@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django import forms
-from facts.models import Person
+from facts.models import Person, Organization, Place, Event, COUNTRY_CHOICES
 
 
 class PersonForm(forms.ModelForm):
-    citizenships = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, choices=Person.COUNTRY_CHOICES)
+    citizenships = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, choices=COUNTRY_CHOICES)
 
     class Meta:
         model = Person
@@ -16,3 +16,6 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonForm
 
 admin.site.register(Person, PersonAdmin)
+admin.site.register(Organization)
+admin.site.register(Place)
+admin.site.register(Event)

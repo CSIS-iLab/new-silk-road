@@ -14,7 +14,6 @@ class Person(models.Model):
         (GIVEN_FIRST_ORDER, 'Given name then family name'),
         (FAMILY_FIRST_ORDER, 'Family name then given name'),
     )
-    COUNTRY_CHOICES = COUNTRY_CHOICES
 
     # Name info
     given_name = models.CharField(max_length=100, help_text="A person's given or 'first' name(s).")
@@ -35,6 +34,9 @@ class Person(models.Model):
     birth_date = models.DateField(blank=True, null=True)
     biography = models.TextField(blank=True)
 
+    # Relations
+    events = models.ManyToManyField('Event', blank=True)
+
     class Meta:
         verbose_name_plural = 'People'
 
@@ -47,3 +49,36 @@ class Person(models.Model):
     def citizenships_names(self):
         return ", ".join((countries.get(s).name for s in self.citizenships))
     citizenships_names.short_description = 'Citizenships'
+
+
+class Organization(models.Model):
+    """Describes an organization"""
+    name = models.CharField(max_length=200)
+    parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
+    founding_date = models.DateField(blank=True, null=True)
+    dissolution_date = models.DateField(blank=True, null=True)
+    events = models.ManyToManyField('Event', blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Place(models.Model):
+    """Describes a place"""
+    name = models.CharField(blank=True, max_length=100)
+    lon = models.FloatField(blank=True, null=True, help_text="Defines a geographic longitude")
+    lat = models.FloatField(blank=True, null=True, help_text="Defines a geographic latitude")
+    country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
+    events = models.ManyToManyField('Event', blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Event(models.Model):
+    """(Event description)"""
+    name = models.CharField(blank=True, max_length=100)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
