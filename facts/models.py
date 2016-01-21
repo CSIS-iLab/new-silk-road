@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.template.defaultfilters import truncatewords
 from iso3166 import countries
 
 COUNTRY_CHOICES = tuple((int(c.numeric), c.name) for c in countries)
@@ -47,7 +48,7 @@ class Person(models.Model):
         return " ".join(name_parts)
 
     def citizenships_names(self):
-        return ", ".join((countries.get(s).name for s in self.citizenships))
+        return ", ".join((countries.get(s).name for s in self.citizenships)) if self.citizenships else None
     citizenships_names.short_description = 'Citizenships'
 
 
@@ -110,4 +111,4 @@ class Insight(models.Model):
     events = models.ManyToManyField('Event', blank=True)
 
     def __str__(self):
-        return u"Insight"
+        return truncatewords(self.description, 5)
