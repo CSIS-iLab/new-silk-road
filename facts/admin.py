@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from facts.models import Person, Organization, Place, Event, COUNTRY_CHOICES
+from facts.models import Person, Organization, Place, Event, Insight, COUNTRY_CHOICES
 
 
 class PersonForm(forms.ModelForm):
@@ -19,3 +19,4 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(Organization)
 admin.site.register(Place)
 admin.site.register(Event)
+admin.site.register(Insight)

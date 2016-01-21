@@ -58,9 +58,24 @@ class Organization(models.Model):
     founding_date = models.DateField(blank=True, null=True)
     dissolution_date = models.DateField(blank=True, null=True)
     events = models.ManyToManyField('Event', blank=True)
+    affiliates = models.ManyToManyField('Person', through='Affiliation',
+                                        help_text="People who are associated with this organization.")
+    headquarters = models.ManyToManyField('Place', blank=True)
 
     def __str__(self):
         return self.name
+
+
+class Affiliation(models.Model):
+    """Describes a relationship between a person and an organization"""
+    person = models.ForeignKey('Person')
+    organization = models.ForeignKey('Organization')
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    description = models.TextField(blank=True, help_text="Describe how the person is affiliated with the organization")
+
+    def __str__(self):
+        return "{}, affiliated with {}".format(self.person, self.organization)
 
 
 class Place(models.Model):
@@ -76,9 +91,23 @@ class Place(models.Model):
 
 
 class Event(models.Model):
-    """(Event description)"""
+    """Describes an event, one which may have a start and end date"""
     name = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+
+class Insight(models.Model):
+    """An insight can involve people, places, and/or organizations"""
+    description = models.TextField(blank=True)
+    people = models.ManyToManyField('Person', blank=True)
+    places = models.ManyToManyField('Place', blank=True)
+    organizations = models.ManyToManyField('Organization', blank=True)
+    events = models.ManyToManyField('Event', blank=True)
+
+    def __str__(self):
+        return u"Insight"

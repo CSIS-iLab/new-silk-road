@@ -4,3 +4,4 @@ dj_database_url
 iso3166>=0.7
 pytz>=2015.7
 gunicorn>=19.4,<20.0
+django-extensions>=1.6,<2.0
