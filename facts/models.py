@@ -39,7 +39,7 @@ class Person(models.Model):
     # Relations
     events = models.ManyToManyField('Event', blank=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name_plural = 'People'
@@ -66,7 +66,7 @@ class Organization(models.Model):
                                         help_text="People who are associated with this organization.")
     headquarters = models.ManyToManyField('Place', blank=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.name
@@ -92,7 +92,7 @@ class Place(models.Model):
     country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
     events = models.ManyToManyField('Event', blank=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.name
@@ -105,7 +105,7 @@ class Event(models.Model):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.name
@@ -119,7 +119,7 @@ class Insight(models.Model):
     organizations = models.ManyToManyField('Organization', blank=True)
     events = models.ManyToManyField('Event', blank=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return truncatewords(self.description, 5)
