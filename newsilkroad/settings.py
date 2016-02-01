@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'debug_toolbar',
     'django_extensions',
 
     'markymark',
@@ -42,6 +41,9 @@ INSTALLED_APPS = [
 
     'facts',
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
