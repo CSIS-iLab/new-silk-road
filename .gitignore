@@ -25,5 +25,5 @@ coverage.xml
 # Project stuff:
 /.env
 
-!/serve/staticfiles/*
+/serve/staticfiles/*
 !/serve/staticfiles/.gitkeep
