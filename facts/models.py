@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.template.defaultfilters import truncatewords
+from taggit.managers import TaggableManager
 from iso3166 import countries
 
 COUNTRY_CHOICES = tuple((int(c.numeric), c.name) for c in countries)
@@ -38,6 +39,8 @@ class Person(models.Model):
     # Relations
     events = models.ManyToManyField('Event', blank=True)
 
+    tags = TaggableManager()
+
     class Meta:
         verbose_name_plural = 'People'
 
@@ -63,6 +66,8 @@ class Organization(models.Model):
                                         help_text="People who are associated with this organization.")
     headquarters = models.ManyToManyField('Place', blank=True)
 
+    tags = TaggableManager()
+
     def __str__(self):
         return self.name
 
@@ -87,6 +92,8 @@ class Place(models.Model):
     country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
     events = models.ManyToManyField('Event', blank=True)
 
+    tags = TaggableManager()
+
     def __str__(self):
         return self.name
 
@@ -97,6 +104,8 @@ class Event(models.Model):
     description = models.TextField(blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+
+    tags = TaggableManager()
 
     def __str__(self):
         return self.name
@@ -109,6 +118,8 @@ class Insight(models.Model):
     places = models.ManyToManyField('Place', blank=True)
     organizations = models.ManyToManyField('Organization', blank=True)
     events = models.ManyToManyField('Event', blank=True)
+
+    tags = TaggableManager()
 
     def __str__(self):
         return truncatewords(self.description, 5)

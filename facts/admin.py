@@ -40,7 +40,12 @@ class PersonAdmin(admin.ModelAdmin):
     )
 
 
+class EventForm(forms.ModelForm):
+    description = MarkdownFormField()
+
+
 class EventAdmin(admin.ModelAdmin):
+    form = EventForm
     inlines = (
         AttendanceInline,
     )
