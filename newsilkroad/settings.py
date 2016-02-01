@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_extensions',
 
+    'markymark',
+
     'facts',
 ]
 
@@ -119,3 +121,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
+
+# markymark
+MARKYMARK_EXTENSIONS = [
+    'markymark.extensions.autolink',
+]

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from facts.models import Person, Organization, Place, Event, Insight, COUNTRY_CHOICES
-
+from markymark.fields import MarkdownFormField
 
 class AttendanceInline(admin.TabularInline):
     model = Person.events.through
@@ -9,6 +9,7 @@ class AttendanceInline(admin.TabularInline):
 
 class PersonForm(forms.ModelForm):
     citizenships = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, required=False, choices=COUNTRY_CHOICES)
+    biography = MarkdownFormField()
 
     class Meta:
         model = Person
