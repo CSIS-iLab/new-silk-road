@@ -29,7 +29,7 @@ class Person(models.Model):
 
     # Biographical Info
     citizenships = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True),
+        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True),
         blank=True,
         default=list
     )
