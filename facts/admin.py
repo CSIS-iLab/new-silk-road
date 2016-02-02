@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django import forms
-from facts.models import Person, Organization, Place, Event, Insight, COUNTRY_CHOICES
+from facts.models import Person, Organization, Place, Event, Insight, Affiliation, COUNTRY_CHOICES
 from markymark.fields import MarkdownFormField
+
+class AffiliationInline(admin.TabularInline):
+    model = Affiliation
 
 class AttendanceInline(admin.TabularInline):
     model = Person.events.through
@@ -20,6 +23,9 @@ class PersonAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'family_name', 'given_name', 'birth_date', 'citizenships_names')
     list_filter = ('family_name',)
     list_editable = ('family_name', 'given_name', 'birth_date')
+    inlines = (
+        AffiliationInline,
+    )
     form = PersonForm
     fieldsets = (
         ('Basic Details', {
@@ -59,5 +65,6 @@ class InsightAdmin(admin.ModelAdmin):
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Organization)
 admin.site.register(Place)
+admin.site.register(Affiliation)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Insight, InsightAdmin)
