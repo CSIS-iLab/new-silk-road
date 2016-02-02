@@ -39,6 +39,9 @@ class PersonAdmin(admin.ModelAdmin):
         ('Biographical Information', {
             'fields': ('birth_date', 'biography', 'citizenships')
         }),
+        ('Taxonomy', {
+            'fields': ('tags',)
+        }),
         ('Related', {
             'classes': ('collapse',),
             'fields': ('events',)
