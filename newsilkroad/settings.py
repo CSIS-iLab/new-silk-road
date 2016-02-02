@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'taggit',
 
     'facts',
+    'loosely'
 ]
 
 if DEBUG:
