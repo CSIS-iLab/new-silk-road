@@ -31,6 +31,7 @@ class Person(models.Model):
     citizenships = ArrayField(
         models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True),
         blank=True,
+        null=True,
         default=list
     )
     birth_date = models.DateField(blank=True, null=True)
