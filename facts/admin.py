@@ -29,7 +29,7 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonForm
     fieldsets = (
         ('Basic Details', {
-            'fields': (('given_name', 'family_name'), ('honorific_prefix', 'honorific_suffix'))
+            'fields': (('given_name', 'family_name'), ('party',), ('honorific_prefix', 'honorific_suffix'))
         }),
         ('Additonal Name Details', {
             'classes': ('collapse',),

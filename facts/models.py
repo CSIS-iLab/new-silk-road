@@ -27,6 +27,8 @@ class Person(models.Model):
     honorific_prefix = models.CharField(blank=True, max_length=100)
     honorific_suffix = models.CharField(blank=True, max_length=100)
 
+    party = models.CharField(blank=True, max_length=100, help_text="Political part affiliation.")
+
     # Biographical Info
     citizenships = ArrayField(
         models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True),
