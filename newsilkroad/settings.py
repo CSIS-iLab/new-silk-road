@@ -36,11 +36,14 @@ INSTALLED_APPS = [
 
     'django_extensions',
 
+    'easy_thumbnails',
+    'filer',
+    'mptt',
+
     'markymark',
     'taggit',
 
-    'facts',
-    'loosely'
+    'knowledgebase',
 ]
 
 if DEBUG:
@@ -128,5 +131,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
 
 # markymark
 MARKYMARK_EXTENSIONS = [
-    'markymark.extensions.autolink',
+    'markymark.extensions.contrib.filer',
 ]
