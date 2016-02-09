@@ -12,5 +12,10 @@ class ArticleAdmin(admin.ModelAdmin):
     }
 
 
+class CategoryAdmin(MPTTModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    list_display = ['name', 'slug']
+
+
 admin.site.register(Article, ArticleAdmin)
-admin.site.register(Category, MPTTModelAdmin)
+admin.site.register(Category, CategoryAdmin)
