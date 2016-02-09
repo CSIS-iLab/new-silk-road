@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from knowledgebase.models import Article
+from knowledgebase.widgets import BigMarkdownTextarea
 
 
 class ArticleModelTests(TestCase):
@@ -31,3 +32,10 @@ https://www.example.com
         obj.save()
         self.assertIsNotNone(obj.slug)
         self.assertEqual(obj.slug, 'test-article-saves-slug')
+
+
+class BigMarkdownTextareaTests(TestCase):
+
+    def test_bigmarkdowntextarea_row_size(self):
+        widget = BigMarkdownTextarea()
+        self.assertGreater(int(widget.attrs['rows']), 20)
