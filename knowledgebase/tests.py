@@ -19,10 +19,15 @@ https://www.example.com
         self.assertIsNotNone(obj.body)
         self.assertHTMLEqual(obj.body_rendered, expected_html)
 
-
     def test_article_save_rendered_markdown(self):
         raw_markdown = '# This is markdown\n\nHere is a paragraph'
         obj = Article(title="Test article saves rendered markdown", body=raw_markdown)
         obj.save()
         self.assertIsNotNone(obj.body)
         self.assertIsNotNone(obj.body_rendered)
+
+    def test_article_save_autoslug(self):
+        obj = Article(title="Test article saves slug")
+        obj.save()
+        self.assertIsNotNone(obj.slug)
+        self.assertEqual(obj.slug, 'test-article-saves-slug')
