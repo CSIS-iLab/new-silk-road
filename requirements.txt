@@ -2,6 +2,7 @@ Django>=1.9.1,<1.10
 dj_database_url
 django-extensions>=1.6,<2.0
 django-markymark==0.9.1
+django-mptt==0.8.0
 django-taggit==0.18.0
 gunicorn>=19.4,<20.0
 iso3166>=0.7
