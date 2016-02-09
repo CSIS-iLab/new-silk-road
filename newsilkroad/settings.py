@@ -128,6 +128,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'newsilkroad/static')
+]
 
 # Media aka uploads
 MEDIA_URL = '/media/'
