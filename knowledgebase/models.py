@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.core.urlresolvers import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
@@ -30,6 +31,9 @@ class Article(models.Model):
         if not self.slug or self.slug == '':
             self._set_slug()
         super(Article, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('knowledgebase:article-detail', kwargs={'slug': self.slug})
 
 
 class Category(MPTTModel):

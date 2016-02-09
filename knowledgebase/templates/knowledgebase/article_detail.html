@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}{{ block.super }} | {{ object.title }} {% endblock %}
+
+{% block content %}
+    <header>
+        <h1>{{ object.title }}</h1>
+    </header>
+    <article>
+        {{ object.body_rendered|safe }}
+    </article>
+{% endblock %}
