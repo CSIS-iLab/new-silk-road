@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load mptt_tags %}
+
+{% block content %}
+{% drilldown_tree_for_node category as category_tree %}
+<nav>
+    {% for cat,structure in category_tree|tree_info %}
+    {% if structure.new_level %}<ul><li>{% else %}</li><li>{% endif %}
+        {% ifequal cat category %}
+        <strong>{{ cat.name }}</strong>
+        {% else %}
+        <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+        {% ifequal cat.parent_id genre.pk %}{% endifequal %}
+        {% endifequal %}
+        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+        {% endfor %}
+</nav>
+{% endblock %}
