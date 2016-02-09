@@ -28,5 +28,8 @@ coverage.xml
 /serve/staticfiles/*
 !/serve/staticfiles/.gitkeep
 
+# Ignore media directory
+/media
+
 # Ignore tmp dir
 /tmp

@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 
 admin.site.site_header = "New Silk Road Administration"
 admin.site.site_title = "NSR Admin"
 
+DEBUG = getattr(settings, 'DEBUG', False)
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 ]
+
+if DEBUG:
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

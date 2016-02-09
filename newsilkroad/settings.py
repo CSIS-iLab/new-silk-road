@@ -129,6 +129,10 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
 
+# Media aka uploads
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # markymark
 MARKYMARK_EXTENSIONS = [
     'markymark.extensions.contrib.filer',
