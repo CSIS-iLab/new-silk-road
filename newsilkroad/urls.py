@@ -16,8 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-admin.site.site_header = "New Silk Road Administration"
-admin.site.site_title = "NSR Admin"
+admin.site.site_header = "DEMO Administration"
+admin.site.site_title = "DEMO Admin"
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
