@@ -1,10 +1,13 @@
 from django.contrib import admin
 from django import forms
-from facts.models import Person, Organization, Place, Event, Insight, Affiliation, COUNTRY_CHOICES
+from facts.models import (Person, Organization, Place, Event, Insight, Affiliation,
+                          Region, InfrastructureType, Project, Initiative, IntiativeType, COUNTRY_CHOICES)
 from markymark.fields import MarkdownFormField
+
 
 class AffiliationInline(admin.TabularInline):
     model = Affiliation
+
 
 class AttendanceInline(admin.TabularInline):
     model = Person.events.through
@@ -65,9 +68,26 @@ class InsightAdmin(admin.ModelAdmin):
     list_filter = ('people', 'places', 'organizations', 'events')
 
 
+class ProjectForm(forms.ModelForm):
+    countries = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, required=False, choices=COUNTRY_CHOICES)
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+
+class ProjectAdmin(admin.ModelAdmin):
+    form = ProjectForm
+
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Organization)
 admin.site.register(Place)
 admin.site.register(Affiliation)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Insight, InsightAdmin)
+admin.site.register(Region)
+admin.site.register(InfrastructureType)
+admin.site.register(Project, ProjectAdmin)
+admin.site.register(Initiative)
+admin.site.register(IntiativeType)

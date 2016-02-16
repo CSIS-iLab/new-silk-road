@@ -126,3 +126,74 @@ class Insight(models.Model):
 
     def __str__(self):
         return truncatewords(self.description, 5)
+
+
+class Region(models.Model):
+    """A human-described geograhic region"""
+    name = models.CharField(blank=True, max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class InfrastructureType(models.Model):
+    """Type of infrastructure"""
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Project(models.Model):
+    """Describes a project"""
+
+    STATUS_ANNOUNCED = 1
+    STATUS_PREPATORY = 2
+    STATUS_STARTED = 3
+    STATUS_UNDER_CONSTRUCTION = 4
+    STATUS_COMPLETED = 5
+
+    PROJECT_STATUSES = (
+        (STATUS_ANNOUNCED, 'Announced/Under Negotiation'),
+        (STATUS_PREPATORY, 'Preparatory Works'),
+        (STATUS_STARTED, 'Started'),
+        (STATUS_UNDER_CONSTRUCTION, 'Under Construction'),
+        (STATUS_COMPLETED, 'Completed')
+    )
+
+    title = models.CharField(max_length=100)
+    countries = ArrayField(
+        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True),
+        blank=True,
+        null=True,
+        default=list
+    )
+    regions = models.ManyToManyField('Region', blank=True, help_text='Select or create geographic region names.')
+    infrastructure_type = models.ForeignKey(InfrastructureType, blank=True, null=True, help_text='Select or create named infrastructure types.')
+    funding_sources = models.ManyToManyField('Organization', related_name='funded_projects', blank=True)
+    client = models.ManyToManyField('Organization', help_text='Client or implementing agency', blank=True)
+    status = models.PositiveSmallIntegerField(blank=True, null=True,
+                                              choices=PROJECT_STATUSES, default=STATUS_ANNOUNCED)
+    initiative = models.ForeignKey('Initiative', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class IntiativeType(models.Model):
+    """Defines a type of initiative"""
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return u"IntiativeType"
+
+
+class Initiative(models.Model):
+    """Describes an initiative"""
+
+    name = models.CharField(max_length=140)
+    initiative_type = models.ForeignKey('IntiativeType')
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        self.name
