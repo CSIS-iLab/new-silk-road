@@ -3,11 +3,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.template.defaultfilters import truncatewords
 from taggit.managers import TaggableManager
 from iso3166 import countries
+from publish.models import Publishable
 
 COUNTRY_CHOICES = tuple((int(c.numeric), c.name) for c in countries)
 
-
-class Person(models.Model):
+class Person(Publishable):
     """Describes a person"""
     GIVEN_FIRST_ORDER = 1
     FAMILY_FIRST_ORDER = 3
@@ -18,16 +18,16 @@ class Person(models.Model):
     )
 
     # Name info
-    given_name = models.CharField(max_length=100, help_text="A person's given or 'first' name(s).")
+    given_name = models.CharField('First name', max_length=100, help_text="A person's given or 'first' name(s).")
     additional_name = models.CharField(blank=True, max_length=100, help_text="An additional name for a person, \
                                                                               such as a 'middle' name.")
+    family_name = models.CharField('Last name', blank=True, max_length=140, help_text="A person's family or 'last' name(s).")
+
+    # Name extras
     patronymic_name = models.CharField(blank=True, max_length=100, help_text="A patronymic name, if one exists.")
-    family_name = models.CharField(blank=True, max_length=140, help_text="A person's family or 'last' name(s).")
     name_order = models.IntegerField(choices=NAME_ORDER_CHOICES, default=GIVEN_FIRST_ORDER)
     honorific_prefix = models.CharField(blank=True, max_length=100)
     honorific_suffix = models.CharField(blank=True, max_length=100)
-
-    party = models.CharField(blank=True, max_length=100, help_text="Political part affiliation.")
 
     # Biographical Info
     citizenships = ArrayField(
@@ -38,6 +38,9 @@ class Person(models.Model):
     )
     birth_date = models.DateField(blank=True, null=True)
     biography = models.TextField(blank=True)
+
+    # Notes
+    notes = models.TextField(blank=True)
 
     # Relations
     events = models.ManyToManyField('Event', blank=True)
@@ -58,7 +61,7 @@ class Person(models.Model):
     citizenships_names.short_description = 'Citizenships'
 
 
-class Organization(models.Model):
+class Organization(Publishable):
     """Describes an organization"""
     name = models.CharField(max_length=200)
     parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
@@ -75,19 +78,19 @@ class Organization(models.Model):
         return self.name
 
 
-class Affiliation(models.Model):
-    """Describes a relationship between a person and an organization"""
+class Position(models.Model):
+    """Describes a position a person holds/held at an organization"""
+    title = models.CharField(max_length=100)
     person = models.ForeignKey('Person')
     organization = models.ForeignKey('Organization')
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
-    description = models.TextField(blank=True, help_text="Describe how the person is affiliated with the organization")
 
     def __str__(self):
         return "{}, affiliated with {}".format(self.person, self.organization)
 
 
-class Place(models.Model):
+class Place(Publishable):
     """Describes a place"""
     name = models.CharField(blank=True, max_length=100)
     lon = models.FloatField(blank=True, null=True, help_text="Defines a geographic longitude")
@@ -101,7 +104,7 @@ class Place(models.Model):
         return self.name
 
 
-class Event(models.Model):
+class Event(Publishable):
     """Describes an event, one which may have a start and end date"""
     name = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)
@@ -114,7 +117,7 @@ class Event(models.Model):
         return self.name
 
 
-class Insight(models.Model):
+class Insight(Publishable):
     """An insight can involve people, places, and/or organizations"""
     description = models.TextField(blank=True)
     people = models.ManyToManyField('Person', blank=True)
@@ -144,7 +147,7 @@ class InfrastructureType(models.Model):
         return self.name
 
 
-class Project(models.Model):
+class Project(Publishable):
     """Describes a project"""
 
     STATUS_ANNOUNCED = 1
@@ -188,7 +191,7 @@ class IntiativeType(models.Model):
         return u"IntiativeType"
 
 
-class Initiative(models.Model):
+class Initiative(Publishable):
     """Describes an initiative"""
 
     name = models.CharField(max_length=140)
