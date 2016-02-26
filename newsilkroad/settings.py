@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'markymark',
     'taggit',
 
+    'facts',
+
 ]
 
 if DEBUG:
