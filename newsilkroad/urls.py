@@ -25,7 +25,6 @@ DEBUG = getattr(settings, 'DEBUG', False)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('knowledgebase.urls', namespace='knowledgebase'))
 ]
 
 if DEBUG:
