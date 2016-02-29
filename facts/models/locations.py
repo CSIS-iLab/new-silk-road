@@ -15,13 +15,14 @@ class Region(models.Model):
 
 
 class Place(Publishable):
-    """Describes a place"""
-    name = models.CharField(blank=True, max_length=100)
+    """Describes a place, broadly or specifically"""
+    label = models.CharField(max_length=100)
+    city = models.CharField(blank=True, max_length=100)
+    country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES)
     lon = models.FloatField(blank=True, null=True, help_text="Defines a geographic longitude")
     lat = models.FloatField(blank=True, null=True, help_text="Defines a geographic latitude")
-    country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
 
     tags = TaggableManager(blank=True)
 
     def __str__(self):
-        return self.name
+        return self.label

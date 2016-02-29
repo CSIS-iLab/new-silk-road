@@ -57,3 +57,15 @@ class Person(Publishable):
     def citizenships_names(self):
         return ", ".join((countries.get(s).name for s in self.citizenships)) if self.citizenships else None
     citizenships_names.short_description = 'Citizenships'
+
+
+class Position(models.Model):
+    """Describes a position a person holds/held at an organization"""
+    title = models.CharField(max_length=100)
+    person = models.ForeignKey('Person')
+    organization = models.ForeignKey('Organization')
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return "{}, affiliated with {}".format(self.person, self.organization)

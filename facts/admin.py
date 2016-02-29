@@ -1,8 +1,15 @@
 from django.contrib import admin
 from django import forms
-from facts.models import (Person, Organization, Place, Event, Position,
-                          Region, InfrastructureType, Project,
-                          Initiative, InitiativeType)
+from facts.models import (
+    Person, Position,
+    Region, Place,
+    Project, Initiative, InitiativeType, InfrastructureType,
+    Government, Company, Event,
+    FinancingOrganization, Multilateral,
+    NonGovernmental, Political, Military,
+    FinancingType, CompanyType, MultilateralType,
+    NGOType, PoliticalType, CompanyStructure,
+)
 from facts.models.locations import COUNTRY_CHOICES
 from markymark.fields import MarkdownFormField
 
@@ -78,7 +85,6 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Person, PersonAdmin)
-admin.site.register(Organization)
 admin.site.register(Place)
 admin.site.register(Position)
 admin.site.register(Event, EventAdmin)
@@ -87,3 +93,17 @@ admin.site.register(InfrastructureType)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Initiative)
 admin.site.register(InitiativeType)
+# organizations
+admin.site.register(Government)
+admin.site.register(Company)
+admin.site.register(CompanyType)
+admin.site.register(CompanyStructure)
+admin.site.register(FinancingOrganization)
+admin.site.register(FinancingType)
+admin.site.register(Multilateral)
+admin.site.register(MultilateralType)
+admin.site.register(NonGovernmental)
+admin.site.register(NGOType)
+admin.site.register(Political)
+admin.site.register(PoliticalType)
+admin.site.register(Military)

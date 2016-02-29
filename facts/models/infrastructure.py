@@ -68,6 +68,13 @@ class Initiative(Publishable):
     affiliated_organizations = models.ManyToManyField('Organization', blank=True)
     affiliated_events = models.ManyToManyField('Event', blank=True)
     # TODO: Figure out countries (members vs geographic scope)
+    # member_countries = ???
+    # geographic_scope = ???
 
     def __str__(self):
         return self.name
+
+
+class ProjectDocuments(models.Model):
+    pass
+    # Need structure for project's documents
