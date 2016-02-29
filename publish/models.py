@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class PublicationManager(models.Manager):
 
     def published(self):
