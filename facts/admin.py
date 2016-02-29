@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django import forms
-from facts.models import (Person, Organization, Place, Event, Insight, Affiliation,
-                          Region, InfrastructureType, Project, Initiative, IntiativeType, COUNTRY_CHOICES)
+from facts.models import (Person, Organization, Place, Event, Position,
+                          Region, InfrastructureType, Project,
+                          Initiative, InitiativeType)
+from facts.models.locations import COUNTRY_CHOICES
 from markymark.fields import MarkdownFormField
 
 
-class AffiliationInline(admin.TabularInline):
-    model = Affiliation
+class PositionInline(admin.TabularInline):
+    model = Position
 
 
 class AttendanceInline(admin.TabularInline):
@@ -27,7 +29,7 @@ class PersonAdmin(admin.ModelAdmin):
     list_filter = ('family_name',)
     list_editable = ('family_name', 'given_name', 'birth_date')
     inlines = (
-        AffiliationInline,
+        PositionInline,
     )
     form = PersonForm
     fieldsets = (
@@ -63,11 +65,6 @@ class EventAdmin(admin.ModelAdmin):
     )
 
 
-class InsightAdmin(admin.ModelAdmin):
-    model = Insight
-    list_filter = ('people', 'places', 'organizations', 'events')
-
-
 class ProjectForm(forms.ModelForm):
     countries = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, required=False, choices=COUNTRY_CHOICES)
 
@@ -83,11 +80,10 @@ class ProjectAdmin(admin.ModelAdmin):
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Organization)
 admin.site.register(Place)
-admin.site.register(Affiliation)
+admin.site.register(Position)
 admin.site.register(Event, EventAdmin)
-admin.site.register(Insight, InsightAdmin)
 admin.site.register(Region)
 admin.site.register(InfrastructureType)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Initiative)
-admin.site.register(IntiativeType)
+admin.site.register(InitiativeType)
