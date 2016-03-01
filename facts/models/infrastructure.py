@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from publish.models import Publishable
 from facts.models.locations import COUNTRY_CHOICES
+from markymark.fields import MarkdownField
 
 
 class InfrastructureType(models.Model):
@@ -63,7 +64,7 @@ class Initiative(Publishable):
 
     name = models.CharField(max_length=140)
     initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
-    notes = models.TextField(blank=True)
+    notes = MarkdownField(blank=True)
     principal_agent = models.ForeignKey('Person', models.SET_NULL, blank=True, null=True)
     parent_initiative = models.ForeignKey('self',
                                           models.SET_NULL, blank=True, null=True,

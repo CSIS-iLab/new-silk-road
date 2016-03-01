@@ -42,7 +42,7 @@ class Organization(MPTTModel, Publishable):
                                      related_name='organizations_led')
     initiatives = models.ManyToManyField('Initiative', blank=True)
     headquarters = models.ForeignKey('Place', models.SET_NULL, blank=True, null=True)
-    notes = MarkdownField(blank=True, help_text='Notes for display on website')
+    notes = MarkdownField(blank=True)
     founding_date = models.DateField(blank=True, null=True)
     dissolution_date = models.DateField(blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True,
@@ -69,7 +69,8 @@ class FinancingOrganization(Organization):
     related_companies = models.ManyToManyField('Company', blank=True)
     related_governments = models.ManyToManyField('Government', blank=True)
     # Financials
-    approved_capital = models.DecimalField(max_digits=17, decimal_places=2)
+    approved_capital = models.DecimalField(blank=True, null=True,
+                                           max_digits=17, decimal_places=2)
     credit_rating = models.CharField(blank=True, max_length=100)
     # shareholders = ???
     scope_of_operations = models.CharField(blank=True, max_length=100)
@@ -124,7 +125,8 @@ class NonGovernmental(Organization):
     related_events = models.ManyToManyField('Event', blank=True)
     # members = ???
     # geographic_scope = ???
-    endowment = models.DecimalField(max_digits=17, decimal_places=2)
+    endowment = models.DecimalField(blank=True, null=True,
+                                    max_digits=17, decimal_places=2)
     org_type = models.ForeignKey('NGOType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
@@ -152,7 +154,8 @@ class Military(Organization):
     """Describes a military variable"""
     country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
     ruling_party = models.BooleanField(default=True)
-    budget = models.DecimalField(max_digits=17, decimal_places=2)
+    budget = models.DecimalField(blank=True, null=True,
+                                 max_digits=17, decimal_places=2)
     related_events = models.ManyToManyField('Event', blank=True)
 
     class Meta:
