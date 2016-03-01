@@ -26,7 +26,9 @@ class MultilateralType(MPTTModel, OrganizationTypeBase):
 
 
 class NGOType(MPTTModel, OrganizationTypeBase):
-    pass
+
+    class Meta:
+        verbose_name = "NGO Type"
 
 
 class PoliticalType(MPTTModel, OrganizationTypeBase):
@@ -36,15 +38,16 @@ class PoliticalType(MPTTModel, OrganizationTypeBase):
 class Organization(MPTTModel, Publishable):
     """Abstract base model for organizations"""
     name = models.CharField(max_length=100)
-    leaders = models.ManyToManyField('Person', related_name='organizations_led')
-    initiatives = models.ManyToManyField('Initiative')
-    headquarters = models.ForeignKey('Place')
+    leaders = models.ManyToManyField('Person', blank=True,
+                                     related_name='organizations_led')
+    initiatives = models.ManyToManyField('Initiative', blank=True)
+    headquarters = models.ForeignKey('Place', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True, help_text='Notes for display on website')
     founding_date = models.DateField(blank=True, null=True)
     dissolution_date = models.DateField(blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True,
                             related_name='children', db_index=True)
-    affiliated_organizations = models.ManyToManyField('self')
+    affiliated_organizations = models.ManyToManyField('self', blank=True)
     staff_size = models.PositiveSmallIntegerField("Staff/Personel count",
                                                   blank=True, null=True)
     mission = models.TextField("Mandate/Mission Statement", blank=True)
@@ -61,17 +64,19 @@ class Government(Organization):
 class FinancingOrganization(Organization):
     """Describes a financing organization"""
     # Relations
-    related_forgs = models.ManyToManyField('self',
+    related_forgs = models.ManyToManyField('self', blank=True,
                                            verbose_name="affiliated financing organizations")
-    related_companies = models.ManyToManyField('Company')
-    related_governments = models.ManyToManyField('Government')
+    related_companies = models.ManyToManyField('Company', blank=True)
+    related_governments = models.ManyToManyField('Government', blank=True)
     # Financials
     approved_capital = models.DecimalField(max_digits=17, decimal_places=2)
     credit_rating = models.CharField(blank=True, max_length=100)
     # shareholders = ???
     scope_of_operations = models.CharField(blank=True, max_length=100)
     procurement = models.CharField(blank=True, max_length=100)
-    org_type = models.ForeignKey('FinancingType', verbose_name='type')
+    org_type = models.ForeignKey('FinancingType',
+                                 models.SET_NULL, blank=True, null=True,
+                                 verbose_name='type')
 
 
 class CompanyStructure(models.Model):
@@ -92,40 +97,47 @@ class Company(Organization):
         (SECTOR_TERTIARY, "Tertiary"),
     )
 
-    related_forgs = models.ManyToManyField('self',
+    related_forgs = models.ManyToManyField('self', blank=True,
                                            verbose_name="affiliated financing organizations")
-    related_companies = models.ManyToManyField('Company')
-    related_governments = models.ManyToManyField('Government')
-    structure = models.ForeignKey('CompanyStructure')
+    related_companies = models.ManyToManyField('Company', blank=True)
+    related_governments = models.ManyToManyField('Government', blank=True)
+    structure = models.ForeignKey('CompanyStructure', blank=True, null=True)
     sector = models.PositiveSmallIntegerField(blank=True, null=True, choices=SECTOR_CHOICES)
-    org_type = models.ForeignKey('CompanyType', verbose_name='type')
+    org_type = models.ForeignKey('CompanyType',
+                                 models.SET_NULL, blank=True, null=True,
+                                 verbose_name='type')
 
 
 class Multilateral(Organization):
     """Describes a multilateral organization"""
     # members = ???
-    org_type = models.ForeignKey('MultilateralType', verbose_name='type')
+    org_type = models.ForeignKey('MultilateralType',
+                                 models.SET_NULL, blank=True, null=True,
+                                 verbose_name='type')
 
 
 class NonGovernmental(Organization):
     """Describes an NGO"""
-    related_events = models.ManyToManyField('Event')
+    related_events = models.ManyToManyField('Event', blank=True)
     # members = ???
     # geographic_scope = ???
     endowment = models.DecimalField(max_digits=17, decimal_places=2)
-    org_type = models.ForeignKey('NGOType', verbose_name='type')
+    org_type = models.ForeignKey('NGOType',
+                                 models.SET_NULL, blank=True, null=True,
+                                 verbose_name='type')
 
     class Meta:
-        verbose_name = "ngo"
+        verbose_name = "NGO"
 
 
 class Political(Organization):
     """Describes a Political Entity"""
     countries = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True),
-        blank=True, null=True, default=list
-    )
-    org_type = models.ForeignKey('PoliticalType', verbose_name='type')
+        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
+        blank=True, null=True, default=list)
+    org_type = models.ForeignKey('PoliticalType',
+                                 models.SET_NULL, blank=True, null=True,
+                                 verbose_name='type')
     ruling_party = models.BooleanField(default=True)
 
 
@@ -134,4 +146,4 @@ class Military(Organization):
     country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
     ruling_party = models.BooleanField(default=True)
     budget = models.DecimalField(max_digits=17, decimal_places=2)
-    related_events = models.ManyToManyField('Event')
+    related_events = models.ManyToManyField('Event', blank=True)

@@ -31,7 +31,7 @@ class Project(Publishable):
 
     title = models.CharField(max_length=100)
     countries = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True),
+        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
         blank=True,
         null=True,
         default=list
@@ -64,7 +64,7 @@ class Initiative(Publishable):
     notes = models.TextField(blank=True)
     principal_agent = models.ForeignKey('Person', blank=True)
     parent_initiative = models.ForeignKey('self', related_name="sub_initiatives", blank=True)
-    founding_date = models.DateField('Foundatin/Signing Date', blank=True, null=True)
+    founding_date = models.DateField('Founding/Signing Date', blank=True, null=True)
     affiliated_organizations = models.ManyToManyField('Organization', blank=True)
     affiliated_events = models.ManyToManyField('Event', blank=True)
     # TODO: Figure out countries (members vs geographic scope)
