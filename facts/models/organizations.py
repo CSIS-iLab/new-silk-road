@@ -101,11 +101,14 @@ class Company(Organization):
                                            verbose_name="affiliated financing organizations")
     related_companies = models.ManyToManyField('Company', blank=True)
     related_governments = models.ManyToManyField('Government', blank=True)
-    structure = models.ForeignKey('CompanyStructure', blank=True, null=True)
+    structure = models.ForeignKey('CompanyStructure', models.SET_NULL, blank=True, null=True)
     sector = models.PositiveSmallIntegerField(blank=True, null=True, choices=SECTOR_CHOICES)
     org_type = models.ForeignKey('CompanyType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
+
+    class Meta:
+        verbose_name_plural = "companies"
 
 
 class Multilateral(Organization):
@@ -140,6 +143,10 @@ class Political(Organization):
                                  verbose_name='type')
     ruling_party = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name = "political entity"
+        verbose_name_plural = "political entities"
+
 
 class Military(Organization):
     """Describes a military variable"""
@@ -147,3 +154,6 @@ class Military(Organization):
     ruling_party = models.BooleanField(default=True)
     budget = models.DecimalField(max_digits=17, decimal_places=2)
     related_events = models.ManyToManyField('Event', blank=True)
+
+    class Meta:
+        verbose_name_plural = "militaries"

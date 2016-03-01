@@ -37,12 +37,14 @@ class Project(Publishable):
         default=list
     )
     regions = models.ManyToManyField('Region', blank=True, help_text='Select or create geographic region names.')
-    infrastructure_type = models.ForeignKey(InfrastructureType, blank=True, null=True, help_text='Select or create named infrastructure types.')
+    infrastructure_type = models.ForeignKey(InfrastructureType,
+                                            models.SET_NULL, blank=True, null=True,
+                                            help_text='Select or create named infrastructure types.')
     funding_sources = models.ManyToManyField('Organization', related_name='funded_projects', blank=True)
     client = models.ManyToManyField('Organization', help_text='Client or implementing agency', blank=True)
     status = models.PositiveSmallIntegerField(blank=True, null=True,
                                               choices=PROJECT_STATUSES, default=STATUS_ANNOUNCED)
-    initiative = models.ForeignKey('Initiative', blank=True, null=True)
+    initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -60,10 +62,12 @@ class Initiative(Publishable):
     """Describes an initiative"""
 
     name = models.CharField(max_length=140)
-    initiative_type = models.ForeignKey('InitiativeType')
+    initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
     notes = models.TextField(blank=True)
-    principal_agent = models.ForeignKey('Person', blank=True)
-    parent_initiative = models.ForeignKey('self', related_name="sub_initiatives", blank=True)
+    principal_agent = models.ForeignKey('Person', models.SET_NULL, blank=True, null=True)
+    parent_initiative = models.ForeignKey('self',
+                                          models.SET_NULL, blank=True, null=True,
+                                          related_name="sub_initiatives")
     founding_date = models.DateField('Founding/Signing Date', blank=True, null=True)
     affiliated_organizations = models.ManyToManyField('Organization', blank=True)
     affiliated_events = models.ManyToManyField('Event', blank=True)
