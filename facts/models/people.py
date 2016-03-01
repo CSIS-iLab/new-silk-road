@@ -1,31 +1,17 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from .locations import COUNTRY_CHOICES, countries
+from markymark.fields import MarkdownField
 from publish.models import Publishable
-from taggit.managers import TaggableManager
 
 
 class Person(Publishable):
     """Describes a person"""
-    GIVEN_FIRST_ORDER = 1
-    FAMILY_FIRST_ORDER = 3
-
-    NAME_ORDER_CHOICES = (
-        (GIVEN_FIRST_ORDER, 'Given name then family name'),
-        (FAMILY_FIRST_ORDER, 'Family name then given name'),
-    )
-
     # Name info
     given_name = models.CharField('First name', max_length=100, help_text="A person's given or 'first' name(s).")
-    additional_name = models.CharField(blank=True, max_length=100, help_text="An additional name for a person, \
+    additional_name = models.CharField('Middle name', blank=True, max_length=100, help_text="An additional name for a person, \
                                                                               such as a 'middle' name.")
     family_name = models.CharField('Last name', blank=True, max_length=140, help_text="A person's family or 'last' name(s).")
-
-    # Name extras
-    patronymic_name = models.CharField(blank=True, max_length=100, help_text="A patronymic name, if one exists.")
-    name_order = models.IntegerField(choices=NAME_ORDER_CHOICES, default=GIVEN_FIRST_ORDER)
-    honorific_prefix = models.CharField(blank=True, max_length=100)
-    honorific_suffix = models.CharField(blank=True, max_length=100)
 
     # Biographical Info
     citizenships = ArrayField(
@@ -35,24 +21,19 @@ class Person(Publishable):
         default=list
     )
     birth_date = models.DateField(blank=True, null=True)
-    biography = models.TextField(blank=True)
 
     # Notes
-    notes = models.TextField(blank=True)
+    notes = MarkdownField(blank=True)
 
     # Relations
     events = models.ManyToManyField('Event', blank=True)
-
-    tags = TaggableManager(blank=True)
+    initiatives = models.ManyToManyField('Initiative', blank=True)
 
     class Meta:
         verbose_name_plural = 'People'
 
     def __str__(self):
-        name_parts = (self.given_name, self.family_name)
-        if self.name_order is self.FAMILY_FIRST_ORDER:
-            name_parts = reversed(name_parts)
-        return " ".join(name_parts)
+        return " ".join((self.given_name, self.family_name))
 
     def citizenships_names(self):
         return ", ".join((countries.get(s).name for s in self.citizenships)) if self.citizenships else None
