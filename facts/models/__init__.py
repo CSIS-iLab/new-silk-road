@@ -3,7 +3,7 @@
 from .organizations import (
                             Government, Company,
                             FinancingOrganization, Multilateral,
-                            NonGovernmental, Political, Military,
+                            NGO, Political, Military,
                             FinancingType, CompanyType, MultilateralType,
                             NGOType, PoliticalType, CompanyStructure,
                             )
