@@ -1,109 +1,82 @@
 from django.contrib import admin
-from django import forms
+from django.forms.models import ModelForm
+from facts.models.organizations import Organization
 from facts.models import (
-    Person, Position,
-    Region, Place,
-    Project, Initiative, InitiativeType, InfrastructureType,
-    Government, Company, Event,
-    FinancingOrganization, Multilateral,
-    NonGovernmental, Political, Military,
-    FinancingType, CompanyType, MultilateralType,
-    NGOType, PoliticalType, CompanyStructure,
+    # Organizations
+    Company, FinancingOrganization, Government,
+    Military, Multilateral, NGO, Political,
 )
-from facts.models.locations import COUNTRY_CHOICES
-from markymark.fields import MarkdownFormField
 
 
-class PositionInline(admin.TabularInline):
-    model = Position
+class FilteredOrganizationForm(ModelForm):
+    filter_class = None
+
+    def __init__(self, *args, **kwargs):
+        super(FilteredOrganizationForm, self).__init__(*args, **kwargs)
+        if self.filter_class:
+            import ipdb; ipdb.set_trace()
+            # TODO: Fix this mess
+            class_qs = self.filter_class.objects.all()
+            qs = self.fields['from_organization'].queryset
+            qs = qs.filter(related_organizations__in=class_qs)
+            self.fields['from_organization'].queryset = qs
 
 
-class AttendanceInline(admin.TabularInline):
-    model = Person.events.through
+class CompanyFilteredForm(FilteredOrganizationForm):
+    filter_class = Company
 
 
-class PersonForm(forms.ModelForm):
-    citizenships = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, required=False, choices=COUNTRY_CHOICES)
-    biography = MarkdownFormField()
+# Relation inlines
+class OrganizationInline(admin.TabularInline):
+    model = Organization.related_organizations.through
+    fk_name = 'to_organization'
+    filter_class = None
 
-    class Meta:
-        model = Person
-        fields = '__all__'
+    @property
+    def verbose_name(self):
+        return self.filter_class._meta.verbose_name
 
-
-class PersonAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'family_name', 'given_name', 'birth_date', 'citizenships_names')
-    list_filter = ('family_name',)
-    list_editable = ('family_name', 'given_name', 'birth_date')
-    inlines = (
-        PositionInline,
-    )
-    form = PersonForm
-    fieldsets = (
-        ('Basic Details', {
-            'fields': (('given_name', 'family_name'), ('party',), ('honorific_prefix', 'honorific_suffix'))
-        }),
-        ('Additonal Name Details', {
-            'classes': ('collapse',),
-            'description': "Different cultures have different conventions for people's names",
-            'fields': ('additional_name', 'patronymic_name', 'name_order')
-        }),
-        ('Biographical Information', {
-            'fields': ('birth_date', 'biography', 'citizenships')
-        }),
-        ('Taxonomy', {
-            'fields': ('tags',)
-        }),
-        ('Related', {
-            'classes': ('collapse',),
-            'fields': ('events',)
-        })
-    )
+    @property
+    def verbose_name_plural(self):
+        return self.filter_class._meta.verbose_name_plural
 
 
-class EventForm(forms.ModelForm):
-    description = MarkdownFormField()
+class CompanyInline(OrganizationInline):
+    filter_class = Company
+    form = CompanyFilteredForm
 
 
-class EventAdmin(admin.ModelAdmin):
-    form = EventForm
-    inlines = (
-        AttendanceInline,
-    )
+class FinancingInline(OrganizationInline):
+    filter_class = FinancingOrganization
 
 
-class ProjectForm(forms.ModelForm):
-    countries = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, required=False, choices=COUNTRY_CHOICES)
-
-    class Meta:
-        model = Project
-        fields = '__all__'
+class GovernmentInline(OrganizationInline):
+    filter_class = Government
 
 
-class ProjectAdmin(admin.ModelAdmin):
-    form = ProjectForm
+class MilitaryInline(OrganizationInline):
+    filter_class = Military
 
 
-admin.site.register(Person, PersonAdmin)
-admin.site.register(Place)
-admin.site.register(Position)
-admin.site.register(Event, EventAdmin)
-admin.site.register(Region)
-admin.site.register(InfrastructureType)
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(Initiative)
-admin.site.register(InitiativeType)
-# organizations
-admin.site.register(Government)
-admin.site.register(Company)
-admin.site.register(CompanyType)
-admin.site.register(CompanyStructure)
-admin.site.register(FinancingOrganization)
-admin.site.register(FinancingType)
-admin.site.register(Multilateral)
-admin.site.register(MultilateralType)
-admin.site.register(NonGovernmental)
-admin.site.register(NGOType)
-admin.site.register(Political)
-admin.site.register(PoliticalType)
-admin.site.register(Military)
+class MultilateralInline(OrganizationInline):
+    filter_class = Multilateral
+
+
+class NGOInline(OrganizationInline):
+    filter_class = NGO
+
+
+class PoliticalInline(OrganizationInline):
+    filter_class = Political
+
+
+ALL_RELATION_INLINES = (
+    CompanyInline, FinancingInline, GovernmentInline,
+    MilitaryInline, MultilateralInline, NGOInline,
+    PoliticalInline
+)
+
+
+# Organization admins
+class CompanyAdmin(admin.ModelAdmin):
+    inlines = list(ALL_RELATION_INLINES)
