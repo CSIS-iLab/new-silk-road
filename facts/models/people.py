@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from .locations import COUNTRY_CHOICES, countries
+from locations.models import COUNTRY_CHOICES, countries
 from markymark.fields import MarkdownField
 from publish.models import Publishable
 

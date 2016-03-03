@@ -1,7 +1,6 @@
 from django.contrib import admin
 from facts.models import (
     Person, Position,
-    Region, Place,
     Project, Initiative, InitiativeType, InfrastructureType,
     Event,
     # Organizations
@@ -20,9 +19,6 @@ from .organizations import OrganizationAdmin
 # People
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Position)
-# Locations
-admin.site.register(Place)
-admin.site.register(Region)
 # Events
 admin.site.register(Event, EventAdmin)
 # Infrastructure

@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from publish.models import Publishable
 from markymark.fields import MarkdownField
 from mptt.models import MPTTModel, TreeForeignKey
-from .locations import COUNTRY_CHOICES
+from locations.models import COUNTRY_CHOICES
 
 
 class OrganizationTypeBase(models.Model):
@@ -47,7 +47,7 @@ class Organization(MPTTModel, Publishable):
     leaders = models.ManyToManyField('Person', blank=True,
                                      related_name='organizations_led')
     initiatives = models.ManyToManyField('Initiative', blank=True)
-    headquarters = models.ForeignKey('Place', models.SET_NULL, blank=True, null=True)
+    headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
     founding_date = models.DateField(blank=True, null=True)
     dissolution_date = models.DateField(blank=True, null=True)

@@ -14,4 +14,3 @@ from .organizations import (
 from .infrastructure import (Project, InfrastructureType, Initiative, InitiativeType)
 from .people import (Person, Position)
 from .events import Event
-from .locations import (Region, Place)

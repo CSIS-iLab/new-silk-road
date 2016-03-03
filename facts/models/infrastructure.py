@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from publish.models import Publishable
-from facts.models.locations import COUNTRY_CHOICES
+from locations.models import CountryField
 from markymark.fields import MarkdownField
 
 
@@ -32,12 +32,12 @@ class Project(Publishable):
 
     title = models.CharField(max_length=100)
     countries = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
+        CountryField(),
         blank=True,
         null=True,
         default=list
     )
-    regions = models.ManyToManyField('Region', blank=True, help_text='Select or create geographic region names.')
+    regions = models.ManyToManyField('locations.Region', blank=True, help_text='Select or create geographic region names.')
     infrastructure_type = models.ForeignKey(InfrastructureType,
                                             models.SET_NULL, blank=True, null=True,
                                             help_text='Select or create named infrastructure types.')

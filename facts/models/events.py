@@ -10,7 +10,7 @@ class Event(Publishable):
     description = MarkdownField(blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
-    places = models.ManyToManyField('Place', blank=True)
+    places = models.ManyToManyField('locations.Place', blank=True)
 
     tags = TaggableManager(blank=True)
 
