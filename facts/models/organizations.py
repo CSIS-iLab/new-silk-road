@@ -14,25 +14,31 @@ class OrganizationTypeBase(models.Model):
 
 
 class CompanyType(MPTTModel, OrganizationTypeBase):
-    pass
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            related_name='children', db_index=True)
 
 
 class FinancingType(MPTTModel, OrganizationTypeBase):
-    pass
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            related_name='children', db_index=True)
 
 
 class MultilateralType(MPTTModel, OrganizationTypeBase):
-    pass
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            related_name='children', db_index=True)
 
 
 class NGOType(MPTTModel, OrganizationTypeBase):
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            related_name='children', db_index=True)
 
     class Meta:
         verbose_name = "NGO type"
 
 
 class PoliticalType(MPTTModel, OrganizationTypeBase):
-    pass
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            related_name='children', db_index=True)
 
 
 class Organization(MPTTModel, Publishable):
