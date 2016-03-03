@@ -45,6 +45,8 @@ class PoliticalInline(admin.TabularInline):
 
 
 class OrganizationAdmin(admin.ModelAdmin):
+    save_on_top = True
+    search_fields = ['name']
     inlines = [
         CompanyInline, FinancingInline, GovernmentInline,
         MilitaryInline, MultilateralInline, NGOInline, PoliticalInline

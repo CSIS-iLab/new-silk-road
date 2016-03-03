@@ -30,7 +30,7 @@ class Person(Publishable):
     initiatives = models.ManyToManyField('Initiative', blank=True)
 
     class Meta:
-        verbose_name_plural = 'People'
+        verbose_name_plural = 'people'
 
     def __str__(self):
         return " ".join((self.given_name, self.family_name))
@@ -47,6 +47,10 @@ class Position(models.Model):
     organization = models.ForeignKey('Organization')
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'position (job)'
+        verbose_name_plural = 'positions (jobs)'
 
     def __str__(self):
         return "{}, affiliated with {}".format(self.person, self.organization)

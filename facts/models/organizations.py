@@ -28,7 +28,7 @@ class MultilateralType(MPTTModel, OrganizationTypeBase):
 class NGOType(MPTTModel, OrganizationTypeBase):
 
     class Meta:
-        verbose_name = "NGO Type"
+        verbose_name = "NGO type"
 
 
 class PoliticalType(MPTTModel, OrganizationTypeBase):
