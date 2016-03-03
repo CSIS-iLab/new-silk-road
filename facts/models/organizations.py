@@ -49,7 +49,7 @@ class Organization(MPTTModel, Publishable):
                             related_name='children', db_index=True)
     staff_size = models.PositiveSmallIntegerField("Staff/Personel count",
                                                   blank=True, null=True)
-    mission = models.TextField("Mandate/Mission Statement", blank=True)
+    mission = MarkdownField("Mandate/Mission Statement", blank=True)
 
     class MPTTMeta:
             order_insertion_by = ['name']
