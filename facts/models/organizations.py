@@ -55,6 +55,7 @@ class Organization(MPTTModel, Publishable):
     parent = TreeForeignKey('self', null=True, blank=True,
                             verbose_name='parent organization',
                             related_name='children', db_index=True)
+    # REVIEW: Shoulf staff_size be an IntegerRangeField?
     staff_size = models.PositiveSmallIntegerField("Staff/Personnel count",
                                                   blank=True, null=True)
     mission = MarkdownField("Mandate/Mission Statement", blank=True)
@@ -102,6 +103,7 @@ class FinancingOrganization(Organization):
     # Financials
     approved_capital = models.DecimalField(blank=True, null=True,
                                            max_digits=17, decimal_places=2)
+    # FIXME: credit_rating should be pairs of agency, raging values
     credit_rating = models.CharField(blank=True, max_length=100)
     shareholder_organizations = models.ManyToManyField('Organization',
                                                        related_name='holds_shares_of',
@@ -159,7 +161,8 @@ class NGO(Organization):
     members = models.ManyToManyField('Organization',
                                      related_name='ngo_memberships',
                                      through='NGOMemberRelation')
-    # geographic_scope = ???
+    geographic_scope = models.ForeignKey('locations.Region',
+                                         models.SET_NULL, blank=True, null=True)
     endowment = models.DecimalField(blank=True, null=True,
                                     max_digits=17, decimal_places=2)
     org_type = models.ForeignKey('NGOType',
