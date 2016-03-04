@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 from facts.models.people import (Person, Position)
 from facts.admin.events import AttendanceInline
+from locations.fields import CountryMultipleChoiceField
 
 
 class PositionInline(admin.TabularInline):
@@ -13,7 +14,7 @@ class PersonInitiativeInline(admin.TabularInline):
 
 
 class PersonForm(forms.ModelForm):
-    # citizenships = forms.TypedMultipleChoiceField(coerce=int, empty_value=None, required=False, choices=COUNTRY_CHOICES)
+    citizenships = CountryMultipleChoiceField()
 
     class Meta:
         model = Person

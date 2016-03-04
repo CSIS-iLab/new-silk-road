@@ -8,6 +8,7 @@ class Event(Publishable):
     """Describes an event, one which may have a start and end date"""
     name = models.CharField(max_length=100)
     description = MarkdownField(blank=True)
+    # TODO: Maybe switch from start_date and end_date to a daterangefield?
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     places = models.ManyToManyField('locations.Place', blank=True)

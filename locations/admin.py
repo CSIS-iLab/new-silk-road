@@ -1,11 +1,11 @@
 from django.contrib.gis import admin
 from django import forms
 from .models import Region, Place, GeoPoint, GeoRegion
-from .fields import CountryChoiceField
+from .fields import CountryMultipleChoiceField
 
 
 class RegionForm(forms.ModelForm):
-    countries = CountryChoiceField(required=False)
+    countries = CountryMultipleChoiceField(required=False)
 
     class Meta:
         model = Region
