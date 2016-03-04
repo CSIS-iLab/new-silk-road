@@ -7,4 +7,4 @@ class CountryChoiceField(forms.TypedMultipleChoiceField):
         kwargs['coerce'] = int
         kwargs['empty_value'] = None
         kwargs['choices'] = COUNTRY_CHOICES
-        super(CountryChoiceField, self).__init__(*args, )
+        super(CountryChoiceField, self).__init__(*args, **kwargs)
