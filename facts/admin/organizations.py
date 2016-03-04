@@ -1,4 +1,5 @@
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
 from facts.models import (
     # Organizations
     Company, FinancingOrganization, Government,
@@ -44,7 +45,7 @@ class PoliticalInline(admin.TabularInline):
     fk_name = 'right'
 
 
-class OrganizationAdmin(admin.ModelAdmin):
+class OrganizationAdmin(MPTTModelAdmin):
     save_on_top = True
     search_fields = ['name']
     inlines = [
