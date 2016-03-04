@@ -1,9 +1,6 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 from facts.models import (
-    # Organizations
-    Company, FinancingOrganization, Government,
-    Military, Multilateral, NGO, Political,
     # Relations
     CompanyRelation, FinancingRelation, GovernmentRelation,
     MilitaryRelation, MultilateralRelation, NGORelation, PoliticalRelation
