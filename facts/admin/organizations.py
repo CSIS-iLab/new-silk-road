@@ -61,6 +61,7 @@ class PoliticalInline(admin.TabularInline):
 class OrganizationAdmin(MPTTModelAdmin):
     save_on_top = True
     search_fields = ['name']
+    list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size')
     inlines = [
         CompanyInline, FinancingInline, GovernmentInline,
         MilitaryInline, MultilateralInline, NGOInline, PoliticalInline
