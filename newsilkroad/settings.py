@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'filer',
     'mptt',
+    'leaflet',
 
     'markymark',
     'taggit',
@@ -144,3 +145,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MARKYMARK_EXTENSIONS = [
     'markymark.extensions.contrib.filer',
 ]
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (31.5975071,97.173225),
+    'DEFAULT_ZOOM': 4,
+}

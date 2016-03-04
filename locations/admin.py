@@ -2,6 +2,7 @@ from django.contrib.gis import admin
 from django import forms
 from .models import Region, Place, GeoPoint, GeoRegion
 from .fields import CountryMultipleChoiceField
+from leaflet.admin import LeafletGeoAdmin
 
 
 class RegionForm(forms.ModelForm):
@@ -12,11 +13,11 @@ class RegionForm(forms.ModelForm):
         fields = '__all__'
 
 
-class RegionAdmin(admin.OSMGeoAdmin):
+class RegionAdmin(LeafletGeoAdmin):
     form = RegionForm
 
 
-admin.site.register(GeoPoint, admin.OSMGeoAdmin)
-admin.site.register(GeoRegion, admin.OSMGeoAdmin)
-admin.site.register(Place, admin.OSMGeoAdmin)
+admin.site.register(GeoPoint, LeafletGeoAdmin)
+admin.site.register(GeoRegion, LeafletGeoAdmin)
+admin.site.register(Place, LeafletGeoAdmin)
 admin.site.register(Region, RegionAdmin)
