@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 
@@ -14,12 +15,15 @@ class CountryField(models.PositiveSmallIntegerField):
         super(CountryField, self).__init__(*args, **kwargs)
 
 
-class Marker(models.Model):
-    """Marks a point on a map"""
+class GeoPoint(models.Model):
+    """Marks a location on a map"""
     label = models.CharField(max_length=100)
     lon = models.FloatField(blank=True, help_text="Defines a geographic longitude")
     lat = models.FloatField(blank=True, help_text="Defines a geographic latitude")
-    point = models.PointField(blank=True)
+    point = models.PointField(blank=True, geography=True)
+
+    class Meta:
+        verbose_name = "Geographic Point"
 
     def _set_location_fields(self):
         if (self.lat and self.lon):
@@ -38,15 +42,31 @@ class Marker(models.Model):
             self._set_location_fields()
         except ValidationError:
             raise Exception('No location data set, unable to save.')
-        super(Marker, self).save(*args, **kwargs)
+        super(GeoPoint, self).save(*args, **kwargs)
 
     def __str__(self):
         return "Marker for '{}'".format(self.label)
 
 
+class GeoRegion(models.Model):
+    """A mappable geographic region"""
+    label = models.CharField(max_length=100)
+    shape = models.MultiPolygonField(geography=True)
+
+    class Meta:
+        verbose_name = "Geographic Region"
+
+    def __str__(self):
+        return self.label
+
+
 class Region(models.Model):
-    """A human-described geograhic region"""
+    """A human-described region of geography or countries"""
     name = models.CharField(max_length=100)
+    geography = models.ForeignKey('GeoRegion', null=True)
+    countries = ArrayField(
+        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
+        blank=True, null=True, default=list)
 
     def __str__(self):
         return self.name
@@ -57,7 +77,8 @@ class Place(models.Model):
     label = models.CharField(max_length=100)
     city = models.CharField(blank=True, max_length=100)
     country = CountryField()
-    position = models.ForeignKey('Marker', blank=True, null=True)
+    location = models.ForeignKey('GeoPoint', blank=True, null=True,
+                                 verbose_name="geographic location")
 
     def __str__(self):
         return self.label

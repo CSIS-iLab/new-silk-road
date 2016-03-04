@@ -1,12 +1,8 @@
 from django.contrib.gis import admin
-from .models import Region, Place, Marker
+from .models import Region, Place, GeoPoint, GeoRegion
 
 
-class MarkerAdmin(admin.OSMGeoAdmin):
-    model = Marker
-
-
-# Locations
-admin.site.register(Marker, MarkerAdmin)
+admin.site.register(GeoPoint, admin.OSMGeoAdmin)
+admin.site.register(GeoRegion, admin.OSMGeoAdmin)
 admin.site.register(Place, admin.OSMGeoAdmin)
 admin.site.register(Region, admin.OSMGeoAdmin)
