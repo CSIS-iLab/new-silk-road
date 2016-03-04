@@ -12,5 +12,5 @@ from .organizations import (
     MilitaryRelation, MultilateralRelation, NGORelation, PoliticalRelation,
 )
 from .infrastructure import (Project, InfrastructureType, Initiative, InitiativeType)
-from .people import (Person, Position)
+from .people import (Person, Position, Shareholder)
 from .events import Event

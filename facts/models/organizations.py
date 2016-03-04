@@ -53,6 +53,7 @@ class Organization(MPTTModel, Publishable):
     founding_date = models.DateField(blank=True, null=True)
     dissolution_date = models.DateField(blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True,
+                            verbose_name='parent organization',
                             related_name='children', db_index=True)
     staff_size = models.PositiveSmallIntegerField("Staff/Personel count",
                                                   blank=True, null=True)
@@ -102,7 +103,7 @@ class FinancingOrganization(Organization):
     approved_capital = models.DecimalField(blank=True, null=True,
                                            max_digits=17, decimal_places=2)
     credit_rating = models.CharField(blank=True, max_length=100)
-    # shareholders = ???
+    shareholders = models.ManyToManyField('Shareholder', blank=True)
     scope_of_operations = models.CharField(blank=True, max_length=100)
     procurement = models.CharField(blank=True, max_length=100)
     org_type = models.ForeignKey('FinancingType',
