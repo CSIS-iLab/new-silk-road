@@ -49,6 +49,7 @@ class Organization(MPTTModel, Publishable):
     initiatives = models.ManyToManyField('Initiative', blank=True)
     headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
+    related_events = models.ManyToManyField('Event', blank=True)
     founding_date = models.DateField(blank=True, null=True)
     dissolution_date = models.DateField(blank=True, null=True)
     parent = TreeForeignKey('self', null=True, blank=True,
@@ -126,7 +127,6 @@ class Military(Organization):
     ruling_party = models.BooleanField(default=True)
     budget = models.DecimalField(blank=True, null=True,
                                  max_digits=17, decimal_places=2)
-    related_events = models.ManyToManyField('Event', blank=True)
     related_organizations = models.ManyToManyField('Organization',
                                                    related_name='related_militaries',
                                                    through='MilitaryRelation')
@@ -137,7 +137,9 @@ class Military(Organization):
 
 class Multilateral(Organization):
     """Describes a multilateral organization"""
-    # members = ???
+    members = models.ManyToManyField('Organization',
+                                     related_name='multilateral_memberships',
+                                     through='MultilateralMemberRelation')
     org_type = models.ForeignKey('MultilateralType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
@@ -148,8 +150,9 @@ class Multilateral(Organization):
 
 class NGO(Organization):
     """Describes an NGO (Non-governmental Organization)"""
-    related_events = models.ManyToManyField('Event', blank=True)
-    # members = ???
+    members = models.ManyToManyField('Organization',
+                                     related_name='ngo_memberships',
+                                     through='NGOMemberRelation')
     # geographic_scope = ???
     endowment = models.DecimalField(blank=True, null=True,
                                     max_digits=17, decimal_places=2)
@@ -231,5 +234,17 @@ class NGORelation(OrganizationRelationBase):
 
 class PoliticalRelation(OrganizationRelationBase):
     left = models.ForeignKey('Political',
+                             verbose_name="from", on_delete=models.CASCADE,
+                             related_name='+')
+
+
+class NGOMemberRelation(OrganizationRelationBase):
+    left = models.ForeignKey('NGO',
+                             verbose_name="from", on_delete=models.CASCADE,
+                             related_name='+')
+
+
+class MultilateralMemberRelation(OrganizationRelationBase):
+    left = models.ForeignKey('Multilateral',
                              verbose_name="from", on_delete=models.CASCADE,
                              related_name='+')
