@@ -63,7 +63,7 @@ class GeoRegion(models.Model):
 class Region(models.Model):
     """A human-described region of geography or countries"""
     name = models.CharField(max_length=100)
-    geography = models.ForeignKey('GeoRegion', null=True)
+    geography = models.ForeignKey('GeoRegion', blank=True, null=True)
     countries = ArrayField(
         models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
         blank=True, null=True, default=list)
