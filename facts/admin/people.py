@@ -1,16 +1,7 @@
 from django.contrib import admin
 from django import forms
-from facts.models.people import (Person, Position, Shareholder)
+from facts.models.people import (Person, Position)
 from facts.admin.events import AttendanceInline
-from facts.fields import PercentageField
-
-
-class ShareholderAdmin(admin.ModelAdmin):
-    value = PercentageField()
-
-
-class ShareholderInline(admin.TabularInline):
-    model = Shareholder
 
 
 class PositionInline(admin.TabularInline):

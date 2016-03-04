@@ -103,7 +103,12 @@ class FinancingOrganization(Organization):
     approved_capital = models.DecimalField(blank=True, null=True,
                                            max_digits=17, decimal_places=2)
     credit_rating = models.CharField(blank=True, max_length=100)
-    shareholders = models.ManyToManyField('Shareholder', blank=True)
+    shareholder_organizations = models.ManyToManyField('Organization',
+                                                       related_name='holds_shares_of',
+                                                       through='OrganizationShareholder')
+    shareholder_people = models.ManyToManyField('Person',
+                                                related_name='holds_shares_of',
+                                                through='PersonShareholder')
     scope_of_operations = models.CharField(blank=True, max_length=100)
     procurement = models.CharField(blank=True, max_length=100)
     org_type = models.ForeignKey('FinancingType',
@@ -184,6 +189,36 @@ class Political(Organization):
     class Meta:
         verbose_name = "political entity"
         verbose_name_plural = "political entities"
+
+
+# Shareholders
+
+class ShareholderBase(models.Model):
+    right = models.ForeignKey('FinancingOrganization',
+                              verbose_name="to", on_delete=models.CASCADE,
+                              related_name='+')
+    value = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        abstract = True
+
+
+class OrganizationShareholder(ShareholderBase):
+    left = models.ForeignKey('Organization',
+                             verbose_name="from", on_delete=models.CASCADE,
+                             related_name='+')
+
+    def __str__(self):
+        return "{}: {}%".format(self.left, self.value)
+
+
+class PersonShareholder(ShareholderBase):
+    left = models.ForeignKey('Person',
+                             verbose_name="from", on_delete=models.CASCADE,
+                             related_name='+')
+
+    def __str__(self):
+        return "{}: {}%".format(self.left, self.value)
 
 
 #  Relations

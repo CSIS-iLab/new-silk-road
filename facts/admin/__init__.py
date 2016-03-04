@@ -14,7 +14,7 @@ from facts.models import (
 from .people import PersonAdmin
 from .events import EventAdmin
 from .infrastructure import ProjectAdmin
-from .organizations import OrganizationAdmin
+from .organizations import OrganizationAdmin, FinancingOrganizationAdmin
 
 # People
 admin.site.register(Person, PersonAdmin)
@@ -30,7 +30,7 @@ admin.site.register(InitiativeType)
 admin.site.register(Company, OrganizationAdmin)
 admin.site.register(CompanyType)
 admin.site.register(CompanyStructure)
-admin.site.register(FinancingOrganization, OrganizationAdmin)
+admin.site.register(FinancingOrganization, FinancingOrganizationAdmin)
 admin.site.register(FinancingType)
 admin.site.register(Government, OrganizationAdmin)
 admin.site.register(Military, OrganizationAdmin)

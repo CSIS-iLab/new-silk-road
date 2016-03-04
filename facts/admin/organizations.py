@@ -3,8 +3,24 @@ from mptt.admin import MPTTModelAdmin
 from facts.models import (
     # Relations
     CompanyRelation, FinancingRelation, GovernmentRelation,
-    MilitaryRelation, MultilateralRelation, NGORelation, PoliticalRelation
+    MilitaryRelation, MultilateralRelation, NGORelation, PoliticalRelation,
+    # shareholders
+    FinancingOrganization,
 )
+from facts.fields import PercentageField
+
+
+class ShareholderAdmin(admin.ModelAdmin):
+    value = PercentageField()
+
+
+class OrganizationShareholderInline(admin.TabularInline):
+    model = FinancingOrganization.shareholder_organizations.through
+    fk_name = 'right'
+
+
+class PersonShareholderInline(admin.TabularInline):
+    model = FinancingOrganization.shareholder_people.through
 
 
 class CompanyInline(admin.TabularInline):
@@ -49,3 +65,8 @@ class OrganizationAdmin(MPTTModelAdmin):
         CompanyInline, FinancingInline, GovernmentInline,
         MilitaryInline, MultilateralInline, NGOInline, PoliticalInline
     ]
+
+
+class FinancingOrganizationAdmin(OrganizationAdmin):
+    shareholder_inlines = [OrganizationShareholderInline, PersonShareholderInline]
+    inlines = shareholder_inlines + OrganizationAdmin.inlines

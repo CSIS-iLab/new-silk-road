@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from facts.models.organizations import ShareholderBase
 from locations.models import COUNTRY_CHOICES, countries
 from markymark.fields import MarkdownField
 from publish.models import Publishable
@@ -54,11 +55,3 @@ class Position(models.Model):
 
     def __str__(self):
         return "{}, affiliated with {}".format(self.person, self.organization)
-
-
-class Shareholder(models.Model):
-    person = models.ForeignKey('Person')
-    value = models.DecimalField(max_digits=5, decimal_places=2)
-
-    def __str__(self):
-        return "{}: {}%".format(self.person, self.value)

@@ -10,7 +10,9 @@ from .organizations import (
     # Organization Relations
     CompanyRelation, FinancingRelation, GovernmentRelation,
     MilitaryRelation, MultilateralRelation, NGORelation, PoliticalRelation,
+
+    OrganizationShareholder, PersonShareholder,
 )
 from .infrastructure import (Project, InfrastructureType, Initiative, InitiativeType)
-from .people import (Person, Position, Shareholder)
+from .people import (Person, Position)
 from .events import Event
