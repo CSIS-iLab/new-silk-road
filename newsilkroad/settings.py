@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'leaflet',
 
     'markymark',
-    'taggit',
 
+    'sources',
     'facts',
     'locations',
 
