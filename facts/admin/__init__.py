@@ -1,4 +1,6 @@
 from django.contrib import admin
+from filer.admin.fileadmin import FileAdmin
+
 from facts.models import (
     Person, Position,
     Project, Initiative, InitiativeType, InfrastructureType,
@@ -10,7 +12,6 @@ from facts.models import (
     FinancingType, CompanyType, MultilateralType,
     NGOType, PoliticalType, CompanyStructure,
 )
-# from .organizations import (CompanyAdmin)
 from .people import PersonAdmin
 from .events import EventAdmin
 from .infrastructure import ProjectAdmin

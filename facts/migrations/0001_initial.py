@@ -9,7 +9,6 @@ import django.db.models.manager
 import locations.models
 import markymark.fields
 import mptt.fields
-import taggit.managers
 
 
 class Migration(migrations.Migration):
@@ -17,7 +16,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('taggit', '0002_auto_20150616_2121'),
         ('locations', '0001_initial'),
     ]
 
@@ -68,7 +66,6 @@ class Migration(migrations.Migration):
                 ('start_date', models.DateField(blank=True, null=True)),
                 ('end_date', models.DateField(blank=True, null=True)),
                 ('places', models.ManyToManyField(blank=True, to='locations.Place')),
-                ('tags', taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
             ],
             options={
                 'abstract': False,

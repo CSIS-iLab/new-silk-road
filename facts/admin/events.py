@@ -7,6 +7,18 @@ class AttendanceInline(admin.TabularInline):
 
 
 class EventAdmin(admin.ModelAdmin):
+    save_on_top = True
     inlines = (
         AttendanceInline,
+    )
+    fieldsets = (
+        (None, {
+            'fields': ('name', ('start_date', 'end_date'),)
+        }),
+        (None, {
+            'fields': ('description',)
+        }),
+        (None, {
+            'fields': ('documents', 'places')
+        }),
     )
