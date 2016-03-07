@@ -10,10 +10,16 @@ class PublicationManager(models.Manager):
         return self.get_queryset().filter(published=False)
 
 
-class Publishable(models.Model):
-    published = models.BooleanField(default=False)
+class Temporal(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Publishable(Temporal):
+    published = models.BooleanField(default=False)
 
     objects = PublicationManager()
 
