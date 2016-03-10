@@ -200,7 +200,7 @@ class ShareholderBase(models.Model):
     right = models.ForeignKey('FinancingOrganization',
                               verbose_name="to", on_delete=models.CASCADE,
                               related_name='+')
-    value = models.DecimalField(max_digits=5, decimal_places=2)
+    value = models.DecimalField('% Share', max_digits=5, decimal_places=2)
 
     class Meta:
         abstract = True

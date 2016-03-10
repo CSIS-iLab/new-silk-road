@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django import forms
 from facts.models.people import (Person, Position)
-from facts.admin.events import AttendanceInline
+from facts.admin.events import PersonEventInline
+from facts.admin.organizations import PersonShareholderInline
 from locations.fields import CountryMultipleChoiceField
 
 
@@ -26,8 +27,9 @@ class PersonAdmin(admin.ModelAdmin):
     list_filter = ('family_name',)
     inlines = (
         PositionInline,
-        AttendanceInline,
-        PersonInitiativeInline
+        PersonEventInline,
+        PersonInitiativeInline,
+        PersonShareholderInline
     )
     form = PersonForm
     fieldsets = (

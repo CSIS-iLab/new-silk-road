@@ -1,15 +1,21 @@
 from django.contrib import admin
-from facts.models.people import Person
+from facts.models import Person
+from facts.models.organizations import Organization
 
 
-class AttendanceInline(admin.TabularInline):
+class PersonEventInline(admin.TabularInline):
     model = Person.events.through
+
+
+class OrganizationEventInline(admin.TabularInline):
+    model = Organization.related_events.through
 
 
 class EventAdmin(admin.ModelAdmin):
     save_on_top = True
     inlines = (
-        AttendanceInline,
+        PersonEventInline,
+        OrganizationEventInline
     )
     fieldsets = (
         (None, {
