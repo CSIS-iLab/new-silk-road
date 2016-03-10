@@ -17,6 +17,7 @@ class EventAdmin(admin.ModelAdmin):
         PersonEventInline,
         OrganizationEventInline
     )
+    list_display = ('name', 'start_date', 'end_date')
     fieldsets = (
         (None, {
             'fields': ('name', ('start_date', 'end_date'),)

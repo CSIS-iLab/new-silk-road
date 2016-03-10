@@ -15,3 +15,5 @@ class ProjectForm(forms.ModelForm):
 
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
+    list_display = ('title', 'status', 'infrastructure_type')
+    list_filter = ('infrastructure_type',)
