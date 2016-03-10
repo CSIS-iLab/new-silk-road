@@ -72,9 +72,15 @@ class Initiative(Publishable):
     founding_date = models.DateField('Founding/Signing Date', blank=True, null=True)
     affiliated_organizations = models.ManyToManyField('Organization', blank=True)
     affiliated_events = models.ManyToManyField('Event', blank=True)
-    # TODO: Figure out countries (members vs geographic scope)
-    # member_countries = ???
-    # geographic_scope = ???
+    member_countries = ArrayField(
+        CountryField(),
+        blank=True,
+        null=True,
+        default=list
+    )
+    geographic_scope = models.ForeignKey('locations.Region',
+                                         on_delete=models.SET_NULL,
+                                         blank=True, null=True)
 
     def __str__(self):
         return self.name

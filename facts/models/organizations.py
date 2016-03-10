@@ -55,7 +55,6 @@ class Organization(MPTTModel, Publishable):
     parent = TreeForeignKey('self', null=True, blank=True,
                             verbose_name='parent organization',
                             related_name='children', db_index=True)
-    # REVIEW: Shoulf staff_size be an IntegerRangeField?
     staff_size = models.PositiveSmallIntegerField("Staff/Personnel count",
                                                   blank=True, null=True)
     mission = MarkdownField("Mandate/Mission Statement", blank=True)
