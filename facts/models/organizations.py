@@ -4,6 +4,9 @@ from publish.models import Publishable
 from markymark.fields import MarkdownField
 from mptt.models import MPTTModel, TreeForeignKey
 from locations.models import COUNTRY_CHOICES
+from finance.credit import (MOODYS_LONG_TERM,
+                            STANDARD_POORS_LONG_TERM,
+                            FITCH_LONG_TERM)
 
 
 class OrganizationTypeBase(models.Model):
@@ -99,11 +102,23 @@ class Company(Organization):
 
 class FinancingOrganization(Organization):
     """Describes a financing organization"""
+
+    MOODYS_RATING_CHOICES = tuple(x for x in enumerate(MOODYS_LONG_TERM, start=1))
+    FITCH_RATING_CHOICES = tuple(x for x in enumerate(FITCH_LONG_TERM, start=101))
+    STANDARD_POORS_RATING_CHOICES = tuple(x for x in enumerate(STANDARD_POORS_LONG_TERM, start=201))
+
     # Financials
     approved_capital = models.DecimalField(blank=True, null=True,
                                            max_digits=17, decimal_places=2)
-    # FIXME: credit_rating should be pairs of agency, raging values
-    credit_rating = models.CharField(blank=True, max_length=100)
+    moodys_credit_rating = models.PositiveSmallIntegerField(
+        choices=MOODYS_RATING_CHOICES, blank=True, null=True
+    )
+    fitch_credit_rating = models.PositiveSmallIntegerField(
+        choices=FITCH_RATING_CHOICES, blank=True, null=True
+    )
+    sp_credit_rating = models.PositiveSmallIntegerField(
+        choices=STANDARD_POORS_RATING_CHOICES, blank=True, null=True
+    )
     shareholder_organizations = models.ManyToManyField('Organization',
                                                        related_name='holds_shares_of',
                                                        through='OrganizationShareholder')
@@ -118,6 +133,13 @@ class FinancingOrganization(Organization):
     related_organizations = models.ManyToManyField('Organization',
                                                    related_name='related_financers',
                                                    through='FinancingRelation')
+
+    def get_credit_ratings_display(self):
+        return (
+            self.get_moodys_credit_rating_display(),
+            self.get_fitch_credit_rating_display(),
+            self.get_sp_credit_rating_display()
+        )
 
 
 class Government(Organization):
