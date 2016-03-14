@@ -6,10 +6,19 @@ from infrastructure.models import (
     Initiative, InitiativeType,
 )
 from locations.fields import CountryMultipleChoiceField
+from publish.admin import TEMPORAL_FIELDS
 
 
 class PersonInitiativeInline(admin.TabularInline):
     model = Initiative.affiliated_people.through
+
+
+class InitiativeForm(forms.ModelForm):
+    member_countries = CountryMultipleChoiceField(required=False)
+
+    class Meta:
+        model = Initiative
+        fields = '__all__'
 
 
 class ProjectForm(forms.ModelForm):
@@ -21,12 +30,17 @@ class ProjectForm(forms.ModelForm):
 
 
 class ProjectAdmin(admin.ModelAdmin):
+    save_on_top = True
     form = ProjectForm
-    list_display = ('title', 'status', 'infrastructure_type')
+    list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
     list_filter = ('infrastructure_type',)
 
 
 class InitiativeAdmin(MPTTModelAdmin):
+    save_on_top = True
+    form = InitiativeForm
+    list_display = ('name', 'initiative_type',) + TEMPORAL_FIELDS
+
     class Meta:
         model = Initiative
 

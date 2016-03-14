@@ -8,6 +8,7 @@ from facts.models import (
     FinancingOrganization,
 )
 from facts.fields import PercentageField
+from publish.admin import TEMPORAL_FIELDS
 
 
 class ShareholderAdmin(admin.ModelAdmin):
@@ -62,7 +63,7 @@ class OrganizationAdmin(MPTTModelAdmin):
     save_on_top = True
     select_related = True
     search_fields = ['name']
-    list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size')
+    list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size') + TEMPORAL_FIELDS
     inlines = [
         CompanyInline, FinancingInline, GovernmentInline,
         MilitaryInline, MultilateralInline, NGOInline, PoliticalInline

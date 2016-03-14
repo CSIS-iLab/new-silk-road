@@ -1,6 +1,7 @@
 from django.contrib import admin
 from facts.models import Person
 from facts.models.organizations import Organization
+from publish.admin import TEMPORAL_FIELDS
 
 
 class PersonEventInline(admin.TabularInline):
@@ -17,7 +18,7 @@ class EventAdmin(admin.ModelAdmin):
         PersonEventInline,
         OrganizationEventInline
     )
-    list_display = ('name', 'start_date', 'end_date')
+    list_display = ('name', 'start_date', 'end_date') + TEMPORAL_FIELDS
     fieldsets = (
         (None, {
             'fields': ('name', ('start_date', 'end_date'),)
