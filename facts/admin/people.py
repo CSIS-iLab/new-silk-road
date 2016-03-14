@@ -20,6 +20,7 @@ class PersonForm(forms.ModelForm):
 
 
 class PersonAdmin(admin.ModelAdmin):
+    save_on_top = True
     list_display = ('__str__', 'family_name', 'given_name', 'citizenships_names', 'birth_date')
     list_filter = ('family_name',)
     inlines = (
@@ -35,10 +36,6 @@ class PersonAdmin(admin.ModelAdmin):
         }),
         (None, {
             'fields': ('citizenships', 'notes')
-        }),
-        ('Related', {
-            'classes': ('collapse',),
-            'fields': ('events',)
         }),
         ('Additional personal details', {
             'classes': ('collapse',),
