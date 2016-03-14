@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from publish.models import Publishable
+from mptt.models import MPTTModel, TreeForeignKey
 from locations.models import CountryField
 from markymark.fields import MarkdownField
 
@@ -43,8 +44,8 @@ class Project(Publishable):
     infrastructure_type = models.ForeignKey(InfrastructureType,
                                             models.SET_NULL, blank=True, null=True,
                                             help_text='Select or create named infrastructure types.')
-    funding_sources = models.ManyToManyField('Organization', related_name='funded_projects', blank=True)
-    client = models.ManyToManyField('Organization', help_text='Client or implementing agency', blank=True)
+    funding_sources = models.ManyToManyField('facts.Organization', related_name='funded_projects', blank=True)
+    client = models.ManyToManyField('facts.Organization', help_text='Client or implementing agency', blank=True)
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
@@ -64,19 +65,23 @@ class InitiativeType(models.Model):
         return self.name
 
 
-class Initiative(Publishable):
+class Initiative(MPTTModel, Publishable):
     """Describes an initiative"""
 
     name = models.CharField(max_length=140)
     initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
-    principal_agent = models.ForeignKey('Person', models.SET_NULL, blank=True, null=True)
-    parent_initiative = models.ForeignKey('self',
-                                          models.SET_NULL, blank=True, null=True,
-                                          related_name="sub_initiatives")
+    principal_agent = models.ForeignKey(
+        'facts.Person', models.SET_NULL, blank=True, null=True,
+        related_name='principal_initiatives',
+    )
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            verbose_name='parent initiative',
+                            related_name='children', db_index=True)
     founding_date = models.DateField('Founding/Signing Date', blank=True, null=True)
-    affiliated_organizations = models.ManyToManyField('Organization', blank=True)
-    affiliated_events = models.ManyToManyField('Event', blank=True)
+    affiliated_organizations = models.ManyToManyField('facts.Organization', blank=True)
+    affiliated_events = models.ManyToManyField('facts.Event', blank=True)
+    affiliated_people = models.ManyToManyField('facts.Person', blank=True)
     member_countries = ArrayField(
         CountryField(),
         blank=True,

@@ -4,14 +4,11 @@ from facts.models.people import (Person, Position)
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
 from locations.fields import CountryMultipleChoiceField
+from infrastructure.admin import PersonInitiativeInline
 
 
 class PositionInline(admin.TabularInline):
     model = Position
-
-
-class PersonInitiativeInline(admin.TabularInline):
-    model = Person.initiatives.through
 
 
 class PersonForm(forms.ModelForm):

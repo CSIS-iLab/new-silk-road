@@ -49,7 +49,7 @@ class Organization(MPTTModel, Publishable):
     name = models.CharField(max_length=100)
     leaders = models.ManyToManyField('Person', blank=True,
                                      related_name='organizations_led')
-    initiatives = models.ManyToManyField('Initiative', blank=True)
+    initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
     headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
     related_events = models.ManyToManyField('Event', blank=True)

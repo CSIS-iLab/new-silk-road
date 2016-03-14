@@ -13,9 +13,5 @@ from .organizations import (
 
     OrganizationShareholder, PersonShareholder,
 )
-from .infrastructure import (
-    Project, ProjectDocument, InfrastructureType,
-    Initiative, InitiativeType
-)
 from .people import (Person, Position)
 from .events import Event

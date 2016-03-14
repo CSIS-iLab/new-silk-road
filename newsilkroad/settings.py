@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'sources',
     'facts',
     'locations',
-
+    'infrastructure',
 ]
 
 if DEBUG:
@@ -147,6 +147,6 @@ MARKYMARK_EXTENSIONS = [
 ]
 
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER': (31.5975071,97.173225),
+    'DEFAULT_CENTER': (31.5975071, 97.173225),
     'DEFAULT_ZOOM': 4,
 }

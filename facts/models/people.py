@@ -27,7 +27,6 @@ class Person(Publishable):
 
     # Relations
     events = models.ManyToManyField('Event', blank=True)
-    initiatives = models.ManyToManyField('Initiative', blank=True)
 
     class Meta:
         verbose_name_plural = 'people'
