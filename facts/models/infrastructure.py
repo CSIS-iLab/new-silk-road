@@ -13,22 +13,24 @@ class InfrastructureType(models.Model):
         return self.name
 
 
+class ProjectStatus:
+    ANNOUNCED = 1
+    PREPATORY = 2
+    STARTED = 3
+    UNDER_CONSTRUCTION = 4
+    COMPLETED = 5
+
+    STATUSES = (
+        (ANNOUNCED, 'Announced/Under Negotiation'),
+        (PREPATORY, 'Preparatory Works'),
+        (STARTED, 'Started'),
+        (UNDER_CONSTRUCTION, 'Under Construction'),
+        (COMPLETED, 'Completed')
+    )
+
+
 class Project(Publishable):
     """Describes a project"""
-
-    STATUS_ANNOUNCED = 1
-    STATUS_PREPATORY = 2
-    STATUS_STARTED = 3
-    STATUS_UNDER_CONSTRUCTION = 4
-    STATUS_COMPLETED = 5
-
-    PROJECT_STATUSES = (
-        (STATUS_ANNOUNCED, 'Announced/Under Negotiation'),
-        (STATUS_PREPATORY, 'Preparatory Works'),
-        (STATUS_STARTED, 'Started'),
-        (STATUS_UNDER_CONSTRUCTION, 'Under Construction'),
-        (STATUS_COMPLETED, 'Completed')
-    )
 
     title = models.CharField(max_length=100)
     countries = ArrayField(
@@ -43,9 +45,12 @@ class Project(Publishable):
                                             help_text='Select or create named infrastructure types.')
     funding_sources = models.ManyToManyField('Organization', related_name='funded_projects', blank=True)
     client = models.ManyToManyField('Organization', help_text='Client or implementing agency', blank=True)
-    status = models.PositiveSmallIntegerField(blank=True, null=True,
-                                              choices=PROJECT_STATUSES, default=STATUS_ANNOUNCED)
+    status = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
+    )
     initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
+    documents = models.ManyToManyField('ProjectDocument', blank=True)
 
     def __str__(self):
         return self.title
@@ -86,6 +91,10 @@ class Initiative(Publishable):
         return self.name
 
 
-class ProjectDocuments(models.Model):
-    pass
-    # Need structure for project's documents
+class ProjectDocument(models.Model):
+    document = models.ForeignKey('sources.Document')
+    notes = MarkdownField(blank=True)
+    status_indicator = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectStatus.STATUSES
+    )

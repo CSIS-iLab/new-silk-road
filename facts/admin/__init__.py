@@ -3,7 +3,8 @@ from filer.admin.fileadmin import FileAdmin
 
 from facts.models import (
     Person, Position,
-    Project, Initiative, InitiativeType, InfrastructureType,
+    Project, ProjectDocument, InfrastructureType,
+    Initiative, InitiativeType,
     Event,
     # Organizations
     Company, FinancingOrganization, Government,
@@ -25,6 +26,7 @@ admin.site.register(Event, EventAdmin)
 # Infrastructure
 admin.site.register(InfrastructureType)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(ProjectDocument)
 admin.site.register(Initiative)
 admin.site.register(InitiativeType)
 # Organizations
