@@ -33,7 +33,7 @@ class ProjectStatus:
 class Project(Publishable):
     """Describes a project"""
 
-    title = models.CharField(max_length=100)
+    name = models.CharField("Project name/title", max_length=100)
     countries = ArrayField(
         CountryField(),
         blank=True,
@@ -54,7 +54,7 @@ class Project(Publishable):
     documents = models.ManyToManyField('ProjectDocument', blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class InitiativeType(models.Model):
