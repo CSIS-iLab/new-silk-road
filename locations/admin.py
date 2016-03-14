@@ -1,6 +1,6 @@
 from django.contrib.gis import admin
 from django import forms
-from .models import Region, Place, GeoPoint, GeoRegion
+from .models import Region, Place, GeoPoint, GeoRegion, GeoCollection
 from .fields import CountryMultipleChoiceField
 from leaflet.admin import LeafletGeoAdmin
 
@@ -37,7 +37,12 @@ class GeoPointAdmin(LeafletGeoAdmin):
     save_on_top = True
 
 
+class GeoCollectionAdmin(LeafletGeoAdmin):
+    model = GeoCollection
+    save_on_top = True
+
 admin.site.register(GeoPoint, GeoPointAdmin)
 admin.site.register(GeoRegion, GeoRegionAdmin)
+admin.site.register(GeoCollection, GeoCollectionAdmin)
 admin.site.register(Place, LeafletGeoAdmin)
 admin.site.register(Region, RegionAdmin)

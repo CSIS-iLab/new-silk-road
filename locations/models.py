@@ -60,6 +60,18 @@ class GeoRegion(models.Model):
         return self.label
 
 
+class GeoCollection(models.Model):
+    """A collection of mappable geometries (lines, polygons, points)"""
+    label = models.CharField(max_length=100)
+    collection = models.GeometryCollectionField(geography=True)
+
+    class Meta:
+        verbose_name = "Geographic Collection"
+
+    def __str__(self):
+        return self.label
+
+
 class Region(models.Model):
     """A human-described region of geography or countries"""
     name = models.CharField(max_length=100)
