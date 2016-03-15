@@ -156,3 +156,8 @@ LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (31.5975071, 97.173225),
     'DEFAULT_ZOOM': 4,
 }
+
+if DEBUG and os.getenv('DEBUG_STATIC', False):
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    STATIC_URL = '/%s/' % STATICFILES_LOCATION
+    MEDIA_URL = '/%s/' % MEDIAFILES_LOCATION
