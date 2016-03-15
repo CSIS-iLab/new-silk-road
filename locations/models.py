@@ -26,14 +26,10 @@ class GeoPoint(models.Model):
         verbose_name = "Geographic Point"
 
     def _set_location_fields(self):
-        # TODO: Move validation to admin form to check for value changes
         if (self.lat and self.lon):
             self.point = Point(self.lon, self.lat)
-        elif self.point:
-            self.lat = self.point.y
-            self.lon = self.point.x
         else:
-            raise ValidationError('Marker have a lat/lon or a point on the map.')
+            raise ValidationError('Marker have a lat/lon.')
 
     def clean(self, *args, **kwargs):
         self._set_location_fields()
