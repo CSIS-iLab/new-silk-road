@@ -131,11 +131,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'newsilkroad/static')
 ]
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Media aka uploads
 MEDIA_URL = '/media/'
