@@ -1,3 +1,4 @@
+boto==2.39.0
 Django>=1.9.1,<1.10
 dj_database_url
 django-extensions>=1.6,<2.0
