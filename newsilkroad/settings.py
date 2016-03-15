@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
 
     'django_extensions',
+    'storages',
 
     'easy_thumbnails',
     'filer',
@@ -129,16 +130,21 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', None)
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-STATIC_URL = '/static/'
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'newsilkroad.project_storages.StaticStorage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'newsilkroad/static')
 ]
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Media aka uploads
-MEDIA_URL = '/media/'
+MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+DEFAULT_FILE_STORAGE = 'newsilkroad.project_storages.MediaStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # markymark
