@@ -14,7 +14,11 @@ class PositionInline(admin.TabularInline):
 
 
 class PersonForm(forms.ModelForm):
-    citizenships = CountryMultipleChoiceField(required=False, widget=Select2MultipleWidget)
+    citizenships = CountryMultipleChoiceField(
+        required=False,
+        widget=Select2MultipleWidget,
+        help_text='Start typing to search for countries.'
+    )
 
     class Meta:
         model = Person
