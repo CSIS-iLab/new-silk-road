@@ -1,0 +1,9 @@
+.md-editor {
+    margin-left: 0;
+    width: auto;
+}
+.md-editor .md-preview p {
+    margin: inherit;
+    padding: inherit;
+    font-size: 14px;
+}
