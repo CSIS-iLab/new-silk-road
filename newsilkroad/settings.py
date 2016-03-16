@@ -29,11 +29,11 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'easy_thumbnails',
     'filer',
+    'suit',
     'mptt',
     'leaflet',
     'markymark',
     'django_select2',
-    'suit',
 
     'django.contrib.admin',
     'django.contrib.auth',
