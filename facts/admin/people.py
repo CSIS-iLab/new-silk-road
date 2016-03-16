@@ -12,7 +12,7 @@ class PositionInline(admin.TabularInline):
 
 
 class PersonForm(forms.ModelForm):
-    citizenships = CountryMultipleChoiceField()
+    citizenships = CountryMultipleChoiceField(required=False)
 
     class Meta:
         model = Person
