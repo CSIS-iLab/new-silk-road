@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django import forms
+from django_select2.forms import Select2MultipleWidget
+
 from facts.models.people import (Person, Position)
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
@@ -12,7 +14,7 @@ class PositionInline(admin.TabularInline):
 
 
 class PersonForm(forms.ModelForm):
-    citizenships = CountryMultipleChoiceField(required=False)
+    citizenships = CountryMultipleChoiceField(required=False, widget=Select2MultipleWidget)
 
     class Meta:
         model = Person
