@@ -27,8 +27,14 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'suit',
+    'easy_thumbnails',
+    'filer',
+    'mptt',
+    'leaflet',
+    'markymark',
     'django_select2',
+    'suit',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,13 +45,6 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'storages',
-
-    'easy_thumbnails',
-    'filer',
-    'mptt',
-    'leaflet',
-
-    'markymark',
 
     'sources',
     'facts',
