@@ -3,7 +3,6 @@ from django.contrib.gis import forms
 from .models import Region, Place, GeoPoint, GeoRegion, GeoCollection
 from .fields import CountryMultipleChoiceField
 from leaflet.admin import LeafletGeoAdmin
-from leaflet.forms.widgets import LeafletWidget
 
 
 class LocationGeoAdmin(LeafletGeoAdmin):
@@ -19,10 +18,12 @@ class RegionForm(forms.ModelForm):
         fields = '__all__'
 
 
+@admin.register(Region)
 class RegionAdmin(LocationGeoAdmin):
     form = RegionForm
 
 
+@admin.register(GeoRegion)
 class GeoRegionAdmin(LocationGeoAdmin):
     model = GeoRegion
     list_display = ('label', 'num_points', 'num_geom')
@@ -36,6 +37,7 @@ class GeoRegionAdmin(LocationGeoAdmin):
     num_geom.short_description = 'Number of Shapes'
 
 
+@admin.register(GeoPoint)
 class GeoPointAdmin(LocationGeoAdmin):
     model = GeoPoint
     list_display = ('label', 'lat', 'lon')
@@ -44,12 +46,9 @@ class GeoPointAdmin(LocationGeoAdmin):
     map_width = '80%'
 
 
+@admin.register(GeoCollection)
 class GeoCollectionAdmin(LocationGeoAdmin):
     model = GeoCollection
     save_on_top = True
 
-admin.site.register(GeoPoint, GeoPointAdmin)
-admin.site.register(GeoRegion, GeoRegionAdmin)
-admin.site.register(GeoCollection, GeoCollectionAdmin)
 admin.site.register(Place, LeafletGeoAdmin)
-admin.site.register(Region, RegionAdmin)

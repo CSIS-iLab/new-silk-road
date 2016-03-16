@@ -32,7 +32,7 @@ class ProjectStatus:
 
 class Project(Publishable):
     """Describes a project"""
-
+    # TODO: Make name field max_length 200+
     name = models.CharField("Project name/title", max_length=100)
     countries = ArrayField(
         CountryField(),
@@ -97,6 +97,7 @@ class Initiative(MPTTModel, Publishable):
 
 
 class ProjectDocument(models.Model):
+    # TODO: document types
     document = models.ForeignKey('sources.Document')
     notes = MarkdownField(blank=True)
     status_indicator = models.PositiveSmallIntegerField(
