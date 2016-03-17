@@ -7,6 +7,7 @@ from infrastructure.models import (
 )
 from locations.fields import CountryMultipleChoiceField
 from publish.admin import TEMPORAL_FIELDS
+from django_select2.forms import Select2MultipleWidget
 
 
 class PersonInitiativeInline(admin.TabularInline):
@@ -14,7 +15,11 @@ class PersonInitiativeInline(admin.TabularInline):
 
 
 class InitiativeForm(forms.ModelForm):
-    member_countries = CountryMultipleChoiceField(required=False)
+    member_countries = CountryMultipleChoiceField(
+        required=False,
+        widget=Select2MultipleWidget,
+        help_text='Start typing to search for countries.'
+    )
 
     class Meta:
         model = Initiative
@@ -22,11 +27,18 @@ class InitiativeForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-    countries = CountryMultipleChoiceField(required=False)
+    countries = CountryMultipleChoiceField(
+        required=False,
+        widget=Select2MultipleWidget,
+        help_text='Start typing to search for countries.'
+    )
 
     class Meta:
         model = Project
         fields = '__all__'
+        widgets = {
+            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'})
+        }
 
 
 class ProjectAdmin(admin.ModelAdmin):
