@@ -14,6 +14,21 @@ class InfrastructureType(models.Model):
         return self.name
 
 
+class ProjectFunding(models.Model):
+    """(ProjectFunder description)"""
+    source = models.ForeignKey('facts.FinancingOrganization')
+    project = models.ForeignKey('Project')
+    amount_description = models.CharField(
+        "Amount",
+        blank=True, max_length=100
+    )
+
+    def __str__(self):
+        return "{}: {}".format(
+            self.source.name, self.amount_description or None
+        )
+
+
 class ProjectStatus:
     ANNOUNCED = 1
     PREPATORY = 2
@@ -32,26 +47,90 @@ class ProjectStatus:
 
 class Project(Publishable):
     """Describes a project"""
-    # TODO: Make name field max_length 200+
-    name = models.CharField("Project name/title", max_length=100)
+    name = models.CharField("Project name/title", max_length=200)
     countries = ArrayField(
         CountryField(),
         blank=True,
         null=True,
         default=list
     )
-    regions = models.ManyToManyField('locations.Region', blank=True, help_text='Select or create geographic region names.')
-    infrastructure_type = models.ForeignKey(InfrastructureType,
-                                            models.SET_NULL, blank=True, null=True,
-                                            help_text='Select or create named infrastructure types.')
-    funding_sources = models.ManyToManyField('facts.Organization', related_name='funded_projects', blank=True)
-    client = models.ManyToManyField('facts.Organization', help_text='Client or implementing agency', blank=True)
+    regions = models.ManyToManyField(
+        'locations.Region',
+        blank=True,
+        help_text='Select or create geographic region names.'
+    )
+    infrastructure_type = models.ForeignKey(
+        InfrastructureType,
+        models.SET_NULL, blank=True, null=True,
+        help_text='Select or create named infrastructure types.'
+    )
+    total_cost_description = models.CharField(
+        'Total Project Cost',
+        blank=True, max_length=100
+    )
+    start_date = models.DateField(blank=True, null=True)
+    commencement_date = models.DateField(
+        'Date of commencement of works',
+        blank=True, null=True
+    )
+    planned_completion_date = models.DateField(
+        'Planned completion date',
+        blank=True, null=True
+    )
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
     )
     initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
+    sources = ArrayField(
+        models.URLField(),
+        blank=True,
+        null=True,
+        default=list,
+        verbose_name="Sources URLs",
+        help_text='Enter URLs separated by commas.'
+    )
+    notes = MarkdownField(blank=True)
+    # Organization relations
+    funding = models.ManyToManyField(
+        'facts.FinancingOrganization',
+        through='ProjectFunding',
+        related_name='projects_funded',
+        blank=True
+    )
+    contractors = models.ManyToManyField(
+        'facts.Organization',
+        verbose_name='Contractors',
+        related_name='projects_contracted',
+        blank=True
+    )
+    consultants = models.ManyToManyField(
+        'facts.Organization',
+        verbose_name='Consultants',
+        related_name='projects_consulted',
+        blank=True
+    )
+    implementers = models.ManyToManyField(
+        'facts.Organization',
+        verbose_name='Client or implementing agency/ies',
+        related_name='projects_implemented',
+        blank=True
+    )
+    operator = models.ForeignKey(
+        'facts.Organization',
+        models.SET_NULL,
+        related_name='projects_operated',
+        blank=True,
+        null=True
+    )
+    # Person relations
+    contacts = models.ManyToManyField(
+        'facts.Person',
+        verbose_name='Points of contact',
+        related_name='projects_contacts',
+        blank=True
+    )
 
     def __str__(self):
         return self.name
@@ -97,8 +176,53 @@ class Initiative(MPTTModel, Publishable):
 
 
 class ProjectDocument(models.Model):
-    # TODO: document types
-    document = models.ForeignKey('sources.Document')
+    DOCUMENT_TYPES = (
+        ('Public Materials', (
+            (1, 'Press Releases'),
+            (2, 'Presentations & Brochures'),
+            (3, 'National Development Plans'),
+        )),
+        ('Agreements/Contracts', (
+            (4, 'MoU'),
+            (5, 'Financing Agreements'),
+            (6, 'Procurement Contracts'),
+            (7, 'Other Agreements'),
+        )),
+        ('Operational Documents', (
+            (8, 'Concept Notes'),
+            (9, 'Review and Approval Documents'),
+            (10, 'Procurement Documents'),
+            (11, 'Appraisal Documents'),
+            (12, 'Administration Manuals'),
+            (13, 'Aide-Memoires'),
+            (14, 'Financial Audits'),
+        )),
+        ('Impact Assessment and Monitoring Reports', (
+            (15, 'Environmental and Social Assessment'),
+            (16, 'Resettlement Frameworks'),
+            (17, 'Safeguards Monitoring Reports'),
+            (18, 'Consultation Minutes'),
+        )),
+        ('Implementation Progress Reports', (
+            (19, 'Progress Reports'),
+            (20, 'Completion Reports'),
+        )),
+        ('Miscellaneous Reports', (
+            (21, 'Miscellaneous Reports'),
+        ))
+    )
+
+    document = models.ForeignKey(
+        'sources.Document',
+        models.SET_NULL,
+        blank=True,
+        null=True
+    )
+    document_type = models.PositiveSmallIntegerField(
+        'type',
+        choices=DOCUMENT_TYPES,
+        blank=True, null=True
+    )
     notes = MarkdownField(blank=True)
     status_indicator = models.PositiveSmallIntegerField(
         blank=True, null=True,
