@@ -117,6 +117,7 @@ class FinancingOrganization(Organization):
         choices=FITCH_RATING_CHOICES, blank=True, null=True
     )
     sp_credit_rating = models.PositiveSmallIntegerField(
+        "Standard & Poors Credit Rating",
         choices=STANDARD_POORS_RATING_CHOICES, blank=True, null=True
     )
     shareholder_organizations = models.ManyToManyField('Organization',
