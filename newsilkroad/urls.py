@@ -25,6 +25,7 @@ DEBUG = getattr(settings, 'DEBUG', False)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^admin-select2/', include('django_select2.urls')),
 ]
 
 if DEBUG:

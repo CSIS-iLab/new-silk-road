@@ -1,44 +1,21 @@
 from django.contrib import admin
-from django import forms
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
+    ProjectFunding,
     Initiative, InitiativeType,
 )
-from locations.fields import CountryMultipleChoiceField
 from publish.admin import TEMPORAL_FIELDS
-from django_select2.forms import Select2MultipleWidget
+from infrastructure.forms import InitiativeForm, ProjectForm, ProjectFundingForm
 
 
 class PersonInitiativeInline(admin.TabularInline):
     model = Initiative.affiliated_people.through
 
 
-class InitiativeForm(forms.ModelForm):
-    member_countries = CountryMultipleChoiceField(
-        required=False,
-        widget=Select2MultipleWidget,
-        help_text='Start typing to search for countries.'
-    )
-
-    class Meta:
-        model = Initiative
-        fields = '__all__'
-
-
-class ProjectForm(forms.ModelForm):
-    countries = CountryMultipleChoiceField(
-        required=False,
-        widget=Select2MultipleWidget,
-        help_text='Start typing to search for countries.'
-    )
-
-    class Meta:
-        model = Project
-        fields = '__all__'
-        widgets = {
-            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'})
-        }
+class ProjectFundingInline(admin.TabularInline):
+    model = ProjectFunding
+    form = ProjectFundingForm
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -46,6 +23,9 @@ class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
     list_filter = ('infrastructure_type',)
+    inlines = [
+        ProjectFundingInline
+    ]
 
 
 class InitiativeAdmin(MPTTModelAdmin):
