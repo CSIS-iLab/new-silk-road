@@ -31,7 +31,7 @@ class ProjectFunding(models.Model):
     )
 
     class Meta:
-        verbose_name_plural = 'Project Funders'
+        verbose_name_plural = 'project funders'
 
     def __str__(self):
         return "{}: {} {}".format(

@@ -18,6 +18,7 @@ class ProjectFundingInline(admin.TabularInline):
     form = ProjectFundingForm
 
 
+@admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
@@ -28,6 +29,7 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Initiative)
 class InitiativeAdmin(MPTTModelAdmin):
     save_on_top = True
     form = InitiativeForm
@@ -36,8 +38,23 @@ class InitiativeAdmin(MPTTModelAdmin):
     class Meta:
         model = Initiative
 
-admin.site.register(InfrastructureType)
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(ProjectDocument)
-admin.site.register(Initiative, InitiativeAdmin)
-admin.site.register(InitiativeType)
+
+@admin.register(InfrastructureType)
+class InfrastructureTypeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ProjectDocument)
+class ProjectDocumentAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(InitiativeType)
+class InitiativeTypeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(ProjectFunding)
+class ProjectFundingAdmin(admin.ModelAdmin):
+    list_display = ('source', 'project', 'amount', 'currency')
+    list_editable = ('source', 'project', 'amount', 'currency')
