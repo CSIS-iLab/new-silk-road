@@ -4,6 +4,7 @@ from publish.models import Publishable
 from mptt.models import MPTTModel, TreeForeignKey
 from locations.models import CountryField
 from markymark.fields import MarkdownField
+from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
 
 
 class InfrastructureType(models.Model):
@@ -18,14 +19,23 @@ class ProjectFunding(models.Model):
     """(ProjectFunder description)"""
     source = models.ForeignKey('facts.FinancingOrganization')
     project = models.ForeignKey('Project')
-    amount_description = models.CharField(
-        "Amount",
-        blank=True, max_length=100
+    amount = models.IntegerField(
+        blank=True, null=True,
+        help_text="Values in whole units (dollars, etc.)"
+    )
+    currency = models.CharField(
+        blank=True, null=True,
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default=DEFAULT_CURRENCY_CHOICE
     )
 
+    class Meta:
+        verbose_name_plural = 'Project Funders'
+
     def __str__(self):
-        return "{}: {}".format(
-            self.source.name, self.amount_description or None
+        return "{}: {} {}".format(
+            self.source.name, self.amount or None, self.currency
         )
 
 
