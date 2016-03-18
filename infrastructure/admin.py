@@ -15,7 +15,6 @@ class PersonInitiativeInline(admin.TabularInline):
 
 class ProjectFundingInline(admin.TabularInline):
     model = ProjectFunding
-    form = ProjectFundingForm
 
 
 @admin.register(Project)
@@ -56,5 +55,6 @@ class InitiativeTypeAdmin(admin.ModelAdmin):
 
 @admin.register(ProjectFunding)
 class ProjectFundingAdmin(admin.ModelAdmin):
+    form = ProjectFundingForm
     list_display = ('source', 'project', 'amount', 'currency')
     list_editable = ('source', 'project', 'amount', 'currency')

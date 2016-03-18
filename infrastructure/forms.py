@@ -71,5 +71,6 @@ class ProjectFundingForm(forms.ModelForm):
         model = ProjectFunding
         fields = '__all__'
         widgets = {
-            'source': TitleSearchWidget
+            'source': TitleSearchWidget,
+            'project': TitleSearchWidget
         }
