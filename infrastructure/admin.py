@@ -22,7 +22,7 @@ class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
-    list_filter = ('infrastructure_type',)
+    list_filter = ('status', 'infrastructure_type',)
     inlines = [
         ProjectFundingInline
     ]
