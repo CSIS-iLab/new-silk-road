@@ -1,27 +1,47 @@
-from infrastructure.models import ProjectStatus
 from .utils import (
     parse_date,
-    find_choice,
-    related_name,
+    choices_from_values,
+    values_list,
     make_url_list,
-    transform,
+    transform_attr,
 )
+from infrastructure.models import ProjectStatus
+from locations.models import COUNTRY_CHOICES
+
+
+def project_status_from_statuses(x):
+    values = values_list(x.get("project_status"), "project_status_name")
+    if values:
+        choices = list(choices_from_values(values, ProjectStatus.STATUSES))
+        if len(choices) > 0:
+            return choices[0]
+    return None
+
+
+def countries_from_country(x):
+    country_rename = {
+        'Vietnam': 'Viet Nam'
+    }
+    values = values_list(x.get("country"), "country_name")
+    values = list(country_rename.get(c, c) for c in country_rename)
+    if values:
+        return list(choices_from_values(values, COUNTRY_CHOICES))
+    return []
 
 
 PROJECT_MODEL_MAP = (
     ("name", lambda x: x.get("project_title")),
-    ("start_date", transform("project_start_date", parse_date)),
+    ("start_date", transform_attr("project_start_date", parse_date)),
     (None, "project_id"),
-    ("status", lambda x: find_choice(
-        related_name(x, "project_status", "project_status_name"),
-        ProjectStatus.STATUSES
-    )),
-    ("sources", transform("sources", make_url_list, default=[])),
-    ("notes", transform("notes", None, default="")),
-    ("commencement_date", transform("commencement_date", parse_date)),
-    ("total_cost_description", transform("total_project_cost_us", None, default="")),
-    ("planned_completion_date", transform("planned_date_of_completion", parse_date)),
+    ("status", project_status_from_statuses),
+    ("sources", transform_attr("sources", make_url_list)),
+    ("notes", lambda x: x.get("notes", "")),
+    ("commencement_date", transform_attr("commencement_date", parse_date)),
+    ("total_cost_description", lambda x: x.get("total_project_cost_us", "")),
+    ("planned_completion_date", transform_attr("planned_date_of_completion", parse_date)),
     (None, "new_reconstruction"),
+    ("countries", countries_from_country),
+
 )
 
 METADATA_FIELDS = {
@@ -32,7 +52,6 @@ METADATA_FIELDS = {
 }
 
 PROJECT_RELATIONAL_FIELDS = {
-    "country": ("countries", None),
     "program_initiative": ("initiative", None),
     "consultant": ("consultants", None),
     "operator": ("operator", None),

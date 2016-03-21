@@ -10,12 +10,9 @@ def parse_date(date_str, fmt='%Y-%m-%d'):
     return dt.date()
 
 
-def related_name(obj, relation_field, name_field):
-    rel_list = obj.get(relation_field, [])
-    if len(rel_list):
-        return rel_list[0].get(name_field, None)
-    else:
-        return None
+def values_list(l, field_name, default=None):
+    for i in l:
+        yield i.get(field_name, default)
 
 
 def find_choice(search_str, choices):
@@ -26,6 +23,11 @@ def find_choice(search_str, choices):
         return result[0]
     else:
         return None
+
+
+def choices_from_values(values, choices):
+    for v in values:
+        yield find_choice(v, choices)
 
 
 def object_for_model(app_label, model_name, data, create=True):
@@ -56,10 +58,10 @@ def make_url_list(list_str, sep=","):
         return None
 
 
-def transform(attr_name, func, default=None):
+def transform_attr(attr_name, func, *args, **kwargs):
     def inner_func(obj):
-        attr_val = obj.get(attr_name, default) if obj else default
+        attr_val = obj.get(attr_name, None) if obj else None
         if not func:
-            return attr_val or default
-        return func(attr_val) or default
+            return attr_val
+        return func(attr_val, *args, **kwargs)
     return inner_func
