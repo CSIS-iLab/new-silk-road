@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'facts',
     'locations',
     'infrastructure',
+
+    'fieldbook_importer',
 ]
 
 if DEBUG:
