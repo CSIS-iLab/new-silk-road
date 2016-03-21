@@ -4,7 +4,7 @@ import json
 
 from infrastructure.models import Project, ProjectStatus
 
-from fieldbook_importer.mappings import PROJECT_MODEL_MAP
+from fieldbook_importer.mappings import PROJECT_MODEL_MAP, PROJECT_RELATED_OBJECTS_MAP
 
 
 class Command(BaseCommand):
@@ -27,6 +27,7 @@ class Command(BaseCommand):
 
         for item in data:
             value_map = {key: func(item) for key, func in PROJECT_MODEL_MAP if key and callable(func)}
+            related_objects = {key: func(item) for key, func in PROJECT_RELATED_OBJECTS_MAP if key and callable(func)}
             if verbosity > 2:
                 self.stdout.write(repr(value_map))
             obj = create_project(**value_map)
@@ -39,3 +40,9 @@ class Command(BaseCommand):
                     err_count += 1
                     if err_count > Command.MAX_ERRORS:
                         raise CommandError("Too many errors, aborting")
+            else:
+                for key, rel_obj in related_objects.items():
+                    if rel_obj and hasattr(obj, key):
+                        rel_obj.save()
+                        setattr(obj, key, rel_obj)
+                obj.save()

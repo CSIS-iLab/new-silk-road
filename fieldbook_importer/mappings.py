@@ -4,6 +4,8 @@ from .utils import (
     values_list,
     make_url_list,
     transform_attr,
+    instance_for_model,
+    coerce_to_empty_string,
 )
 from infrastructure.models import ProjectStatus
 from locations.models import COUNTRY_CHOICES
@@ -29,19 +31,44 @@ def countries_from_country(x):
     return []
 
 
+def infrastructure_type_object(x):
+    values = list(values_list(x.get("infrastructure_type"), "infrastructure_type_name"))
+    if len(values):
+        data = {
+            'name': values[0]
+        }
+        return instance_for_model('infrastructure', 'InfrastructureType', data)
+    return None
+
+
+def initiative_object(x):
+    # TODO: These objects have important data in another JSON!
+    values = list(values_list(x.get("program_initiative"), "program_initiative_name"))
+    if len(values):
+        data = {
+            'name': values[0]
+        }
+        return instance_for_model('infrastructure', 'Initiative', data)
+    return None
+
+
 PROJECT_MODEL_MAP = (
-    ("name", lambda x: x.get("project_title")),
+    ("name", transform_attr("project_title", coerce_to_empty_string)),
     ("start_date", transform_attr("project_start_date", parse_date)),
     (None, "project_id"),
     ("status", project_status_from_statuses),
     ("sources", transform_attr("sources", make_url_list)),
-    ("notes", lambda x: x.get("notes", "")),
+    ("notes", transform_attr("notes", coerce_to_empty_string)),
     ("commencement_date", transform_attr("commencement_date", parse_date)),
-    ("total_cost_description", lambda x: x.get("total_project_cost_us", "")),
+    ("total_cost_description", transform_attr("total_project_cost_us", coerce_to_empty_string)),
     ("planned_completion_date", transform_attr("planned_date_of_completion", parse_date)),
     (None, "new_reconstruction"),
     ("countries", countries_from_country),
+)
 
+PROJECT_RELATED_OBJECTS_MAP = (
+    ("infrastructure_type", infrastructure_type_object),
+    ("initiative", initiative_object),
 )
 
 METADATA_FIELDS = {
@@ -52,11 +79,9 @@ METADATA_FIELDS = {
 }
 
 PROJECT_RELATIONAL_FIELDS = {
-    "program_initiative": ("initiative", None),
     "consultant": ("consultants", None),
     "operator": ("operator", None),
     "region": ("regions", None),
-    "infrastructure_type": ("infrastructure_type", None),
     "points_of_contact": ("contacts", None),
     # Related Organizations
     "contractors": None,

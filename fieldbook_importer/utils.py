@@ -1,5 +1,6 @@
 import datetime
 from django.apps import apps
+from django.core.exceptions import ObjectDoesNotExist
 from urllib.parse import urlparse
 
 
@@ -30,10 +31,12 @@ def choices_from_values(values, choices):
         yield find_choice(v, choices)
 
 
-def object_for_model(app_label, model_name, data, create=True):
-    model = apps.apps.get_model(app_label, model_name)
-    create_method = model.objects.get_or_create if create else model
-    instance = create_method(**data)
+def instance_for_model(app_label, model_name, data):
+    model = apps.get_model(app_label, model_name)
+    try:
+        instance = model.objects.get(**data)
+    except ObjectDoesNotExist:
+        instance = model(**data)
     return instance
 
 
@@ -65,3 +68,9 @@ def transform_attr(attr_name, func, *args, **kwargs):
             return attr_val
         return func(attr_val, *args, **kwargs)
     return inner_func
+
+
+def coerce_to_empty_string(value):
+    if value is not None:
+        return value
+    return ""
