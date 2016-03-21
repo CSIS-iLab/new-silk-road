@@ -1,6 +1,6 @@
 import datetime
 from django.apps import apps
-from urllib import parse as urlparse
+from urllib.parse import urlparse
 
 
 def parse_date(date_str, fmt='%Y-%m-%d'):
@@ -42,19 +42,24 @@ def make_list(list_str, sep=","):
 
 
 def clean_url(url):
-    return urlparse.unquote(url)
+    parsed = urlparse(url)
+    if not parsed.scheme:
+        url = "http://{}".format(url)
+    return url
 
 
 def make_url_list(list_str, sep=","):
     str_list = make_list(list_str, sep)
     if str_list:
-        return [clean_url(x) for x in str_list]
+        return [clean_url(x) for x in str_list if x]
     else:
         return None
 
 
-def apply_transform(attr_name, func, default=None):
+def transform(attr_name, func, default=None):
     def inner_func(obj):
-        attr_val = obj.get(attr_name, default)
+        attr_val = obj.get(attr_name, default) if obj else default
+        if not func:
+            return attr_val or default
         return func(attr_val) or default
     return inner_func
