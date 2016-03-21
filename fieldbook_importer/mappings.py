@@ -3,24 +3,24 @@ from .utils import (
     parse_date,
     find_choice,
     related_name,
-    make_list,
     make_url_list,
+    apply_transform,
 )
 
 
 PROJECT_MODEL_MAP = (
     ("name", lambda x: x.get("project_title")),
-    ("start_date", lambda x: parse_date(x.get("project_start_date", None))),
+    ("start_date", apply_transform("project_start_date", parse_date)),
     (None, "project_id"),
     ("status", lambda x: find_choice(
         related_name(x, "project_status", "project_status_name"),
         ProjectStatus.STATUSES
     )),
-    ("sources", lambda x: make_url_list(x.get("sources", "")) or []),
+    ("sources", apply_transform("sources", make_url_list, default=[])),
     ("notes", lambda x: x.get("notes", '')),
-    (None, "date_of_commencement_of_works"),
-    (None, "total_project_cost_us"),
-    (None, "planned_date_of_completion"),
+    ("commencement_date", apply_transform("commencement_date", parse_date)),
+    ("total_cost_description", lambda x: x.get("total_project_cost_us", "")),
+    ("planned_completion_date", apply_transform("planned_date_of_completion", parse_date)),
     (None, "new_reconstruction"),
 )
 

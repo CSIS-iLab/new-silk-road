@@ -51,3 +51,10 @@ def make_url_list(list_str, sep=","):
         return [clean_url(x) for x in str_list]
     else:
         return None
+
+
+def apply_transform(attr_name, func, default=None):
+    def inner_func(obj):
+        attr_val = obj.get(attr_name, default)
+        return func(attr_val) or default
+    return inner_func
