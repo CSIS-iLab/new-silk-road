@@ -1,11 +1,8 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 from facts.models import (
-    # Relations
-    CompanyRelation, FinancingRelation, GovernmentRelation,
-    MilitaryRelation, MultilateralRelation, NGORelation, PoliticalRelation,
     # shareholders
-    FinancingOrganization,
+    FinancingOrganizationDetails,
 )
 from facts.fields import PercentageField
 from publish.admin import TEMPORAL_FIELDS
@@ -16,47 +13,11 @@ class ShareholderAdmin(admin.ModelAdmin):
 
 
 class OrganizationShareholderInline(admin.TabularInline):
-    model = FinancingOrganization.shareholder_organizations.through
-    fk_name = 'right'
+    model = FinancingOrganizationDetails.shareholder_organizations.through
 
 
 class PersonShareholderInline(admin.TabularInline):
-    model = FinancingOrganization.shareholder_people.through
-
-
-class CompanyInline(admin.TabularInline):
-    model = CompanyRelation
-    fk_name = 'right'
-
-
-class FinancingInline(admin.TabularInline):
-    model = FinancingRelation
-    fk_name = 'right'
-
-
-class GovernmentInline(admin.TabularInline):
-    model = GovernmentRelation
-    fk_name = 'right'
-
-
-class MilitaryInline(admin.TabularInline):
-    model = MilitaryRelation
-    fk_name = 'right'
-
-
-class MultilateralInline(admin.TabularInline):
-    model = MultilateralRelation
-    fk_name = 'right'
-
-
-class NGOInline(admin.TabularInline):
-    model = NGORelation
-    fk_name = 'right'
-
-
-class PoliticalInline(admin.TabularInline):
-    model = PoliticalRelation
-    fk_name = 'right'
+    model = FinancingOrganizationDetails.shareholder_people.through
 
 
 class OrganizationAdmin(MPTTModelAdmin):
@@ -64,12 +25,20 @@ class OrganizationAdmin(MPTTModelAdmin):
     select_related = True
     search_fields = ['name']
     list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size') + TEMPORAL_FIELDS
-    inlines = [
-        CompanyInline, FinancingInline, GovernmentInline,
-        MilitaryInline, MultilateralInline, NGOInline, PoliticalInline
-    ]
 
 
-class FinancingOrganizationAdmin(OrganizationAdmin):
-    shareholder_inlines = [OrganizationShareholderInline, PersonShareholderInline]
-    inlines = shareholder_inlines + OrganizationAdmin.inlines
+class OrganizationDetailsAdmin(admin.ModelAdmin):
+    list_display = ['__str__']
+
+
+class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
+    inlines = [OrganizationShareholderInline, PersonShareholderInline]
+    list_display = OrganizationDetailsAdmin.list_display + ['approved_capital', 'moodys_credit_rating']
+
+
+class CompanyDetailsAdmin(OrganizationDetailsAdmin):
+    list_display = OrganizationDetailsAdmin.list_display + ['sector']
+
+
+class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
+    list_display = OrganizationDetailsAdmin.list_display + ['country']

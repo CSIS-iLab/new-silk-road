@@ -74,25 +74,25 @@ def create_relational_test_method(objfac, relfac, right_factories):
     return test_relation_method
 
 
-def setup_relational_tests():
-    object_relations = (
-        (CompanyFactory, CompanyRelationFactory),
-        (FinancingOrganizationFactory, FinancingRelationFactory),
-        (GovernmentFactory, GovernmentRelationFactory),
-        (MilitaryFactory, MilitaryRelationFactory),
-        (MultilateralFactory, MultilateralRelationFactory),
-        (NGOFactory, NGORelationFactory),
-        (PoliticalFactory, PoliticalRelationFactory),
-    )
-
-    for obj_factory, rel_factory in object_relations:
-        right_facs = [x[0] for x in object_relations if x[0] != obj_factory]
-
-        test_method = create_relational_test_method(obj_factory, rel_factory, right_facs)
-        test_name = 'test_{}_relations'.format(obj_factory._meta.model._meta.model_name)
-        test_method.__name__ = test_name
-
-        setattr(RelationsTestCase, test_name, test_method)
-
-
-setup_relational_tests()
+# def setup_relational_tests():
+#     object_relations = (
+#         (CompanyFactory, CompanyRelationFactory),
+#         (FinancingOrganizationFactory, FinancingRelationFactory),
+#         (GovernmentFactory, GovernmentRelationFactory),
+#         (MilitaryFactory, MilitaryRelationFactory),
+#         (MultilateralFactory, MultilateralRelationFactory),
+#         (NGOFactory, NGORelationFactory),
+#         (PoliticalFactory, PoliticalRelationFactory),
+#     )
+#
+#     for obj_factory, rel_factory in object_relations:
+#         right_facs = [x[0] for x in object_relations if x[0] != obj_factory]
+#
+#         test_method = create_relational_test_method(obj_factory, rel_factory, right_facs)
+#         test_name = 'test_{}_relations'.format(obj_factory._meta.model._meta.model_name)
+#         test_method.__name__ = test_name
+#
+#         setattr(RelationsTestCase, test_name, test_method)
+#
+#
+# setup_relational_tests()

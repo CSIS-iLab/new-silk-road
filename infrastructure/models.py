@@ -17,7 +17,7 @@ class InfrastructureType(models.Model):
 
 class ProjectFunding(models.Model):
     """(ProjectFunder description)"""
-    source = models.ForeignKey('facts.FinancingOrganization')
+    source = models.ForeignKey('facts.Organization')
     project = models.ForeignKey('Project')
     amount = models.IntegerField(
         blank=True, null=True,
@@ -104,7 +104,7 @@ class Project(Publishable):
     notes = MarkdownField(blank=True)
     # Organization relations
     funding = models.ManyToManyField(
-        'facts.FinancingOrganization',
+        'facts.Organization',
         through='ProjectFunding',
         related_name='projects_funded',
         blank=True

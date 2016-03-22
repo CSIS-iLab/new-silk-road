@@ -9,6 +9,57 @@ from finance.credit import (MOODYS_LONG_TERM,
                             FITCH_LONG_TERM)
 
 
+class Organization(MPTTModel, Publishable):
+    """Abstract base model for organizations"""
+
+    TYPE_GENERIC = 1
+    TYPE_COMPANY = 2
+    TYPE_FINANCING = 3
+    TYPE_GOVERNMENT = 4
+    TYPE_MILITARY = 5
+    TYPE_MULTILATERAL = 6
+    TYPE_NGO = 7
+    TYPE_POLITICAL = 8
+
+    ORGANIZATION_TYPES = (
+        (TYPE_GENERIC, "Generic/Unknown"),
+        (TYPE_COMPANY, "Company"),
+        (TYPE_FINANCING, "Financing Organization"),
+        (TYPE_GOVERNMENT, "Government"),
+        (TYPE_MILITARY, "Military"),
+        (TYPE_MULTILATERAL, "Multilateral"),
+        (TYPE_NGO, "NGO"),
+        (TYPE_POLITICAL, "Political Entity"),
+    )
+
+    name = models.CharField(max_length=100)
+    organization_type = models.PositiveSmallIntegerField(
+        choices=ORGANIZATION_TYPES,
+        default=TYPE_GENERIC
+    )
+    leaders = models.ManyToManyField('Person', blank=True,
+                                     related_name='organizations_led')
+    initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
+    headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
+    notes = MarkdownField(blank=True)
+    related_events = models.ManyToManyField('Event', blank=True)
+    founding_date = models.DateField(blank=True, null=True)
+    dissolution_date = models.DateField(blank=True, null=True)
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            verbose_name='parent organization',
+                            related_name='children', db_index=True)
+    staff_size = models.PositiveSmallIntegerField("Staff/Personnel count",
+                                                  blank=True, null=True)
+    mission = MarkdownField("Mandate/Mission Statement", blank=True)
+    related_organizations = models.ManyToManyField('self', blank=True)
+
+    class MPTTMeta:
+            order_insertion_by = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class OrganizationTypeBase(models.Model):
     name = models.CharField(max_length=100)
 
@@ -44,64 +95,49 @@ class PoliticalType(MPTTModel, OrganizationTypeBase):
                             related_name='children', db_index=True)
 
 
-class Organization(MPTTModel, Publishable):
-    """Abstract base model for organizations"""
-    name = models.CharField(max_length=100)
-    leaders = models.ManyToManyField('Person', blank=True,
-                                     related_name='organizations_led')
-    initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
-    headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
-    notes = MarkdownField(blank=True)
-    related_events = models.ManyToManyField('Event', blank=True)
-    founding_date = models.DateField(blank=True, null=True)
-    dissolution_date = models.DateField(blank=True, null=True)
-    parent = TreeForeignKey('self', null=True, blank=True,
-                            verbose_name='parent organization',
-                            related_name='children', db_index=True)
-    staff_size = models.PositiveSmallIntegerField("Staff/Personnel count",
-                                                  blank=True, null=True)
-    mission = MarkdownField("Mandate/Mission Statement", blank=True)
-
-    class MPTTMeta:
-            order_insertion_by = ['name']
-
-    def __str__(self):
-        return self.name
-
-
 class CompanyStructure(models.Model):
     """Describes structure of a company"""
     name = models.CharField("Structure", max_length=100)
 
 
-class Company(Organization):
-    """Describes an company"""
+# Details
+class OrganizationDetails(models.Model):
+    organization = models.OneToOneField(
+        'Organization',
+        models.CASCADE
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return "Details for {}".format(self.organization.name)
+
+
+class CompanyDetails(OrganizationDetails):
+    """Details of an company"""
 
     SECTOR_PRIMARY = 1
     SECTOR_SECONDARY = 2
     SECTOR_TERTIARY = 3
 
     SECTOR_CHOICES = (
-        (SECTOR_PRIMARY, "Primary"),
-        (SECTOR_SECONDARY, "Secondary"),
-        (SECTOR_TERTIARY, "Tertiary"),
+        (SECTOR_PRIMARY, "Primary (raw materials)"),
+        (SECTOR_SECONDARY, "Secondary (manufacturing)"),
+        (SECTOR_TERTIARY, "Tertiary (sales and services)"),
     )
-
     structure = models.ForeignKey('CompanyStructure', models.SET_NULL, blank=True, null=True)
     sector = models.PositiveSmallIntegerField(blank=True, null=True, choices=SECTOR_CHOICES)
     org_type = models.ForeignKey('CompanyType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_companies',
-                                                   through='CompanyRelation')
 
     class Meta:
-        verbose_name_plural = "companies"
+        verbose_name_plural = "company details"
 
 
-class FinancingOrganization(Organization):
-    """Describes a financing organization"""
+class FinancingOrganizationDetails(OrganizationDetails):
+    """Details of a financing organization"""
 
     MOODYS_RATING_CHOICES = tuple(x for x in enumerate(MOODYS_LONG_TERM, start=1))
     FITCH_RATING_CHOICES = tuple(x for x in enumerate(FITCH_LONG_TERM, start=101))
@@ -131,9 +167,6 @@ class FinancingOrganization(Organization):
     org_type = models.ForeignKey('FinancingType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_financers',
-                                                   through='FinancingRelation')
 
     def get_credit_ratings_display(self):
         return (
@@ -142,47 +175,47 @@ class FinancingOrganization(Organization):
             self.get_sp_credit_rating_display()
         )
 
+    class Meta:
+        verbose_name_plural = "financing organization details"
 
-class Government(Organization):
-    """Describes a government"""
+
+class GovernmentDetails(OrganizationDetails):
+    """Details of a government"""
     country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_governments',
-                                                   through='GovernmentRelation')
+
+    class Meta:
+        verbose_name_plural = "government details"
 
 
-class Military(Organization):
-    """Describes a military variable"""
+class MilitaryDetails(OrganizationDetails):
+    """Details of a military variable"""
     country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
     ruling_party = models.BooleanField(default=True)
     budget = models.DecimalField(blank=True, null=True,
                                  max_digits=17, decimal_places=2)
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_militaries',
-                                                   through='MilitaryRelation')
 
     class Meta:
-        verbose_name_plural = "militaries"
+        verbose_name_plural = "military details"
 
 
-class Multilateral(Organization):
-    """Describes a multilateral organization"""
+class MultilateralDetails(OrganizationDetails):
+    """Details of a multilateral organization"""
     members = models.ManyToManyField('Organization',
-                                     related_name='multilateral_memberships',
-                                     through='MultilateralMemberRelation')
+                                     related_name='multilateral_memberships'
+                                     )
     org_type = models.ForeignKey('MultilateralType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_multilaterals',
-                                                   through='MultilateralRelation')
+
+    class Meta:
+        verbose_name_plural = "multilateral details"
 
 
-class NGO(Organization):
-    """Describes an NGO (Non-governmental Organization)"""
+class NGODetails(OrganizationDetails):
+    """Details of an NGO (Non-governmental Organization)"""
     members = models.ManyToManyField('Organization',
-                                     related_name='ngo_memberships',
-                                     through='NGOMemberRelation')
+                                     related_name='ngo_memberships'
+                                     )
     geographic_scope = models.ForeignKey('locations.Region',
                                          models.SET_NULL, blank=True, null=True)
     endowment = models.DecimalField(blank=True, null=True,
@@ -190,16 +223,13 @@ class NGO(Organization):
     org_type = models.ForeignKey('NGOType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_ngos',
-                                                   through='NGORelation')
 
     class Meta:
-        verbose_name = "NGO"
+        verbose_name_plural = "NGO details"
 
 
-class Political(Organization):
-    """Describes a Political Entity"""
+class PoliticalDetails(OrganizationDetails):
+    """Details of a Political Entity"""
     countries = ArrayField(
         models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
         blank=True, null=True, default=list)
@@ -207,19 +237,15 @@ class Political(Organization):
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
     ruling_party = models.BooleanField(default=True)
-    related_organizations = models.ManyToManyField('Organization',
-                                                   related_name='related_politicalentities',
-                                                   through='PoliticalRelation')
 
     class Meta:
-        verbose_name = "political entity"
-        verbose_name_plural = "political entities"
+        verbose_name_plural = "poltitical details"
 
 
 # Shareholders
 
 class ShareholderBase(models.Model):
-    right = models.ForeignKey('FinancingOrganization',
+    right = models.ForeignKey('FinancingOrganizationDetails',
                               verbose_name="to", on_delete=models.CASCADE,
                               related_name='+')
     value = models.DecimalField('% Share', max_digits=5, decimal_places=2)
@@ -244,68 +270,3 @@ class PersonShareholder(ShareholderBase):
 
     def __str__(self):
         return "{}: {}%".format(self.left, self.value)
-
-
-#  Relations
-
-class OrganizationRelationBase(models.Model):
-    # You must define the left = part of the relation
-    right = models.ForeignKey('Organization',
-                              verbose_name="to", on_delete=models.CASCADE,
-                              related_name='+')
-
-    class Meta:
-        abstract = True
-
-
-class CompanyRelation(OrganizationRelationBase):
-    left = models.ForeignKey('Company',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class FinancingRelation(OrganizationRelationBase):
-    left = models.ForeignKey('FinancingOrganization',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class GovernmentRelation(OrganizationRelationBase):
-    left = models.ForeignKey('Government',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class MilitaryRelation(OrganizationRelationBase):
-    left = models.ForeignKey('Military',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class MultilateralRelation(OrganizationRelationBase):
-    left = models.ForeignKey('Multilateral',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class NGORelation(OrganizationRelationBase):
-    left = models.ForeignKey('NGO',
-                             on_delete=models.CASCADE, related_name='+')
-
-
-class PoliticalRelation(OrganizationRelationBase):
-    left = models.ForeignKey('Political',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class NGOMemberRelation(OrganizationRelationBase):
-    left = models.ForeignKey('NGO',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
-
-
-class MultilateralMemberRelation(OrganizationRelationBase):
-    left = models.ForeignKey('Multilateral',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
