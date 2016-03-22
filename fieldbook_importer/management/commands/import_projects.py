@@ -4,7 +4,7 @@ import os.path
 import json
 
 from infrastructure.models import (
-    Project, ProjectStatus,
+    Project,
     InfrastructureType
 )
 
