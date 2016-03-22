@@ -2,6 +2,7 @@
 
 from .organizations import (
     # Organizations
+    Organization,
     Company, FinancingOrganization, Government,
     Military, Multilateral, NGO, Political,
     # Organization types
