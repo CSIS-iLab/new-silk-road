@@ -5,7 +5,7 @@ from .utils import (
     make_url_list,
     transform_attr,
     instance_for_model,
-    coerce_to_empty_string,
+    coerce_to_string,
 )
 from infrastructure.models import ProjectStatus
 from locations.models import COUNTRY_CHOICES
@@ -52,24 +52,24 @@ def initiative_object(x):
     return None
 
 
-PROJECT_MODEL_MAP = (
-    ("name", transform_attr("project_title", coerce_to_empty_string)),
-    ("start_date", transform_attr("project_start_date", parse_date)),
-    (None, "project_id"),
-    ("status", project_status_from_statuses),
-    ("sources", transform_attr("sources", make_url_list)),
-    ("notes", transform_attr("notes", coerce_to_empty_string)),
-    ("commencement_date", transform_attr("commencement_date", parse_date)),
-    ("total_cost_description", transform_attr("total_project_cost_us", coerce_to_empty_string)),
-    ("planned_completion_date", transform_attr("planned_date_of_completion", parse_date)),
-    (None, "new_reconstruction"),
-    ("countries", countries_from_country),
-)
+PROJECT_MAP = {
+    "name": transform_attr("project_title", coerce_to_string),
+    "start_date": transform_attr("project_start_date", parse_date),
+    # "project_id": None,
+    "status": project_status_from_statuses,
+    "sources": transform_attr("sources", make_url_list),
+    "notes": transform_attr("notes", coerce_to_string),
+    "commencement_date": transform_attr("commencement_date", parse_date),
+    "total_cost_description": transform_attr("total_project_cost_us", coerce_to_string),
+    "planned_completion_date": transform_attr("planned_date_of_completion", parse_date),
+    # "new_reconstruction": None,
+    "countries": countries_from_country,
+}
 
-PROJECT_RELATED_OBJECTS_MAP = (
-    ("infrastructure_type", infrastructure_type_object),
-    ("initiative", initiative_object),
-)
+PROJECT_RELATED_MAP = {
+    "infrastructure_type": infrastructure_type_object,
+    "initiative": initiative_object,
+}
 
 METADATA_FIELDS = {
     "date_last_updated": None,
@@ -132,4 +132,8 @@ OTHER_FIELDS = {
     # a separate table of funders to projects with $ values
     "distribution_of_funding": None,
     "sources_of_funding": None
+}
+
+INFRASTRUCTURETYPE_MAP = {
+    'name': transform_attr("infrastructure_type_name", coerce_to_string),
 }

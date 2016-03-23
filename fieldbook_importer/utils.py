@@ -12,8 +12,10 @@ def parse_date(date_str, fmt='%Y-%m-%d'):
 
 
 def values_list(l, field_name, default=None):
-    for i in l:
-        yield i.get(field_name, default)
+    if l:
+        for i in l:
+            yield i.get(field_name, default)
+    return None
 
 
 def find_choice(search_str, choices):
@@ -70,7 +72,7 @@ def transform_attr(attr_name, func, *args, **kwargs):
     return inner_func
 
 
-def coerce_to_empty_string(value):
+def coerce_to_string(value):
     if value is not None:
-        return value
+        return str(value)
     return ""
