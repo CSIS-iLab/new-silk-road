@@ -9,7 +9,7 @@ from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
 
 class InfrastructureType(models.Model):
     """Type of infrastructure"""
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
@@ -148,7 +148,7 @@ class Project(Publishable):
 
 class InitiativeType(models.Model):
     """Defines a type of initiative"""
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
