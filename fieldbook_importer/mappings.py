@@ -141,5 +141,14 @@ INFRASTRUCTURETYPE_MAP = {
 }
 
 ORGANIZATION_MAP = {
-    'name': transform_attr("consultant_name", coerce_to_string),
+    'name': transform_attr("organization_name", coerce_to_string),
 }
+
+CONSULTANT_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
+CONSULTANT_ORGANIZATION_MAP['name'] = transform_attr("consultant_name", coerce_to_string)
+
+OPERATOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
+OPERATOR_ORGANIZATION_MAP['name'] = transform_attr("operator_name", coerce_to_string)
+
+CONTRACTOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
+CONTRACTOR_ORGANIZATION_MAP['name'] = transform_attr("contractors_name", coerce_to_string)

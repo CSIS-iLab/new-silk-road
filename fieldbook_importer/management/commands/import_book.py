@@ -7,7 +7,9 @@ import json
 from fieldbook_importer.mappings import (
     PROJECT_MAP, PROJECT_RELATED_MAP,
     INFRASTRUCTURETYPE_MAP,
-    ORGANIZATION_MAP
+    CONSULTANT_ORGANIZATION_MAP,
+    OPERATOR_ORGANIZATION_MAP,
+    CONTRACTOR_ORGANIZATION_MAP
 )
 
 
@@ -38,8 +40,16 @@ class Command(BaseCommand):
             },
             'consultants': {
                 'model': 'facts.Organization',
-                'mapping': ORGANIZATION_MAP
-            }
+                'mapping': CONSULTANT_ORGANIZATION_MAP,
+            },
+            'operators': {
+                'model': 'facts.Organization',
+                'mapping': OPERATOR_ORGANIZATION_MAP,
+            },
+            'contractors': {
+                'model': 'facts.Organization',
+                'mapping': CONTRACTOR_ORGANIZATION_MAP,
+            },
         }
 
         self.configure(self.configfile)
@@ -55,7 +65,7 @@ class Command(BaseCommand):
                 params = conf.copy()
                 modelname = params.pop('model')
                 if self.verbosity > 1:
-                    self.stdout.write("Processing data for {}".format(modelname))
+                    self.stdout.write("Processing '{}' data as {}".format(sheetname, modelname))
                 model = apps.get_model(modelname)
                 self.load_data(data, model, **params)
             else:
