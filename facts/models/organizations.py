@@ -90,7 +90,10 @@ class OrganizationDetails(models.Model):
         abstract = True
 
     def __str__(self):
-        return "Details for {}".format(self.organization.name)
+        return "{} for {}".format(
+            self._meta.verbose_name.title(),
+            self.organization.name
+        )
 
 
 class CompanyDetails(OrganizationDetails):

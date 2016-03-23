@@ -19,6 +19,7 @@ from .organizations import (
     FinancingOrganizationDetailsAdmin,
     CompanyDetailsAdmin,
     GovernmentDetailsDetailsAdmin,
+    PoliticalDetailsAdmin,
 )
 
 # People
@@ -39,5 +40,5 @@ admin.site.register(MultilateralDetails)
 admin.site.register(MultilateralType)
 admin.site.register(NGODetails, OrganizationDetailsAdmin)
 admin.site.register(NGOType)
-admin.site.register(PoliticalDetails, OrganizationDetailsAdmin)
+admin.site.register(PoliticalDetails, PoliticalDetailsAdmin)
 admin.site.register(PoliticalType)
