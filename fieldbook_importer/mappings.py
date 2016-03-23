@@ -134,6 +134,12 @@ OTHER_FIELDS = {
     "sources_of_funding": None
 }
 
+# Other models
+
 INFRASTRUCTURETYPE_MAP = {
     'name': transform_attr("infrastructure_type_name", coerce_to_string),
+}
+
+ORGANIZATION_MAP = {
+    'name': transform_attr("consultant_name", coerce_to_string),
 }

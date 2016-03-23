@@ -6,7 +6,8 @@ import json
 
 from fieldbook_importer.mappings import (
     PROJECT_MAP, PROJECT_RELATED_MAP,
-    INFRASTRUCTURETYPE_MAP
+    INFRASTRUCTURETYPE_MAP,
+    ORGANIZATION_MAP
 )
 
 
@@ -25,13 +26,19 @@ class Command(BaseCommand):
         self.configfile = kwargs.get('configfile')
         self.err_count = 0
         self.data_sequence = []
-        self.model_maps = {
-            'infrastructure.Project': {
+        self.sheets = {
+            'projects': {
+                'model': 'infrastructure.Project',
                 'mapping': PROJECT_MAP,
                 'related_mapping': PROJECT_RELATED_MAP
             },
-            'infrastructure.InfrastructureType': {
+            'infrastructure_types': {
+                'model': 'infrastructure.InfrastructureType',
                 'mapping': INFRASTRUCTURETYPE_MAP
+            },
+            'consultants': {
+                'model': 'facts.Organization',
+                'mapping': ORGANIZATION_MAP
             }
         }
 
@@ -39,16 +46,20 @@ class Command(BaseCommand):
 
         for item in self.data_sequence:
             # Fail hard on nonexistent keys, at least for now
-            modelname = item.get('model')
             data = item.get('data')
-            if self.verbosity > 1:
-                self.stdout.write("Processing data for {}".format(modelname))
-            params = self.model_maps.get(modelname)
-            if params:
+            sheetname = item.get('sheet')
+
+            conf = self.sheets.get(sheetname)
+
+            if conf:
+                params = conf.copy()
+                modelname = params.pop('model')
+                if self.verbosity > 1:
+                    self.stdout.write("Processing data for {}".format(modelname))
                 model = apps.get_model(modelname)
                 self.load_data(data, model, **params)
             else:
-                self.stderr.write("No mapping available for {}, skipping".format(modelname))
+                self.stderr.write("No mapping available for {}, skipping".format(sheetname))
 
     def configure(self, configfile):
         basename = os.path.abspath(os.path.dirname(configfile.name))
@@ -61,8 +72,8 @@ class Command(BaseCommand):
             if not isinstance(item, dict):
                 raise CommandError(Command.CONFIG_FORMAT_MSG)
             pathinfo = item.pop('file', None)
-            model = item.get('model', None)
-            if pathinfo and model:
+            sheet = item.get('sheet', None)
+            if pathinfo and sheet:
                 fpath = pathinfo if os.path.isabs(pathinfo) else os.path.join(basename, pathinfo)
                 # Replace file with data, add to data_sequence
                 if os.path.exists(fpath):
@@ -79,7 +90,7 @@ class Command(BaseCommand):
     def _get_model_constructor(self, klass):
         if self.dry_run:
             return klass
-        return klass.objects.create
+        return klass.objects.get_or_create
 
     def _get_mapper(self, mapping):
         def mapper(item):
@@ -97,6 +108,8 @@ class Command(BaseCommand):
             if self.verbosity > 2:
                 self.stdout.write(repr(value_map))
             obj = create_obj(**value_map)
+            if isinstance(obj, tuple):
+                obj, _ = obj
             if self.dry_run:
                 try:
                     obj.full_clean()
