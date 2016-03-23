@@ -1,5 +1,4 @@
 import factory
-from facts.models.organizations import OrganizationRelationBase
 
 
 class OrganizationFactory(factory.django.DjangoModelFactory):
@@ -7,6 +6,39 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
         model = 'facts.Organization'
 
     name = factory.Sequence(lambda n: 'Test Organization%s' % n)
+    mission = factory.Faker('paragraph')
+    # leaders = factory.SubFactory(PersonFactory)
+    notes = factory.Faker('paragraph')
+    # headquarters = factory.SubFactory(PlaceFactory)
+    founding_date = factory.Faker('date')
+    dissolution_date = factory.Faker('date')
+
+    @factory.post_generation
+    def related_organizations(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for obj in extracted:
+                self.related_organizations.add(obj)
+
+    @factory.post_generation
+    def initiatives(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for obj in extracted:
+                self.initiatives.add(obj)
+
+    @factory.post_generation
+    def events(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for obj in extracted:
+                self.events.add(obj)
 
 
 class SubOrganizationFactory(OrganizationFactory):
@@ -17,14 +49,8 @@ class SubOrganizationFactory(OrganizationFactory):
     parent = factory.SubFactory(OrganizationFactory)
 
 
-class GovernmentFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'facts.Government'
-
-
-class FinancingOrganizationFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'facts.FinancingOrganization'
+class DetailsFactory(factory.django.DjangoModelFactory):
+    organization = factory.SubFactory(OrganizationFactory)
 
 
 class CompanyStructureFactory(factory.django.DjangoModelFactory):
@@ -32,77 +58,64 @@ class CompanyStructureFactory(factory.django.DjangoModelFactory):
         model = 'facts.CompanyStructure'
 
 
-class CompanyFactory(factory.django.DjangoModelFactory):
+class CompanyDetailsFactory(DetailsFactory):
     class Meta:
-        model = 'facts.Company'
+        model = 'facts.CompanyDetails'
+
+    structure = factory.SubFactory(CompanyStructureFactory)
+    sector = factory.Iterator(range(1, 4))
+    # org_type =
 
 
-class MultilateralFactory(factory.django.DjangoModelFactory):
+class FinancingOrganizationDetailsFactory(DetailsFactory):
     class Meta:
-        model = 'facts.Multilateral'
+        model = 'facts.FinancingOrganizationDetails'
+
+    # approved_capital
+    # moodys_credit_rating
+    # fitch_credit_rating
+    # sp_credit_rating
+    # shareholder_people
+    # scope_of_operations
+    # procurement
+    # org_type
 
 
-class NGOFactory(factory.django.DjangoModelFactory):
+class GovernmentDetailsFactory(DetailsFactory):
     class Meta:
-        model = 'facts.NGO'
+        model = 'facts.GovernmentDetails'
 
 
-class PoliticalFactory(factory.django.DjangoModelFactory):
+class MilitaryDetailsFactory(DetailsFactory):
     class Meta:
-        model = 'facts.Political'
+        model = 'facts.MilitaryDetails'
 
 
-class MilitaryFactory(factory.django.DjangoModelFactory):
+class MultilateralDetailsFactory(DetailsFactory):
     class Meta:
-        model = 'facts.Military'
+        model = 'facts.MultilateralDetails'
 
 
-# Relations
-
-class OrganizationRelationBaseFactory(factory.django.DjangoModelFactory):
+class NGODetailsFactory(DetailsFactory):
     class Meta:
-        model = OrganizationRelationBase
-        abstract = True
-    right = factory.SubFactory(OrganizationFactory)
+        model = 'facts.NGODetails'
 
 
-class CompanyRelationFactory(OrganizationRelationBaseFactory):
+class PoliticalDetailsFactory(DetailsFactory):
     class Meta:
-        model = 'facts.CompanyRelation'
-    left = factory.SubFactory(CompanyFactory)
+        model = 'facts.PoliticalDetails'
 
 
-class FinancingRelationFactory(OrganizationRelationBaseFactory):
+class OrganizationShareholderFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'facts.FinancingRelation'
-    left = factory.SubFactory(FinancingOrganizationFactory)
+        model = 'facts.OrganizationShareholder'
+    investment = factory.SubFactory(OrganizationFactory)
+    shareholder = factory.SubFactory(FinancingOrganizationDetailsFactory)
+    # value = Decimal
 
 
-class GovernmentRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.GovernmentRelation'
-    left = factory.SubFactory(GovernmentFactory)
-
-
-class MilitaryRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.MilitaryRelation'
-    left = factory.SubFactory(MilitaryFactory)
-
-
-class MultilateralRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.MultilateralRelation'
-    left = factory.SubFactory(MultilateralFactory)
-
-
-class NGORelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.NGORelation'
-    left = factory.SubFactory(NGOFactory)
-
-
-class PoliticalRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.PoliticalRelation'
-    left = factory.SubFactory(PoliticalFactory)
+class FODetailsWithShareholdersFactory(FinancingOrganizationDetailsFactory):
+    shareholder_organizations = factory.RelatedFactory(
+        OrganizationShareholderFactory,
+        'shareholder'
+    )

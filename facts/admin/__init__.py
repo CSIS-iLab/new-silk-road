@@ -1,13 +1,12 @@
 from django.contrib import admin
-from filer.admin.fileadmin import FileAdmin
 
 from facts.models import (
     Person, Position,
     Event,
     # Organizations
     Organization,
-    Company, FinancingOrganization, Government,
-    Military, Multilateral, NGO, Political,
+    CompanyDetails, FinancingOrganizationDetails, GovernmentDetails,
+    MilitaryDetails, MultilateralDetails, NGODetails, PoliticalDetails,
     # Organization types
     FinancingType, CompanyType, MultilateralType,
     NGOType, PoliticalType, CompanyStructure,
@@ -15,9 +14,12 @@ from facts.models import (
 from .people import PersonAdmin
 from .events import EventAdmin
 from .organizations import (
-    BaseOrganizationAdmin,
     OrganizationAdmin,
-    FinancingOrganizationAdmin
+    OrganizationDetailsAdmin,
+    FinancingOrganizationDetailsAdmin,
+    CompanyDetailsAdmin,
+    GovernmentDetailsDetailsAdmin,
+    PoliticalDetailsAdmin,
 )
 
 # People
@@ -27,16 +29,16 @@ admin.site.register(Position)
 admin.site.register(Event, EventAdmin)
 # Organizations
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(Company, BaseOrganizationAdmin)
+admin.site.register(CompanyDetails, CompanyDetailsAdmin)
 admin.site.register(CompanyType)
 admin.site.register(CompanyStructure)
-admin.site.register(FinancingOrganization, FinancingOrganizationAdmin)
+admin.site.register(FinancingOrganizationDetails, FinancingOrganizationDetailsAdmin)
 admin.site.register(FinancingType)
-admin.site.register(Government, BaseOrganizationAdmin)
-admin.site.register(Military, BaseOrganizationAdmin)
-admin.site.register(Multilateral, BaseOrganizationAdmin)
+admin.site.register(GovernmentDetails, GovernmentDetailsDetailsAdmin)
+admin.site.register(MilitaryDetails, OrganizationDetailsAdmin)
+admin.site.register(MultilateralDetails)
 admin.site.register(MultilateralType)
-admin.site.register(NGO, BaseOrganizationAdmin)
+admin.site.register(NGODetails, OrganizationDetailsAdmin)
 admin.site.register(NGOType)
-admin.site.register(Political, BaseOrganizationAdmin)
+admin.site.register(PoliticalDetails, PoliticalDetailsAdmin)
 admin.site.register(PoliticalType)

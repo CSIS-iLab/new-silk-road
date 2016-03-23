@@ -1,14 +1,14 @@
 from django.test import TestCase
-from facts.models.locations import COUNTRY_CHOICES
+from locations.models import COUNTRY_CHOICES
 from .organization_factories import (
     OrganizationFactory,
-    CompanyFactory, CompanyRelationFactory,
-    FinancingOrganizationFactory, FinancingRelationFactory,
-    GovernmentFactory, GovernmentRelationFactory,
-    MilitaryFactory, MilitaryRelationFactory,
-    MultilateralFactory, MultilateralRelationFactory,
-    NGOFactory, NGORelationFactory,
-    PoliticalFactory, PoliticalRelationFactory,
+    CompanyDetailsFactory,
+    FinancingOrganizationDetailsFactory,
+    GovernmentDetailsFactory,
+    MilitaryDetailsFactory,
+    MultilateralDetailsFactory,
+    NGODetailsFactory,
+    PoliticalDetailsFactory,
 )
 
 
@@ -39,60 +39,76 @@ class OrganizationTestCase(TestCase):
         self.assertIn(grandchild_org, parent_org.get_descendants().all())
 
 
-class GovernmentTestCase(TestCase):
+class CompanyDetailsTestCase(TestCase):
 
-    def test_government_has_country(self):
-        obj = GovernmentFactory(country=COUNTRY_CHOICES[0][0])
+    def test_organization_has_details(self):
+        obj = CompanyDetailsFactory()
 
-        self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_companydetails'))
+        self.assertTrue(obj.organization.has_companydetails())
 
 
 class FinancingOrganizationTestCase(TestCase):
 
-    def test_organization_has_capital(self):
-        obj = FinancingOrganizationFactory(approved_capital=1000000000)
+    def test_has_capital(self):
+        obj = FinancingOrganizationDetailsFactory(approved_capital=1000000000)
 
         self.assertEqual(obj.approved_capital, 1000000000)
 
+    def test_organization_has_details(self):
+        obj = FinancingOrganizationDetailsFactory()
 
-class RelationsTestCase(TestCase):
-    pass
-
-
-def create_relational_test_method(objfac, relfac, right_factories):
-    def test_relation_method(self):
-        obj = objfac()
-        for num, rfactory in enumerate(right_factories, start=1):
-            other = rfactory()
-
-            relation = relfac(left=obj, right=other)
-
-            self.assertIsNotNone(relation)
-            self.assertIsNotNone(obj.related_organizations.all())
-            self.assertEqual(obj.related_organizations.count(), num)
-
-    return test_relation_method
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_financingorganizationdetails'))
+        self.assertTrue(obj.organization.has_financingorganizationdetails())
 
 
-def setup_relational_tests():
-    object_relations = (
-        (CompanyFactory, CompanyRelationFactory),
-        (FinancingOrganizationFactory, FinancingRelationFactory),
-        (GovernmentFactory, GovernmentRelationFactory),
-        (MilitaryFactory, MilitaryRelationFactory),
-        (MultilateralFactory, MultilateralRelationFactory),
-        (NGOFactory, NGORelationFactory),
-        (PoliticalFactory, PoliticalRelationFactory),
-    )
+class GovernmentTestCase(TestCase):
 
-    for obj_factory, rel_factory in object_relations:
-        right_facs = [x[0] for x in object_relations if x[0] != obj_factory]
+    def test_government_has_country(self):
+        obj = GovernmentDetailsFactory(country=COUNTRY_CHOICES[0][0])
 
-        test_method = create_relational_test_method(obj_factory, rel_factory, right_facs)
-        test_name = 'test_{}_relations'.format(obj_factory._meta.model._meta.model_name)
-        test_method.__name__ = test_name
+        self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
 
-        setattr(RelationsTestCase, test_name, test_method)
+    def test_organization_has_details(self):
+        obj = GovernmentDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_governmentdetails'))
+        self.assertTrue(obj.organization.has_governmentdetails())
 
 
-setup_relational_tests()
+class MilitaryDetailsTestCase(TestCase):
+
+    def test_military_has_country(self):
+        obj = MilitaryDetailsFactory(country=COUNTRY_CHOICES[0][0])
+
+        self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
+
+    def test_organization_has_details(self):
+        obj = MilitaryDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_militarydetails'))
+        self.assertTrue(obj.organization.has_militarydetails())
+
+
+class NGODetailsTestCase(TestCase):
+
+    def test_organization_has_details(self):
+        obj = NGODetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_ngodetails'))
+        self.assertTrue(obj.organization.has_ngodetails())
+
+
+class PoliticalDetailsTestCase(TestCase):
+
+    def test_organization_has_details(self):
+        obj = PoliticalDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_politicaldetails'))
+        self.assertTrue(obj.organization.has_politicaldetails())
