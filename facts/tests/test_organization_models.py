@@ -39,6 +39,31 @@ class OrganizationTestCase(TestCase):
         self.assertIn(grandchild_org, parent_org.get_descendants().all())
 
 
+class CompanyDetailsTestCase(TestCase):
+
+    def test_organization_has_details(self):
+        obj = CompanyDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_companydetails'))
+        self.assertTrue(obj.organization.has_companydetails())
+
+
+class FinancingOrganizationTestCase(TestCase):
+
+    def test_has_capital(self):
+        obj = FinancingOrganizationDetailsFactory(approved_capital=1000000000)
+
+        self.assertEqual(obj.approved_capital, 1000000000)
+
+    def test_organization_has_details(self):
+        obj = FinancingOrganizationDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_financingorganizationdetails'))
+        self.assertTrue(obj.organization.has_financingorganizationdetails())
+
+
 class GovernmentTestCase(TestCase):
 
     def test_government_has_country(self):
@@ -46,10 +71,44 @@ class GovernmentTestCase(TestCase):
 
         self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
 
+    def test_organization_has_details(self):
+        obj = GovernmentDetailsFactory()
 
-class FinancingOrganizationTestCase(TestCase):
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_governmentdetails'))
+        self.assertTrue(obj.organization.has_governmentdetails())
 
-    def test_organization_has_capital(self):
-        obj = FinancingOrganizationDetailsFactory(approved_capital=1000000000)
 
-        self.assertEqual(obj.approved_capital, 1000000000)
+class MilitaryDetailsTestCase(TestCase):
+
+    def test_military_has_country(self):
+        obj = MilitaryDetailsFactory(country=COUNTRY_CHOICES[0][0])
+
+        self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
+
+    def test_organization_has_details(self):
+        obj = MilitaryDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_militarydetails'))
+        self.assertTrue(obj.organization.has_militarydetails())
+
+
+class NGODetailsTestCase(TestCase):
+
+    def test_organization_has_details(self):
+        obj = NGODetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_ngodetails'))
+        self.assertTrue(obj.organization.has_ngodetails())
+
+
+class PoliticalDetailsTestCase(TestCase):
+
+    def test_organization_has_details(self):
+        obj = PoliticalDetailsFactory()
+
+        self.assertIsNotNone(obj.organization)
+        self.assertTrue(hasattr(obj.organization, 'has_politicaldetails'))
+        self.assertTrue(obj.organization.has_politicaldetails())

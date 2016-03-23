@@ -252,3 +252,25 @@ class PersonShareholder(ShareholderBase):
 
     def __str__(self):
         return "{}: {}%".format(self.shareholder, self.value)
+
+
+# Adds has_details method to Organization for each of the OrganizationDetails subclasses
+def patch_organization_details_checks():
+    detail_models = (c._meta.model_name for c in (
+        CompanyDetails, FinancingOrganizationDetails,
+        GovernmentDetails, MilitaryDetails,
+        MultilateralDetails, NGODetails, PoliticalDetails
+    ))
+
+    def create_detail_check_method(modelname):
+        def related_detail_exists(self):
+            return hasattr(self, modelname)
+        return related_detail_exists
+
+    for modelname in detail_models:
+        method = create_detail_check_method(modelname)
+        method_name = "has_{}".format(modelname)
+        method.__name__ = method_name
+        setattr(Organization, method_name, method)
+
+patch_organization_details_checks()
