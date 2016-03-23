@@ -1,7 +1,7 @@
 from django.test import TestCase
 from facts.models import Person
 from facts.admin.people import PersonForm
-from facts.models.locations import COUNTRY_CHOICES
+from locations.models import COUNTRY_CHOICES
 
 
 class PersonFormTestCase(TestCase):

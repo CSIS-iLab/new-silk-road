@@ -1,14 +1,14 @@
 from django.test import TestCase
-from facts.models.locations import COUNTRY_CHOICES
+from locations.models import COUNTRY_CHOICES
 from .organization_factories import (
     OrganizationFactory,
-    CompanyFactory, CompanyRelationFactory,
-    FinancingOrganizationFactory, FinancingRelationFactory,
-    GovernmentFactory, GovernmentRelationFactory,
-    MilitaryFactory, MilitaryRelationFactory,
-    MultilateralFactory, MultilateralRelationFactory,
-    NGOFactory, NGORelationFactory,
-    PoliticalFactory, PoliticalRelationFactory,
+    CompanyDetailsFactory,
+    FinancingOrganizationDetailsFactory,
+    GovernmentDetailsFactory,
+    MilitaryDetailsFactory,
+    MultilateralDetailsFactory,
+    NGODetailsFactory,
+    PoliticalDetailsFactory,
 )
 
 
@@ -42,7 +42,7 @@ class OrganizationTestCase(TestCase):
 class GovernmentTestCase(TestCase):
 
     def test_government_has_country(self):
-        obj = GovernmentFactory(country=COUNTRY_CHOICES[0][0])
+        obj = GovernmentDetailsFactory(country=COUNTRY_CHOICES[0][0])
 
         self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
 
@@ -50,49 +50,6 @@ class GovernmentTestCase(TestCase):
 class FinancingOrganizationTestCase(TestCase):
 
     def test_organization_has_capital(self):
-        obj = FinancingOrganizationFactory(approved_capital=1000000000)
+        obj = FinancingOrganizationDetailsFactory(approved_capital=1000000000)
 
         self.assertEqual(obj.approved_capital, 1000000000)
-
-
-class RelationsTestCase(TestCase):
-    pass
-
-
-def create_relational_test_method(objfac, relfac, right_factories):
-    def test_relation_method(self):
-        obj = objfac()
-        for num, rfactory in enumerate(right_factories, start=1):
-            other = rfactory()
-
-            relation = relfac(left=obj, right=other)
-
-            self.assertIsNotNone(relation)
-            self.assertIsNotNone(obj.related_organizations.all())
-            self.assertEqual(obj.related_organizations.count(), num)
-
-    return test_relation_method
-
-
-# def setup_relational_tests():
-#     object_relations = (
-#         (CompanyFactory, CompanyRelationFactory),
-#         (FinancingOrganizationFactory, FinancingRelationFactory),
-#         (GovernmentFactory, GovernmentRelationFactory),
-#         (MilitaryFactory, MilitaryRelationFactory),
-#         (MultilateralFactory, MultilateralRelationFactory),
-#         (NGOFactory, NGORelationFactory),
-#         (PoliticalFactory, PoliticalRelationFactory),
-#     )
-#
-#     for obj_factory, rel_factory in object_relations:
-#         right_facs = [x[0] for x in object_relations if x[0] != obj_factory]
-#
-#         test_method = create_relational_test_method(obj_factory, rel_factory, right_facs)
-#         test_name = 'test_{}_relations'.format(obj_factory._meta.model._meta.model_name)
-#         test_method.__name__ = test_name
-#
-#         setattr(RelationsTestCase, test_name, test_method)
-#
-#
-# setup_relational_tests()

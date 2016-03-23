@@ -1,5 +1,4 @@
 import factory
-from facts.models.organizations import OrganizationRelationBase
 
 
 class OrganizationFactory(factory.django.DjangoModelFactory):
@@ -17,92 +16,45 @@ class SubOrganizationFactory(OrganizationFactory):
     parent = factory.SubFactory(OrganizationFactory)
 
 
-class GovernmentFactory(factory.django.DjangoModelFactory):
+class OrganizationDetailFactory(factory.django.DjangoModelFactory):
+    organization = factory.SubFactory(OrganizationFactory)
+
+
+class GovernmentDetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.Government'
+        model = 'facts.GovernmentDetails'
 
 
-class FinancingOrganizationFactory(factory.django.DjangoModelFactory):
+class FinancingOrganizationDetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.FinancingOrganization'
+        model = 'facts.FinancingOrganizationDetails'
 
 
-class CompanyStructureFactory(factory.django.DjangoModelFactory):
+class CompanyStructureDetailsFactory(OrganizationDetailFactory):
     class Meta:
         model = 'facts.CompanyStructure'
 
 
-class CompanyFactory(factory.django.DjangoModelFactory):
+class CompanyDetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.Company'
+        model = 'facts.CompanyDetails'
 
 
-class MultilateralFactory(factory.django.DjangoModelFactory):
+class MultilateralDetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.Multilateral'
+        model = 'facts.MultilateralDetails'
 
 
-class NGOFactory(factory.django.DjangoModelFactory):
+class NGODetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.NGO'
+        model = 'facts.NGODetails'
 
 
-class PoliticalFactory(factory.django.DjangoModelFactory):
+class PoliticalDetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.Political'
+        model = 'facts.PoliticalDetails'
 
 
-class MilitaryFactory(factory.django.DjangoModelFactory):
+class MilitaryDetailsFactory(OrganizationDetailFactory):
     class Meta:
-        model = 'facts.Military'
-
-
-# Relations
-
-class OrganizationRelationBaseFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = OrganizationRelationBase
-        abstract = True
-    right = factory.SubFactory(OrganizationFactory)
-
-
-class CompanyRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.CompanyRelation'
-    left = factory.SubFactory(CompanyFactory)
-
-
-class FinancingRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.FinancingRelation'
-    left = factory.SubFactory(FinancingOrganizationFactory)
-
-
-class GovernmentRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.GovernmentRelation'
-    left = factory.SubFactory(GovernmentFactory)
-
-
-class MilitaryRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.MilitaryRelation'
-    left = factory.SubFactory(MilitaryFactory)
-
-
-class MultilateralRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.MultilateralRelation'
-    left = factory.SubFactory(MultilateralFactory)
-
-
-class NGORelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.NGORelation'
-    left = factory.SubFactory(NGOFactory)
-
-
-class PoliticalRelationFactory(OrganizationRelationBaseFactory):
-    class Meta:
-        model = 'facts.PoliticalRelation'
-    left = factory.SubFactory(PoliticalFactory)
+        model = 'facts.MilitaryDetails'
