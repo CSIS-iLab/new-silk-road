@@ -12,31 +12,7 @@ from finance.credit import (MOODYS_LONG_TERM,
 class Organization(MPTTModel, Publishable):
     """Abstract base model for organizations"""
 
-    TYPE_GENERIC = 1
-    TYPE_COMPANY = 2
-    TYPE_FINANCING = 3
-    TYPE_GOVERNMENT = 4
-    TYPE_MILITARY = 5
-    TYPE_MULTILATERAL = 6
-    TYPE_NGO = 7
-    TYPE_POLITICAL = 8
-
-    ORGANIZATION_TYPES = (
-        (TYPE_GENERIC, "Generic/Unknown"),
-        (TYPE_COMPANY, "Company"),
-        (TYPE_FINANCING, "Financing Organization"),
-        (TYPE_GOVERNMENT, "Government"),
-        (TYPE_MILITARY, "Military"),
-        (TYPE_MULTILATERAL, "Multilateral"),
-        (TYPE_NGO, "NGO"),
-        (TYPE_POLITICAL, "Political Entity"),
-    )
-
     name = models.CharField(max_length=100)
-    organization_type = models.PositiveSmallIntegerField(
-        choices=ORGANIZATION_TYPES,
-        default=TYPE_GENERIC
-    )
     leaders = models.ManyToManyField('Person', blank=True,
                                      related_name='organizations_led')
     initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
@@ -55,6 +31,9 @@ class Organization(MPTTModel, Publishable):
 
     class MPTTMeta:
             order_insertion_by = ['name']
+
+    class Meta:
+        verbose_name_plural = "all organizations"
 
     def __str__(self):
         return self.name
@@ -245,9 +224,10 @@ class PoliticalDetails(OrganizationDetails):
 # Shareholders
 
 class ShareholderBase(models.Model):
-    right = models.ForeignKey('FinancingOrganizationDetails',
-                              verbose_name="to", on_delete=models.CASCADE,
-                              related_name='+')
+    investment = models.ForeignKey(
+        'FinancingOrganizationDetails',
+        on_delete=models.CASCADE
+    )
     value = models.DecimalField('% Share', max_digits=5, decimal_places=2)
 
     class Meta:
@@ -255,18 +235,20 @@ class ShareholderBase(models.Model):
 
 
 class OrganizationShareholder(ShareholderBase):
-    left = models.ForeignKey('Organization',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
+    shareholder = models.ForeignKey(
+        'Organization',
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
-        return "{}: {}%".format(self.left, self.value)
+        return "{}: {}%".format(self.shareholder, self.value)
 
 
 class PersonShareholder(ShareholderBase):
-    left = models.ForeignKey('Person',
-                             verbose_name="from", on_delete=models.CASCADE,
-                             related_name='+')
+    shareholder = models.ForeignKey(
+        'Person',
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
-        return "{}: {}%".format(self.left, self.value)
+        return "{}: {}%".format(self.shareholder, self.value)
