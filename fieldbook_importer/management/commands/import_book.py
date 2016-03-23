@@ -20,7 +20,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--dry-run', '-n', action='store_true', default=False)
-        parser.add_argument('configfile', type=argparse.FileType('r'))
+        parser.add_argument(
+            'configfile', type=argparse.FileType('r'),
+            help='A JSON array of objects containing sheet and file (path) values.'
+        )
 
     def handle(self, *args, **kwargs):
         self.dry_run = kwargs.get('dry_run')
