@@ -1,4 +1,5 @@
 from .utils import (
+    get_mapper,
     parse_date,
     choices_from_values,
     values_list,
@@ -6,6 +7,7 @@ from .utils import (
     transform_attr,
     instance_for_model,
     coerce_to_string,
+    section_from_string,
     instances_for_related_items,
     first_of_many
 )
@@ -67,6 +69,11 @@ def initiative_type_object(x):
     return None
 
 
+PERSON_MAP = {
+    "given_name": transform_attr("points_of_contact_name", section_from_string, 0),
+    "family_name": transform_attr("points_of_contact_name", section_from_string, 1),
+}
+
 PROJECT_MAP = {
     "name": transform_attr("project_title", coerce_to_string),
     "start_date": transform_attr("project_start_date", parse_date),
@@ -84,6 +91,15 @@ PROJECT_MAP = {
 PROJECT_RELATED_MAP = {
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
+    # "contacts": transform_attr(
+    #     "points_of_contact",
+    #     instances_for_related_items,
+    #     'facts.Person',
+    #     get_mapper(PERSON_MAP)
+    # )
+    # "consultant": ("consultants", None),
+    # "operator": ("operator", None),
+    # "points_of_contact": ("contacts", None),
 }
 
 METADATA_FIELDS = {
@@ -94,10 +110,7 @@ METADATA_FIELDS = {
 }
 
 PROJECT_RELATIONAL_FIELDS = {
-    "consultant": ("consultants", None),
-    "operator": ("operator", None),
     "region": ("regions", None),
-    "points_of_contact": ("contacts", None),
     # Related Organizations
     "contractors": None,
     "client_implementing_agency": None,
@@ -157,7 +170,6 @@ INITIATIVE_MAP = {
 INITIATIVE_RELATED_MAP = {
     "initiative_type": initiative_type_object,
 }
-
 
 
 # Other models

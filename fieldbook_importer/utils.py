@@ -3,6 +3,12 @@ from django.apps import apps
 from urllib.parse import urlparse
 
 
+def get_mapper(mapping):
+    def mapper(item):
+        return {key: func(item) for key, func in mapping.items() if key and callable(func)}
+    return mapper
+
+
 def parse_date(date_str, fmt='%Y-%m-%d'):
     if not date_str:
         return None
@@ -39,7 +45,6 @@ def instance_for_model(model_label, data):
     except model.DoesNotExist:
         instance = model(**data)
     except model.MultipleObjectsReturned as e:
-        import ipdb; ipdb.set_trace()
         raise e
     return instance
 
@@ -78,6 +83,15 @@ def coerce_to_string(value):
     if value is not None:
         return str(value)
     return ""
+
+
+def section_from_string(value, pos, spliton=" "):
+    if value and isinstance(value, str):
+        parts = value.split(spliton)
+        if pos < len(parts):
+            return parts[pos]
+        return value
+    return None
 
 
 def remap_dict(obj, field_map):

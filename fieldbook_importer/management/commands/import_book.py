@@ -4,6 +4,7 @@ import argparse
 import os.path
 import json
 
+from fieldbook_importer.utils import get_mapper
 from fieldbook_importer.mappings import (
     PROJECT_MAP, PROJECT_RELATED_MAP,
     INFRASTRUCTURETYPE_MAP,
@@ -12,7 +13,8 @@ from fieldbook_importer.mappings import (
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
     INITIATIVE_MAP,
-    INITIATIVE_RELATED_MAP
+    INITIATIVE_RELATED_MAP,
+    PERSON_MAP
 )
 
 
@@ -22,6 +24,7 @@ class Command(BaseCommand):
     CONFIG_FORMAT_MSG = "Config should be a list of objects"
 
     def add_arguments(self, parser):
+        parser.add_argument('--preflight', action='store_true', default=False)
         parser.add_argument('--dry-run', '-n', action='store_true', default=False)
         parser.add_argument(
             'configfile', type=argparse.FileType('r'),
@@ -32,6 +35,7 @@ class Command(BaseCommand):
         self.dry_run = kwargs.get('dry_run')
         self.verbosity = kwargs.get('verbosity')
         self.configfile = kwargs.get('configfile')
+        self.preflight = kwargs.get('preflight')
         self.err_count = 0
         self.data_sequence = []
         self.sheets = {
@@ -65,26 +69,40 @@ class Command(BaseCommand):
                 'model': 'facts.Organization',
                 'mapping': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
             },
+            'points_of_contact': {
+                'model': 'facts.Person',
+                'mapping': PERSON_MAP,
+            }
         }
 
         self.configure(self.configfile)
 
-        for item in self.data_sequence:
-            # Fail hard on nonexistent keys, at least for now
-            data = item.get('data')
-            sheetname = item.get('sheet')
+        if self.preflight:
+            for item in self.data_sequence:
+                sheet_info = 'Sheet: {}'.format(item.get('sheet'))
+                self.stdout.write(sheet_info)
+                data = item.get('data', [])
+                self.stdout.write('Data items: {}'.format(len(data)))
+        else:
+            self._process_data()
 
-            conf = self.sheets.get(sheetname)
+    def _process_data(self):
+            for item in self.data_sequence:
+                # Fail hard on nonexistent keys, at least for now
+                data = item.get('data')
+                sheetname = item.get('sheet')
 
-            if conf:
-                params = conf.copy()
-                modelname = params.pop('model')
-                if self.verbosity > 1:
-                    self.stdout.write("Processing '{}' data as {}".format(sheetname, modelname))
-                model = apps.get_model(modelname)
-                self.load_data(data, model, **params)
-            else:
-                self.stderr.write("No mapping available for {}, skipping".format(sheetname))
+                conf = self.sheets.get(sheetname)
+
+                if conf:
+                    params = conf.copy()
+                    modelname = params.pop('model')
+                    if self.verbosity > 1:
+                        self.stdout.write("Processing '{}' data as {}".format(sheetname, modelname))
+                    model = apps.get_model(modelname)
+                    self.load_data(data, model, **params)
+                else:
+                    self.stderr.write(self.style.WARNING("No mapping available for {}, skipping".format(sheetname)))
 
     def configure(self, configfile):
         basename = os.path.abspath(os.path.dirname(configfile.name))
@@ -117,16 +135,11 @@ class Command(BaseCommand):
             return klass
         return klass.objects.get_or_create
 
-    def _get_mapper(self, mapping):
-        def mapper(item):
-            return {key: func(item) for key, func in mapping.items() if key and callable(func)}
-        return mapper
-
     def load_data(self, data, model_class, mapping, related_mapping=None):
         create_obj = self._get_model_constructor(model_class)
         model_name = model_class._meta.model_name
 
-        value_mapper = self._get_mapper(mapping)
+        value_mapper = get_mapper(mapping)
 
         for item in data:
             value_map = value_mapper(item)
@@ -143,12 +156,11 @@ class Command(BaseCommand):
                     self.stderr.write(repr(e))
                     self.track_error()
             if related_mapping:
-                related_mapper = self._get_mapper(related_mapping)
+                related_mapper = get_mapper(related_mapping)
                 related_value_map = related_mapper(item)
-                for key, rel_obj in related_value_map.items():
-                    if rel_obj and hasattr(obj, key):
-                        if not self.dry_run:
-                            rel_obj.save()
-                        setattr(obj, key, rel_obj)
                 if not self.dry_run:
+                    for key, rel_obj in related_value_map.items():
+                        if rel_obj and hasattr(obj, key):
+                            rel_obj.save()
+                            setattr(obj, key, rel_obj)
                     obj.save()
