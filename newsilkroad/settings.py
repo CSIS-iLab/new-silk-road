@@ -153,7 +153,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # django-suit
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Marco Polo',
-    'CONFIRM_UNSAVED_CHANGES': True
+    # 'CONFIRM_UNSAVED_CHANGES': True
 }
 
 # markymark
