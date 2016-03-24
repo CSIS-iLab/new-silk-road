@@ -23,6 +23,7 @@ class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
     list_filter = ('status', 'infrastructure_type',)
+    ordering = ['name', 'created_at']
     inlines = [
         ProjectFundingInline
     ]
@@ -33,6 +34,7 @@ class InitiativeAdmin(MPTTModelAdmin):
     save_on_top = True
     form = InitiativeForm
     list_display = ('name', 'initiative_type',) + TEMPORAL_FIELDS
+    ordering = ['name', 'created_at']
 
     class Meta:
         model = Initiative
