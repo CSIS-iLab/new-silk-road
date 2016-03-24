@@ -1,6 +1,5 @@
 import datetime
 from django.apps import apps
-from django.core.exceptions import ObjectDoesNotExist
 from urllib.parse import urlparse
 
 
@@ -33,12 +32,15 @@ def choices_from_values(values, choices):
         yield find_choice(v, choices)
 
 
-def instance_for_model(app_label, model_name, data):
-    model = apps.get_model(app_label, model_name)
+def instance_for_model(model_label, data):
+    model = apps.get_model(model_label)
     try:
         instance = model.objects.get(**data)
-    except ObjectDoesNotExist:
+    except model.DoesNotExist:
         instance = model(**data)
+    except model.MultipleObjectsReturned as e:
+        import ipdb; ipdb.set_trace()
+        raise e
     return instance
 
 
@@ -76,3 +78,23 @@ def coerce_to_string(value):
     if value is not None:
         return str(value)
     return ""
+
+
+def remap_dict(obj, field_map):
+    return {k: obj[v] for k, v in field_map.items() if v in obj}
+
+
+def instances_for_related_items(items_list, model_label, field_map):
+    if isinstance(items_list, list):
+        for item in items_list:
+            data = remap_dict(item, field_map)
+            yield instance_for_model(model_label, data)
+    yield None
+
+
+def first_of_many(many):
+    if isinstance(many, list) and len(many) > 0:
+        return many[0]
+    elif hasattr(many, '__next__'):
+        return next(many)
+    return None

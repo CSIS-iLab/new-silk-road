@@ -9,7 +9,10 @@ from fieldbook_importer.mappings import (
     INFRASTRUCTURETYPE_MAP,
     CONSULTANT_ORGANIZATION_MAP,
     OPERATOR_ORGANIZATION_MAP,
-    CONTRACTOR_ORGANIZATION_MAP
+    CONTRACTOR_ORGANIZATION_MAP,
+    IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
+    INITIATIVE_MAP,
+    INITIATIVE_RELATED_MAP
 )
 
 
@@ -37,6 +40,11 @@ class Command(BaseCommand):
                 'mapping': PROJECT_MAP,
                 'related_mapping': PROJECT_RELATED_MAP
             },
+            'program_initiatives': {
+                'model': 'infrastructure.Initiative',
+                'mapping': INITIATIVE_MAP,
+                'related_mapping': INITIATIVE_RELATED_MAP,
+            },
             'infrastructure_types': {
                 'model': 'infrastructure.InfrastructureType',
                 'mapping': INFRASTRUCTURETYPE_MAP
@@ -52,6 +60,10 @@ class Command(BaseCommand):
             'contractors': {
                 'model': 'facts.Organization',
                 'mapping': CONTRACTOR_ORGANIZATION_MAP,
+            },
+            'client_implementing_agencies': {
+                'model': 'facts.Organization',
+                'mapping': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
             },
         }
 
@@ -135,6 +147,8 @@ class Command(BaseCommand):
                 related_value_map = related_mapper(item)
                 for key, rel_obj in related_value_map.items():
                     if rel_obj and hasattr(obj, key):
-                        rel_obj.save()
+                        if not self.dry_run:
+                            rel_obj.save()
                         setattr(obj, key, rel_obj)
-                obj.save()
+                if not self.dry_run:
+                    obj.save()

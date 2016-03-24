@@ -6,6 +6,8 @@ from .utils import (
     transform_attr,
     instance_for_model,
     coerce_to_string,
+    instances_for_related_items,
+    first_of_many
 )
 from infrastructure.models import ProjectStatus
 from locations.models import COUNTRY_CHOICES
@@ -22,33 +24,35 @@ def project_status_from_statuses(x):
 
 def countries_from_country(x):
     country_rename = {
-        'Vietnam': 'Viet Nam'
+        'Vietnam': 'Viet Nam',
+        'East Timor': 'Timor-Leste'
     }
     values = values_list(x.get("country"), "country_name")
-    values = list(country_rename.get(c, c) for c in country_rename)
+    values = list(country_rename.get(c, c) for c in country_rename if c)
     if values:
         return list(choices_from_values(values, COUNTRY_CHOICES))
     return []
 
 
 def infrastructure_type_object(x):
-    values = list(values_list(x.get("infrastructure_type"), "infrastructure_type_name"))
-    if len(values):
-        data = {
-            'name': values[0]
-        }
-        return instance_for_model('infrastructure', 'InfrastructureType', data)
+    objects = instances_for_related_items(
+        x.get("infrastructure_type"),
+        'infrastructure.InfrastructureType',
+        { "name": "infrastructure_type_name" }
+    )
+    if objects:
+        return first_of_many(objects)
     return None
 
 
 def initiative_object(x):
-    # TODO: These objects have important data in another JSON!
-    values = list(values_list(x.get("program_initiative"), "program_initiative_name"))
-    if len(values):
-        data = {
-            'name': values[0]
-        }
-        return instance_for_model('infrastructure', 'Initiative', data)
+    objects = instances_for_related_items(
+        x.get("program_initiative"),
+        'infrastructure.Initiative',
+        { "name": "program_initiative_name" }
+    )
+    if objects:
+        return first_of_many(objects)
     return None
 
 
@@ -134,6 +138,17 @@ OTHER_FIELDS = {
     "sources_of_funding": None
 }
 
+INITIATIVE_MAP = {
+    # "first_appearance_of_initiative"
+    "name": transform_attr("program_initiative_name", coerce_to_string),
+}
+
+INITIATIVE_RELATED_MAP = {
+    "initiative_type": initiative_object,
+}
+
+
+
 # Other models
 
 INFRASTRUCTURETYPE_MAP = {
@@ -152,3 +167,6 @@ OPERATOR_ORGANIZATION_MAP['name'] = transform_attr("operator_name", coerce_to_st
 
 CONTRACTOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
 CONTRACTOR_ORGANIZATION_MAP['name'] = transform_attr("contractors_name", coerce_to_string)
+
+IMPLEMENTING_AGENCY_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
+IMPLEMENTING_AGENCY_ORGANIZATION_MAP['name'] = transform_attr("client_implementing_agency_name", coerce_to_string)
