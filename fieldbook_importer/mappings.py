@@ -86,11 +86,11 @@ PROJECT_MAP = {
     "planned_completion_date": transform_attr("planned_date_of_completion", parse_date),
     # "new_reconstruction": None,
     "countries": countries_from_country,
+    "infrastructure_type": infrastructure_type_object,
+    "initiative": initiative_object,
 }
 
 PROJECT_RELATED_MAP = {
-    "infrastructure_type": infrastructure_type_object,
-    "initiative": initiative_object,
     # "contacts": transform_attr(
     #     "points_of_contact",
     #     instances_for_related_items,
@@ -165,9 +165,6 @@ OTHER_FIELDS = {
 INITIATIVE_MAP = {
     # "first_appearance_of_initiative"
     "name": transform_attr("program_initiative_name", coerce_to_string),
-}
-
-INITIATIVE_RELATED_MAP = {
     "initiative_type": initiative_type_object,
 }
 

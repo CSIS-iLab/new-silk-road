@@ -6,14 +6,13 @@ import json
 
 from fieldbook_importer.utils import get_mapper
 from fieldbook_importer.mappings import (
-    PROJECT_MAP, PROJECT_RELATED_MAP,
+    PROJECT_MAP,
     INFRASTRUCTURETYPE_MAP,
     CONSULTANT_ORGANIZATION_MAP,
     OPERATOR_ORGANIZATION_MAP,
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
     INITIATIVE_MAP,
-    INITIATIVE_RELATED_MAP,
     PERSON_MAP
 )
 
@@ -42,12 +41,12 @@ class Command(BaseCommand):
             'projects': {
                 'model': 'infrastructure.Project',
                 'mapping': PROJECT_MAP,
-                'related_mapping': PROJECT_RELATED_MAP
+                # 'related_mapping': PROJECT_RELATED_MAP
             },
             'program_initiatives': {
                 'model': 'infrastructure.Initiative',
                 'mapping': INITIATIVE_MAP,
-                'related_mapping': INITIATIVE_RELATED_MAP,
+                # 'related_mapping': INITIATIVE_RELATED_MAP,
             },
             'infrastructure_types': {
                 'model': 'infrastructure.InfrastructureType',
