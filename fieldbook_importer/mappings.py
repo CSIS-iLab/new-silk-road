@@ -56,6 +56,17 @@ def initiative_object(x):
     return None
 
 
+def initiative_type_object(x):
+    objects = instances_for_related_items(
+        x.get("initiative_type"),
+        'infrastructure.InitiativeType',
+        { "name": "initiative_type_name" }
+    )
+    if objects:
+        return first_of_many(objects)
+    return None
+
+
 PROJECT_MAP = {
     "name": transform_attr("project_title", coerce_to_string),
     "start_date": transform_attr("project_start_date", parse_date),
@@ -144,7 +155,7 @@ INITIATIVE_MAP = {
 }
 
 INITIATIVE_RELATED_MAP = {
-    "initiative_type": initiative_object,
+    "initiative_type": initiative_type_object,
 }
 
 
