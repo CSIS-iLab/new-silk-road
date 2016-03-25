@@ -92,12 +92,16 @@ def clean_string(value, stripnewlines=True):
     return str_val
 
 
-def section_from_string(value, pos, spliton=" "):
+def force_split_string(value, sep=" "):
     if value and isinstance(value, str):
-        parts = value.split(spliton)
-        if pos < len(parts):
-            return parts[pos]
-        return value
+        return value.split(sep)
+    return None
+
+
+def section_from_string(value, pos, sep=" "):
+    parts = force_split_string(value, sep)
+    if parts and pos < len(parts):
+        return parts[pos]
     return None
 
 

@@ -1,13 +1,10 @@
-from .utils import (
-    get_mapper,
+from fieldbook_importer.utils import (
     parse_date,
     choices_from_values,
     values_list,
     make_url_list,
     transform_attr,
-    instance_for_model,
     clean_string,
-    section_from_string,
     instances_for_related_items,
     first_of_many
 )
@@ -69,7 +66,7 @@ def initiative_type_object(x):
     return None
 
 
-def regions_data(value, recurse=True):
+def process_regions_data(value, recurse=True):
     if isinstance(value, str):
         yield {
             'name': clean_string(value)
@@ -77,24 +74,18 @@ def regions_data(value, recurse=True):
     elif isinstance(value, list):
         if recurse:
             for item in value:
-                yield from regions_data(item, recurse=False)
+                yield from process_regions_data(item, recurse=False)
 
 
 def regions_instances(region_var):
     if region_var:
-        data_list = regions_data(region_var)
+        data_list = process_regions_data(region_var)
         objects = instances_for_related_items(
             data_list,
             'locations.Region',
         )
         return list(objects)
     return None
-
-
-PERSON_MAP = {
-    "given_name": transform_attr("points_of_contact_name", section_from_string, 0),
-    "family_name": transform_attr("points_of_contact_name", section_from_string, 1),
-}
 
 PROJECT_MAP = {
     "name": transform_attr("project_title", clean_string),
@@ -110,32 +101,20 @@ PROJECT_MAP = {
     "countries": countries_from_country,
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
+    # "operator": operator_object,
 }
 
 PROJECT_M2M = {
     "regions": lambda x: regions_instances(x.get('region')),
-    # "contacts": transform_attr(
-    #     "points_of_contact",
-    #     instances_for_related_items,
-    #     'facts.Person',
-    #     get_mapper(PERSON_MAP)
-    # )
-    # "consultant": ("consultants", None),
-    # "operator": ("operator", None),
-    # "points_of_contact": ("contacts", None),
-}
-
-METADATA_FIELDS = {
-    "date_last_updated": None,
-    "collection_stage": None,
-    "processed": None,
-    "verified_path": None,
-}
-
-PROJECT_RELATIONAL_FIELDS = {
+    # "contacts": lambda x: contacts_instances(x.get('points_of_contact')),
     # Related Organizations
-    "contractors": None,
-    "client_implementing_agency": None,
+    # "consultants": ("consultants", None),
+    # "contractors": None,
+    # "client_implementing_agency": "client_implementing_agency",
+
+}
+
+PROJECT_DOCUMENTS_MESS = {
     # Operational Documents
     "administration_manuals_operational_documents": None,
     "appraisal_documents_operational_documents": None,
@@ -162,7 +141,14 @@ PROJECT_RELATIONAL_FIELDS = {
     "press_releases_public_materials": None,
     "national_development_plans_public_materials": None,
     # Documents; Misc
-    "miscellaneous_reports": None,
+    "miscellaneous_reports": None
+}
+
+METADATA_FIELDS = {
+    "date_last_updated": None,
+    "collection_stage": None,
+    "processed": None,
+    "verified_path": None,
 }
 
 FIELDBOOK_FIELDS = {
@@ -190,25 +176,6 @@ INITIATIVE_MAP = {
     "initiative_type": initiative_type_object,
 }
 
-
-# Other models
-
 INFRASTRUCTURETYPE_MAP = {
     'name': transform_attr("infrastructure_type_name", clean_string),
 }
-
-ORGANIZATION_MAP = {
-    'name': transform_attr("organization_name", clean_string),
-}
-
-CONSULTANT_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-CONSULTANT_ORGANIZATION_MAP['name'] = transform_attr("consultant_name", clean_string)
-
-OPERATOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-OPERATOR_ORGANIZATION_MAP['name'] = transform_attr("operator_name", clean_string)
-
-CONTRACTOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-CONTRACTOR_ORGANIZATION_MAP['name'] = transform_attr("contractors_name", clean_string)
-
-IMPLEMENTING_AGENCY_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-IMPLEMENTING_AGENCY_ORGANIZATION_MAP['name'] = transform_attr("client_implementing_agency_name", clean_string)

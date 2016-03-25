@@ -5,16 +5,18 @@ import os.path
 import json
 
 from fieldbook_importer.utils import get_mapper
-from fieldbook_importer.mappings import (
+from fieldbook_importer.mappings.infrastructure import (
     PROJECT_MAP,
     PROJECT_M2M,
     INFRASTRUCTURETYPE_MAP,
+    INITIATIVE_MAP,
+)
+from fieldbook_importer.mappings.facts import (
     CONSULTANT_ORGANIZATION_MAP,
     OPERATOR_ORGANIZATION_MAP,
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    INITIATIVE_MAP,
-    PERSON_MAP
+    PERSON_MAP,
 )
 
 
