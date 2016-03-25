@@ -3,33 +3,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-
-DEFAULT_REGION_NAMES = (
-    'Eastern Europe and the Balkans',
-    'Gulf and Mediterranean',
-    'Northeast Asia',
-    'Russia, Central Asia, and the South Caucuses',
-    'South Asia and India',
-    'Southeast Asia',
-    'Western Europe and Scandinavia'
-)
+from django.core import management
 
 
-def create_regions(apps, schema_editor):
-    Region = apps.get_model("locations.Region")
-    db_alias = schema_editor.connection.alias
-
-    Region.objects.using(db_alias).bulk_create([
-        Region(name=x) for x in DEFAULT_REGION_NAMES
-    ])
-
-
-def remove_regions(apps, schema_editor):
-    Region = apps.get_model("locations.Region")
-    db_alias = schema_editor.connection.alias
-
-    for name in DEFAULT_REGION_NAMES:
-        Region.objects.using(db_alias).filter(name=name).delete()
+def load_regions_from_fixture(apps, schema_editor):
+    management.call_command('loaddata', 'regions.json', app='locations', verbosity=0)
 
 
 class Migration(migrations.Migration):
@@ -39,5 +17,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_regions, remove_regions),
+        migrations.RunPython(load_regions_from_fixture, migrations.RunPython.noop),
     ]
