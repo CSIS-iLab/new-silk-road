@@ -106,7 +106,11 @@ def section_from_string(value, pos, sep=" "):
 
 
 def remap_dict(obj, field_map):
-    return {k: obj[v] for k, v in field_map.items() if v in obj}
+    return {
+        k: v(obj)
+        if callable(v) else obj.get(v, None)
+        for k, v in field_map.items()
+    }
 
 
 def instances_for_related_items(items_list, model_label, field_map=None):

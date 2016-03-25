@@ -14,7 +14,7 @@ from fieldbook_importer.mappings import (
     OPERATOR_ORGANIZATION_MAP,
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    PERSON_MAP,
+    PERSON_POC_MAP
 )
 
 
@@ -71,7 +71,7 @@ class Command(BaseCommand):
             },
             'points_of_contact': {
                 'model': 'facts.Person',
-                'mapping': PERSON_MAP,
+                'mapping': PERSON_POC_MAP,
             }
         }
 
@@ -161,7 +161,8 @@ class Command(BaseCommand):
                         related_manager = getattr(obj, key, None)
                         if related_manager:
                             related_objects = func(item)
-                            related_manager.add(*related_objects)
+                            if related_objects:
+                                related_manager.add(*related_objects)
                         obj.save()
                     elif self.verbosity > 2:
                         self.stdout.write("Processing '{}' many_to_many".format(key))

@@ -8,6 +8,7 @@ from fieldbook_importer.utils import (
     instances_for_related_items,
     first_of_many
 )
+from .facts import make_person_map, PERSON_POC_MAP
 from infrastructure.models import ProjectStatus
 from locations.models import COUNTRY_CHOICES
 
@@ -77,15 +78,39 @@ def process_regions_data(value, recurse=True):
                 yield from process_regions_data(item, recurse=False)
 
 
-def regions_instances(region_var):
-    if region_var:
-        data_list = process_regions_data(region_var)
+def regions_instances(in_var):
+    if in_var:
+        data_list = process_regions_data(in_var)
         objects = instances_for_related_items(
             data_list,
             'locations.Region',
         )
         return list(objects)
     return None
+
+
+def contacts_instances(in_var):
+    if in_var:
+        objects = instances_for_related_items(
+            in_var,
+            'facts.Person',
+            PERSON_POC_MAP
+        )
+        return list(objects)
+    return None
+
+
+# FIXME: operator_object, should map Organizations to operator fk
+# def operator_object(x):
+#     objects = instances_for_related_items(
+#         x.get("operator"),
+#         'facts.Organization',
+#         org_map??("operator_name")
+#     )
+#     if objects:
+#         return first_of_many(objects)
+#     return None
+
 
 PROJECT_MAP = {
     "name": transform_attr("project_title", clean_string),
@@ -101,12 +126,13 @@ PROJECT_MAP = {
     "countries": countries_from_country,
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
+    # FIXME: An operator is an organization, so make it happen
     # "operator": operator_object,
 }
 
 PROJECT_M2M = {
     "regions": lambda x: regions_instances(x.get('region')),
-    # "contacts": lambda x: contacts_instances(x.get('points_of_contact')),
+    "contacts": lambda x: contacts_instances(x.get('points_of_contact')),
     # Related Organizations
     # "consultants": ("consultants", None),
     # "contractors": None,
@@ -173,6 +199,7 @@ OTHER_FIELDS = {
 INITIATIVE_MAP = {
     # "first_appearance_of_initiative"
     "name": transform_attr("program_initiative_name", clean_string),
+    # TODO: Confirm initiative_type using a dataset that has some... 
     "initiative_type": initiative_type_object,
 }
 

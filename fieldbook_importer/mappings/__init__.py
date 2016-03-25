@@ -7,9 +7,10 @@ from .infrastructure import (
     INITIATIVE_MAP,
 )
 from .facts import (
+    make_person_map,
+    PERSON_POC_MAP,
     CONSULTANT_ORGANIZATION_MAP,
     OPERATOR_ORGANIZATION_MAP,
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    PERSON_MAP,
 )
