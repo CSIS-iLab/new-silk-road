@@ -105,17 +105,18 @@ def remap_dict(obj, field_map):
     return {k: obj[v] for k, v in field_map.items() if v in obj}
 
 
-def instances_for_related_items(items_list, model_label, field_map):
-    if isinstance(items_list, list):
+def instances_for_related_items(items_list, model_label, field_map=None):
+    if hasattr(items_list, '__iter__') or hasattr(items_list, '__next__'):
         for item in items_list:
-            data = remap_dict(item, field_map)
+            data = remap_dict(item, field_map) if field_map else item
             yield instance_for_model(model_label, data)
-    yield None
+    else:
+        return None
 
 
 def first_of_many(many):
     if isinstance(many, list) and len(many) > 0:
         return many[0]
     elif hasattr(many, '__next__'):
-        return next(many)
+        return next(many, None)
     return None

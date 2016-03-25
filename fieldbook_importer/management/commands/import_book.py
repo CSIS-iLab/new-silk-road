@@ -7,6 +7,7 @@ import json
 from fieldbook_importer.utils import get_mapper
 from fieldbook_importer.mappings import (
     PROJECT_MAP,
+    PROJECT_M2M,
     INFRASTRUCTURETYPE_MAP,
     CONSULTANT_ORGANIZATION_MAP,
     OPERATOR_ORGANIZATION_MAP,
@@ -41,7 +42,7 @@ class Command(BaseCommand):
             'projects': {
                 'model': 'infrastructure.Project',
                 'mapping': PROJECT_MAP,
-                # 'related_mapping': PROJECT_RELATED_MAP
+                'many_to_many': PROJECT_M2M
             },
             'program_initiatives': {
                 'model': 'infrastructure.Initiative',
@@ -134,7 +135,7 @@ class Command(BaseCommand):
             return klass
         return klass.objects.get_or_create
 
-    def load_data(self, data, model_class, mapping, related_mapping=None):
+    def load_data(self, data, model_class, mapping, many_to_many=None):
         create_obj = self._get_model_constructor(model_class)
         model_name = model_class._meta.model_name
 
@@ -154,12 +155,13 @@ class Command(BaseCommand):
                     self.stderr.write("Error with {} {}".format(model_name, item.get('id', repr(item))))
                     self.stderr.write(repr(e))
                     self.track_error()
-            if related_mapping:
-                related_mapper = get_mapper(related_mapping)
-                related_value_map = related_mapper(item)
-                if not self.dry_run:
-                    for key, rel_obj in related_value_map.items():
-                        if rel_obj and hasattr(obj, key):
-                            rel_obj.save()
-                            setattr(obj, key, rel_obj)
-                    obj.save()
+            if many_to_many:
+                for key, func in many_to_many.items():
+                    if not self.dry_run:
+                        related_manager = getattr(obj, key, None)
+                        if related_manager:
+                            related_objects = func(item)
+                            related_manager.add(*related_objects)
+                        obj.save()
+                    elif self.verbosity > 2:
+                        self.stdout.write("Processing '{}' many_to_many".format(key))

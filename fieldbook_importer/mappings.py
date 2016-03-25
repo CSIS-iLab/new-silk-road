@@ -69,15 +69,26 @@ def initiative_type_object(x):
     return None
 
 
-# def region_object(x):
-#     objects = instances_for_related_items(
-#         x.get("region"),
-#         'location.Region',
-#         {"name": "program_initiative_name"}
-#     )
-#     if objects:
-#         return first_of_many(objects)
-#     return None
+def regions_data(value, recurse=True):
+    if isinstance(value, str):
+        yield {
+            'name': clean_string(value)
+        }
+    elif isinstance(value, list):
+        if recurse:
+            for item in value:
+                yield from regions_data(item, recurse=False)
+
+
+def regions_instances(region_var):
+    if region_var:
+        data_list = regions_data(region_var)
+        objects = instances_for_related_items(
+            data_list,
+            'locations.Region',
+        )
+        return list(objects)
+    return None
 
 
 PERSON_MAP = {
@@ -99,10 +110,10 @@ PROJECT_MAP = {
     "countries": countries_from_country,
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
-    # "regions": region_object,
 }
 
-PROJECT_RELATED_MAP = {
+PROJECT_M2M = {
+    "regions": lambda x: regions_instances(x.get('region')),
     # "contacts": transform_attr(
     #     "points_of_contact",
     #     instances_for_related_items,
