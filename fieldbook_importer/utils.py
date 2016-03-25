@@ -1,6 +1,11 @@
 import datetime
 from django.apps import apps
+from django.utils.encoding import force_str
+import re
 from urllib.parse import urlparse
+
+newlines_reg = re.compile("(\n|\r)")
+extraspace_reg = re.compile("\s{2,}")
 
 
 def get_mapper(mapping):
@@ -79,10 +84,12 @@ def transform_attr(attr_name, func, *args, **kwargs):
     return inner_func
 
 
-def coerce_to_string(value):
-    if value is not None:
-        return str(value)
-    return ""
+def clean_string(value, stripnewlines=True):
+    str_val = force_str(value).strip(" ")
+    if stripnewlines:
+        str_val = newlines_reg.sub(" ", str_val)
+    str_val = extraspace_reg.sub(" ", str_val)
+    return str_val
 
 
 def section_from_string(value, pos, spliton=" "):

@@ -6,7 +6,7 @@ from .utils import (
     make_url_list,
     transform_attr,
     instance_for_model,
-    coerce_to_string,
+    clean_string,
     section_from_string,
     instances_for_related_items,
     first_of_many
@@ -40,7 +40,7 @@ def infrastructure_type_object(x):
     objects = instances_for_related_items(
         x.get("infrastructure_type"),
         'infrastructure.InfrastructureType',
-        { "name": "infrastructure_type_name" }
+        {"name": "infrastructure_type_name"}
     )
     if objects:
         return first_of_many(objects)
@@ -51,7 +51,7 @@ def initiative_object(x):
     objects = instances_for_related_items(
         x.get("program_initiative"),
         'infrastructure.Initiative',
-        { "name": "program_initiative_name" }
+        {"name": "program_initiative_name"}
     )
     if objects:
         return first_of_many(objects)
@@ -62,11 +62,22 @@ def initiative_type_object(x):
     objects = instances_for_related_items(
         x.get("initiative_type"),
         'infrastructure.InitiativeType',
-        { "name": "initiative_type_name" }
+        {"name": "initiative_type_name"}
     )
     if objects:
         return first_of_many(objects)
     return None
+
+
+# def region_object(x):
+#     objects = instances_for_related_items(
+#         x.get("region"),
+#         'location.Region',
+#         {"name": "program_initiative_name"}
+#     )
+#     if objects:
+#         return first_of_many(objects)
+#     return None
 
 
 PERSON_MAP = {
@@ -75,19 +86,20 @@ PERSON_MAP = {
 }
 
 PROJECT_MAP = {
-    "name": transform_attr("project_title", coerce_to_string),
+    "name": transform_attr("project_title", clean_string),
     "start_date": transform_attr("project_start_date", parse_date),
     # "project_id": None,
     "status": project_status_from_statuses,
     "sources": transform_attr("sources", make_url_list),
-    "notes": transform_attr("notes", coerce_to_string),
+    "notes": transform_attr("notes", clean_string),
     "commencement_date": transform_attr("commencement_date", parse_date),
-    "total_cost_description": transform_attr("total_project_cost_us", coerce_to_string),
+    "total_cost_description": transform_attr("total_project_cost_us", clean_string),
     "planned_completion_date": transform_attr("planned_date_of_completion", parse_date),
     # "new_reconstruction": None,
     "countries": countries_from_country,
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
+    # "regions": region_object,
 }
 
 PROJECT_RELATED_MAP = {
@@ -110,7 +122,6 @@ METADATA_FIELDS = {
 }
 
 PROJECT_RELATIONAL_FIELDS = {
-    "region": ("regions", None),
     # Related Organizations
     "contractors": None,
     "client_implementing_agency": None,
@@ -164,7 +175,7 @@ OTHER_FIELDS = {
 
 INITIATIVE_MAP = {
     # "first_appearance_of_initiative"
-    "name": transform_attr("program_initiative_name", coerce_to_string),
+    "name": transform_attr("program_initiative_name", clean_string),
     "initiative_type": initiative_type_object,
 }
 
@@ -172,21 +183,21 @@ INITIATIVE_MAP = {
 # Other models
 
 INFRASTRUCTURETYPE_MAP = {
-    'name': transform_attr("infrastructure_type_name", coerce_to_string),
+    'name': transform_attr("infrastructure_type_name", clean_string),
 }
 
 ORGANIZATION_MAP = {
-    'name': transform_attr("organization_name", coerce_to_string),
+    'name': transform_attr("organization_name", clean_string),
 }
 
 CONSULTANT_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-CONSULTANT_ORGANIZATION_MAP['name'] = transform_attr("consultant_name", coerce_to_string)
+CONSULTANT_ORGANIZATION_MAP['name'] = transform_attr("consultant_name", clean_string)
 
 OPERATOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-OPERATOR_ORGANIZATION_MAP['name'] = transform_attr("operator_name", coerce_to_string)
+OPERATOR_ORGANIZATION_MAP['name'] = transform_attr("operator_name", clean_string)
 
 CONTRACTOR_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-CONTRACTOR_ORGANIZATION_MAP['name'] = transform_attr("contractors_name", coerce_to_string)
+CONTRACTOR_ORGANIZATION_MAP['name'] = transform_attr("contractors_name", clean_string)
 
 IMPLEMENTING_AGENCY_ORGANIZATION_MAP = ORGANIZATION_MAP.copy()
-IMPLEMENTING_AGENCY_ORGANIZATION_MAP['name'] = transform_attr("client_implementing_agency_name", coerce_to_string)
+IMPLEMENTING_AGENCY_ORGANIZATION_MAP['name'] = transform_attr("client_implementing_agency_name", clean_string)
