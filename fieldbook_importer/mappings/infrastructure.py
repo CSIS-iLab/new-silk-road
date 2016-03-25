@@ -1,3 +1,4 @@
+from functools import partial
 from fieldbook_importer.utils import (
     parse_date,
     choices_from_values,
@@ -6,9 +7,13 @@ from fieldbook_importer.utils import (
     transform_attr,
     clean_string,
     instances_for_related_items,
+    instances_or_none,
     first_of_many
 )
-from .facts import make_person_map, PERSON_POC_MAP
+from .facts import (
+    PERSON_POC_MAP,
+    make_organization_map
+)
 from infrastructure.models import ProjectStatus
 from locations.models import COUNTRY_CHOICES
 
@@ -77,28 +82,26 @@ def process_regions_data(value, recurse=True):
             for item in value:
                 yield from process_regions_data(item, recurse=False)
 
+CONSULTANT_ORGANIZATION_MAP = make_organization_map("consultant_name")
+OPERATOR_ORGANIZATION_MAP = make_organization_map("operator_name")
+CONTRACTOR_ORGANIZATION_MAP = make_organization_map("contractors_name")
+IMPLEMENTING_AGENCY_ORGANIZATION_MAP = make_organization_map("client_implementing_agency_name")
 
-def regions_instances(in_var):
-    if in_var:
-        data_list = process_regions_data(in_var)
-        objects = instances_for_related_items(
-            data_list,
-            'locations.Region',
-        )
-        return list(objects)
-    return None
+consultants_instances = partial(
+    instances_or_none,
+    model_name='facts.Organization',
+    mapping=CONSULTANT_ORGANIZATION_MAP
+)
+contacts_instances = partial(
+    instances_or_none,
+    model_name='facts.Person',
+    mapping=PERSON_POC_MAP
+)
 
-
-def contacts_instances(in_var):
-    if in_var:
-        objects = instances_for_related_items(
-            in_var,
-            'facts.Person',
-            PERSON_POC_MAP
-        )
-        return list(objects)
-    return None
-
+regions_instances = partial(
+    instances_or_none,
+    model_name='locations.Region',
+)
 
 # FIXME: operator_object, should map Organizations to operator fk
 # def operator_object(x):
@@ -130,11 +133,12 @@ PROJECT_MAP = {
     # "operator": operator_object,
 }
 
+
 PROJECT_M2M = {
-    "regions": lambda x: regions_instances(x.get('region')),
+    "regions": lambda x: regions_instances(process_regions_data(x.get('region'))),
     "contacts": lambda x: contacts_instances(x.get('points_of_contact')),
     # Related Organizations
-    # "consultants": ("consultants", None),
+    "consultants": lambda x: consultants_instances(x.get('consultant')),
     # "contractors": None,
     # "client_implementing_agency": "client_implementing_agency",
 
@@ -199,7 +203,7 @@ OTHER_FIELDS = {
 INITIATIVE_MAP = {
     # "first_appearance_of_initiative"
     "name": transform_attr("program_initiative_name", clean_string),
-    # TODO: Confirm initiative_type using a dataset that has some... 
+    # TODO: Confirm initiative_type using a dataset that has some...
     "initiative_type": initiative_type_object,
 }
 

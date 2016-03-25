@@ -122,6 +122,16 @@ def instances_for_related_items(items_list, model_label, field_map=None):
         return None
 
 
+def instances_or_none(in_var, model_name, mapping=None):
+    if in_var:
+        return list(instances_for_related_items(
+            in_var,
+            model_name,
+            mapping
+        ))
+    return None
+
+
 def first_of_many(many):
     if isinstance(many, list) and len(many) > 0:
         return many[0]
