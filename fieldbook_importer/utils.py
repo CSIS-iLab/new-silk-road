@@ -1,6 +1,5 @@
 import datetime
 from django.apps import apps
-from django.utils.encoding import force_str
 import re
 from urllib.parse import urlparse
 
@@ -84,12 +83,14 @@ def transform_attr(attr_name, func, *args, **kwargs):
     return inner_func
 
 
-def clean_string(value, stripnewlines=True):
-    str_val = force_str(value).strip(" ")
-    if stripnewlines:
-        str_val = newlines_reg.sub(" ", str_val)
-    str_val = extraspace_reg.sub(" ", str_val)
-    return str_val
+def clean_string(value, stripnewlines=True, default=''):
+    if value and isinstance(value, str):
+        str_val = value.strip(" ")
+        if stripnewlines:
+            str_val = newlines_reg.sub(" ", str_val)
+        str_val = extraspace_reg.sub(" ", str_val)
+        return str_val
+    return default
 
 
 def force_split_string(value, sep=" "):
