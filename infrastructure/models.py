@@ -5,6 +5,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from locations.models import CountryField
 from markymark.fields import MarkdownField
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
+from iso3166 import countries as iso_countries
 
 
 class InfrastructureType(models.Model):
@@ -144,6 +145,10 @@ class Project(Publishable):
 
     def __str__(self):
         return self.name
+
+    def get_countries_display(self):
+        countries_names = [iso_countries[x].name for x in self.countries if x in iso_countries]
+        return ', '.join(countries_names)
 
 
 class InitiativeType(models.Model):

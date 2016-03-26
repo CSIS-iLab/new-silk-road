@@ -23,6 +23,7 @@ class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
     list_filter = ('status', 'infrastructure_type',)
+    search_fields = ('name',)
     ordering = ['name', 'created_at']
     inlines = [
         ProjectFundingInline
