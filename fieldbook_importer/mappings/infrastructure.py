@@ -33,7 +33,7 @@ def countries_from_country(x):
         'East Timor': 'Timor-Leste'
     }
     values = values_list(x.get("country"), "country_name")
-    values = list(country_rename.get(c, c) for c in country_rename if c)
+    values = list(country_rename.get(c, c) for c in values if c)
     if values:
         return list(choices_from_values(values, COUNTRY_CHOICES))
     return []
@@ -92,6 +92,19 @@ consultants_instances = partial(
     model_name='facts.Organization',
     mapping=CONSULTANT_ORGANIZATION_MAP
 )
+
+contractors_instances = partial(
+    instances_or_none,
+    model_name='facts.Organization',
+    mapping=CONTRACTOR_ORGANIZATION_MAP
+)
+
+client_org_instances = partial(
+    instances_or_none,
+    model_name='facts.Organization',
+    mapping=IMPLEMENTING_AGENCY_ORGANIZATION_MAP
+)
+
 contacts_instances = partial(
     instances_or_none,
     model_name='facts.Person',
@@ -139,8 +152,8 @@ PROJECT_M2M = {
     "contacts": lambda x: contacts_instances(x.get('points_of_contact')),
     # Related Organizations
     "consultants": lambda x: consultants_instances(x.get('consultant')),
-    # "contractors": None,
-    # "client_implementing_agency": "client_implementing_agency",
+    "contractors": lambda x: contractors_instances(x.get('contractors')),
+    "implementers": lambda x: client_org_instances(x.get('client_implementing_agency')),
 
 }
 
