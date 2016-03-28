@@ -78,14 +78,15 @@ def initiative_object(x):
     return None
 
 
+# FIXME: InitiativeType is going to be a string, apparently
 def initiative_type_object(x):
-    objects = instances_for_related_items(
-        x.get("initiative_type"),
-        'infrastructure.InitiativeType',
-        {"name": "initiative_type_name"}
-    )
-    if objects:
-        return first_of_many(objects)
+    value = x.get('initiative_type', None)
+    if value:
+        return instance_for_model(
+            'infrastructure.InitiativeType',
+            {"name": clean_string(value)},
+            create=True
+        )
     return None
 
 
