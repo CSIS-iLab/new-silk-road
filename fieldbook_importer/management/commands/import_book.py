@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.db.utils import IntegrityError
 from django.apps import apps
 import argparse
 import os.path
@@ -142,6 +143,8 @@ class Command(BaseCommand):
                     self.data_sequence.append(item)
                 else:
                     self.stderr.write("Error loading data using config")
+                    if self.verbosity > 2:
+                        self.stderr.write("Could not find '{}'".format(fpath))
 
     def track_error(self):
         self.err_count += 1
@@ -163,24 +166,31 @@ class Command(BaseCommand):
             value_map = value_mapper(item)
             if self.verbosity > 2:
                 self.stdout.write(repr(value_map))
-            obj = create_obj(**value_map)
-            if isinstance(obj, tuple):
-                obj, _ = obj
-            if self.dry_run:
-                try:
-                    obj.full_clean()
-                except Exception as e:
-                    self.stderr.write("Error with {} {}".format(model_name, item.get('id', repr(item))))
-                    self.stderr.write(repr(e))
-                    self.track_error()
-            if many_to_many:
-                for key, func in many_to_many.items():
-                    if not self.dry_run:
-                        related_manager = getattr(obj, key, None)
-                        if related_manager:
-                            related_objects = func(item)
-                            if related_objects:
-                                related_manager.add(*related_objects)
-                        obj.save()
-                    elif self.verbosity > 2:
-                        self.stdout.write("Processing '{}' many_to_many".format(key))
+            obj = None
+            try:
+                obj = create_obj(**value_map)
+            except IntegrityError as e:
+                self.stderr.write(repr(e))
+            except Exception as e:
+                raise e
+            if obj:
+                if isinstance(obj, tuple):
+                    obj, _ = obj
+                if self.dry_run:
+                    try:
+                        obj.full_clean()
+                    except Exception as e:
+                        self.stderr.write("Error with {} {}".format(model_name, item.get('id', repr(item))))
+                        self.stderr.write(repr(e))
+                        self.track_error()
+                if many_to_many:
+                    for key, func in many_to_many.items():
+                        if not self.dry_run:
+                            related_manager = getattr(obj, key, None)
+                            if related_manager:
+                                related_objects = func(item)
+                                if related_objects:
+                                    related_manager.add(*related_objects)
+                            obj.save()
+                        elif self.verbosity > 2:
+                            self.stdout.write("Processing '{}' many_to_many".format(key))
