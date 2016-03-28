@@ -6,6 +6,7 @@ from fieldbook_importer.utils import (
     make_url_list,
     transform_attr,
     clean_string,
+    instance_for_model,
     instances_for_related_items,
     instances_or_none,
     first_of_many
@@ -155,6 +156,24 @@ regions_instances = partial(
     model_name='locations.Region',
 )
 
+
+# Storing that extra data
+def extra_project_data(x, create=True):
+    values_obj = {
+        k: x.get(k, None) for k in ('id', 'project_id', 'points',)
+    }
+    data_obj = {
+        'url': x.get('record_url'),
+        'values': values_obj,
+        'label': "Fieldbook data for '{}'".format(values_obj.get('project_id'))
+    }
+    return instance_for_model('facts.Data', data_obj, create=True)
+
+
+def extra_project_data_as_instances(x):
+    return [extra_project_data(x)]
+
+
 PROJECT_DOCUMENT_MAP = {
     # "document"
     "document_type": lambda x: document_type_id(x.get('document_type')),
@@ -213,6 +232,7 @@ PROJECT_M2M = {
     # Documents
     "documents": lambda x: project_doc_instances(x.get('documents')),
     # Funding comes via ProjectFunding intermediary model
+    "extra_data": lambda x: extra_project_data_as_instances(x),
 }
 
 PROJECT_METADATA_FIELDS = {
@@ -248,8 +268,8 @@ INFRASTRUCTURETYPE_MAP = {
 
 # TODO: Figure out this m2m intermediary model.
 PROJECT_FUNDING_MAP = {
-    "source_of_funding": None,  # Organization via FUNDER_ORGANIZATION_MAP
+    # "source_of_funding": funding_organization_object,  # Organization via FUNDER_ORGANIZATION_MAP
     "currency": None,
     "amount": None,
-    "project_id": None,  # Project via project_id in fieldbook
+    # "project_id": project_object,  # Project via project_id in fieldbook
 }

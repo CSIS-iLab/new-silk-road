@@ -42,14 +42,17 @@ def choices_from_values(values, choices):
         yield find_choice(v, choices)
 
 
-def instance_for_model(model_label, data):
+def instance_for_model(model_label, data, create=False):
     model = apps.get_model(model_label)
-    try:
-        instance = model.objects.get(**data)
-    except model.DoesNotExist:
-        instance = model(**data)
-    except model.MultipleObjectsReturned as e:
-        raise e
+    if create:
+        instance, created = model.objects.get_or_create(**data)
+    else:
+        try:
+            instance = model.objects.get(**data)
+        except model.DoesNotExist:
+            instance = model(**data)
+        except model.MultipleObjectsReturned as e:
+            raise e
     return instance
 
 
