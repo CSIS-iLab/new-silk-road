@@ -245,6 +245,11 @@ class ProjectDocument(models.Model):
         choices=ProjectStatus.STATUSES
     )
 
+    def __str__(self):
+        if self.source_url:
+            return self.source_url
+        return "Document #{}".format(self.id)
+
     @classmethod
     def _flattened_doc_types(cls):
         return (value for _, subset in cls.DOCUMENT_TYPES for value in subset)
