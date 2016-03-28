@@ -14,7 +14,10 @@ from .facts import (
     PERSON_POC_MAP,
     make_organization_map
 )
-from infrastructure.models import ProjectStatus
+from infrastructure.models import (
+    ProjectStatus,
+    ProjectDocument
+)
 from locations.models import COUNTRY_CHOICES
 
 
@@ -81,6 +84,14 @@ def process_regions_data(value, recurse=True):
         if recurse:
             for item in value:
                 yield from process_regions_data(item, recurse=False)
+
+
+def document_type_id(value):
+    result = ProjectDocument.lookup_document_type_by_name(value)
+    if result:
+        return result[0]
+    return None
+
 
 CONSULTANT_ORGANIZATION_MAP = make_organization_map("consultant_name")
 OPERATOR_ORGANIZATION_MAP = make_organization_map("operator_name")
@@ -154,7 +165,17 @@ PROJECT_M2M = {
     "consultants": lambda x: consultants_instances(x.get('consultant')),
     "contractors": lambda x: contractors_instances(x.get('contractors')),
     "implementers": lambda x: client_org_instances(x.get('client_implementing_agency')),
+    # "documents": lambda x: project_document_instances(x.get('documents')),
 
+}
+
+PROJECT_DOCUMENT_MAP = {
+    # "document"
+    "document_type": lambda x: document_type_id(x.get('document_type')),
+    "source_url": lambda x: x.get('document_name_or_identifier')
+    # "notes":
+    # NOTE: status_indicator does not appear in Fieldbook data
+    # "status_indicator"
 }
 
 PROJECT_DOCUMENTS_MESS = {

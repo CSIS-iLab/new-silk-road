@@ -14,7 +14,8 @@ from fieldbook_importer.mappings import (
     OPERATOR_ORGANIZATION_MAP,
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    PERSON_POC_MAP
+    PERSON_POC_MAP,
+    PROJECT_DOCUMENT_MAP
 )
 
 
@@ -72,6 +73,10 @@ class Command(BaseCommand):
             'points_of_contact': {
                 'model': 'facts.Person',
                 'mapping': PERSON_POC_MAP,
+            },
+            'documents': {
+                'model': 'infrastructure.ProjectDocument',
+                'mapping': PROJECT_DOCUMENT_MAP
             }
         }
 
@@ -114,8 +119,11 @@ class Command(BaseCommand):
         for item in config:
             if not isinstance(item, dict):
                 raise CommandError(Command.CONFIG_FORMAT_MSG)
-            pathinfo = item.pop('file', None)
             sheet = item.get('sheet', None)
+            pathinfo = item.pop('file', None)
+            if sheet and not pathinfo:
+                # If a sheet name is provided but not a path, assume sheetname.json
+                pathinfo = "{}.json".format(sheet)
             if pathinfo and sheet:
                 fpath = pathinfo if os.path.isabs(pathinfo) else os.path.join(basename, pathinfo)
                 # Replace file with data, add to data_sequence
