@@ -124,6 +124,7 @@ CONSULTANT_ORGANIZATION_MAP = make_organization_map("consultant_name")
 OPERATOR_ORGANIZATION_MAP = make_organization_map("operator_name")
 CONTRACTOR_ORGANIZATION_MAP = make_organization_map("contractors_name")
 IMPLEMENTING_AGENCY_ORGANIZATION_MAP = make_organization_map("client_implementing_agency_name")
+FUNDER_ORGANIZATION_MAP = make_organization_map("sources_of_funding_name")
 
 consultants_instances = partial(
     instances_or_none,
@@ -211,9 +212,7 @@ PROJECT_M2M = {
     "implementers": lambda x: client_org_instances(x.get('client_implementing_agency')),
     # Documents
     "documents": lambda x: project_doc_instances(x.get('documents')),
-    # Funders
-    # "distribution_of_funding": None,
-    # "sources_of_funding": None
+    # Funding comes via ProjectFunding intermediary model
 }
 
 PROJECT_METADATA_FIELDS = {
@@ -244,4 +243,13 @@ INITIATIVE_MAP = {
 
 INFRASTRUCTURETYPE_MAP = {
     'name': transform_attr("infrastructure_type_name", clean_string),
+}
+
+
+# TODO: Figure out this m2m intermediary model.
+PROJECT_FUNDING_MAP = {
+    "source_of_funding": None,  # Organization via FUNDER_ORGANIZATION_MAP
+    "currency": None,
+    "amount": None,
+    "project_id": None,  # Project via project_id in fieldbook
 }
