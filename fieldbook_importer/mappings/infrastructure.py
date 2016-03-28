@@ -94,6 +94,32 @@ def document_type_id(value):
     return None
 
 
+def coerce_to_boolean_or_null(value):
+    if isinstance(value, str):
+        normalized_val = value.lower().strip()
+        if normalized_val == 'yes':
+            return True
+        elif normalized_val == 'no':
+            return False
+    elif isinstance(value, bool):
+        return value
+    return None
+
+
+def get_first_value_or_none(value):
+    if isinstance(value, list) and len(value) > 0:
+        return value[0]
+    return None
+
+
+def evaluate_project_new_value(list_val):
+    key = 'new_name'
+    raw_value = get_first_value_or_none(list_val)
+    if isinstance(raw_value, dict) and key in raw_value:
+        return coerce_to_boolean_or_null(raw_value[key])
+    return None
+
+
 CONSULTANT_ORGANIZATION_MAP = make_organization_map("consultant_name")
 OPERATOR_ORGANIZATION_MAP = make_organization_map("operator_name")
 CONTRACTOR_ORGANIZATION_MAP = make_organization_map("contractors_name")
@@ -167,7 +193,7 @@ PROJECT_MAP = {
     "commencement_date": transform_attr("commencement_date", parse_date),
     "total_cost_description": transform_attr("total_project_cost_us", clean_string),
     "planned_completion_date": transform_attr("planned_date_of_completion", parse_date),
-    # "new_reconstruction": None,
+    "new": transform_attr("new", evaluate_project_new_value),
     "countries": countries_from_country,
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
@@ -183,40 +209,14 @@ PROJECT_M2M = {
     "consultants": lambda x: consultants_instances(x.get('consultant')),
     "contractors": lambda x: contractors_instances(x.get('contractors')),
     "implementers": lambda x: client_org_instances(x.get('client_implementing_agency')),
+    # Documents
     "documents": lambda x: project_doc_instances(x.get('documents')),
+    # Funders
+    # "distribution_of_funding": None,
+    # "sources_of_funding": None
 }
 
-PROJECT_DOCUMENTS_MESS = {
-    # Operational Documents
-    "administration_manuals_operational_documents": None,
-    "appraisal_documents_operational_documents": None,
-    "financial_audits_operational_documents": None,
-    "aide_memoires_operational_documents": None,
-    "procurement_documents_operational_documents": None,
-    "review_approval_documents_operational_documents": None,
-    "concept_notes_operational_documents": None,
-    # Documents: Agreement/Contracts
-    "financing_agreements_agreements_contracts": None,
-    "other_agreements_agreements_contracts": None,
-    "procurement_contracts_agreements_contracts": None,
-    "mou_agreements_contracts": None,
-    # Documents: Implementation Progress Reports
-    "completion_reports_implementation_and_progress_reports": None,
-    "progress_reports_implementation_and_progress_reports": None,
-    # Documents: Impact Assessment and Monitoring Reports
-    "safeguards_monitoring_reports_impact_assessment_and_monitoring_reports": None,
-    "environmental_and_social_assessment_impact_assessment_and_monitoring": None,
-    "resettlement_frameworks_impact_assessment_and_monitoring": None,
-    "consultation_minutes_impact_assessment_and_monitoring": None,
-    # Documents: Public Materials
-    "presentations_brochures_public_materials": None,
-    "press_releases_public_materials": None,
-    "national_development_plans_public_materials": None,
-    # Documents; Misc
-    "miscellaneous_reports": None
-}
-
-METADATA_FIELDS = {
+PROJECT_METADATA_FIELDS = {
     "date_last_updated": None,
     "collection_stage": None,
     "processed": None,
@@ -233,13 +233,6 @@ IGNORABLE_FIELDS = {
     "field_49": None,
     "documentation_all_types": None,  # Repeat of stuff in other fields?
     "first_appearance_of_initiative_date": None,  # No data in SE Asia
-}
-
-OTHER_FIELDS = {
-    # distribution_of_funding and sources_of_funding could be
-    # a separate table of funders to projects with $ values
-    "distribution_of_funding": None,
-    "sources_of_funding": None
 }
 
 INITIATIVE_MAP = {
