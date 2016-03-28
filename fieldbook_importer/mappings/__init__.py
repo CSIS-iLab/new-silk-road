@@ -10,7 +10,8 @@ from .infrastructure import (
     CONTRACTOR_ORGANIZATION_MAP,
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
     FUNDER_ORGANIZATION_MAP,
-    PROJECT_DOCUMENT_MAP
+    PROJECT_DOCUMENT_MAP,
+    PROJECT_FUNDING_MAP
 )
 from .facts import (
     make_person_map,

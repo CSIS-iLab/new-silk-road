@@ -16,7 +16,8 @@ from fieldbook_importer.mappings import (
     IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
     FUNDER_ORGANIZATION_MAP,
     PERSON_POC_MAP,
-    PROJECT_DOCUMENT_MAP
+    PROJECT_DOCUMENT_MAP,
+    PROJECT_FUNDING_MAP
 )
 
 
@@ -78,6 +79,10 @@ class Command(BaseCommand):
             'sources_of_fundings': {
                 'model': 'facts.Organization',
                 'mapping': FUNDER_ORGANIZATION_MAP
+            },
+            'project_funding': {
+                'model': 'infrastructure.ProjectFunding',
+                'mapping': PROJECT_FUNDING_MAP
             },
             'documents': {
                 'model': 'infrastructure.ProjectDocument',

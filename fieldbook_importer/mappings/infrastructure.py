@@ -3,13 +3,15 @@ from fieldbook_importer.utils import (
     parse_date,
     choices_from_values,
     values_list,
+    first_value_or_none,
     make_url_list,
     transform_attr,
     clean_string,
     instance_for_model,
     instances_for_related_items,
     instances_or_none,
-    first_of_many
+    first_of_many,
+    coerce_to_boolean_or_null
 )
 from .facts import (
     PERSON_POC_MAP,
@@ -95,27 +97,9 @@ def document_type_id(value):
     return None
 
 
-def coerce_to_boolean_or_null(value):
-    if isinstance(value, str):
-        normalized_val = value.lower().strip()
-        if normalized_val == 'yes':
-            return True
-        elif normalized_val == 'no':
-            return False
-    elif isinstance(value, bool):
-        return value
-    return None
-
-
-def get_first_value_or_none(value):
-    if isinstance(value, list) and len(value) > 0:
-        return value[0]
-    return None
-
-
 def evaluate_project_new_value(list_val):
     key = 'new_name'
-    raw_value = get_first_value_or_none(list_val)
+    raw_value = first_value_or_none(list_val)
     if isinstance(raw_value, dict) and key in raw_value:
         return coerce_to_boolean_or_null(raw_value[key])
     return None
@@ -172,6 +156,30 @@ def extra_project_data(x, create=True):
 
 def extra_project_data_as_instances(x):
     return [extra_project_data(x)]
+
+
+def project_via_fieldbook_id(fieldbook_id):
+    lookup = {
+        'extra_data__values__id': fieldbook_id
+    }
+    return instance_for_model('infrastructure.Project', lookup)
+
+
+def project_from_related_values(value):
+    obj = first_value_or_none(value)
+    if obj and 'id' in obj:
+        return project_via_fieldbook_id(obj['id'])
+    return None
+
+
+def funder_from_related_values(value):
+    obj = first_value_or_none(value)
+    if obj and 'sources_of_funding_name' in obj:
+        lookup = {
+            'name': obj['sources_of_funding_name']
+        }
+        return instance_for_model('facts.Organization', lookup)
+    return None
 
 
 PROJECT_DOCUMENT_MAP = {
@@ -268,8 +276,9 @@ INFRASTRUCTURETYPE_MAP = {
 
 # TODO: Figure out this m2m intermediary model.
 PROJECT_FUNDING_MAP = {
-    # "source_of_funding": funding_organization_object,  # Organization via FUNDER_ORGANIZATION_MAP
-    "currency": None,
-    "amount": None,
-    # "project_id": project_object,  # Project via project_id in fieldbook
+    # Organization created via FUNDER_ORGANIZATION_MAP
+    "source": transform_attr("source_of_funding", funder_from_related_values),
+    "currency": lambda x: x.get('currency', None),
+    "amount": lambda x: x.get('amount', None),
+    "project": transform_attr("project_id", project_from_related_values),  # Project via project_id in fieldbook
 }

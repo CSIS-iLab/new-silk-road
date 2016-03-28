@@ -142,3 +142,21 @@ def first_of_many(many):
     elif hasattr(many, '__next__'):
         return next(many, None)
     return None
+
+
+def coerce_to_boolean_or_null(value):
+    if isinstance(value, str):
+        normalized_val = value.lower().strip()
+        if normalized_val == 'yes':
+            return True
+        elif normalized_val == 'no':
+            return False
+    elif isinstance(value, bool):
+        return value
+    return None
+
+
+def first_value_or_none(value):
+    if isinstance(value, list) and len(value) > 0:
+        return value[0]
+    return None
