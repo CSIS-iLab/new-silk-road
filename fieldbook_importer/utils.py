@@ -86,11 +86,14 @@ def transform_attr(attr_name, func, *args, **kwargs):
     return inner_func
 
 
-def clean_string(value, stripnewlines=True, default=''):
+def clean_string(value, stripnewlines=True, stripquotes=True, default=''):
     if value and isinstance(value, str):
         str_val = value.strip(" ")
         if stripnewlines:
             str_val = newlines_reg.sub(" ", str_val)
+        if stripquotes:
+            str_val = str_val.replace('"', '')
+            str_val = str_val.replace("'", '')
         str_val = extraspace_reg.sub(" ", str_val)
         return str_val
     return default
