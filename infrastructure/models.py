@@ -92,6 +92,7 @@ class Project(Publishable):
         blank=True, null=True,
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
     )
+    new = models.NullBooleanField('New Construction?')
     initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
     sources = ArrayField(
