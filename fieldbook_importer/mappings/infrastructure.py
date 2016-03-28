@@ -56,6 +56,17 @@ def infrastructure_type_object(x):
     return None
 
 
+def operator_object(x):
+    objects = instances_for_related_items(
+        x.get("operator"),
+        'facts.Organization',
+        {"name": "operator_name"}
+    )
+    if objects:
+        return first_of_many(objects)
+    return None
+
+
 def initiative_object(x):
     objects = instances_for_related_items(
         x.get("program_initiative"),
@@ -199,17 +210,6 @@ project_doc_instances = partial(
     }
 )
 
-# FIXME: operator_object, should map Organizations to operator fk
-# def operator_object(x):
-#     objects = instances_for_related_items(
-#         x.get("operator"),
-#         'facts.Organization',
-#         org_map??("operator_name")
-#     )
-#     if objects:
-#         return first_of_many(objects)
-#     return None
-
 
 PROJECT_MAP = {
     "name": transform_attr("project_title", clean_string),
@@ -225,8 +225,8 @@ PROJECT_MAP = {
     "countries": countries_from_country,
     "infrastructure_type": infrastructure_type_object,
     "initiative": initiative_object,
-    # FIXME: An operator is an organization, so make it happen
-    # "operator": operator_object,
+    # REVIEW: An operator is an organization, so make it happen
+    "operator": operator_object,
 }
 
 
@@ -265,7 +265,7 @@ IGNORABLE_FIELDS = {
 INITIATIVE_MAP = {
     # "first_appearance_of_initiative"
     "name": transform_attr("program_initiative_name", clean_string),
-    # TODO: Confirm initiative_type using a dataset that has some...
+    # REVIEW: Confirm initiative_type using a dataset that has some...
     "initiative_type": initiative_type_object,
 }
 
@@ -274,7 +274,6 @@ INFRASTRUCTURETYPE_MAP = {
 }
 
 
-# TODO: Figure out this m2m intermediary model.
 PROJECT_FUNDING_MAP = {
     # Organization created via FUNDER_ORGANIZATION_MAP
     "source": transform_attr("source_of_funding", funder_from_related_values),
