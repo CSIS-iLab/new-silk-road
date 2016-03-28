@@ -13,3 +13,4 @@ from .organizations import (
 )
 from .people import (Person, Position)
 from .events import Event
+from .other import Data

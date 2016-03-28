@@ -25,6 +25,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ('status', 'infrastructure_type',)
     search_fields = ('name',)
     ordering = ['name', 'created_at']
+    readonly_fields = ('extra_data',)
     inlines = [
         ProjectFundingInline
     ]

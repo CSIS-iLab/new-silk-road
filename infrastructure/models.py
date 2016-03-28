@@ -143,6 +143,7 @@ class Project(Publishable):
         related_name='projects_contacts',
         blank=True
     )
+    extra_data = models.ManyToManyField('facts.Data', blank=True)
 
     def __str__(self):
         return self.name
