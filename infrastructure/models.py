@@ -233,6 +233,7 @@ class ProjectDocument(models.Model):
         blank=True,
         null=True
     )
+    source_url = models.URLField(blank=True, max_length=500)
     document_type = models.PositiveSmallIntegerField(
         'type',
         choices=DOCUMENT_TYPES,
@@ -243,3 +244,19 @@ class ProjectDocument(models.Model):
         blank=True, null=True,
         choices=ProjectStatus.STATUSES
     )
+
+    @classmethod
+    def _flattened_doc_types(cls):
+        return (value for _, subset in cls.DOCUMENT_TYPES for value in subset)
+
+    @classmethod
+    def get_document_type_names(cls):
+        return tuple(name for _, name in cls._flattened_doc_types())
+
+    @classmethod
+    def lookup_document_type_by_name(cls, name):
+        filtered = filter(lambda x: x[1].lower() == name.lower(), cls._flattened_doc_types())
+        as_list = list(filtered)
+        if len(as_list) == 1:
+            return as_list[0]
+        return None
