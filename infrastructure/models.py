@@ -20,7 +20,7 @@ class ProjectFunding(models.Model):
     """(ProjectFunder description)"""
     source = models.ForeignKey('facts.Organization')
     project = models.ForeignKey('Project')
-    amount = models.IntegerField(
+    amount = models.BigIntegerField(
         blank=True, null=True,
         help_text="Values in whole units (dollars, etc.)"
     )
