@@ -87,9 +87,10 @@ def process_regions_data(value, recurse=True):
 
 
 def document_type_id(value):
-    result = ProjectDocument.lookup_document_type_by_name(value)
-    if result:
-        return result[0]
+    if value:
+        result = ProjectDocument.lookup_document_type_by_name(value)
+        if result:
+            return result[0]
     return None
 
 
@@ -125,6 +126,23 @@ contacts_instances = partial(
 regions_instances = partial(
     instances_or_none,
     model_name='locations.Region',
+)
+
+PROJECT_DOCUMENT_MAP = {
+    # "document"
+    "document_type": lambda x: document_type_id(x.get('document_type')),
+    "source_url": transform_attr("document_name_or_identifier", clean_string)
+    # "notes":
+    # NOTE: status_indicator does not appear in Fieldbook data
+    # "status_indicator"
+}
+
+project_doc_instances = partial(
+    instances_or_none,
+    model_name='infrastructure.ProjectDocument',
+    mapping={
+        "source_url": transform_attr("document_name_or_identifier", clean_string)
+    }
 )
 
 # FIXME: operator_object, should map Organizations to operator fk
@@ -165,17 +183,7 @@ PROJECT_M2M = {
     "consultants": lambda x: consultants_instances(x.get('consultant')),
     "contractors": lambda x: contractors_instances(x.get('contractors')),
     "implementers": lambda x: client_org_instances(x.get('client_implementing_agency')),
-    # "documents": lambda x: project_document_instances(x.get('documents')),
-
-}
-
-PROJECT_DOCUMENT_MAP = {
-    # "document"
-    "document_type": lambda x: document_type_id(x.get('document_type')),
-    "source_url": lambda x: x.get('document_name_or_identifier')
-    # "notes":
-    # NOTE: status_indicator does not appear in Fieldbook data
-    # "status_indicator"
+    "documents": lambda x: project_doc_instances(x.get('documents')),
 }
 
 PROJECT_DOCUMENTS_MESS = {

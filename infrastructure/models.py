@@ -260,8 +260,9 @@ class ProjectDocument(models.Model):
 
     @classmethod
     def lookup_document_type_by_name(cls, name):
-        filtered = filter(lambda x: x[1].lower() == name.lower(), cls._flattened_doc_types())
-        as_list = list(filtered)
-        if len(as_list) == 1:
-            return as_list[0]
+        if name:
+            filtered = filter(lambda x: x[1].lower() == name.lower(), cls._flattened_doc_types())
+            as_list = list(filtered)
+            if len(as_list) == 1:
+                return as_list[0]
         return None
