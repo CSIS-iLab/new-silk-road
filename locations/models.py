@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 from iso3166 import countries
 
-COUNTRY_CHOICES = tuple((int(c.numeric), c.name) for c in countries)
+COUNTRY_CHOICES = tuple((int(c.numeric), c.apolitical_name) for c in countries)
 
 
 class CountryField(models.PositiveSmallIntegerField):
