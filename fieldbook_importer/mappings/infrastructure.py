@@ -219,7 +219,7 @@ project_doc_instances = partial(
 
 
 PROJECT_MAP = {
-    "name": transform_attr("project_title", clean_string),
+    "name": transform_attr("project_title", clean_string, default=None),
     "start_date": transform_attr("project_start_date", parse_date),
     # "project_id": None,
     "status": project_status_from_statuses,
