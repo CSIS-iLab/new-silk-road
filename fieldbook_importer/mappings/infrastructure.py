@@ -68,10 +68,11 @@ def operator_object(x):
 
 
 def initiative_object(x):
+    initiative_obj = x.get("program_initiative")
     objects = instances_for_related_items(
-        x.get("program_initiative"),
+        initiative_obj,
         'infrastructure.Initiative',
-        {"name": "program_initiative_name"}
+        {"name": lambda x: clean_string(x.get('program_initiative_name'))}
     )
     if objects:
         return first_of_many(objects)
@@ -92,9 +93,14 @@ def initiative_type_object(x):
 
 def process_regions_data(value, recurse=True):
     if isinstance(value, str):
-        yield {
-            'name': clean_string(value)
-        }
+        if value.startswith('"') or value.startswith('\''):
+            splitchar = value[0]
+            regions_raw = [x.strip(',') for x in value.split(splitchar) if x]
+            yield from process_regions_data(regions_raw, recurse=True)
+        else:
+            yield {
+                'name': clean_string(value)
+            }
     elif isinstance(value, list):
         if recurse:
             for item in value:
