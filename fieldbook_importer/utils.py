@@ -14,10 +14,13 @@ def get_mapper(mapping):
 
 
 def parse_date(date_str, fmt='%Y-%m-%d'):
-    if not date_str:
+    if not date_str or not isinstance(date_str, str):
         return None
-    dt = datetime.datetime.strptime(date_str, fmt)
-    return dt.date()
+    try:
+        dt = datetime.datetime.strptime(date_str, fmt)
+        return dt.date()
+    except ValueError:
+        return None
 
 
 def values_list(l, field_name, default=None):
@@ -42,10 +45,16 @@ def choices_from_values(values, choices):
         yield find_choice(v, choices)
 
 
-def instance_for_model(model_label, data, create=False):
+# TODO: Handle invalid data, like None for required field
+def instance_for_model(model_label, data, create=False, skiperrors=False):
     model = apps.get_model(model_label)
     if create:
-        instance, created = model.objects.get_or_create(**data)
+        try:
+            instance, created = model.objects.get_or_create(**data)
+        except TypeError as e:
+            if skiperrors:
+                return None
+            raise e
     else:
         try:
             instance = model.objects.get(**data)
@@ -53,6 +62,8 @@ def instance_for_model(model_label, data, create=False):
             instance = model(**data)
         except model.MultipleObjectsReturned as e:
             raise e
+            if skiperrors:
+                return None
     return instance
 
 
@@ -124,7 +135,10 @@ def instances_for_related_items(items_list, model_label, field_map=None):
     if hasattr(items_list, '__iter__') or hasattr(items_list, '__next__'):
         for item in items_list:
             data = remap_dict(item, field_map) if field_map else item
-            yield instance_for_model(model_label, data)
+            try:
+                yield instance_for_model(model_label, data)
+            except Exception:
+                pass
     else:
         return None
 
