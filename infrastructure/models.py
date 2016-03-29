@@ -235,7 +235,7 @@ class ProjectDocument(models.Model):
         blank=True,
         null=True
     )
-    source_url = models.URLField(blank=True, max_length=500)
+    source_url = models.URLField(blank=True, max_length=1000)
     document_type = models.PositiveSmallIntegerField(
         'type',
         choices=DOCUMENT_TYPES,
