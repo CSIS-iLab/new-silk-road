@@ -176,17 +176,19 @@ def extra_project_data_as_instances(x):
     return [extra_project_data(x)]
 
 
-def project_via_fieldbook_id(fieldbook_id):
+def project_via_fieldbook_id(fieldbook_id, project_id):
+    '''Lookup using the internal fieldbook id and the user project_id.'''
     lookup = {
-        'extra_data__values__id': fieldbook_id
+        'extra_data__values__id': fieldbook_id,
+        'extra_data__values__project_id': project_id
     }
     return instance_for_model('infrastructure.Project', lookup)
 
 
 def project_from_related_values(value):
     obj = first_value_or_none(value)
-    if obj and 'id' in obj:
-        return project_via_fieldbook_id(obj['id'])
+    if obj and set(['id', 'project_id']).issubset(obj.keys()):
+        return project_via_fieldbook_id(obj['id'], obj['project_id'])
     return None
 
 
