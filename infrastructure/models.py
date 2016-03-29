@@ -96,7 +96,7 @@ class Project(Publishable):
     initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
     sources = ArrayField(
-        models.URLField(max_length=500),
+        models.URLField(max_length=1000),
         blank=True,
         null=True,
         default=list,
