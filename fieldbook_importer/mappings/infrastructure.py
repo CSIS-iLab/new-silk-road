@@ -198,7 +198,7 @@ def funder_from_related_values(value):
         lookup = {
             'name': obj['sources_of_funding_name']
         }
-        return instance_for_model('facts.Organization', lookup)
+        return instance_for_model('facts.Organization', lookup, create=True)
     return None
 
 
