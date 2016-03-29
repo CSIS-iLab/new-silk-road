@@ -190,6 +190,10 @@ class Command(BaseCommand):
                             if related_manager:
                                 related_objects = func(item)
                                 if related_objects:
+                                    related_objects = list(related_objects)
+                                    for rel_obj in related_objects:
+                                        if rel_obj.id is None:
+                                            rel_obj.save()
                                     related_manager.add(*related_objects)
                             obj.save()
                         elif self.verbosity > 2:
