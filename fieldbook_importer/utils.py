@@ -77,7 +77,7 @@ def clean_url(url):
 def make_url_list(list_str, sep=", "):
     str_list = make_list(list_str, sep)
     if str_list:
-        return [clean_url(x) for x in str_list if x and x[0].isalum()]
+        return [clean_url(x) for x in str_list if x and x[0].isalnum()]
     else:
         return None
 
