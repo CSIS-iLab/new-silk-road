@@ -13,6 +13,7 @@ class Organization(MPTTModel, Publishable):
     """Abstract base model for organizations"""
 
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=110)
     leaders = models.ManyToManyField('Person', blank=True,
                                      related_name='organizations_led')
     initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
@@ -41,6 +42,7 @@ class Organization(MPTTModel, Publishable):
 
 class OrganizationTypeBase(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=110)
 
     class Meta:
         abstract = True
@@ -77,6 +79,7 @@ class PoliticalType(MPTTModel, OrganizationTypeBase):
 class CompanyStructure(models.Model):
     """Describes structure of a company"""
     name = models.CharField("Structure", max_length=100)
+    slug = models.SlugField(max_length=110)
 
 
 # Details

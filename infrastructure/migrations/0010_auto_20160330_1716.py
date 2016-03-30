@@ -3,23 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from django.utils.text import slugify
+from utilities.migrations import make_slug_forward, make_uuid_forward
 import uuid
-
-
-def make_slug_forward(model_name, slug_source):
-    def generate_slugs(apps, schema_editor):
-        SluggableModel = apps.get_model('infrastructure', model_name)
-        db_alias = schema_editor.connection.alias
-
-        if hasattr(SluggableModel, 'objects'):
-            for m in SluggableModel.objects.using(db_alias).all():
-                if hasattr(m, 'slug'):
-                    attr_val = getattr(m, slug_source)
-                    if isinstance(attr_val, str):
-                        m.slug = slugify(attr_val)
-                        m.save(update_fields=['slug'])
-    return generate_slugs
 
 
 def create_slugs(apps, schema_editor):
@@ -29,9 +14,14 @@ def create_slugs(apps, schema_editor):
         ('initiativetype', 'name'),
         ('project', 'name')
     )
-    for name, slug_src in model_slugs:
-        func = make_slug_forward(name, slug_src)
+    for model_label, slug_src in model_slugs:
+        func = make_slug_forward('infrastructure', model_label, slug_src)
         func(apps, schema_editor)
+
+
+def set_uuids(apps, schema_editor):
+    func = make_uuid_forward('infrastructure', 'projectdocument', 'identifier')
+    func(apps, schema_editor)
 
 
 class Migration(migrations.Migration):
@@ -70,5 +60,6 @@ class Migration(migrations.Migration):
             name='identifier',
             field=models.UUIDField(default=uuid.uuid4, editable=False),
         ),
-        migrations.RunPython(create_slugs, migrations.RunPython.noop)
+        migrations.RunPython(create_slugs, migrations.RunPython.noop),
+        migrations.RunPython(set_uuids, migrations.RunPython.noop),
     ]

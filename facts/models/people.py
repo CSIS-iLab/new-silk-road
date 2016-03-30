@@ -3,10 +3,12 @@ from django.contrib.postgres.fields import ArrayField
 from locations.models import COUNTRY_CHOICES, countries
 from markymark.fields import MarkdownField
 from publish.models import Publishable
+import uuid
 
 
 class Person(Publishable):
     """Describes a person"""
+    identifier = models.UUIDField(default=uuid.uuid4, editable=False)
     # Name info
     given_name = models.CharField('First name', max_length=100, help_text="A person's given or 'first' name(s).")
     additional_name = models.CharField('Middle name', blank=True, max_length=100, help_text="An additional name for a person, \
