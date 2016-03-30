@@ -13,8 +13,8 @@ from fieldbook_importer.utils import (
     coerce_to_boolean_or_null
 )
 from .facts import (
-    PERSON_POC_MAP,
-    make_organization_map
+    person_poc_transformer,
+    make_organization_transformer
 )
 from infrastructure.models import (
     ProjectStatus,
@@ -151,34 +151,34 @@ def evaluate_project_new_value(list_val):
     return None
 
 
-CONSULTANT_ORGANIZATION_MAP = make_organization_map("consultant_name")
-OPERATOR_ORGANIZATION_MAP = make_organization_map("operator_name")
-CONTRACTOR_ORGANIZATION_MAP = make_organization_map("contractors_name")
-IMPLEMENTING_AGENCY_ORGANIZATION_MAP = make_organization_map("client_implementing_agency_name")
-FUNDER_ORGANIZATION_MAP = make_organization_map("sources_of_funding_name")
+consultant_organization_transformer = make_organization_transformer("consultant_name")
+operator_organization_transformer = make_organization_transformer("operator_name")
+contractor_organization_transformer = make_organization_transformer("contractors_name")
+implementing_agency_organization_transformer = make_organization_transformer("client_implementing_agency_name")
+funder_organization_transformer = make_organization_transformer("sources_of_funding_name")
 
 consultants_instances = partial(
     instances_or_none,
     model_name='facts.Organization',
-    mapping=CONSULTANT_ORGANIZATION_MAP
+    transformer=consultant_organization_transformer
 )
 
 contractors_instances = partial(
     instances_or_none,
     model_name='facts.Organization',
-    mapping=CONTRACTOR_ORGANIZATION_MAP
+    transformer=contractor_organization_transformer
 )
 
 client_org_instances = partial(
     instances_or_none,
     model_name='facts.Organization',
-    mapping=IMPLEMENTING_AGENCY_ORGANIZATION_MAP
+    transformer=implementing_agency_organization_transformer
 )
 
 contacts_instances = partial(
     instances_or_none,
     model_name='facts.Person',
-    mapping=PERSON_POC_MAP
+    transformer=person_poc_transformer
 )
 
 regions_instances = partial(

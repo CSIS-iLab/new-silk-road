@@ -1,23 +1,30 @@
 from fieldbook_importer.utils import (
-    transform_attr,
     clean_string,
-    section_from_string,
 )
+from nameparser import HumanName
 
 
-def make_person_map(name_field):
-    return {
-        "given_name": transform_attr(name_field, section_from_string, 0),
-        "family_name": transform_attr(name_field, section_from_string, 1),
-    }
+def make_person_transformer(name_field):
+    def transform_person(item):
+        name_string = item.get(name_field)
+        if not name_string:
+            return None
+        name = HumanName(name_string)
+        return {
+            "given_name": name.first,
+            "additional_name": name.middle,
+            "family_name": name.last
+        }
+    return transform_person
 
-PERSON_POC_MAP = make_person_map("points_of_contact_name")
+person_poc_transformer = make_person_transformer("points_of_contact_name")
 
 
-def make_organization_map(name_field):
-    return {
-        'name': transform_attr(name_field, clean_string),
-    }
+def make_organization_transformer(name_field):
+    def transform_organization(item):
+        return {
+            'name': clean_string(item.get(name_field)),
+        }
+    return transform_organization
 
-
-ORGANIZATION_MAP = make_organization_map("organization_name")
+organization_transformer = make_organization_transformer("organization_name")

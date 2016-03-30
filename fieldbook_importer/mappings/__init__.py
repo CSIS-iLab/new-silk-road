@@ -14,6 +14,6 @@ from .infrastructure import (
     # PROJECT_FUNDING_MAP
 )
 from .facts import (
-    make_person_map,
-    PERSON_POC_MAP,
+    make_person_transformer,
+    person_poc_transformer,
 )

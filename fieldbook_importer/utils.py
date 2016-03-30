@@ -7,22 +7,6 @@ newlines_reg = re.compile("(\n|\r)")
 extraspace_reg = re.compile("\s{2,}")
 
 
-def get_mapper(mapping):
-    def mapper(item):
-        for key, val in mapping.values():
-            if callable(val):
-                yield key, val(item)
-            elif isinstance(val, dict):
-                yield from get_mapper(val)(item)
-        # obj = {
-        #     key: val(item)
-        #     for key, val in mapping.items()
-        #     if key and callable(val)
-        # }
-        # return obj
-    return mapper
-
-
 def parse_date(date_str, fmt='%Y-%m-%d'):
     if not date_str or not isinstance(date_str, str):
         return None
@@ -98,15 +82,6 @@ def make_url_list(list_str, sep=","):
         return None
 
 
-def transform_attr(attr_name, func, *args, **kwargs):
-    def inner_func(obj):
-        attr_val = obj.get(attr_name, None) if obj else None
-        if not func:
-            return attr_val
-        return func(attr_val, *args, **kwargs)
-    return inner_func
-
-
 def clean_string(value, stripnewlines=True, stripquotes=True, default=''):
     if value and isinstance(value, str):
         str_val = value.strip(" ")
@@ -121,7 +96,7 @@ def clean_string(value, stripnewlines=True, stripquotes=True, default=''):
 
 
 def force_split_string(value, sep=" "):
-    if value and isinstance(value, str):
+    if isinstance(value, str):
         return value.split(sep)
     return None
 

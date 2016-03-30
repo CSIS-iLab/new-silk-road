@@ -5,7 +5,6 @@ import argparse
 import os.path
 import json
 
-from fieldbook_importer.utils import get_mapper
 from fieldbook_importer.mappings import (
     # PROJECT_MAP,
     # PROJECT_M2M,
@@ -48,7 +47,7 @@ class Command(BaseCommand):
             'projects': {
                 'model': 'infrastructure.Project',
                 'transformer': transform_project_data,
-                # 'many_to_many': transform_project_m2m_data
+                'many_to_many': transform_project_m2m_data
             },
             # 'program_initiatives': {
             #     'model': 'infrastructure.Initiative',
