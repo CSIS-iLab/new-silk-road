@@ -5,7 +5,7 @@ import argparse
 import os.path
 import json
 
-from fieldbook_importer.mappings import (
+from fieldbook_importer.transformer import (
     # PROJECT_MAP,
     # PROJECT_M2M,
     # INFRASTRUCTURETYPE_MAP,
