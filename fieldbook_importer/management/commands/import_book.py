@@ -7,18 +7,20 @@ import json
 
 from fieldbook_importer.utils import get_mapper
 from fieldbook_importer.mappings import (
-    PROJECT_MAP,
-    PROJECT_M2M,
-    INFRASTRUCTURETYPE_MAP,
-    INITIATIVE_MAP,
-    CONSULTANT_ORGANIZATION_MAP,
-    OPERATOR_ORGANIZATION_MAP,
-    CONTRACTOR_ORGANIZATION_MAP,
-    IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    FUNDER_ORGANIZATION_MAP,
-    PERSON_POC_MAP,
-    PROJECT_DOCUMENT_MAP,
-    PROJECT_FUNDING_MAP
+    # PROJECT_MAP,
+    # PROJECT_M2M,
+    # INFRASTRUCTURETYPE_MAP,
+    # INITIATIVE_MAP,
+    # CONSULTANT_ORGANIZATION_MAP,
+    # OPERATOR_ORGANIZATION_MAP,
+    # CONTRACTOR_ORGANIZATION_MAP,
+    # IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
+    # FUNDER_ORGANIZATION_MAP,
+    # PERSON_POC_MAP,
+    # PROJECT_DOCUMENT_MAP,
+    # PROJECT_FUNDING_MAP,
+    transform_project_data,
+    transform_project_m2m_data
 )
 
 
@@ -45,50 +47,49 @@ class Command(BaseCommand):
         self.sheets = {
             'projects': {
                 'model': 'infrastructure.Project',
-                'mapping': PROJECT_MAP,
-                'many_to_many': PROJECT_M2M
+                'transformer': transform_project_data,
+                # 'many_to_many': transform_project_m2m_data
             },
-            'program_initiatives': {
-                'model': 'infrastructure.Initiative',
-                'mapping': INITIATIVE_MAP,
-                # 'related_mapping': INITIATIVE_RELATED_MAP,
-            },
-            'infrastructure_types': {
-                'model': 'infrastructure.InfrastructureType',
-                'mapping': INFRASTRUCTURETYPE_MAP
-            },
-            'consultants': {
-                'model': 'facts.Organization',
-                'mapping': CONSULTANT_ORGANIZATION_MAP,
-            },
-            'operators': {
-                'model': 'facts.Organization',
-                'mapping': OPERATOR_ORGANIZATION_MAP,
-            },
-            'contractors': {
-                'model': 'facts.Organization',
-                'mapping': CONTRACTOR_ORGANIZATION_MAP,
-            },
-            'client_implementing_agencies': {
-                'model': 'facts.Organization',
-                'mapping': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-            },
-            'points_of_contact': {
-                'model': 'facts.Person',
-                'mapping': PERSON_POC_MAP,
-            },
-            'sources_of_fundings': {
-                'model': 'facts.Organization',
-                'mapping': FUNDER_ORGANIZATION_MAP
-            },
-            'project_funding': {
-                'model': 'infrastructure.ProjectFunding',
-                'mapping': PROJECT_FUNDING_MAP
-            },
-            'documents': {
-                'model': 'infrastructure.ProjectDocument',
-                'mapping': PROJECT_DOCUMENT_MAP
-            }
+            # 'program_initiatives': {
+            #     'model': 'infrastructure.Initiative',
+            #     'transformer': INITIATIVE_MAP,
+            # },
+            # 'infrastructure_types': {
+            #     'model': 'infrastructure.InfrastructureType',
+            #     'mapping': INFRASTRUCTURETYPE_MAP
+            # },
+            # 'consultants': {
+            #     'model': 'facts.Organization',
+            #     'mapping': CONSULTANT_ORGANIZATION_MAP,
+            # },
+            # 'operators': {
+            #     'model': 'facts.Organization',
+            #     'mapping': OPERATOR_ORGANIZATION_MAP,
+            # },
+            # 'contractors': {
+            #     'model': 'facts.Organization',
+            #     'mapping': CONTRACTOR_ORGANIZATION_MAP,
+            # },
+            # 'client_implementing_agencies': {
+            #     'model': 'facts.Organization',
+            #     'mapping': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
+            # },
+            # 'points_of_contact': {
+            #     'model': 'facts.Person',
+            #     'mapping': PERSON_POC_MAP,
+            # },
+            # 'sources_of_fundings': {
+            #     'model': 'facts.Organization',
+            #     'mapping': FUNDER_ORGANIZATION_MAP
+            # },
+            # 'project_funding': {
+            #     'model': 'infrastructure.ProjectFunding',
+            #     'mapping': PROJECT_FUNDING_MAP
+            # },
+            # 'documents': {
+            #     'model': 'infrastructure.ProjectDocument',
+            #     'mapping': PROJECT_DOCUMENT_MAP
+            # }
         }
 
         self.configure(self.configfile)
@@ -146,29 +147,22 @@ class Command(BaseCommand):
                     if self.verbosity > 2:
                         self.stderr.write("Could not find '{}'".format(fpath))
 
-    def track_error(self):
-        self.err_count += 1
-        if self.err_count > Command.MAX_ERRORS:
-            raise CommandError("Too many errors, aborting")
-
     def _get_model_constructor(self, klass):
         if self.dry_run:
             return klass
         return klass.objects.get_or_create
 
-    def load_data(self, data, model_class, mapping, many_to_many=None):
+    def load_data(self, data, model_class, transformer, many_to_many=None):
         create_obj = self._get_model_constructor(model_class)
         model_name = model_class._meta.model_name
 
-        value_mapper = get_mapper(mapping)
-
         for item in data:
-            value_map = value_mapper(item)
+            transformed_item = transformer(item)
             if self.verbosity > 2:
-                self.stdout.write(repr(value_map))
+                self.stdout.write(repr(transformed_item))
             obj = None
             try:
-                obj = create_obj(**value_map)
+                obj = create_obj(**transformed_item)
             except IntegrityError as e:
                 self.stderr.write(repr(e))
             except Exception as e:
@@ -182,19 +176,17 @@ class Command(BaseCommand):
                     except Exception as e:
                         self.stderr.write("Error with {} {}".format(model_name, item.get('id', repr(item))))
                         self.stderr.write(repr(e))
-                        self.track_error()
                 if many_to_many:
-                    for key, func in many_to_many.items():
+                    m2m_items = many_to_many(item)
+                    for key, related_objects in m2m_items.items():
                         if not self.dry_run:
                             related_manager = getattr(obj, key, None)
-                            if related_manager:
-                                related_objects = func(item)
-                                if related_objects:
-                                    related_objects = list(related_objects)
-                                    for rel_obj in related_objects:
-                                        if rel_obj.id is None:
-                                            rel_obj.save()
-                                    related_manager.add(*related_objects)
+                            if related_manager and related_objects:
+                                related_objects = list(related_objects)
+                                for rel_obj in related_objects:
+                                    if rel_obj.id is None:
+                                        rel_obj.save()
+                                related_manager.add(*related_objects)
                             obj.save()
                         elif self.verbosity > 2:
                             self.stdout.write("Processing '{}' many_to_many".format(key))

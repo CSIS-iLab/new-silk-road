@@ -9,7 +9,17 @@ extraspace_reg = re.compile("\s{2,}")
 
 def get_mapper(mapping):
     def mapper(item):
-        return {key: func(item) for key, func in mapping.items() if key and callable(func)}
+        for key, val in mapping.values():
+            if callable(val):
+                yield key, val(item)
+            elif isinstance(val, dict):
+                yield from get_mapper(val)(item)
+        # obj = {
+        #     key: val(item)
+        #     for key, val in mapping.items()
+        #     if key and callable(val)
+        # }
+        # return obj
     return mapper
 
 
@@ -131,24 +141,24 @@ def remap_dict(obj, field_map):
     }
 
 
-def instances_for_related_items(items_list, model_label, field_map=None):
+def instances_for_related_items(items_list, model_label, transformer=None, create=False):
     if hasattr(items_list, '__iter__') or hasattr(items_list, '__next__'):
         for item in items_list:
-            data = remap_dict(item, field_map) if field_map else item
+            data = transformer(item) if callable(transformer) else item
             try:
-                yield instance_for_model(model_label, data)
+                yield instance_for_model(model_label, data, create=create)
             except Exception:
                 pass
     else:
         return None
 
 
-def instances_or_none(in_var, model_name, mapping=None):
+def instances_or_none(in_var, model_name, transformer=None):
     if in_var:
         return list(instances_for_related_items(
             in_var,
             model_name,
-            mapping
+            transformer
         ))
     return None
 

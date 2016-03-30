@@ -5,7 +5,6 @@ from fieldbook_importer.utils import (
     values_list,
     first_value_or_none,
     make_url_list,
-    transform_attr,
     clean_string,
     instance_for_model,
     instances_for_related_items,
@@ -24,8 +23,37 @@ from infrastructure.models import (
 from locations.models import COUNTRY_CHOICES
 
 
+def transform_initiative_data(item):
+    return{
+        # "first_appearance_of_initiative"
+        "name": clean_string(item.get("program_initiative_name")),
+        # REVIEW: Confirm initiative_type using a dataset that has some...
+        "initiative_type": initiative_type_object(item.get('initiative_type')),
+    }
+
+
+def transform_initiative_type_data(item):
+    return {"name": clean_string(item.get('initiative_type'))},
+
+
+def transform_infrastructuretype_data(item):
+    return {
+        'name': clean_string(item.get("infrastructure_type_name")),
+    }
+
+
+def transform_project_funding_data(item):
+    return {
+        # Organization created via FUNDER_ORGANIZATION_MAP
+        "source": funder_from_related_values(item.get("source_of_funding")),
+        "currency": lambda x: x.get('currency'),
+        "amount": lambda x: x.get('amount'),
+        "project": project_from_related_values(item.get("project_id")),
+    }
+
+
 def project_status_from_statuses(x):
-    values = values_list(x.get("project_status"), "project_status_name")
+    values = values_list(x, "project_status_name")
     if values:
         choices = list(choices_from_values(values, ProjectStatus.STATUSES))
         if len(choices) > 0:
@@ -38,7 +66,7 @@ def countries_from_country(x):
         'Vietnam': 'Viet Nam',
         'East Timor': 'Timor-Leste'
     }
-    values = values_list(x.get("country"), "country_name")
+    values = values_list(x, "country_name")
     values = list(country_rename.get(c, c) for c in values if c)
     if values:
         return list(choices_from_values(values, COUNTRY_CHOICES))
@@ -47,9 +75,10 @@ def countries_from_country(x):
 
 def infrastructure_type_object(x):
     objects = instances_for_related_items(
-        x.get("infrastructure_type"),
+        x,
         'infrastructure.InfrastructureType',
-        {"name": "infrastructure_type_name"}
+        transform_infrastructuretype_data,
+        create=True
     )
     if objects:
         return first_of_many(objects)
@@ -58,9 +87,9 @@ def infrastructure_type_object(x):
 
 def operator_object(x):
     objects = instances_for_related_items(
-        x.get("operator"),
+        x,
         'facts.Organization',
-        {"name": "operator_name"}
+        # transform
     )
     if objects:
         return first_of_many(objects)
@@ -68,11 +97,11 @@ def operator_object(x):
 
 
 def initiative_object(x):
-    initiative_obj = x.get("program_initiative")
     objects = instances_for_related_items(
-        initiative_obj,
+        x,
         'infrastructure.Initiative',
-        {"name": lambda x: clean_string(x.get('program_initiative_name'))}
+        transform_initiative_data,
+        create=True
     )
     if objects:
         return first_of_many(objects)
@@ -81,11 +110,10 @@ def initiative_object(x):
 
 # FIXME: InitiativeType is going to be a string, apparently
 def initiative_type_object(x):
-    value = x.get('initiative_type', None)
-    if value:
+    if x:
         return instance_for_model(
             'infrastructure.InitiativeType',
-            {"name": clean_string(value)},
+            transform_initiative_type_data,
             create=True
         )
     return None
@@ -202,55 +230,54 @@ def funder_from_related_values(value):
     return None
 
 
-PROJECT_DOCUMENT_MAP = {
-    # "document"
-    "document_type": lambda x: document_type_id(x.get('document_type')),
-    "source_url": transform_attr("document_name_or_identifier", clean_string)
-    # "notes":
-    # NOTE: status_indicator does not appear in Fieldbook data
-    # "status_indicator"
-}
+def transform_project_document_data(item):
+    return {
+        # "document"
+        "document_type": document_type_id(item.get('document_type', None)),
+        "source_url": clean_string(item.get("document_name_or_identifier", None)),
+        # "notes":
+        # NOTE: status_indicator does not appear in Fieldbook data
+        # "status_indicator"
+    }
 
 project_doc_instances = partial(
     instances_or_none,
     model_name='infrastructure.ProjectDocument',
-    mapping={
-        "source_url": transform_attr("document_name_or_identifier", clean_string)
-    }
+    transformer=transform_project_document_data
 )
 
 
-PROJECT_MAP = {
-    "name": transform_attr("project_title", clean_string, default=None),
-    "start_date": transform_attr("project_start_date", parse_date),
-    # "project_id": None,
-    "status": project_status_from_statuses,
-    "sources": transform_attr("sources", make_url_list),
-    "notes": transform_attr("notes", clean_string),
-    "commencement_date": transform_attr("commencement_date", parse_date),
-    "total_cost_description": transform_attr("total_project_cost_us", clean_string),
-    "planned_completion_date": transform_attr("planned_date_of_completion", parse_date),
-    "new": transform_attr("new", evaluate_project_new_value),
-    "countries": countries_from_country,
-    "infrastructure_type": infrastructure_type_object,
-    "initiative": initiative_object,
-    # REVIEW: An operator is an organization, so make it happen
-    "operator": operator_object,
-}
+def transform_project_data(item):
+    return {
+        "name": clean_string(item.get("project_title"), default=None),
+        "start_date": parse_date(item.get("project_start_date")),
+        "status": project_status_from_statuses(item.get("project_status")),
+        "sources": make_url_list(item.get("sources")),
+        "notes": clean_string(item.get("notes")),
+        "commencement_date": parse_date(item.get("commencement_date")),
+        "total_cost_description": clean_string(item.get("total_project_cost_us")),
+        "planned_completion_date": parse_date(item.get("planned_date_of_completion")),
+        "new": evaluate_project_new_value(item.get("new")),
+        "countries": countries_from_country(item.get('country')),
+        "infrastructure_type": infrastructure_type_object(item.get('infrastructure_type')),
+        "initiative": initiative_object(item.get('program_initiative')),
+        "operator": operator_object(item.get('program_initiative')),
+    }
 
 
-PROJECT_M2M = {
-    "regions": lambda x: regions_instances(process_regions_data(x.get('region'))),
-    "contacts": lambda x: contacts_instances(x.get('points_of_contact')),
-    # Related Organizations
-    "consultants": lambda x: consultants_instances(x.get('consultant')),
-    "contractors": lambda x: contractors_instances(x.get('contractors')),
-    "implementers": lambda x: client_org_instances(x.get('client_implementing_agency')),
-    # Documents
-    "documents": lambda x: project_doc_instances(x.get('documents')),
-    # Funding comes via ProjectFunding intermediary model
-    "extra_data": lambda x: extra_project_data_as_instances(x),
-}
+def transform_project_m2m_data(item):
+    return {
+        "regions": regions_instances(process_regions_data(item.get('region'))),
+        "contacts": contacts_instances(item.get('points_of_contact')),
+        # Related Organizations
+        "consultants": consultants_instances(item.get('consultant')),
+        "contractors": contractors_instances(item.get('contractors')),
+        "implementers": client_org_instances(item.get('client_implementing_agency')),
+        # Documents
+        "documents": project_doc_instances(item.get('documents')),
+        # Funding comes via ProjectFunding intermediary model
+        "extra_data": extra_project_data_as_instances(item),
+    }
 
 PROJECT_METADATA_FIELDS = {
     "date_last_updated": None,
@@ -269,24 +296,4 @@ IGNORABLE_FIELDS = {
     "field_49": None,
     "documentation_all_types": None,  # Repeat of stuff in other fields?
     "first_appearance_of_initiative_date": None,  # No data in SE Asia
-}
-
-INITIATIVE_MAP = {
-    # "first_appearance_of_initiative"
-    "name": transform_attr("program_initiative_name", clean_string),
-    # REVIEW: Confirm initiative_type using a dataset that has some...
-    "initiative_type": initiative_type_object,
-}
-
-INFRASTRUCTURETYPE_MAP = {
-    'name': transform_attr("infrastructure_type_name", clean_string),
-}
-
-
-PROJECT_FUNDING_MAP = {
-    # Organization created via FUNDER_ORGANIZATION_MAP
-    "source": transform_attr("source_of_funding", funder_from_related_values),
-    "currency": lambda x: x.get('currency', None),
-    "amount": lambda x: x.get('amount', None),
-    "project": transform_attr("project_id", project_from_related_values),  # Project via project_id in fieldbook
 }
