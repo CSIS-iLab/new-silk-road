@@ -74,10 +74,10 @@ def clean_url(url):
     return url
 
 
-def make_url_list(list_str, sep=","):
+def make_url_list(list_str, sep=", "):
     str_list = make_list(list_str, sep)
     if str_list:
-        return [clean_url(x) for x in str_list if x]
+        return [clean_url(x) for x in str_list if x and x[0].isalum()]
     else:
         return None
 
