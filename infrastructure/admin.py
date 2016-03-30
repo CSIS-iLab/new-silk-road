@@ -21,6 +21,7 @@ class ProjectFundingInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
+    prepopulated_fields = {"slug": ("name",)}
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
     list_filter = ('status', 'infrastructure_type',)
     search_fields = ('name',)
@@ -35,6 +36,7 @@ class ProjectAdmin(admin.ModelAdmin):
 class InitiativeAdmin(MPTTModelAdmin):
     save_on_top = True
     form = InitiativeForm
+    prepopulated_fields = {"slug": ("name",)}
     list_display = ('name', 'initiative_type',) + TEMPORAL_FIELDS
     ordering = ['name', 'created_at']
 
@@ -44,7 +46,7 @@ class InitiativeAdmin(MPTTModelAdmin):
 
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):
-    pass
+    prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(ProjectDocument)
@@ -54,7 +56,7 @@ class ProjectDocumentAdmin(admin.ModelAdmin):
 
 @admin.register(InitiativeType)
 class InitiativeTypeAdmin(admin.ModelAdmin):
-    pass
+    prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(ProjectFunding)
