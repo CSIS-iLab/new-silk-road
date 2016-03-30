@@ -17,7 +17,7 @@ def make_person_transformer(name_field):
         }
     return transform_person
 
-person_poc_transformer = make_person_transformer("points_of_contact_name")
+transform_person_poc = make_person_transformer("points_of_contact_name")
 
 
 def make_organization_transformer(name_field):
@@ -27,4 +27,4 @@ def make_organization_transformer(name_field):
         }
     return transform_organization
 
-organization_transformer = make_organization_transformer("organization_name")
+transform_organization = make_organization_transformer("organization_name")

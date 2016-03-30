@@ -3,17 +3,17 @@
 from .infrastructure import (
     transform_project_data,
     transform_project_m2m_data,
-    # INFRASTRUCTURETYPE_MAP,
-    # INITIATIVE_MAP,
-    # CONSULTANT_ORGANIZATION_MAP,
-    # OPERATOR_ORGANIZATION_MAP,
-    # CONTRACTOR_ORGANIZATION_MAP,
-    # IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    # FUNDER_ORGANIZATION_MAP,
-    # PROJECT_DOCUMENT_MAP,
-    # PROJECT_FUNDING_MAP
+    transform_infrastructuretype_data,
+    transform_initiative_data,
+    transform_consultant_organization,
+    transform_operator_organization,
+    transform_contractor_organization,
+    transform_implementing_agency_organization,
+    transform_funder_organization,
+    transform_project_document_data,
+    transform_project_funding_data
 )
 from .facts import (
     make_person_transformer,
-    person_poc_transformer,
+    transform_person_poc,
 )

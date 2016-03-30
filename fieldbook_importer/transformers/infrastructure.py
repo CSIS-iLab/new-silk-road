@@ -13,7 +13,7 @@ from fieldbook_importer.utils import (
     coerce_to_boolean_or_null
 )
 from .facts import (
-    person_poc_transformer,
+    transform_person_poc,
     make_organization_transformer
 )
 from infrastructure.models import (
@@ -33,7 +33,10 @@ def transform_initiative_data(item):
 
 
 def transform_initiative_type_data(item):
-    return {"name": clean_string(item.get('initiative_type'))},
+    value = item if isinstance(item, str) else item.get('initiative_type')
+    if not value:
+        return None
+    return {"name": clean_string(value)}
 
 
 def transform_infrastructuretype_data(item):
@@ -113,7 +116,7 @@ def initiative_type_object(x):
     if x:
         return instance_for_model(
             'infrastructure.InitiativeType',
-            transform_initiative_type_data,
+            transform_initiative_type_data(x),
             create=True
         )
     return None
@@ -151,34 +154,34 @@ def evaluate_project_new_value(list_val):
     return None
 
 
-consultant_organization_transformer = make_organization_transformer("consultant_name")
-operator_organization_transformer = make_organization_transformer("operator_name")
-contractor_organization_transformer = make_organization_transformer("contractors_name")
-implementing_agency_organization_transformer = make_organization_transformer("client_implementing_agency_name")
-funder_organization_transformer = make_organization_transformer("sources_of_funding_name")
+transform_consultant_organization = make_organization_transformer("consultant_name")
+transform_operator_organization = make_organization_transformer("operator_name")
+transform_contractor_organization = make_organization_transformer("contractors_name")
+transform_implementing_agency_organization = make_organization_transformer("client_implementing_agency_name")
+transform_funder_organization = make_organization_transformer("sources_of_funding_name")
 
 consultants_instances = partial(
     instances_or_none,
     model_name='facts.Organization',
-    transformer=consultant_organization_transformer
+    transformer=transform_consultant_organization
 )
 
 contractors_instances = partial(
     instances_or_none,
     model_name='facts.Organization',
-    transformer=contractor_organization_transformer
+    transformer=transform_contractor_organization
 )
 
 client_org_instances = partial(
     instances_or_none,
     model_name='facts.Organization',
-    transformer=implementing_agency_organization_transformer
+    transformer=transform_implementing_agency_organization
 )
 
 contacts_instances = partial(
     instances_or_none,
     model_name='facts.Person',
-    transformer=person_poc_transformer
+    transformer=transform_person_poc
 )
 
 regions_instances = partial(

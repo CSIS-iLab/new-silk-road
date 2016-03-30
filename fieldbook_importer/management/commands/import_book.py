@@ -5,21 +5,19 @@ import argparse
 import os.path
 import json
 
-from fieldbook_importer.transformer import (
-    # PROJECT_MAP,
-    # PROJECT_M2M,
-    # INFRASTRUCTURETYPE_MAP,
-    # INITIATIVE_MAP,
-    # CONSULTANT_ORGANIZATION_MAP,
-    # OPERATOR_ORGANIZATION_MAP,
-    # CONTRACTOR_ORGANIZATION_MAP,
-    # IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-    # FUNDER_ORGANIZATION_MAP,
-    # PERSON_POC_MAP,
-    # PROJECT_DOCUMENT_MAP,
-    # PROJECT_FUNDING_MAP,
+from fieldbook_importer.transformers import (
     transform_project_data,
-    transform_project_m2m_data
+    transform_project_m2m_data,
+    transform_infrastructuretype_data,
+    transform_initiative_data,
+    # transform_consultant_organization,
+    # transform_operator_organization,
+    # transform_contractor_organization,
+    # transform_implementing_agency_organization,
+    # transform_funder_organization,
+    # transform_project_document_data,
+    # transform_project_funding_data,
+    # transform_person_poc
 )
 
 
@@ -49,45 +47,45 @@ class Command(BaseCommand):
                 'transformer': transform_project_data,
                 'many_to_many': transform_project_m2m_data
             },
-            # 'program_initiatives': {
-            #     'model': 'infrastructure.Initiative',
-            #     'transformer': INITIATIVE_MAP,
-            # },
-            # 'infrastructure_types': {
-            #     'model': 'infrastructure.InfrastructureType',
-            #     'mapping': INFRASTRUCTURETYPE_MAP
-            # },
+            'program_initiatives': {
+                'model': 'infrastructure.Initiative',
+                'transformer': transform_initiative_data,
+            },
+            'infrastructure_types': {
+                'model': 'infrastructure.InfrastructureType',
+                'transformer': transform_infrastructuretype_data
+            },
             # 'consultants': {
             #     'model': 'facts.Organization',
-            #     'mapping': CONSULTANT_ORGANIZATION_MAP,
+            #     'transformer': CONSULTANT_ORGANIZATION_MAP,
             # },
             # 'operators': {
             #     'model': 'facts.Organization',
-            #     'mapping': OPERATOR_ORGANIZATION_MAP,
+            #     'transformer': OPERATOR_ORGANIZATION_MAP,
             # },
             # 'contractors': {
             #     'model': 'facts.Organization',
-            #     'mapping': CONTRACTOR_ORGANIZATION_MAP,
+            #     'transformer': CONTRACTOR_ORGANIZATION_MAP,
             # },
             # 'client_implementing_agencies': {
             #     'model': 'facts.Organization',
-            #     'mapping': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
+            #     'transformer': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
             # },
             # 'points_of_contact': {
             #     'model': 'facts.Person',
-            #     'mapping': PERSON_POC_MAP,
+            #     'transformer': PERSON_POC_MAP,
             # },
             # 'sources_of_fundings': {
             #     'model': 'facts.Organization',
-            #     'mapping': FUNDER_ORGANIZATION_MAP
+            #     'transformer': FUNDER_ORGANIZATION_MAP
             # },
             # 'project_funding': {
             #     'model': 'infrastructure.ProjectFunding',
-            #     'mapping': PROJECT_FUNDING_MAP
+            #     'transformer': PROJECT_FUNDING_MAP
             # },
             # 'documents': {
             #     'model': 'infrastructure.ProjectDocument',
-            #     'mapping': PROJECT_DOCUMENT_MAP
+            #     'transformer': PROJECT_DOCUMENT_MAP
             # }
         }
 
