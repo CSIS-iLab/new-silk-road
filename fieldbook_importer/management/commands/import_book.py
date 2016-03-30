@@ -10,14 +10,14 @@ from fieldbook_importer.transformers import (
     transform_project_m2m_data,
     transform_infrastructuretype_data,
     transform_initiative_data,
-    # transform_consultant_organization,
-    # transform_operator_organization,
-    # transform_contractor_organization,
-    # transform_implementing_agency_organization,
-    # transform_funder_organization,
-    # transform_project_document_data,
-    # transform_project_funding_data,
-    # transform_person_poc
+    transform_consultant_organization,
+    transform_operator_organization,
+    transform_contractor_organization,
+    transform_implementing_agency_organization,
+    transform_funder_organization,
+    transform_project_funding_data,
+    transform_project_document_data,
+    transform_person_poc
 )
 
 
@@ -55,38 +55,38 @@ class Command(BaseCommand):
                 'model': 'infrastructure.InfrastructureType',
                 'transformer': transform_infrastructuretype_data
             },
-            # 'consultants': {
-            #     'model': 'facts.Organization',
-            #     'transformer': CONSULTANT_ORGANIZATION_MAP,
-            # },
-            # 'operators': {
-            #     'model': 'facts.Organization',
-            #     'transformer': OPERATOR_ORGANIZATION_MAP,
-            # },
-            # 'contractors': {
-            #     'model': 'facts.Organization',
-            #     'transformer': CONTRACTOR_ORGANIZATION_MAP,
-            # },
-            # 'client_implementing_agencies': {
-            #     'model': 'facts.Organization',
-            #     'transformer': IMPLEMENTING_AGENCY_ORGANIZATION_MAP,
-            # },
-            # 'points_of_contact': {
-            #     'model': 'facts.Person',
-            #     'transformer': PERSON_POC_MAP,
-            # },
-            # 'sources_of_fundings': {
-            #     'model': 'facts.Organization',
-            #     'transformer': FUNDER_ORGANIZATION_MAP
-            # },
-            # 'project_funding': {
-            #     'model': 'infrastructure.ProjectFunding',
-            #     'transformer': PROJECT_FUNDING_MAP
-            # },
-            # 'documents': {
-            #     'model': 'infrastructure.ProjectDocument',
-            #     'transformer': PROJECT_DOCUMENT_MAP
-            # }
+            'consultants': {
+                'model': 'facts.Organization',
+                'transformer': transform_consultant_organization,
+            },
+            'operators': {
+                'model': 'facts.Organization',
+                'transformer': transform_operator_organization,
+            },
+            'contractors': {
+                'model': 'facts.Organization',
+                'transformer': transform_contractor_organization,
+            },
+            'client_implementing_agencies': {
+                'model': 'facts.Organization',
+                'transformer': transform_implementing_agency_organization,
+            },
+            'points_of_contact': {
+                'model': 'facts.Person',
+                'transformer': transform_person_poc,
+            },
+            'sources_of_fundings': {
+                'model': 'facts.Organization',
+                'transformer': transform_funder_organization
+            },
+            'project_funding': {
+                'model': 'infrastructure.ProjectFunding',
+                'transformer': transform_project_funding_data
+            },
+            'documents': {
+                'model': 'infrastructure.ProjectDocument',
+                'transformer': transform_project_document_data
+            }
         }
 
         self.configure(self.configfile)

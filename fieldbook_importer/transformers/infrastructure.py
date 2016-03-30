@@ -49,8 +49,8 @@ def transform_project_funding_data(item):
     return {
         # Organization created via FUNDER_ORGANIZATION_MAP
         "source": funder_from_related_values(item.get("source_of_funding")),
-        "currency": lambda x: x.get('currency'),
-        "amount": lambda x: x.get('amount'),
+        "currency": item.get('currency'),
+        "amount": item.get('amount'),
         "project": project_from_related_values(item.get("project_id")),
     }
 
