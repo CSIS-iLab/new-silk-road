@@ -26,6 +26,11 @@ class OrganizationAdmin(MPTTModelAdmin):
     select_related = True
     search_fields = ['name']
     list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size') + TEMPORAL_FIELDS
+    prepopulated_fields = {"slug": ("name",)}
+
+
+class OrganizationType(MPTTModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class OrganizationDetailsAdmin(admin.ModelAdmin):
