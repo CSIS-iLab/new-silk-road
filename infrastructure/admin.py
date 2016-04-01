@@ -21,6 +21,7 @@ class ProjectFundingInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
+    # FIXME: name field may contain unicode, so how can we flip on unicode here
     prepopulated_fields = {"slug": ("name",)}
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
     list_filter = ('status', 'infrastructure_type',)

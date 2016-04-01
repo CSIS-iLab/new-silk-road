@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.core.urlresolvers import reverse
 from publish.models import Publishable
 from mptt.models import MPTTModel, TreeForeignKey
 from locations.models import CountryField
@@ -154,6 +155,9 @@ class Project(Publishable):
     def get_countries_display(self):
         countries_names = [iso_countries[x].name for x in self.countries if x in iso_countries]
         return ', '.join(countries_names)
+
+    def get_absolute_url(self):
+        return reverse('infrastructure-project-detail', args=[self.slug])
 
 
 class InitiativeType(models.Model):
