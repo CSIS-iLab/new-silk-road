@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'facts',
     'locations',
     'infrastructure',
+    'website',
 
     'fieldbook_importer',
 ]
@@ -73,7 +74,7 @@ ROOT_URLCONF = 'newsilkroad.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'newsilkroad/templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': True if os.getenv('TEMPLATE_DEBUG', 'True') == 'True' else DEBUG,
@@ -140,9 +141,7 @@ STATICFILES_LOCATION = 'static'
 STATICFILES_STORAGE = 'newsilkroad.project_storages.StaticStorage'
 STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'newsilkroad/static')
-]
+
 
 # Media aka uploads
 MEDIAFILES_LOCATION = 'media'
