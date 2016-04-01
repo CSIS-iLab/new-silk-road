@@ -41,7 +41,7 @@ class Organization(MPTTModel, Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('facts-organization', args=[self.slug])
+        return reverse('facts-organization-detail', args=[self.slug])
 
 
 class OrganizationTypeBase(models.Model):

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from facts.models import (
     Person, Position,
-    Event,
+    Event, EventType,
     # Organizations
     Organization,
     CompanyDetails, FinancingOrganizationDetails, GovernmentDetails,
@@ -12,7 +12,9 @@ from facts.models import (
     NGOType, PoliticalType, CompanyStructure,
 )
 from .people import PersonAdmin
-from .events import EventAdmin
+from .events import (
+    EventAdmin, EventTypeAdmin
+)
 from .organizations import (
     OrganizationAdmin,
     OrganizationType,
@@ -28,6 +30,7 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(Position)
 # Events
 admin.site.register(Event, EventAdmin)
+admin.site.register(EventType, EventTypeAdmin)
 # Organizations
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(CompanyDetails, CompanyDetailsAdmin)

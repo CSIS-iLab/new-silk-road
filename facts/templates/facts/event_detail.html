@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% load markymark %}
+
+{% block content %}
+<article>
+    <h1>{{ object.name }}</h1>
+    <ul>
+        <li>{{ object.start_date }}</li>
+        <li>{{ object.end_date }}</li>
+    </ul>
+    <section class='description'>
+{{ object.description|markdown }}
+    </section>
+</article>
+{% endblock %}

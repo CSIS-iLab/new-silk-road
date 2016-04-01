@@ -14,6 +14,7 @@ class OrganizationEventInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     save_on_top = True
+    search_fields = ['name']
     inlines = (
         PersonEventInline,
         OrganizationEventInline
@@ -21,12 +22,18 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_date', 'end_date') + TEMPORAL_FIELDS
     fieldsets = (
         (None, {
-            'fields': ('name', ('start_date', 'end_date'),)
+            'fields': (('name', 'slug'), ('start_date', 'end_date'),)
         }),
         (None, {
-            'fields': ('description',)
+            'fields': ('event_type', 'description',)
         }),
         (None, {
             'fields': ('documents', 'places')
         }),
     )
+    prepopulated_fields = {"slug": ("name",)}
+
+
+class EventTypeAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ['name']

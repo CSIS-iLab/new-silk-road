@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 from publish.models import Publishable
 from markymark.fields import MarkdownField
@@ -9,6 +10,12 @@ class EventType(MPTTModel):
     slug = models.SlugField(max_length=110)
     parent = TreeForeignKey('self', null=True, blank=True,
                             related_name='children', db_index=True)
+
+    def __str__(self):
+        return self.name
+
+    # def get_absolute_url(self):
+    #     return reverse('facts-event-type-detail', args=[self.slug])
 
 
 class Event(Publishable):
@@ -27,3 +34,6 @@ class Event(Publishable):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('facts-event-detail', args=[self.slug])

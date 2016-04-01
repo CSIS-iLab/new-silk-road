@@ -12,5 +12,5 @@ from .organizations import (
     OrganizationShareholder, PersonShareholder,
 )
 from .people import (Person, Position)
-from .events import Event
+from .events import (Event, EventType)
 from .other import Data

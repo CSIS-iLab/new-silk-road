@@ -46,7 +46,7 @@ class Person(Publishable):
         return " ".join([x for x in name_parts if x])
 
     def get_absolute_url(self):
-        return reverse('facts-person', args=[str(self.identifier)])
+        return reverse('facts-person-detail', args=[str(self.identifier)])
 
 
 class Position(models.Model):
