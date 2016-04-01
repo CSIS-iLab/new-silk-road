@@ -176,3 +176,6 @@ if DEBUG and os.getenv('DEBUG_STATIC', False) == 'True':
 
 # Setting this variable to ``True`` activates the maintenancemode middleware.
 MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', False) == 'True'
+MAINTENANCE_IGNORE_URLS = (
+    r'^/admin/.*',
+)
