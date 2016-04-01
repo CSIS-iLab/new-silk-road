@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>People</h2>
-{% if page_obj %}{% include "facts/_pagination_controls.html" %}{% endif %}
+{% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
 
 <ul>
 {% for object in person_list  %}
@@ -11,6 +11,6 @@
     </li>
 {% endfor %}
 </ul>
-{% if page_obj %}{% include "facts/_pagination_controls.html" %}{% endif %}
+{% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
 
 {% endblock %}
