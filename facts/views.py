@@ -28,6 +28,7 @@ class EventDetailView(DetailView):
 
 class EventListView(ListView):
     model = Event
+    paginate_by = 50
 
 
 # Organization stuff
@@ -37,6 +38,7 @@ class OrganizationDetailView(DetailView):
 
 class OrganizationListView(ListView):
     model = Organization
+    paginate_by = 50
 
 
 # Organization detailsviews
