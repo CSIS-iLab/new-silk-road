@@ -19,6 +19,7 @@ class PersonDetailView(DetailView):
 
 class PersonListView(ListView):
     model = Person
+    paginate_by = 50
 
 
 class EventDetailView(DetailView):

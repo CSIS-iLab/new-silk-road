@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.core.urlresolvers import reverse
 from locations.models import COUNTRY_CHOICES, countries
 from markymark.fields import MarkdownField
 from publish.models import Publishable
@@ -43,6 +44,9 @@ class Person(Publishable):
     def full_display_name(self):
         name_parts = (self.given_name, self.additional_name or None, self.family_name)
         return " ".join([x for x in name_parts if x])
+
+    def get_absolute_url(self):
+        return reverse('facts-person', args=[str(self.identifier)])
 
 
 class Position(models.Model):
