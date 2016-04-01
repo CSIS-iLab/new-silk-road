@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
 
+    'maintenancemode',
+
     'django_extensions',
     'storages',
 
@@ -65,6 +67,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -165,7 +168,11 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 4,
 }
 
-if DEBUG and os.getenv('DEBUG_STATIC', False):
+if DEBUG and os.getenv('DEBUG_STATIC', False) == 'True':
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     STATIC_URL = '/%s/' % STATICFILES_LOCATION
     MEDIA_URL = '/%s/' % MEDIAFILES_LOCATION
+
+
+# Setting this variable to ``True`` activates the maintenancemode middleware.
+MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', False) == 'True'
