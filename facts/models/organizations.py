@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.core.urlresolvers import reverse
 from publish.models import Publishable
 from markymark.fields import MarkdownField
 from mptt.models import MPTTModel, TreeForeignKey
@@ -38,6 +39,9 @@ class Organization(MPTTModel, Publishable):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('facts-organization', args=[self.slug])
 
 
 class OrganizationTypeBase(models.Model):

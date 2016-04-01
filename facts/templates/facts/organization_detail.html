@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{ object.name }}</h2>
+
+    <section class="projects">{% spaceless %}
+    {% if obj.projects_consulted.exists %}
+    {% include "facts/_related_projects.html" with projects_list=object.projects_consulted.all organization_role="consultancies" %}
+    {% endif %}
+
+    {% if object.projects_contracted.exists %}
+    {% include "facts/_related_projects.html" with projects_list=object.projects_contracted.all organization_role="contracts" %}
+    {% endif %}
+
+    {% if object.projects_funded.exists %}
+    {% include "facts/_related_projects.html" with projects_list=object.projects_funded.all organization_role="funded" %}
+    {% endif %}
+
+    {% if object.projects_implemented.exists %}
+    {% include "facts/_related_projects.html" with projects_list=object.projects_implemented.all organization_role="implemented" %}
+    {% endif %}
+
+    {% if object.projects_operated.exists %}
+    {% include "facts/_related_projects.html" with projects_list=object.projects_operated.all organization_role="operated" %}
+    {% endif %}
+    {% endspaceless %}
+    </section>
+{% endblock %}
