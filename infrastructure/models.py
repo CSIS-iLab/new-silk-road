@@ -149,6 +149,9 @@ class Project(Publishable):
     )
     extra_data = models.ManyToManyField('facts.Data', blank=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -196,6 +199,9 @@ class Initiative(MPTTModel, Publishable):
     geographic_scope = models.ForeignKey('locations.Region',
                                          on_delete=models.SET_NULL,
                                          blank=True, null=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
