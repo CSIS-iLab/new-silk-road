@@ -13,7 +13,7 @@ def make_slug_forward(app_label, model_label, slug_source):
                     break
                 attr_val = getattr(m, slug_source)
                 if isinstance(attr_val, str):
-                    m.slug = slugify(attr_val)
+                    m.slug = slugify(attr_val, allow_unicode=True)
                     m.save(update_fields=['slug'])
     return generate_slugs
 
