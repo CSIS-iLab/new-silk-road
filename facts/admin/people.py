@@ -27,7 +27,7 @@ class PersonForm(forms.ModelForm):
 
 class PersonAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display = ('__str__', 'family_name', 'given_name', 'citizenships_names', 'birth_date')
+    list_display = ('family_name', 'given_name', 'citizenships_names', 'birth_date', 'identifier',)
     list_filter = ('family_name',)
     inlines = (
         PositionInline,
@@ -36,9 +36,13 @@ class PersonAdmin(admin.ModelAdmin):
         PersonShareholderInline
     )
     form = PersonForm
+    readonly_fields = ('identifier',)
     fieldsets = (
         ('Basic Details', {
-            'fields': (('given_name', 'family_name'),)
+            'fields': (
+                'identifier',
+                ('given_name', 'family_name'),
+            )
         }),
         (None, {
             'fields': ('citizenships', 'notes')

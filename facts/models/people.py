@@ -40,6 +40,10 @@ class Person(Publishable):
         return ", ".join((countries.get(s).name for s in self.citizenships)) if self.citizenships else None
     citizenships_names.short_description = 'Citizenships'
 
+    def full_display_name(self):
+        name_parts = (self.given_name, self.additional_name or None, self.family_name)
+        return " ".join([x for x in name_parts if x])
+
 
 class Position(models.Model):
     """Describes a position a person holds/held at an organization"""
