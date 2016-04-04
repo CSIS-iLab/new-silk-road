@@ -3,10 +3,13 @@
 {% block content %}
 <article class="project">
     <h2>{{ object.name }}</h2>
-
+    {% if object.initiative %}
+    <h3>Initiative: <a href="{{ object.initiative.get_absolute_url }}">{{ object.initiative.name }}</a></h3>
+    {% endif %}
     <p>{{ object.get_countries_display }}</p>
 
     {{ object.notes|markdown }}
+
 
     <section class="documents">
         <h3>Documents</h3>
