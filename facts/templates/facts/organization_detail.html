@@ -7,8 +7,31 @@
         <dd>{% lorem 15 w %}</dd>
     </dl>
 
+
+    {% if object.companydetails %}
+    <section class="details company">
+        <h2>Company Details</h2>
+        <dl>
+            <dt>Sector</dt>
+            <dd>{{ object.companydetails.get_sector_display|default:"Unspecified" }}</dd>
+            <dt>Company Type</dt>
+            <dd>{{ object.companydetails.org_type|default:"Unspecified" }}</dd>
+            <dt>Company Structure</dt>
+            <dd>{{ object.companydetails.structure|default:"Unspecified" }}</dd>
+        </dl>
+    </section>
+    {% endif %}
+
+
+    {% if object.governmentdetails %}
+    <section class="details government">
+        <h2>Government Details</h2>
+        {{ object.governmentdetails.country }}
+    </section>
+    {% endif %}
+
     <section class="projects">{% spaceless %}
-    {% if obj.projects_consulted.exists %}
+    {% if object.projects_consulted.exists %}
     {% include "facts/_related_projects.html" with projects_list=object.projects_consulted.all organization_role="consultancies" %}
     {% endif %}
 
