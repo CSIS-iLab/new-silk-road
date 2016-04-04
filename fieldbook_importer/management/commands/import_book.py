@@ -7,7 +7,7 @@ import json
 
 from fieldbook_importer.transformers import (
     transform_project_data,
-    transform_project_m2m_data,
+    transform_project_related_data,
     transform_infrastructuretype_data,
     transform_initiative_data,
     transform_consultant_organization,
@@ -17,7 +17,11 @@ from fieldbook_importer.transformers import (
     transform_funder_organization,
     transform_project_funding_data,
     transform_project_document_data,
-    transform_person_poc
+    transform_person_poc,
+    make_organization_related_transformer,
+)
+from fieldbook_importer.utils import (
+    instance_for_model,
 )
 
 
@@ -45,7 +49,7 @@ class Command(BaseCommand):
             'projects': {
                 'model': 'infrastructure.Project',
                 'transformer': transform_project_data,
-                'many_to_many': transform_project_m2m_data
+                'related': transform_project_related_data
             },
             'program_initiatives': {
                 'model': 'infrastructure.Initiative',
@@ -58,18 +62,22 @@ class Command(BaseCommand):
             'consultants': {
                 'model': 'facts.Organization',
                 'transformer': transform_consultant_organization,
+                'related': make_organization_related_transformer("consultant_name")
             },
             'operators': {
                 'model': 'facts.Organization',
                 'transformer': transform_operator_organization,
+                'related': make_organization_related_transformer("operator_name")
             },
             'contractors': {
                 'model': 'facts.Organization',
                 'transformer': transform_contractor_organization,
+                'related': make_organization_related_transformer("contractors_name")
             },
             'client_implementing_agencies': {
                 'model': 'facts.Organization',
                 'transformer': transform_implementing_agency_organization,
+                'related': make_organization_related_transformer("client_implementing_agency_name")
             },
             'points_of_contact': {
                 'model': 'facts.Person',
@@ -77,11 +85,12 @@ class Command(BaseCommand):
             },
             'sources_of_fundings': {
                 'model': 'facts.Organization',
-                'transformer': transform_funder_organization
+                'transformer': transform_funder_organization,
+                'related': make_organization_related_transformer("sources_of_funding_name")
             },
             'project_funding': {
                 'model': 'infrastructure.ProjectFunding',
-                'transformer': transform_project_funding_data
+                'transformer': transform_project_funding_data,
             },
             'documents': {
                 'model': 'infrastructure.ProjectDocument',
@@ -149,7 +158,26 @@ class Command(BaseCommand):
             return klass
         return klass.objects.get_or_create
 
-    def load_data(self, data, model_class, transformer, many_to_many=None):
+    def _process_m2m_objects(self, obj, key, related_objects):
+        manager = getattr(obj, key, None)
+        if manager and related_objects:
+            related_objects = list(related_objects)
+            for rel_obj in related_objects:
+                if rel_obj.id is None:
+                    rel_obj.save()
+            manager.add(*related_objects)
+
+    def _process_one2one_object(self, obj, key, data):
+        '''For one2one objects, we expect the key to be a model_label, e.g. app.ModelName'''
+        if isinstance(data, dict):
+            data[obj._meta.model_name] = obj
+            instance = instance_for_model(key, data, create=True)
+            if self.verbosity > 2:
+                self.stdout.write("Created {}".format(str(instance)))
+        else:
+            raise CommandError("Attempted to process a one2one with non-dict data")
+
+    def load_data(self, data, model_class, transformer, related=None):
         create_obj = self._get_model_constructor(model_class)
         model_name = model_class._meta.model_name
 
@@ -173,17 +201,15 @@ class Command(BaseCommand):
                     except Exception as e:
                         self.stderr.write("Error with {} {}".format(model_name, item.get('id', repr(item))))
                         self.stderr.write(repr(e))
-                if many_to_many:
-                    m2m_items = many_to_many(item)
-                    for key, related_objects in m2m_items.items():
+                if related:
+                    related_transforms = related(item)
+                    for key, value in related_transforms.items():
                         if not self.dry_run:
-                            related_manager = getattr(obj, key, None)
-                            if related_manager and related_objects:
-                                related_objects = list(related_objects)
-                                for rel_obj in related_objects:
-                                    if rel_obj.id is None:
-                                        rel_obj.save()
-                                related_manager.add(*related_objects)
+                            rel_type, data = value
+                            if rel_type == 'm2m':
+                                self._process_m2m_objects(obj, key, data)
+                            elif rel_type == 'one2one':
+                                self._process_one2one_object(obj, key, data)
                             obj.save()
                         elif self.verbosity > 2:
-                            self.stdout.write("Processing '{}' many_to_many".format(key))
+                            self.stdout.write("Processing '{}' related".format(key))

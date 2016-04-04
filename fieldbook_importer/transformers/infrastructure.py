@@ -268,18 +268,39 @@ def transform_project_data(item):
     }
 
 
-def transform_project_m2m_data(item):
+def transform_project_related_data(item):
     return {
-        "regions": regions_instances(process_regions_data(item.get('region'))),
-        "contacts": contacts_instances(item.get('points_of_contact')),
+        "regions": (
+            'm2m',
+            regions_instances(process_regions_data(item.get('region')))
+        ),
+        "contacts": (
+            'm2m',
+            contacts_instances(item.get('points_of_contact'))
+        ),
         # Related Organizations
-        "consultants": consultants_instances(item.get('consultant')),
-        "contractors": contractors_instances(item.get('contractors')),
-        "implementers": client_org_instances(item.get('client_implementing_agency')),
+        "consultants": (
+            'm2m',
+            consultants_instances(item.get('consultant'))
+        ),
+        "contractors": (
+            'm2m',
+            contractors_instances(item.get('contractors'))
+        ),
+        "implementers": (
+            'm2m',
+            client_org_instances(item.get('client_implementing_agency'))
+        ),
         # Documents
-        "documents": project_doc_instances(item.get('documents')),
+        "documents": (
+            'm2m',
+            project_doc_instances(item.get('documents'))
+        ),
         # Funding comes via ProjectFunding intermediary model
-        "extra_data": extra_project_data_as_instances(item),
+        "extra_data": (
+            'm2m',
+            extra_project_data_as_instances(item)
+        ),
     }
 
 PROJECT_METADATA_FIELDS = {
