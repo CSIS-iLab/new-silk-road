@@ -144,7 +144,9 @@ STATICFILES_LOCATION = 'static'
 STATICFILES_STORAGE = 'newsilkroad.project_storages.StaticStorage'
 STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
 STATIC_ROOT = os.path.join(BASE_DIR, 'serve/staticfiles')
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'website/static_overrides')
+]
 
 # Media aka uploads
 MEDIAFILES_LOCATION = 'media'
