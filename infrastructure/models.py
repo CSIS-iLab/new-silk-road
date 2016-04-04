@@ -160,7 +160,7 @@ class Project(Publishable):
         return ', '.join(countries_names)
 
     def get_absolute_url(self):
-        return reverse('infrastructure-project-detail', args=[self.slug])
+        return reverse('infrastructure-project-detail', args=[self.slug or None])
 
 
 class InitiativeType(models.Model):
@@ -205,6 +205,9 @@ class Initiative(MPTTModel, Publishable):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('infrastructure-initiative-detail', args=[self.slug or None])
 
 
 class ProjectDocument(models.Model):

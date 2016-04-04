@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="initiative">
+    <h2>{{ object.name }}</h2>
+    <h3>Type: {{ object.initiative_type.name|default:"Not specified" }}</h3>
+    <dl>
+        {% if object.founding_date %}
+        <dt>Founded</dt>
+        <dd>{{ object.founding_date }}</dd>
+        {% endif %}
+    </dl>
+    <section class="projects">
+        <h2>Projects ({{ object.project_set.count }})</h2>
+        <ul>{% for related_object in object.project_set.all %}
+            <li>
+                <a href="{{ related_object.get_absolute_url }}">{{ related_object.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+</article>
+{% endblock %}
