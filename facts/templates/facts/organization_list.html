@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Organizations</h2>
+<h2>{{ display_name_plural|default:"Organizations" }}</h2>
 {% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
 
 <ul>

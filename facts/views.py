@@ -4,9 +4,6 @@ from django.views.generic.list import ListView
 from .models import (
     Person,
     Organization,
-    CompanyDetails, FinancingOrganizationDetails, GovernmentDetails,
-    MilitaryDetails, MultilateralDetails, NGODetails, PoliticalDetails,
-
     Event,
 )
 
@@ -39,32 +36,45 @@ class OrganizationDetailView(DetailView):
 class OrganizationListView(ListView):
     model = Organization
     paginate_by = 50
+    display_name_plural = None
+
+    def get_context_data(self, **kwargs):
+        context = super(OrganizationListView, self).get_context_data(**kwargs)
+        if hasattr(self, 'display_name_plural'):
+            context['display_name_plural'] = self.display_name_plural
+        return context
 
 
-# Organization detailsviews
-class CompanyDetailsView(DetailView):
-    model = CompanyDetails
+class CompanyListView(OrganizationListView):
+    queryset = Organization.objects.filter(companydetails__isnull=False)
+    display_name_plural = 'Companies'
 
 
-class FinancingOrganizationDetailsView(DetailView):
-    model = FinancingOrganizationDetails
+class FinancingOrganizationListView(OrganizationListView):
+    queryset = Organization.objects.filter(financingorganizationdetails__isnull=False)
+    display_name_plural = 'Financing Organizations'
 
 
-class GovernmentDetailsView(DetailView):
-    model = GovernmentDetails
+class GovernmentListView(OrganizationListView):
+    queryset = Organization.objects.filter(governmentdetails__isnull=False)
+    display_name_plural = 'Governments'
 
 
-class MilitaryDetailsView(DetailView):
-    model = MilitaryDetails
+class MilitaryListView(OrganizationListView):
+    queryset = Organization.objects.filter(militarydetails__isnull=False)
+    display_name_plural = 'Militaries'
 
 
-class MultilateralDetailsView(DetailView):
-    model = MultilateralDetails
+class MultilateralListView(OrganizationListView):
+    queryset = Organization.objects.filter(multilateraldetails__isnull=False)
+    display_name_plural = 'Multilaterals'
 
 
-class NGODetailsView(DetailView):
-    model = NGODetails
+class NGOListView(OrganizationListView):
+    queryset = Organization.objects.filter(ngodetails__isnull=False)
+    display_name_plural = 'Non-governmental organizations'
 
 
-class PoliticalDetailsView(DetailView):
-    model = PoliticalDetails
+class PoliticalListView(OrganizationListView):
+    queryset = Organization.objects.filter(politicaldetails__isnull=False)
+    display_name_plural = 'Politcal Entities'
