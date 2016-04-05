@@ -1,13 +1,21 @@
 from django.contrib.gis import admin
 from django.contrib.gis import forms
-from .models import Region, Place, GeoPoint, GeoRegion, GeoCollection
+from .models import (
+    PointGeometry, PolygonGeometry,
+    LineStringGeometry, GeometryCollection,
+    Region, Place,
+)
 from .fields import CountryMultipleChoiceField
 from leaflet.admin import LeafletGeoAdmin
 
 
-class LocationGeoAdmin(LeafletGeoAdmin):
+class MapAdmin(LeafletGeoAdmin):
     map_width = '80%'
     save_on_top = True
+
+
+class LocationGeoAdmin(MapAdmin):
+    readonly_fields = ('attributes',)
 
 
 class RegionForm(forms.ModelForm):
@@ -19,36 +27,39 @@ class RegionForm(forms.ModelForm):
 
 
 @admin.register(Region)
-class RegionAdmin(LocationGeoAdmin):
+class RegionAdmin(MapAdmin):
     form = RegionForm
 
 
-@admin.register(GeoRegion)
-class GeoRegionAdmin(LocationGeoAdmin):
-    model = GeoRegion
+@admin.register(PolygonGeometry)
+class PolygonGeometryAdmin(LocationGeoAdmin):
+    model = PolygonGeometry
     list_display = ('label', 'num_points', 'num_geom')
 
     def num_points(self, obj):
-        return obj.shape.num_points if obj.shape else 0
+        return obj.geometry.num_points if obj.geometry else 0
     num_points.short_description = 'Number of Points'
 
     def num_geom(self, obj):
-        return obj.shape.num_geom if obj.shape else 0
+        return obj.geometry.num_geom if obj.geometry else 0
     num_geom.short_description = 'Number of Shapes'
 
 
-@admin.register(GeoPoint)
-class GeoPointAdmin(LocationGeoAdmin):
-    model = GeoPoint
-    list_display = ('label', 'lat', 'lon')
-    save_on_top = True
-    modifiable = False
-    map_width = '80%'
+@admin.register(PointGeometry)
+class PointGeometryAdmin(LocationGeoAdmin):
+    model = PointGeometry
+    list_display = ('label',)
 
 
-@admin.register(GeoCollection)
-class GeoCollectionAdmin(LocationGeoAdmin):
-    model = GeoCollection
+@admin.register(LineStringGeometry)
+class LineStringGeometryAdmin(LocationGeoAdmin):
+    model = LineStringGeometry
+    list_display = ('label',)
+
+
+@admin.register(GeometryCollection)
+class GeometryCollectionAdmin(admin.ModelAdmin):
+    model = GeometryCollection
     save_on_top = True
 
 admin.site.register(Place, LeafletGeoAdmin)

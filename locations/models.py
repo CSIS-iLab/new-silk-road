@@ -1,7 +1,5 @@
 from django.contrib.gis.db import models
-from django.contrib.postgres.fields import ArrayField
-from django.contrib.gis.geos import Point
-from django.core.exceptions import ValidationError
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 from iso3166 import countries
 
@@ -15,64 +13,56 @@ class CountryField(models.PositiveSmallIntegerField):
         super(CountryField, self).__init__(*args, **kwargs)
 
 
-class GeoPoint(models.Model):
-    """Marks a location on a map"""
+class GeometryRecord(models.Model):
     label = models.CharField(max_length=100)
-    lon = models.FloatField(blank=True, help_text="Defines a geographic longitude")
-    lat = models.FloatField(blank=True, help_text="Defines a geographic latitude")
-    point = models.PointField(blank=True, geography=True)
+    attributes = JSONField(blank=True, default=dict)
+    geometry = None
+    collection = models.ForeignKey(
+        'locations.GeometryCollection',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+
+class PointGeometry(GeometryRecord):
+    geometry = models.PointField()
 
     class Meta:
-        verbose_name = "Geographic Point"
+        verbose_name = 'point'
 
-    def _set_location_fields(self):
-        if (self.lat and self.lon):
-            self.point = Point(self.lon, self.lat)
-        else:
-            raise ValidationError('Marker have a lat/lon.')
+    @property
+    def latitude(self):
+        return self.geometry.y
 
-    def clean(self, *args, **kwargs):
-        self._set_location_fields()
-
-    def save(self, *args, **kwargs):
-        try:
-            self._set_location_fields()
-        except ValidationError:
-            raise Exception('No location data set, unable to save.')
-        super(GeoPoint, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return "Marker for '{}'".format(self.label)
+    @property
+    def longitude(self):
+        return self.geometry.x
 
 
-class GeoRegion(models.Model):
-    """A mappable geographic region"""
-    label = models.CharField(max_length=100)
-    shape = models.MultiPolygonField(geography=True)
+class LineStringGeometry(GeometryRecord):
+    geometry = models.LineStringField()
 
     class Meta:
-        verbose_name = "Geographic Region"
-
-    def __str__(self):
-        return self.label
+        verbose_name = 'line'
 
 
-class GeoCollection(models.Model):
-    """A collection of mappable geometries (lines, polygons, points)"""
-    label = models.CharField(max_length=100)
-    collection = models.GeometryCollectionField(geography=True)
+class PolygonGeometry(GeometryRecord):
+    geometry = models.PolygonField()
 
     class Meta:
-        verbose_name = "Geographic Collection"
+        verbose_name = 'polygon'
 
-    def __str__(self):
-        return self.label
+
+class GeometryCollection(models.Model):
+    label = models.CharField(max_length=100)
+    attributes = JSONField()
 
 
 class Region(models.Model):
     """A human-described region of geography or countries"""
     name = models.CharField(max_length=100)
-    geography = models.ForeignKey('GeoRegion', blank=True, null=True)
+    geography = models.ForeignKey('PolygonGeometry', blank=True, null=True)
     countries = ArrayField(
         models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
         blank=True, null=True, default=list)
@@ -86,7 +76,7 @@ class Place(models.Model):
     label = models.CharField(max_length=100)
     city = models.CharField(blank=True, max_length=100)
     country = CountryField()
-    location = models.ForeignKey('GeoPoint', blank=True, null=True,
+    location = models.ForeignKey('PointGeometry', blank=True, null=True,
                                  verbose_name="geographic location")
 
     def __str__(self):
