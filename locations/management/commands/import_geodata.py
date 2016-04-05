@@ -2,7 +2,12 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.gdal import DataSource
 import os.path
 
-from locations.models import PointGeometry, LineStringGeometry, PolygonGeometry
+from locations.models import (
+    PointGeometry,
+    LineStringGeometry,
+    PolygonGeometry,
+    GeometryCollection
+)
 
 
 class Command(BaseCommand):
@@ -10,14 +15,44 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--dry-run', '-n', action='store_true', default=False)
         parser.add_argument(
-            'files', nargs='+',
+            'files',
+            nargs='+',
             help='A filepath or glob of filepaths'
         )
+        parser.add_argument(
+            '--no-collect',
+            action='store_true',
+            help='Put geometries for a file into a collection'
+        )
+        parser.add_argument(
+            '--attributes',
+            nargs='+',
+            help='Add extra attributes for imported geodata'
+        )
+
+    def _create_attributes(self, raw_attributes):
+        attributes = {
+            k: v for k, v in [x.split('=') for x in raw_attributes if '=' in x]
+        }
+        for key in attributes.keys():
+            value = attributes[key]
+            if value.isnumeric():
+                attributes[key] = int(value)
+            elif value[0].isnumeric() and '.' in value:
+                try:
+                    attributes[key] = float(value)
+                except:
+                    pass
+        return attributes
 
     def handle(self, *args, **kwargs):
         infiles = kwargs.get('files')
         self.verbosity = kwargs.get('verbosity')
         self.dry_run = kwargs.get('dry_run')
+        self.no_collect = kwargs.get('no_collect')
+        # Attempt to parse additional attributes
+        raw_attrs = kwargs.get('attributes')
+        self.attributes = self._create_attributes(raw_attrs) if raw_attrs else {}
 
         if self.verbosity > 1:
             self.stdout.write(self.style.NOTICE('3D geometries will be flattened!'))
@@ -25,12 +60,17 @@ class Command(BaseCommand):
         for f in infiles:
             path, filename = os.path.split(f)
             fname, fext = os.path.splitext(filename)
-            if self.verbosity > 2:
-                self.stdout.write(fname)
+            self.stdout.write("Processing '{}'".format(fname))
+            self.attributes['source'] = filename
             try:
                 ds = DataSource(f)
             except Exception as e:
                 raise CommandError(e)
+
+            collection = GeometryCollection.objects.create(
+                label=fname,
+                attributes=self.attributes.copy()
+            ) if not self.no_collect and not self.dry_run else None
 
             for layer in ds:
                 layer_name, ext = os.path.splitext(layer.name)
@@ -56,8 +96,13 @@ class Command(BaseCommand):
                         data = {f.name.lower(): f.value for f in feat}
                         # Add source information to attributes
                         data['layer'] = layer_name
-                        data['source'] = filename
+                        data.update(self.attributes)
                         if not self.dry_run:
-                            GeoModel.objects.create(geometry=geom.wkt, attributes=data)
+                            GeoModel.objects.create(
+                                label=data.get('name', layer_name),
+                                geometry=geom.wkt,
+                                attributes=data,
+                                collection=collection
+                            )
                         else:
                             self.stdout.write(self.style.SUCCESS('Parsed feature {feat.fid} in {feat.layer_name}, but did not save (dry-run)'.format(feat=feat)))

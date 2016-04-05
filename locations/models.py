@@ -56,7 +56,7 @@ class PolygonGeometry(GeometryRecord):
 
 class GeometryCollection(models.Model):
     label = models.CharField(max_length=100)
-    attributes = JSONField()
+    attributes = JSONField(blank=True, default=dict)
 
 
 class Region(models.Model):
