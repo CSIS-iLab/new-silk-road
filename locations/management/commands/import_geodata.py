@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.gdal import DataSource
 import os.path
 
-from locations.models import PointGeometry, LineStringGeometry
+from locations.models import PointGeometry, LineStringGeometry, PolygonGeometry
 
 
 class Command(BaseCommand):
@@ -38,10 +38,12 @@ class Command(BaseCommand):
                     self.stdout.write('Layer "{}": {} {}s'.format(layer_name, len(layer), layer.geom_type.name))
                 for feat in layer:
                     GeoModel = None
-                    if feat.geom_type.django == 'PointField':
+                    if feat.geom.geom_name == 'POINT':
                         GeoModel = PointGeometry
-                    elif feat.geom_type.django == 'LineStringField':
+                    elif feat.geom.geom_name == 'LINESTRING':
                         GeoModel = LineStringGeometry
+                    elif feat.geom.geom_name == 'POLYGON':
+                        GeoModel = PolygonGeometry
                     else:
                         warn_msg = self.style.WARNING('No matching locations.Model for geometry \'{}\''.format(layer.geom_type.name))
                         self.stderr.write(warn_msg)
