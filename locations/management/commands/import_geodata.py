@@ -9,6 +9,8 @@ from locations.models import (
     GeometryCollection
 )
 
+FILENAME_TRANSLATION_TABLE = str.maketrans('?', '–')
+
 
 class Command(BaseCommand):
 
@@ -67,7 +69,7 @@ class Command(BaseCommand):
             except Exception as e:
                 raise CommandError(e)
 
-            clean_name = fname.replace('?', ' ')
+            clean_name = fname.translate(FILENAME_TRANSLATION_TABLE).strip()
             collection = GeometryCollection.objects.create(
                 label=clean_name,
                 attributes=self.attributes.copy()
