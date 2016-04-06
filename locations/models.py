@@ -24,6 +24,14 @@ class GeometryRecord(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        if self.label:
+            return self.label
+        src = self.attributes.get('source')
+        if src:
+            return src
+        return self.geometry.wkt[:40]
+
 
 class PointGeometry(GeometryRecord):
     geometry = models.PointField()
@@ -57,6 +65,11 @@ class PolygonGeometry(GeometryRecord):
 class GeometryCollection(models.Model):
     label = models.CharField(max_length=100)
     attributes = JSONField(blank=True, default=dict)
+
+    def __str__(self):
+        if self.label:
+            return self.label
+        return "Collection #{}".format(self.id)
 
 
 class Region(models.Model):
