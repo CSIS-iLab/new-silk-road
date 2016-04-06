@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from publish.models import Publishable
 from markymark.fields import MarkdownField
@@ -13,6 +14,11 @@ class EventType(MPTTModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(EventType, self).save(*args, **kwargs)
 
     # def get_absolute_url(self):
     #     return reverse('facts-event-type-detail', args=[self.slug])
@@ -37,3 +43,8 @@ class Event(Publishable):
 
     def get_absolute_url(self):
         return reverse('facts-event-detail', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(Event, self).save(*args, **kwargs)

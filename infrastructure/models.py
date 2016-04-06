@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 from publish.models import Publishable
 from mptt.models import MPTTModel, TreeForeignKey
 from locations.models import CountryField
@@ -171,6 +172,11 @@ class InitiativeType(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(InitiativeType, self).save(*args, **kwargs)
+
 
 class Initiative(MPTTModel, Publishable):
     """Describes an initiative"""
@@ -205,6 +211,11 @@ class Initiative(MPTTModel, Publishable):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(Initiative, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('infrastructure-initiative-detail', args=[self.slug or None])

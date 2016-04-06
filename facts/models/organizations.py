@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 from publish.models import Publishable
 from markymark.fields import MarkdownField
 from mptt.models import MPTTModel, TreeForeignKey
@@ -43,6 +44,11 @@ class Organization(MPTTModel, Publishable):
     def get_absolute_url(self):
         return reverse('facts-organization-detail', args=[self.slug])
 
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(Organization, self).save(*args, **kwargs)
+
 
 class OrganizationTypeBase(models.Model):
     name = models.CharField(max_length=100)
@@ -53,6 +59,11 @@ class OrganizationTypeBase(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(OrganizationTypeBase, self).save(*args, **kwargs)
 
 
 class CompanyType(MPTTModel, OrganizationTypeBase):
@@ -87,6 +98,11 @@ class CompanyStructure(models.Model):
     """Describes structure of a company"""
     name = models.CharField("Structure", max_length=100)
     slug = models.SlugField(max_length=110)
+
+    def save(self, *args, **kwargs):
+        if not self.slug or self.slug == '':
+            self.slug = slugify(self.name, allow_unicode=True)
+        super(CompanyStructure, self).save(*args, **kwargs)
 
 
 # Details

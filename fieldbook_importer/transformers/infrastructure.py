@@ -1,3 +1,4 @@
+from django.utils.text import slugify
 from functools import partial
 from fieldbook_importer.utils import (
     parse_date,
@@ -24,9 +25,11 @@ from locations.models import COUNTRY_CHOICES
 
 
 def transform_initiative_data(item):
+    name = clean_string(item.get("program_initiative_name"))
     return{
         # "first_appearance_of_initiative"
-        "name": clean_string(item.get("program_initiative_name")),
+        "name": name,
+        "slug": slugify(name, allow_unicode=True),
         # REVIEW: Confirm initiative_type using a dataset that has some...
         "initiative_type": initiative_type_object(item.get('initiative_type')),
     }
@@ -36,12 +39,15 @@ def transform_initiative_type_data(item):
     value = item if isinstance(item, str) else item.get('initiative_type')
     if not value:
         return None
-    return {"name": clean_string(value)}
+    name = clean_string(value)
+    return {"name": name, 'slug': slugify(name, allow_unicode=True)}
 
 
 def transform_infrastructuretype_data(item):
+    name = clean_string(item.get("infrastructure_type_name"))
     return {
-        'name': clean_string(item.get("infrastructure_type_name")),
+        'name': name,
+        "slug": slugify(name, allow_unicode=True),
     }
 
 
@@ -111,7 +117,6 @@ def initiative_object(x):
     return None
 
 
-# FIXME: InitiativeType is going to be a string, apparently
 def initiative_type_object(x):
     if x:
         return instance_for_model(
@@ -251,8 +256,10 @@ project_doc_instances = partial(
 
 
 def transform_project_data(item):
+    name = clean_string(item.get("project_title"), default=None)
     return {
-        "name": clean_string(item.get("project_title"), default=None),
+        "name": name,
+        "slug": slugify(name, allow_unicode=True),
         "start_date": parse_date(item.get("project_start_date")),
         "status": project_status_from_statuses(item.get("project_status")),
         "sources": make_url_list(item.get("sources")),

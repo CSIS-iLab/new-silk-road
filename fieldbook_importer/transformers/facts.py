@@ -1,3 +1,4 @@
+from django.utils.text import slugify
 from fieldbook_importer.utils import (
     clean_string,
 )
@@ -25,8 +26,10 @@ transform_person_poc = make_person_transformer("points_of_contact_name")
 
 def make_organization_transformer(name_field):
     def transform_organization(item):
+        org_name = clean_string(item.get(name_field))
         return {
-            'name': clean_string(item.get(name_field)),
+            'name': org_name,
+            'slug': slugify(org_name, allow_unicode=True)
         }
     return transform_organization
 
