@@ -70,8 +70,8 @@ class GeometryCollectionAdmin(admin.ModelAdmin):
 
     def geometry_type_candidate(self, obj):
         record = obj.geometryrecord_set.first()
-        geom = record.get_geometry()
-        return geom.geom_type if geom else None
+        record = record.get_georecord() if record else None
+        return record.geometry.geom_type if record and record.geometry else None
     geometry_type_candidate.short_description = 'Geometry Type (estimated)'
 
 admin.site.register(Place, LeafletGeoAdmin)
