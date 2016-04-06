@@ -67,8 +67,9 @@ class Command(BaseCommand):
             except Exception as e:
                 raise CommandError(e)
 
+            clean_name = fname.replace('?', ' ')
             collection = GeometryCollection.objects.create(
-                label=fname,
+                label=clean_name,
                 attributes=self.attributes.copy()
             ) if not self.no_collect and not self.dry_run else None
 
