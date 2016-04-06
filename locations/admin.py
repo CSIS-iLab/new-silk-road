@@ -16,6 +16,7 @@ class MapAdmin(LeafletGeoAdmin):
 
 class GeometryBaseAdmin(MapAdmin):
     readonly_fields = ('attributes',)
+    search_fields = ['label']
 
     def num_points(self, obj):
         return obj.geometry.num_points if obj.geometry else 0
@@ -64,6 +65,7 @@ class GeometryCollectionAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = ('attributes', 'geometry_count', 'geometry_type_candidate')
     list_display = ('label', 'geometry_count', 'geometry_type_candidate',)
+    search_fields = ['label']
 
     def geometry_count(self, obj):
         return obj.geometryrecord_set.count()
