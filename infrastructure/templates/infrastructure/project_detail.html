@@ -1,4 +1,14 @@
-{% extends "base.html" %}{% load markymark %}
+{% extends "base.html" %}{% load markymark %}{% load leaflet_tags %}
+
+{% block extrahead %}
+{% spaceless %}
+{% leaflet_js %}{% leaflet_css %}
+{% endspaceless %}
+{% endblock %}
+
+{% block pagetitle %}
+{{ object.name }} | {{ block.super }}
+{% endblock %}
 
 {% block content %}
 <article class="project">
@@ -8,7 +18,13 @@
     {% endif %}
     <p>{{ object.get_countries_display }}</p>
 
-    {{ object.notes|markdown }}
+    <section class="map-container">
+{% leaflet_map "project_map" %}
+    </section>
+
+    <section class="notes">
+{{ object.notes|markdown }}
+    </section>
 
 
     <section class="documents">
@@ -20,5 +36,28 @@
             {% endfor %}
         </ul>
     </section>
+    <script type="text/javascript">
+        var layer;
+        window.addEventListener("map:init", function (e) {
+            var detail = e.detail;
+
+            var project_geo = {{object.geodata.geometry.geojson|safe|default:"null"}};
+            var geo_attributes = {{object.geodata.attributes|safe|default:"null"}};
+
+            if (project_geo) {
+                layer = L.geoJson(project_geo, {
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties) {
+                            layer.bindPopup(feature.properties.description);
+                        }
+                    }
+                });
+
+                detail.map.addLayer(layer);
+                detail.map.fitBounds(layer.getBounds());
+            }
+
+        }, false);
+    </script>
 </article>
 {% endblock %}
