@@ -18,20 +18,6 @@ class GeometryRecord(models.Model):
     attributes = JSONField(blank=True, default=dict)
     geometry = None
 
-    RECORD_TYPES = ('linestringgeometry', 'pointgeometry', 'polygongeometry')
-
-    def _find_geometry_attrname(self):
-        for attr_name in self.RECORD_TYPES:
-            if hasattr(self, attr_name):
-                return attr_name
-        return None
-
-    def get_georecord(self):
-        if self.geometry:
-            return self
-        attr_name = self._find_geometry_attrname()
-        return getattr(self, attr_name) if attr_name else None
-
     def __str__(self):
         if self.label:
             return self.label
