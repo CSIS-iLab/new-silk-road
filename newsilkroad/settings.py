@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'storages',
+    'djgeojson',
 
     'sources',
     'facts',

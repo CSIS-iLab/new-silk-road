@@ -1,0 +1,53 @@
+{% extends "base.html" %}{% load markymark %}{% load leaflet_tags %}
+
+{% block extrahead %}
+{% spaceless %}
+{% leaflet_js %}{% leaflet_css %}
+{% endspaceless %}
+<style>
+    .leaflet-container {  /* all maps */
+        width:  100%;
+        height: 600px;
+    }
+</style>
+{% endblock %}
+
+{% block pagetitle %}
+Map | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<article class="project">
+
+    <section class="map-container">
+{% leaflet_map "all_projects_map" %}
+    </section>
+
+    <script type="text/javascript">
+        window.addEventListener("map:init", function (e) {
+            var layer;
+            var geodata;
+            var detail = e.detail;
+
+            var url = "{% url 'infrastructure-projects-geojson' %}";
+
+            if (url) {
+                var httpRequest = new XMLHttpRequest();
+
+                httpRequest.addEventListener('readystatechange', function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        geodata = JSON.parse(httpRequest.responseText);
+                        layer = L.geoJson(geodata);
+                        detail.map.addLayer(layer);
+                        detail.map.fitBounds(layer.getBounds());
+                    }
+                });
+                httpRequest.open('GET', url);
+                httpRequest.send();
+
+            }
+
+        }, false);
+    </script>
+</article>
+{% endblock %}
