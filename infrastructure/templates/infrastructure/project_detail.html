@@ -36,8 +36,8 @@
         </ul>
     </section>
     <script type="text/javascript">
-        var layer;
         window.addEventListener("map:init", function (e) {
+            var layer;
             var detail = e.detail;
 
             var project_geo = {{object.geodata.geometry.geojson|safe|default:"null"}};
