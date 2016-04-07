@@ -12,10 +12,9 @@
 
 {% block content %}
 <article class="project">
-    <h2>{{ object.name }}</h2>
-    {% if object.initiative %}
+    <h2>{{ object.name }}</h2>{% if object.initiative %}
     <h3>Initiative: <a href="{{ object.initiative.get_absolute_url }}">{{ object.initiative.name }}</a></h3>
-    {% endif %}
+{% endif %}
     <p>{{ object.get_countries_display }}</p>
 
     <section class="map-container">
@@ -43,13 +42,12 @@
 
             var project_geo = {{object.geodata.geometry.geojson|safe|default:"null"}};
             var geo_attributes = {{object.geodata.attributes|safe|default:"null"}};
+            var project_name = "{{ object.name|default:"" }}";
 
             if (project_geo) {
                 layer = L.geoJson(project_geo, {
                     onEachFeature: function (feature, layer) {
-                        if (feature.properties) {
-                            layer.bindPopup(feature.properties.description);
-                        }
+                        layer.bindPopup(project_name);
                     }
                 });
 
