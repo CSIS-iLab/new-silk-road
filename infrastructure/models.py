@@ -150,11 +150,7 @@ class Project(Publishable):
     )
     extra_data = models.ManyToManyField('facts.Data', blank=True)
 
-    geometries = models.ForeignKey(
-        'locations.GeometryCollection',
-        models.SET_NULL,
-        blank=True, null=True
-    )
+    geometries = models.ManyToManyField('locations.MultiGeometry', blank=True)
 
     class Meta:
         ordering = ['name']

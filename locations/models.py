@@ -17,12 +17,6 @@ class GeometryRecord(models.Model):
     label = models.CharField(max_length=100)
     attributes = JSONField(blank=True, default=dict)
     geometry = None
-    collection = models.ForeignKey(
-        'locations.GeometryCollection',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
 
     RECORD_TYPES = ('linestringgeometry', 'pointgeometry', 'polygongeometry')
 
@@ -76,14 +70,11 @@ class PolygonGeometry(GeometryRecord):
         verbose_name = 'polygon'
 
 
-class GeometryCollection(models.Model):
-    label = models.CharField(max_length=100)
-    attributes = JSONField(blank=True, default=dict)
+class MultiGeometry(GeometryRecord):
+    geometry = models.GeometryCollectionField()
 
-    def __str__(self):
-        if self.label:
-            return self.label
-        return "Collection #{}".format(self.id)
+    class Meta:
+        verbose_name = 'geometry collection'
 
 
 class Region(models.Model):

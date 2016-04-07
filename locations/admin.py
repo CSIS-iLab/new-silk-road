@@ -2,7 +2,7 @@ from django.contrib.gis import admin
 from django.contrib.gis import forms
 from .models import (
     PointGeometry, PolygonGeometry,
-    LineStringGeometry, GeometryCollection,
+    LineStringGeometry, MultiGeometry,
     Region, Place,
 )
 from .fields import CountryMultipleChoiceField
@@ -40,40 +40,31 @@ class RegionAdmin(MapAdmin):
     form = RegionForm
 
 
-@admin.register(PolygonGeometry)
+# @admin.register(PolygonGeometry)
 class PolygonGeometryAdmin(GeometryBaseAdmin):
     model = PolygonGeometry
     list_display = ('label', 'num_points', 'num_geom')
 
 
-@admin.register(PointGeometry)
+# @admin.register(PointGeometry)
 class PointGeometryAdmin(GeometryBaseAdmin):
     model = PointGeometry
     list_display = ('label', 'latitude', 'longitude')
     readonly_fields = ('latitude', 'longitude', 'attributes')
 
 
-@admin.register(LineStringGeometry)
+# @admin.register(LineStringGeometry)
 class LineStringGeometryAdmin(GeometryBaseAdmin):
     model = LineStringGeometry
     list_display = ('__str__', 'label', 'num_points', 'num_geom',)
 
 
-@admin.register(GeometryCollection)
-class GeometryCollectionAdmin(admin.ModelAdmin):
-    model = GeometryCollection
+@admin.register(MultiGeometry)
+class GeometryCollectionAdmin(GeometryBaseAdmin):
     save_on_top = True
-    readonly_fields = ('attributes', 'geometry_count', 'geometry_type_candidate')
-    list_display = ('label', 'geometry_count', 'geometry_type_candidate',)
+    readonly_fields = ('attributes', 'num_geom', 'num_points')
+    list_display = ('label', 'num_geom', 'num_points',)
     search_fields = ['label']
 
-    def geometry_count(self, obj):
-        return obj.geometryrecord_set.count()
-
-    def geometry_type_candidate(self, obj):
-        record = obj.geometryrecord_set.first()
-        record = record.get_georecord() if record else None
-        return record.geometry.geom_type if record and record.geometry else None
-    geometry_type_candidate.short_description = 'Geometry Type (estimated)'
 
 admin.site.register(Place, LeafletGeoAdmin)
