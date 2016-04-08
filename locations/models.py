@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.contrib.postgres.fields import ArrayField, JSONField
+import uuid
 
 from iso3166 import countries
 
@@ -61,6 +62,18 @@ class MultiGeometry(GeometryRecord):
 
     class Meta:
         verbose_name = 'geometry collection'
+
+
+class GeometryStore(models.Model):
+    """Providing a way to collect related geometry while still siloing by geometry type"""
+    identifier = models.UUIDField(default=uuid.uuid4, editable=False)
+    attributes = JSONField(blank=True, default=dict)
+    lines = models.ManyToManyField('locations.LineStringGeometry')
+    points = models.ManyToManyField('locations.PointGeometry')
+    polygons = models.ManyToManyField('locations.PolygonGeometry')
+
+    def __str__(self):
+        return str(self.identifier)
 
 
 class Region(models.Model):

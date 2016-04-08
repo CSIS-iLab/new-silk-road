@@ -3,6 +3,7 @@ from django.contrib.gis import forms
 from .models import (
     PointGeometry, PolygonGeometry,
     LineStringGeometry, MultiGeometry,
+    GeometryStore,
     Region, Place,
 )
 from .fields import CountryMultipleChoiceField
@@ -59,12 +60,26 @@ class LineStringGeometryAdmin(GeometryBaseAdmin):
     list_display = ('__str__', 'label', 'num_points', 'num_geom',)
 
 
-@admin.register(MultiGeometry)
+# @admin.register(MultiGeometry)
 class GeometryCollectionAdmin(GeometryBaseAdmin):
     save_on_top = True
     readonly_fields = ('attributes', 'num_geom', 'num_points')
     list_display = ('label', 'num_geom', 'num_points',)
     search_fields = ['label']
+
+
+@admin.register(GeometryStore)
+class GeometryStoreAdmin(admin.ModelAdmin):
+    readonly_fields = ('attributes',)
+    list_display = ('identifier', 'name_attr', 'source_attr')
+
+    def name_attr(self, obj):
+        return obj.attributes.get('name', 'No name attribute')
+    name_attr.short_description = 'Name'
+
+    def source_attr(self, obj):
+        return obj.attributes.get('source', 'No source captured')
+    source_attr.short_description = 'Source'
 
 
 admin.site.register(Place, LeafletGeoAdmin)

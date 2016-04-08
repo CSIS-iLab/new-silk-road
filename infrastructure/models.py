@@ -150,8 +150,8 @@ class Project(Publishable):
     )
     extra_data = models.ManyToManyField('facts.Data', blank=True)
 
-    geodata = models.ForeignKey(
-        'locations.MultiGeometry',
+    geo = models.ForeignKey(
+        'locations.GeometryStore',
         models.SET_NULL,
         blank=True, null=True
     )
