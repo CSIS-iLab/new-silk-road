@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 if self.verbosity > 1:
                     self.stdout.write("Attempting to match collection '{}' using name '{}'".format(item.identifier, geom_name))
 
-                project_candidates = Project.objects.filter(name=geom_name)
+                project_candidates = Project.objects.filter(name__icontains=geom_name.strip())
                 matches_count = project_candidates.count()
                 if self.verbosity > 1:
                     msg = "Matched {} projects".format(matches_count)
