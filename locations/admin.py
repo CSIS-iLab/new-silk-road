@@ -2,7 +2,7 @@ from django.contrib.gis import admin
 from django.contrib.gis import forms
 from .models import (
     PointGeometry, PolygonGeometry,
-    LineStringGeometry, MultiGeometry,
+    LineStringGeometry,
     GeometryStore,
     Region, Place,
 )
