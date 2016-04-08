@@ -49,7 +49,7 @@ def instance_for_model(model_label, data, create=False, skiperrors=False):
         try:
             instance = model.objects.get(**data)
         except model.DoesNotExist:
-            instance = model(**data)
+            instance = None
         except model.MultipleObjectsReturned as e:
             raise e
             if skiperrors:

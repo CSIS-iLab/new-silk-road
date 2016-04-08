@@ -161,7 +161,7 @@ class Command(BaseCommand):
     def _process_m2m_objects(self, obj, key, related_objects):
         manager = getattr(obj, key, None)
         if manager and related_objects:
-            related_objects = list(related_objects)
+            related_objects = list((obj for obj in related_objects if obj))
             for rel_obj in related_objects:
                 if rel_obj.id is None:
                     rel_obj.save()

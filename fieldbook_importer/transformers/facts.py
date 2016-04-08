@@ -1,5 +1,5 @@
 from django.utils.text import slugify
-from utilities.string import clean_string
+from datautils.string import clean_string
 from nameparser import HumanName
 import re
 

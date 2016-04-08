@@ -21,7 +21,6 @@ from infrastructure.models import (
     ProjectStatus,
     ProjectDocument
 )
-from locations.models import COUNTRY_CHOICES
 
 
 def transform_initiative_data(item):
@@ -70,16 +69,22 @@ def project_status_from_statuses(x):
     return None
 
 
-def countries_from_country(x):
+# FIXME: Make map to country objects
+def transform_country(item):
+    name = item.get("country_name")
+    if not name:
+        return None
     country_rename = {
         'Vietnam': 'Viet Nam',
+        'Russia': 'Russian Federation',
+        'Laos': 'Lao People\'s Democratic Republic',
         'East Timor': 'Timor-Leste'
     }
-    values = values_list(x, "country_name")
-    values = list(country_rename.get(c, c) for c in values if c)
-    if values:
-        return list(choices_from_values(values, COUNTRY_CHOICES))
-    return []
+    if name in country_rename:
+        name = country_rename[name]
+    return {
+        "name": name
+    }
 
 
 def infrastructure_type_object(x):
@@ -195,6 +200,13 @@ regions_instances = partial(
 )
 
 
+countries_instances = partial(
+    instances_or_none,
+    model_name='locations.Country',
+    transformer=transform_country
+)
+
+
 # Storing that extra data
 def extra_project_data(x, create=True):
     values_obj = {
@@ -268,7 +280,6 @@ def transform_project_data(item):
         "total_cost_description": clean_string(item.get("total_project_cost_us")),
         "planned_completion_date": parse_date(item.get("planned_date_of_completion")),
         "new": evaluate_project_new_value(item.get("new")),
-        "countries": countries_from_country(item.get('country')),
         "infrastructure_type": infrastructure_type_object(item.get('infrastructure_type')),
         "initiative": initiative_object(item.get('program_initiative')),
         "operator": operator_object(item.get('program_initiative')),
@@ -285,6 +296,11 @@ def transform_project_related_data(item):
             'm2m',
             contacts_instances(item.get('points_of_contact'))
         ),
+        "countries": (
+            'm2m',
+            countries_instances(item.get('country'))
+        ),
+
         # Related Organizations
         "consultants": (
             'm2m',
