@@ -5,7 +5,11 @@ from infrastructure.models import (
     ProjectFunding,
     Initiative, InitiativeType,
 )
-from publish.admin import TEMPORAL_FIELDS
+from publish.admin import (
+    TEMPORAL_FIELDS,
+    make_published,
+    make_not_published
+)
 from infrastructure.forms import InitiativeForm, ProjectForm, ProjectFundingForm
 
 
@@ -26,6 +30,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS + ('published',)
     list_filter = ('status', 'infrastructure_type', 'countries', 'regions')
     search_fields = ('name',)
+    actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
     readonly_fields = ('extra_data',)
     inlines = [
@@ -41,6 +46,7 @@ class InitiativeAdmin(MPTTModelAdmin):
     list_display = ('name', 'initiative_type',) + TEMPORAL_FIELDS + ('published',)
     list_filter = ('geographic_scope', 'initiative_type', 'member_countries')
     search_fields = ('name',)
+    actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
 
     class Meta:

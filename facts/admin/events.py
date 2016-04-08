@@ -1,7 +1,11 @@
 from django.contrib import admin
 from facts.models import Person
 from facts.models.organizations import Organization
-from publish.admin import TEMPORAL_FIELDS
+from publish.admin import (
+    TEMPORAL_FIELDS,
+    make_published,
+    make_not_published
+)
 
 
 class PersonEventInline(admin.TabularInline):
@@ -20,6 +24,7 @@ class EventAdmin(admin.ModelAdmin):
         OrganizationEventInline
     )
     list_display = ('name', 'start_date', 'end_date') + TEMPORAL_FIELDS + ('published',)
+    actions = [make_published, make_not_published]
     fieldsets = (
         (None, {
             'fields': (('name', 'slug'), ('start_date', 'end_date'),)

@@ -6,6 +6,10 @@ from facts.models.people import (Person, Position)
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
 from infrastructure.admin import PersonInitiativeInline
+from publish.admin import (
+    make_published,
+    make_not_published
+)
 
 
 class PositionInline(admin.TabularInline):
@@ -26,6 +30,7 @@ class PersonAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = ('family_name', 'given_name', 'birth_date', 'identifier',) + ('published',)
     list_filter = ('family_name',)
+    actions = [make_published, make_not_published]
     inlines = (
         PositionInline,
         PersonEventInline,

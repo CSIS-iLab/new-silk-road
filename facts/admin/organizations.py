@@ -5,7 +5,11 @@ from facts.models import (
     FinancingOrganizationDetails,
 )
 from facts.fields import PercentageField
-from publish.admin import TEMPORAL_FIELDS
+from publish.admin import (
+    TEMPORAL_FIELDS,
+    make_published,
+    make_not_published
+)
 
 
 class ShareholderAdmin(admin.ModelAdmin):
@@ -25,6 +29,7 @@ class OrganizationAdmin(MPTTModelAdmin):
     select_related = True
     search_fields = ['name']
     list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size') + TEMPORAL_FIELDS + ('published',)
+    actions = [make_published, make_not_published]
     prepopulated_fields = {"slug": ("name",)}
 
 
