@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
                         params = {
                             'label': data.get('name'),
-                            'geometry': geom.geos,
+                            'geom': geom.geos,
                             'attributes': data
                         }
                         if geom.geom_type == 'Point':

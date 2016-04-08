@@ -16,6 +16,9 @@ class GeometryRecord(models.Model):
             return src
         return self.geom.wkt[:40]
 
+    class Meta:
+        abstract = True
+
 
 class PointGeometry(GeometryRecord):
     geom = models.PointField()

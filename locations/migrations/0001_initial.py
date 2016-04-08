@@ -31,14 +31,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='GeometryRecord',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('label', models.CharField(max_length=100)),
-                ('attributes', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
-            ],
-        ),
-        migrations.CreateModel(
             name='GeometryStore',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -66,46 +58,50 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LineStringGeometry',
             fields=[
-                ('geometryrecord_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='locations.GeometryRecord')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('label', models.CharField(max_length=100)),
+                ('attributes', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
                 ('geometry', django.contrib.gis.db.models.fields.LineStringField(srid=4326)),
             ],
             options={
                 'verbose_name': 'line',
-            },
-            bases=('locations.geometryrecord',),
+            }
         ),
         migrations.CreateModel(
             name='MultiGeometry',
             fields=[
-                ('geometryrecord_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='locations.GeometryRecord')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('label', models.CharField(max_length=100)),
+                ('attributes', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
                 ('geometry', django.contrib.gis.db.models.fields.GeometryCollectionField(srid=4326)),
             ],
             options={
                 'verbose_name': 'geometry collection',
-            },
-            bases=('locations.geometryrecord',),
+            }
         ),
         migrations.CreateModel(
             name='PointGeometry',
             fields=[
-                ('geometryrecord_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='locations.GeometryRecord')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('label', models.CharField(max_length=100)),
+                ('attributes', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
                 ('geometry', django.contrib.gis.db.models.fields.PointField(srid=4326)),
             ],
             options={
                 'verbose_name': 'point',
-            },
-            bases=('locations.geometryrecord',),
+            }
         ),
         migrations.CreateModel(
             name='PolygonGeometry',
             fields=[
-                ('geometryrecord_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='locations.GeometryRecord')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('label', models.CharField(max_length=100)),
+                ('attributes', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
                 ('geometry', django.contrib.gis.db.models.fields.PolygonField(srid=4326)),
             ],
             options={
                 'verbose_name': 'polygon',
-            },
-            bases=('locations.geometryrecord',),
+            }
         ),
         migrations.AddField(
             model_name='region',
