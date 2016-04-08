@@ -1,7 +1,7 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from locations.models import (
-    MultiGeometry
+    GeometryStore
 )
 from infrastructure.models import Project
 
@@ -15,29 +15,33 @@ class Command(BaseCommand):
         self.dry_run = kwargs.get('dry_run')
         self.verbosity = kwargs.get('verbosity')
 
-        for item in MultiGeometry.objects.all():
-            if self.verbosity > 1:
-                self.stdout.write("Attempting to match collection '{}'".format(item.label))
+        for item in GeometryStore.objects.all():
+            if 'name' not in item.attributes:
+                self.stderr(self.style.WARNING("Geometry {} has no 'name' attribute to match on".format(item.identifier)))
+            else:
+                geom_name = item.attributes.get('name')
+                if self.verbosity > 1:
+                    self.stdout.write("Attempting to match collection '{}' using name '{}'".format(item.identifier, geom_name))
 
-            project_candidates = Project.objects.filter(name=item.label)
-            matches_count = project_candidates.count()
-            if self.verbosity > 1:
-                msg = "Matched {} projects".format(matches_count)
-                stylefunc = self.style.SUCCESS if matches_count == 1 else self.style.NOTICE
-                self.stdout.write(stylefunc(msg))
+                project_candidates = Project.objects.filter(name=geom_name)
+                matches_count = project_candidates.count()
+                if self.verbosity > 1:
+                    msg = "Matched {} projects".format(matches_count)
+                    stylefunc = self.style.SUCCESS if matches_count == 1 else self.style.NOTICE
+                    self.stdout.write(stylefunc(msg))
 
-            if matches_count == 1 and not self.dry_run:
-                project = project_candidates.first()
-                if not project.geodata:
-                    if not self.dry_run:
-                        project.geodata = item
-                        project.save(update_fields=['geodata'])
-                    if self.verbosity > 0:
-                        msg = self.style.SUCCESS("Matched geodata '{}' to Project '{}'".format(item, project))
-                        self.stdout.write(msg)
-                else:
-                    msg = self.style.WARNING("'{}' already has associated geodata, skipping".format(project))
-                    self.stderr.write(msg)
+                if matches_count == 1 and not self.dry_run:
+                    project = project_candidates.first()
+                    if not project.geo:
+                        if not self.dry_run:
+                            project.geo = item
+                            project.save(update_fields=['geo'])
+                        if self.verbosity > 0:
+                            msg = self.style.SUCCESS("Matched GeometryStore '{}' to Project '{}'".format(item, project))
+                            self.stdout.write(msg)
+                    else:
+                        msg = self.style.WARNING("'{}' already has associated geodata, skipping".format(project))
+                        self.stderr.write(msg)
 
-            if self.verbosity > 0:
-                self.stdout.write("")
+                if self.verbosity > 0:
+                    self.stdout.write("")
