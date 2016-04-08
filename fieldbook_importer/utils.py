@@ -1,10 +1,6 @@
 import datetime
 from django.apps import apps
-import re
 from urllib.parse import urlparse
-
-newlines_reg = re.compile("(\n|\r)")
-extraspace_reg = re.compile("\s{2,}")
 
 
 def parse_date(date_str, fmt='%Y-%m-%d'):
@@ -80,19 +76,6 @@ def make_url_list(list_str, sep=", "):
         return [clean_url(x) for x in str_list if x and x[0].isalnum()]
     else:
         return None
-
-
-def clean_string(value, stripnewlines=True, stripquotes=True, default=''):
-    if value and isinstance(value, str):
-        str_val = value.strip(" ")
-        if stripnewlines:
-            str_val = newlines_reg.sub(" ", str_val)
-        if stripquotes:
-            str_val = str_val.replace('"', '')
-            str_val = str_val.replace("'", '')
-        str_val = extraspace_reg.sub(" ", str_val)
-        return str_val
-    return default
 
 
 def force_split_string(value, sep=" "):

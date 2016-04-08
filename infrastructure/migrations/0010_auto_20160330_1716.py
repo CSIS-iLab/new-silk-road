@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from utilities.migrations import make_slug_forward, make_uuid_forward
+from datautils.migrations import make_slug_forward, make_uuid_forward
 import uuid
 
 

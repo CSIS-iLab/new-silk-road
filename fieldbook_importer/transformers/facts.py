@@ -1,7 +1,5 @@
 from django.utils.text import slugify
-from fieldbook_importer.utils import (
-    clean_string,
-)
+from utilities.string import clean_string
 from nameparser import HumanName
 import re
 

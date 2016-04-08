@@ -1,12 +1,12 @@
 from django.utils.text import slugify
 from functools import partial
+from utilities import clean_string
 from fieldbook_importer.utils import (
     parse_date,
     choices_from_values,
     values_list,
     first_value_or_none,
     make_url_list,
-    clean_string,
     instance_for_model,
     instances_for_related_items,
     instances_or_none,
