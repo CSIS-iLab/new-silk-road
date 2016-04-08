@@ -14,7 +14,7 @@ import uuid
 class InfrastructureType(models.Model):
     """Type of infrastructure"""
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=110)
+    slug = models.SlugField(max_length=110, allow_unicode=True)
 
     def __str__(self):
         return self.name
@@ -63,7 +63,7 @@ class ProjectStatus:
 class Project(Publishable):
     """Describes a project"""
     name = models.CharField("Project name/title", max_length=200)
-    slug = models.SlugField(max_length=210)
+    slug = models.SlugField(max_length=210, allow_unicode=True)
     countries = ArrayField(
         CountryField(),
         blank=True,
@@ -173,7 +173,7 @@ class Project(Publishable):
 class InitiativeType(models.Model):
     """Defines a type of initiative"""
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=110)
+    slug = models.SlugField(max_length=110, allow_unicode=True)
 
     def __str__(self):
         return self.name
@@ -188,7 +188,7 @@ class Initiative(MPTTModel, Publishable):
     """Describes an initiative"""
 
     name = models.CharField(max_length=140)
-    slug = models.SlugField(max_length=150)
+    slug = models.SlugField(max_length=150, allow_unicode=True)
     initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
     principal_agent = models.ForeignKey(
