@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^', include('website.urls')),
     url(r'^kb/', include('facts.urls')),
     url(r'^', include('infrastructure.urls')),
+    url(r'^locations/', include('locations.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^admin-select2/', include('django_select2.urls')),
 ]

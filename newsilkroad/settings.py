@@ -170,6 +170,7 @@ LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (31.5975071, 97.173225),
     'DEFAULT_ZOOM': 4,
 }
+MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN')
 
 if DEBUG and os.getenv('DEBUG_STATIC', False) == 'True':
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
