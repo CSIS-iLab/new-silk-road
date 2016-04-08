@@ -6,7 +6,7 @@ import uuid
 class GeometryRecord(models.Model):
     label = models.CharField(max_length=100)
     attributes = JSONField(blank=True, default=dict)
-    geometry = None
+    geom = None
 
     def __str__(self):
         if self.label:
@@ -14,40 +14,40 @@ class GeometryRecord(models.Model):
         src = self.attributes.get('source')
         if src:
             return src
-        return self.geometry.wkt[:40]
+        return self.geom.wkt[:40]
 
 
 class PointGeometry(GeometryRecord):
-    geometry = models.PointField()
+    geom = models.PointField()
 
     class Meta:
         verbose_name = 'point'
 
     @property
     def latitude(self):
-        return self.geometry.y
+        return self.geom.y
 
     @property
     def longitude(self):
-        return self.geometry.x
+        return self.geom.x
 
 
 class LineStringGeometry(GeometryRecord):
-    geometry = models.LineStringField()
+    geom = models.LineStringField()
 
     class Meta:
         verbose_name = 'line'
 
 
 class PolygonGeometry(GeometryRecord):
-    geometry = models.PolygonField()
+    geom = models.PolygonField()
 
     class Meta:
         verbose_name = 'polygon'
 
 
 class MultiGeometry(GeometryRecord):
-    geometry = models.GeometryCollectionField()
+    geom = models.GeometryCollectionField()
 
     class Meta:
         verbose_name = 'geometry collection'
