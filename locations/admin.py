@@ -5,6 +5,7 @@ from .models import (
     LineStringGeometry,
     GeometryStore,
     Region, Place,
+    Country
 )
 from .fields import CountryMultipleChoiceField
 from leaflet.admin import LeafletGeoAdmin
@@ -39,6 +40,12 @@ class RegionForm(forms.ModelForm):
 @admin.register(Region)
 class RegionAdmin(MapAdmin):
     form = RegionForm
+
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'alpha_3', 'numeric')
+    search_fields = ('name',)
 
 
 # @admin.register(PolygonGeometry)

@@ -7,6 +7,7 @@ from iso3166 import countries
 COUNTRY_CHOICES = tuple((int(c.numeric), c.apolitical_name) for c in countries)
 
 
+# TODO: Remove CountryField and stuff
 class CountryField(models.PositiveSmallIntegerField):
 
     def __init__(self, *args, **kwargs):
@@ -98,3 +99,16 @@ class Place(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class Country(models.Model):
+    name = models.CharField('Display name', max_length=200)
+    numeric = models.PositiveSmallIntegerField(unique=True, help_text='ISO 3166 numeric')
+    alpha_3 = models.CharField(max_length=3, unique=True, help_text='ISO 3166 alpha-3 name')
+
+    class Meta:
+        verbose_name_plural = 'countries'
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
