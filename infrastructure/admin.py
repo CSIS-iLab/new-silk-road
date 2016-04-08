@@ -24,7 +24,7 @@ class ProjectAdmin(admin.ModelAdmin):
     # FIXME: name field may contain unicode, so how can we flip on unicode here
     prepopulated_fields = {"slug": ("name",)}
     list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS
-    list_filter = ('status', 'infrastructure_type',)
+    list_filter = ('status', 'infrastructure_type', 'countries', 'regions')
     search_fields = ('name',)
     ordering = ['name', 'created_at']
     readonly_fields = ('extra_data',)
@@ -39,6 +39,8 @@ class InitiativeAdmin(MPTTModelAdmin):
     form = InitiativeForm
     prepopulated_fields = {"slug": ("name",)}
     list_display = ('name', 'initiative_type',) + TEMPORAL_FIELDS
+    list_filter = ('geographic_scope', 'initiative_type', 'member_countries')
+    search_fields = ('name',)
     ordering = ['name', 'created_at']
 
     class Meta:
@@ -52,7 +54,9 @@ class InfrastructureTypeAdmin(admin.ModelAdmin):
 
 @admin.register(ProjectDocument)
 class ProjectDocumentAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('identifier', 'document_type', 'status_indicator')
+    list_filter = ('document_type', 'status_indicator')
+    search_fields = ('source_url', 'notes')
 
 
 @admin.register(InitiativeType)
