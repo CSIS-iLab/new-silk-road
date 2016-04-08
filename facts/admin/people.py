@@ -24,7 +24,7 @@ class PersonForm(forms.ModelForm):
 
 class PersonAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display = ('family_name', 'given_name', 'birth_date', 'identifier',)
+    list_display = ('family_name', 'given_name', 'birth_date', 'identifier',) + ('published',)
     list_filter = ('family_name',)
     inlines = (
         PositionInline,
