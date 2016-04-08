@@ -47,7 +47,8 @@ class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
 
 
 class CompanyDetailsAdmin(OrganizationDetailsAdmin):
-    list_display = OrganizationDetailsAdmin.list_display + ['sector']
+    list_display = OrganizationDetailsAdmin.list_display + ['sector', 'structure', 'org_type']
+    list_filter = ('sector', 'org_type')
 
 
 class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
