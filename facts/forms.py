@@ -2,11 +2,9 @@ from django import forms
 from django_select2.forms import (
     ModelSelect2Widget,
     ModelSelect2MultipleWidget,
-    Select2MultipleWidget,
 )
 
-from facts.models import (Person, PoliticalDetails)
-from locations.fields import CountryMultipleChoiceField
+from facts.models import (Person)
 
 
 class TitleSearchFieldMixin(object):
@@ -42,15 +40,3 @@ class PersonSearchWidget(NameSearchFieldsMixin, ModelSelect2Widget):
 
 class PersonSearchMultiWidget(NameSearchFieldsMixin, ModelSelect2MultipleWidget):
     model = Person
-
-
-class PoliticalDetailsForm(forms.ModelForm):
-    countries = CountryMultipleChoiceField(
-        required=False,
-        widget=Select2MultipleWidget,
-        help_text='Start typing to search for countries.'
-    )
-
-    class Meta:
-        model = PoliticalDetails
-        fields = '__all__'

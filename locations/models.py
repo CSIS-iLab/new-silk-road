@@ -1,18 +1,6 @@
 from django.contrib.gis.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import JSONField
 import uuid
-
-from iso3166 import countries
-
-COUNTRY_CHOICES = tuple((int(c.numeric), c.apolitical_name) for c in countries)
-
-
-# TODO: Remove CountryField and stuff
-class CountryField(models.PositiveSmallIntegerField):
-
-    def __init__(self, *args, **kwargs):
-        kwargs['choices'] = COUNTRY_CHOICES
-        super(CountryField, self).__init__(*args, **kwargs)
 
 
 class GeometryRecord(models.Model):
@@ -81,9 +69,7 @@ class Region(models.Model):
     """A human-described region of geography or countries"""
     name = models.CharField(max_length=100)
     geography = models.ForeignKey('PolygonGeometry', blank=True, null=True)
-    countries = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
-        blank=True, null=True, default=list)
+    countries = models.ManyToManyField('Country')
 
     def __str__(self):
         return self.name
@@ -93,7 +79,7 @@ class Place(models.Model):
     """Describes a place, broadly or specifically"""
     label = models.CharField(max_length=100)
     city = models.CharField(blank=True, max_length=100)
-    country = CountryField()
+    country = models.ForeignKey('Country')
     location = models.ForeignKey('PointGeometry', blank=True, null=True,
                                  verbose_name="geographic location")
 

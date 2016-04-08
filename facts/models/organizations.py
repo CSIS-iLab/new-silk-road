@@ -1,11 +1,9 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from publish.models import Publishable
 from markymark.fields import MarkdownField
 from mptt.models import MPTTModel, TreeForeignKey
-from locations.models import COUNTRY_CHOICES
 from finance.credit import (MOODYS_LONG_TERM,
                             STANDARD_POORS_LONG_TERM,
                             FITCH_LONG_TERM)
@@ -16,6 +14,7 @@ class Organization(MPTTModel, Publishable):
 
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=110, allow_unicode=True)
+    countries = models.ManyToManyField('locations.Country', blank=True)
     leaders = models.ManyToManyField('Person', blank=True,
                                      related_name='organizations_led')
     initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
@@ -189,7 +188,7 @@ class FinancingOrganizationDetails(OrganizationDetails):
 
 class GovernmentDetails(OrganizationDetails):
     """Details of a government"""
-    country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
+    country = models.ForeignKey('locations.Country', models.SET_NULL, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "government details"
@@ -197,7 +196,7 @@ class GovernmentDetails(OrganizationDetails):
 
 class MilitaryDetails(OrganizationDetails):
     """Details of a military variable"""
-    country = models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES, blank=True, null=True)
+    country = models.ForeignKey('locations.Country', models.SET_NULL, blank=True, null=True)
     ruling_party = models.BooleanField(default=True)
     budget = models.DecimalField(blank=True, null=True,
                                  max_digits=17, decimal_places=2)
@@ -238,9 +237,7 @@ class NGODetails(OrganizationDetails):
 
 class PoliticalDetails(OrganizationDetails):
     """Details of a Political Entity"""
-    countries = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
-        blank=True, null=True, default=list)
+    countries = models.ManyToManyField('locations.Country', blank=True)
     org_type = models.ForeignKey('PoliticalType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')

@@ -4,10 +4,8 @@ from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from publish.models import Publishable
 from mptt.models import MPTTModel, TreeForeignKey
-from locations.models import CountryField
 from markymark.fields import MarkdownField
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
-from iso3166 import countries as iso_countries
 import uuid
 
 
@@ -64,12 +62,7 @@ class Project(Publishable):
     """Describes a project"""
     name = models.CharField("Project name/title", max_length=200)
     slug = models.SlugField(max_length=210, allow_unicode=True)
-    countries = ArrayField(
-        CountryField(),
-        blank=True,
-        null=True,
-        default=list
-    )
+    countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
         'locations.Region',
         blank=True,
@@ -162,10 +155,6 @@ class Project(Publishable):
     def __str__(self):
         return self.name
 
-    def get_countries_display(self):
-        countries_names = [iso_countries[x].name for x in self.countries if x in iso_countries]
-        return ', '.join(countries_names)
-
     def get_absolute_url(self):
         return reverse('infrastructure-project-detail', args=[self.slug or None])
 
@@ -202,12 +191,7 @@ class Initiative(MPTTModel, Publishable):
     affiliated_organizations = models.ManyToManyField('facts.Organization', blank=True)
     affiliated_events = models.ManyToManyField('facts.Event', blank=True)
     affiliated_people = models.ManyToManyField('facts.Person', blank=True)
-    member_countries = ArrayField(
-        CountryField(),
-        blank=True,
-        null=True,
-        default=list
-    )
+    member_countries = models.ManyToManyField('locations.Country', blank=True)
     geographic_scope = models.ForeignKey('locations.Region',
                                          on_delete=models.SET_NULL,
                                          blank=True, null=True)

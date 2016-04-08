@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
-from locations.models import COUNTRY_CHOICES, countries
 from markymark.fields import MarkdownField
 from publish.models import Publishable
 import uuid
@@ -17,12 +15,7 @@ class Person(Publishable):
     family_name = models.CharField('Last name', blank=True, max_length=140, help_text="A person's family or 'last' name(s).")
 
     # Biographical Info
-    citizenships = ArrayField(
-        models.PositiveSmallIntegerField(choices=COUNTRY_CHOICES),
-        blank=True,
-        null=True,
-        default=list
-    )
+    citizenships = models.ManyToManyField('locations.Country', blank=True)
     birth_date = models.DateField(blank=True, null=True)
 
     # Notes
@@ -36,10 +29,6 @@ class Person(Publishable):
 
     def __str__(self):
         return " ".join((self.given_name, self.family_name))
-
-    def citizenships_names(self):
-        return ", ".join((countries.get(s).name for s in self.citizenships)) if self.citizenships else None
-    citizenships_names.short_description = 'Citizenships'
 
     def full_display_name(self):
         name_parts = (self.given_name, self.additional_name or None, self.family_name)

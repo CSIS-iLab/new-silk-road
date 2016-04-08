@@ -4,7 +4,6 @@ from facts.models import (
     # shareholders
     FinancingOrganizationDetails,
 )
-from facts.forms import PoliticalDetailsForm
 from facts.fields import PercentageField
 from publish.admin import TEMPORAL_FIELDS
 
@@ -51,4 +50,4 @@ class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
 
 
 class PoliticalDetailsAdmin(OrganizationDetailsAdmin):
-    form = PoliticalDetailsForm
+    pass

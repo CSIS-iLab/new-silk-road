@@ -7,7 +7,9 @@ from .models import (
     Region, Place,
     Country
 )
-from .fields import CountryMultipleChoiceField
+from django_select2.forms import (
+    ModelSelect2MultipleWidget,
+)
 from leaflet.admin import LeafletGeoAdmin
 
 
@@ -30,11 +32,13 @@ class GeometryBaseAdmin(MapAdmin):
 
 
 class RegionForm(forms.ModelForm):
-    countries = CountryMultipleChoiceField(required=False)
 
     class Meta:
         model = Region
         fields = '__all__'
+        widgets = {
+            'countries': ModelSelect2MultipleWidget
+        }
 
 
 @admin.register(Region)

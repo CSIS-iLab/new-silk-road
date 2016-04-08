@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('sources', '0001_initial'),
         ('facts', '0001_initial'),
-        ('locations', '0002_geocollection'),
+        ('locations', '0001_initial'),
         ('infrastructure', '0001_initial'),
     ]
 
