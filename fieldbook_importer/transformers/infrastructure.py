@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 from functools import partial
-from utilities import clean_string
+from datautils.string import clean_string
 from fieldbook_importer.utils import (
     parse_date,
     choices_from_values,
