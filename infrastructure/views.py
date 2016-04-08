@@ -1,27 +1,31 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-# from djgeojson.views import GeoJSONLayerView
 
 from .models import (Project, Initiative)
-from locations.models import (MultiGeometry)
+from django.conf import settings
+
+MAPBOX_TOKEN = getattr(settings, 'MAPBOX_TOKEN', None)
+LEAFLET_CONFIG = getattr(settings, 'LEAFLET_CONFIG', None)
+DEFAULT_CENTER = LEAFLET_CONFIG.get('DEFAULT_CENTER') if LEAFLET_CONFIG else None
 
 
 class ProjectDetailView(DetailView):
     model = Project
 
-
-# class ProjectsGeoJSONView(GeoJSONLayerView):
-#     queryset = MultiGeometry.objects.filter(project__isnull=True)
-#     geometry_field = 'geometry'
-#     properties = [
-#         'label',
-#         'attributes'
-#     ]
+    def get_context_data(self, **kwargs):
+        context = super(ProjectDetailView, self).get_context_data(**kwargs)
+        context['mapbox_token'] = MAPBOX_TOKEN
+        return context
 
 
 class ProjectsMapView(ListView):
     model = Project
     template_name = 'infrastructure/all_projects_map.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectsMapView, self).get_context_data(**kwargs)
+        context['mapbox_token'] = MAPBOX_TOKEN
+        return context
 
 
 class ProjectListView(ListView):

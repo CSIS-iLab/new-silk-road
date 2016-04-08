@@ -1,11 +1,10 @@
 {% extends "base.html" %}{% load markymark %}{% load leaflet_tags %}
 
 {% block extrahead %}
-{% spaceless %}
-{% leaflet_js %}{% leaflet_css %}
-{% endspaceless %}
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css' rel='stylesheet' />
 <style>
-    .leaflet-container {  /* all maps */
+    #map {  /* all maps */
         width:  100%;
         height: 600px;
     }
@@ -20,34 +19,41 @@ Map | {{ block.super }}
 <article class="project">
 
     <section class="map-container">
-{% leaflet_map "all_projects_map" %}
+        <div id="map"></div>
     </section>
 
     <script type="text/javascript">
-        window.addEventListener("map:init", function (e) {
-            var layer;
-            var geodata;
-            var detail = e.detail;
+        var layer;
+        mapboxgl.accessToken = '{{mapbox_token|safe}}';
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
+            center: {{default_center|default:"[-274.4953579099464, 22.440381130024562]"}}, // starting position
+            zoom: 3 // starting zoom
+        });
+        map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
-            var url = "{% url 'infrastructure-projects-geojson' %}";
+        map.on('style.load', function () {
+            map.addSource('projects-src', {
+                'type': 'geojson',
+                'data': ''
+            });
 
-            if (url) {
-                var httpRequest = new XMLHttpRequest();
+            map.addLayer({
+                "id": "allprojects",
+                "type": "circle",
+                "source": "projects-src",
+                "paint": {
+                    "circle-color": "red"
+                    // "line-color": "red",
+                    // "line-width": 2
+                }
+            });
 
-                httpRequest.addEventListener('readystatechange', function() {
-                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                        geodata = JSON.parse(httpRequest.responseText);
-                        layer = L.geoJson(geodata);
-                        detail.map.addLayer(layer);
-                        detail.map.fitBounds(layer.getBounds());
-                    }
-                });
-                httpRequest.open('GET', url);
-                httpRequest.send();
-
-            }
-
-        }, false);
+            // layer = map.getLayer("allprojects");
+            //
+            // map.fitBounds(layer.getBounds());
+        });
     </script>
 </article>
 {% endblock %}

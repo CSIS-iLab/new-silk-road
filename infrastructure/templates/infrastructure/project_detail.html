@@ -1,9 +1,14 @@
-{% extends "base.html" %}{% load markymark %}{% load leaflet_tags %}
+{% extends "base.html" %}{% load markymark %}{% load geojson_tags %}
 
 {% block extrahead %}
-{% spaceless %}
-{% leaflet_js %}{% leaflet_css %}
-{% endspaceless %}
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css' rel='stylesheet' />
+<style>
+    #map {  /* all maps */
+        width:  100%;
+        height: 600px;
+    }
+</style>
 {% endblock %}
 
 {% block pagetitle %}
@@ -18,7 +23,7 @@
     <p>{{ object.get_countries_display }}</p>
 
     <section class="map-container">
-{% leaflet_map "project_map" %}
+        <div id="map"></div>
     </section>
 
     <section class="notes">
@@ -36,26 +41,55 @@
         </ul>
     </section>
     <script type="text/javascript">
-        window.addEventListener("map:init", function (e) {
-            var layer;
-            var detail = e.detail;
+        var layer;
+        mapboxgl.accessToken = '{{mapbox_token|safe}}';
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
+            center: {{default_center|default:"[-274.4953579099464, 22.440381130024562]"}}, // starting position
+            zoom: 3 // starting zoom
+        });
+        map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
-            var project_geo = {{object.geodata.geometry.geojson|safe|default:"null"}};
-            var geo_attributes = {{object.geodata.attributes|safe|default:"null"}};
-            var project_name = "{{ object.name|default:"" }}";
+        map.on('style.load', function () {
+{% if object.geo.points.all %}
+            map.addSource('project-points', {
+                'type': 'geojson',
+                'cluster': true,
+                'data': "{% url 'geostore-points' identifier=object.geo.identifier %}"
+            });
 
-            if (project_geo) {
-                layer = L.geoJson(project_geo, {
-                    onEachFeature: function (feature, layer) {
-                        layer.bindPopup(project_name);
-                    }
-                });
+            map.addLayer({
+                "id": "project-points",
+                "type": "circle",
+                "source": "project-points",
+                "paint": {
+                    "circle-color": "red"
+                    // "line-color": "red",
+                    // "line-width": 2
+                }
+            });
+{% endif %}
+{% if object.geo.lines.all %}
+            map.addSource('project-lines', {
+                'type': 'geojson',
+                'data': "{% url 'geostore-lines' identifier=object.geo.identifier %}"
+            });
 
-                detail.map.addLayer(layer);
-                detail.map.fitBounds(layer.getBounds());
-            }
+            map.addLayer({
+                "id": "project-lines",
+                "type": "line",
+                "source": "project-lines",
+                "paint": {
+                    "line-color": "blue",
+                    "line-width": 2
+                }
+            });
+{% endif %}
 
-        }, false);
+            layer = map.getLayer("project-lines");
+            map.fitBounds(layer.getBounds());
+        });
     </script>
 </article>
 {% endblock %}
