@@ -1,5 +1,11 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from locations.views import BaseGeoJSONView
+from locations.models import (
+    LineStringGeometry,
+    PointGeometry,
+    PolygonGeometry,
+)
 
 from .models import (Project, Initiative)
 from django.conf import settings
@@ -26,6 +32,18 @@ class ProjectsMapView(ListView):
         context = super(ProjectsMapView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         return context
+
+
+class ProjectsPointsGeoJSONView(BaseGeoJSONView):
+    geo_queryset = PointGeometry.objects.filter(geometrystore__project__isnull=False).all()
+
+
+class ProjectsLinesGeoJSONView(BaseGeoJSONView):
+    geo_queryset = LineStringGeometry.objects.filter(geometrystore__project__isnull=False).all()
+
+
+class ProjectsPolygonsGeoJSONView(BaseGeoJSONView):
+    geo_queryset = PolygonGeometry.objects.filter(geometrystore__project__isnull=False).all()
 
 
 class ProjectListView(ListView):

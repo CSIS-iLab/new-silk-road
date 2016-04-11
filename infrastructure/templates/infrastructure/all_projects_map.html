@@ -36,7 +36,7 @@ Map | {{ block.super }}
         map.on('style.load', function () {
             map.addSource('projects-src', {
                 'type': 'geojson',
-                'data': ''
+                'data': '{% url "projects-points-geojson" %}'
             });
 
             map.addLayer({

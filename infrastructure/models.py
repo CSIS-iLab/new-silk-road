@@ -156,7 +156,7 @@ class Project(Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('infrastructure-project-detail', args=[self.slug or None])
+        return reverse('project-detail', args=[self.slug or None])
 
 
 class InitiativeType(models.Model):
@@ -208,7 +208,7 @@ class Initiative(MPTTModel, Publishable):
         super(Initiative, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('infrastructure-initiative-detail', args=[self.slug or None])
+        return reverse('initiative-detail', args=[self.slug or None])
 
 
 class ProjectDocument(models.Model):
