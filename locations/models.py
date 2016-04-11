@@ -1,5 +1,7 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.db.models import Extent
 from django.contrib.postgres.fields import JSONField
+from django.contrib.gis.geos import Polygon, MultiPolygon
 import uuid
 
 
@@ -66,6 +68,31 @@ class GeometryStore(models.Model):
 
     def __str__(self):
         return str(self.identifier)
+
+    def lines_extent(self):
+        agg = self.lines.aggregate(extent=Extent('geom'))
+        return agg['extent']
+
+    def points_extent(self):
+        agg = self.points.aggregate(extent=Extent('geom'))
+        return agg['extent']
+
+    def polygons_extent(self):
+        agg = self.polygons.aggregate(extent=Extent('geom'))
+        return agg['extent']
+
+    def _yield_extents(self):
+        if self.lines.exists():
+            yield self.lines_extent()
+        if self.points.exists():
+            yield self.points_extent()
+        if self.polygons.exists():
+            yield self.polygons_extent()
+
+    def calculate_overall_extent(self):
+        polygons = (Polygon.from_bbox(box) for box in self._yield_extents())
+        multi_poly = MultiPolygon(list(polygons))
+        return multi_poly.extent
 
 
 class Region(models.Model):

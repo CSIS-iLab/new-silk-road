@@ -6,7 +6,7 @@
 <style>
     #map {  /* all maps */
         width:  100%;
-        height: 600px;
+        height: 300px;
     }
 </style>
 {% endblock %}
@@ -42,6 +42,9 @@
     </section>
     <script type="text/javascript">
         var layer;
+        var bbox = [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
+            {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}];
+
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
         var map = new mapboxgl.Map({
             container: 'map', // container id
@@ -88,7 +91,7 @@
 {% endif %}
 
             layer = map.getLayer("project-lines");
-            map.fitBounds(layer.getBounds());
+            map.fitBounds(bbox, {'maxZoom': 15});
         });
     </script>
 </article>
