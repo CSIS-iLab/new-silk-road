@@ -4,9 +4,17 @@
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css' rel='stylesheet' />
 <style>
-    #map {  /* all maps */
+    #map {
         width:  100%;
         height: 400px;
+        display: block;
+    }
+    .mapboxgl-popup {
+            max-width: 400px;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+    .marker-title {
+        font-weight: 700;
     }
 </style>
 <script src='{% static "js/project.js" %}'></script>
@@ -49,16 +57,12 @@
         geoLayers.push({
             src: {
                 type: 'geojson',
-                cluster: true,
                 data: "{% url 'geostore-points' identifier=object.geo.identifier %}"
             },
             layer: {
                 id: "project-points",
-                type: "circle",
                 source: "project-points-src",
-                paint: {
-                    "circle-color": "red"
-                }
+                type: "circle",
             }
         });
 {% endif %}
@@ -82,15 +86,24 @@
     var bbox = [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
         {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}];
 
-        var map = projectmap.createMap(mapboxgl, {
+        var proj = new ProjectMap(mapboxgl, {
             container: "map",
-            center: {{default_center|default:"[-274.4953579099464, 22.440381130024562]"}},
-            mapLayers: geoLayers,
-            bounds: {
+            center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}
+        });
+
+        proj.map.on('style.load', function () {
+            var bounding = {
                 bbox: bbox,
                 maxZoom: 15,
                 padding: 10
             }
+            proj.addLayers([geoLayers[0]], bounding);
+
+            proj.setPopupLayers(['project-points']);
+            // var tooltip = new mapboxgl.Popup({closeOnClick: false})
+            //     .setLngLat([100.544445, 20.872203])
+            //     .setHTML('<h1>Hello World!</h1>')
+            //     .addTo(proj.map);
         });
     </script>
 </article>
