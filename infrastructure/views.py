@@ -1,5 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from rest_framework import viewsets, filters
 from locations.views import BaseGeoJSONView
 from locations.models import (
     LineStringGeometry,
@@ -7,6 +8,8 @@ from locations.models import (
     PolygonGeometry,
 )
 
+from .serializers import (ProjectSerializer, InitiativeSerializer)
+from .filters import (ProjectFilter, InitiativeFilter)
 from .models import (Project, Initiative)
 from django.conf import settings
 
@@ -58,3 +61,19 @@ class InitiativeDetailView(DetailView):
 class InitiativeListView(ListView):
     model = Initiative
     paginate_by = 50
+
+
+# API
+
+class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = ProjectFilter
+
+
+class InitiativeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Initiative.objects.all()
+    serializer_class = InitiativeSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = InitiativeFilter

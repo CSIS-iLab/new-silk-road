@@ -47,7 +47,8 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'storages',
-    'djgeojson',
+    'djgeojson',  # REVIEW: Are we going to use this?
+    'rest_framework',
 
     'sources',
     'facts',
