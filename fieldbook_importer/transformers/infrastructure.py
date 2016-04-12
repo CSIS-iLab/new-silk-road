@@ -69,7 +69,6 @@ def project_status_from_statuses(x):
     return None
 
 
-# FIXME: Make map to country objects
 def transform_country(item):
     name = item.get("country_name")
     if not name:
