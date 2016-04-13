@@ -15,6 +15,34 @@ class ProjectFilter(django_filters.FilterSet):
     funder_name = django_filters.CharFilter(name='funding__name', lookup_expr='iexact')
     funder_name__contains = django_filters.CharFilter(name='funding__name', lookup_expr='icontains')
 
+    contractor = django_filters.CharFilter(
+        name='contractors__name', lookup_expr='iexact', distinct=True
+    )
+    contractor__contains = django_filters.CharFilter(
+        name='contractors__name', lookup_expr='icontains', distinct=True
+    )
+
+    consultant = django_filters.CharFilter(
+        name='consultants__name', lookup_expr='iexact'
+    )
+    consultant__contains = django_filters.CharFilter(
+        name='consultants__name', lookup_expr='icontains'
+    )
+
+    implementer = django_filters.CharFilter(
+        name='implementers__name', lookup_expr='iexact'
+    )
+    implementer__contains = django_filters.CharFilter(
+        name='implementers__name', lookup_expr='icontains'
+    )
+
+    operator = django_filters.CharFilter(
+        name='operator__name', lookup_expr='iexact'
+    )
+    operator__contains = django_filters.CharFilter(
+        name='operator__name', lookup_expr='iexact'
+    )
+
     class Meta:
         model = Project
         fields = {

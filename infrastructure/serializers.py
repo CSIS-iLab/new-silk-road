@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from infrastructure.models import Project, Initiative
+from facts.serializers import OrganizationBasicSerializer
 
 
 class ProjectSerializer(serializers.ModelSerializer):
     infrastructure_type = serializers.StringRelatedField()
     initiative = serializers.StringRelatedField()
+    operator = OrganizationBasicSerializer(read_only=True)
+    contractors = OrganizationBasicSerializer(many=True, read_only=True)
+    consultants = OrganizationBasicSerializer(many=True, read_only=True)
+    implementers = OrganizationBasicSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
@@ -12,11 +17,14 @@ class ProjectSerializer(serializers.ModelSerializer):
             'name',
             'initiative', 'infrastructure_type',
             'planned_completion_date', 'start_date',
-            'get_absolute_url'
+            'get_absolute_url',
+            'operator', 'contractors', 'consultants', 'implementers',
         )
 
 
 class InitiativeSerializer(serializers.ModelSerializer):
+    geographic_scope = serializers.StringRelatedField()
+
     class Meta:
         model = Initiative
         fields = (
