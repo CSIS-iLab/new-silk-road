@@ -1,22 +1,39 @@
 from rest_framework import viewsets, filters
 from rest_framework_gis.filters import InBBoxFilter
 
-from .models import (
+from locations.models import (
     LineStringGeometry,
     PointGeometry,
     PolygonGeometry,
     GeometryStore
 )
-from .serializers import (
+from api.serializers.locations import (
     LineStringGeometrySerializer,
     PointGeometrySerializer,
     PolygonGeometrySerializer,
     GeometryStoreSerializer
 )
-from .filters import GeometryStoreFilter
+from locations.filters import GeometryStoreFilter
+from infrastructure.models import (Project, Initiative)
+from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer)
+from infrastructure.filters import (ProjectFilter, InitiativeFilter)
 
 
-# API
+class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = ProjectFilter
+
+
+class InitiativeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Initiative.objects.all()
+    serializer_class = InitiativeSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = InitiativeFilter
+
+
+# locations
 class LineStringGeometryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = LineStringGeometry.objects.all()
     serializer_class = LineStringGeometrySerializer

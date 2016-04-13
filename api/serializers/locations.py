@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
-from .models import (
+from locations.models import (
     LineStringGeometry,
     PointGeometry,
     PolygonGeometry,
