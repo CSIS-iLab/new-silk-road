@@ -1,62 +1,46 @@
-from django.views.generic import View
-from django.views.generic.detail import SingleObjectMixin
-from django.core.serializers import serialize
-from django.http import HttpResponse, Http404
-from .models import GeometryStore
+from rest_framework import viewsets, filters
+from rest_framework_gis.filters import InBBoxFilter
+
+from .models import (
+    LineStringGeometry,
+    PointGeometry,
+    PolygonGeometry,
+    GeometryStore
+)
+from .serializers import (
+    LineStringGeometrySerializer,
+    PointGeometrySerializer,
+    PolygonGeometrySerializer,
+    GeometryStoreSerializer
+)
+from .filters import GeometryStoreFilter
 
 
-class GeoJSONResponseMixin(object):
-
-    def render_to_response(self, geo_objects):
-        if not geo_objects:
-            raise Http404("GeoJSON not found")
-        resp = serialize(
-            'geojson',
-            geo_objects,
-            geometry_field='geom',
-            fields=('label',)
-        )
-        return HttpResponse(resp, content_type="application/json")
+# API
+class LineStringGeometryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = LineStringGeometry.objects.all()
+    serializer_class = LineStringGeometrySerializer
+    bbox_filter_field = 'geom'
+    filter_backends = (InBBoxFilter,)
 
 
-class BaseGeoJSONView(View, GeoJSONResponseMixin):
-    geo_queryset = None
-
-    def get_geo_queryset(self):
-        if self.geo_queryset:
-            return self.geo_queryset
-        return None
-
-    def get(self, request, *args, **kwargs):
-        self.geo_queryset = self.get_geo_queryset()
-        return self.render_to_response(self.geo_queryset)
+class PointGeometryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PointGeometry.objects.all()
+    serializer_class = PointGeometrySerializer
+    bbox_filter_field = 'geom'
+    filter_backends = (InBBoxFilter,)
 
 
-class PointsGeoJSONView(SingleObjectMixin, BaseGeoJSONView):
-    model = GeometryStore
-    slug_field = 'identifier'
-    slug_url_kwarg = 'identifier'
-
-    def get_geo_queryset(self):
-        self.object = self.get_object()
-        return self.object.points.all()
+class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PolygonGeometry.objects.all()
+    serializer_class = PolygonGeometrySerializer
+    bbox_filter_field = 'geom'
+    filter_backends = (InBBoxFilter,)
 
 
-class LinesGeoJSONView(SingleObjectMixin, BaseGeoJSONView):
-    model = GeometryStore
-    slug_field = 'identifier'
-    slug_url_kwarg = 'identifier'
-
-    def get_geo_queryset(self):
-        self.object = self.get_object()
-        return self.object.lines.all()
-
-
-class PolygonsGeoJSONView(SingleObjectMixin, BaseGeoJSONView):
-    model = GeometryStore
-    slug_field = 'identifier'
-    slug_url_kwarg = 'identifier'
-
-    def get_geo_queryset(self):
-        self.object = self.get_object()
-        return self.object.polygons.all()
+class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = GeometryStore.objects.all()
+    lookup_field = 'identifier'
+    serializer_class = GeometryStoreSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = GeometryStoreFilter
