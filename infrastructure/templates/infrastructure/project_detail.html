@@ -92,7 +92,7 @@
         var bbox = [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
             {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}];
 
-        var geostore_url = "{% url 'geometrystore-detail' identifier=object.geo.identifier format='json' %}";
+        var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";
 
 
         var proj = new ProjectMap(mapboxgl, {

@@ -21,7 +21,7 @@ router.register(r'points', PointGeometryViewSet)
 router.register(r'polygons', PolygonGeometryViewSet)
 router.register(r'geostore', GeometryStoreViewSet)
 
-
+app_name = 'api'
 urlpatterns = [
     url(r'^', include(router.urls)),
 ]
