@@ -28,7 +28,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'easy_thumbnails',
-    'filer',
+    'newsilkroad.apps.MediaConfig',
     'suit',
     'mptt',
     'leaflet',
