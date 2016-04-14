@@ -13,7 +13,13 @@ from api.serializers.locations import (
     PolygonGeometrySerializer,
     GeometryStoreSerializer
 )
-from locations.filters import GeometryStoreFilter
+from locations.filters import (
+    GeometryStoreFilter,
+    LineStringGeometryFilter,
+    PointGeometryFilter,
+    PolygonGeometryFilter
+
+)
 from infrastructure.models import (Project, Initiative)
 from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer)
 from infrastructure.filters import (ProjectFilter, InitiativeFilter)
@@ -38,21 +44,24 @@ class LineStringGeometryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = LineStringGeometry.objects.all()
     serializer_class = LineStringGeometrySerializer
     bbox_filter_field = 'geom'
-    filter_backends = (InBBoxFilter,)
+    filter_backends = (InBBoxFilter, filters.DjangoFilterBackend)
+    filter_class = LineStringGeometryFilter
 
 
 class PointGeometryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PointGeometry.objects.all()
     serializer_class = PointGeometrySerializer
     bbox_filter_field = 'geom'
-    filter_backends = (InBBoxFilter,)
+    filter_backends = (InBBoxFilter, filters.DjangoFilterBackend)
+    filter_class = PointGeometryFilter
 
 
 class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PolygonGeometry.objects.all()
     serializer_class = PolygonGeometrySerializer
     bbox_filter_field = 'geom'
-    filter_backends = (InBBoxFilter,)
+    filter_backends = (InBBoxFilter, filters.DjangoFilterBackend)
+    filter_class = PolygonGeometryFilter
 
 
 class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
