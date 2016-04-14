@@ -107,7 +107,7 @@ class CompanyStructure(models.Model):
 # Details
 class OrganizationDetails(models.Model):
     organization = models.OneToOneField(
-        'Organization',
+        'facts.Organization',
         models.CASCADE
     )
 
@@ -133,9 +133,9 @@ class CompanyDetails(OrganizationDetails):
         (SECTOR_SECONDARY, "Secondary (manufacturing)"),
         (SECTOR_TERTIARY, "Tertiary (sales and services)"),
     )
-    structure = models.ForeignKey('CompanyStructure', models.SET_NULL, blank=True, null=True)
+    structure = models.ForeignKey('facts.CompanyStructure', models.SET_NULL, blank=True, null=True)
     sector = models.PositiveSmallIntegerField(blank=True, null=True, choices=SECTOR_CHOICES)
-    org_type = models.ForeignKey('CompanyType',
+    org_type = models.ForeignKey('facts.CompanyType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
 
@@ -163,15 +163,15 @@ class FinancingOrganizationDetails(OrganizationDetails):
         "Standard & Poors Credit Rating",
         choices=STANDARD_POORS_RATING_CHOICES, blank=True, null=True
     )
-    shareholder_organizations = models.ManyToManyField('Organization',
+    shareholder_organizations = models.ManyToManyField('facts.Organization',
                                                        related_name='holds_shares_of',
                                                        through='OrganizationShareholder')
-    shareholder_people = models.ManyToManyField('Person',
+    shareholder_people = models.ManyToManyField('facts.Person',
                                                 related_name='holds_shares_of',
                                                 through='PersonShareholder')
     scope_of_operations = models.CharField(blank=True, max_length=100)
     procurement = models.CharField(blank=True, max_length=100)
-    org_type = models.ForeignKey('FinancingType',
+    org_type = models.ForeignKey('facts.FinancingType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
 
@@ -251,7 +251,7 @@ class PoliticalDetails(OrganizationDetails):
 
 class ShareholderBase(models.Model):
     investment = models.ForeignKey(
-        'FinancingOrganizationDetails',
+        'facts.FinancingOrganizationDetails',
         on_delete=models.CASCADE
     )
     value = models.DecimalField('% Share', max_digits=5, decimal_places=2)
@@ -262,7 +262,7 @@ class ShareholderBase(models.Model):
 
 class OrganizationShareholder(ShareholderBase):
     shareholder = models.ForeignKey(
-        'Organization',
+        'facts.Organization',
         on_delete=models.CASCADE,
     )
 
@@ -272,7 +272,7 @@ class OrganizationShareholder(ShareholderBase):
 
 class PersonShareholder(ShareholderBase):
     shareholder = models.ForeignKey(
-        'Person',
+        'facts.Person',
         on_delete=models.CASCADE,
     )
 
