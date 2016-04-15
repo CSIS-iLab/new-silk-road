@@ -51,6 +51,10 @@ class CompanyDetailsAdmin(OrganizationDetailsAdmin):
     list_filter = ('sector', 'org_type')
 
 
+class CompanyStructureAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+
+
 class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
     list_display = OrganizationDetailsAdmin.list_display + ['country']
 

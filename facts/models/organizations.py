@@ -98,6 +98,9 @@ class CompanyStructure(models.Model):
     name = models.CharField("Structure", max_length=100)
     slug = models.SlugField(max_length=110, allow_unicode=True)
 
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if not self.slug or self.slug == '':
             self.slug = slugify(self.name, allow_unicode=True)

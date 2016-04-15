@@ -26,7 +26,7 @@ class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
     prepopulated_fields = {"slug": ("name",)}
-    list_display = ('name', 'status', 'infrastructure_type') + TEMPORAL_FIELDS + ('published',)
+    list_display = ('name', 'fieldbook_id', 'status', 'infrastructure_type') + TEMPORAL_FIELDS + ('published',)
     list_filter = ('status', 'infrastructure_type', 'countries', 'regions')
     search_fields = ('name',)
     actions = [make_published, make_not_published]
@@ -35,6 +35,14 @@ class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ProjectFundingInline
     ]
+
+    def fieldbook_id(self, obj):
+        if obj.extra_data.exists:
+            project_id_match = obj.extra_data.filter(values__has_key='project_id').first()
+            if project_id_match:
+                return project_id_match.values.get('project_id')
+        return None
+    fieldbook_id.short_description = 'Fieldbook Id'
 
 
 @admin.register(Initiative)

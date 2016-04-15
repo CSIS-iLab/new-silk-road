@@ -23,6 +23,7 @@ from .organizations import (
     CompanyDetailsAdmin,
     GovernmentDetailsDetailsAdmin,
     PoliticalDetailsAdmin,
+    CompanyStructureAdmin,
 )
 
 # People
@@ -35,7 +36,7 @@ admin.site.register(EventType, EventTypeAdmin)
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(CompanyDetails, CompanyDetailsAdmin)
 admin.site.register(CompanyType, OrganizationType)
-admin.site.register(CompanyStructure)
+admin.site.register(CompanyStructure, CompanyStructureAdmin)
 admin.site.register(FinancingOrganizationDetails, FinancingOrganizationDetailsAdmin)
 admin.site.register(FinancingType, OrganizationType)
 admin.site.register(GovernmentDetails, GovernmentDetailsDetailsAdmin)
