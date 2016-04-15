@@ -33,6 +33,7 @@ class Person(Publishable):
     def full_display_name(self):
         name_parts = (self.given_name, self.additional_name or None, self.family_name)
         return " ".join([x for x in name_parts if x])
+    full_display_name.short_description = "Full name"
 
     def get_absolute_url(self):
         return reverse('facts-person-detail', args=[str(self.identifier)])

@@ -26,9 +26,28 @@ class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
     prepopulated_fields = {"slug": ("name",)}
-    list_display = ('name', 'fieldbook_id', 'status', 'infrastructure_type') + TEMPORAL_FIELDS + ('published',)
-    list_filter = ('status', 'infrastructure_type', 'countries', 'regions')
-    search_fields = ('name',)
+    list_display = (
+        'name',
+        'fieldbook_id',
+        'initiative',
+        'status',
+        'infrastructure_type',
+        'operator',
+        'published',
+    )
+    list_filter = ('status', 'infrastructure_type', 'initiative', 'countries', 'regions')
+    search_fields = (
+        'name',
+        'initiative__name',
+        'contacts__given_name',
+        'contacts__family_name',
+        'funding__name',
+        'contractors__name',
+        'consultants__name',
+        'implementers__name',
+        'operator__name',
+        'countries__name',
+    )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
     readonly_fields = ('extra_data',)
@@ -43,6 +62,12 @@ class ProjectAdmin(admin.ModelAdmin):
                 return project_id_match.values.get('project_id')
         return None
     fieldbook_id.short_description = 'Fieldbook Id'
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super(ProjectAdmin, self).get_search_results(request, queryset, search_term)
+        if 'project' in search_term.lower():
+            queryset |= self.model.objects.filter(extra_data__values__project_id=search_term.title())
+        return queryset, use_distinct
 
 
 @admin.register(Initiative)

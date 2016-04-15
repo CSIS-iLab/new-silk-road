@@ -28,8 +28,12 @@ class PersonForm(forms.ModelForm):
 
 class PersonAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display = ('family_name', 'given_name', 'birth_date', 'identifier',) + ('published',)
-    list_filter = ('family_name',)
+    list_display = ('full_display_name', 'birth_date', 'identifier',) + ('published',)
+    search_fields = (
+        'family_name', 'given_name',
+        'events__name',
+        'citizenships__name',
+    )
     actions = [make_published, make_not_published]
     inlines = (
         PositionInline,
