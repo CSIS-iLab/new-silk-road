@@ -9,4 +9,6 @@ class Document(Temporal):
     url = models.URLField('URL', blank=True, max_length=1000)
 
     def __str__(self):
-        return self.name
+        if self.source_file:
+            return self.source_file.original_filename
+        return "Document #{}".format(self.id)
