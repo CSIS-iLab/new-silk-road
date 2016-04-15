@@ -43,6 +43,10 @@ class ProjectFilter(django_filters.FilterSet):
         name='operator__name', lookup_expr='iexact'
     )
 
+    fieldbook_id = django_filters.CharFilter(
+        name='extra_data__values__project_id', lookup_expr='exact'
+    )
+
     class Meta:
         model = Project
         fields = {
