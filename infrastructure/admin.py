@@ -6,7 +6,6 @@ from infrastructure.models import (
     Initiative, InitiativeType,
 )
 from publish.admin import (
-    TEMPORAL_FIELDS,
     make_published,
     make_not_published
 )
@@ -28,6 +27,7 @@ class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     list_display = (
         'name',
+        'id',
         'fieldbook_id',
         'initiative',
         'status',
@@ -38,6 +38,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ('status', 'infrastructure_type', 'initiative', 'countries', 'regions')
     search_fields = (
         'name',
+        'id',
         'initiative__name',
         'contacts__given_name',
         'contacts__family_name',
@@ -67,6 +68,11 @@ class ProjectAdmin(admin.ModelAdmin):
         queryset, use_distinct = super(ProjectAdmin, self).get_search_results(request, queryset, search_term)
         if 'project' in search_term.lower():
             queryset |= self.model.objects.filter(extra_data__values__project_id=search_term.title())
+        try:
+            integer_search_term = int(search_term)
+            queryset |= self.model.objects.filter(id=integer_search_term)
+        except Exception:
+            pass
         return queryset, use_distinct
 
 
@@ -75,14 +81,39 @@ class InitiativeAdmin(MPTTModelAdmin):
     save_on_top = True
     form = InitiativeForm
     prepopulated_fields = {"slug": ("name",)}
-    list_display = ('name', 'initiative_type',) + TEMPORAL_FIELDS + ('published',)
+    list_display = (
+        'name',
+        'id',
+        'initiative_type',
+        'principal_agent',
+        'parent',
+        'geographic_scope',
+        'published',
+    )
     list_filter = ('geographic_scope', 'initiative_type', 'member_countries')
-    search_fields = ('name',)
+    search_fields = (
+        'name',
+        'id',
+        'member_countries__name',
+        'affiliated_people__given_name',
+        'affiliated_people__family_name',
+        'affiliated_organizations__name',
+        'affiliated_events__name',
+    )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
 
     class Meta:
         model = Initiative
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset, use_distinct = super(InitiativeAdmin, self).get_search_results(request, queryset, search_term)
+        try:
+            integer_search_term = int(search_term)
+            queryset |= self.model.objects.filter(id=integer_search_term)
+        except Exception:
+            pass
+        return queryset, use_distinct
 
 
 @admin.register(InfrastructureType)
@@ -92,7 +123,13 @@ class InfrastructureTypeAdmin(admin.ModelAdmin):
 
 @admin.register(ProjectDocument)
 class ProjectDocumentAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'document_type', 'status_indicator')
+    list_display = (
+        'identifier',
+        'document_type',
+        'status_indicator',
+        'source_url',
+        'document',
+    )
     list_filter = ('document_type', 'status_indicator')
     search_fields = ('source_url', 'notes')
 
@@ -107,5 +144,8 @@ class ProjectFundingAdmin(admin.ModelAdmin):
     form = ProjectFundingForm
     list_display = ('source', 'project', 'amount', 'currency')
     list_editable = ('amount', 'currency')
-    list_filter = ('source', 'project', 'currency')
-    search_fields = ('source', 'project')
+    list_filter = ('currency',)
+    search_fields = (
+        'source__name',
+        'project__name',
+    )
