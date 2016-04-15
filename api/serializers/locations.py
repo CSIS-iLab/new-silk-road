@@ -8,23 +8,35 @@ from locations.models import (
 )
 
 
-class LineStringGeometrySerializer(GeoFeatureModelSerializer):
+class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):
+    geostores = serializers.HyperlinkedIdentityField(
+        many=True,
+        read_only=True,
+        lookup_field='identifier',
+        view_name='api:geometrystore-detail'
+    )
 
     class Meta:
+        fields = ('geostores', 'attributes', 'label')
+
+
+class LineStringGeometrySerializer(GeometryStoreRelatedSerializer):
+
+    class Meta(GeometryStoreRelatedSerializer.Meta):
         model = LineStringGeometry
         geo_field = 'geom'
 
 
-class PointGeometrySerializer(GeoFeatureModelSerializer):
+class PointGeometrySerializer(GeometryStoreRelatedSerializer):
 
-    class Meta:
+    class Meta(GeometryStoreRelatedSerializer.Meta):
         model = PointGeometry
         geo_field = 'geom'
 
 
-class PolygonGeometrySerializer(GeoFeatureModelSerializer):
+class PolygonGeometrySerializer(GeometryStoreRelatedSerializer):
 
-    class Meta:
+    class Meta(GeometryStoreRelatedSerializer.Meta):
         model = PolygonGeometry
         geo_field = 'geom'
 
