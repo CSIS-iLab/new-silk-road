@@ -27,7 +27,21 @@ class PersonShareholderInline(admin.TabularInline):
 class OrganizationAdmin(MPTTModelAdmin):
     save_on_top = True
     select_related = True
-    search_fields = ['name']
+    search_fields = (
+        'name',
+        'parent__name',
+        'countries__name',
+        'leaders__given_name',
+        'leaders__family_name',
+        'initiatives__name',
+        'related_events__name',
+        'related_organizations__name',
+        'projects_consulted__name',
+        'projects_contracted__name',
+        'projects_funded__name',
+        'projects_implemented__name',
+        'projects_operated__name',
+    )
     list_display = ('name', 'founding_date', 'dissolution_date', 'staff_size') + TEMPORAL_FIELDS + ('published',)
     actions = [make_published, make_not_published]
     prepopulated_fields = {"slug": ("name",)}
