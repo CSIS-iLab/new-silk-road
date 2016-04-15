@@ -47,13 +47,15 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'storages',
-    'djgeojson',
+    'rest_framework',
+    'rest_framework_gis',
 
     'sources',
     'facts',
     'locations',
     'infrastructure',
     'website',
+    'api',
 
     'fieldbook_importer',
 ]

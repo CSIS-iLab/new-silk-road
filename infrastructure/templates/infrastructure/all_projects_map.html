@@ -34,25 +34,62 @@ Map | {{ block.super }}
         map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
         map.on('style.load', function () {
-            map.addSource('projects-src', {
-                'type': 'geojson',
-                'data': '{% url "projects-points-geojson" %}'
-            });
-
-            map.addLayer({
-                "id": "allprojects",
-                "type": "circle",
-                "source": "projects-src",
-                "paint": {
-                    "circle-color": "red"
-                    // "line-color": "red",
-                    // "line-width": 2
+            var geometries = {
+                lines: '{% url "api:linestringgeometry-list" %}',
+                points: '{% url "api:pointgeometry-list" %}',
+                polygons: '{% url "api:polygongeometry-list" %}'
+            }
+            var paintStyles = {
+                lines: {
+                    'line-width': 6,
+                    'line-color': '#FF0000'
+                },
+                points: {
+                    'circle-color': '#00FF00',
+                    'circle-radius': 6
+                },
+                polygons: {
+                    'fill-color': '#0000FF'
                 }
-            });
+            }
+            for (var prop in geometries) {
+                if (geometries.hasOwnProperty(prop)) {
+                    var src_name = prop + '-src';
+                    var layer_id = prop + '-layer';
+                    var drawType, refLayer;
+                    switch (prop) {
+                        case 'lines':
+                            drawType = 'line';
+                            refLayer = 'road-motorway';
+                            break;
+                        case 'points':
+                            drawType = 'circle';
+                            break;
+                        case 'polygons':
+                            drawType = 'fill';
+                            break;
+                        default:
+                            drawType = null;
+                            refLayer = null;
+                    }
+                    if (drawType) {
+                        map.addSource(src_name, {
+                            'type': 'geojson',
+                            'data': geometries[prop]
+                        });
 
-            // layer = map.getLayer("allprojects");
-            //
-            // map.fitBounds(layer.getBounds());
+                        var layerConfig = {
+                            "id": layer_id,
+                            "type": drawType,
+                            "source": src_name,
+                        };
+                        if (paintStyles.hasOwnProperty(prop)) {
+                            layerConfig['paint'] = paintStyles[prop];
+                        }
+                        map.addLayer(layerConfig);
+                    }
+                }
+            }
         });
     </script>
 </article>

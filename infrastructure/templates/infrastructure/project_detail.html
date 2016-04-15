@@ -50,41 +50,50 @@
         </ul>
     </section>
     <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var httpRequest, geostore;
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
 
-        var geoLayers = [];
-{% if object.geo.points.exists %}
-        geoLayers.push({
-            src: {
-                type: 'geojson',
-                data: "{% url 'geostore-points' identifier=object.geo.identifier %}"
-            },
-            layer: {
-                id: "project-points",
-                source: "project-points-src",
-                type: "circle",
+        function mapProject(data, mapHelper, bounding) {
+            var geoLayers = [];
+            if (data.lines) {
+                geoLayers.push({
+                    src: { type: 'geojson', data: data.lines },
+                    layer: {
+                        id: 'project-lines', type: 'line',
+                        source: 'project-lines-src'
+                    }
+                })
             }
-        });
-{% endif %}
-{% if object.geo.lines.exists %}
-        geoLayers.push({
-            src: {
-                type: 'geojson',
-                data: "{% url 'geostore-lines' identifier=object.geo.identifier %}"
-            },
-            layer: {
-                id: "project-lines",
-                type: "line",
-                source: "project-lines-src",
-                paint: {
-                    "line-color": "blue",
-                    "line-width": 2
-                }
+            if (data.points) {
+                geoLayers.push({
+                    src: { type: 'geojson', data: data.points },
+                    layer: {
+                        id: 'project-points', type: 'circle',
+                        source: 'project-points-src'
+                    }
+                })
             }
-        });
-{% endif %}
-    var bbox = [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
-        {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}];
+            if (data.polygons) {
+                geoLayers.push({
+                    src: { type: 'geojson', data: data.polygons },
+                    layer: {
+                        id: 'project-polygons', type: 'fill',
+                        source: 'project-polygons-src'
+                    }
+                })
+            }
+            mapHelper.addLayers(geoLayers, bounding);
+
+            if (data.points) mapHelper.setPopupLayers(['project-points']);
+        }
+
+
+        var bbox = [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
+            {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}];
+
+        var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";
+
 
         var proj = new ProjectMap(mapboxgl, {
             container: "map",
@@ -97,14 +106,26 @@
                 maxZoom: 15,
                 padding: 10
             }
-            proj.addLayers(geoLayers, bounding);
 
-            proj.setPopupLayers(['project-points']);
+            if (geostore_url) {
+                httpRequest = new XMLHttpRequest();
+                httpRequest.addEventListener("readystatechange", function () {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        geostore = JSON.parse(httpRequest.responseText);
+                        mapProject(geostore, proj, bounding);
+                    }
+                })
+
+                httpRequest.open('GET', geostore_url, true);
+                httpRequest.send();
+            }
+
             // var tooltip = new mapboxgl.Popup({closeOnClick: false})
             //     .setLngLat([100.544445, 20.872203])
             //     .setHTML('<h1>Hello World!</h1>')
             //     .addTo(proj.map);
         });
+    });
     </script>
 </article>
 {% endblock %}
