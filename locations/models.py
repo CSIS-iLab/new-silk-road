@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models
-from django.contrib.gis.db.models import Extent
+from django.contrib.gis.db.models import Extent, Union
 from django.contrib.postgres.fields import JSONField
-from django.contrib.gis.geos import Polygon, MultiPolygon
+from django.contrib.gis.geos import Polygon, MultiPolygon, GeometryCollection
 import uuid
 
 
@@ -65,6 +65,7 @@ class GeometryStore(models.Model):
     lines = models.ManyToManyField('locations.LineStringGeometry', related_name='geostores')
     points = models.ManyToManyField('locations.PointGeometry', related_name='geostores')
     polygons = models.ManyToManyField('locations.PolygonGeometry', related_name='geostores')
+    centroid = models.PointField(blank=True, null=True)
 
     def __str__(self):
         return str(self.identifier)
@@ -73,13 +74,22 @@ class GeometryStore(models.Model):
         agg = self.lines.aggregate(extent=Extent('geom'))
         return agg['extent']
 
+    def multiline(self):
+        return self.lines.aggregate(union=Union('geom'))['union']
+
     def points_extent(self):
         agg = self.points.aggregate(extent=Extent('geom'))
         return agg['extent']
 
+    def multipoint(self):
+        return self.points.aggregate(union=Union('geom'))['union']
+
     def polygons_extent(self):
         agg = self.polygons.aggregate(extent=Extent('geom'))
         return agg['extent']
+
+    def multipolygon(self):
+        return self.polygons.aggregate(union=Union('geom'))['union']
 
     def _yield_extents(self):
         if self.lines.exists():
@@ -93,6 +103,21 @@ class GeometryStore(models.Model):
         polygons = (Polygon.from_bbox(box) for box in self._yield_extents())
         multi_poly = MultiPolygon(list(polygons))
         return multi_poly.extent
+
+    def _create_collection(self):
+        multis = (self.multiline(), self.multipoint(), self.multipolygon())
+        coll = GeometryCollection([x for x in multis if x])
+        return coll
+
+    def _get_collection_centroid(self):
+        coll = self._create_collection()
+        return coll.centroid
+
+    def save(self, *args, **kwargs):
+        coll_centroid = self._get_collection_centroid()
+        if coll_centroid:
+            self.centroid = coll_centroid
+        super(GeometryStore, self).save(*args, **kwargs)
 
 
 class Region(models.Model):
