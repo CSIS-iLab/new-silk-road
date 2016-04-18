@@ -49,9 +49,11 @@
             {% endfor %}
         </ul>
     </section>
+    {% if object.geo %}
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         var httpRequest, geostore;
+        var mapbox_style = '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}';
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
 
         function mapProject(data, mapHelper, bounding) {
@@ -97,6 +99,7 @@
 
         var proj = new ProjectMap(mapboxgl, {
             container: "map",
+            style: mapbox_style,
             center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}
         });
 
@@ -127,5 +130,6 @@
         });
     });
     </script>
+    {% endif %}
 </article>
 {% endblock %}

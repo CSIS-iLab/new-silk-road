@@ -4,6 +4,7 @@ from .models import (Project, Initiative)
 from django.conf import settings
 
 MAPBOX_TOKEN = getattr(settings, 'MAPBOX_TOKEN', None)
+MAPBOX_STYLE_URL = getattr(settings, 'MAPBOX_STYLE_URL', 'mapbox://styles/mapbox/streets-v8')
 LEAFLET_CONFIG = getattr(settings, 'LEAFLET_CONFIG', None)
 DEFAULT_CENTER = LEAFLET_CONFIG.get('DEFAULT_CENTER') if LEAFLET_CONFIG else None
 
@@ -14,6 +15,7 @@ class ProjectDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
+        context['mapbox_style'] = MAPBOX_STYLE_URL
         return context
 
 
@@ -24,6 +26,7 @@ class ProjectsMapView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ProjectsMapView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
+        context['mapbox_style'] = MAPBOX_STYLE_URL
         return context
 
 

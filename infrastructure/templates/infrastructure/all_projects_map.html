@@ -27,7 +27,7 @@ Map | {{ block.super }}
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
         var map = new mapboxgl.Map({
             container: 'map', // container id
-            style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
+            style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
             center: {{default_center|default:"[-274.4953579099464, 22.440381130024562]"}}, // starting position
             zoom: 3 // starting zoom
         });

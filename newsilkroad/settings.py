@@ -173,6 +173,7 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 4,
 }
 MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN')
+MAPBOX_STYLE_URL = os.getenv('MAPBOX_STYLE_URL', 'mapbox://styles/mapbox/streets-v8')
 
 if DEBUG and os.getenv('DEBUG_STATIC', False) == 'True':
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'

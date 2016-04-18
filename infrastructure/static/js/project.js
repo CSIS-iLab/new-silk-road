@@ -6,7 +6,7 @@ function ProjectMap(mapboxgl, config) {
 
   this.map = new mapboxgl.Map({
     container: config.container || null,
-    style: config.style || 'mapbox://styles/mapbox/streets-v8',
+    style: config.style || null,
     center: config.center || null
   });
   this.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
