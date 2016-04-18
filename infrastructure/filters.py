@@ -50,8 +50,12 @@ class ProjectFilter(django_filters.FilterSet):
     class Meta:
         model = Project
         fields = {
-            'planned_completion_date': ['isnull', 'exact', 'gt', 'lt', 'year__lt', 'year__gt'],
-            'start_date': ['isnull', 'exact', 'gt', 'lt', 'year__lt', 'year__gt']
+            'planned_completion_year': ['isnull', 'exact', 'gt', 'lt'],
+            'planned_completion_month': ['isnull', 'exact', 'gt', 'lt'],
+            'planned_completion_day': ['isnull', 'exact', 'gt', 'lt'],
+            'start_year': ['isnull', 'exact', 'gt', 'lt'],
+            'start_month': ['isnull', 'exact', 'gt', 'lt'],
+            'start_day': ['isnull', 'exact', 'gt', 'lt'],
         }
 
 

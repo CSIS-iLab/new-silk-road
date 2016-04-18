@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 'transformer': transform_project_data,
                 'related': transform_project_related_data
             },
-            'program_initiatives': {
+            'programs_initiatives': {
                 'model': 'infrastructure.Initiative',
                 'transformer': transform_initiative_data,
             },
@@ -83,7 +83,7 @@ class Command(BaseCommand):
                 'model': 'facts.Person',
                 'transformer': transform_person_poc,
             },
-            'sources_of_fundings': {
+            'sources_of_funding': {
                 'model': 'facts.Organization',
                 'transformer': transform_funder_organization,
                 'related': make_organization_related_transformer("sources_of_funding_name")

@@ -16,7 +16,12 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = (
             'name',
             'initiative', 'infrastructure_type',
-            'planned_completion_date', 'start_date',
+            'planned_completion_year',
+            'planned_completion_month',
+            'planned_completion_day',
+            'start_year',
+            'start_month',
+            'start_day',
             'get_absolute_url',
             'operator', 'contractors', 'consultants', 'implementers',
         )

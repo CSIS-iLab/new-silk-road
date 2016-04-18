@@ -77,15 +77,18 @@ class Project(Publishable):
         'Total Project Cost',
         blank=True, max_length=100
     )
-    start_date = models.DateField(blank=True, null=True)
-    commencement_date = models.DateField(
-        'Date of commencement of works',
-        blank=True, null=True
-    )
-    planned_completion_date = models.DateField(
-        'Planned completion date',
-        blank=True, null=True
-    )
+    start_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    start_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    start_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    commencement_year = models.PositiveSmallIntegerField('Year of commencement of works', blank=True, null=True)
+    commencement_month = models.PositiveSmallIntegerField('Month of commencement of works', blank=True, null=True)
+    commencement_day = models.PositiveSmallIntegerField('Day of commencement of works', blank=True, null=True)
+
+    planned_completion_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    planned_completion_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    planned_completion_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED

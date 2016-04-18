@@ -2,7 +2,6 @@ from django.utils.text import slugify
 from functools import partial
 from datautils.string import clean_string
 from fieldbook_importer.utils import (
-    parse_date,
     choices_from_values,
     values_list,
     first_value_or_none,
@@ -11,7 +10,8 @@ from fieldbook_importer.utils import (
     instances_for_related_items,
     instances_or_none,
     first_of_many,
-    coerce_to_boolean_or_null
+    coerce_to_boolean_or_null,
+    parse_int
 )
 from .facts import (
     transform_person_poc,
@@ -271,13 +271,19 @@ def transform_project_data(item):
     return {
         "name": name,
         "slug": slugify(name, allow_unicode=True),
-        "start_date": parse_date(item.get("project_start_date")),
+        "start_year": parse_int(item.get("project_start_year")),
+        "start_month": parse_int(item.get("project_start_month")),
+        "start_day": parse_int(item.get("project_start_day")),
         "status": project_status_from_statuses(item.get("project_status")),
         "sources": make_url_list(item.get("sources")),
         "notes": clean_string(item.get("notes")),
-        "commencement_date": parse_date(item.get("commencement_date")),
+        "commencement_year": parse_int(item.get("commencement_year")),
+        "commencement_month": parse_int(item.get("commencement_month")),
+        "commencement_day": parse_int(item.get("commencement_day")),
         "total_cost_description": clean_string(item.get("total_project_cost_us")),
-        "planned_completion_date": parse_date(item.get("planned_date_of_completion")),
+        "planned_completion_year": parse_int(item.get("planned_year_of_completion")),
+        "planned_completion_month": parse_int(item.get("planned_month_of_completion")),
+        "planned_completion_day": parse_int(item.get("planned_day_of_completion")),
         "new": evaluate_project_new_value(item.get("new")),
         "infrastructure_type": infrastructure_type_object(item.get('infrastructure_type')),
         "initiative": initiative_object(item.get('program_initiative')),

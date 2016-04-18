@@ -145,3 +145,11 @@ def first_value_or_none(value):
     if isinstance(value, list) and len(value) > 0:
         return value[0]
     return None
+
+
+def parse_int(value):
+    if isinstance(value, int):
+        return value
+    elif isinstance(value, str) and value.isdigit():
+        return int(value)
+    return None
