@@ -6,6 +6,7 @@ from locations.models import (
     PolygonGeometry,
     GeometryStore,
 )
+from api.fields import DynamicFieldsMixin
 
 
 class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):
@@ -41,11 +42,12 @@ class PolygonGeometrySerializer(GeometryStoreRelatedSerializer):
         geo_field = 'geom'
 
 
-class GeometryStoreSerializer(serializers.ModelSerializer):
+class GeometryStoreSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     lines = LineStringGeometrySerializer(many=True, read_only=True)
     points = PointGeometrySerializer(many=True, read_only=True)
     polygons = PolygonGeometrySerializer(many=True, read_only=True)
 
     class Meta:
         model = GeometryStore
-        fields = ('identifier', 'attributes', 'lines', 'points', 'polygons')
+        fields = ('identifier', 'attributes', 'centroid', 'lines', 'points', 'polygons')
+        indelible_fields = ('identifier',)

@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from infrastructure.models import Project, Initiative
 from facts.serializers import OrganizationBasicSerializer
+from api.fields import DynamicFieldsMixin
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     infrastructure_type = serializers.StringRelatedField()
     initiative = serializers.StringRelatedField()
     operator = OrganizationBasicSerializer(read_only=True)
@@ -27,7 +28,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
 
 
-class InitiativeSerializer(serializers.ModelSerializer):
+class InitiativeSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     geographic_scope = serializers.StringRelatedField()
 
     class Meta:
