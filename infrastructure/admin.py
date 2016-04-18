@@ -60,7 +60,7 @@ class ProjectAdmin(admin.ModelAdmin):
         if obj.extra_data.exists:
             project_id_match = obj.extra_data.filter(dictionary__has_key='project_id').first()
             if project_id_match:
-                return project_id_match.values.get('project_id')
+                return project_id_match.dictionary.get('project_id')
         return None
     fieldbook_id.short_description = 'Fieldbook Id'
 
