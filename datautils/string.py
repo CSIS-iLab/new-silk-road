@@ -12,8 +12,8 @@ def clean_string(value, stripnewlines=True, stripquotes=True, default=''):
     if value and isinstance(value, str):
         str_val = value.strip(" ")
         if stripnewlines:
-            translations['\n'] = ''
-            translations['\r'] = ''
+            translations['\n'] = ' '
+            translations['\r'] = ' '
         if stripquotes:
             translations['"'] = ''
             translations['\''] = ''
