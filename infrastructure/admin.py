@@ -58,7 +58,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
     def fieldbook_id(self, obj):
         if obj.extra_data.exists:
-            project_id_match = obj.extra_data.filter(values__has_key='project_id').first()
+            project_id_match = obj.extra_data.filter(dictionary__has_key='project_id').first()
             if project_id_match:
                 return project_id_match.values.get('project_id')
         return None
@@ -67,7 +67,7 @@ class ProjectAdmin(admin.ModelAdmin):
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super(ProjectAdmin, self).get_search_results(request, queryset, search_term)
         if 'project' in search_term.lower():
-            queryset |= self.model.objects.filter(extra_data__values__project_id=search_term.title())
+            queryset |= self.model.objects.filter(extra_data__dictionary__project_id=search_term.title())
         try:
             integer_search_term = int(search_term)
             queryset |= self.model.objects.filter(id=integer_search_term)

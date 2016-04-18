@@ -44,7 +44,7 @@ class ProjectFilter(django_filters.FilterSet):
     )
 
     fieldbook_id = django_filters.CharFilter(
-        name='extra_data__values__project_id', lookup_expr='exact'
+        name='extra_data__dictionary__project_id', lookup_expr='exact'
     )
 
     class Meta:

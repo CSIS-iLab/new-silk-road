@@ -213,7 +213,7 @@ countries_instances = partial(
 # Storing that extra data
 def extra_project_data(x, create=True):
     values_obj = {
-        k: x.get(k, None) for k in ('id', 'project_id', 'points',)
+        k: x.get(k, None) for k in ('id', 'project_id', 'points') if x.get(k, None)
     }
     data_obj = {
         'url': x.get('record_url'),
@@ -230,8 +230,8 @@ def extra_project_data_as_instances(x):
 def project_via_fieldbook_id(fieldbook_id, project_id):
     '''Lookup using the internal fieldbook id and the user project_id.'''
     lookup = {
-        'extra_data__values__id': fieldbook_id,
-        'extra_data__values__project_id': project_id
+        'extra_data__dictionary__id': fieldbook_id,
+        'extra_data__dictionary__project_id': project_id
     }
     return instance_for_model('infrastructure.Project', lookup)
 
