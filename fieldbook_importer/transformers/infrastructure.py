@@ -51,13 +51,16 @@ def transform_infrastructuretype_data(item):
 
 
 def transform_project_funding_data(item):
-    return {
-        # Organization created via FUNDER_ORGANIZATION_MAP
-        "source": funder_from_related_values(item.get("source_of_funding")),
-        "currency": item.get('currency'),
-        "amount": item.get('amount'),
-        "project": project_from_related_values(item.get("project_id")),
-    }
+    funding_source = item.get("source_of_funding")
+    if funding_source:
+        return {
+            # Organization created via FUNDER_ORGANIZATION_MAP
+            "source": funder_from_related_values(funding_source),
+            "currency": item.get('currency'),
+            "amount": item.get('amount'),
+            "project": project_from_related_values(item.get("project_id")),
+        }
+    return None
 
 
 def project_status_from_statuses(x):

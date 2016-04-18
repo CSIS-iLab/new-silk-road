@@ -186,12 +186,13 @@ class Command(BaseCommand):
             if self.verbosity > 2:
                 self.stdout.write(repr(transformed_item))
             obj = None
-            try:
-                obj = create_obj(**transformed_item)
-            except IntegrityError as e:
-                self.stderr.write(repr(e))
-            except Exception as e:
-                raise e
+            if transformed_item:
+                try:
+                    obj = create_obj(**transformed_item)
+                except IntegrityError as e:
+                    self.stderr.write(repr(e))
+                except Exception as e:
+                    raise e
             if obj:
                 if isinstance(obj, tuple):
                     obj, _ = obj
