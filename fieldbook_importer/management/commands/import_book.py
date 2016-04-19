@@ -164,16 +164,28 @@ class Command(BaseCommand):
             related_objects = list((obj for obj in related_objects if obj))
             for rel_obj in related_objects:
                 if rel_obj.id is None:
-                    rel_obj.save()
+                    try:
+                        rel_obj.save()
+                    except IntegrityError as e:
+                        self.stderr.write(repr(e))
+                        self.stderr.write(repr(rel_obj))
+                    except Exception as e:
+                        raise e
             manager.add(*related_objects)
 
     def _process_one2one_object(self, obj, key, data):
         '''For one2one objects, we expect the key to be a model_label, e.g. app.ModelName'''
         if isinstance(data, dict):
             data[obj._meta.model_name] = obj
-            instance = instance_for_model(key, data, create=True)
-            if self.verbosity > 2:
-                self.stdout.write("Created {}".format(str(instance)))
+            try:
+                instance = instance_for_model(key, data, create=True)
+                if self.verbosity > 2:
+                    self.stdout.write("Created {}".format(str(instance)))
+            except IntegrityError as e:
+                self.stderr.write(repr(e))
+                self.stderr.write(repr(data))
+            except Exception as e:
+                raise e
         else:
             raise CommandError("Attempted to process a one2one with non-dict data")
 
@@ -191,6 +203,7 @@ class Command(BaseCommand):
                     obj = create_obj(**transformed_item)
                 except IntegrityError as e:
                     self.stderr.write(repr(e))
+                    self.stderr.write(repr(transformed_item))
                 except Exception as e:
                     raise e
             if obj:
