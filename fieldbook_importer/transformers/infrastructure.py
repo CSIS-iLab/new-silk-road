@@ -217,7 +217,7 @@ def extra_project_data(x, create=True):
     }
     data_obj = {
         'url': x.get('record_url'),
-        'values': values_obj,
+        'dictionary': values_obj,
         'label': "Fieldbook data for '{}'".format(values_obj.get('project_id'))
     }
     return instance_for_model('facts.Data', data_obj, create=True)
