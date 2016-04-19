@@ -68,6 +68,12 @@ class Command(BaseCommand):
             geo_store_data.update(self.attributes)
             geo_store = GeometryStore.objects.create(attributes=geo_store_data)
 
+            # layers = {
+            #     'lines': [],
+            #     'points': [],
+            #     'polygons': [],
+            # }
+
             for layer in ds:
                 layer_name, ext = os.path.splitext(layer.name)
                 if self.verbosity > 2:
@@ -93,6 +99,7 @@ class Command(BaseCommand):
                             'attributes': data
                         }
                         if geom.geom_type == 'Point':
+                            # layers['points'].append()
                             geo_store.points.create(**params)
                         elif geom.geom_type == 'LineString':
                             geo_store.lines.create(**params)

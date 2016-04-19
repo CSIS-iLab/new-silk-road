@@ -113,12 +113,6 @@ class GeometryStore(models.Model):
         coll = self._create_collection()
         return coll.centroid
 
-    def save(self, *args, **kwargs):
-        coll_centroid = self._get_collection_centroid()
-        if coll_centroid:
-            self.centroid = coll_centroid
-        super(GeometryStore, self).save(*args, **kwargs)
-
 
 class Region(models.Model):
     """A human-described region of geography or countries"""
