@@ -53,7 +53,6 @@
     </section>
     {% if object.geo %}
     <script type="text/javascript">
-    var map;
     document.addEventListener("DOMContentLoaded", function () {
         var httpRequest, geostore;
         var linePaint = {
@@ -83,7 +82,7 @@
 
 
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
-        map = new mapboxgl.Map({
+        var map = new mapboxgl.Map({
             container: "map",
             style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
             center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}

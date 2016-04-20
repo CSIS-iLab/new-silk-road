@@ -1,14 +1,23 @@
-{% extends "base.html" %}{% load markymark %}{% load leaflet_tags %}
+{% extends "base.html" %}{% load staticfiles %}
 
 {% block extrahead %}
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css' rel='stylesheet' />
 <style>
-    #map {  /* all maps */
+    #map {
         width:  100%;
         height: 600px;
+        display: block;
+    }
+    .mapboxgl-popup {
+            max-width: 400px;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    }
+    .marker-title {
+        font-weight: 700;
     }
 </style>
+<script src='{% static "js/map-utils.js" %}'></script>
 {% endblock %}
 
 {% block pagetitle %}
@@ -16,14 +25,27 @@ Map | {{ block.super }}
 {% endblock %}
 
 {% block content %}
-<article class="project">
+<article>
 
     <section class="map-container">
         <div id="map"></div>
     </section>
-
-    <script type="text/javascript">
-        var layer;
+</article>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var paintStyles = {
+            lines: {
+                'line-width': 6,
+                'line-color': '#FF0000'
+            },
+            points: {
+                'circle-color': '#a81e3b',
+                'circle-radius': 6
+            },
+            polygons: {
+                'fill-color': '#0000FF'
+            }
+        }
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
         var map = new mapboxgl.Map({
             container: 'map', // container id
@@ -34,61 +56,15 @@ Map | {{ block.super }}
         map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
         map.on('style.load', function () {
-            var geometries = {
-                points: '{% url "api:geostore-centroids-list" %}',
-            }
-            var paintStyles = {
-                lines: {
-                    'line-width': 6,
-                    'line-color': '#FF0000'
-                },
-                points: {
-                    'circle-color': '#00FF00',
-                    'circle-radius': 6
-                },
-                polygons: {
-                    'fill-color': '#0000FF'
-                }
-            }
-            for (var prop in geometries) {
-                if (geometries.hasOwnProperty(prop)) {
-                    var src_name = prop + '-src';
-                    var layer_id = prop + '-layer';
-                    var drawType, refLayer;
-                    switch (prop) {
-                        case 'lines':
-                            drawType = 'line';
-                            refLayer = 'road-motorway';
-                            break;
-                        case 'points':
-                            drawType = 'circle';
-                            break;
-                        case 'polygons':
-                            drawType = 'fill';
-                            break;
-                        default:
-                            drawType = null;
-                            refLayer = null;
-                    }
-                    if (drawType) {
-                        map.addSource(src_name, {
-                            'type': 'geojson',
-                            'data': geometries[prop]
-                        });
+            map.addSource('projects-centroids-src', MapUtils.sourceForGeoJSON('{% url "api:geostore-centroids-list" %}'));
+            map.addLayer(MapUtils.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle'));
 
-                        var layerConfig = {
-                            "id": layer_id,
-                            "type": drawType,
-                            "source": src_name,
-                        };
-                        if (paintStyles.hasOwnProperty(prop)) {
-                            layerConfig['paint'] = paintStyles[prop];
-                        }
-                        map.addLayer(layerConfig);
-                    }
-                }
-            }
+            var centroidsPopupHandler = MapUtils.createPopUpHandlerForLayers(mapboxgl, map, ['projects-centroids-layer'], function(feature) {
+                return "Project: " + feature.properties.project_name;
+            });
+            map.on('click', centroidsPopupHandler);
         });
-    </script>
-</article>
+    });
+
+</script>
 {% endblock %}

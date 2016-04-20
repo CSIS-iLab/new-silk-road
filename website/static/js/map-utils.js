@@ -23,27 +23,29 @@
   }
 
   exports.createPopUpHandlerForLayers = function (mapboxgl, map, layers, labelCreator) {
-    var context = (function(mapboxgl, map, layers, labelCreator){
-      this.mapboxgl = mapboxgl;
-      this.map = map;
-      this.layers = layers;
-      this.labelCreator = labelCreator
-    })(mapboxgl, map, layers, labelCreator);
+    this.mapboxgl = mapboxgl;
+    this.map = map;
+    this.layers = layers;
+    this.labelCreator = labelCreator
+
+    var ctx = this;
 
     var popupHandler = function (e) {
-      var features = context.map.queryRenderedFeatures(e.point, { layers: context.layers });
+      var features = ctx.map.queryRenderedFeatures(e.point, { layers: ctx.layers });
       if (!features.length) {
         return;
       }
       var feature = features[0];
-      var featureText = textLabelCreator(feature);
+      var featureText = ctx.labelCreator(feature);
+      if (root.debug === true) console.log(featureText);
       if (featureText) {
         if (root.debug === true) console.log(feature.geometry.coordinates);
-        var popup = new context.mapboxgl.Popup()
+        var popup = new ctx.mapboxgl.Popup()
                         .setLngLat(feature.geometry.coordinates)
                         .setText(featureText);
 
-        popup.addTo(context.map);
+        popup.addTo(ctx.map);
+        if (root.debug) console.log(popup);
       }
     };
     return popupHandler;
