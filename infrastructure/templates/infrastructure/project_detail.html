@@ -31,9 +31,11 @@
 {% endif %}
     <p>{{ object.get_countries_display }}</p>
 
+{% if object.geo %}
     <section class="map-container">
         <div id="map"></div>
     </section>
+{% endif %}
 
     <section class="notes">
 {{ object.notes|markdown }}
@@ -63,7 +65,15 @@
                     src: { type: 'geojson', data: data.lines },
                     layer: {
                         id: 'project-lines', type: 'line',
-                        source: 'project-lines-src'
+                        source: 'project-lines-src',
+                        layout: {
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#FF0000',
+                            'line-width': 3,
+                            'line-opacity': 0.6
+                        }
                     }
                 })
             }
