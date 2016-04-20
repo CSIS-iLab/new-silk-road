@@ -7,6 +7,7 @@ from locations.models import (
     GeometryStore,
 )
 from api.fields import DynamicFieldsMixin
+from .infrastructure import ProjectBasicSerializer
 
 
 class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):
@@ -51,3 +52,12 @@ class GeometryStoreSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         model = GeometryStore
         fields = ('identifier', 'attributes', 'centroid', 'lines', 'points', 'polygons')
         indelible_fields = ('identifier',)
+
+
+class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
+    projects = ProjectBasicSerializer(many=True, read_only=True, source='project_set')
+
+    class Meta:
+        model = GeometryStore
+        fields = ('identifier', 'attributes', 'centroid', 'projects')
+        geo_field = 'centroid'

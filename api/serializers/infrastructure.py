@@ -4,6 +4,17 @@ from facts.serializers import OrganizationBasicSerializer
 from api.fields import DynamicFieldsMixin
 
 
+class ProjectBasicSerializer(serializers.ModelSerializer):
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
+
+    class Meta:
+        model = Project
+        fields = (
+            'name',
+            'url',
+        )
+
+
 class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     infrastructure_type = serializers.StringRelatedField()
     initiative = serializers.StringRelatedField()
@@ -11,6 +22,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     contractors = OrganizationBasicSerializer(many=True, read_only=True)
     consultants = OrganizationBasicSerializer(many=True, read_only=True)
     implementers = OrganizationBasicSerializer(many=True, read_only=True)
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
         model = Project
@@ -23,7 +35,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             'start_year',
             'start_month',
             'start_day',
-            'get_absolute_url',
+            'url',
             'operator', 'contractors', 'consultants', 'implementers',
         )
 

@@ -10,6 +10,7 @@ from api.views import (
     PointGeometryViewSet,
     PolygonGeometryViewSet,
     GeometryStoreViewSet,
+    GeometryStoreCentroidViewSet
 )
 
 
@@ -20,6 +21,7 @@ router.register(r'lines', LineStringGeometryViewSet)
 router.register(r'points', PointGeometryViewSet)
 router.register(r'polygons', PolygonGeometryViewSet)
 router.register(r'geostore', GeometryStoreViewSet)
+router.register(r'geostore-centroids', GeometryStoreCentroidViewSet, base_name='geostore-centroids')
 
 app_name = 'api'
 urlpatterns = [
