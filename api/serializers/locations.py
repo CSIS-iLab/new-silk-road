@@ -55,9 +55,18 @@ class GeometryStoreSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 
 class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
-    projects = ProjectBasicSerializer(many=True, read_only=True, source='project_set')
 
     class Meta:
         model = GeometryStore
-        fields = ('identifier', 'attributes', 'centroid', 'projects')
         geo_field = 'centroid'
+
+    def get_properties(self, instance, fields):
+                # fields = ('identifier', 'attributes', 'centroid', 'projects')
+        first_proj = instance.project_set.first()
+        props = instance.attributes.copy()
+        props.update({
+            'geostore': instance.identifier,
+            'project_name': first_proj.name if first_proj else None,
+            'project_slug': first_proj.slug if first_proj else None
+        })
+        return props
