@@ -1,6 +1,11 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.gdal import DataSource
-from locations.models import GeometryStore
+from locations.models import (
+    GeometryStore,
+    LineStringGeometry,
+    PointGeometry,
+    PolygonGeometry,
+)
 import os.path
 from datautils.string import clean_string
 
@@ -68,11 +73,11 @@ class Command(BaseCommand):
             geo_store_data.update(self.attributes)
             geo_store = GeometryStore.objects.create(attributes=geo_store_data)
 
-            # layers = {
-            #     'lines': [],
-            #     'points': [],
-            #     'polygons': [],
-            # }
+            geometries = {
+                'lines': [],
+                'points': [],
+                'polygons': [],
+            }
 
             for layer in ds:
                 layer_name, ext = os.path.splitext(layer.name)
@@ -99,11 +104,20 @@ class Command(BaseCommand):
                             'attributes': data
                         }
                         if geom.geom_type == 'Point':
-                            # layers['points'].append()
-                            geo_store.points.create(**params)
+                            obj, created = PointGeometry.objects.get_or_create(**params)
+                            geometries['points'].append(obj)
                         elif geom.geom_type == 'LineString':
-                            geo_store.lines.create(**params)
+                            obj, created = LineStringGeometry.objects.get_or_create(**params)
+                            geometries['lines'].append(obj)
                         elif geom.geom_type == 'Polygon':
-                            geo_store.polygons.create(**params)
+                            obj, created = PolygonGeometry.objects.get_or_create(**params)
+                            geometries['polygons'].append(obj)
                         else:
                             self.stderr.out(self.style.WARNING("Unable to match geometry with type '{}' to a relation in GeometryStore".format(geom.geom_type)))
+
+                if geometries['lines']:
+                    geo_store.lines.set(geometries['lines'])
+                if geometries['points']:
+                    geo_store.points.set(geometries['points'])
+                if geometries['polygons']:
+                    geo_store.polygons.set(geometries['polygons'])
