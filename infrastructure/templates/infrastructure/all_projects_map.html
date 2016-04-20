@@ -35,9 +35,7 @@ Map | {{ block.super }}
 
         map.on('style.load', function () {
             var geometries = {
-                lines: '{% url "api:linestringgeometry-list" %}',
-                points: '{% url "api:pointgeometry-list" %}',
-                polygons: '{% url "api:polygongeometry-list" %}'
+                points: '{% url "api:geostore-centroids-list" %}',
             }
             var paintStyles = {
                 lines: {
