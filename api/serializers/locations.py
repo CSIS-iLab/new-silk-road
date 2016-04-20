@@ -7,7 +7,7 @@ from locations.models import (
     GeometryStore,
 )
 from api.fields import DynamicFieldsMixin
-from .infrastructure import ProjectBasicSerializer
+from api.serializers.infrastructure import ProjectBasicSerializer
 
 
 class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from infrastructure.models import Project, Initiative
-from facts.serializers import OrganizationBasicSerializer
+from api.serializers.facts import OrganizationBasicSerializer
 from api.fields import DynamicFieldsMixin
 
 
