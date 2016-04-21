@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'fieldbook_importer',
 ]
 
-if DEBUG:
+if DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True":
     INSTALLED_APPS.append('debug_toolbar')
 
 MIDDLEWARE_CLASSES = [
@@ -175,14 +175,14 @@ LEAFLET_CONFIG = {
 MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN')
 MAPBOX_STYLE_URL = os.getenv('MAPBOX_STYLE_URL', 'mapbox://styles/mapbox/streets-v8')
 
-if DEBUG and os.getenv('DEBUG_STATIC', False) == 'True':
+if DEBUG and os.getenv('DEBUG_STATIC', 'False') == 'True':
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     STATIC_URL = '/%s/' % STATICFILES_LOCATION
     MEDIA_URL = '/%s/' % MEDIAFILES_LOCATION
 
 
 # Setting this variable to ``True`` activates the maintenancemode middleware.
-MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', False) == 'True'
+MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
 MAINTENANCE_IGNORE_URLS = (
     r'^/admin/.*',
 )
