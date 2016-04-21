@@ -45,19 +45,27 @@ Map | {{ block.super }}
         mm.makeMap({
             container: 'map', // container id
             style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
-            center: {{default_center|default:"[-274.4953579099464, 22.440381130024562]"}}, // starting position
+            center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}, // starting position
             zoom: 3 // starting zoom
         });
         mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
-        mm.map.on('style.load', function () {
-            mm.map.addSource('projects-centroids-src', mm.createGeoJSONSource('{% url "api:geostore-centroids-list" %}'));
-            mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle'));
+        mm.map.on('load', function () {
+            httpRequest = new XMLHttpRequest();
+            httpRequest.addEventListener("readystatechange", function () {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    geostore = JSON.parse(httpRequest.responseText);
+                    mm.map.addSource('projects-centroids-src', mm.createGeoJSONSource(geostore));
+                    mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle'));
+                    var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], function(feature) {
+                        return "Project: " + feature.properties.project_name;
+                    });
+                    mm.map.on('click', centroidsPopupHandler);
+                }
+            })
 
-            var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], function(feature) {
-                return "Project: " + feature.properties.project_name;
-            });
-            mm.map.on('click', centroidsPopupHandler);
+            httpRequest.open('GET', '{% url "api:geostore-centroids-list" format="json" %}', true);
+            httpRequest.send();
         });
     });
 
