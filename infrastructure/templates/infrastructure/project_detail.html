@@ -1,23 +1,16 @@
 {% extends "base.html" %}{% load markymark %}{% load staticfiles %}
 
 {% block extrahead %}
-<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.css' rel='stylesheet' />
 <style>
     #map {
         width:  100%;
         height: 400px;
         display: block;
     }
-    .mapboxgl-popup {
-            max-width: 400px;
-            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-    }
-    .marker-title {
-        font-weight: 700;
-    }
 </style>
-<script src='{% static "js/map-utils.js" %}'></script>
+<script src='{% static "js/mapmaker.js" %}'></script>
 {% endblock %}
 
 {% block pagetitle %}
@@ -63,33 +56,40 @@
         var lineLayout = { 'line-cap': 'round' };
 
         function mapProject(data, camera) {
+
+
             if (data.lines && data.lines.features.length > 0) {
-                map.addSource('lines-src', MapUtils.sourceForGeoJSON(data.lines));
-                map.addLayer(MapUtils.layerFromSource('lines-layer', 'lines-src', 'line', linePaint, lineLayout));
+                mm.map.addSource('lines-src', mm.createGeoJSONSource(data.lines));
+                mm.map.addLayer(mm.layerFromSource('lines-layer', 'lines-src', 'line', linePaint, lineLayout));
             }
             if (data.points && data.points.features.length > 0) {
-                map.addSource('points-src', MapUtils.sourceForGeoJSON(data.points));
-                map.addLayer(MapUtils.layerFromSource('points-layer', 'points-src', 'circle'));
+                mm.map.addSource('points-src', mm.createGeoJSONSource(data.points));
+                mm.map.addLayer(mm.layerFromSource('points-layer', 'points-src', 'circle'));
             }
             if (data.polygons && data.polygons.features.length > 0) {
-                map.addSource('polygons-src', MapUtils.sourceForGeoJSON(data.polygons));
-                map.addLayer(MapUtils.layerFromSource('polygons-layer', 'polygons-src', 'fill'));
+                mm.map.addSource('polygons-src', mm.createGeoJSONSource(data.polygons));
+                mm.map.addLayer(mm.layerFromSource('polygons-layer', 'polygons-src', 'fill'));
             }
-            map.fitBounds(camera.bounds, camera);
+            mm.map.fitBounds(camera.bounds, camera);
+            var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['points-layer'], function(feature) {
+                return "<p>Hello</p>";
+            });
+            mm.map.on('click', centroidsPopupHandler);
         }
 
         var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";
 
 
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
-        var map = new mapboxgl.Map({
+        var mm = new MapMaker(mapboxgl);
+        mm.makeMap({
             container: "map",
             style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
             center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}
         });
-        map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
+        mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
-        map.on('style.load', function () {
+        mm.map.on('style.load', function () {
             var camera = {
                 bounds: [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
                     {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}],
