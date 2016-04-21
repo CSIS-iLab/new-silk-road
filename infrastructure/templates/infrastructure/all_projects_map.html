@@ -26,6 +26,14 @@ Map | {{ block.super }}
 </article>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
+        function htmlLabelForFeature(feature) {
+            var hed = feature.properties.project_name || feature.properties.name;
+            label = "<h4>" + hed + "</h4>";
+            if (feature.properties.project_url) {
+                label += "<p><a href='" + feature.properties.project_url + "'>View Project</a></p>";
+            }
+            return label;
+        }
         var paintStyles = {
             lines: {
                 'line-width': 6,
@@ -57,9 +65,7 @@ Map | {{ block.super }}
                     geostore = JSON.parse(httpRequest.responseText);
                     mm.map.addSource('projects-centroids-src', mm.createGeoJSONSource(geostore));
                     mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle'));
-                    var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], function(feature) {
-                        return "Project: " + feature.properties.project_name;
-                    });
+                    var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], htmlLabelForFeature);
                     mm.map.on('click', centroidsPopupHandler);
                 }
             })

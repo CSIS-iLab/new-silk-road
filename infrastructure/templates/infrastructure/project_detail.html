@@ -71,10 +71,10 @@
                 mm.map.addLayer(mm.layerFromSource('polygons-layer', 'polygons-src', 'fill'));
             }
             mm.map.fitBounds(camera.bounds, camera);
-            var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['points-layer'], function(feature) {
-                return "<p>Hello</p>";
-            });
-            mm.map.on('click', centroidsPopupHandler);
+            // var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['points-layer'], function(feature) {
+            //     return "<p>Hello</p>";
+            // });
+            // mm.map.on('click', centroidsPopupHandler);
         }
 
         var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";

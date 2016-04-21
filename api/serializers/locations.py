@@ -7,7 +7,6 @@ from locations.models import (
     GeometryStore,
 )
 from api.fields import DynamicFieldsMixin
-from api.serializers.infrastructure import ProjectBasicSerializer
 
 
 class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):
@@ -66,7 +65,12 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         props = instance.attributes.copy()
         props.update({
             'geostore': instance.identifier,
-            'project_name': first_proj.name if first_proj else None,
-            'project_slug': first_proj.slug if first_proj else None
         })
+        if first_proj:
+            props['project_name'] = first_proj.name
+            props['project_slug'] = first_proj.slug
+            try:
+                props['project_url'] = first_proj.get_absolute_url()
+            except Exception:
+                pass
         return props
