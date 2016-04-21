@@ -89,7 +89,7 @@
         });
         mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
-        mm.map.on('style.load', function () {
+        mm.map.on('load', function () {
             var camera = {
                 bounds: [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
                     {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}],
