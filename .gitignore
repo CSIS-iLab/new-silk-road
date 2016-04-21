@@ -33,3 +33,6 @@ coverage.xml
 
 # Ignore tmp dir
 /tmp
+
+# Node modules
+/node_modules

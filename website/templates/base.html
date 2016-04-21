@@ -4,8 +4,16 @@
     <head>
         <meta charset="utf-8">
         <title>{% block pagetitle %}Website{% endblock %}</title>
-        <link rel="stylesheet" href='{% static "css/main.css" %}' media="screen">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="stylesheet" href='{% static "css/site.min.css" %}' media="screen">
 {% block extrahead %}{% endblock %}
+        <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        // TODO: Set up Analytics tracker code
+        // ga('create', 'UA-XXXXX-Y', 'auto');
+        // ga('send', 'pageview');
+        </script>
+        <script async src='https://www.google-analytics.com/analytics.js'></script>
     </head>
     <body>
         <header>

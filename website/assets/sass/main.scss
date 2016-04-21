@@ -1,0 +1,36 @@
+@import "_variables";
+@import "lib/bourbon/bourbon";
+@import "lib/neat/neat";
+@import "map";
+body {
+    font: $base-font-size $base-font-family;
+}
+#wrapper {
+    @include outer-container($max-page-width);
+}
+.row {
+    @include row();
+}
+@for $i from 1 through 12 {
+    .col-#{$i} {
+        @include span-columns($i);
+    }
+}
+.search-map {
+    @include row();
+    position: relative;
+
+    .map-container {
+        width: inherit;
+    }
+    .search-controls {
+        @include position(absolute, 2% 1.5% null null);
+        @include size(33% auto);
+        box-shadow: 0 0 5px rgba(51, 51, 51, 0.2);
+        input {
+            @include fill-parent;
+            padding: 8px;
+        }
+
+    }
+}
