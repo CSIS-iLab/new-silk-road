@@ -2,6 +2,7 @@ from django.utils.text import slugify
 from datautils.string import clean_string
 from nameparser import HumanName
 import re
+import typing
 
 company_reg = re.compile('(company|corporation|ojsc)')
 
@@ -24,7 +25,14 @@ transform_person_poc = make_person_transformer("points_of_contact_name")
 
 def make_organization_transformer(name_field):
     def transform_organization(item):
-        org_name = clean_string(item.get(name_field))
+        if isinstance(name_field, typing.Iterable) and not isinstance(name_field, str):
+            name_values = list(filter(lambda x: item.get(x), name_field))
+            if name_values:
+                org_name = name_values[0]
+            else:
+                return None
+        else:
+            org_name = clean_string(item.get(name_field))
         return {
             'name': org_name,
             'slug': slugify(org_name, allow_unicode=True)

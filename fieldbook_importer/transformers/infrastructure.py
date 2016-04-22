@@ -26,11 +26,12 @@ from infrastructure.models import (
 def transform_initiative_data(item):
     name = clean_string(item.get("program_initiative_name", item.get("program_initiative")))
     return{
-        # "first_appearance_of_initiative"
         "name": name,
         "slug": slugify(name, allow_unicode=True),
-        # REVIEW: Confirm initiative_type using a dataset that has some...
         "initiative_type": initiative_type_object(item.get('initiative_type')),
+        "appeared_year": parse_int(item.get('first_appearance_year')),
+        "appeared_month": parse_int(item.get('first_appearance_month')),
+        "appeared_day": parse_int(item.get('first_appearance_date')),
     }
 
 
@@ -169,7 +170,7 @@ def evaluate_project_new_value(list_val):
 
 transform_consultant_organization = make_organization_transformer("consultant_name")
 transform_operator_organization = make_organization_transformer("operator_name")
-transform_contractor_organization = make_organization_transformer("contractors_name")
+transform_contractor_organization = make_organization_transformer(("contractors_name", "contractor_name"))
 transform_implementing_agency_organization = make_organization_transformer("client_implementing_agency_name")
 transform_funder_organization = make_organization_transformer("sources_of_funding_name")
 
