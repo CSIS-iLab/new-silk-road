@@ -51,7 +51,7 @@ def transform_infrastructuretype_data(item):
 
 
 def transform_project_funding_data(item):
-    funding_source = item.get("source_of_funding")
+    funding_source = item.get("sources_of_funding", item.get("source_of_funding"))
     project_id = item.get("project_id")
     if funding_source and project_id:
         return {
@@ -284,7 +284,8 @@ def transform_project_data(item):
         "commencement_year": parse_int(item.get("commencement_year")),
         "commencement_month": parse_int(item.get("commencement_month")),
         "commencement_day": parse_int(item.get("commencement_day")),
-        "total_cost_description": clean_string(item.get("total_project_cost_us")),
+        "total_cost": parse_int(item.get("total_project_cost")),
+        "total_cost_currency": item.get("total_project_cost_currency"),
         "planned_completion_year": parse_int(item.get("planned_year_of_completion")),
         "planned_completion_month": parse_int(item.get("planned_month_of_completion")),
         "planned_completion_day": parse_int(item.get("planned_day_of_completion")),
