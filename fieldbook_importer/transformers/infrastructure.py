@@ -24,7 +24,7 @@ from infrastructure.models import (
 
 
 def transform_initiative_data(item):
-    name = clean_string(item.get("program_initiative_name"))
+    name = clean_string(item.get("program_initiative_name", item.get("program_initiative")))
     return{
         # "first_appearance_of_initiative"
         "name": name,

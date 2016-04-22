@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ValidationError, MultipleObjectsReturned
 from django.db.utils import IntegrityError
 from django.apps import apps
 import argparse
@@ -153,11 +154,6 @@ class Command(BaseCommand):
                     if self.verbosity > 2:
                         self.stderr.write("Could not find '{}'".format(fpath))
 
-    def _get_model_constructor(self, klass):
-        if self.dry_run:
-            return klass
-        return klass.objects.get_or_create
-
     def _process_m2m_objects(self, obj, key, related_objects):
         manager = getattr(obj, key, None)
         if manager and related_objects:
@@ -190,7 +186,6 @@ class Command(BaseCommand):
             raise CommandError("Attempted to process a one2one with non-dict data")
 
     def load_data(self, data, model_class, transformer, related=None):
-        create_obj = self._get_model_constructor(model_class)
         model_name = model_class._meta.model_name
 
         for item in data:
@@ -200,30 +195,44 @@ class Command(BaseCommand):
             obj = None
             if transformed_item:
                 try:
-                    obj = create_obj(**transformed_item)
-                except IntegrityError as e:
-                    self.stderr.write(repr(e))
-                    self.stderr.write(repr(transformed_item))
-                except Exception as e:
-                    raise e
-            if obj:
-                if isinstance(obj, tuple):
-                    obj, _ = obj
-                if self.dry_run:
+                    obj = model_class.objects.get(**transformed_item)
+                except model_class.DoesNotExist:
+                    obj = model_class(**transformed_item)
                     try:
                         obj.full_clean()
-                    except Exception as e:
-                        self.stderr.write("Error with {} {}".format(model_name, item.get('id', repr(item))))
+                    except ValidationError as e:
                         self.stderr.write(repr(e))
-                if related:
-                    related_transforms = related(item)
-                    for key, value in related_transforms.items():
-                        if not self.dry_run:
-                            rel_type, data = value
-                            if rel_type == 'm2m':
-                                self._process_m2m_objects(obj, key, data)
-                            elif rel_type == 'one2one':
-                                self._process_one2one_object(obj, key, data)
+                        self.stderr.write(repr(item))
+                    try:
+                        obj.save()
+                    except IntegrityError as e:
+                        self.stderr.write(repr(e))
+                        self.stderr.write(repr(item))
+                except MultipleObjectsReturned as e:
+                        self.stderr.write(repr(e))
+                        self.stderr.write(repr(item))
+                except Exception as e:
+                    raise e
+                if obj and obj.id:
+                    if not self.dry_run:
+                        try:
+                            if self.verbosity > 2:
+                                self.stdout.write("Saving '{}'".format(obj))
                             obj.save()
-                        elif self.verbosity > 2:
-                            self.stdout.write("Processing '{}' related".format(key))
+                        except Exception as e:
+                            self.stderr.write("Error saving {} {}".format(model_name, item.get('id', repr(item))))
+                            self.stderr.write(repr(e))
+                    if obj.id and related:
+                        related_transforms = related(item)
+                        for key, value in related_transforms.items():
+                            if not self.dry_run:
+                                rel_type, data = value
+                                if rel_type == 'm2m':
+                                    self._process_m2m_objects(obj, key, data)
+                                elif rel_type == 'one2one':
+                                    self._process_one2one_object(obj, key, data)
+                                obj.save()
+                            elif self.verbosity > 2:
+                                self.stdout.write("Processing '{}' related".format(key))
+                else:
+                    self.stderr.write("Unable to save {}".format(repr(item)))
