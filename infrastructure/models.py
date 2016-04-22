@@ -60,8 +60,8 @@ class ProjectStatus:
 
 class Project(Publishable):
     """Describes a project"""
-    name = models.CharField("Project name/title", max_length=200)
-    slug = models.SlugField(max_length=210, allow_unicode=True)
+    name = models.CharField("Project name/title", max_length=300)
+    slug = models.SlugField(max_length=310, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
         'locations.Region',
@@ -73,10 +73,17 @@ class Project(Publishable):
         models.SET_NULL, blank=True, null=True,
         help_text='Select or create named infrastructure types.'
     )
-    total_cost_description = models.CharField(
-        'Total Project Cost',
-        blank=True, max_length=100
+    total_cost = models.BigIntegerField(
+        blank=True, null=True,
+        help_text="Values in whole units (dollars, etc.)"
     )
+    total_cost_currency = models.CharField(
+        blank=True, null=True,
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default=DEFAULT_CURRENCY_CHOICE
+    )
+
     start_year = models.PositiveSmallIntegerField(blank=True, null=True)
     start_month = models.PositiveSmallIntegerField(blank=True, null=True)
     start_day = models.PositiveSmallIntegerField(blank=True, null=True)
