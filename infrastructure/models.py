@@ -206,6 +206,10 @@ class Initiative(MPTTModel, Publishable):
                                          on_delete=models.SET_NULL,
                                          blank=True, null=True)
 
+    appeared_year = models.PositiveSmallIntegerField('First Apperance Year', blank=True, null=True)
+    appeared_month = models.PositiveSmallIntegerField('First Apperance Month', blank=True, null=True)
+    appeared_day = models.PositiveSmallIntegerField('First Apperance Day', blank=True, null=True)
+
     class Meta:
         ordering = ['name']
 
