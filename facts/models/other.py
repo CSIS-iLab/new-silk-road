@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from datautils.validators import URLLikeValidator
 
 
 class Data(models.Model):
     """JSON data, perhaps associated with a URL."""
     dictionary = JSONField()
-    url = models.URLField(blank=True, max_length=1000)
+    url = models.CharField(blank=True, max_length=1000, validators=[URLLikeValidator])
     label = models.CharField(blank=True, max_length=100)
 
     def __str__(self):

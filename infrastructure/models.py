@@ -6,6 +6,7 @@ from publish.models import Publishable
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
+from datautils.validators import URLLikeValidator
 import uuid
 
 
@@ -104,7 +105,7 @@ class Project(Publishable):
     initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
     sources = ArrayField(
-        models.URLField(max_length=1000),
+        models.CharField(max_length=1000, validators=[URLLikeValidator]),
         blank=True,
         null=True,
         default=list,
@@ -269,7 +270,7 @@ class ProjectDocument(models.Model):
         blank=True,
         null=True
     )
-    source_url = models.URLField(blank=True, max_length=1000)
+    source_url = models.CharField(blank=True, max_length=1000, validators=[URLLikeValidator])
     document_type = models.PositiveSmallIntegerField(
         'type',
         choices=DOCUMENT_TYPES,
