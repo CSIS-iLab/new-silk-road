@@ -108,9 +108,9 @@ class Command(BaseCommand):
                 data = item.get('data', [])
                 self.stdout.write('Data items: {}'.format(len(data)))
         else:
-            self._process_data()
+            self._process_sheet()
 
-    def _process_data(self):
+    def _process_sheet(self):
             for item in self.data_sequence:
                 # Fail hard on nonexistent keys, at least for now
                 filepath = item.get('file')
@@ -124,8 +124,8 @@ class Command(BaseCommand):
                     if self.verbosity > 1:
                         self.stdout.write("Processing '{}' data as {}".format(sheetname, modelname))
                     model = apps.get_model(modelname)
-                    data = json.load(open(filepath, 'r'))
-                    self.load_data(data, model, **params)
+                    sheet_data = json.load(open(filepath, 'r'))
+                    self._process_sheet_data(sheet_data, model, **params)
                 else:
                     self.stderr.write(self.style.WARNING("No mapping available for {}, skipping".format(sheetname)))
 
@@ -186,7 +186,7 @@ class Command(BaseCommand):
         else:
             raise CommandError("Attempted to process a one2one with non-dict data")
 
-    def _create_item(self, data, model_class, orig_item, related=None):
+    def _create_item(self, data, model_class, row, related=None):
         obj = None
         model_name = model_class._meta.model_name
         try:
@@ -197,18 +197,18 @@ class Command(BaseCommand):
                 obj.full_clean()
             except ValidationError as e:
                 self.stderr.write(repr(e))
-                if orig_item:
-                    self.stderr.write(repr(orig_item))
+                if row:
+                    self.stderr.write(repr(row))
             try:
                 obj.save()
             except IntegrityError as e:
                 self.stderr.write(repr(e))
-                if orig_item:
-                    self.stderr.write(repr(orig_item))
+                if row:
+                    self.stderr.write(repr(row))
         except MultipleObjectsReturned as e:
                 self.stderr.write(repr(e))
-                if orig_item:
-                    self.stderr.write(repr(orig_item))
+                if row:
+                    self.stderr.write(repr(row))
         except Exception as e:
             raise e
         if obj and obj.id:
@@ -218,10 +218,10 @@ class Command(BaseCommand):
                         self.stdout.write("Saving '{}'".format(obj))
                     obj.save()
                 except Exception as e:
-                    self.stderr.write("Error saving {} {}".format(model_name, orig_item.get('id', repr(orig_item))))
+                    self.stderr.write("Error saving {} {}".format(model_name, row.get('id', repr(row))))
                     self.stderr.write(repr(e))
-            if obj.id and related and orig_item:
-                related_transforms = related(orig_item)
+            if obj.id and related and row:
+                related_transforms = related(row)
                 related_view = related_transforms.items() if isinstance(related_transforms, dict) else related_transforms
                 for key, value in related_view:
                     if not self.dry_run:
@@ -234,18 +234,18 @@ class Command(BaseCommand):
                     elif self.verbosity > 2:
                         self.stdout.write("Processing '{}' related".format(key))
         else:
-            self.stderr.write("Unable to save {}".format(repr(orig_item)))
+            self.stderr.write("Unable to save {}".format(repr(row)))
 
-    def load_data(self, data, model_class, transformer, related=None):
+    def _process_sheet_data(self, sheet_data, model_class, transformer, related=None):
 
-        for item in data:
-            transformed_data = transformer(item)
+        for row in sheet_data:
+            transformed_data = transformer(row)
             if self.verbosity > 2:
                 self.stdout.write(repr(transformed_data))
 
             if transformed_data:
                 if isinstance(transformed_data, dict):
-                    self._create_item(transformed_data, model_class, item, related)
+                    self._create_item(transformed_data, model_class, row, related)
                 elif isinstance(transformed_data, list) or hasattr(transformed_data, '__next__'):
                     for t in transformed_data:
-                        self._create_item(t, model_class, item, related)
+                        self._create_item(t, model_class, row, related)

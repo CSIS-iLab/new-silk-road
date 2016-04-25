@@ -79,6 +79,7 @@ def transform_country(item):
     if not name:
         return None
     country_rename = {
+        'Iran': 'Iran, Islamic Republic of',
         'Vietnam': 'Viet Nam',
         'Russia': 'Russian Federation',
         'Laos': 'Lao People\'s Democratic Republic',
@@ -257,22 +258,23 @@ def funder_from_related_values(value):
 def transform_project_document_data(item):
     # TODO: Improve attaching documents to projects
     splitchar = ' '
-    proj_id = item.get('project_id', None)
-    doc_url = clean_string(item.get("document_link", None), item.get("document_name_or_identifier", None))
-    if not doc_url.startswith('Document') and proj_id:
-        base_data = {
-            "document_type": document_type_id(item.get('document_type', None)),
-        }
-        if splitchar in item:
-            many_urls = [d.strip(',') for d in item.split(splitchar) if d != ',']
+    doc_url = item.get("document_link", item.get("document_name_or_identifier", None))
+    if not doc_url.startswith('Document'):
+        base_data = {}
+        if 'document_type' in item:
+            base_data["document_type"] = document_type_id(item.get('document_type', None))
+        if splitchar in doc_url:
+            many_urls = [d.strip(',') for d in doc_url.split(splitchar) if d != ',']
+            many_objs = []
             for url in many_urls:
-                data = base_data.copy()
-                data['source_url'] = url
-                yield data
+                url_obj = {'source_url': url}
+                url_obj.update(base_data)
+                many_objs.append(url_obj)
+            return many_objs
         else:
             data = base_data.copy()
             data['source_url'] = doc_url
-            yield data
+            return data
 
 
 project_doc_instances = partial(
