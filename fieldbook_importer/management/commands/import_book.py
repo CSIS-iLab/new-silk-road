@@ -113,7 +113,7 @@ class Command(BaseCommand):
     def _process_data(self):
             for item in self.data_sequence:
                 # Fail hard on nonexistent keys, at least for now
-                data = item.get('data')
+                filepath = item.get('file')
                 sheetname = item.get('sheet')
 
                 conf = self.sheets.get(sheetname)
@@ -124,6 +124,7 @@ class Command(BaseCommand):
                     if self.verbosity > 1:
                         self.stdout.write("Processing '{}' data as {}".format(sheetname, modelname))
                     model = apps.get_model(modelname)
+                    data = json.load(open(filepath, 'r'))
                     self.load_data(data, model, **params)
                 else:
                     self.stderr.write(self.style.WARNING("No mapping available for {}, skipping".format(sheetname)))
@@ -147,7 +148,7 @@ class Command(BaseCommand):
                 fpath = pathinfo if os.path.isabs(pathinfo) else os.path.join(basename, pathinfo)
                 # Replace file with data, add to data_sequence
                 if os.path.exists(fpath):
-                    item['data'] = json.load(open(fpath, 'r'))
+                    item['file'] = fpath
                     self.data_sequence.append(item)
                 else:
                     self.stderr.write("Error loading data using config")
@@ -185,54 +186,66 @@ class Command(BaseCommand):
         else:
             raise CommandError("Attempted to process a one2one with non-dict data")
 
-    def load_data(self, data, model_class, transformer, related=None):
+    def _create_item(self, data, model_class, orig_item, related=None):
+        obj = None
         model_name = model_class._meta.model_name
+        try:
+            obj = model_class.objects.get(**data)
+        except model_class.DoesNotExist:
+            obj = model_class(**data)
+            try:
+                obj.full_clean()
+            except ValidationError as e:
+                self.stderr.write(repr(e))
+                if orig_item:
+                    self.stderr.write(repr(orig_item))
+            try:
+                obj.save()
+            except IntegrityError as e:
+                self.stderr.write(repr(e))
+                if orig_item:
+                    self.stderr.write(repr(orig_item))
+        except MultipleObjectsReturned as e:
+                self.stderr.write(repr(e))
+                if orig_item:
+                    self.stderr.write(repr(orig_item))
+        except Exception as e:
+            raise e
+        if obj and obj.id:
+            if not self.dry_run:
+                try:
+                    if self.verbosity > 2:
+                        self.stdout.write("Saving '{}'".format(obj))
+                    obj.save()
+                except Exception as e:
+                    self.stderr.write("Error saving {} {}".format(model_name, orig_item.get('id', repr(orig_item))))
+                    self.stderr.write(repr(e))
+            if obj.id and related and orig_item:
+                related_transforms = related(orig_item)
+                related_view = related_transforms.items() if isinstance(related_transforms, dict) else related_transforms
+                for key, value in related_view:
+                    if not self.dry_run:
+                        rel_type, data = value
+                        if rel_type == 'm2m':
+                            self._process_m2m_objects(obj, key, data)
+                        elif rel_type == 'one2one':
+                            self._process_one2one_object(obj, key, data)
+                        obj.save()
+                    elif self.verbosity > 2:
+                        self.stdout.write("Processing '{}' related".format(key))
+        else:
+            self.stderr.write("Unable to save {}".format(repr(orig_item)))
+
+    def load_data(self, data, model_class, transformer, related=None):
 
         for item in data:
-            transformed_item = transformer(item)
+            transformed_data = transformer(item)
             if self.verbosity > 2:
-                self.stdout.write(repr(transformed_item))
-            obj = None
-            if transformed_item:
-                try:
-                    obj = model_class.objects.get(**transformed_item)
-                except model_class.DoesNotExist:
-                    obj = model_class(**transformed_item)
-                    try:
-                        obj.full_clean()
-                    except ValidationError as e:
-                        self.stderr.write(repr(e))
-                        self.stderr.write(repr(item))
-                    try:
-                        obj.save()
-                    except IntegrityError as e:
-                        self.stderr.write(repr(e))
-                        self.stderr.write(repr(item))
-                except MultipleObjectsReturned as e:
-                        self.stderr.write(repr(e))
-                        self.stderr.write(repr(item))
-                except Exception as e:
-                    raise e
-                if obj and obj.id:
-                    if not self.dry_run:
-                        try:
-                            if self.verbosity > 2:
-                                self.stdout.write("Saving '{}'".format(obj))
-                            obj.save()
-                        except Exception as e:
-                            self.stderr.write("Error saving {} {}".format(model_name, item.get('id', repr(item))))
-                            self.stderr.write(repr(e))
-                    if obj.id and related:
-                        related_transforms = related(item)
-                        for key, value in related_transforms.items():
-                            if not self.dry_run:
-                                rel_type, data = value
-                                if rel_type == 'm2m':
-                                    self._process_m2m_objects(obj, key, data)
-                                elif rel_type == 'one2one':
-                                    self._process_one2one_object(obj, key, data)
-                                obj.save()
-                            elif self.verbosity > 2:
-                                self.stdout.write("Processing '{}' related".format(key))
-                else:
-                    self.stderr.write("Unable to save {}".format(repr(item)))
+                self.stdout.write(repr(transformed_data))
+
+            if transformed_data:
+                if isinstance(transformed_data, dict):
+                    self._create_item(transformed_data, model_class, item, related)
+                elif isinstance(transformed_data, list) or hasattr(transformed_data, '__next__'):
+                    for t in transformed_data:
+                        self._create_item(t, model_class, item, related)

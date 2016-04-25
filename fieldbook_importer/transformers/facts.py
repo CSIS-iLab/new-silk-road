@@ -28,7 +28,7 @@ def make_organization_transformer(name_field):
         if isinstance(name_field, typing.Iterable) and not isinstance(name_field, str):
             name_values = list(filter(lambda x: item.get(x), name_field))
             if name_values:
-                org_name = name_values[0]
+                org_name = item.get(name_values[0])
             else:
                 return None
         else:

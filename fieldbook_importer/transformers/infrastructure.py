@@ -52,7 +52,7 @@ def transform_infrastructuretype_data(item):
 
 
 def transform_project_funding_data(item):
-    funding_source = item.get("sources_of_funding", item.get("source_of_funding"))
+    funding_source = item.get("sources_of_funding", item.get("source_of_fundings"))
     project_id = item.get("project_id")
     if funding_source and project_id:
         return {
@@ -75,7 +75,7 @@ def project_status_from_statuses(x):
 
 
 def transform_country(item):
-    name = item.get("country_name")
+    name = item.get("country_name", item.get("country"))
     if not name:
         return None
     country_rename = {
@@ -255,14 +255,25 @@ def funder_from_related_values(value):
 
 
 def transform_project_document_data(item):
-    return {
-        # "document"
-        "document_type": document_type_id(item.get('document_type', None)),
-        "source_url": clean_string(item.get("document_name_or_identifier", None)),
-        # "notes":
-        # NOTE: status_indicator does not appear in Fieldbook data
-        # "status_indicator"
-    }
+    # TODO: Improve attaching documents to projects
+    splitchar = ' '
+    proj_id = item.get('project_id', None)
+    doc_url = clean_string(item.get("document_link", None), item.get("document_name_or_identifier", None))
+    if not doc_url.startswith('Document') and proj_id:
+        base_data = {
+            "document_type": document_type_id(item.get('document_type', None)),
+        }
+        if splitchar in item:
+            many_urls = [d.strip(',') for d in item.split(splitchar) if d != ',']
+            for url in many_urls:
+                data = base_data.copy()
+                data['source_url'] = url
+                yield data
+        else:
+            data = base_data.copy()
+            data['source_url'] = doc_url
+            yield data
+
 
 project_doc_instances = partial(
     instances_or_none,
@@ -298,44 +309,43 @@ def transform_project_data(item):
 
 
 def transform_project_related_data(item):
-    return {
-        "regions": (
-            'm2m',
-            regions_instances(process_regions_data(item.get('region')))
-        ),
-        "contacts": (
-            'm2m',
-            contacts_instances(item.get('points_of_contact'))
-        ),
-        "countries": (
-            'm2m',
-            countries_instances(item.get('country'))
-        ),
-
-        # Related Organizations
-        "consultants": (
-            'm2m',
-            consultants_instances(item.get('consultant'))
-        ),
-        "contractors": (
-            'm2m',
-            contractors_instances(item.get('contractors'))
-        ),
-        "implementers": (
-            'm2m',
-            client_org_instances(item.get('client_implementing_agency'))
-        ),
-        # Documents
-        "documents": (
-            'm2m',
-            project_doc_instances(item.get('documents'))
-        ),
+    return (
         # Funding comes via ProjectFunding intermediary model
-        "extra_data": (
+        ("extra_data", (
             'm2m',
             extra_project_data_as_instances(item)
-        ),
-    }
+        )),
+        ("regions", (
+            'm2m',
+            regions_instances(process_regions_data(item.get('region')))
+        )),
+        ("contacts", (
+            'm2m',
+            contacts_instances(item.get('points_of_contact', item.get('points_of_contacts')))
+        )),
+        ("countries", (
+            'm2m',
+            countries_instances(item.get('country', item.get('country_name')))
+        )),
+        # Related Organizations
+        ("consultants", (
+            'm2m',
+            consultants_instances(item.get('consultant'))
+        )),
+        ("contractors", (
+            'm2m',
+            contractors_instances(item.get('contractors'))
+        )),
+        ("implementers", (
+            'm2m',
+            client_org_instances(item.get('client_implementing_agency'))
+        )),
+        # Documents
+        ("documents", (
+            'm2m',
+            project_doc_instances(item.get('documents'))
+        )),
+    )
 
 PROJECT_METADATA_FIELDS = {
     "date_last_updated": None,
