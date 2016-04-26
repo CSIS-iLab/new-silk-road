@@ -56,7 +56,6 @@ def transform_project_funding_data(item):
     project_id = item.get("project_id")
     if funding_source and project_id:
         return {
-            # Organization created via FUNDER_ORGANIZATION_MAP
             "source": funder_from_related_values(funding_source),
             "currency": item.get('currency'),
             "amount": item.get('amount'),

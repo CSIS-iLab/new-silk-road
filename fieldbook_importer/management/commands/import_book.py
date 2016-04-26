@@ -86,8 +86,7 @@ class Command(BaseCommand):
             },
             'sources_of_funding': {
                 'model': 'facts.Organization',
-                'transformer': transform_funder_organization,
-                'related': make_organization_related_transformer("sources_of_funding_name")
+                'transformer': transform_funder_organization
             },
             'project_funding': {
                 'model': 'infrastructure.ProjectFunding',
