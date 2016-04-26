@@ -60,6 +60,15 @@ class ProjectStatus:
     )
 
 
+class CollectionStage(object):
+    IDENTIFIED = 1
+    COLLECTED = 2
+    STAGES = (
+        (IDENTIFIED, 'Identified'),
+        (COLLECTED, 'Collected'),
+    )
+
+
 class Project(Publishable):
     """Describes a project"""
     name = models.CharField("Project name/title", max_length=300)
@@ -150,8 +159,17 @@ class Project(Publishable):
         related_name='projects_contacts',
         blank=True
     )
-    extra_data = models.ManyToManyField('facts.Data', blank=True)
 
+    # Extras & Internal Use
+    extra_data = models.ManyToManyField('facts.Data', blank=True)
+    verified_path = models.NullBooleanField(blank=True)
+    collection_stage = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=CollectionStage.STAGES,
+        default=CollectionStage.IDENTIFIED
+    )
+
+    # Geodata
     geo = models.ForeignKey(
         'locations.GeometryStore',
         models.SET_NULL,
