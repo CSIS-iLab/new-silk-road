@@ -19,7 +19,8 @@ from .facts import (
 )
 from infrastructure.models import (
     ProjectStatus,
-    ProjectDocument
+    ProjectDocument,
+    CollectionStage,
 )
 
 
@@ -67,6 +68,15 @@ def project_status_from_statuses(x):
     values = values_list(x, "project_status_name")
     if values:
         choices = list(choices_from_values(values, ProjectStatus.STATUSES))
+        if len(choices) > 0:
+            return choices[0]
+    return None
+
+
+def collection_stage_from_value(x):
+    values = values_list(x, "collection_stage_name")
+    if values:
+        choices = list(choices_from_values(values, CollectionStage.STAGES))
         if len(choices) > 0:
             return choices[0]
     return None
@@ -315,6 +325,7 @@ def transform_project_data(item):
         "new": evaluate_project_new_value(item.get("new")),
         "infrastructure_type": infrastructure_type_object(item.get('infrastructure_type')),
         "initiative": initiative_object(item.get('program_initiative')),
+        "collection_stage": collection_stage_from_value(item.get("collection_stage"))
     }
 
 
