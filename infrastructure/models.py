@@ -20,8 +20,8 @@ class InfrastructureType(models.Model):
 
 
 class ProjectFunding(models.Model):
-    """(ProjectFunder description)"""
-    source = models.ForeignKey('facts.Organization')
+    """ProjectFunding relates Organizations to projects they fund, with amounts"""
+    sources = models.ManyToManyField('facts.Organization', blank=True)
     project = models.ForeignKey('Project')
     amount = models.BigIntegerField(
         blank=True, null=True,
@@ -38,8 +38,9 @@ class ProjectFunding(models.Model):
         verbose_name_plural = 'project funders'
 
     def __str__(self):
-        return "{}: {} {}".format(
-            self.source.name, self.amount or None, self.currency
+        sources_str = ",".join([str(x) for x in self.sources.all()[:2]]) if self.sources.exists() else ""
+        return "{} {}: {}".format(
+            self.amount or None, self.currency, sources_str
         )
 
 
@@ -115,8 +116,7 @@ class Project(Publishable):
     notes = MarkdownField(blank=True)
     # Organization relations
     funding = models.ManyToManyField(
-        'facts.Organization',
-        through='ProjectFunding',
+        'infrastructure.ProjectFunding',
         related_name='projects_funded',
         blank=True
     )

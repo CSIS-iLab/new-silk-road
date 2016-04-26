@@ -143,10 +143,11 @@ class InitiativeTypeAdmin(admin.ModelAdmin):
 @admin.register(ProjectFunding)
 class ProjectFundingAdmin(admin.ModelAdmin):
     form = ProjectFundingForm
-    list_display = ('source', 'project', 'amount', 'currency')
+    # TODO: Add a list display of sources?
+    list_display = ('project', 'amount', 'currency')
     list_editable = ('amount', 'currency')
     list_filter = ('currency',)
     search_fields = (
-        'source__name',
+        'sources__name',
         'project__name',
     )
