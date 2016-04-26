@@ -255,33 +255,28 @@ def funder_from_related_values(value):
     return None
 
 
-def transform_project_document_data(item):
-    # TODO: Improve attaching documents to projects
+def create_project_documents(item):
+    # NOTE: This is messy because source data is soooo messy.
     splitchar = ' '
+    project_id = item.get("project_id")
+    project = project_from_related_values(project_id)
     doc_url = item.get("document_link", item.get("document_name_or_identifier", None))
-    if not doc_url.startswith('Document'):
-        base_data = {}
+    if project and not doc_url.startswith('Document'):
+        outdata = {}
         if 'document_type' in item:
-            base_data["document_type"] = document_type_id(item.get('document_type', None))
+            outdata["document_type"] = document_type_id(item.get('document_type', None))
         if splitchar in doc_url:
             many_urls = [d.strip(',') for d in doc_url.split(splitchar) if d != ',']
-            many_objs = []
+            # many_objs = []
             for url in many_urls:
                 url_obj = {'source_url': url}
-                url_obj.update(base_data)
-                many_objs.append(url_obj)
-            return many_objs
+                url_obj.update(outdata)
+                # many_objs.append(url_obj)
+                project.documents.create(**url_obj)
         else:
-            data = base_data.copy()
+            data = outdata.copy()
             data['source_url'] = doc_url
-            return data
-
-
-project_doc_instances = partial(
-    instances_or_none,
-    model_name='infrastructure.ProjectDocument',
-    transformer=transform_project_document_data
-)
+            project.documents.create(**data)
 
 
 def transform_project_data(item):
@@ -343,10 +338,10 @@ def transform_project_related_data(item):
             client_org_instances(item.get('client_implementing_agency'))
         )),
         # Documents
-        ("documents", (
-            'm2m',
-            project_doc_instances(item.get('documents'))
-        )),
+        # ("documents", (
+        #     'm2m',
+        #     project_doc_instances(item.get('documents'))
+        # )),
     )
 
 PROJECT_METADATA_FIELDS = {

@@ -17,7 +17,7 @@ from fieldbook_importer.transformers import (
     transform_implementing_agency_organization,
     transform_funder_organization,
     transform_project_funding_data,
-    transform_project_document_data,
+    create_project_documents,
     transform_person_poc,
     make_organization_related_transformer,
 )
@@ -95,7 +95,7 @@ class Command(BaseCommand):
             },
             'documents': {
                 'model': 'infrastructure.ProjectDocument',
-                'transformer': transform_project_document_data
+                'transformer': create_project_documents
             }
         }
 
@@ -206,9 +206,9 @@ class Command(BaseCommand):
                 if row:
                     self.stderr.write(repr(row))
         except MultipleObjectsReturned as e:
-                self.stderr.write(repr(e))
-                if row:
-                    self.stderr.write(repr(row))
+            self.stderr.write(repr(e))
+            if row:
+                self.stderr.write(repr(row))
         except Exception as e:
             raise e
         if obj and obj.id:
