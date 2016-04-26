@@ -20,6 +20,7 @@ from fieldbook_importer.transformers import (
     create_project_documents,
     transform_person_poc,
     make_organization_related_transformer,
+    associate_funders_with_funding,
 )
 from fieldbook_importer.utils import (
     instance_for_model,
@@ -91,6 +92,7 @@ class Command(BaseCommand):
             'project_funding': {
                 'model': 'infrastructure.ProjectFunding',
                 'transformer': transform_project_funding_data,
+                'related': associate_funders_with_funding
             },
             'documents': {
                 'model': 'infrastructure.ProjectDocument',

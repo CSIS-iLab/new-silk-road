@@ -56,7 +56,6 @@ def transform_project_funding_data(item):
     project_id = item.get("project_id")
     if funding_source and project_id:
         return {
-            "source": funder_from_related_values(funding_source),
             "currency": item.get('currency'),
             "amount": item.get('amount'),
             "project": project_from_related_values(project_id),
@@ -251,14 +250,23 @@ def project_from_related_values(value):
     return None
 
 
-def funder_from_related_values(value):
-    obj = first_value_or_none(value)
-    if obj and 'sources_of_funding_name' in obj:
-        lookup = {
-            'name': obj['sources_of_funding_name']
-        }
-        return instance_for_model('facts.Organization', lookup, create=True)
+def funders_from_related_values(value):
+    for item in value:
+        if item and 'sources_of_funding_name' in item:
+            lookup = {
+                'name': item['sources_of_funding_name']
+            }
+            yield instance_for_model('facts.Organization', lookup, create=True)
     return None
+
+
+def associate_funders_with_funding(item):
+    return (
+        ("sources", (
+            'm2m',
+            funders_from_related_values(item.get('sources_of_funding'))
+        )),
+    )
 
 
 def create_project_documents(item):
@@ -346,11 +354,6 @@ def transform_project_related_data(item):
             'm2m',
             client_org_instances(item.get('client_implementing_agency'))
         )),
-        # Documents
-        # ("documents", (
-        #     'm2m',
-        #     project_doc_instances(item.get('documents'))
-        # )),
     )
 
 PROJECT_METADATA_FIELDS = {

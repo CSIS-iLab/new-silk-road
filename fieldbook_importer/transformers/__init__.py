@@ -12,6 +12,7 @@ from .infrastructure import (
     transform_funder_organization,
     create_project_documents,
     transform_project_funding_data,
+    associate_funders_with_funding,
 )
 from .facts import (
     make_person_transformer,
