@@ -193,11 +193,18 @@ client_org_instances = partial(
     transformer=transform_implementing_agency_organization
 )
 
+operators_instances = partial(
+    instances_or_none,
+    model_name='facts.Organization',
+    transformer=transform_operator_organization
+)
+
 contacts_instances = partial(
     instances_or_none,
     model_name='facts.Person',
     transformer=transform_person_poc
 )
+
 
 regions_instances = partial(
     instances_or_none,
@@ -301,7 +308,6 @@ def transform_project_data(item):
         "new": evaluate_project_new_value(item.get("new")),
         "infrastructure_type": infrastructure_type_object(item.get('infrastructure_type')),
         "initiative": initiative_object(item.get('program_initiative')),
-        "operator": operator_object(item.get('program_initiative')),
     }
 
 
@@ -325,6 +331,10 @@ def transform_project_related_data(item):
             countries_instances(item.get('country', item.get('country_name')))
         )),
         # Related Organizations
+        ("operators", (
+            'm2m',
+            operators_instances(item.get('operator'))
+        )),
         ("consultants", (
             'm2m',
             consultants_instances(item.get('consultant'))
