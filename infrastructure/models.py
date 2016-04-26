@@ -138,12 +138,10 @@ class Project(Publishable):
         related_name='projects_implemented',
         blank=True
     )
-    operator = models.ForeignKey(
+    operators = models.ManyToManyField(
         'facts.Organization',
-        models.SET_NULL,
         related_name='projects_operated',
         blank=True,
-        null=True
     )
     # Person relations
     contacts = models.ManyToManyField(

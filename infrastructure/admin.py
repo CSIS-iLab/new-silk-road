@@ -32,7 +32,8 @@ class ProjectAdmin(admin.ModelAdmin):
         'initiative',
         'status',
         'infrastructure_type',
-        'operator',
+        # TODO: Provide some info on operators in list view? Maybe an Ajax popup???
+        # 'operators',
         'published',
     )
     list_filter = ('status', 'infrastructure_type', 'initiative', 'countries', 'regions')
@@ -46,7 +47,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'contractors__name',
         'consultants__name',
         'implementers__name',
-        'operator__name',
+        'operators__name',
         'countries__name',
     )
     actions = [make_published, make_not_published]
