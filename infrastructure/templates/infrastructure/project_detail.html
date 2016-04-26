@@ -42,7 +42,7 @@
         <h4>{{doc_type.grouper}}</h4>
         <ul>{% for doc in doc_type.list  %}
             <li>
-                <a rel="external" target="_blank" href="{{ doc.source_url }}">{{ doc.source_url }}</a>
+                <a rel="external nofollow" target="_blank" href="{{ doc.source_url }}">{{ doc.get_source_url_tail }}</a>
             </li>
             {% endfor %}
         </ul>

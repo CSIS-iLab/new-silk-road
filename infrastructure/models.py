@@ -285,6 +285,9 @@ class ProjectDocument(models.Model):
             return self.source_url
         return "Document #{}".format(self.id)
 
+    def get_source_url_tail(self):
+        return self.source_url.split('/')[-1] or None
+
     @classmethod
     def _flattened_doc_types(cls):
         return (value for _, subset in cls.DOCUMENT_TYPES for value in subset)
