@@ -37,12 +37,16 @@
 
     <section class="documents">
         <h3>Documents</h3>
-        <ul>{% for doc in object.documents.all  %}
+        {% regroup object.documents.all by get_document_type_display as docs_list %}
+        {% for doc_type in docs_list %}
+        <h4>{{doc_type.grouper}}</h4>
+        <ul>{% for doc in doc_type.list  %}
             <li>
-                <a rel="external" target="_blank" href="{{ doc.source_url }}">Document source</a>
+                <a rel="external" target="_blank" href="{{ doc.source_url }}">{{ doc.source_url }}</a>
             </li>
             {% endfor %}
         </ul>
+        {% endfor %}
     </section>
     {% if object.geo %}
     <script type="text/javascript">
