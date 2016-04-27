@@ -145,7 +145,7 @@ def initiative_type_object(x):
     return None
 
 
-def process_regions_data(value, recurse=True):
+def process_regions_data(value, recurse=True, inner_key='region_name'):
     if isinstance(value, str):
         if value.startswith('"') or value.startswith('\''):
             splitchar = value[0]
@@ -159,6 +159,8 @@ def process_regions_data(value, recurse=True):
         if recurse:
             for item in value:
                 yield from process_regions_data(item, recurse=False)
+    elif isinstance(value, dict):
+        yield from process_regions_data(value.get(inner_key, None), recurse=False)
 
 
 def document_type_id(value):
