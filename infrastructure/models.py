@@ -126,11 +126,6 @@ class Project(Publishable):
     )
     notes = MarkdownField(blank=True)
     # Organization relations
-    funding = models.ManyToManyField(
-        'infrastructure.ProjectFunding',
-        related_name='projects_funded',
-        blank=True
-    )
     contractors = models.ManyToManyField(
         'facts.Organization',
         verbose_name='Contractors',
