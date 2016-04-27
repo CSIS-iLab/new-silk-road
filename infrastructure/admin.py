@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html, format_html_join
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
@@ -26,24 +27,39 @@ class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
     prepopulated_fields = {"slug": ("name",)}
     list_display = (
-        'name',
         'id',
         'fieldbook_id',
+        'name',
+        'infrastructure_type',
+        'countries_display',
+        # TODO: Provide some info on operators in list view? Maybe an Ajax popup???
+        # TODO: Sources of Funding
+        'implementers_display',
         'initiative',
         'status',
-        'infrastructure_type',
-        # TODO: Provide some info on operators in list view? Maybe an Ajax popup???
-        # 'operators',
+        'start_year',
+        'planned_completion_year',
+        'verified_path',
+        'collection_stage',
+        'notes',
+        'sources_display',
+        'updated_at',
         'published',
     )
-    list_filter = ('status', 'infrastructure_type', 'initiative', 'countries', 'regions')
+    list_filter = (
+        'status',
+        'infrastructure_type',
+        'initiative',
+        'countries',
+        'regions',
+    )
     search_fields = (
         'name',
         'id',
         'initiative__name',
         'contacts__given_name',
         'contacts__family_name',
-        'funding__name',
+        'funding__sources__name',
         'contractors__name',
         'consultants__name',
         'implementers__name',
@@ -64,6 +80,31 @@ class ProjectAdmin(admin.ModelAdmin):
                 return project_id_match.dictionary.get('project_id')
         return None
     fieldbook_id.short_description = 'Fieldbook Id'
+
+    def countries_display(self, obj):
+        limit = 3
+        if obj.countries.exists():
+            select_country_names = [x.name for x in obj.countries.only('name')[:limit]]
+            return ", ".join(select_country_names)
+        return None
+    countries_display.short_description = 'Countries (limit: 3)'
+
+    def implementers_display(self, obj):
+        limit = 3
+        if obj.implementers.exists():
+            select_implementer_names = [x.name for x in obj.implementers.only('name')[:limit]]
+            return ", ".join(select_implementer_names)
+        return None
+    implementers_display.short_description = 'Implementers (limit: 3)'
+
+    def sources_display(self, obj):
+        if obj.sources:
+            return format_html(
+                "<ul>{}</ul>",
+                format_html_join('\n', '<li>{}</li>', ((x,) for x in obj.sources))
+            )
+        return None
+    sources_display.short_description = 'Sources'
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super(ProjectAdmin, self).get_search_results(request, queryset, search_term)
