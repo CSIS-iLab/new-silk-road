@@ -325,7 +325,8 @@ def transform_project_data(item):
         "new": evaluate_project_new_value(item.get("new")),
         "infrastructure_type": infrastructure_type_object(item.get('infrastructure_type')),
         "initiative": initiative_object(item.get('program_initiative')),
-        "collection_stage": collection_stage_from_value(item.get("collection_stage"))
+        "collection_stage": collection_stage_from_value(item.get('collection_stage')),
+        "verified_path": coerce_to_boolean_or_null(item.get('verified_path'))
     }
 
 
@@ -366,22 +367,3 @@ def transform_project_related_data(item):
             client_org_instances(item.get('client_implementing_agency'))
         )),
     )
-
-PROJECT_METADATA_FIELDS = {
-    "date_last_updated": None,
-    "collection_stage": None,
-    "processed": None,
-    "verified_path": None,
-}
-
-FIELDBOOK_FIELDS = {
-    "id": None,
-    "record_url": None,
-}
-
-IGNORABLE_FIELDS = {
-    "points": None,
-    "field_49": None,
-    "documentation_all_types": None,  # Repeat of stuff in other fields?
-    "first_appearance_of_initiative_date": None,  # No data in SE Asia
-}
