@@ -50,13 +50,15 @@ class ProjectStatus:
     STARTED = 3
     UNDER_CONSTRUCTION = 4
     COMPLETED = 5
+    CANCELLED = 6
 
     STATUSES = (
         (ANNOUNCED, 'Announced/Under Negotiation'),
         (PREPATORY, 'Preparatory Works'),
         (STARTED, 'Started'),
         (UNDER_CONSTRUCTION, 'Under Construction'),
-        (COMPLETED, 'Completed')
+        (COMPLETED, 'Completed'),
+        (CANCELLED, 'Cancelled'),
     )
 
 
