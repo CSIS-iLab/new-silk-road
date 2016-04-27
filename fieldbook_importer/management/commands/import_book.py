@@ -87,7 +87,8 @@ class Command(BaseCommand):
             },
             'sources_of_funding': {
                 'model': 'facts.Organization',
-                'transformer': transform_funder_organization
+                'transformer': transform_funder_organization,
+                'related': make_organization_related_transformer("sources_of_funding_name")
             },
             'project_funding': {
                 'model': 'infrastructure.ProjectFunding',
@@ -168,6 +169,8 @@ class Command(BaseCommand):
                         self.stderr.write(repr(e))
                         self.stderr.write(repr(rel_obj))
                     except Exception as e:
+                        self.stderr.write(repr(e))
+                        self.stderr.write(repr(rel_obj))
                         raise e
             manager.add(*related_objects)
 
@@ -183,6 +186,8 @@ class Command(BaseCommand):
                 self.stderr.write(repr(e))
                 self.stderr.write(repr(data))
             except Exception as e:
+                self.stderr.write(repr(e))
+                self.stderr.write(repr(data))
                 raise e
         else:
             raise CommandError("Attempted to process a one2one with non-dict data")
@@ -211,6 +216,7 @@ class Command(BaseCommand):
             if row:
                 self.stderr.write(repr(row))
         except Exception as e:
+            self.stderr.write(repr(e))
             raise e
         if obj and obj.id:
             if not self.dry_run:
