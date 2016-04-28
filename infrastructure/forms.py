@@ -12,6 +12,7 @@ from facts.forms import (
 )
 from facts.models.organizations import Organization
 from facts.models import Person
+from locations.forms import GeometryStoreUploadForm
 
 
 class InitiativeForm(forms.ModelForm):
@@ -67,3 +68,7 @@ class ProjectFundingForm(forms.ModelForm):
             'source': TitleSearchWidget,
             'project': TitleSearchWidget
         }
+
+
+class ProjectGeoUploadForm(GeometryStoreUploadForm):
+    project = forms.ModelChoiceField(queryset=Project.objects.all(), required=False)

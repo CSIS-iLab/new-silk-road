@@ -3,7 +3,12 @@ from django.conf.urls import url
 from .views import (
     ProjectDetailView, ProjectListView,
     InitiativeDetailView, InitiativeListView,
+    GeoUploadView
 )
+
+adminpatterns = [
+    url(r'^add-geo/$', GeoUploadView.as_view(), name='project-geo-upload')
+]
 
 urlpatterns = [
     url(r'^projects/(?P<slug>\S+)/$', ProjectDetailView.as_view(), name='project-detail'),

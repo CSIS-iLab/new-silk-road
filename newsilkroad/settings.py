@@ -161,6 +161,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Reconnecting Asia',
     # 'CONFIRM_UNSAVED_CHANGES': True
+    'MENU': (
+        'infrastructure',
+        'facts',
+        '-',
+        'locations',
+        {'label': 'Upload Geodata', 'url': 'infrastructure-admin:project-geo-upload', },
+        '-',
+        'media',
+        'sources',
+        '-',
+        'auth',
+    )
 }
 
 # markymark

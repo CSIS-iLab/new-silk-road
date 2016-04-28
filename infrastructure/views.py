@@ -1,6 +1,10 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import (Project, Initiative)
+from .forms import ProjectGeoUploadForm
 from django.conf import settings
 
 MAPBOX_TOKEN = getattr(settings, 'MAPBOX_TOKEN', None)
@@ -42,3 +46,17 @@ class InitiativeDetailView(DetailView):
 class InitiativeListView(ListView):
     model = Initiative
     paginate_by = 50
+
+
+# Project geom upload
+class GeoUploadView(LoginRequiredMixin, FormView):
+    template_name = 'infrastructure/admin/geo_upload_form.html'
+    form_class = ProjectGeoUploadForm
+    success_url = '/thanks/'
+
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        # form.send_email()
+        print("FORM")
+        return super(GeoUploadView, self).form_valid(form)

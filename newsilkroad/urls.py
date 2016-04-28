@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
+from infrastructure.urls import adminpatterns
+
 admin.site.site_header = "New Silk Road Administration"
 admin.site.site_title = "NSR Admin"
 
@@ -28,6 +30,7 @@ urlpatterns = [
     url(r'^', include('infrastructure.urls')),
     url(r'^kb/', include('facts.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^admin/infrastructure/', include(adminpatterns, namespace='infrastructure-admin')),
     url(r'^admin/', admin.site.urls),
     url(r'^admin-select2/', include('django_select2.urls')),
 ]
