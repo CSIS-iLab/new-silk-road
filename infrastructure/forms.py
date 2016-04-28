@@ -72,7 +72,8 @@ class ProjectFundingForm(forms.ModelForm):
 
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
-    project = forms.ChoiceField(
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
         widget=ModelSelect2Widget(
             model=Project,
             search_fields=['name__icontains']
