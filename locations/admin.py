@@ -4,6 +4,7 @@ from .models import (
     PointGeometry, PolygonGeometry,
     LineStringGeometry,
     GeometryStore,
+    MultiGeometry,
     Region, Place,
     Country
 )
@@ -23,11 +24,11 @@ class GeometryBaseAdmin(MapAdmin):
     search_fields = ['label']
 
     def num_points(self, obj):
-        return obj.geometry.num_points if obj.geometry else 0
+        return obj.geom.num_points if obj.geom else 0
     num_points.short_description = 'Number of Points'
 
     def num_geom(self, obj):
-        return obj.geometry.num_geom if obj.geometry else 0
+        return obj.geom.num_geom if obj.geom else 0
     num_geom.short_description = 'Number of Shapes'
 
 
@@ -52,20 +53,20 @@ class CountryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-# @admin.register(PolygonGeometry)
+@admin.register(PolygonGeometry)
 class PolygonGeometryAdmin(GeometryBaseAdmin):
     model = PolygonGeometry
     list_display = ('label', 'num_points', 'num_geom')
 
 
-# @admin.register(PointGeometry)
+@admin.register(PointGeometry)
 class PointGeometryAdmin(GeometryBaseAdmin):
     model = PointGeometry
     list_display = ('label', 'latitude', 'longitude')
     readonly_fields = ('latitude', 'longitude', 'attributes')
 
 
-# @admin.register(LineStringGeometry)
+@admin.register(LineStringGeometry)
 class LineStringGeometryAdmin(GeometryBaseAdmin):
     model = LineStringGeometry
     list_display = ('__str__', 'label', 'num_points', 'num_geom',)

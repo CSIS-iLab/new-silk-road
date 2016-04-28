@@ -54,9 +54,6 @@ class PolygonGeometry(GeometryRecord):
 class MultiGeometry(GeometryRecord):
     geom = models.GeometryCollectionField()
 
-    class Meta:
-        verbose_name = 'geometry collection'
-
 
 class GeometryStore(models.Model):
     """Providing a way to collect related geometry while still siloing by geometry type"""
