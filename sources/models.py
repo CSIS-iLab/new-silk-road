@@ -6,8 +6,8 @@ from datautils.validators import URLLikeValidator
 
 class Document(Temporal):
     """A Document"""
-    source_file = FilerFileField(verbose_name='File')
     url = models.CharField('URL', blank=True, max_length=1000, validators=[URLLikeValidator])
+    source_file = FilerFileField(verbose_name='File')
 
     def __str__(self):
         if self.source_file:
