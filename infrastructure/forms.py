@@ -1,5 +1,6 @@
 from django import forms
 from django_select2.forms import (
+    ModelSelect2Widget,
     ModelSelect2MultipleWidget,
 )
 from infrastructure.models import (
@@ -71,4 +72,10 @@ class ProjectFundingForm(forms.ModelForm):
 
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
-    project = forms.ModelChoiceField(queryset=Project.objects.all(), required=False)
+    project = forms.ChoiceField(
+        widget=ModelSelect2Widget(
+            model=Project,
+            search_fields=['name__icontains']
+        ),
+        required=False
+    )

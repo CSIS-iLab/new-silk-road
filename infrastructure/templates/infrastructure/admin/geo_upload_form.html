@@ -1,7 +1,10 @@
 {% extends "admin/base_site.html" %}
 
-{% block content_title_value %}Upload Geo{% endblock %}
+{% block title %}Upload Geo {{ block.super }}{% endblock %}
 
+{% block extrahead %}{{ block.super }}
+{{ form.media.css }}
+{% endblock %}
 
 {% block content %}<div id="content-main">
     <div class="inner-center-column">
@@ -14,8 +17,7 @@
                     <div>
                         <div class="control-label">{{ form.geo_file.label_tag }}</div>
                         <div class="controls">
-                            <input id="{{ form.geo_file.auto_id }}" name="{{ form.geo_file.html_name }}"
-                            type="file" accept=".kml,.geojson">
+                            {{ form.geo_file }}
                             {% if form.geo_file.errors %}
                             <span class="help-inline">{{ form.geo_file.errors }}</span>
                             {% endif %}
@@ -56,3 +58,8 @@
     </div>
 </div>
 {% endblock content %}
+
+
+{% block extrajs %}
+{{ form.media.js }}
+{% endblock %}
