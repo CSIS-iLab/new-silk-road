@@ -61,6 +61,7 @@ class MultiGeometry(GeometryRecord):
 class GeometryStore(models.Model):
     """Providing a way to collect related geometry while still siloing by geometry type"""
     identifier = models.UUIDField(default=uuid.uuid4, editable=False)
+    label = models.CharField(blank=True, max_length=400)
     attributes = JSONField(blank=True, default=dict)
     lines = models.ManyToManyField('locations.LineStringGeometry', related_name='geostores')
     points = models.ManyToManyField('locations.PointGeometry', related_name='geostores')
