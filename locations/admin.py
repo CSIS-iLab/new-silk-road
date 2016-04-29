@@ -94,7 +94,7 @@ class GeometryStoreAdmin(admin.ModelAdmin):
     source_attr.short_description = 'Source Attribute'
 
     def center_attr(self, obj):
-        return obj.centroid.wkt
+        return obj.centroid.wkt if obj.centroid else None
     center_attr.short_description = 'Center'
 
 
