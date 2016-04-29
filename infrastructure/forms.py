@@ -1,6 +1,7 @@
 from django import forms
 from django_select2.forms import (
     ModelSelect2MultipleWidget,
+    ModelSelect2Widget,
 )
 from infrastructure.models import (
     Project, Initiative, ProjectFunding
@@ -12,6 +13,12 @@ from facts.forms import (
 )
 from facts.models.organizations import Organization
 from facts.models import Person
+
+
+class GeometrySearchWidget(ModelSelect2Widget):
+    search_fields = [
+        'label__icontains',
+    ]
 
 
 class InitiativeForm(forms.ModelForm):
@@ -58,7 +65,8 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
             'initiative': TitleSearchWidget,
-            'countries': ModelSelect2MultipleWidget
+            'countries': ModelSelect2MultipleWidget,
+            'geo': GeometrySearchWidget
         }
 
 
