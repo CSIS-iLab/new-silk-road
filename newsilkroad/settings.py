@@ -162,6 +162,7 @@ SUIT_CONFIG = {
     'ADMIN_NAME': 'Reconnecting Asia',
     # 'CONFIRM_UNSAVED_CHANGES': True
     'MENU': (
+        '-',
         'infrastructure',
         '-',
         {'label': 'Organizations', 'models': ('facts.organization',)},
@@ -171,7 +172,7 @@ SUIT_CONFIG = {
             'facts.companytype',
         )},
         {'label': 'Financing', 'models': ('facts.financingorganizationdetails', 'facts.financingtype')},
-        {'label': 'Military', 'models': ('facts.governmentdetails',)},
+        {'label': 'Government', 'models': ('facts.governmentdetails',)},
         {'label': 'Multilaterals', 'models': ('facts.multilateraldetails', 'facts.multilateraltype')},
         {'label': 'Military', 'models': ('facts.militarydetails', 'facts.militarytype')},
         {'label': 'NGO', 'models': ('facts.ngodetails', 'facts.ngotype')},
@@ -179,7 +180,17 @@ SUIT_CONFIG = {
         {'label': 'Events', 'models': ('facts.event', 'facts.eventtype')},
         {'label': 'People', 'models': ('facts.person', 'facts.position')},
         '-',
-        'locations',
+        {'label': 'Locations', 'models': (
+            'locations.country',
+            'locations.region',
+            'locations.place'
+        )},
+        {'label': 'Geodata', 'models': (
+            'locations.geometrystore',
+            'locations.linestringgeometry',
+            'locations.pointgeometry',
+            'locations.polygongeometry',
+        )},
         '-',
         'media',
         'sources',
