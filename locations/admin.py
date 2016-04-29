@@ -83,15 +83,19 @@ class GeometryCollectionAdmin(GeometryBaseAdmin):
 @admin.register(GeometryStore)
 class GeometryStoreAdmin(admin.ModelAdmin):
     readonly_fields = ('attributes',)
-    list_display = ('identifier', 'name_attr', 'source_attr')
+    list_display = ('identifier', 'label', 'name_attr', 'source_attr', 'center_attr')
 
     def name_attr(self, obj):
         return obj.attributes.get('name', 'No name attribute')
-    name_attr.short_description = 'Name'
+    name_attr.short_description = 'Name Attribute'
 
     def source_attr(self, obj):
         return obj.attributes.get('source', 'No source captured')
-    source_attr.short_description = 'Source'
+    source_attr.short_description = 'Source Attribute'
+
+    def center_attr(self, obj):
+        return obj.centroid.wkt
+    center_attr.short_description = 'Center'
 
 
 admin.site.register(Place, LeafletGeoAdmin)

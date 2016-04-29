@@ -1,1 +1,1 @@
-web: gunicorn newsilkroad.wsgi --log-file -
+web: waitress-serve --port=$PORT newsilkroad.wsgi:application

@@ -63,9 +63,11 @@ class GeometryStore(models.Model):
     lines = models.ManyToManyField('locations.LineStringGeometry', related_name='geostores')
     points = models.ManyToManyField('locations.PointGeometry', related_name='geostores')
     polygons = models.ManyToManyField('locations.PolygonGeometry', related_name='geostores')
-    centroid = models.PointField(blank=True, null=True)
+    centroid = models.PointField(blank=True, null=True, editable=False)
 
     def __str__(self):
+        if self.label:
+            return self.label
         return str(self.identifier)
 
     def lines_extent(self):
