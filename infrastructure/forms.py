@@ -40,6 +40,11 @@ class ProjectForm(forms.ModelForm):
         queryset=Organization.objects.all(),
         help_text='Select field and begin typing a title to search'
     )
+    operators = TitleSearchMultiField(
+        required=False,
+        queryset=Organization.objects.all(),
+        help_text='Select field and begin typing a title to search'
+    )
     contacts = forms.ModelMultipleChoiceField(
         widget=PersonSearchMultiWidget,
         required=False,
@@ -53,7 +58,6 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
             'initiative': TitleSearchWidget,
-            'operator': TitleSearchWidget,
             'countries': ModelSelect2MultipleWidget
         }
 

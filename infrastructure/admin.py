@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html, format_html_join
+from django.core.urlresolvers import reverse
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
@@ -65,6 +66,9 @@ class ProjectAdmin(admin.ModelAdmin):
         'implementers__name',
         'operators__name',
         'countries__name',
+    )
+    filter_horizontal = (
+        'documents',
     )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
@@ -168,12 +172,22 @@ class ProjectDocumentAdmin(admin.ModelAdmin):
     list_display = (
         'identifier',
         'document_type',
-        'status_indicator',
+        'projects_display',
         'source_url',
         'document',
+        'status_indicator',
     )
     list_filter = ('document_type', 'status_indicator')
     search_fields = ('source_url', 'notes')
+
+    def projects_display(self, obj):
+        if obj.project_set:
+            return format_html(
+                "<p>{}</p>",
+                format_html_join(', ', '<a target="_blank" href="{}" title="{}">Project {}</a>', ((reverse('admin:infrastructure_project_change', args=(x.id,)), x, x.id) for x in obj.project_set.all()))
+            )
+        return None
+    projects_display.short_description = 'Projects'
 
 
 @admin.register(InitiativeType)
