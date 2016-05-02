@@ -60,7 +60,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'initiative__name',
         'contacts__given_name',
         'contacts__family_name',
-        'funding__sources__name',
+        'projectfunding__sources__name',
         'contractors__name',
         'consultants__name',
         'implementers__name',
