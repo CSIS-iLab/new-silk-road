@@ -150,9 +150,6 @@ LOGGING = {
 # Sentry config
 RAVEN_CONFIG = {
     'dsn': os.getenv('SENTRY_DSN'),
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    'release': raven.fetch_git_sha(BASE_DIR),
 }
 
 # Database
