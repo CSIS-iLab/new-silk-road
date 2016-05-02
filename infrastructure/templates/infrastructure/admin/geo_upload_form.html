@@ -1,0 +1,65 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Upload Geo {{ block.super }}{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+{{ form.media.css }}
+{% endblock %}
+
+{% block content %}<div id="content-main">
+    <div class="inner-center-column">
+        <h1>Upload Geodata</h1>
+        <p>This form takes <strong>GeoJSON</strong> or <strong>KML</strong> files, converts them to "Geometry stores" and optionally associates them with a Project. Conversion of geodata may take a few seconds, depending on the size and complexity of the geodata.</p>
+        <form enctype="multipart/form-data" action="{% url 'infrastructure-admin:project-geo-upload' %}" method="post" class="form-horizontal">
+            {% csrf_token %}
+            <fieldset>
+                <div class="control-group form-row field-name {% if form.geo_file.errors %}error{% endif %}">
+                    <div>
+                        <div class="control-label">{{ form.geo_file.label_tag }}</div>
+                        <div class="controls">
+                            {{ form.geo_file }}
+                            {% if form.geo_file.errors %}
+                            <span class="help-inline">{{ form.geo_file.errors }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group form-row field-name {% if form.label.errors %}error{% endif %}">
+                    <div>
+                        <div class="control-label">{{ form.label.label_tag }}</div>
+                        <div class="controls">
+                        {{ form.label }}
+                        {% if form.label.errors %}
+                        <span class="help-inline">{{ form.label.errors }}</span>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group form-row field-name {% if form.project.errors %}error{% endif %}">
+                    <div>
+                        <div class="control-label">{{ form.project.label_tag }}</div>
+                        <div class="controls">
+                        {{ form.project }}
+                        {% if form.project.errors %}
+                        <span class="help-inline">{{ form.project.errors }}</span>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group form-row field-name">
+                    <div class="save-box">
+                        <input class="btn btn-high btn-info" type="submit" value="Upload" />
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block extrajs %}
+{{ form.media.js }}
+{% endblock %}

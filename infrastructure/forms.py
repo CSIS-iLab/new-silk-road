@@ -1,5 +1,6 @@
 from django import forms
 from django_select2.forms import (
+    ModelSelect2Widget,
     ModelSelect2MultipleWidget,
     ModelSelect2Widget,
 )
@@ -13,6 +14,7 @@ from facts.forms import (
 )
 from facts.models.organizations import Organization
 from facts.models import Person
+from locations.forms import GeometryStoreUploadForm
 
 
 class GeometrySearchWidget(ModelSelect2Widget):
@@ -79,3 +81,14 @@ class ProjectFundingForm(forms.ModelForm):
             'source': TitleSearchWidget,
             'project': TitleSearchWidget
         }
+
+
+class ProjectGeoUploadForm(GeometryStoreUploadForm):
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        widget=ModelSelect2Widget(
+            model=Project,
+            search_fields=['name__icontains']
+        ),
+        required=False
+    )

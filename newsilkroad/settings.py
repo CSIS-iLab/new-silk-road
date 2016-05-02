@@ -191,6 +191,7 @@ SUIT_CONFIG = {
             'locations.pointgeometry',
             'locations.polygongeometry',
         )},
+        {'label': 'Upload Geodata', 'url': 'infrastructure-admin:project-geo-upload', },
         '-',
         'media',
         'sources',
