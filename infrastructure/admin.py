@@ -36,7 +36,7 @@ class ProjectAdmin(admin.ModelAdmin):
         # TODO: Provide some info on operators in list view? Maybe an Ajax popup???
         # TODO: Sources of Funding
         'implementers_display',
-        'initiative',
+        'initiatives_display',
         'status',
         'start_year',
         'planned_completion_year',
@@ -50,14 +50,14 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = (
         'status',
         'infrastructure_type',
-        'initiative',
+        'initiatives',
         'countries',
         'regions',
     )
     search_fields = (
         'name',
         'id',
-        'initiative__name',
+        'initiatives__name',
         'contacts__given_name',
         'contacts__family_name',
         'projectfunding__sources__name',
@@ -92,6 +92,14 @@ class ProjectAdmin(admin.ModelAdmin):
             return ", ".join(select_country_names)
         return None
     countries_display.short_description = 'Countries (limit: 3)'
+
+    def initiatives_display(self, obj):
+        limit = 3
+        if obj.initiatives.exists():
+            select_names = [x.name for x in obj.initiatives.only('name')[:limit]]
+            return ", ".join(select_names)
+        return None
+    initiatives_display.short_description = 'Initiatives (limit: 3)'
 
     def implementers_display(self, obj):
         limit = 3
