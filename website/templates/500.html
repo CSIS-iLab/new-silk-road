@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
+{% block extrahead %}<script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
+{% endblock %}
+
 {% block content %}
     <h2>500: Server Error</h2>
     <p>Something is wrong with this website.</p>
+
+    {% if request.sentry.id %}
+      <script>
+      Raven.showReportDialog({
+        eventId: '{{ request.sentry.id }}',
+        dsn: 'https://a26991d4cffb47e6b12337fec71c1b87@app.getsentry.com/66737'
+      });
+      </script>
+    {% endif %}
 {% endblock %}
