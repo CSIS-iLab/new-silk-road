@@ -8,6 +8,7 @@ class ProjectFilter(django_filters.FilterSet):
 
     initiative = django_filters.CharFilter(name='initiative__name', lookup_expr='iexact')
     initiative__contains = django_filters.CharFilter(name='initiative__name', lookup_expr='icontains')
+    initiative__isnull = django_filters.BooleanFilter(name='initiative', lookup_expr='isnull')
 
     infrastructure_type = django_filters.CharFilter(name='infrastructure_type__name', lookup_expr='iexact')
     infrastructure_type__contains = django_filters.CharFilter(name='infrastructure_type__name', lookup_expr='icontains')
@@ -37,10 +38,10 @@ class ProjectFilter(django_filters.FilterSet):
     )
 
     operator = django_filters.CharFilter(
-        name='operator__name', lookup_expr='iexact'
+        name='operators__name', lookup_expr='iexact'
     )
     operator__contains = django_filters.CharFilter(
-        name='operator__name', lookup_expr='iexact'
+        name='operators__name', lookup_expr='iexact'
     )
 
     fieldbook_id = django_filters.CharFilter(
@@ -56,6 +57,9 @@ class ProjectFilter(django_filters.FilterSet):
             'start_year': ['isnull', 'exact', 'gt', 'lt'],
             'start_month': ['isnull', 'exact', 'gt', 'lt'],
             'start_day': ['isnull', 'exact', 'gt', 'lt'],
+            'commencement_year': ['isnull', 'exact', 'gt', 'lt'],
+            'commencement_month': ['isnull', 'exact', 'gt', 'lt'],
+            'commencement_day': ['isnull', 'exact', 'gt', 'lt'],
         }
 
 

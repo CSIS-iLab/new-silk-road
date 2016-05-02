@@ -5,18 +5,20 @@ from facts.models import (
 
 
 class OrganizationBasicSerializer(serializers.ModelSerializer):
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
         model = Organization
         fields = (
-            'name', 'get_absolute_url'
+            'name', 'url'
         )
 
 
 class PersonBasicSerializer(serializers.ModelSerializer):
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
 
     class Meta:
         model = Person
         fields = (
-            'given_name', 'family_name', 'identifier', 'get_absolute_url'
+            'given_name', 'family_name', 'identifier', 'url'
         )
