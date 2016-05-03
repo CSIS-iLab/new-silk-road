@@ -21,6 +21,8 @@ class ProjectFilter(django_filters.FilterSet):
 
     funder_name = django_filters.CharFilter(name='funding__name', lookup_expr='iexact')
     funder_name__contains = django_filters.CharFilter(name='funding__name', lookup_expr='icontains')
+    funder_country = django_filters.CharFilter(name='funding__sources__countries__name', lookup_expr='iexact')
+    funder_country_code = django_filters.CharFilter(name='funding__sources__countries__alpha_3', lookup_expr='iexact')
 
     contractor = django_filters.CharFilter(
         name='contractors__name', lookup_expr='iexact', distinct=True
