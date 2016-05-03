@@ -28,7 +28,6 @@ from infrastructure.filters import (ProjectFilter, InitiativeFilter)
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Project.objects.select_related(
-        'initiative',
         'infrastructure_type',
     ).all()
     serializer_class = ProjectSerializer

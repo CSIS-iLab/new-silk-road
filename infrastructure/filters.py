@@ -1,4 +1,5 @@
 import django_filters
+from django.db.models import Count
 from .models import Project, Initiative
 
 
@@ -6,9 +7,14 @@ class ProjectFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(name='name', lookup_expr='iexact')
     name__contains = django_filters.CharFilter(name='name', lookup_expr='icontains')
 
-    initiative = django_filters.CharFilter(name='initiative__name', lookup_expr='iexact')
-    initiative__contains = django_filters.CharFilter(name='initiative__name', lookup_expr='icontains')
-    initiative__isnull = django_filters.BooleanFilter(name='initiative', lookup_expr='isnull')
+    initiative_name = django_filters.CharFilter(name='initiatives__name', lookup_expr='iexact')
+    initiative_name__contains = django_filters.CharFilter(name='initiatives__name', lookup_expr='icontains')
+    initiatives__isnull = django_filters.BooleanFilter(name='initiatives', lookup_expr='isnull')
+    initiatives__count = django_filters.MethodFilter()
+    initiatives__count__gt = django_filters.MethodFilter()
+    initiatives__count__gte = django_filters.MethodFilter()
+    initiatives__count__lt = django_filters.MethodFilter()
+    initiatives__count__lte = django_filters.MethodFilter()
 
     infrastructure_type = django_filters.CharFilter(name='infrastructure_type__name', lookup_expr='iexact')
     infrastructure_type__contains = django_filters.CharFilter(name='infrastructure_type__name', lookup_expr='icontains')
@@ -47,6 +53,27 @@ class ProjectFilter(django_filters.FilterSet):
     fieldbook_id = django_filters.CharFilter(
         name='extra_data__dictionary__project_id', lookup_expr='exact'
     )
+
+    def _filter_initiatives_count(self, queryset, value, filter_expression):
+        if value:
+            lookup = {filter_expression: value}
+            return queryset.annotate(num_initiatives=Count('initiatives')).filter(**lookup)
+        return queryset
+
+    def filter_initiatives__count(self, queryset, value):
+        return self._filter_initiatives_count(queryset, value, 'num_initiatives')
+
+    def filter_initiatives__count__gt(self, queryset, value):
+        return self._filter_initiatives_count(queryset, value, 'num_initiatives__gt')
+
+    def filter_initiatives__count__gte(self, queryset, value):
+        return self._filter_initiatives_count(queryset, value, 'num_initiatives__gte')
+
+    def filter_initiatives__count__lt(self, queryset, value):
+        return self._filter_initiatives_count(queryset, value, 'num_initiatives__lt')
+
+    def filter_initiatives__count__lte(self, queryset, value):
+        return self._filter_initiatives_count(queryset, value, 'num_initiatives__lte')
 
     class Meta:
         model = Project

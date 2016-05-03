@@ -29,7 +29,7 @@ class ProjectFundingSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     infrastructure_type = serializers.StringRelatedField()
-    initiative = serializers.StringRelatedField()
+    initiatives = serializers.StringRelatedField(many=True)
     funding = ProjectFundingSerializer(many=True, read_only=True)
     # operators = OrganizationBasicSerializer(many=True, read_only=True)
     # contractors = OrganizationBasicSerializer(many=True, read_only=True)
@@ -41,7 +41,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         model = Project
         fields = (
             'name',
-            'initiative', 'infrastructure_type',
+            'initiatives', 'infrastructure_type',
             'planned_completion_year',
             'planned_completion_month',
             'planned_completion_day',
