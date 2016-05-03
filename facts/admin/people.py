@@ -6,6 +6,7 @@ from facts.models.people import (Person, Position)
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
 from infrastructure.admin import PersonInitiativeInline
+from locations.models import Country
 from publish.admin import (
     make_published,
     make_not_published
@@ -16,13 +17,21 @@ class PositionInline(admin.TabularInline):
     model = Position
 
 
+class CountrySearchMultiWidget(ModelSelect2MultipleWidget):
+    model = Country
+    search_fields = [
+        'name__icontains',
+        'alpha_3__iexact',
+    ]
+
+
 class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
         fields = '__all__'
         widgets = {
-            'citizenships': ModelSelect2MultipleWidget
+            'citizenships': CountrySearchMultiWidget
         }
 
 

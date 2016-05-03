@@ -2,14 +2,13 @@ from django import forms
 from django_select2.forms import (
     ModelSelect2Widget,
     ModelSelect2MultipleWidget,
-    ModelSelect2Widget,
 )
 from infrastructure.models import (
     Project, Initiative, ProjectFunding
 )
 from facts.forms import (
-    TitleSearchWidget,
-    TitleSearchMultiField,
+    NameSearchWidget,
+    NameSearchMultiField,
     PersonSearchMultiWidget
 )
 from facts.models.organizations import Organization
@@ -34,22 +33,27 @@ class InitiativeForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-    contractors = TitleSearchMultiField(
+    initiatives = NameSearchMultiField(
+        required=False,
+        queryset=Initiative.objects.all(),
+        help_text='Select field and begin typing a title to search'
+    )
+    contractors = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
         help_text='Select field and begin typing a title to search'
     )
-    consultants = TitleSearchMultiField(
+    consultants = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
         help_text='Select field and begin typing a title to search'
     )
-    implementers = TitleSearchMultiField(
+    implementers = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
         help_text='Select field and begin typing a title to search'
     )
-    operators = TitleSearchMultiField(
+    operators = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
         help_text='Select field and begin typing a title to search'
@@ -66,20 +70,24 @@ class ProjectForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
-            'initiative': TitleSearchWidget,
+            'initiative': NameSearchWidget,
             'countries': ModelSelect2MultipleWidget,
             'geo': GeometrySearchWidget
         }
 
 
 class ProjectFundingForm(forms.ModelForm):
+    sources = NameSearchMultiField(
+        required=False,
+        queryset=Organization.objects.all(),
+        help_text='Select field and begin typing a title to search'
+    )
 
     class Meta:
         model = ProjectFunding
         fields = '__all__'
         widgets = {
-            'source': TitleSearchWidget,
-            'project': TitleSearchWidget
+            'project': NameSearchWidget
         }
 
 

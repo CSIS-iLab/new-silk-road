@@ -20,6 +20,7 @@ class PersonInitiativeInline(admin.TabularInline):
 
 class ProjectFundingInline(admin.TabularInline):
     model = ProjectFunding
+    form = ProjectFundingForm
 
 
 @admin.register(Project)
