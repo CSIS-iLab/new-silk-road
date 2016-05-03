@@ -73,17 +73,22 @@ class LineStringGeometryAdmin(GeometryBaseAdmin):
 
 
 # @admin.register(MultiGeometry)
-class GeometryCollectionAdmin(GeometryBaseAdmin):
-    save_on_top = True
-    readonly_fields = ('attributes', 'num_geom', 'num_points')
-    list_display = ('label', 'num_geom', 'num_points',)
-    search_fields = ['label']
+# class GeometryCollectionAdmin(GeometryBaseAdmin):
+#     save_on_top = True
+#     readonly_fields = ('attributes', 'num_geom', 'num_points')
+#     list_display = ('label', 'num_geom', 'num_points',)
+#     search_fields = ['label']
 
 
 @admin.register(GeometryStore)
 class GeometryStoreAdmin(admin.ModelAdmin):
     readonly_fields = ('attributes',)
     list_display = ('identifier', 'label', 'name_attr', 'source_attr', 'center_attr')
+    filter_horizontal = [
+        'points',
+        'lines',
+        'polygons'
+    ]
 
     def name_attr(self, obj):
         return obj.attributes.get('name', 'No name attribute')
