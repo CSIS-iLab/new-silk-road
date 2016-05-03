@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django import forms
-from django_select2.forms import ModelSelect2MultipleWidget
 
 from facts.models.people import (Person, Position)
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
 from infrastructure.admin import PersonInitiativeInline
 from locations.models import Country
+from locations.forms import CountrySearchMultiField
 from publish.admin import (
     make_published,
     make_not_published
@@ -17,22 +17,16 @@ class PositionInline(admin.TabularInline):
     model = Position
 
 
-class CountrySearchMultiWidget(ModelSelect2MultipleWidget):
-    model = Country
-    search_fields = [
-        'name__icontains',
-        'alpha_3__iexact',
-    ]
-
-
 class PersonForm(forms.ModelForm):
+    citizenships = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
 
     class Meta:
         model = Person
         fields = '__all__'
-        widgets = {
-            'citizenships': CountrySearchMultiWidget
-        }
 
 
 class PersonAdmin(admin.ModelAdmin):

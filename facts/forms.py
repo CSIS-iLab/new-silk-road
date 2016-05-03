@@ -23,7 +23,7 @@ class NameSearchMultiWidget(NameSearchFieldMixin, ModelSelect2MultipleWidget):
 
 class NameSearchMultiField(forms.ModelMultipleChoiceField):
     widget = NameSearchMultiWidget
-    help_text = 'Start typing to search.'
+    help_text = 'Select field and begin typing to search'
 
 
 class PersonSearchFieldsMixin(object):
@@ -40,3 +40,8 @@ class PersonSearchWidget(PersonSearchFieldsMixin, ModelSelect2Widget):
 
 class PersonSearchMultiWidget(PersonSearchFieldsMixin, ModelSelect2MultipleWidget):
     model = Person
+
+
+class PersonSearchMultiField(forms.ModelMultipleChoiceField):
+    widget = PersonSearchMultiWidget
+    help_text = "Select field and begin typing a person's name to search"

@@ -70,6 +70,7 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     filter_horizontal = (
         'documents',
+        'regions',
     )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']

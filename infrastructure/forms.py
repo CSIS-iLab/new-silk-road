@@ -1,7 +1,6 @@
 from django import forms
 from django_select2.forms import (
     ModelSelect2Widget,
-    ModelSelect2MultipleWidget,
 )
 from infrastructure.models import (
     Project, Initiative, ProjectFunding
@@ -9,11 +8,13 @@ from infrastructure.models import (
 from facts.forms import (
     NameSearchWidget,
     NameSearchMultiField,
-    PersonSearchMultiWidget
+    PersonSearchWidget,
+    PersonSearchMultiField
 )
 from facts.models.organizations import Organization
-from facts.models import Person
-from locations.forms import GeometryStoreUploadForm
+from facts.models import (Person, Event)
+from locations.forms import (GeometryStoreUploadForm, CountrySearchMultiField)
+from locations.models import Country
 
 
 class GeometrySearchWidget(ModelSelect2Widget):
@@ -23,12 +24,33 @@ class GeometrySearchWidget(ModelSelect2Widget):
 
 
 class InitiativeForm(forms.ModelForm):
+    affiliated_people = PersonSearchMultiField(
+        required=False,
+        queryset=Person.objects.all(),
+        help_text=PersonSearchMultiField.help_text
+    )
+    member_countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+    affiliated_organizations = NameSearchMultiField(
+        required=False,
+        queryset=Organization.objects.all(),
+        help_text=NameSearchMultiField.help_text
+    )
+    affiliated_events = NameSearchMultiField(
+        required=False,
+        queryset=Event.objects.all(),
+        help_text=NameSearchMultiField.help_text
+    )
 
     class Meta:
         model = Initiative
         fields = '__all__'
         widgets = {
-            'member_countries': ModelSelect2MultipleWidget
+            'parent': NameSearchWidget,
+            'principal_agent': PersonSearchWidget
         }
 
 
@@ -36,33 +58,37 @@ class ProjectForm(forms.ModelForm):
     initiatives = NameSearchMultiField(
         required=False,
         queryset=Initiative.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
     contractors = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
     consultants = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
     implementers = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
     operators = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
-    contacts = forms.ModelMultipleChoiceField(
-        widget=PersonSearchMultiWidget,
+    contacts = PersonSearchMultiField(
         required=False,
         queryset=Person.objects.all(),
-        help_text='Select field and begin typing a name to search'
+        help_text=PersonSearchMultiField.help_text
+    )
+    countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
     )
 
     class Meta:
@@ -70,8 +96,6 @@ class ProjectForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
-            'initiative': NameSearchWidget,
-            'countries': ModelSelect2MultipleWidget,
             'geo': GeometrySearchWidget
         }
 
@@ -79,8 +103,7 @@ class ProjectForm(forms.ModelForm):
 class ProjectFundingForm(forms.ModelForm):
     sources = NameSearchMultiField(
         required=False,
-        queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        queryset=Organization.objects.all()
     )
 
     class Meta:
