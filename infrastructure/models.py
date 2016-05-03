@@ -114,7 +114,7 @@ class Project(Publishable):
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
     )
     new = models.NullBooleanField('New Construction?')
-    initiative = models.ForeignKey('Initiative', models.SET_NULL, blank=True, null=True)
+    initiatives = models.ManyToManyField('Initiative', blank=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
     sources = ArrayField(
         models.CharField(max_length=1000, validators=[URLLikeValidator]),
