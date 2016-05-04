@@ -4,13 +4,10 @@ from .models import (
     PointGeometry, PolygonGeometry,
     LineStringGeometry,
     GeometryStore,
-    MultiGeometry,
     Region, Place,
     Country
 )
-from django_select2.forms import (
-    ModelSelect2MultipleWidget,
-)
+from .forms import CountrySearchMultiField
 from leaflet.admin import LeafletGeoAdmin
 
 
@@ -33,13 +30,15 @@ class GeometryBaseAdmin(MapAdmin):
 
 
 class RegionForm(forms.ModelForm):
+    countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
 
     class Meta:
         model = Region
         fields = '__all__'
-        widgets = {
-            'countries': ModelSelect2MultipleWidget
-        }
 
 
 @admin.register(Region)

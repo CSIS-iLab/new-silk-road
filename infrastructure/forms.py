@@ -13,14 +13,15 @@ from facts.forms import (
 )
 from facts.models.organizations import Organization
 from facts.models import (Person, Event)
-from locations.forms import (GeometryStoreUploadForm, CountrySearchMultiField)
-from locations.models import Country
-
-
-class GeometrySearchWidget(ModelSelect2Widget):
-    search_fields = [
-        'label__icontains',
-    ]
+from locations.forms import (
+    GeometryStoreUploadForm,
+    GeometrySearchField,
+    CountrySearchMultiField
+)
+from locations.models import (
+    Country,
+    GeometryStore
+)
 
 
 class InitiativeForm(forms.ModelForm):
@@ -44,14 +45,20 @@ class InitiativeForm(forms.ModelForm):
         queryset=Event.objects.all(),
         help_text=NameSearchMultiField.help_text
     )
+    parent = forms.ModelChoiceField(
+        queryset=Initiative.objects.all(),
+        widget=NameSearchWidget(model=Initiative),
+        required=False
+    )
+    principal_agent = forms.ModelChoiceField(
+        queryset=Person.objects.all(),
+        widget=PersonSearchWidget(model=Person),
+        required=False
+    )
 
     class Meta:
         model = Initiative
         fields = '__all__'
-        widgets = {
-            'parent': NameSearchWidget,
-            'principal_agent': PersonSearchWidget
-        }
 
 
 class ProjectForm(forms.ModelForm):
@@ -90,13 +97,17 @@ class ProjectForm(forms.ModelForm):
         queryset=Country.objects.all(),
         help_text=CountrySearchMultiField.help_text
     )
+    geo = GeometrySearchField(
+        required=False,
+        queryset=GeometryStore.objects.all(),
+        help_text=GeometrySearchField.help_text
+    )
 
     class Meta:
         model = Project
         fields = '__all__'
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
-            'geo': GeometrySearchWidget
         }
 
 
@@ -105,13 +116,15 @@ class ProjectFundingForm(forms.ModelForm):
         required=False,
         queryset=Organization.objects.all()
     )
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        widget=NameSearchWidget(model=Project),
+        required=False
+    )
 
     class Meta:
         model = ProjectFunding
         fields = '__all__'
-        widgets = {
-            'project': NameSearchWidget
-        }
 
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
