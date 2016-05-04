@@ -26,7 +26,9 @@ class PersonInitiativeInline(admin.StackedInline):
 
 class ProjectFundingInline(admin.StackedInline):
     model = ProjectFunding
-    form = ProjectFundingForm
+    filter_horizontal = (
+        'sources',
+    )
 
 
 class ProjectsInitiativeInline(admin.StackedInline):
