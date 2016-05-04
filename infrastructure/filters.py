@@ -1,6 +1,7 @@
 import django_filters
 from django.db.models import Count, Q
 from .models import Project, Initiative
+from finance.currency import CURRENCY_CHOICES
 
 
 class ProjectFilter(django_filters.FilterSet):
@@ -16,12 +17,22 @@ class ProjectFilter(django_filters.FilterSet):
     initiatives__count__lt = django_filters.MethodFilter()
     initiatives__count__lte = django_filters.MethodFilter()
 
-    infrastructure_type = django_filters.CharFilter(name='infrastructure_type__name', lookup_expr='iexact')
-    infrastructure_type__contains = django_filters.CharFilter(name='infrastructure_type__name', lookup_expr='icontains')
+    infrastructure_type = django_filters.CharFilter(
+        name='infrastructure_type__name', lookup_expr='iexact', distinct=True
+    )
+    infrastructure_type__contains = django_filters.CharFilter(
+        name='infrastructure_type__name', lookup_expr='icontains', distinct=True
+    )
 
-    funder_name = django_filters.CharFilter(name='funding__name', lookup_expr='iexact')
-    funder_name__contains = django_filters.CharFilter(name='funding__name', lookup_expr='icontains')
-    funder_country = django_filters.CharFilter(name='funding__sources__countries__name', lookup_expr='iexact')
+    funder_name = django_filters.CharFilter(
+        name='funding__name', lookup_expr='iexact', distinct=True
+    )
+    funder_name__contains = django_filters.CharFilter(
+        name='funding__name', lookup_expr='icontains', distinct=True
+    )
+    funder_country = django_filters.CharFilter(
+        name='funding__sources__countries__name', lookup_expr='iexact', distinct=True
+    )
     funder_country_codes = django_filters.MethodFilter()
 
     contractor = django_filters.CharFilter(
@@ -32,28 +43,32 @@ class ProjectFilter(django_filters.FilterSet):
     )
 
     consultant = django_filters.CharFilter(
-        name='consultants__name', lookup_expr='iexact'
+        name='consultants__name', lookup_expr='iexact', distinct=True
     )
     consultant__contains = django_filters.CharFilter(
-        name='consultants__name', lookup_expr='icontains'
+        name='consultants__name', lookup_expr='icontains', distinct=True
     )
 
     implementer = django_filters.CharFilter(
-        name='implementers__name', lookup_expr='iexact'
+        name='implementers__name', lookup_expr='iexact', distinct=True
     )
     implementer__contains = django_filters.CharFilter(
-        name='implementers__name', lookup_expr='icontains'
+        name='implementers__name', lookup_expr='icontains', distinct=True
     )
 
     operator = django_filters.CharFilter(
-        name='operators__name', lookup_expr='iexact'
+        name='operators__name', lookup_expr='iexact', distinct=True
     )
     operator__contains = django_filters.CharFilter(
-        name='operators__name', lookup_expr='iexact'
+        name='operators__name', lookup_expr='iexact', distinct=True
     )
 
     fieldbook_id = django_filters.CharFilter(
-        name='extra_data__dictionary__project_id', lookup_expr='exact'
+        name='extra_data__dictionary__project_id', lookup_expr='exact', distinct=True
+    )
+
+    total_cost_currency = django_filters.ChoiceFilter(
+        choices=CURRENCY_CHOICES
     )
 
     def _filter_initiatives_count(self, queryset, value, filter_expression):
@@ -98,15 +113,16 @@ class ProjectFilter(django_filters.FilterSet):
     class Meta:
         model = Project
         fields = {
-            'planned_completion_year': ['isnull', 'exact', 'gt', 'lt'],
-            'planned_completion_month': ['isnull', 'exact', 'gt', 'lt'],
-            'planned_completion_day': ['isnull', 'exact', 'gt', 'lt'],
-            'start_year': ['isnull', 'exact', 'gt', 'lt'],
-            'start_month': ['isnull', 'exact', 'gt', 'lt'],
-            'start_day': ['isnull', 'exact', 'gt', 'lt'],
-            'commencement_year': ['isnull', 'exact', 'gt', 'lt'],
-            'commencement_month': ['isnull', 'exact', 'gt', 'lt'],
-            'commencement_day': ['isnull', 'exact', 'gt', 'lt'],
+            'total_cost': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'planned_completion_year': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'planned_completion_month': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'planned_completion_day': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'start_year': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'start_month': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'start_day': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'commencement_year': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'commencement_month': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
+            'commencement_day': ['isnull', 'exact', 'gt', 'lt', 'gte', 'lte'],
         }
 
 
