@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Count
+from django.db.models import Count, Q
 from .models import Project, Initiative
 
 
@@ -22,7 +22,7 @@ class ProjectFilter(django_filters.FilterSet):
     funder_name = django_filters.CharFilter(name='funding__name', lookup_expr='iexact')
     funder_name__contains = django_filters.CharFilter(name='funding__name', lookup_expr='icontains')
     funder_country = django_filters.CharFilter(name='funding__sources__countries__name', lookup_expr='iexact')
-    funder_country_code = django_filters.CharFilter(name='funding__sources__countries__alpha_3', lookup_expr='iexact')
+    funder_country_codes = django_filters.MethodFilter()
 
     contractor = django_filters.CharFilter(
         name='contractors__name', lookup_expr='iexact', distinct=True
@@ -76,6 +76,24 @@ class ProjectFilter(django_filters.FilterSet):
 
     def filter_initiatives__count__lte(self, queryset, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__lte')
+
+    def filter_funder_country_codes(self, queryset, value):
+        lookup_expr = 'funding__sources__countries__alpha_3__iexact'
+        if value:
+            if ',' in value:
+                value_list = value.split(',')
+                for v in value_list:
+                    queryset = queryset.filter(**{lookup_expr: v})
+                return queryset.distinct('name')
+            elif '|' in value:
+                value_list = value.split('|')
+                q_args = Q(**{lookup_expr: value_list[0]})
+                for v in value_list[1:]:
+                    q_args |= Q(**{lookup_expr: v})
+                return queryset.filter(q_args).distinct('name')
+            else:
+                return queryset.filter(**{lookup_expr: value.strip()}).distinct('name')
+        return queryset
 
     class Meta:
         model = Project
