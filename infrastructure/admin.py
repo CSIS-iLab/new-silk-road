@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db import models
 from django.utils.html import format_html, format_html_join
 from django.core.urlresolvers import reverse
 from mptt.admin import MPTTModelAdmin
@@ -11,15 +12,30 @@ from publish.admin import (
     make_published,
     make_not_published
 )
-from infrastructure.forms import InitiativeForm, ProjectForm, ProjectFundingForm
+from infrastructure.forms import (
+    InitiativeForm,
+    ProjectForm,
+    ProjectFundingForm
+)
+from facts.forms import NameSearchWidget
 
 
-class PersonInitiativeInline(admin.TabularInline):
+class PersonInitiativeInline(admin.StackedInline):
     model = Initiative.affiliated_people.through
 
 
-class ProjectFundingInline(admin.TabularInline):
+class ProjectFundingInline(admin.StackedInline):
     model = ProjectFunding
+    filter_horizontal = (
+        'sources',
+    )
+
+
+class ProjectsInitiativeInline(admin.StackedInline):
+    model = Project.initiatives.through
+    formfield_overrides = {
+        models.ForeignKey: {'widget': NameSearchWidget(attrs={'style': 'width: 80%;'})},
+    }
 
 
 @admin.register(Project)
@@ -69,6 +85,7 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     filter_horizontal = (
         'documents',
+        'regions',
     )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
@@ -156,6 +173,9 @@ class InitiativeAdmin(MPTTModelAdmin):
     )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
+    inlines = [
+        ProjectsInitiativeInline,
+    ]
 
     class Meta:
         model = Initiative

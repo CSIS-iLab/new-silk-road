@@ -1,64 +1,106 @@
 from django import forms
 from django_select2.forms import (
     ModelSelect2Widget,
-    ModelSelect2MultipleWidget,
-    ModelSelect2Widget,
 )
 from infrastructure.models import (
     Project, Initiative, ProjectFunding
 )
 from facts.forms import (
-    TitleSearchWidget,
-    TitleSearchMultiField,
-    PersonSearchMultiWidget
+    NameSearchWidget,
+    NameSearchMultiField,
+    PersonSearchWidget,
+    PersonSearchMultiField
 )
 from facts.models.organizations import Organization
-from facts.models import Person
-from locations.forms import GeometryStoreUploadForm
-
-
-class GeometrySearchWidget(ModelSelect2Widget):
-    search_fields = [
-        'label__icontains',
-    ]
+from facts.models import (Person, Event)
+from locations.forms import (
+    GeometryStoreUploadForm,
+    GeometrySearchField,
+    CountrySearchMultiField
+)
+from locations.models import (
+    Country,
+    GeometryStore
+)
 
 
 class InitiativeForm(forms.ModelForm):
+    affiliated_people = PersonSearchMultiField(
+        required=False,
+        queryset=Person.objects.all(),
+        help_text=PersonSearchMultiField.help_text
+    )
+    member_countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+    affiliated_organizations = NameSearchMultiField(
+        required=False,
+        queryset=Organization.objects.all(),
+        help_text=NameSearchMultiField.help_text
+    )
+    affiliated_events = NameSearchMultiField(
+        required=False,
+        queryset=Event.objects.all(),
+        help_text=NameSearchMultiField.help_text
+    )
+    parent = forms.ModelChoiceField(
+        queryset=Initiative.objects.all(),
+        widget=NameSearchWidget(model=Initiative),
+        required=False
+    )
+    principal_agent = forms.ModelChoiceField(
+        queryset=Person.objects.all(),
+        widget=PersonSearchWidget(model=Person),
+        required=False
+    )
 
     class Meta:
         model = Initiative
         fields = '__all__'
-        widgets = {
-            'member_countries': ModelSelect2MultipleWidget
-        }
 
 
 class ProjectForm(forms.ModelForm):
-    contractors = TitleSearchMultiField(
+    initiatives = NameSearchMultiField(
+        required=False,
+        queryset=Initiative.objects.all(),
+        help_text=NameSearchMultiField.help_text
+    )
+    contractors = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
-    consultants = TitleSearchMultiField(
+    consultants = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
-    implementers = TitleSearchMultiField(
+    implementers = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
-    operators = TitleSearchMultiField(
+    operators = NameSearchMultiField(
         required=False,
         queryset=Organization.objects.all(),
-        help_text='Select field and begin typing a title to search'
+        help_text=NameSearchMultiField.help_text
     )
-    contacts = forms.ModelMultipleChoiceField(
-        widget=PersonSearchMultiWidget,
+    contacts = PersonSearchMultiField(
         required=False,
         queryset=Person.objects.all(),
-        help_text='Select field and begin typing a name to search'
+        help_text=PersonSearchMultiField.help_text
+    )
+    countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+    geo = GeometrySearchField(
+        required=False,
+        queryset=GeometryStore.objects.all(),
+        help_text=GeometrySearchField.help_text
     )
 
     class Meta:
@@ -66,21 +108,23 @@ class ProjectForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
-            'initiative': TitleSearchWidget,
-            'countries': ModelSelect2MultipleWidget,
-            'geo': GeometrySearchWidget
         }
 
 
 class ProjectFundingForm(forms.ModelForm):
+    sources = NameSearchMultiField(
+        required=False,
+        queryset=Organization.objects.all()
+    )
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        widget=NameSearchWidget(model=Project),
+        required=False
+    )
 
     class Meta:
         model = ProjectFunding
         fields = '__all__'
-        widgets = {
-            'source': TitleSearchWidget,
-            'project': TitleSearchWidget
-        }
 
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):

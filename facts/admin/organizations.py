@@ -38,7 +38,7 @@ class OrganizationAdmin(MPTTModelAdmin):
         'related_organizations__name',
         'projects_consulted__name',
         'projects_contracted__name',
-        'projects_funded__name',
+        'projectfunding__project__name',
         'projects_implemented__name',
         'projects_operated__name',
     )

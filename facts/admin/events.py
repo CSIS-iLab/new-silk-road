@@ -19,6 +19,10 @@ class OrganizationEventInline(admin.TabularInline):
 class EventAdmin(admin.ModelAdmin):
     save_on_top = True
     search_fields = ['name']
+    filter_horizontal = (
+        'documents',
+        'places',
+    )
     inlines = (
         PersonEventInline,
         OrganizationEventInline

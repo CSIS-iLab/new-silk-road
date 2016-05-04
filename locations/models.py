@@ -60,9 +60,21 @@ class GeometryStore(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False)
     label = models.CharField(blank=True, max_length=400)
     attributes = JSONField(blank=True, default=dict)
-    lines = models.ManyToManyField('locations.LineStringGeometry', related_name='geostores')
-    points = models.ManyToManyField('locations.PointGeometry', related_name='geostores')
-    polygons = models.ManyToManyField('locations.PolygonGeometry', related_name='geostores')
+    lines = models.ManyToManyField(
+        'locations.LineStringGeometry',
+        related_name='geostores',
+        blank=True
+    )
+    points = models.ManyToManyField(
+        'locations.PointGeometry',
+        related_name='geostores',
+        blank=True
+    )
+    polygons = models.ManyToManyField(
+        'locations.PolygonGeometry',
+        related_name='geostores',
+        blank=True
+    )
     centroid = models.PointField(blank=True, null=True, editable=False)
 
     def __str__(self):
