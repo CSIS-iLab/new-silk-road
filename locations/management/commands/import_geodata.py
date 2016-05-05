@@ -20,11 +20,6 @@ class Command(BaseCommand):
             help='A filepath or glob of filepaths'
         )
         parser.add_argument(
-            '--no-collect',
-            action='store_true',
-            help='Put geometries for a file into a collection'
-        )
-        parser.add_argument(
             '--attributes',
             nargs='+',
             help='Add extra attributes for imported geodata'
@@ -49,7 +44,6 @@ class Command(BaseCommand):
         infiles = kwargs.get('files')
         self.verbosity = kwargs.get('verbosity')
         self.dry_run = kwargs.get('dry_run')
-        self.no_collect = kwargs.get('no_collect')
         # Attempt to parse additional attributes
         raw_attrs = kwargs.get('attributes')
         self.attributes = self._create_attributes(raw_attrs) if raw_attrs else {}
