@@ -6,7 +6,7 @@ import uuid
 
 
 class GeometryRecord(models.Model):
-    label = models.CharField(max_length=100)
+    label = models.CharField(max_length=400)
     attributes = JSONField(blank=True, default=dict)
     geom = None
 
