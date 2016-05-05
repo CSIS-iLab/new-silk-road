@@ -25,25 +25,10 @@ from locations.models import (
 
 
 class InitiativeForm(forms.ModelForm):
-    affiliated_people = PersonSearchMultiField(
-        required=False,
-        queryset=Person.objects.all(),
-        help_text=PersonSearchMultiField.help_text
-    )
     member_countries = CountrySearchMultiField(
         required=False,
         queryset=Country.objects.all(),
         help_text=CountrySearchMultiField.help_text
-    )
-    affiliated_organizations = NameSearchMultiField(
-        required=False,
-        queryset=Organization.objects.all(),
-        help_text=NameSearchMultiField.help_text
-    )
-    affiliated_events = NameSearchMultiField(
-        required=False,
-        queryset=Event.objects.all(),
-        help_text=NameSearchMultiField.help_text
     )
     parent = forms.ModelChoiceField(
         queryset=Initiative.objects.all(),
@@ -62,36 +47,6 @@ class InitiativeForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-    initiatives = NameSearchMultiField(
-        required=False,
-        queryset=Initiative.objects.all(),
-        help_text=NameSearchMultiField.help_text
-    )
-    contractors = NameSearchMultiField(
-        required=False,
-        queryset=Organization.objects.all(),
-        help_text=NameSearchMultiField.help_text
-    )
-    consultants = NameSearchMultiField(
-        required=False,
-        queryset=Organization.objects.all(),
-        help_text=NameSearchMultiField.help_text
-    )
-    implementers = NameSearchMultiField(
-        required=False,
-        queryset=Organization.objects.all(),
-        help_text=NameSearchMultiField.help_text
-    )
-    operators = NameSearchMultiField(
-        required=False,
-        queryset=Organization.objects.all(),
-        help_text=NameSearchMultiField.help_text
-    )
-    contacts = PersonSearchMultiField(
-        required=False,
-        queryset=Person.objects.all(),
-        help_text=PersonSearchMultiField.help_text
-    )
     countries = CountrySearchMultiField(
         required=False,
         queryset=Country.objects.all(),

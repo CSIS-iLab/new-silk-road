@@ -84,6 +84,11 @@ class ProjectAdmin(admin.ModelAdmin):
         'countries__name',
     )
     filter_horizontal = (
+        'initiatives',
+        'contractors',
+        'consultants',
+        'implementers',
+        'operators',
         'documents',
         'regions',
     )
@@ -171,6 +176,11 @@ class InitiativeAdmin(MPTTModelAdmin):
         'affiliated_organizations__name',
         'affiliated_events__name',
     )
+    filter_horizontal = [
+        'affiliated_people',
+        'affiliated_organizations',
+        'affiliated_events'
+    ]
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
     inlines = [
