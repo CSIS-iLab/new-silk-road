@@ -48,11 +48,11 @@ class ProjectAdmin(admin.ModelAdmin):
         'fieldbook_id',
         'name',
         'infrastructure_type',
-        'countries_display',
         # TODO: Provide some info on operators in list view? Maybe an Ajax popup???
-        # TODO: Sources of Funding
-        'implementers_display',
-        'initiatives_display',
+        # - Countries
+        # - Sources of Funding
+        # - Implementers
+        # - Initiatives
         'status',
         'start_year',
         'planned_completion_year',
@@ -72,7 +72,6 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     search_fields = (
         'name',
-        'id',
         'initiatives__name',
         'contacts__given_name',
         'contacts__family_name',
@@ -100,36 +99,12 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
 
     def fieldbook_id(self, obj):
-        if obj.extra_data.exists:
+        if obj.extra_data.exists():
             project_id_match = obj.extra_data.filter(dictionary__has_key='project_id').first()
             if project_id_match:
                 return project_id_match.dictionary.get('project_id')
         return None
     fieldbook_id.short_description = 'Fieldbook Id'
-
-    def countries_display(self, obj):
-        limit = 3
-        if obj.countries.exists():
-            select_country_names = [x.name for x in obj.countries.only('name')[:limit]]
-            return ", ".join(select_country_names)
-        return None
-    countries_display.short_description = 'Countries (limit: 3)'
-
-    def initiatives_display(self, obj):
-        limit = 3
-        if obj.initiatives.exists():
-            select_names = [x.name for x in obj.initiatives.only('name')[:limit]]
-            return ", ".join(select_names)
-        return None
-    initiatives_display.short_description = 'Initiatives (limit: 3)'
-
-    def implementers_display(self, obj):
-        limit = 3
-        if obj.implementers.exists():
-            select_implementer_names = [x.name for x in obj.implementers.only('name')[:limit]]
-            return ", ".join(select_implementer_names)
-        return None
-    implementers_display.short_description = 'Implementers (limit: 3)'
 
     def sources_display(self, obj):
         if obj.sources:
@@ -142,7 +117,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
     def get_search_results(self, request, queryset, search_term):
         queryset, use_distinct = super(ProjectAdmin, self).get_search_results(request, queryset, search_term)
-        if 'project' in search_term.lower():
+        if search_term.lower().startswith('project'):
             queryset |= self.model.objects.filter(extra_data__dictionary__project_id=search_term.title())
         try:
             integer_search_term = int(search_term)
