@@ -9,10 +9,9 @@ from facts.forms import (
     NameSearchWidget,
     NameSearchMultiField,
     PersonSearchWidget,
-    PersonSearchMultiField
 )
 from facts.models.organizations import Organization
-from facts.models import (Person, Event)
+from facts.models import (Person,)
 from locations.forms import (
     GeometryStoreUploadForm,
     GeometrySearchField,
