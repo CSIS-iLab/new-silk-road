@@ -1,13 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.contrib.gis.gdal import DataSource
-from locations.models import (
-    GeometryStore,
-    LineStringGeometry,
-    PointGeometry,
-    PolygonGeometry,
-)
 import os.path
 from datautils.string import clean_string
+from locations.utils import geostore_from_file
 
 
 class Command(BaseCommand):
@@ -55,63 +49,18 @@ class Command(BaseCommand):
             path, filename = os.path.split(f)
             fname, fext = os.path.splitext(filename)
             self.stdout.write("Processing '{}'".format(fname))
-            self.attributes['source'] = filename
+            self.attributes['source'] = clean_string(filename)
+
             try:
-                ds = DataSource(f)
+                geo_store = geostore_from_file(
+                    f, fname,
+                    verbosity=self.verbosity,
+                    geo_attributes=self.attributes,
+                    create=True if not self.dry_run else False
+                )
+                if geo_store:
+                    self.stdout.write(self.style.SUCCESS("Created '{}'".format(geo_store.identifier)))
+                else:
+                    self.stderr.write(self.style.ERROR("Unable to create Geostore for '{}'".format(filename)))
             except Exception as e:
                 raise CommandError(e)
-
-            geo_store_data = {
-                'name': clean_string(fname)
-            }
-            geo_store_data.update(self.attributes)
-            geo_store = GeometryStore.objects.create(attributes=geo_store_data)
-
-            geometries = {
-                'lines': [],
-                'points': [],
-                'polygons': [],
-            }
-
-            for layer in ds:
-                layer_name, ext = os.path.splitext(layer.name)
-                if self.verbosity > 2:
-                    self.stdout.write('Layer "{}": {} {}s'.format(layer_name, len(layer), layer.geom_type.name))
-                for feat in layer:
-                    # Remove 3rd dimension
-                    geom = feat.geom.clone()
-                    geom.coord_dim = 2
-                    if geo_store and not self.dry_run:
-                        # Create attributes dict from geom fields
-                        data = {f.name.lower(): f.value for f in feat}
-                        if 'name' in data:
-                            data['name'] = clean_string(data['name'])
-                        # Add source information to attributes
-                        data['layer'] = layer_name
-                        data.update(self.attributes)
-                        if self.verbosity > 2:
-                            self.stdout.write('Feature "{}": {}'.format(data.get('name', layer_name), feat.geom_type))
-
-                        params = {
-                            'label': data.get('name'),
-                            'geom': geom.geos,
-                            'attributes': data
-                        }
-                        if geom.geom_type == 'Point':
-                            obj, created = PointGeometry.objects.get_or_create(**params)
-                            geometries['points'].append(obj)
-                        elif geom.geom_type == 'LineString':
-                            obj, created = LineStringGeometry.objects.get_or_create(**params)
-                            geometries['lines'].append(obj)
-                        elif geom.geom_type == 'Polygon':
-                            obj, created = PolygonGeometry.objects.get_or_create(**params)
-                            geometries['polygons'].append(obj)
-                        else:
-                            self.stderr.out(self.style.WARNING("Unable to match geometry with type '{}' to a relation in GeometryStore".format(geom.geom_type)))
-
-                if geometries['lines']:
-                    geo_store.lines.set(geometries['lines'])
-                if geometries['points']:
-                    geo_store.points.set(geometries['points'])
-                if geometries['polygons']:
-                    geo_store.polygons.set(geometries['polygons'])
