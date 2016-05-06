@@ -38,6 +38,28 @@ class ProjectsInitiativeInline(admin.StackedInline):
     }
 
 
+class HasGeoListFilter(admin.SimpleListFilter):
+    title = 'has geo'
+    parameter_name = 'geo'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return (
+            ('true', 'Yes'),
+            ('false', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        has_geo = self.value() == 'true'
+        return queryset.filter(geo__isnull=(not has_geo))
+
+
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -69,6 +91,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'initiatives',
         'countries',
         'regions',
+        HasGeoListFilter,
     )
     search_fields = (
         'name',
