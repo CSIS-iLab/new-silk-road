@@ -17,7 +17,9 @@
 Map | {{ block.super }}
 {% endblock %}
 
-{% block content %}
+{% block bodyclass %}map{% endblock %}
+
+{% block content-shell %}
 <div class="search-map">
     <section class="map-container">
         <div id="map"></div>
@@ -27,6 +29,13 @@ Map | {{ block.super }}
         <div class="results"></div>
     </section>
 </div>
+<div class="content-wrap">
+    <h1>Body content</h1>
+    {% lorem 3 p %}
+</div>
+{% endblock %}
+
+{% block postbodyjs %}
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         function htmlLabelForFeature(feature) {

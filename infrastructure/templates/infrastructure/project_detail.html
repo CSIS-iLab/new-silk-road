@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load markymark %}{% load staticfiles %}
+{% extends "base.html" %}{% load markymark %}{% load staticfiles %}{% load humanize %}
 
 {% block extrahead %}
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.js'></script>
@@ -19,7 +19,7 @@
 
 {% block content %}
 <article class="project">
-    <h2>{{ object.name }}</h2>{% if object.initiative %}
+    <h1>{{ object.name }}</h1>{% if object.initiative %}
     <h3>Initiative: <a href="{{ object.initiative.get_absolute_url }}">{{ object.initiative.name }}</a></h3>
 {% endif %}
     <p>{{ object.get_countries_display }}</p>
@@ -29,12 +29,48 @@
         <div id="map"></div>
     </section>
 {% endif %}
-
-    <section class="notes">
-{{ object.notes|markdown }}
+    <section class="details">
+        <div class="row">
+            <section class="col-3">
+                <h3>Countries</h3>
+                <ul>{% for country in object.countries.all %}
+                    <li>{{ country.name }}</li>{% endfor %}
+                </ul>
+            </section>
+            <section class="col-3">
+                <h3>Regions</h3>
+                <ul>{% for region in object.regions.all %}
+                    <li>{{ region.name }}</li>{% endfor %}
+                </ul>
+            </section>
+            <section class="col-3">
+                <h3>Type</h3>
+                <p>{{ object.infrastructure_type.name }}</p>
+            </section>
+            <section class="col-3">
+                <h3>Status</h3>
+                <p>{{ object.get_status_display }}</p>
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-4">
+                <h3>Total Project Cost</h3>
+                <p>{{ object.total_cost|intword }} {{ object.total_cost_currency|default:"(Unspecified currency)" }}</p>
+            </section>
+            <section class="col-4">
+                <h3>Start Date</h3>
+                <p>{{ object.start_year|stringformat:"04d"|default:"??" }}-{{ object.start_month|stringformat:"02d"|default:"??" }}-{{ object.start_day|stringformat:"02d"|default:"??" }}</p>
+            </section>
+            <section class="col-4">
+                <h3>Planned Completion Date</h3>
+                <p>{{ object.planned_completion_year|stringformat:"04d"|default:"??" }}-{{ object.planned_completion_month|stringformat:"02d"|default:"??" }}-{{ object.planned_completion_day|stringformat:"02d"|default:"??" }}</p>
+            </section>
+        </div>
     </section>
-
-
+    <section class="notes">
+        <h2>Notes</h2>
+{{ object.notes|default:None|markdown }}
+    </section>
     <section class="documents">
         <h3>Documents</h3>
         {% regroup object.documents.all by get_document_type_display as docs_list %}
@@ -48,75 +84,79 @@
         </ul>
         {% endfor %}
     </section>
-    {% if object.geo %}
-    <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function () {
-        var httpRequest, geostore;
-        var linePaint = {
-            'line-color': '#FF0000',
-            'line-width': 3,
-            'line-opacity': 0.6
-        };
-        var lineLayout = { 'line-cap': 'round' };
-
-        function mapProject(data, camera) {
+</article>
+{% endblock %}
 
 
-            if (data.lines && data.lines.features.length > 0) {
-                mm.map.addSource('lines-src', mm.createGeoJSONSource(data.lines));
-                mm.map.addLayer(mm.layerFromSource('lines-layer', 'lines-src', 'line', linePaint, lineLayout));
-            }
-            if (data.points && data.points.features.length > 0) {
-                mm.map.addSource('points-src', mm.createGeoJSONSource(data.points));
-                mm.map.addLayer(mm.layerFromSource('points-layer', 'points-src', 'circle'));
-            }
-            if (data.polygons && data.polygons.features.length > 0) {
-                mm.map.addSource('polygons-src', mm.createGeoJSONSource(data.polygons));
-                mm.map.addLayer(mm.layerFromSource('polygons-layer', 'polygons-src', 'fill'));
-            }
-            mm.map.fitBounds(camera.bounds, camera);
-            // var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['points-layer'], function(feature) {
-            //     return "<p>Hello</p>";
-            // });
-            // mm.map.on('click', centroidsPopupHandler);
+{% block postbodyjs %}
+{% if object.geo %}
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+    var httpRequest, geostore;
+    var linePaint = {
+        'line-color': '#FF0000',
+        'line-width': 3,
+        'line-opacity': 0.6
+    };
+    var lineLayout = { 'line-cap': 'round' };
+
+    function mapProject(data, camera) {
+
+
+        if (data.lines && data.lines.features.length > 0) {
+            mm.map.addSource('lines-src', mm.createGeoJSONSource(data.lines));
+            mm.map.addLayer(mm.layerFromSource('lines-layer', 'lines-src', 'line', linePaint, lineLayout));
+        }
+        if (data.points && data.points.features.length > 0) {
+            mm.map.addSource('points-src', mm.createGeoJSONSource(data.points));
+            mm.map.addLayer(mm.layerFromSource('points-layer', 'points-src', 'circle'));
+        }
+        if (data.polygons && data.polygons.features.length > 0) {
+            mm.map.addSource('polygons-src', mm.createGeoJSONSource(data.polygons));
+            mm.map.addLayer(mm.layerFromSource('polygons-layer', 'polygons-src', 'fill'));
+        }
+        mm.map.fitBounds(camera.bounds, camera);
+        // var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['points-layer'], function(feature) {
+        //     return "<p>Hello</p>";
+        // });
+        // mm.map.on('click', centroidsPopupHandler);
+    }
+
+    var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";
+
+
+    mapboxgl.accessToken = '{{mapbox_token|safe}}';
+    var mm = new MapMaker(mapboxgl);
+    mm.makeMap({
+        container: "map",
+        style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
+        center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}
+    });
+    mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
+
+    mm.map.on('load', function () {
+        var camera = {
+            bounds: [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
+                {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}],
+            maxZoom: 15,
+            padding: 10
         }
 
-        var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";
+        if (geostore_url) {
+            httpRequest = new XMLHttpRequest();
+            httpRequest.addEventListener("readystatechange", function () {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    geostore = JSON.parse(httpRequest.responseText);
+                    mapProject(geostore, camera);
+                }
+            })
 
+            httpRequest.open('GET', geostore_url, true);
+            httpRequest.send();
+        }
 
-        mapboxgl.accessToken = '{{mapbox_token|safe}}';
-        var mm = new MapMaker(mapboxgl);
-        mm.makeMap({
-            container: "map",
-            style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
-            center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}
-        });
-        mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
-
-        mm.map.on('load', function () {
-            var camera = {
-                bounds: [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
-                    {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}],
-                maxZoom: 15,
-                padding: 10
-            }
-
-            if (geostore_url) {
-                httpRequest = new XMLHttpRequest();
-                httpRequest.addEventListener("readystatechange", function () {
-                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                        geostore = JSON.parse(httpRequest.responseText);
-                        mapProject(geostore, camera);
-                    }
-                })
-
-                httpRequest.open('GET', geostore_url, true);
-                httpRequest.send();
-            }
-
-        });
     });
-    </script>
-    {% endif %}
-</article>
+});
+</script>
+{% endif %}
 {% endblock %}

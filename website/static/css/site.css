@@ -29,9 +29,12 @@ textarea {
 .marker-title {
   font-weight: 700; }
 
+html {
+  font-size: 18px; }
+
 body {
   margin: 0;
-  font: 18px Lato, "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  font: 1rem Lato, "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   line-height: 1.45em;
   color: #58585a;
   -webkit-font-feature-settings: "liga", "kern";
@@ -41,63 +44,88 @@ body {
 
 h1 {
   font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
+  font-size: 2.77778rem;
   line-height: 1.2em; }
 
-h2 {
-  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-  line-height: 1.2em; }
+h2, h3, h4, h5, h6 {
+  font-family: Lato, "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  line-height: 1.25rem;
+  margin: 0 0 0.75em; }
 
-h3 {
-  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-  line-height: 1.2em; }
+p {
+  margin: 0 0 2rem; }
 
-h4 {
-  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-  line-height: 1.2em; }
+ul {
+  margin: 0 0 1em;
+  padding-left: 1em;
+  line-height: 1.1rem; }
 
-h5 {
-  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-  line-height: 1.2em; }
-
-h6 {
-  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-  line-height: 1.2em; }
-
-h1 {
-  font-size: 50px; }
-
-h3 {
-  text-transform: uppercase; }
+nav ul {
+  padding-left: 0; }
+  nav ul li {
+    list-style-type: none; }
 
 header {
   background: no-repeat center/100% url("/static/img/top_banner_bg.svg") #d6e1d6;
+  height: 75px;
   border-top: 5px solid #252d3a;
-  border-bottom: 2px solid #252d3a; }
+  border-bottom: 3px solid #252d3a; }
   header::after {
     clear: both;
     content: "";
     display: table; }
   header h1 {
-    font-size: 18px;
+    font-size: 1rem;
     float: left;
-    margin: 0;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    background-image: url("/static/img/"); }
+    margin: 1rem 0; }
   header nav {
-    float: right; }
+    float: right;
+    margin: 1rem 60px 1rem 0; }
     header nav ul li {
       display: inline-block;
-      margin-left: none;
-      margin-right: 1em;
-      font-size: 0.92em; }
+      margin-left: 1em;
+      margin-right: none;
+      font-size: 1rem; }
       header nav ul li a {
-        padding: 5px 0 3px 1em;
+        padding: 3px 0 2px 1em;
         font-weight: bold;
         text-decoration: none;
         color: #556377;
         border-bottom: 1px solid #556377; }
+
+.details h3 {
+  display: inline-block;
+  font-size: 1.11111rem;
+  text-transform: uppercase; }
+
+.details .row {
+  margin-bottom: 40px; }
+  .details .row section {
+    margin-bottom: 0; }
+  .details .row:nth-child(odd) h3 {
+    color: #75986a;
+    border-bottom: 2px solid #75986a; }
+  .details .row:nth-child(even) h3 {
+    color: #556377;
+    border-bottom: 2px solid #556377; }
+
+article h1 {
+  padding-bottom: 4px;
+  border-bottom: 5px solid #788ca8; }
+
+article section {
+  margin-bottom: 40px; }
+
+footer {
+  border-top: 3px solid #252d3a;
+  background-color: #d6e1d6;
+  color: #252d3a;
+  padding: 40px 0; }
+  footer a {
+    color: #252d3a;
+    text-decoration: none; }
+  footer nav {
+    margin-left: 8.5298%; }
 
 .page-wrap {
   display: block;
@@ -110,9 +138,10 @@ header {
     display: table; }
 
 .content-wrap {
-  max-width: 1000px;
+  max-width: 1040px;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  margin-bottom: 4rem; }
   .content-wrap::after {
     clear: both;
     content: "";

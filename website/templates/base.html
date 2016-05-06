@@ -15,23 +15,25 @@
         </script>
         <script async src='https://www.google-analytics.com/analytics.js'></script>
     </head>
-    <body>
+    <body class="{% block bodyclass %}{% endblock %}">
         <div class="page-wrap">
             <header role="banner">
-                <a href="/"><h1>Reconnecting Asia</h1></a>
-                <nav>
-                    <ul>
-                        <li><a href="{% url 'website-map' %}">Map</a></li>
-                        <li><a href="">Knowledgebase</a></li>
-                        <li><a href="">Analysis</a></li>
-                        <li><a href="">About</a></li>
-                    </ul>
-                </nav>
+                <h1><a href="/">Reconnecting Asia</a></h1>
+                {% include "_navigation.html" %}
             </header>
+    {% block content-shell %}
             <div class="content-wrap">
-                {% block content %}
-                {% endblock content %}
+                {% block content %}{% endblock content %}
             </div>
+    {% endblock %}
+            <footer>
+                <div class="row">
+                    <div class="col-9">
+                        {% include "_navigation.html" %}
+                    </div>
+                </div>
+            </footer>
         </div>
     </body>
+{% block postbodyjs %}{% endblock %}
 </html>
