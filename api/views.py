@@ -73,6 +73,7 @@ class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GeometryStoreSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
+    pagination_class = None
 
 
 class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
@@ -81,3 +82,4 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GeometryStoreCentroidSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
+    pagination_class = None
