@@ -1,9 +1,10 @@
-var gulp      = require('gulp'),
-    sass      = require('gulp-sass'),
-    cleanCss  = require('gulp-clean-css'),
-    concat    = require('gulp-concat'),
-    uglify    = require('gulp-uglify'),
-    rename    = require('gulp-rename');
+var gulp     = require('gulp'),
+    sass     = require('gulp-sass'),
+    cleanCss = require('gulp-clean-css'),
+    svgmin   = require('gulp-svgmin'),
+    concat   = require('gulp-concat'),
+    uglify   = require('gulp-uglify'),
+    rename   = require('gulp-rename');
 
 var assetsBase = 'website/assets',
     destBase = 'website/static'
@@ -21,6 +22,22 @@ gulp.task('sass', function () {
                .pipe(gulp.dest(cssDest))
 });
 
+gulp.task('svg', function () {
+    var svgDest = destBase + '/img'
+    return gulp.src(assetsBase + '/svg/*.svg')
+        .pipe(svgmin({
+            plugins: [{
+                removeTitle: true
+            }, {
+                removeRasterImages: true
+            }, {
+                cleanupNumericValues: {
+                    floatPrecision: 2
+                }
+            }]
+        }))
+        .pipe(gulp.dest(svgDest));
+});
 
 gulp.task('default', ['build']);
 

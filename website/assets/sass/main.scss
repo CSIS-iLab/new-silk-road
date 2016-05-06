@@ -1,12 +1,72 @@
 @import "_variables";
 @import "lib/bourbon/bourbon";
 @import "lib/neat/neat";
+@import "_normalize";
 @import "map";
 body {
-    font: $base-font-size $base-font-family;
+    margin: 0;
+    font: $base-font-size $sans-font-family;
+    line-height: $base-line-height;
+    color: $gravel-grey;
+    @include font-feature-settings("liga", "kern");
 }
-#wrapper {
+
+@for $i from 1 through 6 {
+    h#{$i} {
+        font-family: $serif-font-family;
+        line-height: 1.2em;
+    }
+}
+
+h1 {
+    font-size: $major-font-size;
+}
+
+h3 {
+    text-transform: uppercase;
+}
+
+header {
+    @include clearfix;
+    background: no-repeat center/100% url($top-banner-img-url) $pale-green;
+    border-top: 5px solid $dark-night;
+    border-bottom: 2px solid $dark-night;
+    h1 {
+        font-size: $base-font-size;
+        float: left;
+        margin: 0;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        background-image: url($logo-image-url);
+    }
+    nav {
+        float: right;
+        ul {
+            li {
+                display: inline-block;
+                margin-left: none;
+                margin-right: 1em;
+                font-size: 0.92em;
+                a {
+                    padding: 5px 0 3px 1em;
+                    font-weight: bold;
+                    text-decoration: none;
+                    color: $slate-grey;
+                    border-bottom: 1px solid $slate-grey;
+                }
+            }
+        }
+    }
+}
+
+.page-wrap {
+    display: block;
     @include outer-container($max-page-width);
+}
+
+.content-wrap {
+    @include outer-container($max-content-width);
 }
 .row {
     @include row();

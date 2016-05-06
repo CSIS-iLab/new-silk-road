@@ -1,3 +1,27 @@
-$base-font-size: 16px;
-$base-font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
-$max-page-width: 1000px;
+@import "lib/bourbon/bourbon";
+
+@import url(https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900);
+
+// Basics
+$base-font-size: 18px;
+$major-font-size: 50px;
+$base-line-height: 1.45em;
+$sans-font-family: Lato, $helvetica;
+$serif-font-family: Merriweather, $georgia;;
+$max-page-width: 1600px;
+$max-content-width: 1000px;
+
+
+// Colors
+
+$pale-green: #d6e1d6;
+$medium-green: #75986a;
+$dark-night: #252d3a;
+$slate-grey: #556377;
+$gravel-grey: #58585a;
+
+
+// Image URLs
+$img-url-base: '/static/img/';
+$logo-image-url: $img-url-base;
+$top-banner-img-url: $img-url-base + 'top_banner_bg.svg';
