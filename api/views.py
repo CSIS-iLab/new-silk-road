@@ -27,7 +27,9 @@ from infrastructure.filters import (ProjectFilter, InitiativeFilter)
 
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Project.objects.all()
+    queryset = Project.objects.select_related(
+        'infrastructure_type',
+    ).all()
     serializer_class = ProjectSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ProjectFilter

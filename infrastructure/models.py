@@ -22,7 +22,7 @@ class InfrastructureType(models.Model):
 class ProjectFunding(models.Model):
     """ProjectFunding relates Organizations to projects they fund, with amounts"""
     sources = models.ManyToManyField('facts.Organization', blank=True)
-    project = models.ForeignKey('Project')
+    project = models.ForeignKey('Project', related_name='funding')
     amount = models.BigIntegerField(
         blank=True, null=True,
         help_text="Values in whole units (dollars, etc.)"

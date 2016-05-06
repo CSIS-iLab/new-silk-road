@@ -278,3 +278,8 @@ MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
 MAINTENANCE_IGNORE_URLS = (
     r'^/admin/.*',
 )
+
+# Rest API
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.StandardLimitPagination',
+}
