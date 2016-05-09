@@ -56,8 +56,11 @@ class HasGeoListFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        has_geo = self.value() == 'true'
-        return queryset.filter(geo__isnull=(not has_geo))
+        val = self.value()
+        if val:
+            has_geo = val == 'true'
+            return queryset.filter(geo__isnull=(not has_geo))
+        return queryset
 
 
 @admin.register(Project)
@@ -89,7 +92,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'status',
         'infrastructure_type',
         'initiatives',
-        'countries',
+        'countries__name',
         'regions',
         HasGeoListFilter,
     )
