@@ -22,13 +22,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='projectfunding',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime(2016, 5, 10, 20, 10, 28, 93042, tzinfo=utc)),
+            field=models.DateTimeField(auto_now_add=True, default=datetime.datetime.now(tz=utc)),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='projectfunding',
             name='updated_at',
-            field=models.DateTimeField(auto_now=True, default=datetime.datetime(2016, 5, 10, 20, 10, 37, 556833, tzinfo=utc)),
+            field=models.DateTimeField(auto_now=True, default=datetime.datetime.now(tz=utc)),
             preserve_default=False,
         ),
         migrations.AlterField(
