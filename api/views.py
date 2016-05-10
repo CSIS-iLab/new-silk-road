@@ -14,7 +14,7 @@ from api.serializers.locations import (
     GeometryStoreSerializer,
     GeometryStoreCentroidSerializer,
 )
-from locations.filters import (
+from api.filters.locations import (
     GeometryStoreFilter,
     LineStringGeometryFilter,
     PointGeometryFilter,
@@ -23,7 +23,7 @@ from locations.filters import (
 )
 from infrastructure.models import (Project, Initiative)
 from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer)
-from infrastructure.filters import (ProjectFilter, InitiativeFilter)
+from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
