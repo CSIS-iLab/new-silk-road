@@ -1,7 +1,18 @@
 <section class="funding">
     <h3>Projects Funded</h3>
-    <ul>{% for funding in funding_list|slice:slice_size  %}
-        <li><a href="{{ funding.project.absolute_url }}">{{ funding.project.name }}</a></li>{% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Project</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>{% for funding in funding_list|slice:slice_size  %}
+            <tr>
+                <td><a href="{{ funding.project.absolute_url }}">{{ funding.project.name }}</a></td>
+                <td>{{ funding.amount|default:"Unknown" }} {{ funding.currency|default:"" }}</td>
+            </tr>{% endfor %}
+        </tbody>
+    </table>
     <p>More &hellip;</p>
 </section>
