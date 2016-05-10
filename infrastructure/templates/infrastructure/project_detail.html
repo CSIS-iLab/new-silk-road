@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
             bounds: [{% for val in object.geo.calculate_overall_extent %}{% spaceless %}
                 {{val}}{% if not forloop.last%},{% endif %}{% endspaceless %}{% endfor %}],
             maxZoom: 15,
-            padding: 10
+            padding: 40
         }
 
         if (geostore_url) {
