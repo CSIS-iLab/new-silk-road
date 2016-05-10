@@ -29,6 +29,11 @@ textarea {
 .marker-title {
   font-weight: 700; }
 
+.map-container {
+  width: 100%; }
+  .map-container .mapboxgl-map {
+    overflow: visible; }
+
 html {
   font-size: 18px; }
 
@@ -117,35 +122,37 @@ header {
     color: #556377;
     border-bottom: 2px solid #556377; }
 
-article h1 {
-  padding-bottom: 4px;
-  border-bottom: 5px solid #788ca8; }
-
-article section {
-  margin-bottom: 40px; }
-  article section h2 {
-    font: 1.77778rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-    color: #4e736c; }
-  article section h3 {
-    display: inline-block;
-    font-size: 1.11111rem;
-    text-transform: uppercase;
-    color: #556377; }
-  article section.documents {
-    padding: 2em;
-    background-color: #eee8e4; }
-  article section table {
-    font-size: 0.88889rem;
-    width: 80%; }
-    article section table tr:nth-of-type(even) {
+article {
+  margin-top: 40px; }
+  article h1 {
+    padding-bottom: 4px;
+    border-bottom: 5px solid #788ca8;
+    margin: 0 0 40px; }
+  article section {
+    margin-bottom: 40px; }
+    article section h2 {
+      font: 1.77778rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
+      color: #4e736c; }
+    article section h3 {
+      display: inline-block;
+      font-size: 1.11111rem;
+      text-transform: uppercase;
+      color: #556377; }
+    article section.documents {
+      padding: 2em;
       background-color: #eee8e4; }
-    article section table th, article section table td {
-      padding: 2px 5px;
-      text-align: left; }
-      article section table th:last-of-type, article section table td:last-of-type {
-        text-align: right; }
-      article section table th li, article section table td li {
-        margin-bottom: 4px; }
+    article section table {
+      font-size: 0.88889rem;
+      width: 80%; }
+      article section table tr:nth-of-type(even) {
+        background-color: #eee8e4; }
+      article section table th, article section table td {
+        padding: 2px 5px;
+        text-align: left; }
+        article section table th:last-of-type, article section table td:last-of-type {
+          text-align: right; }
+        article section table th li, article section table td li {
+          margin-bottom: 4px; }
 
 footer {
   position: relative;
@@ -287,14 +294,7 @@ footer {
     margin-right: 0; }
 
 .search-map {
-  display: block;
   position: relative; }
-  .search-map::after {
-    clear: both;
-    content: "";
-    display: table; }
-  .search-map .map-container {
-    width: inherit; }
   .search-map .search-controls {
     position: absolute;
     top: 2%;
@@ -305,13 +305,3 @@ footer {
     .search-map .search-controls input {
       width: 100%;
       padding: 8px; }
-
-/*
-    Map styles
-*/
-.mapboxgl-popup {
-  max-width: 400px;
-  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
-
-.marker-title {
-  font-weight: 700; }

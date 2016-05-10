@@ -8,3 +8,11 @@
 .marker-title {
     font-weight: 700;
 }
+
+.map-container {
+    @include fill-parent;
+
+    .mapboxgl-map {
+        overflow: visible;
+    }
+}

@@ -123,9 +123,12 @@ header {
 }
 
 article {
+    margin-top: $block-spacing;
+
     h1 {
         padding-bottom: 4px;
         border-bottom: 5px solid $blue-steel;
+        margin: 0 0 $block-spacing;
     }
     section {
         margin-bottom: $block-spacing;
@@ -206,12 +209,8 @@ footer {
     }
 }
 .search-map {
-    @include row();
     position: relative;
 
-    .map-container {
-        width: inherit;
-    }
     .search-controls {
         @include position(absolute, 2% 1.5% null null);
         @include size(33% auto);
