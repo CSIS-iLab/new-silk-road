@@ -36,7 +36,7 @@ class ProjectFunding(Temporal):
 
     class Meta:
         verbose_name_plural = 'project funders'
-        ordering = ['project__name']
+        ordering = ['project__name', 'created_at']
 
     def __str__(self):
         sources_str = ",".join([str(x) for x in self.sources.all()[:2]]) if self.sources.exists() else ""
