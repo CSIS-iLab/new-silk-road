@@ -10,6 +10,7 @@ django-maintenancemode==0.11.2
 django-mptt>=0.8.0,<0.9.0
 django-filter==0.13.0
 djangorestframework>=3.3.3,<3.4.0
+djangorestframework-filters>=0.8.0,<0.9.0
 djangorestframework-gis>=0.10.1,<0.11.0
 Django-Select2==5.8.4
 django-storages==1.4

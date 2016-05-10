@@ -14,7 +14,7 @@ from api.serializers.locations import (
     GeometryStoreSerializer,
     GeometryStoreCentroidSerializer,
 )
-from locations.filters import (
+from api.filters.locations import (
     GeometryStoreFilter,
     LineStringGeometryFilter,
     PointGeometryFilter,
@@ -23,7 +23,7 @@ from locations.filters import (
 )
 from infrastructure.models import (Project, Initiative)
 from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer)
-from infrastructure.filters import (ProjectFilter, InitiativeFilter)
+from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
@@ -73,6 +73,7 @@ class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GeometryStoreSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
+    pagination_class = None
 
 
 class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
@@ -81,3 +82,4 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GeometryStoreCentroidSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
+    pagination_class = None
