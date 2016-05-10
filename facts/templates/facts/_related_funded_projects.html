@@ -1,0 +1,7 @@
+<section class="funding">
+    <h3>Projects Funded</h3>
+    <ul>{% for funding in funding_list|slice:slice_size  %}
+        <li><a href="{{ funding.project.absolute_url }}">{{ funding.project.name }}</a></li>{% endfor %}
+    </ul>
+    <p>More &hellip;</p>
+</section>
