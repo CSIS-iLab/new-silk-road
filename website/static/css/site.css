@@ -62,9 +62,16 @@ ul {
   margin: 0 0 1em;
   padding-left: 1em;
   line-height: 1.1rem; }
+  ul li {
+    margin-bottom: 6px; }
   ul.clean {
     list-style-type: none;
     padding-left: 0; }
+  ul.compact {
+    margin: 0;
+    padding: 0; }
+    ul.compact li {
+      margin-bottom: 3px; }
 
 nav ul {
   padding-left: 0; }
@@ -127,6 +134,18 @@ article section {
   article section.documents {
     padding: 2em;
     background-color: #eee8e4; }
+  article section table {
+    font-size: 0.88889rem;
+    width: 80%; }
+    article section table tr:nth-of-type(even) {
+      background-color: #eee8e4; }
+    article section table th, article section table td {
+      padding: 2px 5px;
+      text-align: left; }
+      article section table th:last-of-type, article section table td:last-of-type {
+        text-align: right; }
+      article section table th li, article section table td li {
+        margin-bottom: 4px; }
 
 footer {
   position: relative;

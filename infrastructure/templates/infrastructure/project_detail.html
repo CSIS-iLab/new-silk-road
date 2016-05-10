@@ -86,8 +86,35 @@
     </section>
     <section>
         <h2>Explore Related People &amp; Organizations</h2>
+        <div class="row">
+            <section class="col-6">
+                <h3>Contractors</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.contractors.all %}
+            </section>
+            <section class="col-6">
+                <h3>Consultants</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.consultants.all %}
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-6">
+                <h3>Implementers</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.implementers.all %}
+            </section>
+            <section class="col-6">
+                <h3>Operators</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.operators.all %}
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-6">
+                <h3>Contacts</h3>
+                {% include "infrastructure/_related_people_list.html" with people_list=object.contacts.all %}
+            </section>
+        </div>
         <section>
-            <h3></h3>
+            <h3>Funders</h3>
+            {% include "infrastructure/_project_funding_list.html" with funding_list=object.funding.all %}
         </section>
     </section>
 </article>
