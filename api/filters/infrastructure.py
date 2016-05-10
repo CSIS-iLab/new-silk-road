@@ -33,7 +33,44 @@ class ProjectFundingFilter(filters.FilterSet):
     sources = filters.RelatedFilter(OrganizationFilter, name='sources', distinct=True)
     project = filters.RelatedFilter('api.filters.infrastructure.ProjectFilter', name='project')
     amount = filters.AllLookupsFilter(name='amount')
-    currency = filters.ChoiceFilter(name='currency', choices=CURRENCY_CHOICES)
+    currency = filters.CharFilter(name='currency', lookup_expr='iexact')
+    currency_amount = filters.MethodFilter()
+    currency_amount__gt = filters.MethodFilter()
+    currency_amount__gte = filters.MethodFilter()
+    currency_amount__lt = filters.MethodFilter()
+    currency_amount__lte = filters.MethodFilter()
+
+    def __filter__currency_amount(self, name, queryset, value, modifier=None):
+        currency_field = 'currency'
+        amount_field = name.replace('currency_amount', 'amount')
+        currency_field = name.replace('currency_amount', 'currency__iexact')
+        if modifier:
+            currency_field = currency_field.replace(modifier, '').rstrip('_')
+
+        value = value.strip()
+        value_list = value.split(' ')
+        if len(value_list) == 2:
+            lookup = {
+                amount_field: value_list[0],
+                currency_field: value_list[1]
+            }
+            return queryset.filter(**lookup)
+        return queryset.none()
+
+    def filter_currency_amount(self, name, queryset, value):
+        return self.__filter__currency_amount(name, queryset, value)
+
+    def filter_currency_amount__gt(self, name, queryset, value):
+        return self.__filter__currency_amount(name, queryset, value, modifier='gt')
+
+    def filter_currency_amount__gte(self, name, queryset, value):
+        return self.__filter__currency_amount(name, queryset, value, modifier='gte')
+
+    def filter_currency_amount__lt(self, name, queryset, value):
+        return self.__filter__currency_amount(name, queryset, value, modifier='lt')
+
+    def filter_currency_amount__lte(self, name, queryset, value):
+        return self.__filter__currency_amount(name, queryset, value, modifier='lte')
 
     class Meta:
         model = ProjectFunding
@@ -53,7 +90,6 @@ class ProjectFilter(filters.FilterSet):
     infrastructure_type = filters.RelatedFilter(InfrastructureTypeFilter, name='infrastructure_type')
 
     funding = filters.RelatedFilter(ProjectFundingFilter, name='funding', distinct=True)
-    # TODO: MethodFilter for amount + currency
 
     contractors = filters.RelatedFilter(OrganizationFilter, name='contractors')
     consultants = filters.RelatedFilter(OrganizationFilter, name='consultants')
