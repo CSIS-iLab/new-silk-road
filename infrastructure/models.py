@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
-from publish.models import Publishable
+from publish.models import Publishable, Temporal
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
@@ -19,7 +19,7 @@ class InfrastructureType(models.Model):
         return self.name
 
 
-class ProjectFunding(models.Model):
+class ProjectFunding(Temporal):
     """ProjectFunding relates Organizations to projects they fund, with amounts"""
     sources = models.ManyToManyField('facts.Organization', blank=True)
     project = models.ForeignKey('Project', related_name='funding')
@@ -36,6 +36,7 @@ class ProjectFunding(models.Model):
 
     class Meta:
         verbose_name_plural = 'project funders'
+        ordering = ['project__name']
 
     def __str__(self):
         sources_str = ",".join([str(x) for x in self.sources.all()[:2]]) if self.sources.exists() else ""

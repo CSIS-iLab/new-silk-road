@@ -36,6 +36,7 @@ class Organization(MPTTModel, Publishable):
 
     class Meta:
         verbose_name_plural = "all organizations"
+        ordering = ['name', 'created_at']
 
     def __str__(self):
         return self.name
