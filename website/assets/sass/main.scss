@@ -14,6 +14,10 @@ body {
     @include font-feature-settings("liga", "kern");
 }
 
+a {
+    color: $medium-green;
+}
+
 h1 {
     font-family: $serif-font-family;
     font-size: $major-hed-size;
@@ -34,6 +38,11 @@ ul {
     margin: 0 0 1em;
     padding-left: 1em;
     line-height: 1.1rem;
+
+    &.clean {
+        list-style-type: none;
+        padding-left: 0;
+    }
 }
 
 nav {
@@ -56,9 +65,7 @@ header {
         font-size: 1rem;
         float: left;
         margin: 1rem 0;
-        // text-indent: 100%;
-        // white-space: nowrap;
-        // overflow: hidden;
+        // @include hide-text;
         // background-image: url($logo-image-url);
     }
     nav {
@@ -83,11 +90,6 @@ header {
 }
 
 .details {
-    h3 {
-        display: inline-block;
-        font-size: $mid-text-size;
-        text-transform: uppercase;
-    }
     .row {
         margin-bottom: $block-spacing;
 
@@ -114,20 +116,43 @@ article {
     }
     section {
         margin-bottom: $block-spacing;
+
+        h2 {
+            font: $section-hed-size $serif-font-family;
+            color: $serious-green;
+        }
+
+        h3 {
+            display: inline-block;
+            font-size: $mid-text-size;
+            text-transform: uppercase;
+            color: $slate-grey;
+        }
+
+        &.documents {
+            padding: 2em;
+            background-color: $creamy;
+
+        }
     }
 }
 
+
 footer {
+    @include position(relative);
     border-top: $thin-dark-border;
     background-color: $pale-green;
     color: $dark-night;
-    padding: $block-spacing 0;
+    @include pad($block-spacing $footer-horizontal-padding);
+    nav li {
+        margin-bottom: $block-spacing/2;
+    }
     a {
         color: $dark-night;
         text-decoration: none;
     }
-    nav {
-        @include shift(1);
+    .logo {
+        @include position(absolute, null $footer-horizontal-padding $block-spacing null);
     }
 }
 

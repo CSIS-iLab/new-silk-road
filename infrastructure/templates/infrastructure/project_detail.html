@@ -72,17 +72,23 @@
 {{ object.notes|default:None|markdown }}
     </section>
     <section class="documents">
-        <h3>Documents</h3>
+        <h2>Documentation</h2>
         {% regroup object.documents.all by get_document_type_display as docs_list %}
         {% for doc_type in docs_list %}
-        <h4>{{doc_type.grouper}}</h4>
-        <ul>{% for doc in doc_type.list  %}
+        <h3>{{doc_type.grouper}}</h3>
+        <ul class="clean">{% for doc in doc_type.list  %}
             <li>
                 <a rel="external nofollow" target="_blank" href="{{ doc.source_url }}">{{ doc.get_source_url_tail }}</a>
             </li>
             {% endfor %}
         </ul>
         {% endfor %}
+    </section>
+    <section>
+        <h2>Explore Related People &amp; Organizations</h2>
+        <section>
+            <h3></h3>
+        </section>
     </section>
 </article>
 {% endblock %}

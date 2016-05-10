@@ -12,6 +12,7 @@ $base-font-size: $em-base;
 $major-hed-size: rem(50);
 $mid-hed-size: rem(22);
 $mid-text-size: rem(20);
+$section-hed-size: rem(32);
 $minor-text-size: rem(16);
 $nav-text-size: rem(18);
 $base-line-height: 1.45em;
@@ -22,10 +23,12 @@ $serif-font-family: Merriweather, $georgia;
 
 $pale-green: #d6e1d6;
 $medium-green: #75986a;
+$serious-green: #4e736c;
 $dark-night: #252d3a;
 $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
+$creamy: #eee8e4;
 
 
 // Image URLs
@@ -39,3 +42,4 @@ $top-banner-img-url: $img-url-base + 'top_banner_bg.svg';
 $thick-dark-border: 5px solid $dark-night;
 $thin-dark-border: 3px solid $dark-night;
 $block-spacing: 40px;
+$footer-horizontal-padding: $block-spacing*1.75

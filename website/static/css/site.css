@@ -42,6 +42,9 @@ body {
   -ms-font-feature-settings: "liga", "kern";
   font-feature-settings: "liga", "kern"; }
 
+a {
+  color: #75986a; }
+
 h1 {
   font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
   font-size: 2.77778rem;
@@ -59,6 +62,9 @@ ul {
   margin: 0 0 1em;
   padding-left: 1em;
   line-height: 1.1rem; }
+  ul.clean {
+    list-style-type: none;
+    padding-left: 0; }
 
 nav ul {
   padding-left: 0; }
@@ -93,11 +99,6 @@ header {
         color: #556377;
         border-bottom: 1px solid #556377; }
 
-.details h3 {
-  display: inline-block;
-  font-size: 1.11111rem;
-  text-transform: uppercase; }
-
 .details .row {
   margin-bottom: 40px; }
   .details .row section {
@@ -115,17 +116,33 @@ article h1 {
 
 article section {
   margin-bottom: 40px; }
+  article section h2 {
+    font: 1.77778rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
+    color: #4e736c; }
+  article section h3 {
+    display: inline-block;
+    font-size: 1.11111rem;
+    text-transform: uppercase;
+    color: #556377; }
+  article section.documents {
+    padding: 2em;
+    background-color: #eee8e4; }
 
 footer {
+  position: relative;
   border-top: 3px solid #252d3a;
   background-color: #d6e1d6;
   color: #252d3a;
-  padding: 40px 0; }
+  padding: 40px 70px; }
+  footer nav li {
+    margin-bottom: 20px; }
   footer a {
     color: #252d3a;
     text-decoration: none; }
-  footer nav {
-    margin-left: 8.5298%; }
+  footer .logo {
+    position: absolute;
+    right: 70px;
+    bottom: 40px; }
 
 .page-wrap {
   display: block;
