@@ -1,7 +1,6 @@
-@import "_variables";
-@import "lib/bourbon/bourbon";
-@import "lib/neat/neat";
-@import "_normalize";
+@import "variables";
+@import "lib/bourbon/bourbon", "lib/neat/neat";
+@import "normalize";
 @import "map";
 html {
     font-size: $base-font-size;
@@ -70,7 +69,7 @@ nav {
 
 header {
     @include clearfix;
-    background: no-repeat center/100% url($top-banner-img-url) $pale-green;
+    background: no-repeat center/100% url($top-banner-img) $pale-green;
     height: 75px;
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
@@ -79,7 +78,7 @@ header {
         float: left;
         margin: 1rem 0;
         // @include hide-text;
-        // background-image: url($logo-image-url);
+        // background-image: url($logo-image);
     }
     nav {
         float: right;
@@ -118,8 +117,6 @@ header {
             border-bottom: 2px solid $slate-grey;
         }
     }
-
-
 }
 
 article {
@@ -129,6 +126,7 @@ article {
         padding-bottom: 4px;
         border-bottom: 5px solid $blue-steel;
         margin: 0 0 $block-spacing;
+        position: relative;
     }
     section {
         margin-bottom: $block-spacing;
@@ -206,19 +204,5 @@ footer {
 @for $i from 1 through 12 {
     .col-#{$i} {
         @include span-columns($i);
-    }
-}
-.search-map {
-    position: relative;
-
-    .search-controls {
-        @include position(absolute, 2% 1.5% null null);
-        @include size(33% auto);
-        box-shadow: 0 0 5px rgba(51, 51, 51, 0.2);
-        input {
-            @include fill-parent;
-            padding: 8px;
-        }
-
     }
 }

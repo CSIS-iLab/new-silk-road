@@ -33,13 +33,12 @@ $creamer: #eee8e4;
 
 // Image URLs
 $img-url-base: '/static/img/';
-$logo-image-url: $img-url-base;
-$top-banner-img-url: $img-url-base + 'top_banner_bg.svg';
-
+$logo-image: $img-url-base;
+$top-banner-img: $img-url-base + 'top_banner_bg.svg';
 
 // Reusables
 
 $thick-dark-border: 5px solid $dark-night;
 $thin-dark-border: 3px solid $dark-night;
 $block-spacing: 40px;
-$footer-horizontal-padding: $block-spacing*1.75
+$footer-horizontal-padding: $block-spacing*1.75;

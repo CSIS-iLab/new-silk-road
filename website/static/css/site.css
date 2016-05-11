@@ -19,6 +19,12 @@ textarea {
   font: inherit;
   margin: 0; }
 
+html {
+  box-sizing: border-box; }
+
+*, *::after, *::before {
+  box-sizing: inherit; }
+
 /*
     Map styles
 */
@@ -33,6 +39,19 @@ textarea {
   width: 100%; }
   .map-container .mapboxgl-map {
     overflow: visible; }
+
+.search-map {
+  position: relative; }
+  .search-map .search-controls {
+    position: absolute;
+    top: 2%;
+    right: 1.5%;
+    height: auto;
+    width: 33%;
+    box-shadow: 0 0 5px rgba(51, 51, 51, 0.2); }
+    .search-map .search-controls input {
+      width: 100%;
+      padding: 8px; }
 
 html {
   font-size: 18px; }
@@ -127,7 +146,8 @@ article {
   article h1 {
     padding-bottom: 4px;
     border-bottom: 5px solid #788ca8;
-    margin: 0 0 40px; }
+    margin: 0 0 40px;
+    position: relative; }
   article section {
     margin-bottom: 40px; }
     article section h2 {
@@ -292,6 +312,27 @@ footer {
   width: 100%; }
   .col-12:last-child {
     margin-right: 0; }
+
+html {
+  box-sizing: border-box; }
+
+*, *::after, *::before {
+  box-sizing: inherit; }
+
+/*
+    Map styles
+*/
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
+
+.marker-title {
+  font-weight: 700; }
+
+.map-container {
+  width: 100%; }
+  .map-container .mapboxgl-map {
+    overflow: visible; }
 
 .search-map {
   position: relative; }
