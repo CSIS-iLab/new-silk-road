@@ -45,21 +45,15 @@ Map | {{ block.super }}
             }
             return label;
         }
-        var paintStyles = {
-            lines: {
-                'line-width': 6,
-                'line-color': '#FF0000'
-            },
-            points: {
-                'circle-color': '#a81e3b',
-                'circle-radius': 6
-            },
-            polygons: {
-                'fill-color': '#0000FF'
-            }
-        }
+
         mapboxgl.accessToken = '{{mapbox_token|safe}}';
         var mm = new MapMaker(mapboxgl);
+        var paintStyle = {
+            'circle-color': '#d61b42',
+            'circle-radius': {
+                "stops": [[3, 2], [7, 5]]
+            }
+        };
 
         mm.makeMap({
             container: 'map', // container id
@@ -75,7 +69,7 @@ Map | {{ block.super }}
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     geostore = JSON.parse(httpRequest.responseText);
                     mm.map.addSource('projects-centroids-src', mm.createGeoJSONSource(geostore));
-                    mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle'));
+                    mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle', paintStyle));
                     var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], htmlLabelForFeature);
                     mm.map.on('click', centroidsPopupHandler);
                 }

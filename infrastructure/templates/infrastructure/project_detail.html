@@ -127,8 +127,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var httpRequest, geostore;
     var linePaint = {
         'line-color': '#FF0000',
-        'line-width': 3,
-        'line-opacity': 0.6
+        'line-width': {
+            'stops': [[3,1], [5,3]]
+        },
+        'line-opacity': 0.8
     };
     var lineLayout = { 'line-cap': 'round' };
 
