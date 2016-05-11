@@ -74,6 +74,7 @@ class CollectionStage(object):
 
 class Project(Publishable):
     """Describes a project"""
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField("Project name/title", max_length=300)
     slug = models.SlugField(max_length=310, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
@@ -181,7 +182,13 @@ class Project(Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('project-detail', args=[self.slug or None])
+        return reverse(
+            'infrastructure:project-detail',
+            kwargs={
+                'slug': self.slug,
+                'identifier': str(self.identifier)
+            }
+        )
 
 
 class InitiativeType(models.Model):
@@ -201,6 +208,7 @@ class InitiativeType(models.Model):
 class Initiative(MPTTModel, Publishable):
     """Describes an initiative"""
 
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=150, allow_unicode=True)
     initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
@@ -237,7 +245,13 @@ class Initiative(MPTTModel, Publishable):
         super(Initiative, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('initiative-detail', args=[self.slug or None])
+        return reverse(
+            'infrastructure:initiative-detail',
+            kwargs={
+                'slug': self.slug,
+                'identifier': str(self.identifier)
+            }
+        )
 
 
 class ProjectDocument(models.Model):
@@ -277,7 +291,7 @@ class ProjectDocument(models.Model):
         ))
     )
 
-    identifier = models.UUIDField(default=uuid.uuid4, editable=False)
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     document = models.ForeignKey(
         'sources.Document',
         models.SET_NULL,
