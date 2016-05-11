@@ -11,9 +11,10 @@ adminpatterns = [
     url(r'^add-geo/$', staff_member_required()(GeoUploadView.as_view()), name='project-geo-upload')
 ]
 
+app_name = 'infrastructure'
 urlpatterns = [
-    url(r'^projects/(?P<slug>\S+)/$', ProjectDetailView.as_view(), name='project-detail'),
+    url(r'^projects/(?P<slug>\S+)/(?P<identifier>[a-f0-9-]{32,36})/$', ProjectDetailView.as_view(), name='project-detail'),
     url(r'^projects/$', ProjectListView.as_view(), name='project-list'),
-    url(r'^initiatives/(?P<slug>\S+)/$', InitiativeDetailView.as_view(), name='initiative-detail'),
+    url(r'^initiatives/(?P<slug>\S+)/(?P<identifier>[a-f0-9-]{32,36})/$', InitiativeDetailView.as_view(), name='initiative-detail'),
     url(r'^initiatives/$', InitiativeListView.as_view(), name='initiative-list'),
 ]

@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 
 class ProjectDetailView(DetailView):
     model = Project
+    slug_field = 'identifier'
+    slug_url_kwarg = 'identifier'
 
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
@@ -49,6 +51,8 @@ class ProjectListView(ListView):
 
 class InitiativeDetailView(DetailView):
     model = Initiative
+    slug_field = 'identifier'
+    slug_url_kwarg = 'identifier'
 
 
 class InitiativeListView(ListView):
