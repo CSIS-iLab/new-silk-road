@@ -42,7 +42,7 @@ class Organization(MPTTModel, Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('facts-organization-detail', args=[self.slug])
+        return reverse('facts:organization-detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
         if not self.slug or self.slug == '':
