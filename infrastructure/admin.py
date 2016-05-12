@@ -30,12 +30,34 @@ class ProjectFundingInline(admin.StackedInline):
         'sources',
     )
 
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
+
 
 class ProjectsInitiativeInline(admin.StackedInline):
     model = Project.initiatives.through
     formfield_overrides = {
         models.ForeignKey: {'widget': NameSearchWidget(attrs={'style': 'width: 80%;'})},
     }
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
+
+
+class ProjectsDocumentsInline(admin.StackedInline):
+    model = Project.documents.through
+    formfield_overrides = {
+        models.ForeignKey: {'widget': NameSearchWidget(attrs={'style': 'width: 80%;'})},
+    }
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
 
 
 class HasGeoListFilter(admin.SimpleListFilter):
@@ -218,6 +240,9 @@ class ProjectDocumentAdmin(admin.ModelAdmin):
     )
     list_filter = ('document_type', 'status_indicator')
     search_fields = ('source_url', 'notes')
+    inlines = [
+        ProjectsDocumentsInline,
+    ]
 
     def projects_display(self, obj):
         if obj.project_set:
