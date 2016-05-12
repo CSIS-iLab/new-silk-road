@@ -11,13 +11,18 @@ from locations.models import (
 )
 
 
-class GeometryStoreFilter(GeoFilterSet):
+class GeometryStoreFilter(filters.FilterSet):
+    label = filters.AllLookupsFilter(name='label')
     name = filters.CharFilter(name='attributes__name', lookup_expr='iexact')
-    name__contains = filters.CharFilter(name='attributes__name', lookup_expr='icontains')
+    project = filters.RelatedFilter(
+        'api.filters.infrastructure.ProjectFilter',
+        name='project',
+        distinct=True
+    )
 
     class Meta:
         model = GeometryStore
-        fields = ('identifier',)
+        fields = ('identifier', 'project')
 
 
 def filter_region_json(qs, value):

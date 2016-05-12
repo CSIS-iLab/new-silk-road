@@ -20,6 +20,10 @@ class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):
     class Meta:
         fields = ('geostores', 'attributes', 'label')
 
+    def get_properties(self, instance, fields):
+        props = instance.attributes.copy()
+        return props
+
 
 class LineStringGeometrySerializer(GeometryStoreRelatedSerializer):
 
@@ -60,17 +64,7 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         geo_field = 'centroid'
 
     def get_properties(self, instance, fields):
-                # fields = ('identifier', 'attributes', 'centroid', 'projects')
-        first_proj = instance.project_set.first()
-        props = instance.attributes.copy()
-        props.update({
+        return {
+            'label': instance.label,
             'geostore': instance.identifier,
-        })
-        if first_proj:
-            props['project_name'] = first_proj.name
-            props['project_slug'] = first_proj.slug
-            try:
-                props['project_url'] = first_proj.get_absolute_url()
-            except Exception:
-                pass
-        return props
+        }

@@ -38,10 +38,10 @@ Map | {{ block.super }}
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
         function htmlLabelForFeature(feature) {
-            var hed = feature.properties.project_name || feature.properties.name;
+            var hed = feature.properties.project_name || feature.properties.name || feature.properties.label;
             label = "<h4>" + hed + "</h4>";
             if (feature.properties.project_url) {
-                label += "<p><a href='" + feature.properties.project_url + "'>View Project</a></p>";
+                label += "<p><a target='_blank' href='" + feature.properties.project_url + "'>View Project</a></p>";
             }
             return label;
         }

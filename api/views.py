@@ -30,6 +30,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Project.objects.select_related(
         'infrastructure_type',
     ).all()
+    lookup_field = 'identifier'
     serializer_class = ProjectSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = ProjectFilter
@@ -37,6 +38,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 
 class InitiativeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Initiative.objects.all()
+    lookup_field = 'identifier'
     serializer_class = InitiativeSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = InitiativeFilter
@@ -68,16 +70,15 @@ class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = GeometryStore.objects.all()
+    queryset = GeometryStore.objects.filter(project__isnull=False)
     lookup_field = 'identifier'
     serializer_class = GeometryStoreSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
-    pagination_class = None
 
 
 class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = GeometryStore.objects.all()
+    queryset = GeometryStore.objects.filter(project__isnull=False)
     lookup_field = 'identifier'
     serializer_class = GeometryStoreCentroidSerializer
     filter_backends = (filters.DjangoFilterBackend,)
