@@ -7,7 +7,7 @@ import uuid
 
 class Person(Publishable):
     """Describes a person"""
-    identifier = models.UUIDField(default=uuid.uuid4, editable=False)
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     # Name info
     given_name = models.CharField('First name', max_length=100, help_text="A person's given or 'first' name(s).")
     additional_name = models.CharField('Middle name', blank=True, max_length=100, help_text="An additional name for a person, \
@@ -36,7 +36,7 @@ class Person(Publishable):
     full_display_name.short_description = "Full name"
 
     def get_absolute_url(self):
-        return reverse('facts-person-detail', args=[str(self.identifier)])
+        return reverse('facts:person-detail', args=[str(self.identifier)])
 
 
 class Position(models.Model):
