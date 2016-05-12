@@ -206,6 +206,8 @@ footer {
     position: absolute;
     right: 50px;
     bottom: 33px; }
+  footer .content-wrap {
+    margin-bottom: 0; }
 
 .page-wrap {
   display: block; }

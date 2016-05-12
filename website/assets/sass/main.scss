@@ -212,6 +212,10 @@ footer {
     .logo {
         @include position(absolute, null $footer-horizontal-padding $row-spacing null);
     }
+
+    .content-wrap {
+        margin-bottom: 0;
+    }
 }
 
 .page-wrap {
