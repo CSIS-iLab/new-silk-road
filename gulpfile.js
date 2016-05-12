@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp     = require('gulp'),
     sass     = require('gulp-sass'),
     cleanCss = require('gulp-clean-css'),
@@ -7,7 +9,7 @@ var gulp     = require('gulp'),
     rename   = require('gulp-rename');
 
 var assetsBase = 'website/assets',
-    destBase = 'website/static'
+    destBase = 'website/static',
     sassGlob = '/**/*.scss';
 
 
