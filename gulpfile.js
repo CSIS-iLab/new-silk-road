@@ -1,6 +1,6 @@
 var gulp      = require('gulp'),
     sass      = require('gulp-sass'),
-    minifyCSS = require('gulp-minify-css'),
+    cleanCss  = require('gulp-clean-css'),
     concat    = require('gulp-concat'),
     uglify    = require('gulp-uglify'),
     rename    = require('gulp-rename');
@@ -17,7 +17,7 @@ gulp.task('sass', function () {
                .pipe(concat('site.css'))
                .pipe(gulp.dest(cssDest))
                .pipe(rename({ extname: '.min.css' }))
-               .pipe(minifyCSS())
+               .pipe(cleanCss())
                .pipe(gulp.dest(cssDest))
 });
 

@@ -21,7 +21,7 @@ class EventType(MPTTModel):
         super(EventType, self).save(*args, **kwargs)
 
     # def get_absolute_url(self):
-    #     return reverse('facts-event-type-detail', args=[self.slug])
+    #     return reverse('facts:event-type-detail', args=[self.slug])
 
 
 class Event(Publishable):
@@ -42,7 +42,7 @@ class Event(Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('facts-event-detail', args=[self.slug])
+        return reverse('facts:event-detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
         if not self.slug or self.slug == '':

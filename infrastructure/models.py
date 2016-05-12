@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
-from publish.models import Publishable
+from publish.models import Publishable, Temporal
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
@@ -19,7 +19,7 @@ class InfrastructureType(models.Model):
         return self.name
 
 
-class ProjectFunding(models.Model):
+class ProjectFunding(Temporal):
     """ProjectFunding relates Organizations to projects they fund, with amounts"""
     sources = models.ManyToManyField('facts.Organization', blank=True)
     project = models.ForeignKey('Project', related_name='funding')
@@ -36,6 +36,7 @@ class ProjectFunding(models.Model):
 
     class Meta:
         verbose_name_plural = 'project funders'
+        ordering = ['project__name', 'created_at']
 
     def __str__(self):
         sources_str = ",".join([str(x) for x in self.sources.all()[:2]]) if self.sources.exists() else ""
@@ -73,6 +74,7 @@ class CollectionStage(object):
 
 class Project(Publishable):
     """Describes a project"""
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField("Project name/title", max_length=300)
     slug = models.SlugField(max_length=310, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
@@ -180,7 +182,13 @@ class Project(Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('project-detail', args=[self.slug or None])
+        return reverse(
+            'infrastructure:project-detail',
+            kwargs={
+                'slug': self.slug,
+                'identifier': str(self.identifier)
+            }
+        )
 
 
 class InitiativeType(models.Model):
@@ -200,6 +208,7 @@ class InitiativeType(models.Model):
 class Initiative(MPTTModel, Publishable):
     """Describes an initiative"""
 
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=150, allow_unicode=True)
     initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
@@ -236,7 +245,13 @@ class Initiative(MPTTModel, Publishable):
         super(Initiative, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('initiative-detail', args=[self.slug or None])
+        return reverse(
+            'infrastructure:initiative-detail',
+            kwargs={
+                'slug': self.slug,
+                'identifier': str(self.identifier)
+            }
+        )
 
 
 class ProjectDocument(models.Model):
@@ -276,7 +291,7 @@ class ProjectDocument(models.Model):
         ))
     )
 
-    identifier = models.UUIDField(default=uuid.uuid4, editable=False)
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     document = models.ForeignKey(
         'sources.Document',
         models.SET_NULL,

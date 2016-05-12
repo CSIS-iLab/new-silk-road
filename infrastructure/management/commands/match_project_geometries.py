@@ -16,10 +16,10 @@ class Command(BaseCommand):
         self.verbosity = kwargs.get('verbosity')
 
         for item in GeometryStore.objects.all():
-            if 'name' not in item.attributes:
-                self.stderr(self.style.WARNING("Geometry {} has no 'name' attribute to match on".format(item.identifier)))
+            if not item.label:
+                self.stderr(self.style.WARNING("Geometry {} has no 'name' attribute to match on".format(str(item.identifier))))
             else:
-                geom_name = item.attributes.get('name')
+                geom_name = item.label
                 if self.verbosity > 1:
                     self.stdout.write("Attempting to match collection '{}' using name '{}'".format(item.identifier, geom_name))
 

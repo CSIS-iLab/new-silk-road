@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 
 class ProjectDetailView(DetailView):
     model = Project
+    slug_field = 'identifier'
+    slug_url_kwarg = 'identifier'
 
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
@@ -49,6 +51,8 @@ class ProjectListView(ListView):
 
 class InitiativeDetailView(DetailView):
     model = Initiative
+    slug_field = 'identifier'
+    slug_url_kwarg = 'identifier'
 
 
 class InitiativeListView(ListView):
@@ -67,8 +71,12 @@ class GeoUploadView(LoginRequiredMixin, FormView):
         tempfp.write(uploaded_file.read())
         tempfp.close()
         label = form.cleaned_data.get('label') or uploaded_file.name
+        project = form.cleaned_data.get('project', None)
         try:
             geo = geostore_from_file(tempfp.name, label)
+            if project:
+                project.geo = geo
+                project.save()
             self.success_url = reverse('admin:locations_geometrystore_change', args=(geo.id,))
             return super(GeoUploadView, self).form_valid(form)
         except Exception as e:

@@ -215,7 +215,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # django-suit
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Reconnecting Asia',
-    # 'CONFIRM_UNSAVED_CHANGES': True
+    'CONFIRM_UNSAVED_CHANGES': True if not DEBUG else False,
     'MENU': (
         '-',
         'infrastructure',
