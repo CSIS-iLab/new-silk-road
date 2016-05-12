@@ -40,6 +40,9 @@ ul {
 
     li {
         margin-bottom: 6px;
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     &.clean {
@@ -52,6 +55,7 @@ ul {
         padding: 0;
 
             li {
+                @extend li:last-child;
                 margin-bottom: 3px;
             }
     }
@@ -74,15 +78,14 @@ header {
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
     h1 {
-        font-size: 1rem;
         float: left;
         margin: 1rem 0;
-        // @include hide-text;
-        // background-image: url($logo-image);
+        @include hide-text;
+        background: url($logo-image) no-repeat;
     }
     nav {
         float: right;
-        margin: 1rem 60px 1rem 0;
+        margin: 1rem 0;
         ul {
             li {
                 display: inline-block;
@@ -103,7 +106,7 @@ header {
 
 .details {
     .row {
-        margin-bottom: $block-spacing;
+        margin-bottom: $row-spacing;
 
         section {
             margin-bottom: 0;
@@ -119,17 +122,25 @@ header {
     }
 }
 
+article > section {
+    margin-bottom: $section-spacing;
+}
+
 article {
-    margin-top: $block-spacing;
+    margin-top: $section-spacing;
 
     h1 {
-        padding-bottom: 4px;
+        color: $dark-night;
+        padding-bottom: 15px;
         border-bottom: 5px solid $blue-steel;
-        margin: 0 0 $block-spacing;
+        margin: 0 0 $row-spacing;
         position: relative;
     }
     section {
-        margin-bottom: $block-spacing;
+
+        .row:last-child {
+            margin-bottom: 0;
+        }
 
         h2 {
             font: $section-hed-size $serif-font-family;
@@ -143,8 +154,12 @@ article {
             color: $slate-grey;
         }
 
+        ul:last-child {
+            margin-bottom: 0;
+        }
+
         &.documents {
-            padding: 2em;
+            padding: $row-spacing;
             background-color: $creamer;
 
         }
@@ -152,8 +167,19 @@ article {
         table {
             font-size: $minor-text-size;
             width: 80%;
-            tr:nth-of-type(even) {
-                background-color: $creamer;
+            tbody {
+                tr {
+                    color: $medium-green;
+                    a {
+                        color: $medium-green;
+                    }
+                }
+                tr:nth-of-type(even) {
+                    color: $slate-grey;
+                    a {
+                        color: $slate-grey;
+                    }
+                }
             }
             th, td {
                 padding: 2px 5px;
@@ -175,22 +201,22 @@ footer {
     border-top: $thin-dark-border;
     background-color: $pale-green;
     color: $dark-night;
-    @include pad($block-spacing $footer-horizontal-padding);
+    @include pad($row-spacing $footer-horizontal-padding);
     nav li {
-        margin-bottom: $block-spacing/2;
+        margin-bottom: $row-spacing/2;
     }
     a {
         color: $dark-night;
         text-decoration: none;
     }
     .logo {
-        @include position(absolute, null $footer-horizontal-padding $block-spacing null);
+        @include position(absolute, null $footer-horizontal-padding $row-spacing null);
     }
 }
 
 .page-wrap {
     display: block;
-    @include outer-container($max-page-width);
+    // @include outer-container($max-page-width);
 }
 
 .content-wrap {
@@ -200,6 +226,7 @@ footer {
 
 .row {
     @include row();
+    margin-bottom: $row-spacing;
 }
 @for $i from 1 through 12 {
     .col-#{$i} {

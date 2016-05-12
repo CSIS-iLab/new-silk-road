@@ -71,7 +71,7 @@ a {
 
 h1 {
   font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-  font-size: 2.77778rem;
+  font-size: 2.22222rem;
   line-height: 1.2em; }
 
 h2, h3, h4, h5, h6 {
@@ -88,6 +88,8 @@ ul {
   line-height: 1.1rem; }
   ul li {
     margin-bottom: 6px; }
+    ul li:last-child, ul.compact li {
+      margin-bottom: 0; }
   ul.clean {
     list-style-type: none;
     padding-left: 0; }
@@ -105,24 +107,27 @@ nav ul {
 header {
   background: no-repeat center/100% url("/static/img/top_banner_bg.svg") #d6e1d6;
   height: 75px;
-  border-top: 5px solid #252d3a;
-  border-bottom: 3px solid #252d3a; }
+  border-top: 5px solid #353d4e;
+  border-bottom: 3px solid #353d4e; }
   header::after {
     clear: both;
     content: "";
     display: table; }
   header h1 {
-    font-size: 1rem;
     float: left;
-    margin: 1rem 0; }
+    margin: 1rem 0;
+    overflow: hidden;
+    text-indent: 101%;
+    white-space: nowrap;
+    background: url("/static/img/ReConAsiaLogo.svg") no-repeat; }
   header nav {
     float: right;
-    margin: 1rem 60px 1rem 0; }
+    margin: 1rem 0; }
     header nav ul li {
       display: inline-block;
       margin-left: 1em;
       margin-right: none;
-      font-size: 1rem; }
+      font-size: 0.88889rem; }
       header nav ul li a {
         padding: 3px 0 2px 1em;
         font-weight: bold;
@@ -131,7 +136,7 @@ header {
         border-bottom: 1px solid #556377; }
 
 .details .row {
-  margin-bottom: 40px; }
+  margin-bottom: 33px; }
   .details .row section {
     margin-bottom: 0; }
   .details .row:nth-child(odd) h3 {
@@ -141,67 +146,72 @@ header {
     color: #556377;
     border-bottom: 2px solid #556377; }
 
+article > section {
+  margin-bottom: 50px; }
+
 article {
-  margin-top: 40px; }
+  margin-top: 50px; }
   article h1 {
-    padding-bottom: 4px;
+    color: #353d4e;
+    padding-bottom: 15px;
     border-bottom: 5px solid #788ca8;
-    margin: 0 0 40px;
+    margin: 0 0 33px;
     position: relative; }
-  article section {
-    margin-bottom: 40px; }
-    article section h2 {
-      font: 1.77778rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-      color: #4e736c; }
-    article section h3 {
-      display: inline-block;
-      font-size: 1.11111rem;
-      text-transform: uppercase;
+  article section .row:last-child {
+    margin-bottom: 0; }
+  article section h2 {
+    font: 1.44444rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
+    color: #4e736c; }
+  article section h3 {
+    display: inline-block;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #556377; }
+  article section ul:last-child {
+    margin-bottom: 0; }
+  article section.documents {
+    padding: 33px;
+    background-color: #eee8e4; }
+  article section table {
+    font-size: 0.88889rem;
+    width: 80%; }
+    article section table tbody tr {
+      color: #75986a; }
+      article section table tbody tr a {
+        color: #75986a; }
+    article section table tbody tr:nth-of-type(even) {
       color: #556377; }
-    article section.documents {
-      padding: 2em;
-      background-color: #eee8e4; }
-    article section table {
-      font-size: 0.88889rem;
-      width: 80%; }
-      article section table tr:nth-of-type(even) {
-        background-color: #eee8e4; }
-      article section table th, article section table td {
-        padding: 2px 5px;
-        text-align: left; }
-        article section table th:last-of-type, article section table td:last-of-type {
-          text-align: right; }
-        article section table th li, article section table td li {
-          margin-bottom: 4px; }
+      article section table tbody tr:nth-of-type(even) a {
+        color: #556377; }
+    article section table th, article section table td {
+      padding: 2px 5px;
+      text-align: left; }
+      article section table th:last-of-type, article section table td:last-of-type {
+        text-align: right; }
+      article section table th li, article section table td li {
+        margin-bottom: 4px; }
 
 footer {
   position: relative;
-  border-top: 3px solid #252d3a;
+  border-top: 3px solid #353d4e;
   background-color: #d6e1d6;
-  color: #252d3a;
-  padding: 40px 70px; }
+  color: #353d4e;
+  padding: 33px 50px; }
   footer nav li {
-    margin-bottom: 20px; }
+    margin-bottom: 16.5px; }
   footer a {
-    color: #252d3a;
+    color: #353d4e;
     text-decoration: none; }
   footer .logo {
     position: absolute;
-    right: 70px;
-    bottom: 40px; }
+    right: 50px;
+    bottom: 33px; }
 
 .page-wrap {
-  display: block;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto; }
-  .page-wrap::after {
-    clear: both;
-    content: "";
-    display: table; }
+  display: block; }
 
 .content-wrap {
-  max-width: 1040px;
+  max-width: 980px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 4rem; }
@@ -211,7 +221,8 @@ footer {
     display: table; }
 
 .row {
-  display: block; }
+  display: block;
+  margin-bottom: 33px; }
   .row::after {
     clear: both;
     content: "";

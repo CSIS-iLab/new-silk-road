@@ -18,8 +18,10 @@
     <body class="{% block bodyclass %}{% endblock %}">
         <div class="page-wrap">
             <header role="banner">
-                <h1><a href="/">Reconnecting Asia</a></h1>
-                {% include "_navigation.html" %}
+                <div class="content-wrap">
+                    <a href="/"><h1>Reconnecting Asia</h1></a>
+                    {% include "_navigation.html" %}
+                </div>
             </header>
     {% block content-shell %}
             <div class="content-wrap">
@@ -27,15 +29,17 @@
             </div>
     {% endblock %}
             <footer>
-                <div class="row">
+                <div class="content-wrap">
+                    <div class="row">
 
-                </div>
-                <div class="row">
-                    <div class="col-9">
-                        {% include "_navigation.html" %}
                     </div>
+                    <div class="row">
+                        <div class="col-9">
+                            {% include "_navigation.html" %}
+                        </div>
+                    </div>
+                    <img class="logo" src="{% static 'img/csis-log.png' %}" alt="Center for Strategic and International Studies">
                 </div>
-                <img class="logo" src="{% static 'img/csis-log.png' %}" alt="Center for Strategic and International Studies">
             </footer>
         </div>
 {% block postbodyjs %}{% endblock %}

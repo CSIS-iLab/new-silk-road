@@ -4,17 +4,17 @@
 
 // Basics
 $max-page-width: 1600px;
-$max-content-width: $max-page-width * 0.65;
+$max-content-width: 980px;
 
 // fonts
 $em-base: 18px;
 $base-font-size: $em-base;
-$major-hed-size: rem(50);
+$major-hed-size: rem(40);
 $mid-hed-size: rem(22);
-$mid-text-size: rem(20);
-$section-hed-size: rem(32);
+$mid-text-size: rem($base-font-size);
+$section-hed-size: rem(26);
 $minor-text-size: rem(16);
-$nav-text-size: rem(18);
+$nav-text-size: $minor-text-size;
 $base-line-height: 1.45em;
 $sans-font-family: Lato, $helvetica;
 $serif-font-family: Merriweather, $georgia;
@@ -24,7 +24,7 @@ $serif-font-family: Merriweather, $georgia;
 $pale-green: #d6e1d6;
 $medium-green: #75986a;
 $serious-green: #4e736c;
-$dark-night: #252d3a;
+$dark-night: #353d4e;
 $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
@@ -33,12 +33,13 @@ $creamer: #eee8e4;
 
 // Image URLs
 $img-url-base: '/static/img/';
-$logo-image: $img-url-base;
+$logo-image: $img-url-base + 'ReConAsiaLogo.svg';
 $top-banner-img: $img-url-base + 'top_banner_bg.svg';
 
 // Reusables
 
 $thick-dark-border: 5px solid $dark-night;
 $thin-dark-border: 3px solid $dark-night;
-$block-spacing: 40px;
-$footer-horizontal-padding: $block-spacing*1.75;
+$section-spacing: 50px;
+$row-spacing: 33px;
+$footer-horizontal-padding: $section-spacing;
