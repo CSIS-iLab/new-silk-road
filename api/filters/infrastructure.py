@@ -7,8 +7,6 @@ from infrastructure.models import (
     InfrastructureType
 )
 from finance.currency import CURRENCY_CHOICES
-from api.filters.facts import OrganizationFilter
-from api.filters.locations import CountryFilter, RegionFilter
 
 
 class InfrastructureTypeFilter(filters.FilterSet):
@@ -20,7 +18,9 @@ class InfrastructureTypeFilter(filters.FilterSet):
 class InitiativeFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(name='name')
 
-    geographic_scope = filters.RelatedFilter(RegionFilter, name='geographic_scope')
+    geographic_scope = filters.RelatedFilter(
+        'api.filters.locations.RegionFilter', name='geographic_scope'
+    )
 
     class Meta:
         model = Initiative
@@ -30,8 +30,12 @@ class InitiativeFilter(filters.FilterSet):
 
 
 class ProjectFundingFilter(filters.FilterSet):
-    sources = filters.RelatedFilter(OrganizationFilter, name='sources', distinct=True)
-    project = filters.RelatedFilter('api.filters.infrastructure.ProjectFilter', name='project')
+    sources = filters.RelatedFilter(
+        'api.filters.facts.OrganizationFilter', name='sources', distinct=True
+    )
+    project = filters.RelatedFilter(
+        'api.filters.infrastructure.ProjectFilter', name='project'
+    )
     amount = filters.AllLookupsFilter(name='amount')
     currency = filters.CharFilter(name='currency', lookup_expr='iexact')
     currency_amount = filters.MethodFilter()
@@ -78,7 +82,10 @@ class ProjectFundingFilter(filters.FilterSet):
 
 class ProjectFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(name='name')
-    countries = filters.RelatedFilter(CountryFilter, name='countries')
+    countries = filters.RelatedFilter(
+        'api.filters.locations.CountryFilter', name='countries'
+    )
+    geo__identifier = filters.CharFilter(name='geo__identifier')
 
     initiatives = filters.RelatedFilter(InitiativeFilter, name='initiatives')
     initiatives__count = filters.MethodFilter()
@@ -91,10 +98,18 @@ class ProjectFilter(filters.FilterSet):
 
     funding = filters.RelatedFilter(ProjectFundingFilter, name='funding', distinct=True)
 
-    contractors = filters.RelatedFilter(OrganizationFilter, name='contractors')
-    consultants = filters.RelatedFilter(OrganizationFilter, name='consultants')
-    implementers = filters.RelatedFilter(OrganizationFilter, name='implementers')
-    operators = filters.RelatedFilter(OrganizationFilter, name='operators')
+    contractors = filters.RelatedFilter(
+        'api.filters.facts.OrganizationFilter', name='contractors'
+    )
+    consultants = filters.RelatedFilter(
+        'api.filters.facts.OrganizationFilter', name='consultants'
+    )
+    implementers = filters.RelatedFilter(
+        'api.filters.facts.OrganizationFilter', name='implementers'
+    )
+    operators = filters.RelatedFilter(
+        'api.filters.facts.OrganizationFilter', name='operators'
+    )
 
     fieldbook_id = filters.CharFilter(
         name='extra_data__dictionary__project_id', lookup_expr='exact', distinct=True
