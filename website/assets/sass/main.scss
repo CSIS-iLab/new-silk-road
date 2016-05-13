@@ -70,22 +70,47 @@ nav {
     }
 }
 
+header, footer {
+    &:before, &:after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: absolute;
+        z-index: -1;
+    }
+
+    &:before {
+        background: repeat center/25% url($banner-bg-img) transparent;
+        opacity: 0.4;
+    }
+
+    &:after {
+        background-color: $pale-green;
+        z-index: -2;
+    }
+}
 
 header {
     @include clearfix;
-    background: no-repeat center/100% url($top-banner-img) $pale-green;
-    height: 75px;
+    position: relative;
+    display: block;
+    height: 118px;
+    width: 100%;
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
+
     h1 {
         float: left;
-        margin: 1rem 0;
+        margin: 3% 0 0;
+        max-width: 376px;
         @include hide-text;
         background: url($logo-image) no-repeat;
     }
     nav {
         float: right;
-        margin: 1rem 0;
+        margin: 3% 0 0;
         ul {
             li {
                 display: inline-block;
@@ -101,6 +126,25 @@ header {
                 }
             }
         }
+    }
+
+}
+
+footer {
+    @include position(relative);
+    border-top: $thin-dark-border;
+    color: $dark-night;
+    @include pad($row-spacing $footer-horizontal-padding);
+    nav li {
+        margin-bottom: $row-spacing/2;
+    }
+    a {
+        color: $dark-night;
+        text-decoration: none;
+    }
+    .logo {
+        @include position(absolute, null $footer-horizontal-padding $row-spacing null);
+        max-width: 306px;
     }
 }
 
@@ -195,29 +239,6 @@ article {
     }
 }
 
-
-footer {
-    @include position(relative);
-    border-top: $thin-dark-border;
-    background-color: $pale-green;
-    color: $dark-night;
-    @include pad($row-spacing $footer-horizontal-padding);
-    nav li {
-        margin-bottom: $row-spacing/2;
-    }
-    a {
-        color: $dark-night;
-        text-decoration: none;
-    }
-    .logo {
-        @include position(absolute, null $footer-horizontal-padding $row-spacing null);
-    }
-
-    .content-wrap {
-        margin-bottom: 0;
-    }
-}
-
 .page-wrap {
     display: block;
     // @include outer-container($max-page-width);
@@ -227,6 +248,14 @@ footer {
     @include outer-container($max-content-width);
     margin-bottom: 4rem;
 }
+
+header, footer {
+    .content-wrap {
+        max-width: 1082px;
+        margin-bottom: 0;
+    }
+}
+
 
 .row {
     @include row();

@@ -104,9 +104,28 @@ nav ul {
   nav ul li {
     list-style-type: none; }
 
+header:before, header:after, footer:before, footer:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1; }
+
+header:before, footer:before {
+  background: repeat center/25% url("/static/img/topographic_texture.svg") transparent;
+  opacity: 0.4; }
+
+header:after, footer:after {
+  background-color: #d6e1d6;
+  z-index: -2; }
+
 header {
-  background: no-repeat center/100% url("/static/img/top_banner_bg.svg") #d6e1d6;
-  height: 75px;
+  position: relative;
+  display: block;
+  height: 118px;
+  width: 100%;
   border-top: 5px solid #353d4e;
   border-bottom: 3px solid #353d4e; }
   header::after {
@@ -115,14 +134,15 @@ header {
     display: table; }
   header h1 {
     float: left;
-    margin: 1rem 0;
+    margin: 3% 0 0;
+    max-width: 376px;
     overflow: hidden;
     text-indent: 101%;
     white-space: nowrap;
     background: url("/static/img/ReConAsiaLogo.svg") no-repeat; }
   header nav {
     float: right;
-    margin: 1rem 0; }
+    margin: 3% 0 0; }
     header nav ul li {
       display: inline-block;
       margin-left: 1em;
@@ -134,6 +154,22 @@ header {
         text-decoration: none;
         color: #556377;
         border-bottom: 1px solid #556377; }
+
+footer {
+  position: relative;
+  border-top: 3px solid #353d4e;
+  color: #353d4e;
+  padding: 33px 50px; }
+  footer nav li {
+    margin-bottom: 16.5px; }
+  footer a {
+    color: #353d4e;
+    text-decoration: none; }
+  footer .logo {
+    position: absolute;
+    right: 50px;
+    bottom: 33px;
+    max-width: 306px; }
 
 .details .row {
   margin-bottom: 33px; }
@@ -191,24 +227,6 @@ article {
       article section table th li, article section table td li {
         margin-bottom: 4px; }
 
-footer {
-  position: relative;
-  border-top: 3px solid #353d4e;
-  background-color: #d6e1d6;
-  color: #353d4e;
-  padding: 33px 50px; }
-  footer nav li {
-    margin-bottom: 16.5px; }
-  footer a {
-    color: #353d4e;
-    text-decoration: none; }
-  footer .logo {
-    position: absolute;
-    right: 50px;
-    bottom: 33px; }
-  footer .content-wrap {
-    margin-bottom: 0; }
-
 .page-wrap {
   display: block; }
 
@@ -221,6 +239,10 @@ footer {
     clear: both;
     content: "";
     display: table; }
+
+header .content-wrap, footer .content-wrap {
+  max-width: 1082px;
+  margin-bottom: 0; }
 
 .row {
   display: block;
