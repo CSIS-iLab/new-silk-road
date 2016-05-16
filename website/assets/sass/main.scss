@@ -26,6 +26,9 @@ h1 {
     font-family: $serif-font-family;
     font-size: $major-hed-size;
     line-height: 1.2em;
+    @include media($small-break) {
+        font-size: $major-hed-size * 0.70;
+    }
 }
 
 h2,h3,h4,h5,h6 {
@@ -36,6 +39,10 @@ h2,h3,h4,h5,h6 {
 
 p {
     margin: 0 0 2rem;
+
+    @include media($small-break) {
+        margin: 0;
+    }
 }
 
 ul {
@@ -88,12 +95,12 @@ header, footer {
     }
 
     &::before {
-        background: repeat left/25% url($banner-bg-img) transparent;
+        background: repeat left/$banner-img-size url($banner-bg-img) transparent;
         opacity: 0.4;
     }
     // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
     &::-ms-backdrop, &::before {
-        background: repeat left/25% url($banner-bg-img-ie11) transparent;
+        background: repeat left/$banner-img-size url($banner-bg-img-ie11) transparent;
     }
 
     &::after {
@@ -123,8 +130,8 @@ header {
             max-width: $medium * .40;
         }
         @include media($small-break) {
-            max-width: 90%;
             float: none;
+            max-width: 100%;
             margin: 15px auto 0;
         }
     }
@@ -132,7 +139,6 @@ header {
         float: right;
         margin: 33px 0 0;
         @include media($small-break) {
-            max-width: 90%;
             float: none;
             margin: 0 auto;
         }
@@ -163,37 +169,28 @@ footer {
     @include position(relative);
     border-top: $thin-dark-border;
     color: $dark-night;
-    @include pad($row-spacing $footer-horizontal-padding);
+    @include pad($large-spacing $footer-horizontal-padding);
+    @include media($small-break) {
+        padding: $small-spacing 0;
+    }
     nav li {
-        margin-bottom: $row-spacing/2;
+        margin-bottom: $large-spacing/2;
     }
     a {
         color: $dark-night;
         text-decoration: none;
     }
     .logo {
-        @include position(absolute, null $footer-horizontal-padding $row-spacing null);
+        @include position(absolute, null $footer-horizontal-padding $large-spacing null);
         max-width: 306px;
-    }
-}
-
-.details {
-    .row {
-        margin-bottom: $row-spacing;
-
-        section {
-            margin-bottom: 0;
-        }
-        &:nth-child(odd) h3 {
-            color: $medium-green;
-            border-bottom: 2px solid $medium-green;
-        }
-        &:nth-child(even) h3 {
-            color: $slate-grey;
-            border-bottom: 2px solid $slate-grey;
+        @include media($small-break) {
+            @include position(static);
+            max-width: floor($small * 0.99);
+            margin: $medium-spacing auto 0;
         }
     }
 }
+
 
 article > section {
     margin-bottom: $section-spacing;
@@ -201,13 +198,19 @@ article > section {
 
 article {
     margin-top: $section-spacing;
+    @include media($small-break) {
+        margin: $medium-spacing 0 0;
+    }
 
     h1 {
         color: $dark-night;
         padding-bottom: 15px;
         border-bottom: 5px solid $blue-steel;
-        margin: 0 0 $row-spacing;
+        margin: 0 0 $large-spacing;
         position: relative;
+        @include media($small-break) {
+            margin: 0 0 $small-spacing;
+        }
     }
     section {
 
@@ -232,7 +235,7 @@ article {
         }
 
         &.documents {
-            padding: $row-spacing;
+            padding: $large-spacing;
             background-color: $creamer;
 
         }
@@ -240,6 +243,18 @@ article {
         table {
             font-size: $minor-text-size;
             width: 80%;
+
+            @include media($small-break) {
+                width: 100%;
+
+                tbody td, thead th {
+                    padding: 0;
+                    &:first-child {
+                        padding-right: 6px;
+                    }
+                }
+            }
+
             tbody {
                 tr {
                     color: $medium-green;
@@ -257,6 +272,7 @@ article {
             th, td {
                 padding: 2px 5px;
                 text-align: left;
+                vertical-align: text-top;
                 &:last-of-type {
                     text-align: right;
                 }
@@ -279,6 +295,9 @@ article {
     @include media($medium-break) {
         @include outer-container($medium * 0.9);
     }
+    @include media($small-break) {
+        max-width: 98%;
+    }
 }
 
 header, footer {
@@ -288,16 +307,43 @@ header, footer {
         @include media($medium-break) {
             @include outer-container($medium * 0.96);
         }
+        @include media($small-break) {
+            max-width: 97%;
+        }
     }
 }
 
-
 .row {
     @include row();
-    margin-bottom: $row-spacing;
+    margin-bottom: $large-spacing;
+
+    @include media($small-break) {
+        margin-bottom: 0;
+    }
+
+    &:nth-child(odd) h3 {
+        color: $medium-green;
+        border-bottom: 2px solid $medium-green;
+    }
+    &:nth-child(even) h3 {
+        color: $slate-grey;
+        border-bottom: 2px solid $slate-grey;
+    }
+
+    @include media($small-break) {
+        &:nth-child(odd) h3, &:nth-child(even) h3 {
+            color: $slate-grey;
+            border-bottom: 2px solid $slate-grey;
+        }
+    }
 }
+
 @for $i from 1 through 12 {
     .col-#{$i} {
         @include span-columns($i);
+        @include media($small-break) {
+            @include span-columns(1);
+            margin-bottom: $medium-spacing;
+        }
     }
 }
