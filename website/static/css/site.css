@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900);
+@import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
 html {
   box-sizing: border-box; }
 
@@ -104,20 +104,24 @@ nav ul {
   nav ul li {
     list-style-type: none; }
 
-header:before, header:after, footer:before, footer:after {
+header::before, header::after, footer::before, footer::after {
   content: "";
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
+  bottom: 0;
+  right: 0;
+  display: block;
   position: absolute;
   z-index: -1; }
 
-header:before, footer:before {
-  background: repeat center/25% url("/static/img/topographic_texture.svg") transparent;
+header::before, footer::before {
+  background: repeat left/25% url("/static/img/topographic_texture.svg") transparent;
   opacity: 0.4; }
 
-header:after, footer:after {
+header::-ms-backdrop, header::before, footer::-ms-backdrop, footer::before {
+  background: repeat left/25% url("/static/img/topographic_texture.png") transparent; }
+
+header::after, footer::after {
   background-color: #d6e1d6;
   z-index: -2; }
 
@@ -128,10 +132,6 @@ header {
   width: 100%;
   border-top: 5px solid #353d4e;
   border-bottom: 3px solid #353d4e; }
-  header::after {
-    clear: both;
-    content: "";
-    display: table; }
   header h1 {
     float: left;
     margin: 3% 0 0;

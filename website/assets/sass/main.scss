@@ -71,29 +71,33 @@ nav {
 }
 
 header, footer {
-    &:before, &:after {
+    &::before, &::after {
         content: "";
-        width: 100%;
-        height: 100%;
         top: 0;
         left: 0;
+        bottom: 0;
+        right: 0;
+        display: block;
         position: absolute;
         z-index: -1;
     }
 
-    &:before {
-        background: repeat center/25% url($banner-bg-img) transparent;
+    &::before {
+        background: repeat left/25% url($banner-bg-img) transparent;
         opacity: 0.4;
     }
+    // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
+    &::-ms-backdrop, &::before {
+        background: repeat left/25% url($banner-bg-img-ie11) transparent;
+    }
 
-    &:after {
+    &::after {
         background-color: $pale-green;
         z-index: -2;
     }
 }
 
 header {
-    @include clearfix;
     position: relative;
     display: block;
     height: 118px;

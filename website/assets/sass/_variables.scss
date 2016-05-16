@@ -1,6 +1,6 @@
 @import "lib/bourbon/bourbon";
 
-@import url(https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900);
+@import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
 
 // Basics
 $max-page-width: 1600px;
@@ -35,6 +35,7 @@ $creamer: #eee8e4;
 $img-url-base: '/static/img/';
 $logo-image: $img-url-base + 'ReConAsiaLogo.svg';
 $banner-bg-img: $img-url-base + 'topographic_texture.svg';
+$banner-bg-img-ie11: $img-url-base + 'topographic_texture.png';
 
 // Reusables
 
