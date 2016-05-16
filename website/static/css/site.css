@@ -132,22 +132,42 @@ header {
   width: 100%;
   border-top: 5px solid #353d4e;
   border-bottom: 3px solid #353d4e; }
+  @media screen and (max-width: 360px) {
+    header {
+      height: auto; } }
   header h1 {
     float: left;
-    margin: 3% 0 0;
+    margin: 33px 0 0;
     max-width: 376px;
     overflow: hidden;
     text-indent: 101%;
     white-space: nowrap;
     background: url("/static/img/ReConAsiaLogo.svg") no-repeat; }
+    @media screen and (max-width: 768px) {
+      header h1 {
+        max-width: 307.2px; } }
+    @media screen and (max-width: 360px) {
+      header h1 {
+        max-width: 90%;
+        float: none;
+        margin: 15px auto 0; } }
   header nav {
     float: right;
-    margin: 3% 0 0; }
+    margin: 33px 0 0; }
+    @media screen and (max-width: 360px) {
+      header nav {
+        max-width: 90%;
+        float: none;
+        margin: 0 auto; } }
     header nav ul li {
       display: inline-block;
       margin-left: 1em;
-      margin-right: none;
+      margin-right: 0;
       font-size: 0.88889rem; }
+      @media screen and (max-width: 360px) {
+        header nav ul li {
+          display: block;
+          margin: 0 0 6px 0; } }
       header nav ul li a {
         padding: 3px 0 2px 1em;
         font-weight: bold;
@@ -239,10 +259,28 @@ article {
     clear: both;
     content: "";
     display: table; }
+  @media screen and (max-width: 768px) {
+    .content-wrap {
+      max-width: 691.2px;
+      margin-left: auto;
+      margin-right: auto; }
+      .content-wrap::after {
+        clear: both;
+        content: "";
+        display: table; } }
 
 header .content-wrap, footer .content-wrap {
   max-width: 1082px;
   margin-bottom: 0; }
+  @media screen and (max-width: 768px) {
+    header .content-wrap, footer .content-wrap {
+      max-width: 737.28px;
+      margin-left: auto;
+      margin-right: auto; }
+      header .content-wrap::after, footer .content-wrap::after {
+        clear: both;
+        content: "";
+        display: table; } }
 
 .row {
   display: block;

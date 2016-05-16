@@ -2,6 +2,11 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 @import "normalize";
 @import "map";
+
+$medium-break: new-breakpoint(max-width $medium 4);
+$small-break: new-breakpoint(max-width $small 1);
+
+
 html {
     font-size: $base-font-size;
 }
@@ -104,23 +109,43 @@ header {
     width: 100%;
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
+    @include media($small-break) {
+        height: auto;
+    }
 
     h1 {
         float: left;
-        margin: 3% 0 0;
+        margin: 33px 0 0;
         max-width: 376px;
         @include hide-text;
         background: url($logo-image) no-repeat;
+        @include media($medium-break) {
+            max-width: $medium * .40;
+        }
+        @include media($small-break) {
+            max-width: 90%;
+            float: none;
+            margin: 15px auto 0;
+        }
     }
     nav {
         float: right;
-        margin: 3% 0 0;
+        margin: 33px 0 0;
+        @include media($small-break) {
+            max-width: 90%;
+            float: none;
+            margin: 0 auto;
+        }
         ul {
             li {
                 display: inline-block;
                 margin-left: 1em;
-                margin-right: none;
+                margin-right: 0;
                 font-size: $nav-text-size;
+                @include media($small-break) {
+                    display: block;
+                    margin: 0 0 6px 0;
+                }
                 a {
                     padding: 3px 0 2px 1em;
                     font-weight: bold;
@@ -251,12 +276,18 @@ article {
 .content-wrap {
     @include outer-container($max-content-width);
     margin-bottom: 4rem;
+    @include media($medium-break) {
+        @include outer-container($medium * 0.9);
+    }
 }
 
 header, footer {
     .content-wrap {
         max-width: 1082px;
         margin-bottom: 0;
+        @include media($medium-break) {
+            @include outer-container($medium * 0.96);
+        }
     }
 }
 

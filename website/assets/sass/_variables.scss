@@ -2,8 +2,12 @@
 
 @import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
 
-// Basics
-$max-page-width: 1600px;
+// Sizes
+$large: 1600px;
+$medium: 768px;
+$small: 360px;
+
+$max-page-width: $large;
 $max-content-width: 980px;
 
 // fonts
@@ -36,6 +40,7 @@ $img-url-base: '/static/img/';
 $logo-image: $img-url-base + 'ReConAsiaLogo.svg';
 $banner-bg-img: $img-url-base + 'topographic_texture.svg';
 $banner-bg-img-ie11: $img-url-base + 'topographic_texture.png';
+
 
 // Reusables
 

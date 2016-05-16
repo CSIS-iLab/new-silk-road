@@ -1,5 +1,6 @@
 <nav>
-    <ul>
+    <ul>{% if showhome %}
+        <li><a href="/">Home</a></li>{% endif %}
         <li><a href="{% url 'website-map' %}">Map</a></li>
         <li><a href="/kb/">Knowledgebase</a></li>
         <li><a href="/anaylsis/">Analysis</a></li>
