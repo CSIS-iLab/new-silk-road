@@ -108,13 +108,14 @@ header, footer {
     }
 }
 
-header {
+header[role=banner] {
     position: relative;
     display: block;
     height: auto;
     width: 100%;
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
+
     @include media($medium-break) {
         height: 118px;
     }
@@ -170,6 +171,18 @@ header {
 
 }
 
+.content-wrap {
+    padding: $medium-spacing 0 0;
+    @include media($medium-break) {
+        padding-top: $section-spacing;
+    }
+    background-image: url($main-arrow-img);
+    background-clip: border-box;
+    background-position: 50% -1px;
+    background-size: $main-arrow-width auto;
+    background-repeat: no-repeat;
+}
+
 footer {
     @include position(relative);
     border-top: $thin-dark-border;
@@ -202,17 +215,28 @@ article > section {
 }
 
 article {
-    margin: $medium-spacing 0 0;
-    @include media($medium-break) {
-        margin-top: $section-spacing;
-    }
-
     h1 {
         color: $dark-night;
         padding-bottom: 15px;
         border-bottom: 5px solid $blue-steel;
         margin: 0 0 $small-spacing;
         position: relative;
+
+        // &::after {
+        //     content: url($small-arrow-img);
+        //     display: inline-block;
+        //     position: absolute;
+        //     bottom: -18%;
+        //     right: 90%;
+        //     left: 0;
+        //     // background-image: url($small-arrow-img);
+        //     // background-clip: border-box;
+        //     // background-position: 50% 100%;
+        //     // background-size: $small-arrow-width auto;
+        //     // background-repeat: no-repeat;
+        //     overflow: visible;
+        // }
+
         @include media($medium-break) {
             margin: 0 0 $large-spacing;
         }

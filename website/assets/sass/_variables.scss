@@ -25,7 +25,7 @@ $serif-font-family: Merriweather, $georgia;
 $pale-green: #d6e1d6;
 $medium-green: #75986a;
 $serious-green: #4e736c;
-$dark-night: #353d4e;
+$dark-night: #252d3a;
 $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
@@ -38,7 +38,11 @@ $logo-image: $img-url-base + 'ReConAsiaLogo.svg';
 $banner-bg-img: $img-url-base + 'topographic_texture.svg';
 $banner-bg-img-ie11: $img-url-base + 'topographic_texture.png';
 $banner-img-size: 300px;
-
+$main-arrow-img: $img-url-base + 'main-triangle.svg';
+$main-arrow-width: 55px;
+$small-arrow-img: $img-url-base + 'small-triangle.svg';
+$small-arrow-width: 35px;
+$small-arrow-height: 8px;
 
 // Reusables
 

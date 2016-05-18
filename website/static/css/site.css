@@ -50,20 +50,20 @@ html {
     .content-wrap {
       max-width: 980px; } }
 
-header .content-wrap, footer .content-wrap {
+header .wrap, footer .wrap {
   max-width: 96%;
   margin-bottom: 0; }
   @media screen and (min-width: 768px) {
-    header .content-wrap, footer .content-wrap {
+    header .wrap, footer .wrap {
       max-width: 737.28px;
       margin-left: auto;
       margin-right: auto; }
-      header .content-wrap::after, footer .content-wrap::after {
+      header .wrap::after, footer .wrap::after {
         clear: both;
         content: "";
         display: table; } }
   @media screen and (min-width: 1200px) {
-    header .content-wrap, footer .content-wrap {
+    header .wrap, footer .wrap {
       max-width: 1082px; } }
 
 .row {
@@ -481,17 +481,17 @@ header::after, footer::after {
   background-color: #d6e1d6;
   z-index: -2; }
 
-header {
+header[role=banner] {
   position: relative;
   display: block;
   height: auto;
   width: 100%;
-  border-top: 5px solid #353d4e;
-  border-bottom: 3px solid #353d4e; }
+  border-top: 5px solid #252d3a;
+  border-bottom: 3px solid #252d3a; }
   @media screen and (min-width: 768px) {
-    header {
+    header[role=banner] {
       height: 118px; } }
-  header h1 {
+  header[role=banner] h1 {
     float: none;
     max-width: 100%;
     margin: 15px auto 0;
@@ -500,45 +500,56 @@ header {
     white-space: nowrap;
     background: url("/static/img/ReConAsiaLogo.svg") no-repeat; }
     @media screen and (min-width: 768px) {
-      header h1 {
+      header[role=banner] h1 {
         float: left;
         margin: 33px 0 0;
         max-width: 307.2px; } }
     @media screen and (min-width: 1200px) {
-      header h1 {
+      header[role=banner] h1 {
         width: 376px;
         max-width: 376px; } }
-  header nav {
+  header[role=banner] nav {
     float: none;
     margin: 14px auto 21px auto; }
     @media screen and (min-width: 768px) {
-      header nav {
+      header[role=banner] nav {
         float: right;
         margin: 33px 0 0; } }
-    header nav ul {
+    header[role=banner] nav ul {
       margin-bottom: 0; }
-      header nav ul li {
+      header[role=banner] nav ul li {
         display: block;
         margin: 0 0 16px 0;
         font-size: 0.88889rem; }
         @media screen and (min-width: 768px) {
-          header nav ul li {
+          header[role=banner] nav ul li {
             display: inline-block;
             margin: 0 0 8px 1em; } }
-        header nav ul li a {
+        header[role=banner] nav ul li a {
           padding: 3px 0 2px 0.5em;
           font-weight: bold;
           text-decoration: none;
           color: #556377;
           border-bottom: 1px solid #556377; }
           @media screen and (min-width: 768px) {
-            header nav ul li a {
+            header[role=banner] nav ul li a {
               padding-left: 1em; } }
+
+.content-wrap {
+  padding: 20px 0 0;
+  background-image: url("/static/img/main-triangle.svg");
+  background-clip: border-box;
+  background-position: 50% -1px;
+  background-size: 55px auto;
+  background-repeat: no-repeat; }
+  @media screen and (min-width: 768px) {
+    .content-wrap {
+      padding-top: 50px; } }
 
 footer {
   position: relative;
-  border-top: 3px solid #353d4e;
-  color: #353d4e;
+  border-top: 3px solid #252d3a;
+  color: #252d3a;
   padding: 14px 0; }
   @media screen and (min-width: 768px) {
     footer {
@@ -546,7 +557,7 @@ footer {
   footer nav li {
     margin-bottom: 16.5px; }
   footer a {
-    color: #353d4e;
+    color: #252d3a;
     text-decoration: none; }
   footer .logo {
     position: static;
@@ -562,61 +573,62 @@ footer {
 article > section {
   margin-bottom: 50px; }
 
-article {
-  margin: 20px 0 0; }
+article h1 {
+  color: #252d3a;
+  padding-bottom: 15px;
+  border-bottom: 5px solid #788ca8;
+  margin: 0 0 14px;
+  position: relative; }
   @media screen and (min-width: 768px) {
-    article {
-      margin-top: 50px; } }
-  article h1 {
-    color: #353d4e;
-    padding-bottom: 15px;
-    border-bottom: 5px solid #788ca8;
-    margin: 0 0 14px;
-    position: relative; }
-    @media screen and (min-width: 768px) {
-      article h1 {
-        margin: 0 0 33px; } }
-  article section .row:last-child {
-    margin-bottom: 0; }
-  article section h2 {
-    font: 1.44444rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
-    color: #4e736c; }
-  article section h3 {
-    display: inline-block;
-    font-size: 1rem;
-    text-transform: uppercase;
-    color: #556377; }
-  article section ul:last-child {
-    margin-bottom: 0; }
-  article section.documents {
-    padding: 33px;
-    background-color: #eee8e4; }
-  article section table {
-    font-size: 0.88889rem;
-    width: 100%; }
-    article section table tbody td, article section table thead th {
-      padding: 0; }
-      article section table tbody td:first-child, article section table thead th:first-child {
-        padding-right: 6px; }
-    @media screen and (min-width: 768px) {
-      article section table {
-        width: 80%; } }
-    article section table tbody tr {
+    article h1 {
+      margin: 0 0 33px; } }
+
+article section .row:last-child {
+  margin-bottom: 0; }
+
+article section h2 {
+  font: 1.44444rem Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif;
+  color: #4e736c; }
+
+article section h3 {
+  display: inline-block;
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: #556377; }
+
+article section ul:last-child {
+  margin-bottom: 0; }
+
+article section.documents {
+  padding: 33px;
+  background-color: #eee8e4; }
+
+article section table {
+  font-size: 0.88889rem;
+  width: 100%; }
+  article section table tbody td, article section table thead th {
+    padding: 0; }
+    article section table tbody td:first-child, article section table thead th:first-child {
+      padding-right: 6px; }
+  @media screen and (min-width: 768px) {
+    article section table {
+      width: 80%; } }
+  article section table tbody tr {
+    color: #75986a; }
+    article section table tbody tr a {
       color: #75986a; }
-      article section table tbody tr a {
-        color: #75986a; }
-    article section table tbody tr:nth-of-type(even) {
+  article section table tbody tr:nth-of-type(even) {
+    color: #556377; }
+    article section table tbody tr:nth-of-type(even) a {
       color: #556377; }
-      article section table tbody tr:nth-of-type(even) a {
-        color: #556377; }
-    article section table th, article section table td {
-      padding: 2px 5px;
-      text-align: left;
-      vertical-align: text-top; }
-      article section table th:last-of-type, article section table td:last-of-type {
-        text-align: right; }
-      article section table th li, article section table td li {
-        margin-bottom: 4px; }
+  article section table th, article section table td {
+    padding: 2px 5px;
+    text-align: left;
+    vertical-align: text-top; }
+    article section table th:last-of-type, article section table td:last-of-type {
+      text-align: right; }
+    article section table th li, article section table td li {
+      margin-bottom: 4px; }
 
 .row h3 {
   color: #556377;

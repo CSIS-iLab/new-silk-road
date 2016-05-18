@@ -23,7 +23,7 @@ $small-wrap: 96%;
 }
 
 header, footer {
-    .content-wrap {
+    .wrap {
         max-width: $small-wrap;
         margin-bottom: 0;
         @include media($medium-break) {
