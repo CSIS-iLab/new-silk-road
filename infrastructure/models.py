@@ -213,7 +213,7 @@ class Initiative(MPTTModel, Publishable):
     initiative_type = models.ForeignKey('InitiativeType', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
     principal_agent = models.ForeignKey(
-        'facts.Person', models.SET_NULL, blank=True, null=True,
+        'facts.Organization', models.SET_NULL, blank=True, null=True,
         related_name='principal_initiatives',
     )
     parent = TreeForeignKey('self', null=True, blank=True,
