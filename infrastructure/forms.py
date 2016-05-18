@@ -35,8 +35,8 @@ class InitiativeForm(forms.ModelForm):
         required=False
     )
     principal_agent = forms.ModelChoiceField(
-        queryset=Person.objects.all(),
-        widget=PersonSearchWidget(model=Person),
+        queryset=Organization.objects.all(),
+        widget=NameSearchWidget(model=Organization),
         required=False
     )
 
