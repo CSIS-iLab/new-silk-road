@@ -10,6 +10,7 @@ from publish.admin import (
     make_published,
     make_not_published
 )
+from utilities.admin import PhraseSearchAdminMixin
 
 
 class ShareholderAdmin(admin.ModelAdmin):
@@ -24,7 +25,7 @@ class PersonShareholderInline(admin.TabularInline):
     model = FinancingOrganizationDetails.shareholder_people.through
 
 
-class OrganizationAdmin(MPTTModelAdmin):
+class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
     save_on_top = True
     select_related = True
     search_fields = (

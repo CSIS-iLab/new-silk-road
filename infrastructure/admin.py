@@ -18,6 +18,7 @@ from infrastructure.forms import (
     ProjectFundingForm
 )
 from facts.forms import NameSearchWidget
+from utilities.admin import PhraseSearchAdminMixin
 
 
 class PersonInitiativeInline(admin.StackedInline):
@@ -86,7 +87,7 @@ class HasGeoListFilter(admin.SimpleListFilter):
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
     prepopulated_fields = {"slug": ("name",)}
@@ -176,7 +177,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 @admin.register(Initiative)
-class InitiativeAdmin(MPTTModelAdmin):
+class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
     save_on_top = True
     form = InitiativeForm
     prepopulated_fields = {"slug": ("name",)}
