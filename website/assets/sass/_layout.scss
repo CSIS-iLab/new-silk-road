@@ -1,0 +1,69 @@
+@import "variables";
+@import "lib/bourbon/bourbon", "lib/neat/neat";
+
+$large-break: new-breakpoint(min-width $large);
+$medium-break: new-breakpoint(min-width $medium 4);
+$small-break: new-breakpoint(min-width $small 1);
+
+$small-wrap: 96%;
+
+.page-wrap {
+    display: block;
+}
+
+.content-wrap {
+    @include outer-container($small-wrap);
+    margin-bottom: 4rem;
+    @include media($medium-break) {
+        @include outer-container($medium * 0.9);
+    }
+    @include media($large-break) {
+        max-width: $max-content-width;
+    }
+}
+
+header, footer {
+    .content-wrap {
+        max-width: $small-wrap;
+        margin-bottom: 0;
+        @include media($medium-break) {
+            @include outer-container($medium * 0.96);
+        }
+        @include media($large-break) {
+            max-width: $max-content-width + 102;
+        }
+    }
+}
+
+.row {
+    @include row();
+    margin-bottom: 0;
+
+    @include media($large-break) {
+        margin-bottom: $large-spacing;
+    }
+}
+
+@for $i from 1 through 12 {
+    .col-#{$i} {
+        @include span-columns(1 of 1);
+        margin-bottom: $large-spacing;
+    }
+}
+
+@include media($medium-break) {
+    @for $i from 1 through 12 {
+        .col-#{$i} {
+            @include span-columns($i/(12/$grid-columns));
+            margin-bottom: $medium-spacing;
+        }
+    }
+}
+
+@include media($large-break) {
+    @for $i from 1 through 12 {
+        .col-#{$i} {
+            @include span-columns($i);
+        }
+    }
+}

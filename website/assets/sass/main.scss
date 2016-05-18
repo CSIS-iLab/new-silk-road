@@ -1,10 +1,9 @@
+@import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
 @import "variables";
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 @import "normalize";
+@import "layout";
 @import "map";
-
-$medium-break: new-breakpoint(max-width $medium 4);
-$small-break: new-breakpoint(max-width $small 1);
 
 
 html {
@@ -24,10 +23,10 @@ a {
 
 h1 {
     font-family: $serif-font-family;
-    font-size: $major-hed-size;
+    font-size: $major-hed-size * 0.70;
     line-height: 1.2em;
-    @include media($small-break) {
-        font-size: $major-hed-size * 0.70;
+    @include media($medium-break) {
+        font-size: $major-hed-size;
     }
 }
 
@@ -112,52 +111,58 @@ header, footer {
 header {
     position: relative;
     display: block;
-    height: 118px;
+    height: auto;
     width: 100%;
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
-    @include media($small-break) {
-        height: auto;
+    @include media($medium-break) {
+        height: 118px;
     }
 
     h1 {
-        float: left;
-        margin: 33px 0 0;
-        max-width: 376px;
+        float: none;
+        max-width: 100%;
+        margin: 15px auto 0;
         @include hide-text;
         background: url($logo-image) no-repeat;
         @include media($medium-break) {
+            float: left;
+            margin: 33px 0 0;
             max-width: $medium * .40;
         }
-        @include media($small-break) {
-            float: none;
-            max-width: 100%;
-            margin: 15px auto 0;
+        @include media($large-break) {
+            width: 376px;
+            max-width: 376px;
         }
     }
     nav {
-        float: right;
-        margin: 33px 0 0;
-        @include media($small-break) {
-            float: none;
-            margin: 0 auto;
+        float: none;
+        margin: $small-spacing auto $small-spacing*1.5 auto;
+        @include media($medium-break) {
+            float: right;
+            margin: 33px 0 0;
         }
         ul {
+            margin-bottom: 0;
+
             li {
-                display: inline-block;
-                margin-left: 1em;
-                margin-right: 0;
+                display: block;
+                margin: 0 0 16px 0;
                 font-size: $nav-text-size;
-                @include media($small-break) {
-                    display: block;
-                    margin: 0 0 6px 0;
+                @include media($medium-break) {
+                    display: inline-block;
+                    margin: 0 0 8px 1em;
                 }
                 a {
-                    padding: 3px 0 2px 1em;
+                    padding: 3px 0 2px 0.5em;
                     font-weight: bold;
                     text-decoration: none;
                     color: $slate-grey;
                     border-bottom: 1px solid $slate-grey;
+
+                    @include media($medium-break) {
+                        padding-left: 1em;
+                    }
                 }
             }
         }
@@ -169,9 +174,9 @@ footer {
     @include position(relative);
     border-top: $thin-dark-border;
     color: $dark-night;
-    @include pad($large-spacing $footer-horizontal-padding);
-    @include media($small-break) {
-        padding: $small-spacing 0;
+    padding: $small-spacing 0;
+    @include media($medium-break) {
+        @include pad($large-spacing $footer-horizontal-padding);
     }
     nav li {
         margin-bottom: $large-spacing/2;
@@ -181,12 +186,12 @@ footer {
         text-decoration: none;
     }
     .logo {
-        @include position(absolute, null $footer-horizontal-padding $large-spacing null);
-        max-width: 306px;
-        @include media($small-break) {
-            @include position(static);
-            max-width: floor($small * 0.99);
-            margin: $medium-spacing auto 0;
+        @include position(static);
+        max-width: floor($small * 0.99);
+        margin: $medium-spacing auto 0;
+        @include media($medium-break) {
+            @include position(absolute, null $footer-horizontal-padding $large-spacing null);
+            max-width: 306px;
         }
     }
 }
@@ -197,19 +202,19 @@ article > section {
 }
 
 article {
-    margin-top: $section-spacing;
-    @include media($small-break) {
-        margin: $medium-spacing 0 0;
+    margin: $medium-spacing 0 0;
+    @include media($medium-break) {
+        margin-top: $section-spacing;
     }
 
     h1 {
         color: $dark-night;
         padding-bottom: 15px;
         border-bottom: 5px solid $blue-steel;
-        margin: 0 0 $large-spacing;
+        margin: 0 0 $small-spacing;
         position: relative;
-        @include media($small-break) {
-            margin: 0 0 $small-spacing;
+        @include media($medium-break) {
+            margin: 0 0 $large-spacing;
         }
     }
     section {
@@ -242,17 +247,17 @@ article {
 
         table {
             font-size: $minor-text-size;
-            width: 80%;
+            width: 100%;
 
-            @include media($small-break) {
-                width: 100%;
-
-                tbody td, thead th {
-                    padding: 0;
-                    &:first-child {
-                        padding-right: 6px;
-                    }
+            tbody td, thead th {
+                padding: 0;
+                &:first-child {
+                    padding-right: 6px;
                 }
+            }
+
+            @include media($medium-break) {
+                width: 80%;
             }
 
             tbody {
@@ -284,66 +289,17 @@ article {
     }
 }
 
-.page-wrap {
-    display: block;
-    // @include outer-container($max-page-width);
-}
-
-.content-wrap {
-    @include outer-container($max-content-width);
-    margin-bottom: 4rem;
-    @include media($medium-break) {
-        @include outer-container($medium * 0.9);
-    }
-    @include media($small-break) {
-        max-width: 98%;
-    }
-}
-
-header, footer {
-    .content-wrap {
-        max-width: 1082px;
-        margin-bottom: 0;
-        @include media($medium-break) {
-            @include outer-container($medium * 0.96);
-        }
-        @include media($small-break) {
-            max-width: 97%;
-        }
-    }
-}
 
 .row {
-    @include row();
-    margin-bottom: $large-spacing;
-
-    @include media($small-break) {
-        margin-bottom: 0;
-    }
-
-    &:nth-child(odd) h3 {
-        color: $medium-green;
-        border-bottom: 2px solid $medium-green;
-    }
-    &:nth-child(even) h3 {
+    h3 {
         color: $slate-grey;
         border-bottom: 2px solid $slate-grey;
     }
 
-    @include media($small-break) {
-        &:nth-child(odd) h3, &:nth-child(even) h3 {
-            color: $slate-grey;
-            border-bottom: 2px solid $slate-grey;
-        }
-    }
-}
-
-@for $i from 1 through 12 {
-    .col-#{$i} {
-        @include span-columns($i);
-        @include media($small-break) {
-            @include span-columns(1);
-            margin-bottom: $medium-spacing;
+    @include media($medium-break) {
+        &:nth-child(odd) h3 {
+            color: $medium-green;
+            border-bottom: 2px solid $medium-green;
         }
     }
 }

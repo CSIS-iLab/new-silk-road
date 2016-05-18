@@ -32,13 +32,13 @@
         <div class="row">
             <section class="col-3">
                 <h3>Countries</h3>
-                <ul>{% for country in object.countries.all %}
+                <ul class="clean">{% for country in object.countries.all %}
                     <li>{{ country.name }}</li>{% endfor %}
                 </ul>
             </section>
             <section class="col-3">
                 <h3>Regions</h3>
-                <ul>{% for region in object.regions.all %}
+                <ul class="clean">{% for region in object.regions.all %}
                     <li>{{ region.name }}</li>{% endfor %}
                 </ul>
             </section>
