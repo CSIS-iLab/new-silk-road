@@ -39,9 +39,8 @@ class ProjectFunding(Temporal):
         ordering = ['project__name', 'created_at']
 
     def __str__(self):
-        sources_str = ",".join([str(x) for x in self.sources.all()[:2]]) if self.sources.exists() else ""
-        return "{} {}: {}".format(
-            self.amount or None, self.currency, sources_str
+        return "{} {}".format(
+            self.amount or None, self.currency
         )
 
 
