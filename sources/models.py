@@ -1,7 +1,7 @@
 from django.db import models
 from publish.models import Temporal
 from filer.fields.file import FilerFileField
-from datautils.validators import URLLikeValidator
+from utilities.validators import URLLikeValidator
 
 
 class Document(Temporal):

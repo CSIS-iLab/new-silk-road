@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from datautils.validators import URLLikeValidator
+from utilities.validators import URLLikeValidator
 
 
 class Data(models.Model):

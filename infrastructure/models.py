@@ -6,7 +6,7 @@ from publish.models import Publishable, Temporal
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
-from datautils.validators import URLLikeValidator
+from utilities.validators import URLLikeValidator
 import uuid
 
 

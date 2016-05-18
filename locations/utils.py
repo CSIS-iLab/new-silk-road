@@ -2,7 +2,7 @@ from django.contrib.gis.gdal import DataSource
 from locations.models import (
     GeometryStore,
 )
-from datautils.string import clean_string
+from utilities.string import clean_string
 import logging
 
 logger = logging.getLogger(__name__)

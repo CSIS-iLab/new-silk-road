@@ -1,6 +1,6 @@
 from django.utils.text import slugify
 from functools import partial
-from datautils.string import clean_string
+from utilities.string import clean_string
 from fieldbook_importer.utils import (
     choices_from_values,
     values_list,

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 import os.path
-from datautils.string import clean_string
+from utilities.string import clean_string
 from locations.utils import geostore_from_file
 
 

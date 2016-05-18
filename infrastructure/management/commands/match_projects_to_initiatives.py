@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.apps import apps
 import argparse
 import json
-from datautils.string import clean_string
+from utilities.string import clean_string
 
 
 class Command(BaseCommand):
