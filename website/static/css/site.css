@@ -25,45 +25,44 @@ html {
 *, *::after, *::before {
   box-sizing: inherit; }
 
-.page-wrap {
-  display: block; }
-
 .content-wrap {
+  margin-bottom: 4rem; }
+
+.content-wrap, footer .wrap {
   max-width: 96%;
   margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 4rem; }
-  .content-wrap::after {
+  margin-right: auto; }
+  .content-wrap::after, footer .wrap::after {
     clear: both;
     content: "";
     display: table; }
   @media screen and (min-width: 768px) {
-    .content-wrap {
+    .content-wrap, footer .wrap {
       max-width: 691.2px;
       margin-left: auto;
       margin-right: auto; }
-      .content-wrap::after {
+      .content-wrap::after, footer .wrap::after {
         clear: both;
         content: "";
         display: table; } }
   @media screen and (min-width: 1200px) {
-    .content-wrap {
+    .content-wrap, footer .wrap {
       max-width: 980px; } }
 
-header .wrap, footer .wrap {
+header .wrap {
   max-width: 96%;
   margin-bottom: 0; }
   @media screen and (min-width: 768px) {
-    header .wrap, footer .wrap {
+    header .wrap {
       max-width: 737.28px;
       margin-left: auto;
       margin-right: auto; }
-      header .wrap::after, footer .wrap::after {
+      header .wrap::after {
         clear: both;
         content: "";
         display: table; } }
   @media screen and (min-width: 1200px) {
-    header .wrap, footer .wrap {
+    header .wrap {
       max-width: 1082px; } }
 
 .row {
@@ -434,7 +433,7 @@ h2, h3, h4, h5, h6 {
 
 p {
   margin: 0 0 2rem; }
-  @media screen and (min-width: 360px) {
+  @media screen and (min-width: 400px) {
     p {
       margin: 0; } }
 
@@ -460,7 +459,7 @@ nav ul {
   nav ul li {
     list-style-type: none; }
 
-header::before, header::after, footer::before, footer::after {
+body > header::before, body > header::after, body > footer::before, body > footer::after {
   content: "";
   top: 0;
   left: 0;
@@ -470,14 +469,14 @@ header::before, header::after, footer::before, footer::after {
   position: absolute;
   z-index: -1; }
 
-header::before, footer::before {
+body > header::before, body > footer::before {
   background: repeat left/300px url("/static/img/topographic_texture.svg") transparent;
   opacity: 0.4; }
 
-header::-ms-backdrop, header::before, footer::-ms-backdrop, footer::before {
+body > header::-ms-backdrop, body > header::before, body > footer::-ms-backdrop, body > footer::before {
   background: repeat left/300px url("/static/img/topographic_texture.png") transparent; }
 
-header::after, footer::after {
+body > header::after, body > footer::after {
   background-color: #d6e1d6;
   z-index: -2; }
 
@@ -546,14 +545,17 @@ header[role=banner] {
     .content-wrap {
       padding-top: 50px; } }
 
+::-ms-backdrop, .content-wrap {
+  background-position: 50% -72px; }
+
 footer {
   position: relative;
   border-top: 3px solid #252d3a;
   color: #252d3a;
-  padding: 14px 0; }
+  padding: 14px; }
   @media screen and (min-width: 768px) {
     footer {
-      padding: 33px 50px; } }
+      padding: 33px 0 0; } }
   footer nav li {
     margin-bottom: 16.5px; }
   footer a {
@@ -561,27 +563,64 @@ footer {
     text-decoration: none; }
   footer .logo {
     position: static;
-    max-width: 356px;
-    margin: 20px auto 0; }
+    max-width: 100%; }
     @media screen and (min-width: 768px) {
       footer .logo {
         position: absolute;
-        right: 50px;
-        bottom: 33px;
+        top: 138px;
+        right: 60px;
+        margin: 20px auto 0;
         max-width: 306px; } }
 
 article > section {
   margin-bottom: 50px; }
 
+article header {
+  position: relative;
+  padding-bottom: 14px; }
+  @media screen and (min-width: 768px) {
+    article header {
+      padding-bottom: 33px; } }
+  article header::after {
+    content: "";
+    width: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 7px;
+    left: 0;
+    background-image: url("/static/img/small-triangle.svg");
+    background-position: 50% 100%;
+    background-size: 35px auto;
+    background-repeat: no-repeat; }
+    @media screen and (min-width: 768px) {
+      article header::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 26px;
+        left: 0; } }
+  article header::-ms-backdrop, article header::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 7px;
+    left: 0; }
+    @media screen and (min-width: 768px) {
+      article header::-ms-backdrop, article header::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 28px;
+        left: 0; } }
+
 article h1 {
   color: #252d3a;
   padding-bottom: 15px;
   border-bottom: 5px solid #788ca8;
-  margin: 0 0 14px;
+  margin: 0;
   position: relative; }
-  @media screen and (min-width: 768px) {
-    article h1 {
-      margin: 0 0 33px; } }
 
 article section .row:last-child {
   margin-bottom: 0; }

@@ -81,7 +81,7 @@ nav {
     }
 }
 
-header, footer {
+body > header, body > footer {
     &::before, &::after {
         content: "";
         top: 0;
@@ -183,13 +183,17 @@ header[role=banner] {
     background-repeat: no-repeat;
 }
 
+::-ms-backdrop, .content-wrap {
+    background-position: 50% (-($section-spacing + 22));
+}
+
 footer {
     @include position(relative);
     border-top: $thin-dark-border;
     color: $dark-night;
-    padding: $small-spacing 0;
+    padding: $small-spacing;
     @include media($medium-break) {
-        @include pad($large-spacing $footer-horizontal-padding);
+        @include pad($large-spacing 0 0);
     }
     nav li {
         margin-bottom: $large-spacing/2;
@@ -200,10 +204,10 @@ footer {
     }
     .logo {
         @include position(static);
-        max-width: floor($small * 0.99);
-        margin: $medium-spacing auto 0;
+        max-width: 100%;
         @include media($medium-break) {
-            @include position(absolute, null $footer-horizontal-padding $large-spacing null);
+            @include position(absolute, 138px 60px null null);
+            margin: $medium-spacing auto 0;
             max-width: 306px;
         }
     }
@@ -215,31 +219,43 @@ article > section {
 }
 
 article {
+
+    header {
+        position: relative;
+
+        padding-bottom: $small-spacing;
+        @include media($medium-break) {
+            padding-bottom: $large-spacing;
+        }
+
+        &::after {
+            content: "";
+            width: 100%;
+            display: block;
+            @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+            background-image: url($small-arrow-img);
+            background-position: 50% 100%;
+            background-size: $small-arrow-width auto;
+            background-repeat: no-repeat;
+            @include media($medium-break) {
+                @include position(absolute, 0 0 ($large-spacing - $thick-border-width - 2px) 0);
+            }
+        }
+        &::-ms-backdrop, &::after {
+            @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+            @include media($medium-break) {
+                @include position(absolute, 0 0 ($large-spacing - $thick-border-width) 0);
+            }
+        }
+    }
+
     h1 {
         color: $dark-night;
         padding-bottom: 15px;
-        border-bottom: 5px solid $blue-steel;
-        margin: 0 0 $small-spacing;
+        border-bottom: $thick-border-width solid $blue-steel;
+        margin: 0;
         position: relative;
 
-        // &::after {
-        //     content: url($small-arrow-img);
-        //     display: inline-block;
-        //     position: absolute;
-        //     bottom: -18%;
-        //     right: 90%;
-        //     left: 0;
-        //     // background-image: url($small-arrow-img);
-        //     // background-clip: border-box;
-        //     // background-position: 50% 100%;
-        //     // background-size: $small-arrow-width auto;
-        //     // background-repeat: no-repeat;
-        //     overflow: visible;
-        // }
-
-        @include media($medium-break) {
-            margin: 0 0 $large-spacing;
-        }
     }
     section {
 

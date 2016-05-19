@@ -3,17 +3,16 @@
 
 $large-break: new-breakpoint(min-width $large);
 $medium-break: new-breakpoint(min-width $medium 4);
-$small-break: new-breakpoint(min-width $small 1);
+$small-break: new-breakpoint(min-width $small 2);
 
 $small-wrap: 96%;
 
-.page-wrap {
-    display: block;
+.content-wrap {
+    margin-bottom: 4rem;
 }
 
-.content-wrap {
+.content-wrap, footer .wrap {
     @include outer-container($small-wrap);
-    margin-bottom: 4rem;
     @include media($medium-break) {
         @include outer-container($medium * 0.9);
     }
@@ -22,7 +21,7 @@ $small-wrap: 96%;
     }
 }
 
-header, footer {
+header {
     .wrap {
         max-width: $small-wrap;
         margin-bottom: 0;

@@ -16,29 +16,27 @@
         <script async src='https://www.google-analytics.com/analytics.js'></script>
     </head>
     <body class="{% block bodyclass %}{% endblock %}">
-        <div class="page-wrap">
-            <header role="banner">
-                <div class="wrap">
-                    <a href="/"><h1>Reconnecting Asia</h1></a>
-                    {% include "_navigation.html" %}
-                </div>
-            </header>
-    {% block content-shell %}
-            <div class="content-wrap">
-                {% block content %}{% endblock content %}
+        <header role="banner">
+            <div class="wrap">
+                <a href="/"><h1>Reconnecting Asia</h1></a>
+                {% include "_navigation.html" %}
             </div>
-    {% endblock %}
-            <footer>
-                <div class="wrap">
-                    <div class="row">
-                        <div class="col-9">
-                            {% include "_navigation.html" with showhome=True %}
-                        </div>
-                    </div>
-                    <img class="logo" src="{% static 'img/csis_logo_gray.svg' %}" alt="Center for Strategic and International Studies">
-                </div>
-            </footer>
+        </header>
+{% block content-shell %}
+        <div class="content-wrap">
+            {% block content %}{% endblock content %}
         </div>
+{% endblock %}
+        <footer>
+            <div class="wrap">
+                <div class="row">
+                    <div class="col-9">
+                        {% include "_navigation.html" with showhome=True %}
+                    </div>
+                </div>
+                <img class="logo" src="{% static 'img/csis_logo_gray.svg' %}" alt="Center for Strategic and International Studies">
+            </div>
+        </footer>
 {% block postbodyjs %}{% endblock %}
     </body>
 </html>

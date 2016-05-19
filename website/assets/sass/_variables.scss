@@ -3,7 +3,7 @@
 // Sizes
 $large: 1200px;
 $medium: 768px;
-$small: 360px;
+$small: 400px; // for larger smartphones. $small is a bad label
 
 $max-content-width: 980px;
 
@@ -46,10 +46,11 @@ $small-arrow-height: 8px;
 
 // Reusables
 
-$thick-dark-border: 5px solid $dark-night;
-$thin-dark-border: 3px solid $dark-night;
+$thick-border-width: 5px;
+$thin-border-width: 3px;
+$thick-dark-border: $thick-border-width solid $dark-night;
+$thin-dark-border: $thin-border-width solid $dark-night;
 $section-spacing: 50px;
 $large-spacing: 33px;
 $medium-spacing: ceil($large-spacing * 0.6);
 $small-spacing: ceil($large-spacing * 0.4);
-$footer-horizontal-padding: $section-spacing;

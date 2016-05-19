@@ -18,11 +18,11 @@
 
 {% block content %}
 <article class="project">
-    <h1>{{ object.name }}</h1>{% if object.initiative %}
-    <h3>Initiative: <a href="{{ object.initiative.get_absolute_url }}">{{ object.initiative.name }}</a></h3>
-{% endif %}
-    <p>{{ object.get_countries_display }}</p>
-
+    <header>
+        <h1>{{ object.name }}</h1>{% if object.initiative %}
+        <h3>Initiative: <a href="{{ object.initiative.get_absolute_url }}">{{ object.initiative.name }}</a></h3>
+        {% endif %}
+    </header>
 {% if object.geo %}
     <section class="map-container">
         <div id="map"></div>
