@@ -20,8 +20,10 @@ var assetsBase = './website/assets',
     destBase   = './website/static',
     sassGlob   = '/**/*.scss';
 
+var production = process.env.NODE_ENV === 'production';
+
 // Input file.
-watchify.args.debug = true;
+watchify.args.debug = !production;
 var bundler = watchify(browserify(assetsBase + '/apps/map/app.js', watchify.args));
 bundler.transform(babelify.configure({
     sourceMapRelative: 'apps/map',
