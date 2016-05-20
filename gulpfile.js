@@ -1,20 +1,56 @@
 'use strict';
 
-var gulp       = require('gulp'),
-    webpack    = require('webpack-stream'),
-    babel      = require("gulp-babel"),
-    sass       = require('gulp-sass'),
-    cleanCss   = require('gulp-clean-css'),
-    svgmin     = require('gulp-svgmin'),
-    concat     = require('gulp-concat'),
-    sourcemaps = require("gulp-sourcemaps"),
-    uglify     = require('gulp-uglify'),
-    rename     = require('gulp-rename');
+var gulp        = require('gulp');
+var gutil       = require('gulp-util');
+var source      = require('vinyl-source-stream');
+var buffer      = require('vinyl-buffer');
+var babelify    = require('babelify');
+var watchify    = require('watchify');
+var sourcemaps  = require('gulp-sourcemaps');
+var browserify  = require('browserify');
+var uglify      = require('gulp-uglify');
+var browserSync = require('browser-sync').create();
+var sass        = require('gulp-sass');
+var cleanCss    = require('gulp-clean-css');
+var svgmin      = require('gulp-svgmin');
+var concat      = require('gulp-concat');
+var rename      = require('gulp-rename');
 
 var assetsBase = './website/assets',
     destBase   = './website/static',
     sassGlob   = '/**/*.scss';
 
+// Input file.
+watchify.args.debug = true;
+var bundler = watchify(browserify(assetsBase + '/apps/map/app.js', watchify.args));
+bundler.transform(babelify.configure({
+    sourceMapRelative: 'apps/map',
+    presets: ["es2015", "react"]
+}));
+bundler.on('update', bundle);
+
+function bundle() {
+    gutil.log('Compiling JS...');
+
+    return bundler.bundle()
+        .on('error', function (err) {
+            gutil.log(err.message);
+            browserSync.notify("Browserify Error!");
+            this.emit("end");
+        })
+        .pipe(source('mapapp.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(uglify())
+        .on('error', gutil.log)
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest(destBase + '/js'))
+        .pipe(browserSync.stream({once: true}));
+}
+
+gulp.task('bundle', function () {
+    return bundle();
+});
 
 gulp.task('sass', function () {
     var cssDest = destBase + '/css';
@@ -44,32 +80,19 @@ gulp.task('svg', function () {
         .pipe(gulp.dest(svgDest));
 });
 
-gulp.task('mapapp', function () {
-  return gulp.src(assetsBase + '/js/mapapp.js')
-    .pipe(sourcemaps.init())
-    // .pipe(concat("mapapp.js"))
-    .pipe(webpack({
-      module: {
-        loaders: [
-          { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel" }
-        ],
-        plugins: [
-          new webpack.DefinePlugin({
-            'process.env': {
-              'NODE_ENV': JSON.stringify('production')
-            }
-          })
-        ],
-      }
-    }))
-    .pipe(sourcemaps.write("."))
-    .pipe(gulp.dest(destBase + '/js'));
-})
 
-gulp.task('default', ['build']);
+gulp.task('default', ['build'], function () {
+    gulp.watch(assetsBase + sassGlob, ['sass']);
+    browserSync.init({
+        proxy: "localhost:8000",
+        serveStatic: [destBase],
+        files: [destBase + '/css/*.css'],
+        open: false
+    });
+});
 
-gulp.task('build', ['sass', 'mapapp']);
+gulp.task('build', ['sass', 'bundle']);
 
 gulp.task('watch', function() {
-  gulp.watch(assetsBase + sassGlob, ['sass']);
+    gulp.watch(assetsBase + sassGlob, ['sass']);
 })
