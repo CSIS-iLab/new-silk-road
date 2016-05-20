@@ -2,6 +2,7 @@
 
 var gulp        = require('gulp');
 var gutil       = require('gulp-util');
+var gulpif      = require('gulp-if');
 var source      = require('vinyl-source-stream');
 var buffer      = require('vinyl-buffer');
 var babelify    = require('babelify');
@@ -27,7 +28,8 @@ watchify.args.debug = !production;
 var bundler = watchify(browserify(assetsBase + '/apps/map/app.js', watchify.args));
 bundler.transform(babelify.configure({
     sourceMapRelative: 'apps/map',
-    presets: ["es2015", "react"]
+    presets: ["es2015", "react"],
+    plugins: ["transform-class-properties"]
 }));
 bundler.on('update', bundle);
 
@@ -43,7 +45,7 @@ function bundle() {
         .pipe(source('mapapp.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
+        .pipe(gulpif(production, uglify()))
         .on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest(destBase + '/js'))
