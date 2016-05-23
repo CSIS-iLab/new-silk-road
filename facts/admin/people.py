@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.db import models
 
 from facts.models.people import (Person, Position)
 from facts.admin.events import PersonEventInline
@@ -11,10 +12,19 @@ from publish.admin import (
     make_published,
     make_not_published
 )
+from facts.forms import NameSearchWidget
 
 
 class PositionInline(admin.TabularInline):
     model = Position
+    formfield_overrides = {
+        models.ForeignKey: {'widget': NameSearchWidget()},
+    }
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
 
 
 class PersonForm(forms.ModelForm):

@@ -4,7 +4,12 @@ from django_select2.forms import (
     ModelSelect2MultipleWidget,
 )
 
-from facts.models import (Person)
+from facts.models import (
+    Person,
+    OrganizationShareholder,
+    PersonShareholder,
+    Organization,
+)
 
 
 class NameSearchFieldMixin(object):
@@ -45,3 +50,35 @@ class PersonSearchMultiWidget(PersonSearchFieldsMixin, ModelSelect2MultipleWidge
 class PersonSearchMultiField(forms.ModelMultipleChoiceField):
     widget = PersonSearchMultiWidget
     help_text = "Select field and begin typing a person's name to search"
+
+
+class ShareholderFormBase(forms.ModelForm):
+    investment = forms.ModelChoiceField(
+        queryset=Organization.objects.all(),
+        widget=NameSearchWidget(model=Organization),
+        required=False
+    )
+
+
+class OrganizationShareholderForm(ShareholderFormBase):
+    shareholder = forms.ModelChoiceField(
+        queryset=Organization.objects.all(),
+        widget=NameSearchWidget(model=Organization),
+        required=False
+    )
+
+    class Meta:
+        model = OrganizationShareholder
+        fields = '__all__'
+
+
+class PersonShareholderForm(ShareholderFormBase):
+    shareholder = forms.ModelChoiceField(
+        queryset=Person.objects.all(),
+        widget=PersonSearchWidget,
+        required=False
+    )
+
+    class Meta:
+        model = PersonShareholder
+        fields = '__all__'
