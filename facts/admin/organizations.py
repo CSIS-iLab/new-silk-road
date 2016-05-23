@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db import models
 from mptt.admin import MPTTModelAdmin
 from facts.models import (
     # shareholders
@@ -13,9 +12,15 @@ from publish.admin import (
 )
 from utilities.admin import PhraseSearchAdminMixin
 from facts.forms import (
-    NameSearchWidget,
     OrganizationShareholderForm,
-    PersonShareholderForm
+    PersonShareholderForm,
+    CompanyDetailsForm,
+    FinancingOrganizationDetailsForm,
+    GovernmentDetailsForm,
+    MilitaryDetailsForm,
+    MultilateralDetailsForm,
+    NGODetailsForm,
+    PoliticalDetailsForm,
 )
 
 
@@ -72,9 +77,6 @@ class OrganizationType(MPTTModelAdmin):
 
 class OrganizationDetailsAdmin(admin.ModelAdmin):
     list_display = ['__str__']
-    formfield_overrides = {
-        models.ForeignKey: {'widget': NameSearchWidget()},
-    }
 
     class Media:
         css = {
@@ -82,26 +84,38 @@ class OrganizationDetailsAdmin(admin.ModelAdmin):
         }
 
 
-class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
-    inlines = [OrganizationShareholderInline, PersonShareholderInline]
-    list_display = OrganizationDetailsAdmin.list_display + ['approved_capital', 'moodys_credit_rating']
-    formfield_overrides = {
-        models.OneToOneField: {'widget': NameSearchWidget()},
-    }
-
-
 class CompanyDetailsAdmin(OrganizationDetailsAdmin):
+    form = CompanyDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['sector', 'structure', 'org_type']
     list_filter = ('sector', 'org_type')
 
 
-class CompanyStructureAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
+    form = FinancingOrganizationDetailsForm
+    inlines = [OrganizationShareholderInline, PersonShareholderInline]
+    list_display = OrganizationDetailsAdmin.list_display + ['approved_capital', 'moodys_credit_rating']
 
 
 class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
+    form = GovernmentDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['country']
 
 
+class MilitaryDetailsAdmin(OrganizationDetailsAdmin):
+    form = MilitaryDetailsForm
+
+
+class MultilateralDetailsAdmin(OrganizationDetailsAdmin):
+    form = MultilateralDetailsForm
+
+
+class NGODetailsAdmin(OrganizationDetailsAdmin):
+    form = NGODetailsForm
+
+
 class PoliticalDetailsAdmin(OrganizationDetailsAdmin):
-    pass
+    form = PoliticalDetailsForm
+
+
+class CompanyStructureAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}

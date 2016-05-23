@@ -18,10 +18,12 @@ from .events import (
 from .organizations import (
     OrganizationAdmin,
     OrganizationType,
-    OrganizationDetailsAdmin,
-    FinancingOrganizationDetailsAdmin,
     CompanyDetailsAdmin,
+    FinancingOrganizationDetailsAdmin,
     GovernmentDetailsDetailsAdmin,
+    MilitaryDetailsAdmin,
+    MultilateralDetailsAdmin,
+    NGODetailsAdmin,
     PoliticalDetailsAdmin,
     CompanyStructureAdmin,
 )
@@ -40,10 +42,10 @@ admin.site.register(CompanyStructure, CompanyStructureAdmin)
 admin.site.register(FinancingOrganizationDetails, FinancingOrganizationDetailsAdmin)
 admin.site.register(FinancingType, OrganizationType)
 admin.site.register(GovernmentDetails, GovernmentDetailsDetailsAdmin)
-admin.site.register(MilitaryDetails, OrganizationDetailsAdmin)
-admin.site.register(MultilateralDetails)
+admin.site.register(MilitaryDetails, MilitaryDetailsAdmin)
+admin.site.register(MultilateralDetails, MultilateralDetailsAdmin)
 admin.site.register(MultilateralType, OrganizationType)
-admin.site.register(NGODetails, OrganizationDetailsAdmin)
+admin.site.register(NGODetails, NGODetailsAdmin)
 admin.site.register(NGOType, OrganizationType)
 admin.site.register(PoliticalDetails, PoliticalDetailsAdmin)
 admin.site.register(PoliticalType, OrganizationType)
