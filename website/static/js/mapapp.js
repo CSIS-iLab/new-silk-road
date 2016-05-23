@@ -359,7 +359,9205 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":337}],2:[function(require,module,exports){
+},{"util/":384}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _actionArea = require('../style/actionArea');
+
+var _actionArea2 = _interopRequireDefault(_actionArea);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * ActionArea
+ *
+ * The purpose of this component is to provide a button like behaviour for a
+ * click like interaction within other components. Button can't be used in such
+ * cases as it always will have it's own focus which is not desired in
+ * components like DatePicker e.g. next month button.
+ *
+ * Note: Use the ActionArea's onUpdate instead of onClick as otherwise on iOS9
+ * the ActionArea will trigger onFocus for it's parent with a set tabindex.
+ */
+
+var ActionArea = function (_Component) {
+  _inherits(ActionArea, _Component);
+
+  function ActionArea(properties) {
+    _classCallCheck(this, ActionArea);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ActionArea).call(this, properties));
+
+    _this.state = {
+      // Note: On touch devices mouseEnter is fired while mouseLeave is not.
+      // This would result in a hover effect that keeps active until another
+      // element is focused on. This would result in the same behaviour as using
+      // the :hover pseudo class. To prevent it from happening activating the
+      // hover state is prevented when a touch event has been triggered before.
+      // source: http://stackoverflow.com/a/22444532/837709
+      isIgnoringHover: false,
+      isActive: false,
+      isHovered: false
+    };
+
+    _this._onMouseEnter = function (event) {
+      if (!_this.state.isIgnoringHover) {
+        _this.setState({
+          isHovered: true,
+          isIgnoringHover: false
+        });
+      }
+
+      if (_this.props.onMouseEnter) {
+        _this.props.onMouseEnter(event);
+      }
+    };
+
+    _this._onMouseLeave = function (event) {
+      _this.setState({
+        isHovered: false
+      });
+
+      if (_this.props.onMouseLeave) {
+        _this.props.onMouseLeave(event);
+      }
+    };
+
+    _this._onMouseDown = function (event) {
+      if (event.button === 0) {
+        _this.setState({
+          isActive: true
+        });
+      }
+
+      if (_this.props.onMouseDown) {
+        _this.props.onMouseDown(event);
+      }
+    };
+
+    _this._onMouseUp = function (event) {
+      var isActive = _this.state.isActive;
+      if (event.button === 0) {
+        _this.setState({
+          isActive: false
+        });
+      }
+
+      if (_this.props.onMouseUp) {
+        _this.props.onMouseUp(event);
+      }
+
+      if (event.button === 0 && isActive && _this.props.onUpdate) {
+        _this.props.onUpdate({});
+      }
+    };
+
+    _this._onTouchStart = function (event) {
+      if (event.touches.length === 1) {
+        _this.setState({
+          isActive: true,
+          isIgnoringHover: true
+        });
+      }
+
+      if (_this.props.onTouchStart) {
+        _this.props.onTouchStart(event);
+      }
+    };
+
+    _this._onTouchEnd = function () {
+      var isActive = _this.state.isActive;
+
+      _this.setState({
+        isActive: false,
+        isIgnoringHover: true
+      });
+
+      if (_this.props.onTouchEnd) {
+        _this.props.onTouchEnd(event);
+      }
+
+      if (isActive && _this.props.onUpdate) {
+        _this.props.onUpdate({});
+      }
+    };
+
+    _this._onTouchCancel = function () {
+      _this.setState({
+        isActive: false,
+        isIgnoringHover: true
+      });
+
+      if (_this.props.onTouchCancel) {
+        _this.props.onTouchCancel(event);
+      }
+    };
+
+    var style = properties.style;
+
+    var childProps = _objectWithoutProperties(properties, ['style']); // eslint-disable-line no-unused-vars
+
+
+    _this.childProps = childProps;
+    return _this;
+  }
+
+  _createClass(ActionArea, [{
+    key: 'componentWillReceiveProps',
+
+
+    /**
+     * Update the childProps based on the updated properties passed to the card.
+     */
+    value: function componentWillReceiveProps(properties) {
+      var style = properties.style;
+
+      var childProps = _objectWithoutProperties(properties, ['style']); // eslint-disable-line no-unused-vars
+
+
+      this.childProps = childProps;
+    }
+
+    /**
+     * As soon as the mouse enters the component the isHovered state is activated.
+     *
+     * The state isHovered is not set to true in case onMouseEnter was triggered
+     * by a touch event.
+     */
+
+
+    /**
+     * Deactivate the isHovered state.
+     */
+
+
+    /**
+     * Activates the active state in case the main mouse button was pressed.
+     */
+
+
+    /**
+     * Triggers onUpdate in case the mouse button was pressed on this element.
+     *
+     * In addition the active state is deactivated.
+     */
+
+
+    /**
+     * Updates the button to be active and makes sure the next onMouseEnter is
+     * ignored.
+     */
+
+
+    /**
+     * Triggers onUpdate in case the touch event started on this element and makes
+     * sure the next onMouseEnter is ignored.
+     */
+
+
+    /**
+     * Updates the button to be release and makes sure the next onMouseEnter is
+     * ignored.
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var style = _extends({}, _actionArea2.default.style, this.props.style);
+      if (this.state.isHovered) {
+        style = _extends({}, style, _actionArea2.default.hoverStyle, this.props.hoverStyle);
+      }
+
+      if (this.state.isActive) {
+        style = _extends({}, style, _actionArea2.default.activeStyle, this.props.activeStyle);
+      }
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          role: 'button'
+        }, this.childProps, {
+          onMouseDown: this._onMouseDown,
+          onMouseUp: this._onMouseUp,
+          onMouseEnter: this._onMouseEnter,
+          onMouseLeave: this._onMouseLeave,
+          onTouchStart: this._onTouchStart,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          style: style
+        }),
+        this.props.children
+      );
+    }
+  }]);
+
+  return ActionArea;
+}(_react.Component);
+
+ActionArea.displayName = 'ActionArea';
+ActionArea.propTypes = {
+  activeStyle: _react.PropTypes.object,
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  hoverStyle: _react.PropTypes.object,
+  onTouchStart: _react.PropTypes.func,
+  onTouchEnd: _react.PropTypes.func,
+  onTouchCancel: _react.PropTypes.func,
+  onMouseDown: _react.PropTypes.func,
+  onMouseEnter: _react.PropTypes.func,
+  onMouseLeave: _react.PropTypes.func,
+
+  // TODO investigate how we solve mouseUp in other compents (like the right click edgecase)
+  onMouseUp: _react.PropTypes.func,
+  onUpdate: _react.PropTypes.func,
+  style: _react.PropTypes.object
+};
+exports.default = ActionArea;
+},{"../style/actionArea":27,"react":378}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _helpers = require('../utils/helpers');
+
+var _button = require('../style/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _button3 = require('../config/button');
+
+var _button4 = _interopRequireDefault(_button3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; } // eslint-disable-line no-unused-vars
+
+
+var buttonTypes = ['button', 'submit', 'reset']; // eslint-disable-line no-unused-vars
+
+/**
+ * Returns an object with properties that are relevant for the button element.
+ *
+ * In case a wrong or no type is defined the type of the child button will be
+ * set to `button`.
+ */
+function sanitizeChildProps(properties) {
+  var className = properties.className;
+  var // eslint-disable-line no-unused-vars
+  style = properties.style;
+  var // eslint-disable-line no-unused-vars
+  hoverStyle = properties.hoverStyle;
+  var // eslint-disable-line no-unused-vars
+  focusStyle = properties.focusStyle;
+  var // eslint-disable-line no-unused-vars
+  activeStyle = properties.activeStyle;
+  var // eslint-disable-line no-unused-vars
+  disabledStyle = properties.disabledStyle;
+  var // eslint-disable-line no-unused-vars
+  disabledHoverStyle = properties.disabledHoverStyle;
+  var // eslint-disable-line no-unused-vars
+  primary = properties.primary;
+  var // eslint-disable-line no-unused-vars
+  onTouchStart = properties.onTouchStart;
+  var // eslint-disable-line no-unused-vars
+  onTouchEnd = properties.onTouchEnd;
+  var // eslint-disable-line no-unused-vars
+  onTouchCancel = properties.onTouchCancel;
+  var // eslint-disable-line no-unused-vars
+  onMouseDown = properties.onMouseDown;
+  var // eslint-disable-line no-unused-vars
+  onMouseEnter = properties.onMouseEnter;
+  var // eslint-disable-line no-unused-vars
+  onMouseLeave = properties.onMouseLeave;
+  var // eslint-disable-line no-unused-vars
+  onFocus = properties.onFocus;
+  var // eslint-disable-line no-unused-vars
+  onBlur = properties.onBlur;
+
+  var childProps = _objectWithoutProperties(properties, ['className', 'style', 'hoverStyle', 'focusStyle', 'activeStyle', 'disabledStyle', 'disabledHoverStyle', 'primary', 'onTouchStart', 'onTouchEnd', 'onTouchCancel', 'onMouseDown', 'onMouseEnter', 'onMouseLeave', 'onFocus', 'onBlur']);
+
+  return childProps;
+}
+
+/**
+ * Update hover, focus & active style for the speficied styleId.
+ *
+ * @param styleId {string} - a unique id that exists as class attribute in the DOM
+ * @param properties {object} - the components properties optionally containing custom styles
+ */
+function updatePseudoClassStyle(styleId, properties, preventFocusStyleForTouchAndClick) {
+  var baseStyle = properties.primary ? _button2.default.primaryStyle : _button2.default.style;
+  var baseDisabledStyle = properties.primary ? _button2.default.primaryDisabledStyle : _button2.default.disabledStyle;
+  var disabledStyle = _extends({}, baseStyle, properties.style, baseDisabledStyle, properties.disabledStyle);
+  var baseActiveStyle = properties.primary ? _button2.default.primaryActiveStyle : _button2.default.activeStyle;
+  var activeStyle = _extends({}, baseActiveStyle, properties.activeStyle);
+
+  var focusStyle = void 0;
+  if (preventFocusStyleForTouchAndClick) {
+    focusStyle = { outline: 0 };
+  } else {
+    var baseFocusStyle = properties.primary ? _button2.default.primaryFocusStyle : _button2.default.focusStyle;
+    focusStyle = _extends({}, baseFocusStyle, properties.focusStyle);
+  }
+
+  var styles = [{
+    id: styleId,
+    style: activeStyle,
+    pseudoClass: 'active'
+  }, {
+    id: styleId,
+    style: disabledStyle,
+    pseudoClass: 'active',
+    disabled: true
+  }, {
+    id: styleId,
+    style: focusStyle,
+    pseudoClass: 'focus'
+  }];
+
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * Button component
+ *
+ * The button behaves exactly like a normal html button except:
+ * - Once a user clicks on the button it will loose focus
+ * - By default every button is of type="button" instead of "submit"
+ */
+
+var Button = function (_Component) {
+  _inherits(Button, _Component);
+
+  function Button(properties) {
+    _classCallCheck(this, Button);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Button).call(this, properties));
+
+    _this._onFocus = function (event) {
+      _this.focused = true;
+      _this.forceUpdate();
+
+      if (_this.props.onFocus) {
+        _this.props.onFocus(event);
+      }
+    };
+
+    _this._onBlur = function (event) {
+      _this.focused = false;
+      _this.setState({ isActive: false });
+
+      if (_this.props.onBlur) {
+        _this.props.onBlur(event);
+      }
+    };
+
+    _this._onMouseDown = function (event) {
+      if (event.button === 0 && !_this.props.disabled) {
+        _this.mouseDownOnButton = true;
+      }
+
+      if (_this.props.onMouseDown) {
+        _this.props.onMouseDown(event);
+      }
+    };
+
+    _this._onTouchStart = function (event) {
+      if (!_this.props.disabled && event.touches.length === 1) {
+        _this.setState({
+          isActive: true,
+          isIgnoringHover: true
+        });
+      }
+
+      if (_this.props.onTouchStart) {
+        _this.props.onTouchStart(event);
+      }
+    };
+
+    _this._onTouchEnd = function (event) {
+      _this.setState({
+        isActive: false,
+        isIgnoringHover: true
+      });
+
+      if (_this.props.onTouchEnd) {
+        _this.props.onTouchEnd(event);
+      }
+    };
+
+    _this._onTouchCancel = function (event) {
+      _this.setState({
+        isActive: false,
+        isIgnoringHover: true
+      });
+
+      if (_this.props.onTouchEnd) {
+        _this.props.onTouchEnd(event);
+      }
+    };
+
+    _this._onMouseEnter = function (event) {
+      if (!_this.state.isIgnoringHover) {
+        _this.setState({
+          isHovered: true,
+          isIgnoringHover: false
+        });
+      }
+
+      if (_this.props.onMouseEnter) {
+        _this.props.onMouseEnter(event);
+      }
+    };
+
+    _this._onMouseLeave = function (event) {
+      _this.setState({
+        isHovered: false
+      });
+
+      if (_this.props.onMouseLeave) {
+        _this.props.onMouseLeave(event);
+      }
+    };
+
+    _this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _button4.default.preventFocusStyleForTouchAndClick;
+
+    _this.state = {
+      childProps: sanitizeChildProps(properties),
+
+      // used for touch devices like iOS Chrome/Safari where the active
+      // pseudoClass is not supported on touch
+      isActive: false,
+      isHovered: false,
+
+      // Note: On touch devices mouseEnter is fired while mouseLeave is not.
+      // This would result in a hover effect that keeps active until another
+      // element is focused on. This would result in the same behaviour as using
+      // the :hover pseudo class. To prevent it from happening activating the
+      // hover state is prevented when a touch event has been triggered before.
+      // source: http://stackoverflow.com/a/22444532/837709
+      isIgnoringHover: false
+    };
+
+    // The focused attribute is used to apply the one-time focus animation.
+    // As it is reset after every render it can't be set inside state as this
+    // would trigger an endless loop.
+    _this.focused = false;
+
+    // This used to determine if the one-time focus animation should be prevented.
+    _this.mouseDownOnButton = false;
+    return _this;
+  }
+
+  _createClass(Button, [{
+    key: 'componentWillMount',
+
+
+    /**
+     * Generates the style-id & inject the focus & active style.
+     */
+    value: function componentWillMount() {
+      this.styleId = 'style-id' + (0, _helpers.uniqueId)();
+      updatePseudoClassStyle(this.styleId, this.props, this.preventFocusStyleForTouchAndClick);
+    }
+
+    /**
+     * Update the childProps based on the updated properties of the button.
+     */
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _button4.default.preventFocusStyleForTouchAndClick;
+
+      this.setState({
+        childProps: sanitizeChildProps(properties)
+      });
+      (0, _injectStyle.removeStyle)(this.styleId);
+      updatePseudoClassStyle(this.styleId, properties, this.preventFocusStyleForTouchAndClick);
+    }
+
+    /**
+     * Deactivate the focused attribute in order to make sure the focus animation
+     * only runs once when the component is focused on & not after re-rendering
+     * e.g when the user clicks the button.
+     */
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.focused = false;
+      this.mouseDownOnButton = false;
+    }
+
+    /**
+     * Remove a component's associated styles whenever it gets removed from the DOM.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeStyle)(this.styleId);
+    }
+
+    /**
+     * Activate the focused attribute used to determine when to show the
+     * one-time focus animation and trigger a render.
+     */
+
+
+    /**
+     * Deactivate the focused attribute used to determine when to show the
+     * one-time focus animation and trigger a render.
+     */
+
+
+    /**
+     * Updates the button to be pressed.
+     */
+
+
+    /**
+     * Updates the button to be release.
+     */
+
+
+    /**
+     * Updates the button to be release.
+     */
+
+
+    /**
+     * As soon as the mouse enters the component the isHovered state is activated.
+     */
+
+
+    /**
+     * Deactivate the isHovered state.
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var baseStyle = this.props.primary ? _button2.default.primaryStyle : _button2.default.style;
+      var combinedStyle = _extends({}, baseStyle, this.props.style);
+
+      if (this.state.isHovered) {
+        var baseHoverStyle = this.props.primary ? _button2.default.primaryHoverStyle : _button2.default.hoverStyle;
+        combinedStyle = _extends({}, combinedStyle, baseHoverStyle, this.props.hoverStyle);
+      }
+
+      if (this.props.disabled) {
+        var baseDisabledStyle = this.props.primary ? _button2.default.primaryDisabledStyle : _button2.default.disabledStyle;
+        combinedStyle = _extends({}, combinedStyle, baseDisabledStyle, this.props.disabledStyle);
+        if (this.state.isHovered) {
+          var baseDisabledHoverStyle = this.props.primary ? _button2.default.primaryDisabledHoverStyle : _button2.default.disabledHoverStyle;
+          combinedStyle = _extends({}, combinedStyle, baseDisabledHoverStyle, this.props.disabledHoverStyle);
+        }
+      } else {
+        if (this.state.isActive) {
+          var baseActiveStyle = this.props.primary ? _button2.default.primaryActiveStyle : _button2.default.activeStyle;
+          combinedStyle = _extends({}, combinedStyle, baseActiveStyle, this.props.activeStyle);
+        } else if (this.focused && !this.state.isActive && !this.mouseDownOnButton && this.preventFocusStyleForTouchAndClick) {
+          var baseFocusStyle = this.props.primary ? _button2.default.primaryFocusStyle : _button2.default.focusStyle;
+          combinedStyle = _extends({}, combinedStyle, baseFocusStyle, this.props.focusStyle);
+        }
+      }
+
+      return _react2.default.createElement(
+        'button',
+        _extends({
+          style: combinedStyle,
+          className: (0, _unionClassNames2.default)(this.props.className, this.styleId),
+          onTouchStart: this._onTouchStart,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          onFocus: this._onFocus,
+          onBlur: this._onBlur,
+          onMouseDown: this._onMouseDown,
+          onMouseEnter: this._onMouseEnter,
+          onMouseLeave: this._onMouseLeave
+        }, this.state.childProps),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Button;
+}(_react.Component);
+
+Button.displayName = 'Button';
+Button.propTypes = {
+  activeStyle: _react.PropTypes.object,
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  className: _react.PropTypes.string,
+  disabled: _react.PropTypes.bool,
+  type: _react.PropTypes.oneOf(buttonTypes),
+  style: _react.PropTypes.object,
+  focusStyle: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  disabledStyle: _react.PropTypes.object,
+  disabledHoverStyle: _react.PropTypes.object,
+  onTouchStart: _react.PropTypes.func,
+  onTouchEnd: _react.PropTypes.func,
+  onTouchCancel: _react.PropTypes.func,
+  onMouseDown: _react.PropTypes.func,
+  onMouseEnter: _react.PropTypes.func,
+  onMouseLeave: _react.PropTypes.func,
+  onFocus: _react.PropTypes.func,
+  onBlur: _react.PropTypes.func,
+  preventFocusStyleForTouchAndClick: _react.PropTypes.bool,
+  primary: _react.PropTypes.bool
+};
+Button.defaultProps = {
+  primary: false,
+  disabled: false,
+  type: 'button'
+};
+exports.default = Button;
+},{"../config/button":20,"../style/button":29,"../utils/helpers":44,"../utils/inject-style":45,"../utils/union-class-names":47,"react":378}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _card = require('../style/card');
+
+var _card2 = _interopRequireDefault(_card);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // eslint-disable-line no-unused-vars
+
+
+/**
+ * Card component with a light shadow.
+ *
+ * This component will apply any attribute to the div that has been provided as
+ * property & is valid for a div.
+ */
+
+var Card = function (_Component) {
+  _inherits(Card, _Component);
+
+  function Card(properties) {
+    _classCallCheck(this, Card);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Card).call(this, properties));
+
+    var style = properties.style;
+
+    var childProps = _objectWithoutProperties(properties, ['style']); // eslint-disable-line no-unused-vars
+
+
+    _this.childProps = childProps;
+    return _this;
+  }
+
+  _createClass(Card, [{
+    key: 'componentWillReceiveProps',
+
+
+    /**
+     * Update the childProps based on the updated properties passed to the card.
+     */
+    value: function componentWillReceiveProps(properties) {
+      var style = properties.style;
+
+      var childProps = _objectWithoutProperties(properties, ['style']); // eslint-disable-line no-unused-vars
+
+
+      this.childProps = childProps;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var divStyle = _extends({}, _card2.default.style, this.props.style);
+
+      return _react2.default.createElement(
+        'div',
+        _extends({}, this.childProps, { style: divStyle }),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Card;
+}(_react.Component);
+
+Card.displayName = 'Card';
+Card.propTypes = {
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  style: _react.PropTypes.object
+};
+exports.default = Card;
+},{"../style/card":30,"react":378}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Choice component
+ */
+
+var Choice = function (_Component) {
+  _inherits(Choice, _Component);
+
+  function Choice() {
+    _classCallCheck(this, Choice);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Choice).apply(this, arguments));
+  }
+
+  _createClass(Choice, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.props.children
+      );
+    }
+  }]);
+
+  return Choice;
+}(_react.Component);
+
+Choice.displayName = 'Choice';
+Choice.propTypes = {
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  value: _react.PropTypes.bool.isRequired
+};
+exports.default = Choice;
+},{"react":378}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _helpers = require('../utils/helpers');
+
+var _comboBox = require('../style/combo-box');
+
+var _comboBox2 = _interopRequireDefault(_comboBox);
+
+var _ComboBoxItem = require('../components/ComboBoxItem');
+
+var _ComboBoxItem2 = _interopRequireDefault(_ComboBoxItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Update hover style for the specified styleId.
+ *
+ * @param styleId {string} - a unique id that exists as class attribute in the DOM
+ * @param caretStyleId {string} - unique is assigned as class to caret span
+ * @param properties {object} - the components properties optionally containing hoverStyle
+ */
+function updatePseudoClassStyle(styleId, caretStyleId, properties) {
+  var hoverStyle = _extends({}, _comboBox2.default.hoverStyle, properties.hoverStyle);
+  var focusStyle = _extends({}, _comboBox2.default.focusStyle, properties.focusStyle);
+  var disabledHoverStyle = _extends({}, _comboBox2.default.disabledHoverStyle, properties.disabledHoverStyle);
+  var caretFocusStyle = _extends({}, _comboBox2.default.caretFocusStyle);
+
+  var styles = [{
+    id: styleId,
+    style: hoverStyle,
+    pseudoClass: 'hover'
+  }, {
+    id: styleId,
+    style: disabledHoverStyle,
+    pseudoClass: 'hover',
+    disabled: true
+  }, {
+    id: styleId,
+    style: focusStyle,
+    pseudoClass: 'focus'
+  }, {
+    id: caretStyleId,
+    style: caretFocusStyle,
+    pseudoClass: 'focus'
+  }];
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * Returns an object with properties that are relevant for the wrapper div.
+ */
+function sanitizeWrapperProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'aria-label', 'aria-disabled']);
+}
+
+/**
+ * Returns an object with properties that are relevant for the input box.
+ */
+function sanitizeInputProps(properties) {
+  return (0, _helpers.omit)(properties, ['ref', 'value', 'valueLink', 'defaultValue', 'placeholder', 'disabled', 'hintStyle', 'className', 'style', 'onUpdate', 'onInputMatch', 'tabIndex', 'onBlur', 'onFocus', 'onKeyDown', 'aria-disabled', 'aria-autocomplete', 'children']);
+}
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div of
+ * the selected option.
+ */
+function sanitizeCaretProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'className', 'onClick', 'tabIndex']);
+}
+
+/**
+ * Returns an object with properties that are relevant for the combo-box menu.
+ */
+function sanitizeMenuProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'ref', 'role']);
+}
+
+/**
+ * Default function used for filtering options.
+ */
+function filterFunc(inputValue, optionValue) {
+  if (inputValue && optionValue) {
+    return optionValue.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
+  }
+
+  return false;
+}
+
+/**
+ * ComboBox React Component.
+ */
+
+var ComboBox = function (_Component) {
+  _inherits(ComboBox, _Component);
+
+  function ComboBox(properties) {
+    _classCallCheck(this, ComboBox);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ComboBox).call(this, properties));
+
+    _this._onTouchStartAtOption = function (event, index) {
+      if (!_this.props.disabled && event.touches.length === 1) {
+        _this._touchStartedAt = index;
+        _this.setState({ focusedOptionIndex: index });
+      }
+    };
+
+    _this._onTouchEndAtOption = function (event, index) {
+      if (!_this.props.disabled && _this._touchStartedAt) {
+        if (_this._touchStartedAt === index) {
+          event.preventDefault();
+          _this._triggerChange(_this._getValueForIndex(index));
+        }
+
+        _this._touchStartedAt = undefined;
+      }
+    };
+
+    _this._onTouchCancelAtOption = function () {
+      if (!_this.props.disabled) {
+        _this._touchStartedAt = undefined;
+        _this.setState({ focusedOptionIndex: undefined });
+      }
+    };
+
+    _this._onBlur = function (event) {
+      if (!_this.props.disabled) {
+        _this.setState({
+          isOpen: false,
+          focusedOptionIndex: undefined
+        });
+      }
+
+      if (_this.props.onBlur) {
+        _this.props.onBlur(event);
+      }
+    };
+
+    _this._onFocus = function (event) {
+      if (!_this.props.disabled) {
+        _this.setState({
+          isOpen: true
+        });
+      }
+
+      if (_this.props.onFocus) {
+        _this.props.onFocus(event);
+      }
+    };
+
+    _this._onCaretClick = function () {
+      if (!_this.props.disabled) {
+        var isOpen = !_this.state.isOpen;
+        _this.setState({
+          isOpen: isOpen
+        });
+      }
+    };
+
+    _this._onMouseEnterAtOption = function (index) {
+      if (!_this.props.disabled) {
+        _this.setState({
+          focusedOptionIndex: index
+        });
+      }
+    };
+
+    _this._onMouseLeaveAtOption = function () {
+      if (!_this.props.disabled) {
+        _this.setState({
+          focusedOptionIndex: undefined
+        });
+      }
+    };
+
+    _this._onClickAtOption = function (index) {
+      if (!_this.props.disabled) {
+        _this._triggerChange(_this._getValueForIndex(index));
+      }
+    };
+
+    _this._onKeyDown = function (event) {
+      if (!_this.props.disabled) {
+        if (!_this.state.isOpen) {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            _this.setState({
+              isOpen: true
+            });
+          }
+        } else {
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            _this._onArrowDownKeyDown();
+          } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            _this._onArrowUpKeyDown();
+          } else if (event.key === 'ArrowRight') {
+            if (_this.props.enableHint) {
+              event.preventDefault();
+              var hint = _this._getHint();
+              if (hint) {
+                _this._userUpdateValue(hint);
+              }
+            }
+          } else if (event.key === 'Enter') {
+            event.preventDefault();
+            _this._onEnterOrTabKeyDown();
+          } else if (event.key === 'Tab') {
+            // event.preventDefault(); should not be called here else tab
+            // will not be able to take user to next component on the page
+            _this._onEnterOrTabKeyDown();
+          } else if (event.key === 'Escape') {
+            event.preventDefault();
+            _this.setState({
+              isOpen: false,
+              focusedOptionIndex: undefined
+            });
+          }
+        }
+      }
+
+      if (_this.props.onKeyDown) {
+        _this.props.onKeyDown(event);
+      }
+    };
+
+    _this._onArrowDownKeyDown = function () {
+      var index = 0;
+      if (_this.state.focusedOptionIndex !== undefined && _this.state.focusedOptionIndex + 1 < _this.filteredOptions.length) {
+        index = _this.state.focusedOptionIndex + 1;
+      }
+
+      _this.setState({
+        focusedOptionIndex: index
+      });
+    };
+
+    _this._onChange = function (event) {
+      var value = event.target.value;
+      _this._userUpdateValue(value);
+    };
+
+    var inputValue = void 0;
+
+    if ((0, _helpers.has)(properties, 'valueLink')) {
+      inputValue = properties.valueLink.value;
+    } else if ((0, _helpers.has)(properties, 'value')) {
+      inputValue = properties.value;
+    } else if ((0, _helpers.has)(properties, 'defaultValue')) {
+      inputValue = properties.defaultValue;
+    }
+
+    _this.state = {
+      isOpen: false,
+      focusedOptionIndex: undefined,
+      inputValue: inputValue,
+      wrapperProps: sanitizeWrapperProps(properties.wrapperProps),
+      inputProps: sanitizeInputProps(properties),
+      caretProps: sanitizeCaretProps(properties.caretProps),
+      menuProps: sanitizeMenuProps(properties.menuProps)
+    };
+
+    _this.filteredOptions = ComboBox.filterOptions(inputValue, properties);
+    return _this;
+  }
+
+  _createClass(ComboBox, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      var value = void 0;
+      if (typeof this.state.focusedOptionIndex !== 'undefined') {
+        value = this.filteredOptions[this.state.focusedOptionIndex].props.value;
+      }
+
+      return {
+        isDisabled: this.props.disabled,
+        isHoveredValue: value
+      };
+    }
+
+    /**
+     * This method will calculate the hint that should be present in comboBox at some point in time. Rules:
+     * 1. If menu is not open hint is undefined
+     * 2. If menu is open but there are no filteredOptions hint is undefined
+     * 3. If if some option is highlighted hint is equal to its value
+     * 4. If no option is highlighted but some value is present in input box hint is equal to value of first filteredOptions
+     * If user has typed some text in input box and there is a hint(according to above calculations), the starting of hint
+     * is replaced by the text input by user ( this is to make sure that case of letters in hint is same as that in input box
+     * value and overlap is perfect.)
+     * todo: simplify logic in method below
+     */
+
+  }, {
+    key: '_getHint',
+    value: function _getHint() {
+      if (this.state.isOpen) {
+        var filteredOptions = this.filteredOptions;
+        if (filteredOptions && filteredOptions.length > 0) {
+          var hint = void 0;
+          var focusedOptionIndex = this.state.focusedOptionIndex;
+          var inputValue = this.state.inputValue;
+          if (focusedOptionIndex >= 0) {
+            hint = filteredOptions[focusedOptionIndex].props.value;
+          } else if (inputValue && inputValue.length > 0) {
+            hint = filteredOptions[0].props.value;
+          }
+
+          if (hint) {
+            if (inputValue && inputValue.length > 0) {
+              var position = hint.toLowerCase().indexOf(inputValue.toLowerCase());
+              if (position === 0) {
+                return inputValue + hint.substr(inputValue.length, hint.length - inputValue.length);
+              } else if (position === -1) {
+                return hint;
+              }
+            } else {
+              return hint;
+            }
+          }
+        }
+      }
+
+      return undefined;
+    }
+
+    /**
+     * Generates the style-id & inject the focus & hover style.
+     */
+
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var id = (0, _helpers.uniqueId)();
+      this._styleId = 'style-id' + id;
+      this._caretStyleId = 'caretStyle-id' + id;
+      updatePseudoClassStyle(this._styleId, this._caretStyleId, this.props);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      var newState = {
+        wrapperProps: sanitizeWrapperProps(properties.wrapperProps),
+        inputProps: sanitizeInputProps(properties),
+        caretProps: sanitizeCaretProps(properties.caretProps),
+        menuProps: sanitizeMenuProps(properties.menuProps)
+      };
+
+      if ((0, _helpers.has)(properties, 'valueLink')) {
+        newState.inputValue = properties.valueLink.value;
+      } else if ((0, _helpers.has)(properties, 'value')) {
+        newState.inputValue = properties.value;
+      }
+
+      if (newState.inputValue) {
+        newState.filteredOptions = ComboBox.filterOptions(newState.inputValue, properties);
+      }
+
+      this.setState(newState);
+
+      (0, _injectStyle.removeAllStyles)([this._styleId, this._caretStyleId]);
+      updatePseudoClassStyle(this._styleId, this._caretStyleId, properties);
+    }
+
+    /**
+     * Remove a component's associated styles whenever it gets removed from the DOM.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeAllStyles)([this._styleId, this._caretStyleId]);
+    }
+
+    /**
+     * Update focusedOptionIndex when an option is touched.
+     */
+
+
+    /**
+     * Triggers a change event after the user touched on an Option.
+     */
+
+
+    /**
+     * Update focusedOptionIndex to undefined on touch cancel.
+     */
+
+
+    /**
+     * Closed opened combo-box options and removed focusStyles on blur.
+     */
+
+
+    /**
+     * Set focused state when element is focused.
+     */
+
+
+    /**
+     * Open/ Close menu when create is clicked.
+     */
+
+
+    /**
+     * Update focusedOptionIndex for component when mouse enters an option.
+     */
+
+
+    /**
+     * Set focusedOptionIndex to undefined.
+     */
+
+
+    /**
+     * Update component value when an option is clicked.
+     */
+
+
+    /**
+     * Handle keyDown in input (when input is focused):
+     * 1. ComboBox is closed and ArrowDown/ ArrowUp is pressed -> open the ComboBox
+     * 2. ComboBox is opened and ArrowDown is pressed -> highlight next option
+     * 3. ComboBox is opened and ArrowUp is pressed -> highlight previous option
+     * 4. ComboBox is opened and ArrowRight is pressed -> value of hint is copied over to inputBox
+     * 5. ComboBox is opened and Enter/ Tab is pressed -> update input value to value of option
+     * 6. ComboBox is opened and Esc is pressed -> close ComboBox
+     */
+
+
+    /**
+     * Highlight next option when arrowDown key is pressed.
+     * Highlight first option if currently last option is focused.
+     */
+
+  }, {
+    key: '_onArrowUpKeyDown',
+
+
+    /**
+     * Highlight previous option when arrowUp key is pressed.
+     * Highlight last option if currently first option is focused.
+     */
+    value: function _onArrowUpKeyDown() {
+      if (this.filteredOptions.length > 0) {
+        var index = this.filteredOptions.length - 1;
+        if (this.state.focusedOptionIndex) {
+          index = this.state.focusedOptionIndex - 1;
+        }
+
+        this.setState({
+          focusedOptionIndex: index
+        });
+      }
+    }
+
+    /**
+     * Update value of Input box to the value of highlighted option.
+     */
+
+  }, {
+    key: '_onEnterOrTabKeyDown',
+    value: function _onEnterOrTabKeyDown() {
+      if (this.state.focusedOptionIndex >= 0) {
+        this._triggerChange(this.filteredOptions[this.state.focusedOptionIndex].props.value);
+      }
+    }
+
+    /**
+     * The function will return options (if any) who's value is same as value of the combo-box input.
+     */
+
+  }, {
+    key: '_findMatch',
+    value: function _findMatch(value) {
+      return (0, _helpers.find)(this.filteredOptions, function (entry) {
+        return entry.props.value === value;
+      });
+    }
+
+    /**
+     * The function is called when user selects an option. Function will do following:
+     * 1. Close the options
+     * 2. Change value of input depending on whether its has value, defaultValue or valueLink property
+     * 3. Call onUpdate props function
+     */
+
+  }, {
+    key: '_triggerChange',
+    value: function _triggerChange(value) {
+      if ((0, _helpers.has)(this.props, 'valueLink')) {
+        this.props.valueLink.requestChange(value);
+        this.setState({
+          isOpen: false,
+          focusedOptionIndex: undefined
+        });
+      } else if ((0, _helpers.has)(this.props, 'value')) {
+        this.setState({
+          isOpen: false,
+          focusedOptionIndex: undefined
+        });
+      } else {
+        this.setState({
+          inputValue: value,
+          isOpen: false,
+          focusedOptionIndex: undefined
+        });
+        this.filteredOptions = ComboBox.filterOptions(value, this.props);
+      }
+
+      var obj = { value: value, isOptionSelection: true, isMatchingOption: true };
+      var matchedOption = this._findMatch(value);
+      obj.identifier = matchedOption ? matchedOption.props.identifier : undefined;
+
+      if (this.props.onUpdate) {
+        this.props.onUpdate(obj);
+      }
+    }
+
+    /**
+     * The function is called when user type/ paste value in the input box.
+     */
+
+  }, {
+    key: '_getValueForIndex',
+
+
+    /**
+     * Returns the value of the child with a certain index.
+     */
+    value: function _getValueForIndex(index) {
+      return this.filteredOptions[index].props.value;
+    }
+
+    /**
+     * The function is called when user inputs a value in the input box. This can be done by:
+     * 1. typing/ pasting value into input box
+     * 2. pressing arrowRight key when there is some hint in the input box
+     *
+     * Function will do following:
+     * 1. Open the options
+     * 2. Change value of input depending on whether its has value, defaultValue or valueLink property
+     * 3. Call onUpdate props function
+     */
+
+  }, {
+    key: '_userUpdateValue',
+    value: function _userUpdateValue(value) {
+      if ((0, _helpers.has)(this.props, 'valueLink')) {
+        this.props.valueLink.requestChange(value);
+        this.setState({
+          isOpen: true,
+          focusedOptionIndex: undefined
+        });
+      } else if ((0, _helpers.has)(this.props, 'value')) {
+        this.setState({
+          isOpen: true,
+          focusedOptionIndex: undefined
+        });
+      } else {
+        this.setState({
+          inputValue: value,
+          isOpen: true,
+          focusedOptionIndex: undefined
+        });
+        this.filteredOptions = ComboBox.filterOptions(value, this.props);
+      }
+
+      var obj = { value: value, isOptionSelection: false, isMatchingOption: false };
+
+      var matchedOption = this._findMatch(value);
+      if (matchedOption) {
+        obj.identifier = matchedOption.props.identifier;
+        obj.isMatchingOption = true;
+      }
+
+      if (this.props.onUpdate) {
+        this.props.onUpdate(obj);
+      }
+    }
+
+    /**
+     * Function to filter options using input value.
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var inputStyle = _extends({}, _comboBox2.default.style, this.props.style);
+      var hintStyle = _extends({}, _comboBox2.default.hintStyle, this.props.hintStyle);
+      var wrapperStyle = _extends({}, _comboBox2.default.wrapperStyle, this.props.wrapperStyle);
+      var menuStyle = _extends({}, _comboBox2.default.menuStyle, this.props.menuStyle);
+
+      var hint = this.props.enableHint ? this._getHint() : undefined;
+      var placeHolder = !hint ? this.props.placeholder : undefined;
+      var inputClassName = (0, _unionClassNames2.default)(this.props.className, this._styleId);
+      var tabIndex = this.props.tabIndex ? this.props.tabIndex : '0';
+
+      if (this.props.disabled) {
+        inputStyle = _extends({}, inputStyle, _comboBox2.default.disabledStyle, this.props.disabledStyle);
+      }
+
+      // todo: Currently there are no different hover styles for caret, like select they are probably not really needed.
+      var caretStyle = void 0;
+      if (this.props.displayCaret) {
+        if (this.props.disabled) {
+          caretStyle = _extends({}, _comboBox2.default.caretToOpenStyle, this.props.caretToOpenStyle, _comboBox2.default.disabledCaretToOpenStyle, this.props.disabledCaretToOpenStyle);
+        } else if (this.state.isOpen) {
+          caretStyle = _extends({}, _comboBox2.default.caretToCloseStyle, this.props.caretToCloseStyle);
+        } else {
+          caretStyle = _extends({}, _comboBox2.default.caretToOpenStyle, this.props.caretToOpenStyle);
+        }
+      }
+
+      var computedMenuStyle = this.state.isOpen && !this.props.disabled && this.filteredOptions && this.filteredOptions.length > 0 ? menuStyle : { display: 'none' };
+
+      // using value for input makes it a controlled component and it will be changed in controlled manner if (1) user enters value, (2) user selects some option
+      // value will be updated depending on whether user has passed value / valueLink / defaultValue as property
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          style: wrapperStyle,
+          'aria-label': this.props['aria-label'],
+          'aria-disabled': this.props.disabled
+        }, this.state.wrapperProps),
+        _react2.default.createElement('input', {
+          style: hintStyle,
+          value: hint,
+          tabIndex: -1,
+          readOnly: true
+        }),
+        _react2.default.createElement('input', _extends({
+          disabled: this.props.disabled,
+          'aria-disabled': this.props.disabled,
+          value: this.state.inputValue,
+          placeholder: placeHolder,
+          style: inputStyle,
+          className: inputClassName,
+          onChange: this._onChange,
+          tabIndex: tabIndex,
+          onBlur: this._onBlur,
+          onFocus: this._onFocus,
+          onKeyDown: this._onKeyDown,
+          'aria-autocomplete': 'list'
+        }, this.state.inputProps)),
+        _react2.default.createElement('span', _extends({
+          style: caretStyle,
+          className: this._caretStyleId,
+          onClick: this._onCaretClick,
+          tabIndex: -1
+        }, this.state.caretProps)),
+        _react2.default.createElement(
+          'ul',
+          _extends({
+            style: computedMenuStyle,
+            role: 'listbox',
+            'aria-expanded': this.state.isOpen
+          }, this.state.menuProps),
+          _react2.default.Children.map(this.filteredOptions, function (entry, index) {
+            return _react2.default.createElement(
+              _ComboBoxItem2.default,
+              {
+                key: index,
+                index: index,
+                onItemTouchStart: _this2._onTouchStartAtOption,
+                onItemTouchEnd: _this2._onTouchEndAtOption,
+                onItemTouchCancel: _this2._onTouchCancelAtOption,
+                onItemClick: _this2._onClickAtOption,
+                onItemMouseEnter: _this2._onMouseEnterAtOption,
+                onItemMouseLeave: _this2._onMouseLeaveAtOption
+              },
+              entry
+            );
+          })
+        )
+      );
+    }
+  }], [{
+    key: 'filterOptions',
+    value: function filterOptions(inputValue, properties) {
+      /* eslint react/sort-comp:0*/
+      var filteredOptions = [];
+      if (!(0, _helpers.isEmpty)(properties.children)) {
+        if (inputValue) {
+          filteredOptions = (0, _helpers.filterReactChildren)(properties.children, function (entry) {
+            return properties.filterFunc(inputValue, entry.props.value);
+          });
+        } else {
+          filteredOptions = (0, _helpers.getArrayForReactChildren)(properties.children, function (entry) {
+            return entry;
+          });
+        }
+
+        if (properties.maxOptions) {
+          filteredOptions = filteredOptions.splice(0, properties.maxOptions);
+        }
+      }
+
+      return filteredOptions;
+    }
+  }]);
+
+  return ComboBox;
+}(_react.Component);
+
+ComboBox.displayName = 'ComboBox';
+ComboBox.propTypes = {
+  children: _react.PropTypes.oneOfType([_react.PropTypes.array, _react.PropTypes.object]),
+  defaultValue: _react.PropTypes.string,
+  value: _react.PropTypes.string,
+  valueLink: _react.PropTypes.shape({
+    value: _react.PropTypes.string,
+    requestChange: _react.PropTypes.func.isRequired
+  }),
+  placeholder: _react.PropTypes.string,
+  disabled: _react.PropTypes.bool,
+  wrapperProps: _react.PropTypes.object,
+  menuProps: _react.PropTypes.object,
+  caretProps: _react.PropTypes.object,
+  onUpdate: _react.PropTypes.func,
+  onInputMatch: _react.PropTypes.func,
+  tabIndex: _react.PropTypes.number,
+  onKeyDown: _react.PropTypes.func,
+  onFocus: _react.PropTypes.func,
+  onBlur: _react.PropTypes.func,
+  className: _react.PropTypes.string,
+  caretClassName: _react.PropTypes.string,
+  style: _react.PropTypes.object,
+  wrapperStyle: _react.PropTypes.object,
+  hintStyle: _react.PropTypes.object,
+  menuStyle: _react.PropTypes.object,
+  focusStyle: _react.PropTypes.object,
+  disabledStyle: _react.PropTypes.object,
+  disabledHoverStyle: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  caretToOpenStyle: _react.PropTypes.object,
+  caretToCloseStyle: _react.PropTypes.object,
+  disabledCaretToOpenStyle: _react.PropTypes.object,
+  maxOptions: _react.PropTypes.number,
+  displayCaret: _react.PropTypes.bool,
+  enableHint: _react.PropTypes.bool,
+  filterFunc: _react.PropTypes.func,
+  'aria-label': _react.PropTypes.string
+};
+ComboBox.childContextTypes = {
+  isDisabled: _react.PropTypes.bool.isRequired,
+  isHoveredValue: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string, _react.PropTypes.number])
+};
+ComboBox.defaultProps = {
+  disabled: false,
+  displayCaret: false,
+  enableHint: false,
+  'aria-label': 'ComboBox',
+  filterFunc: filterFunc, // TODO rename to filterFunction in 3.0.0
+  tabIndex: 0,
+  children: []
+};
+exports.default = ComboBox;
+},{"../components/ComboBoxItem":7,"../style/combo-box":31,"../utils/helpers":44,"../utils/inject-style":45,"../utils/union-class-names":47,"react":378}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Belle internal component to wrap an Option in a ComboBox.
+ *
+ * This component exists to avoid binding functions in JSX.
+ */
+
+var ComboBoxItem = function (_Component) {
+  _inherits(ComboBoxItem, _Component);
+
+  function ComboBoxItem() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, ComboBoxItem);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ComboBoxItem)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this._onClick = function () {
+      _this.props.onItemClick(_this.props.index);
+    }, _this._onTouchStart = function (event) {
+      _this.props.onItemTouchStart(event, _this.props.index);
+    }, _this._onTouchEnd = function (event) {
+      _this.props.onItemTouchEnd(event, _this.props.index);
+    }, _this._onTouchCancel = function () {
+      _this.props.onItemTouchCancel();
+    }, _this._onMouseEnter = function () {
+      _this.props.onItemMouseEnter(_this.props.index);
+    }, _this._onMouseLeave = function () {
+      _this.props.onItemMouseLeave();
+    }, _this._onMouseDown = function (event) {
+      event.preventDefault();
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(ComboBoxItem, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'li',
+        {
+          onClick: this._onClick,
+          onMouseEnter: this._onMouseEnter,
+          onMouseLeave: this._onMouseLeave,
+          onMouseDown: this._onMouseDown,
+          onTouchStart: this._onTouchStart,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          role: 'option'
+        },
+        this.props.children
+      );
+    }
+  }]);
+
+  return ComboBoxItem;
+}(_react.Component);
+
+ComboBoxItem.displayName = 'ComboBoxItem';
+ComboBoxItem.propTypes = {
+  children: _react.PropTypes.node.isRequired,
+  index: _react.PropTypes.number.isRequired,
+  onItemClick: _react.PropTypes.func.isRequired,
+  onItemTouchStart: _react.PropTypes.func.isRequired,
+  onItemTouchEnd: _react.PropTypes.func.isRequired,
+  onItemTouchCancel: _react.PropTypes.func.isRequired,
+  onItemMouseEnter: _react.PropTypes.func.isRequired,
+  onItemMouseLeave: _react.PropTypes.func.isRequired
+};
+exports.default = ComboBoxItem;
+},{"react":378}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _helpers = require('../utils/helpers');
+
+var _dateHelpers = require('../utils/date-helpers');
+
+var _datePicker = require('../style/date-picker');
+
+var _datePicker2 = _interopRequireDefault(_datePicker);
+
+var _datePicker3 = require('../config/datePicker');
+
+var _datePicker4 = _interopRequireDefault(_datePicker3);
+
+var _ActionArea = require('./ActionArea');
+
+var _ActionArea2 = _interopRequireDefault(_ActionArea);
+
+var _DisabledDay = require('./DisabledDay');
+
+var _DisabledDay2 = _interopRequireDefault(_DisabledDay);
+
+var _Day = require('./Day');
+
+var _Day2 = _interopRequireDefault(_Day);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div of the date picker.
+ */
+function sanitizeWrapperProps(properties) {
+  return (0, _helpers.omit)(properties, ['tabIndex', 'onFocus', 'onBlur', 'onKeyDown', 'onMouseDown', 'onMouseUp', 'onTouchStart', 'onTouchEnd', 'onTouchCancel', 'aria-label', 'disabled', 'style', 'className']);
+}
+
+/**
+ * Returns an object with properties that are relevant for day span.
+ */
+function sanitizeEmptyDayProps(properties) {
+  return (0, _helpers.omit)(properties, ['key', 'style']);
+}
+
+/**
+ * Returns an object with properties that are relevant for day span.
+ */
+function sanitizeDisabledDayProps(properties) {
+  return (0, _helpers.omit)(properties, ['key', 'onMouseEnter', 'onMouseLeave', 'style']);
+}
+
+/**
+ * Returns an object with properties that are relevant for day span.
+ */
+function sanitizeDayProps(properties) {
+  return (0, _helpers.omit)(properties, ['key', 'onMouseDown', 'onMouseUp', 'onMouseEnter', 'onMouseLeave', 'onTouchStart', 'onTouchEnd', 'onTouchCancel', 'aria-selected', 'style', 'role']);
+}
+
+function sanitizeNavBarProps(properties) {
+  return (0, _helpers.omit)(properties, ['style']);
+}
+
+function sanitizePrevMonthNavProps(properties) {
+  return (0, _helpers.omit)(properties, ['aria-label', 'className', 'onClick', 'style']);
+}
+
+function sanitizePrevMonthNavIconProps(properties) {
+  return (0, _helpers.omit)(properties, ['style']);
+}
+
+function sanitizeNextMonthNavProps(properties) {
+  return (0, _helpers.omit)(properties, ['aria-label', 'className', 'onClick', 'style']);
+}
+
+function sanitizeNextMonthNavIconProps(properties) {
+  return (0, _helpers.omit)(properties, ['style']);
+}
+
+function sanitizeMonthLabelProps(properties) {
+  return (0, _helpers.omit)(properties, ['id', 'role', 'style']);
+}
+
+function sanitizeDayLabelProps(properties) {
+  return (0, _helpers.omit)(properties, ['key', 'role', 'style']);
+}
+
+function sanitizeWeekHeaderProps(properties) {
+  return (0, _helpers.omit)(properties, ['style']);
+}
+
+function sanitizeWeekGridProps(properties) {
+  return (0, _helpers.omit)(properties, ['role', 'style']);
+}
+
+/**
+ * Injects pseudo classes for styles into the DOM.
+ */
+function updatePseudoClassStyle(pseudoStyleIds, properties, preventFocusStyleForTouchAndClick) {
+  var styles = [{
+    id: pseudoStyleIds.prevMonthNavStyleId,
+    style: _extends({}, _datePicker2.default.hoverPrevMonthNavStyle, properties.hoverPrevMonthNavStyle),
+    pseudoClass: 'hover'
+
+  }, {
+    id: pseudoStyleIds.nextMonthNavStyleId,
+    style: _extends({}, _datePicker2.default.hoverNextMonthNavStyle, properties.hoverNextMonthNavStyle),
+    pseudoClass: 'hover'
+  }];
+  var focusStyle = void 0;
+  if (preventFocusStyleForTouchAndClick) {
+    focusStyle = { outline: 0 };
+  } else {
+    focusStyle = _extends({}, _datePicker2.default.focusStyle, properties.focusStyle);
+  }
+
+  styles.push({
+    id: pseudoStyleIds.styleId,
+    style: focusStyle,
+    pseudoClass: 'focus'
+  });
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * DatePicker React Component.
+ *
+ * This implementation follows the recommendations proposed here:
+ * http://www.w3.org/TR/wai-aria-practices/#datepicker
+ */
+
+var DatePicker = function (_Component) {
+  _inherits(DatePicker, _Component);
+
+  function DatePicker(properties) {
+    _classCallCheck(this, DatePicker);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DatePicker).call(this, properties));
+
+    _initialiseProps.call(_this);
+
+    var selectedDate = void 0;
+    var month = void 0;
+    var year = void 0;
+
+    if ((0, _helpers.has)(properties, 'valueLink')) {
+      selectedDate = properties.valueLink.value;
+    } else if ((0, _helpers.has)(properties, 'value')) {
+      selectedDate = properties.value;
+    } else if ((0, _helpers.has)(properties, 'defaultValue')) {
+      selectedDate = properties.defaultValue;
+    }
+
+    if (properties.defaultMonth) {
+      month = properties.defaultMonth - 1;
+    } else if (selectedDate) {
+      month = selectedDate.getMonth();
+    } else {
+      month = (0, _dateHelpers.today)().getMonth();
+    }
+
+    if (properties.defaultYear) {
+      year = properties.defaultYear;
+    } else if (selectedDate) {
+      year = selectedDate.getFullYear();
+    } else {
+      year = (0, _dateHelpers.today)().getFullYear();
+    }
+
+    _this.state = {
+      isFocused: false,
+      isActive: false,
+      selectedDate: selectedDate,
+      month: month,
+      year: year
+    };
+
+    _this.localeData = (0, _dateHelpers.getLocaleData)(properties.locale);
+    _this.wrapperProps = sanitizeWrapperProps(properties);
+    _this.dayProps = sanitizeDayProps(properties.dayProps);
+    _this.disabledDayProps = sanitizeDisabledDayProps(properties.dayProps);
+    _this.emptyDayProps = sanitizeEmptyDayProps(properties.dayProps);
+    _this.navBarProps = sanitizeNavBarProps(properties.navBarProps);
+    _this.prevMonthNavProps = sanitizePrevMonthNavProps(properties.prevMonthNavProps);
+    _this.prevMonthNavIconProps = sanitizePrevMonthNavIconProps(properties.prevMonthNavIconProps);
+    _this.nextMonthNavProps = sanitizeNextMonthNavProps(properties.nextMonthNavProps);
+    _this.nextMonthNavIconProps = sanitizeNextMonthNavIconProps(properties.nextMonthNavIconProps);
+    _this.monthLabelProps = sanitizeMonthLabelProps(properties.monthLabelProps);
+    _this.dayLabelProps = sanitizeDayLabelProps(properties.dayLabelProps);
+    _this.weekHeaderProps = sanitizeWeekHeaderProps(properties.weekHeaderProps);
+    _this.weekGridProps = sanitizeWeekGridProps(properties.weekGridProps);
+
+    _this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _datePicker4.default.preventFocusStyleForTouchAndClick;
+    return _this;
+  }
+
+  _createClass(DatePicker, [{
+    key: 'componentWillMount',
+
+
+    /**
+     * Generates the style-id based on React's unique DOM node id.
+     * Calls function to inject the pseudo classes into the dom.
+     */
+    value: function componentWillMount() {
+      var id = (0, _helpers.uniqueId)();
+      this.pseudoStyleIds = {};
+      this.pseudoStyleIds.styleId = 'wrapper-style-id' + id;
+      this.pseudoStyleIds.prevMonthNavStyleId = 'prevMonthNav-style-id' + id;
+      this.pseudoStyleIds.nextMonthNavStyleId = 'nextMonthNav-style-id' + id;
+      updatePseudoClassStyle(this.pseudoStyleIds, this.props, this.preventFocusStyleForTouchAndClick);
+    }
+
+    /**
+     * Function will update component state and styles as new props are received.
+     */
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      var newState = {};
+
+      if ((0, _helpers.has)(properties, 'valueLink')) {
+        newState.selectedDate = properties.valueLink.value;
+      } else if ((0, _helpers.has)(properties, 'value')) {
+        newState.selectedDate = properties.value;
+      }
+
+      this.setState(newState);
+
+      this.localeData = (0, _dateHelpers.getLocaleData)(properties.locale);
+      this.wrapperProps = sanitizeWrapperProps(properties);
+      this.dayProps = sanitizeDayProps(properties.dayProps);
+      this.disabledDayProps = sanitizeDisabledDayProps(properties.dayProps);
+      this.emptyDayProps = sanitizeEmptyDayProps(properties.dayProps);
+      this.navBarProps = sanitizeNavBarProps(properties.navBarProps);
+      this.prevMonthNavProps = sanitizePrevMonthNavProps(properties.prevMonthNavProps);
+      this.prevMonthNavIconProps = sanitizePrevMonthNavIconProps(properties.prevMonthNavIconProps);
+      this.nextMonthNavProps = sanitizeNextMonthNavProps(properties.nextMonthNavProps);
+      this.nextMonthNavIconProps = sanitizeNextMonthNavIconProps(properties.nextMonthNavIconProps);
+      this.monthLabelProps = sanitizeMonthLabelProps(properties.monthLabelProps);
+      this.dayLabelProps = sanitizeDayLabelProps(properties.dayLabelProps);
+      this.weekHeaderProps = sanitizeWeekHeaderProps(properties.weekHeaderProps);
+      this.weekGridProps = sanitizeWeekGridProps(properties.weekGridProps);
+
+      this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _datePicker4.default.preventFocusStyleForTouchAndClick;
+
+      (0, _injectStyle.removeAllStyles)(Object.keys(this.pseudoStyleIds));
+      updatePseudoClassStyle(this.pseudoStyleIds, properties, this.preventFocusStyleForTouchAndClick);
+    }
+
+    /**
+     * Removes pseudo classes from the DOM once component gets unmounted.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeAllStyles)(Object.keys(this.pseudoStyleIds));
+    }
+
+    /**
+     * Callback is called when wrapper is focused, it will conditionally set isFocused.
+     *
+     * In addition this.state.focusedDateKey will be set to current date of whichever month is displayed on date-picker (if this.state.focusedDateKey is undefined).
+     */
+
+
+    /**
+     * Callback is called when wrapper is blurred, it will reset isFocused, focusedDateKey.
+     */
+
+
+    /**
+      * Callback is called when wrapper receives mouseDown. Conditionally set isActive.
+      */
+
+
+    /**
+     * Callback is called when wrapper receives mouseUp. Reset isActive.
+     */
+
+
+    /**
+     * Callback is called when touch starts on wrapper. Conditionally sets isActive.
+     */
+
+
+    /**
+     * Callback is called when touch ends on wrapper. Reset isActive.
+     */
+
+
+    /**
+     * On keyDown on wrapper if date-picker is not disabled and some day is focused:
+     * 1. arrow keys will navigate calendar
+     * 2. enter key will set selectedDate of component
+     * 3. space key will set / unset selectedDate
+     * 4. props.onKeyDown will be called
+     */
+
+
+    /**
+     * Function will handle pageUp key down event.
+     */
+
+
+    /**
+     * Function will handle pageDown key down event.
+     */
+
+
+    /**
+     * Callback is called when some day receives mouseDown.
+     * It will conditionally set this.state.activeDay, this.state.focusedDateKey and call props.onDayMouseDown.
+     *
+     * Note: mouseEvent.button is supported by all browsers are are targeting: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
+     */
+
+
+    /**
+     * Callback is called when some day receives mouseUp.
+     * It will reset this.state.activeDay and call props.onDayMouseUp.
+     */
+
+
+    /**
+     * Callback is called when some day receives MouseEnter. It will conditionally set this.state.focusedDateKey.
+     */
+
+
+    /**
+     * Callback is called when some day receives MouseLeave. It will reset this.state.focusedDateKey.
+     */
+
+
+    /**
+     * Callback is called when some day receives touchStart.
+     * It will conditionally set this.state.activeDay and call props.onDayTouchStart.
+     */
+
+
+    /**
+     * Callback is called when some day receives touchEnd.
+     * It will reset this.state.activeDay and call props.onDayTouchEnd.
+     */
+
+  }, {
+    key: '_triggerSelectDate',
+
+
+    /**
+     * Depending on whether component is controlled or uncontrolled the function will update this.state.selectedDate.
+     * It will also call props.onUpdate.
+     */
+    value: function _triggerSelectDate(day, month, year) {
+      if (!this.props.disabled && !this.props.readOnly) {
+        var selectedDate = day ? new Date(year, month, day) : undefined;
+
+        if ((0, _helpers.has)(this.props, 'valueLink')) {
+          this.props.valueLink.requestChange(selectedDate);
+        } else if (!(0, _helpers.has)(this.props, 'value')) {
+          this.setState({
+            selectedDate: selectedDate,
+            month: month,
+            year: year
+          });
+        }
+
+        if (this.props.onUpdate) {
+          this.props.onUpdate({
+            value: selectedDate
+          });
+        }
+      }
+    }
+
+    /**
+     * Function will select / deselect date passed to it, it is used in case of 'Space' keyDown on a day.
+     */
+
+  }, {
+    key: '_triggerToggleDate',
+    value: function _triggerToggleDate(date) {
+      if (!this.props.disabled && !this.props.readOnly) {
+        var day = void 0;
+        var month = void 0;
+        var year = void 0;
+        if (this.state.selectedDate && date && this.state.selectedDate.getDate() === date.getDate() && this.state.selectedDate.getMonth() === date.getMonth() && this.state.selectedDate.getFullYear() === date.getFullYear()) {
+          day = undefined;
+          month = this.state.month;
+          year = this.state.year;
+        } else {
+          day = date.getDate();
+          month = date.getMonth();
+          year = date.getFullYear();
+        }
+
+        this._triggerSelectDate(day, month, year);
+      }
+    }
+  }, {
+    key: '_focusOnTheFistDayOfTheMonth',
+    value: function _focusOnTheFistDayOfTheMonth() {
+      this.setState({
+        focusedDateKey: this.state.year + '-' + (this.state.month + 1) + '-1'
+      });
+    }
+  }, {
+    key: '_focusOnFallbackDay',
+    value: function _focusOnFallbackDay() {
+      if (this.state.lastHoveredDay) {
+        this.setState({
+          focusedDateKey: this.state.lastHoveredDay
+        });
+      } else {
+        this._focusOnTheFistDayOfTheMonth();
+      }
+    }
+
+    /**
+     * The function is mainly used when some day is focused and Arrow keys are pressed to navigate to some other day.
+     * days is the number of days by which focused should be moved ahead or behind.
+     */
+
+  }, {
+    key: '_focusOtherDay',
+    value: function _focusOtherDay(days) {
+      var focusedDate = (0, _dateHelpers.getDateForDateKey)(this.state.focusedDateKey);
+      var currentMonth = focusedDate.getMonth();
+
+      var nextFocusedDate = (0, _dateHelpers.getDateForDateKey)(this.state.focusedDateKey);
+      nextFocusedDate.setDate(nextFocusedDate.getDate() + days);
+      var nextFocusedDateKey = (0, _dateHelpers.convertDateToDateKey)(nextFocusedDate);
+      var nextMonth = nextFocusedDate.getMonth();
+
+      if (nextMonth !== currentMonth) {
+        if ((nextMonth < currentMonth || nextMonth === 11 && currentMonth === 0) && !(nextMonth === 0 && currentMonth === 11)) {
+          this._decreaseMonthYear();
+        } else if ((nextMonth > currentMonth || nextMonth === 0 && currentMonth === 11) && !(nextMonth === 11 && currentMonth === 0)) {
+          this._increaseMonthYear();
+        }
+      }
+
+      this.setState({
+        focusedDateKey: nextFocusedDateKey
+      });
+    }
+
+    /**
+     * The function will decrease current month in state. It will also call props.onMonthUpdate.
+     */
+
+  }, {
+    key: '_decreaseMonthYear',
+    value: function _decreaseMonthYear() {
+      var newMonth = void 0;
+      var newYear = void 0;
+      if (this.state.month === 0) {
+        newMonth = 11;
+        newYear = this.state.year - 1;
+      } else {
+        newMonth = this.state.month - 1;
+        newYear = this.state.year;
+      }
+
+      this.setState({
+        month: newMonth,
+        year: newYear,
+        focusedDateKey: undefined,
+        lastHoveredDay: undefined
+      });
+      if (this.props.onMonthUpdate) {
+        this.props.onMonthUpdate(newMonth + 1, newYear);
+      }
+    }
+
+    /**
+     * The function will increase current month in state. It will also call props.onMonthUpdate.
+     */
+
+  }, {
+    key: '_increaseMonthYear',
+    value: function _increaseMonthYear() {
+      var newMonth = void 0;
+      var newYear = void 0;
+      if (this.state.month === 11) {
+        newMonth = 0;
+        newYear = this.state.year + 1;
+      } else {
+        newMonth = this.state.month + 1;
+        newYear = this.state.year;
+      }
+
+      this.setState({
+        month: newMonth,
+        year: newYear,
+        focusedDateKey: undefined,
+        lastHoveredDay: undefined
+      });
+      if (this.props.onMonthUpdate) {
+        this.props.onMonthUpdate(newMonth + 1, newYear);
+      }
+    }
+  }, {
+    key: '_isWithinMinAndMax',
+    value: function _isWithinMinAndMax(date) {
+      return !(this.props.min && date < this.props.min || this.props.max && date > this.props.max);
+    }
+  }, {
+    key: '_renderPrevMonthNav',
+    value: function _renderPrevMonthNav() {
+      var prevMonthNavStyle = _extends({}, _datePicker2.default.prevMonthNavStyle, this.props.prevMonthNavStyle);
+
+      var prevMonthNavIconStyle = _extends({}, _datePicker2.default.prevMonthNavIconStyle, this.props.prevMonthNavIconStyle);
+
+      var className = this.pseudoStyleIds.prevMonthNavStyleId;
+      if (this.props.prevMonthNavProps) {
+        className = (0, _unionClassNames2.default)(this.props.prevMonthNavProps.className, className);
+      }
+
+      return _react2.default.createElement(
+        _ActionArea2.default,
+        _extends({
+          onUpdate: this._onClickPrevMonth,
+          style: prevMonthNavStyle,
+          className: className,
+          'aria-label': 'Go to previous month'
+        }, this.prevMonthNavProps),
+        _react2.default.createElement('div', _extends({
+          style: prevMonthNavIconStyle
+        }, this.prevMonthNavIconProps))
+      );
+    }
+  }, {
+    key: '_renderNextMonthNav',
+    value: function _renderNextMonthNav() {
+      var nextMonthNavStyle = _extends({}, _datePicker2.default.nextMonthNavStyle, this.props.nextMonthNavStyle);
+
+      var nextMonthNavIconStyle = _extends({}, _datePicker2.default.nextMonthNavIconStyle, this.props.nextMonthNavIconStyle);
+
+      var className = this.pseudoStyleIds.nextMonthNavStyleId;
+      if (this.props.nextMonthNavProps) {
+        className = (0, _unionClassNames2.default)(this.props.nextMonthNavProps.className, className);
+      }
+
+      return _react2.default.createElement(
+        _ActionArea2.default,
+        _extends({
+          onUpdate: this._onClickNextMonth,
+          style: nextMonthNavStyle,
+          className: className,
+          'aria-label': 'Go to next month'
+        }, this.nextMonthNavProps),
+        _react2.default.createElement('div', _extends({
+          style: nextMonthNavIconStyle
+        }, this.nextMonthNavIconProps))
+      );
+    }
+
+    /**
+     * Function will return jsx for rendering the nav bar for calendar.
+     * Depending on following rules it will apply styles to prevMonthNav and nextMonthNav:
+     * 1. If disabled hide navs
+     * 2. If active apply activeStyles
+     */
+
+  }, {
+    key: '_renderNavBar',
+    value: function _renderNavBar() {
+      var navBarStyle = _extends({}, _datePicker2.default.navBarStyle, this.props.navBarStyle);
+      var monthLabelStyle = _extends({}, _datePicker2.default.monthLabelStyle, this.props.monthLabelStyle);
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          style: navBarStyle
+        }, this.navBarProps),
+        this._renderPrevMonthNav(),
+        _react2.default.createElement(
+          'span',
+          _extends({
+            style: monthLabelStyle,
+            role: 'heading'
+            /*
+              This label has an id as suggested in http://www.w3.org/TR/wai-aria-practices/#datepicker
+            */
+            , id: this.state.year + '-' + this.state.month
+          }, this.monthLabelProps),
+          this.localeData.monthNames[this.state.month] + ' ' + this.state.year
+        ),
+        this._renderNextMonthNav()
+      );
+    }
+
+    /**
+     * Function will return jsx for rendering the week header for calendar.
+     * Disabled styles will be applied for disabled date-picker.
+     * Day headers will be rendered using locale information.
+     */
+
+  }, {
+    key: '_renderWeekHeader',
+    value: function _renderWeekHeader() {
+      var _this2 = this;
+
+      var weekHeaderStyle = _extends({}, _datePicker2.default.weekHeaderStyle, this.props.weekHeaderStyle);
+
+      var dayLabelStyle = _extends({}, _datePicker2.default.dayLabelStyle, this.props.dayLabelStyle);
+      if (this.props.disabled) {
+        dayLabelStyle = _extends({}, dayLabelStyle, _datePicker2.default.disabledDayLabelStyle, this.props.disabledDayLabelStyle);
+      }
+
+      var weekendLabelStyle = _extends({}, dayLabelStyle, _datePicker2.default.weekendLabelStyle, this.props.weekendLabelStyle);
+      var dayNames = (0, _helpers.shift)(this.localeData.dayNamesMin, this.localeData.firstDay);
+      dayNames = this.localeData.isRTL ? (0, _helpers.reverse)(dayNames) : dayNames;
+      var weekendIndex = (7 - this.localeData.firstDay) % 7 + this.localeData.weekEnd;
+      weekendIndex = this.localeData.isRTL ? 6 - weekendIndex : weekendIndex;
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          style: weekHeaderStyle
+        }, this.weekHeaderProps),
+        (0, _helpers.map)(dayNames, function (dayAbbr, index) {
+          return _react2.default.createElement(
+            'span',
+            _extends({
+              key: 'dayAbbr-' + index,
+              style: index === weekendIndex ? weekendLabelStyle : dayLabelStyle,
+              role: 'columnheader'
+            }, _this2.dayLabelProps),
+            dayAbbr
+          );
+        })
+      );
+    }
+
+    /**
+     * Function will return jsx for rendering the a day.
+     * It will apply various styles in sequence as below (styles will be additive):
+     * 1. If component is readOnly apply readOnly styles
+     * 2. If component is disabled apply disabled styles
+     *    - If component is disabled and hovered apply disableHover styles
+     * 3. If day is weekend apply weekendStyle
+     * 4. If its day in current month and component is not disabled or readOnly:
+     *    - If its current day apply todayStyle
+     *    - If this is selected day apply selectedDayStyle
+     *    - If component is hovered apply hover styles
+     *    - If component is hovered and active apply hoveredStyles + activeStyles
+     *    - If component is hovered and not active but focused and preventFocusStyleForTouchAndClick apply focus styles
+     * 5. If current day represents other months day in calendar apply otherMonthDayStyle
+     */
+
+  }, {
+    key: '_renderDay',
+    value: function _renderDay(currentDate, index) {
+      var day = currentDate.getDate();
+      var month = currentDate.getMonth();
+      var year = currentDate.getFullYear();
+      var isOtherMonth = month !== this.state.month;
+      var dateKey = (0, _dateHelpers.convertDateToDateKey)(currentDate);
+      var isDisabledDay = !this._isWithinMinAndMax(currentDate);
+
+      var ariaSelected = false;
+
+      var dayStyle = _extends({}, _datePicker2.default.dayStyle, this.props.dayStyle);
+
+      if (this.props.readOnly) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.readOnlyDayStyle, this.props.readOnlyDayStyle);
+      }
+
+      if (isOtherMonth) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.otherMonthDayStyle, this.props.otherMonthDayStyle);
+      }
+
+      if (this.props.disabled || isDisabledDay) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.disabledDayStyle, this.props.disabledDayStyle);
+      }
+
+      if (currentDate.getDay() === this.localeData.weekEnd) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.weekendStyle, this.props.weekendStyle);
+      }
+
+      if (day === (0, _dateHelpers.today)().getDate() && month === (0, _dateHelpers.today)().getMonth() && year === (0, _dateHelpers.today)().getFullYear()) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.todayStyle, this.props.todayStyle);
+      }
+
+      if (this.state.selectedDate && day === this.state.selectedDate.getDate() && currentDate.getMonth() === this.state.selectedDate.getMonth() && currentDate.getFullYear() === this.state.selectedDate.getFullYear()) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.selectedDayStyle, this.props.selectedDayStyle);
+        ariaSelected = true;
+      }
+
+      if (this.state.focusedDateKey === dateKey) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.focusDayStyle, this.props.focusDayStyle);
+        if (this.props.disabled || isDisabledDay) {
+          dayStyle = _extends({}, dayStyle, _datePicker2.default.disabledFocusDayStyle, this.props.disabledFocusDayStyle);
+        }
+      }
+
+      if (!this.props.disabled && !this.props.readOnly && this.state.activeDay === dateKey) {
+        dayStyle = _extends({}, dayStyle, _datePicker2.default.activeDayStyle, this.props.activeDayStyle);
+      }
+
+      var renderedDay = this.props.renderDay ? this.props.renderDay(currentDate) : day;
+
+      if (!this.props.showOtherMonthDate && isOtherMonth) {
+        return _react2.default.createElement('span', _extends({
+          key: 'day-' + index,
+          style: dayStyle
+        }, this.emptyDayProps));
+      }
+
+      if (isDisabledDay) {
+        return _react2.default.createElement(
+          _DisabledDay2.default,
+          {
+            key: 'day-' + index,
+            style: dayStyle,
+            dateKey: dateKey,
+            onDayMouseEnter: this._onDayMouseEnter,
+            onDayMouseLeave: this._onDayMouseLeave,
+            disabledDayProps: this.disabledDayProps
+          },
+          renderedDay
+        );
+      }
+
+      return _react2.default.createElement(
+        _Day2.default,
+        {
+          key: 'day-' + index,
+          dateKey: dateKey,
+          onDayMouseDown: this._onDayMouseDown,
+          onDayMouseUp: this._onDayMouseUp,
+          onDayMouseEnter: this._onDayMouseEnter,
+          onDayMouseLeave: this._onDayMouseLeave,
+          onDayTouchStart: this._onDayTouchStart,
+          onDayTouchEnd: this._onDayTouchEnd,
+          onDayTouchCancel: this._onDayTouchCancel,
+          selected: ariaSelected,
+          style: dayStyle,
+          dayProps: this.dayProps
+        },
+        renderedDay
+      );
+    }
+
+    /**
+     * Function will render:
+     * - main calendar component
+     * - call methods to render navBar and week header
+     * - get array of weeks in a month and for each day in the week call method to render day
+     *
+     * It will apply styles sequentially according to Wrapper according to following rules:
+     * 1. If component is readOnly apply readOnlyStyle
+     * 2. If component is disabled apply disabledStyle
+     *    - If disabled component is hovered apply disabledHoverStyle
+     * 3. If component is not disabled:
+     *    - If component is hovered apply hover style
+     *    - If component is hovered and active apply hover + active styles
+     *    - If component is hovered and focused but not active and preventFocusStyleForTouchAndClick is true apply focusStyles
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      var style = _extends({}, _datePicker2.default.style, this.props.style);
+      if (this.props.readOnly) {
+        style = _extends({}, style, _datePicker2.default.readOnlyStyle, this.props.readOnlyStyle);
+      }
+
+      if (this.props.disabled) {
+        style = _extends({}, style, _datePicker2.default.disabledStyle, this.props.disabledStyle);
+      }
+
+      if (this.preventFocusStyleForTouchAndClick && this.state.isFocused) {
+        style = _extends({}, style, _datePicker2.default.focusStyle, this.props.focusStyle);
+      }
+
+      if (this.state.isActive) {
+        style = _extends({}, style, _datePicker2.default.activeStyle, this.props.activeStyle);
+      }
+
+      var weekArray = (0, _dateHelpers.getWeekArrayForMonth)(this.state.month, this.state.year, this.localeData.firstDay);
+
+      var tabIndex = !this.props.disabled ? this.props.tabIndex : false;
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          tabIndex: tabIndex,
+          onFocus: this._onFocus,
+          onBlur: this._onBlur,
+          onKeyDown: this._onKeyDown,
+          onMouseDown: this._onMouseDown,
+          onMouseUp: this._onMouseUp,
+          onTouchStart: this._onTouchStart,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          'aria-label': this.props['aria-label'],
+          'aria-disabled': this.props.disabled,
+          'aria-readonly': this.props.readOnly,
+          style: style,
+          className: (0, _unionClassNames2.default)(this.props.className, this.pseudoStyleIds.styleId)
+        }, this.wrapperProps),
+        this._renderNavBar(),
+        _react2.default.createElement(
+          'div',
+          _extends({
+            role: 'grid',
+            style: _datePicker2.default.weekGridStyle
+          }, this.weekGridProps),
+          this._renderWeekHeader(),
+          (0, _helpers.map)(weekArray, function (week) {
+            var weekDays = _this3.localeData.isRTL ? (0, _helpers.reverse)(week) : week;
+            return (0, _helpers.map)(weekDays, function (day, dayIndex) {
+              return _this3._renderDay(day, dayIndex);
+            });
+          })
+        )
+      );
+    }
+  }]);
+
+  return DatePicker;
+}(_react.Component);
+
+DatePicker.displayName = 'DatePicker';
+DatePicker.propTypes = {
+  // value related props
+  defaultValue: _react.PropTypes.instanceOf(Date),
+  value: _react.PropTypes.instanceOf(Date),
+  valueLink: _react.PropTypes.shape({
+    value: _react.PropTypes.instanceOf(Date),
+    requestChange: _react.PropTypes.func.isRequired
+  }),
+
+  min: _react.PropTypes.instanceOf(Date),
+  max: _react.PropTypes.instanceOf(Date),
+
+  // component config related props
+  locale: _react.PropTypes.string,
+  month: _react.PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+  year: _react.PropTypes.number,
+  showOtherMonthDate: _react.PropTypes.bool,
+  renderDay: _react.PropTypes.func,
+  tabIndex: _react.PropTypes.number,
+  'aria-label': _react.PropTypes.string,
+  disabled: _react.PropTypes.bool,
+  readOnly: _react.PropTypes.bool,
+  preventFocusStyleForTouchAndClick: _react.PropTypes.bool,
+
+  // event callbacks for wrapper
+  onFocus: _react.PropTypes.func,
+  onBlur: _react.PropTypes.func,
+  onKeyDown: _react.PropTypes.func,
+  onMouseDown: _react.PropTypes.func,
+  onMouseUp: _react.PropTypes.func,
+  onTouchStart: _react.PropTypes.func,
+  onTouchEnd: _react.PropTypes.func,
+  onTouchCancel: _react.PropTypes.func,
+
+  // callbacks for change of values
+  onUpdate: _react.PropTypes.func,
+  onMonthUpdate: _react.PropTypes.func,
+
+  // props
+  dayProps: _react.PropTypes.object,
+  navBarProps: _react.PropTypes.object,
+  prevMonthNavProps: _react.PropTypes.object,
+  prevMonthNavIconProps: _react.PropTypes.object,
+  nextMonthNavProps: _react.PropTypes.object,
+  nextMonthNavIconProps: _react.PropTypes.object,
+  monthLabelProps: _react.PropTypes.object,
+  dayLabelProps: _react.PropTypes.object,
+  weekHeaderProps: _react.PropTypes.object,
+  weekGridProps: _react.PropTypes.object,
+
+  // ClassNames
+  className: _react.PropTypes.string,
+
+  // wrapper styles
+  style: _react.PropTypes.object,
+  disabledStyle: _react.PropTypes.object,
+  readOnlyStyle: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  activeStyle: _react.PropTypes.object,
+  focusStyle: _react.PropTypes.object,
+  disabledHoverStyle: _react.PropTypes.object,
+
+  // navbar styles
+  navBarStyle: _react.PropTypes.object,
+
+  // prevMonthNav styles
+  prevMonthNavStyle: _react.PropTypes.object,
+  prevMonthNavIconStyle: _react.PropTypes.object,
+  hoverPrevMonthNavStyle: _react.PropTypes.object,
+  activePrevMonthNavStyle: _react.PropTypes.object,
+
+  // nextMonthNav styles
+  nextMonthNavStyle: _react.PropTypes.object,
+  nextMonthNavIconStyle: _react.PropTypes.object,
+  hoverNextMonthNavStyle: _react.PropTypes.object,
+  activeNextMonthNavStyle: _react.PropTypes.object,
+
+  weekHeaderStyle: _react.PropTypes.object,
+
+  // monthlbl styles
+  monthLabelStyle: _react.PropTypes.object,
+
+  // daylbl styles
+  dayLabelStyle: _react.PropTypes.object,
+  disabledDayLabelStyle: _react.PropTypes.object,
+  weekendLabelStyle: _react.PropTypes.object,
+
+  // day styles
+  dayStyle: _react.PropTypes.object,
+  disabledDayStyle: _react.PropTypes.object,
+  readOnlyDayStyle: _react.PropTypes.object,
+  activeDayStyle: _react.PropTypes.object,
+  focusDayStyle: _react.PropTypes.object,
+  disabledFocusDayStyle: _react.PropTypes.object,
+  todayStyle: _react.PropTypes.object,
+  selectedDayStyle: _react.PropTypes.object,
+  otherMonthDayStyle: _react.PropTypes.object,
+  weekendStyle: _react.PropTypes.object
+};
+DatePicker.defaultProps = {
+  tabIndex: 0,
+  'aria-label': 'datepicker',
+  disabled: false,
+  readOnly: false,
+  showOtherMonthDate: true
+};
+
+var _initialiseProps = function _initialiseProps() {
+  var _this4 = this;
+
+  this._onFocus = function () {
+    if (!_this4.props.disabled) {
+      if (!_this4.state.isActive) {
+        var newState = {
+          isFocused: true
+        };
+        if (!_this4.state.focusedDateKey) {
+          if (_this4.state.selectedDate && _this4.state.selectedDate.getMonth() === _this4.state.month && _this4.state.selectedDate.getFullYear() === _this4.state.year) {
+            newState.focusedDateKey = (0, _dateHelpers.convertDateToDateKey)(_this4.state.selectedDate);
+          } else if (_this4.state.month === (0, _dateHelpers.today)().getMonth() && _this4.state.year === (0, _dateHelpers.today)().getFullYear()) {
+            newState.focusedDateKey = (0, _dateHelpers.getDateKey)((0, _dateHelpers.today)().getFullYear(), (0, _dateHelpers.today)().getMonth() + 1, (0, _dateHelpers.today)().getDate());
+          } else {
+            newState.focusedDateKey = (0, _dateHelpers.getDateKey)(_this4.state.year, _this4.state.month + 1, 1);
+          }
+        }
+
+        _this4.setState(newState);
+      }
+    }
+
+    if (_this4.props.onFocus) {
+      _this4.props.onFocus(event);
+    }
+  };
+
+  this._onBlur = function () {
+    if (!_this4.props.disabled) {
+      _this4.setState({
+        isFocused: false,
+        focusedDateKey: undefined
+      });
+    }
+
+    if (_this4.props.onBlur) {
+      _this4.props.onBlur(event);
+    }
+  };
+
+  this._onMouseDown = function (event) {
+    if (!_this4.props.disabled && event.button === 0) {
+      _this4.setState({
+        isActive: true
+      });
+    }
+
+    if (_this4.props.onMouseDown) {
+      _this4.props.onMouseDown(event);
+    }
+  };
+
+  this._onMouseUp = function (event) {
+    if (!_this4.props.disabled && event.button === 0) {
+      _this4.setState({
+        isActive: false
+      });
+    }
+
+    if (_this4.props.onMouseUp) {
+      _this4.props.onMouseUp(event);
+    }
+  };
+
+  this._onTouchStart = function (event) {
+    if (!_this4.props.disabled && event.touches.length === 1) {
+      _this4.setState({
+        isActive: true
+      });
+    }
+
+    if (_this4.props.onTouchStart) {
+      _this4.props.onTouchStart(event);
+    }
+  };
+
+  this._onTouchEnd = function () {
+    if (!_this4.props.disabled) {
+      _this4.setState({
+        isActive: false
+      });
+    }
+
+    if (_this4.props.onTouchEnd) {
+      _this4.props.onTouchEnd(event);
+    }
+  };
+
+  this._onTouchCancel = function () {
+    _this4.setState({
+      isActive: false
+    });
+
+    if (_this4.props.onTouchCancel) {
+      _this4.props.onTouchCancel(event);
+    }
+  };
+
+  this._onKeyDown = function (event) {
+    if (!_this4.props.disabled) {
+      if (event.key === 'Home') {
+        // Moves to the first day of the current month.
+        event.preventDefault();
+        _this4._focusOnTheFistDayOfTheMonth();
+      } else if (event.key === 'End') {
+        // Moves to the last day of the current month.
+        event.preventDefault();
+        var date = (0, _dateHelpers.getLastDayForMonth)(_this4.state.year, _this4.state.month);
+        _this4.setState({
+          focusedDateKey: (0, _dateHelpers.convertDateToDateKey)(date)
+        });
+      }
+
+      if (_this4.state.focusedDateKey) {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          _this4._focusOtherDay(7);
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          _this4._focusOtherDay(-7);
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          _this4._focusOtherDay(_this4.localeData.isRTL ? 1 : -1);
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          _this4._focusOtherDay(_this4.localeData.isRTL ? -1 : 1);
+        } else if (event.key === 'PageUp') {
+          _this4._onPageUpKeyDown(event);
+        } else if (event.key === 'PageDown') {
+          _this4._onPageDownKeyDown(event);
+        } else if (event.key === 'Enter') {
+          event.preventDefault();
+          var _date = (0, _dateHelpers.getDateForDateKey)(_this4.state.focusedDateKey);
+          if (_this4._isWithinMinAndMax(_date)) {
+            _this4._triggerSelectDate(_date.getDate(), _date.getMonth(), _date.getFullYear());
+          }
+        } else if (event.key === ' ') {
+          event.preventDefault();
+          var _date2 = (0, _dateHelpers.getDateForDateKey)(_this4.state.focusedDateKey);
+          if (_this4._isWithinMinAndMax(_date2)) {
+            _this4._triggerToggleDate(_date2);
+          }
+        }
+      } else {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          _this4._focusOnFallbackDay();
+        }
+      }
+    }
+
+    if (_this4.props.onKeyDown) {
+      _this4.props.onKeyDown(event);
+    }
+  };
+
+  this._onPageUpKeyDown = function (event) {
+    // Moves to the same date in the previous month.
+    event.preventDefault();
+
+    // TODO extract this to a helper function and test various edge cases
+    var date = void 0;
+    var lastDayInMonth = (0, _dateHelpers.getLastDayForMonth)(_this4.state.year, _this4.state.month - 1);
+    var focusedDate = (0, _dateHelpers.getDateForDateKey)(_this4.state.focusedDateKey);
+
+    // jump from March 30 to Feb 29
+    if (focusedDate.getDate() > lastDayInMonth.getDate()) {
+      date = lastDayInMonth;
+    } else {
+      date = (0, _dateHelpers.getDateForDateKey)(_this4.state.focusedDateKey);
+      date.setMonth(date.getMonth() - 1);
+    }
+
+    _this4.setState({
+      focusedDateKey: (0, _dateHelpers.convertDateToDateKey)(date),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+      lastHoveredDay: undefined
+    });
+  };
+
+  this._onPageDownKeyDown = function (event) {
+    // Moves to the same date in the next month.
+    event.preventDefault();
+
+    // TODO extract this to a helper function and test various edge cases
+    var date = void 0;
+    var lastDayInMonth = (0, _dateHelpers.getLastDayForMonth)(_this4.state.year, _this4.state.month + 1);
+    var focusedDate = (0, _dateHelpers.getDateForDateKey)(_this4.state.focusedDateKey);
+
+    // Use case: Jump from Jan 31 to Feb 29
+    if (focusedDate.getDate() > lastDayInMonth.getDate()) {
+      date = lastDayInMonth;
+    } else {
+      date = (0, _dateHelpers.getDateForDateKey)(_this4.state.focusedDateKey);
+      date.setMonth(date.getMonth() + 1);
+    }
+
+    _this4.setState({
+      focusedDateKey: (0, _dateHelpers.convertDateToDateKey)(date),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+      lastHoveredDay: undefined
+    });
+  };
+
+  this._onDayMouseDown = function (dateKey, event) {
+    if (event.button === 0 && !_this4.props.disabled && !_this4.props.readOnly) {
+      _this4.setState({
+        activeDay: dateKey
+      });
+    }
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onMouseDown) {
+      _this4.props.dayProps.onMouseDown(event);
+    }
+  };
+
+  this._onDayMouseUp = function (dateKey, event) {
+    if (event.button === 0 && !_this4.props.disabled && !_this4.props.readOnly && _this4.state.activeDay === dateKey) {
+      var date = (0, _dateHelpers.getDateForDateKey)(dateKey);
+      var day = date.getDate();
+      var month = date.getMonth();
+      var year = date.getFullYear();
+      _this4._triggerSelectDate(day, month, year);
+      _this4.setState({
+        // Note: updating focusedDateKey in mouseEnter normally would be good enough,
+        // but it is necessary to set on mouseUp for the following edge case:
+        // A user moves the cursor over a day. Moves on with the keyboard and
+        // then without moving again just pressing the mouse. In this case
+        // mouseEnter did not get called again.
+        focusedDateKey: dateKey,
+        activeDay: undefined
+      });
+    }
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onMouseUp) {
+      _this4.props.dayProps.onMouseUp(event);
+    }
+  };
+
+  this._onDayMouseEnter = function (dateKey, event) {
+    if (!_this4.props.readOnly) {
+      _this4.setState({
+        focusedDateKey: dateKey
+      });
+    }
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onMouseEnter) {
+      _this4.props.dayProps.onMouseEnter(event);
+    }
+  };
+
+  this._onDayMouseLeave = function (dateKey, event) {
+    if (!_this4.props.readOnly && event.button === 0 && _this4.state.focusedDateKey === dateKey) {
+      _this4.setState({
+        focusedDateKey: undefined,
+        lastHoveredDay: _this4.state.focusedDateKey
+      });
+    }
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onMouseLeave) {
+      _this4.props.dayProps.onMouseLeave(event);
+    }
+  };
+
+  this._onDayTouchStart = function (dateKey, event) {
+    if (!_this4.props.disabled && !_this4.props.readOnly && event.touches.length === 1) {
+      _this4.setState({
+        activeDay: dateKey
+      });
+    }
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onTouchStart) {
+      _this4.props.dayProps.onTouchStart(event);
+    }
+  };
+
+  this._onDayTouchEnd = function (dateKey, event) {
+    if (!_this4.props.disabled && !_this4.props.readOnly) {
+      var date = (0, _dateHelpers.getDateForDateKey)(dateKey);
+      var day = date.getDate();
+      var month = date.getMonth();
+      var year = date.getFullYear();
+      _this4._triggerSelectDate(day, month, year);
+      if (_this4.state.activeDay === dateKey) {
+        _this4.setState({
+          activeDay: undefined
+        });
+      }
+    }
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onTouchEnd) {
+      _this4.props.dayProps.onTouchEnd(event);
+    }
+  };
+
+  this._onDayTouchCancel = function (dateKey, event) {
+    _this4.setState({
+      activeDay: undefined
+    });
+
+    if (_this4.props.dayProps && _this4.props.dayProps.onTouchCancel) {
+      _this4.props.dayProps.onTouchCancel(event);
+    }
+  };
+
+  this._onClickPrevMonth = function () {
+    _this4._decreaseMonthYear();
+    if (_this4.props.prevMonthNavProps && _this4.props.prevMonthNavProps.onClick) {
+      _this4.props.prevMonthNavProps.onClick(event);
+    }
+  };
+
+  this._onClickNextMonth = function () {
+    _this4._increaseMonthYear();
+    if (_this4.props.nextMonthNavProps && _this4.props.nextMonthNavProps.onClick) {
+      _this4.props.nextMonthNavProps.onClick(event);
+    }
+  };
+};
+
+exports.default = DatePicker;
+},{"../config/datePicker":21,"../style/date-picker":32,"../utils/date-helpers":43,"../utils/helpers":44,"../utils/inject-style":45,"../utils/union-class-names":47,"./ActionArea":2,"./Day":9,"./DisabledDay":10,"react":378}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Belle internal component to wrap a Day in a DatePicker.
+ *
+ * This component exists to avoid binding functions in JSX.
+ */
+
+var Day = function (_Component) {
+  _inherits(Day, _Component);
+
+  function Day() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, Day);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Day)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this._onMouseEnter = function (event) {
+      _this.props.onDayMouseEnter(_this.props.dateKey, event);
+    }, _this._onMouseLeave = function (event) {
+      _this.props.onDayMouseLeave(_this.props.dateKey, event);
+    }, _this._onMouseDown = function (event) {
+      _this.props.onDayMouseDown(_this.props.dateKey, event);
+    }, _this._onMouseUp = function (event) {
+      _this.props.onDayMouseUp(_this.props.dateKey, event);
+    }, _this._onTouchStart = function (event) {
+      _this.props.onDayTouchStart(_this.props.dateKey, event);
+    }, _this._onTouchEnd = function (event) {
+      _this.props.onDayTouchEnd(_this.props.dateKey, event);
+    }, _this._onTouchCancel = function (event) {
+      _this.props.onDayTouchCancel(_this.props.dateKey, event);
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(Day, [{
+    key: 'render',
+    value: function render() {
+      var _extends2;
+
+      return _react2.default.createElement(
+        'span',
+        _extends((_extends2 = {
+          style: this.props.style,
+          onMouseEnter: this._onMouseEnter,
+          onMouseLeave: this._onMouseLeave,
+          onMouseDown: this._onMouseDown,
+          onMouseUp: this._onMouseUp,
+          onTouchStart: this._onTouchStart,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          'aria-selected': this.props.selected
+        }, _defineProperty(_extends2, 'style', this.props.style), _defineProperty(_extends2, 'role', 'gridcell'), _extends2), this.props.dayProps),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Day;
+}(_react.Component);
+
+Day.displayName = 'Day';
+Day.propTypes = {
+  children: _react.PropTypes.node.isRequired,
+  dateKey: _react.PropTypes.string.isRequired,
+  onDayMouseEnter: _react.PropTypes.func.isRequired,
+  onDayMouseLeave: _react.PropTypes.func.isRequired,
+  onDayMouseDown: _react.PropTypes.func.isRequired,
+  onDayMouseUp: _react.PropTypes.func.isRequired,
+  onDayTouchStart: _react.PropTypes.func.isRequired,
+  onDayTouchEnd: _react.PropTypes.func.isRequired,
+  onDayTouchCancel: _react.PropTypes.func.isRequired,
+  style: _react.PropTypes.object.isRequired,
+  dayProps: _react.PropTypes.any,
+  selected: _react.PropTypes.bool.isRequired
+};
+exports.default = Day;
+},{"react":378}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Belle internal component to wrap a DisabledDay in a DatePicker.
+ *
+ * This component exists to avoid binding functions in JSX.
+ */
+
+var DisabledDay = function (_Component) {
+  _inherits(DisabledDay, _Component);
+
+  function DisabledDay() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, DisabledDay);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(DisabledDay)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this._onMouseEnter = function (event) {
+      _this.props.onDayMouseEnter(_this.props.dateKey, event);
+    }, _this._onMouseLeave = function (event) {
+      _this.props.onDayMouseLeave(_this.props.dateKey, event);
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(DisabledDay, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'span',
+        _extends({
+          style: this.props.style,
+          onMouseEnter: this._onDayMouseEnter,
+          onMouseLeave: this._onDayMouseLeave
+        }, this.props.disabledDayProps),
+        this.props.children
+      );
+    }
+  }]);
+
+  return DisabledDay;
+}(_react.Component);
+
+DisabledDay.displayName = 'DisabledDay';
+DisabledDay.propTypes = {
+  children: _react.PropTypes.node.isRequired,
+  dateKey: _react.PropTypes.string.isRequired,
+  onDayMouseEnter: _react.PropTypes.func.isRequired,
+  onDayMouseLeave: _react.PropTypes.func.isRequired,
+  style: _react.PropTypes.object.isRequired,
+  disabledDayProps: _react.PropTypes.any
+};
+exports.default = DisabledDay;
+},{"react":378}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _helpers = require('../utils/helpers');
+
+var _option = require('../style/option');
+
+var _option2 = _interopRequireDefault(_option);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div.
+ */
+function sanitizeChildProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'hoverStyle', 'selectStyle', 'disabledSelectStyle', 'value', '_isDisplayedAsSelected']);
+}
+
+/**
+ * Option component.
+ *
+ * This component should be used together with Belle's Select.
+ */
+
+var Option = function (_Component) {
+  _inherits(Option, _Component);
+
+  function Option(properties) {
+    _classCallCheck(this, Option);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Option).call(this, properties));
+
+    _this.state = {
+      childProps: sanitizeChildProps(properties)
+    };
+    return _this;
+  }
+
+  _createClass(Option, [{
+    key: 'componentWillReceiveProps',
+
+
+    /**
+     * Update the childProps based on the updated properties passed to the
+     * Option.
+     */
+    value: function componentWillReceiveProps(properties) {
+      this.setState({ childProps: sanitizeChildProps(properties) });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var optionStyle = void 0;
+
+      if (this.props._isDisplayedAsSelected) {
+        optionStyle = _extends({}, _option2.default.selectStyle, this.props.selectStyle);
+        if (this.context.isDisabled) {
+          optionStyle = _extends({}, optionStyle, _option2.default.disabledSelectStyle, this.props.disabledSelectStyle);
+        }
+      } else {
+        optionStyle = _extends({}, _option2.default.style, this.props.style);
+        if (this.context.isHoveredValue === this.props.value) {
+          optionStyle = _extends({}, optionStyle, _option2.default.hoverStyle, this.props.hoverStyle);
+        }
+      }
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          style: optionStyle
+        }, this.state.childProps),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Option;
+}(_react.Component);
+
+Option.displayName = 'Option';
+Option.propTypes = {
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  style: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  selectStyle: _react.PropTypes.object,
+  disabledSelectStyle: _react.PropTypes.object,
+  _isDisplayedAsSelected: _react.PropTypes.bool,
+  value: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string, _react.PropTypes.number]).isRequired
+};
+Option.contextTypes = {
+  isDisabled: _react.PropTypes.bool.isRequired,
+  isHoveredValue: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string, _react.PropTypes.number])
+};
+Option.defaultProps = {
+  _isDisplayedAsSelected: false
+};
+exports.default = Option;
+},{"../style/option":33,"../utils/helpers":44,"react":378}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _helpers = require('../utils/helpers');
+
+var _placeholder = require('../style/placeholder');
+
+var _placeholder2 = _interopRequireDefault(_placeholder);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div.
+ */
+function sanitizeChildProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'disabledStyle', '_isDisabled']);
+}
+
+/**
+ * Placeholder component.
+ *
+ * This component should be used together with Belle's Select.
+ */
+
+var Placeholder = function (_Component) {
+  _inherits(Placeholder, _Component);
+
+  function Placeholder(properties) {
+    _classCallCheck(this, Placeholder);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Placeholder).call(this, properties));
+
+    _this.state = {
+      childProps: sanitizeChildProps(properties)
+    };
+    return _this;
+  }
+
+  _createClass(Placeholder, [{
+    key: 'componentWillReceiveProps',
+
+
+    /**
+     * Update the childProps based on the updated properties passed to the
+     * Placeholder.
+     */
+    value: function componentWillReceiveProps(properties) {
+      this.setState({ childProps: sanitizeChildProps(properties) });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var computedStyle = _extends({}, _placeholder2.default.style, this.props.style);
+      if (this.props._isDisabled) {
+        computedStyle = _extends({}, computedStyle, _placeholder2.default.disabledStyle, this.props.disabledStyle);
+      }
+
+      return _react2.default.createElement(
+        'div',
+        _extends({ style: computedStyle }, this.state.childProps),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Placeholder;
+}(_react.Component);
+
+Placeholder.displayName = 'Placeholder';
+Placeholder.propTypes = {
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  style: _react.PropTypes.object,
+  disabledStyle: _react.PropTypes.object,
+  _isDisabled: _react.PropTypes.bool
+};
+Placeholder.defaultProps = {
+  _isDisabled: false
+};
+exports.default = Placeholder;
+},{"../style/placeholder":34,"../utils/helpers":44,"react":378}],13:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _exenv = require('exenv');
+
+var _helpers = require('../utils/helpers');
+
+var _rating = require('../style/rating.js');
+
+var _rating2 = _interopRequireDefault(_rating);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _rating3 = require('../config/rating');
+
+var _rating4 = _interopRequireDefault(_rating3);
+
+var _animationFrameManagement = require('../utils/animation-frame-management');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * sanitize properties for the wrapping div.
+ */
+function sanitizeWrapperProps(properties) {
+  return (0, _helpers.omit)(properties, ['className', 'onKeyDown', 'onMouseEnter', 'onMouseMove', 'onMouseLeave', 'onMouseUp', 'onMouseDown', 'onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel', 'onBlur', 'onFocus', 'tabIndex', 'aria-label', 'aria-valuemax', 'aria-valuemin', 'aria-valuenow', 'aria-disabled', 'style', 'focusStyle', 'disabledStyle', 'characterStyle', 'activeCharacterStyle', 'hoverCharacterStyle', 'characterProps']);
+}
+
+/**
+ * sanitize properties for the character span.
+ */
+function sanitizeCharacterProps(properties) {
+  return (0, _helpers.omit)(properties, ['data-belle-value', 'style']);
+}
+
+/**
+ * Injects pseudo classes for styles into the DOM.
+ */
+function updatePseudoClassStyle(ratingWrapperStyleId, properties, preventFocusStyleForTouchAndClick) {
+  var ratingFocusStyle = void 0;
+  if (preventFocusStyleForTouchAndClick) {
+    ratingFocusStyle = { outline: 0 };
+  } else {
+    ratingFocusStyle = _extends({}, _rating2.default.focusStyle, properties.focusStyle);
+  }
+
+  var styles = [{
+    id: ratingWrapperStyleId,
+    style: ratingFocusStyle,
+    pseudoClass: 'focus'
+  }];
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * Rating component
+ *
+ * The component leverages 5 characters (by default stars) to allow the user to
+ * to rate.
+ */
+
+var Rating = function (_Component) {
+  _inherits(Rating, _Component);
+
+  function Rating(properties) {
+    _classCallCheck(this, Rating);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Rating).call(this, properties));
+
+    _initialiseProps.call(_this);
+
+    var value = void 0;
+
+    if ((0, _helpers.has)(properties, 'valueLink')) {
+      value = properties.valueLink.value;
+    } else if ((0, _helpers.has)(properties, 'value')) {
+      value = properties.value;
+    } else if ((0, _helpers.has)(properties, 'defaultValue')) {
+      value = properties.defaultValue;
+    }
+
+    _this.state = {
+      value: value,
+      focusedValue: undefined,
+      generalProps: sanitizeWrapperProps(properties),
+      characterProps: sanitizeCharacterProps(properties.characterProps),
+      isFocus: false,
+      isActive: false
+    };
+
+    _this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _rating4.default.preventFocusStyleForTouchAndClick;
+    return _this;
+  }
+
+  /**
+   * Setting default prop values.
+   */
+
+
+  _createClass(Rating, [{
+    key: 'componentWillMount',
+
+
+    /**
+     * Apply pseudo class styling to the wrapper div.
+     */
+    value: function componentWillMount() {
+      var id = (0, _helpers.uniqueId)();
+      this.ratingWrapperStyleId = 'rating-wrapper-style-id' + id;
+      updatePseudoClassStyle(this.ratingWrapperStyleId, this.props, this.preventFocusStyleForTouchAndClick);
+
+      if (_exenv.canUseDOM) {
+        this.mouseUpOnDocumentCallback = this._onMouseUpOnDocument;
+        document.addEventListener('mouseup', this.mouseUpOnDocumentCallback);
+      }
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      var newState = {
+        wrapperProps: sanitizeWrapperProps(properties),
+        characterProps: sanitizeCharacterProps(properties.characterProps)
+      };
+
+      if (properties.valueLink) {
+        newState.value = properties.valueLink.value;
+      } else if (properties.value) {
+        newState.value = properties.value;
+      }
+
+      this.setState(newState);
+
+      this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _rating4.default.preventFocusStyleForTouchAndClick;
+
+      (0, _injectStyle.removeStyle)(this.ratingWrapperStyleId);
+      updatePseudoClassStyle(this.ratingWrapperStyleId, properties, this.preventFocusStyleForTouchAndClick);
+    }
+
+    /**
+     * Removes pseudo classes from the DOM once component gets removed.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeStyle)(this.ratingWrapperStyleId);
+      if (_exenv.canUseDOM) {
+        document.removeEventListener('mouseup', this.mouseUpOnDocumentCallback);
+      }
+    }
+
+    /**
+     * As soon as the mouse enters the component the focusedValue is updated based
+     * on the value of the targeted span.
+     */
+
+
+    /**
+     * As the mouse moved over the component and enters a new star the focusedValue
+     * is updated based on the value of the targeted span.
+     */
+
+
+    /**
+     * Resets the component as the mouse leaves the hover area.
+     */
+
+
+    /**
+     * Sets isActive state to true.
+     */
+
+
+    /**
+     * Sets isActive state to false.
+     */
+
+
+    /**
+     * Change focusValue and sets isActive state to true.
+     */
+
+
+    /**
+     * set the focusedValue depending on mouse position
+     */
+
+
+    /**
+     * update the component when touch ends
+     */
+
+
+    /**
+     * reset the component in case of touch cancel
+     */
+
+
+    /**
+     * reset the component on blur
+     */
+
+
+    /**
+     * enable focus styling of component when tab is used to focus component
+     */
+
+
+    /**
+     * Manages the keyboard events.
+     *
+     * In case the Rating Component is in focus Space, ArrowUp will result in increasing the value and arrow down will result in decreasing the value.
+     * Enter/ space will result in updating the value of the component.
+     *
+     * Pressing Escape will reset the value to last value.
+     *
+     */
+
+
+    /**
+     * decrease the value by 1 when arrow down key is pressed
+     */
+
+
+    /**
+     * increase value by 1 when arrow up key is pressed
+     */
+
+
+    /**
+     * set component value to current focus value
+     */
+
+
+    /**
+     * reset component when escape key is pressed
+     * esc key should just reset the component displayed rating without removing hover or focus styles
+     */
+
+  }, {
+    key: '_getCurrentValue',
+
+
+    /**
+     * Returns current value of rating to be displayed on the component
+     */
+    value: function _getCurrentValue() {
+      var value = void 0;
+      if (this.state.focusedValue !== undefined) {
+        value = this.state.focusedValue;
+      } else {
+        value = this.state.value ? this.state.value : 0;
+      }
+
+      return value;
+    }
+
+    /**
+     * The function will be passed to requestAnimationFrame for touchMove
+     */
+
+  }, {
+    key: '_triggerComponentUpdateOnTouchMove',
+    value: function _triggerComponentUpdateOnTouchMove(touches) {
+      var touchedElement = document.elementFromPoint(touches.clientX, touches.clientY);
+      var value = Number(touchedElement.getAttribute('data-belle-value'));
+      if (value && this.state.focusedValue !== value) {
+        this.setState({
+          focusedValue: value
+        });
+      }
+    }
+
+    /**
+     * update component when component is clicked, touch ends, enter or space key are hit
+     * different update logic will apply depending on whether component has property defaultValue, value or valueLink specified
+     */
+
+  }, {
+    key: '_triggerComponentUpdate',
+    value: function _triggerComponentUpdate(value) {
+      if ((0, _helpers.has)(this.props, 'valueLink')) {
+        this.props.valueLink.requestChange(value);
+        this.setState({
+          focusedValue: undefined,
+          isActive: false
+        });
+      } else if ((0, _helpers.has)(this.props, 'value')) {
+        this.setState({
+          focusedValue: undefined,
+          isActive: false
+        });
+      } else {
+        this.setState({
+          focusedValue: undefined,
+          isActive: false,
+          value: value
+        });
+      }
+
+      if (this.props.onUpdate) {
+        this.props.onUpdate({ value: value });
+      }
+    }
+
+    /**
+     * Returns the HTML function to be rendered by this component.
+     */
+
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var currentValue = this._getCurrentValue();
+      var tabIndex = !this.props.disabled ? this.props.tabIndex : -1;
+
+      var characterStyle = _extends({}, _rating2.default.characterStyle, this.props.characterStyle);
+
+      if (this.state.isActive) {
+        characterStyle = _extends({}, characterStyle, _rating2.default.activeCharacterStyle, this.props.activeCharacterStyle);
+      } else if (this.state.isHover) {
+        characterStyle = _extends({}, characterStyle, _rating2.default.hoverCharacterStyle, this.props.hoverCharacterStyle);
+      }
+
+      var wrapperStyle = _extends({}, _rating2.default.style, this.props.style);
+      if (this.props.disabled) {
+        wrapperStyle = _extends({}, wrapperStyle, _rating2.default.disabledStyle, this.props.disabledStyle);
+        if (this.state.isHover) {
+          wrapperStyle = _extends({}, wrapperStyle, _rating2.default.disabledHoverStyle, this.props.disabledHoverStyle);
+        }
+      } else {
+        if (this.state.isFocus && this.preventFocusStyleForTouchAndClick) {
+          wrapperStyle = _extends({}, wrapperStyle, _rating2.default.focusStyle, this.props.focusStyle);
+        }
+
+        if (this.state.isHover) {
+          wrapperStyle = _extends({}, wrapperStyle, _rating2.default.hoverStyle, this.props.hoverStyle);
+        }
+      }
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          ref: 'wrapper',
+          style: wrapperStyle,
+          className: (0, _unionClassNames2.default)(this.props.className, this.ratingWrapperStyleId),
+          onKeyDown: this._onKeyDown,
+          onMouseEnter: this._onMouseEnter,
+          onMouseMove: this._onMouseMove,
+          onMouseLeave: this._onMouseLeave,
+          onMouseUp: this._onMouseUp,
+          onMouseDown: this._onMouseDown,
+          onTouchStart: this._onTouchStart,
+          onTouchMove: this._onTouchMove,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          onContextMenu: this._onContextMenu,
+          onBlur: this._onBlur,
+          onFocus: this._onFocus,
+          tabIndex: tabIndex,
+          'aria-label': this.props['aria-label'],
+          'aria-valuemax': 5,
+          'aria-valuemin': 1,
+          'aria-valuenow': this.state.value,
+          'aria-disabled': this.props.disabled
+        }, this.state.wrapperProps),
+        _react2.default.Children.map([1, 2, 3, 4, 5], function (value) {
+          var ratingStyle = currentValue >= value ? characterStyle : {};
+          return _react2.default.createElement(
+            'span',
+            _extends({
+              'data-belle-value': value,
+              style: ratingStyle
+            }, _this2.state.characterProps),
+            _this2.props.character
+          );
+        })
+      );
+    }
+  }]);
+
+  return Rating;
+}(_react.Component);
+
+Rating.displayName = 'Rating';
+Rating.propTypes = {
+  defaultValue: _react.PropTypes.oneOf([1, 2, 3, 4, 5]),
+  value: _react.PropTypes.oneOf([1, 2, 3, 4, 5]),
+  valueLink: _react.PropTypes.shape({
+    value: _react.PropTypes.oneOf([1, 2, 3, 4, 5]),
+    requestChange: _react.PropTypes.func.isRequired
+  }),
+  disabled: _react.PropTypes.bool,
+  tabIndex: _react.PropTypes.number,
+  character: _react.PropTypes.string,
+  characterProps: _react.PropTypes.object,
+  preventFocusStyleForTouchAndClick: _react.PropTypes.bool,
+  'aria-label': _react.PropTypes.string,
+  style: _react.PropTypes.object,
+  className: _react.PropTypes.string,
+  focusStyle: _react.PropTypes.object,
+  disabledStyle: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  disabledHoverStyle: _react.PropTypes.object,
+  characterStyle: _react.PropTypes.object,
+  activeCharacterStyle: _react.PropTypes.object,
+  hoverCharacterStyle: _react.PropTypes.object,
+  onUpdate: _react.PropTypes.func,
+  onMouseDown: _react.PropTypes.func,
+  onMouseUp: _react.PropTypes.func,
+  onMouseEnter: _react.PropTypes.func,
+  onMouseMove: _react.PropTypes.func,
+  onMouseLeave: _react.PropTypes.func,
+  onTouchStart: _react.PropTypes.func,
+  onTouchMove: _react.PropTypes.func,
+  onTouchEnd: _react.PropTypes.func,
+  onTouchCancel: _react.PropTypes.func,
+  onFocus: _react.PropTypes.func,
+  onBlur: _react.PropTypes.func,
+  onKeyDown: _react.PropTypes.func
+};
+Rating.defaultProps = {
+  disabled: false,
+  tabIndex: 0,
+  character: '★',
+  'aria-label': 'rating'
+};
+
+var _initialiseProps = function _initialiseProps() {
+  var _this3 = this;
+
+  this._onMouseEnter = function (event) {
+    // In case the user pressed the mouse and then hovers over the rating and
+    // releases the mousUp should no be trigger. Only when the mouseDown starts
+    // inside.
+    // Activating inside, going out & coming back should still be possible.
+    if (!_this3.state.isActive) {
+      _this3.preventNextMouseUpTriggerUpdate = true;
+    }
+
+    if (!_this3.props.disabled) {
+      var value = Number(event.target.getAttribute('data-belle-value'));
+      _this3.setState({
+        focusedValue: value,
+        isHover: true
+      });
+    } else {
+      _this3.setState({
+        isHover: true
+      });
+    }
+
+    if (_this3.props.onMouseEnter) {
+      _this3.props.onMouseEnter(event);
+    }
+  };
+
+  this._onMouseMove = function (event) {
+    if (!_this3.props.disabled) {
+      var value = Number(event.target.getAttribute('data-belle-value'));
+      if (_this3.state.focusedValue !== value) {
+        _this3.setState({
+          focusedValue: value
+        });
+      }
+    }
+
+    if (_this3.props.onMouseMove) {
+      _this3.props.onMouseMove(event);
+    }
+  };
+
+  this._onMouseLeave = function (event) {
+    if (!_this3.props.disabled) {
+      _this3.setState({
+        focusedValue: undefined,
+        isHover: false
+      });
+    } else {
+      _this3.setState({
+        isHover: false
+      });
+    }
+
+    if (_this3.props.onMouseLeave) {
+      _this3.props.onMouseLeave(event);
+    }
+  };
+
+  this._onMouseDown = function (event) {
+    if (!_this3.props.disabled && event.button === 0) {
+      _this3.setState({ isActive: true });
+      _this3.preventNextMouseUpTriggerUpdate = false;
+    }
+
+    if (_this3.props.onMouseDown) {
+      _this3.props.onMouseDown(event);
+    }
+  };
+
+  this._onMouseUp = function (event) {
+    if (!_this3.props.disabled && !_this3.preventNextMouseUpTriggerUpdate) {
+      var value = Number(event.target.getAttribute('data-belle-value'));
+      _this3._triggerComponentUpdate(value);
+    }
+
+    if (_this3.props.onMouseUp) {
+      _this3.props.onMouseUp(event);
+    }
+  };
+
+  this._onMouseUpOnDocument = function () {
+    _this3.setState({ isActive: false });
+  };
+
+  this._onContextMenu = function () {
+    _this3.setState({ isActive: false });
+  };
+
+  this._onTouchStart = function (event) {
+    event.preventDefault();
+
+    if (!_this3.props.disabled && event.touches.length === 1) {
+      var value = Number(event.target.getAttribute('data-belle-value'));
+      _this3.setState({
+        focusedValue: value,
+        isActive: true
+      });
+    }
+
+    if (_this3.props.onTouchStart) {
+      _this3.props.onTouchStart(event);
+    }
+  };
+
+  this._onTouchMove = function (event) {
+    if (!_this3.props.disabled && event.touches.length === 1) {
+      var touches = event.touches[0];
+
+      // the requestAnimationFrame function must be executed in the context of window
+      // see http://stackoverflow.com/a/9678166/837709
+      var animationFrame = _animationFrameManagement.requestAnimationFrame.call(window, _this3._triggerComponentUpdateOnTouchMove.bind(_this3, touches));
+
+      if (_this3.previousTouchMoveFrame) {
+        // the cancelAnimationFrame function must be executed in the context of window
+        // see http://stackoverflow.com/a/9678166/837709
+        _animationFrameManagement.cancelAnimationFrame.call(window, _this3.previousTouchMoveFrame);
+      }
+
+      _this3.previousTouchMoveFrame = animationFrame;
+    }
+
+    if (_this3.props.onTouchMove) {
+      _this3.props.onTouchMove(event);
+    }
+  };
+
+  this._onTouchEnd = function (event) {
+    if (!_this3.props.disabled) {
+      event.preventDefault();
+      _this3.setState({ isActive: false });
+      var value = _this3.state.focusedValue;
+      _this3._triggerComponentUpdate(value);
+    }
+
+    if (_this3.props.onTouchEnd) {
+      _this3.props.onTouchEnd(event);
+    }
+  };
+
+  this._onTouchCancel = function (event) {
+    if (!_this3.props.disabled) {
+      _this3.setState({
+        isActive: false,
+        focusedValue: undefined
+      });
+    }
+
+    if (_this3.props.onTouchCancel) {
+      _this3.props.onTouchCancel(event);
+    }
+  };
+
+  this._onBlur = function (event) {
+    if (!_this3.props.disabled) {
+      _this3.setState({
+        focusedValue: undefined,
+        isFocus: false,
+        isActive: false
+      });
+    }
+
+    if (_this3.props.onBlur) {
+      _this3.props.onBlur(event);
+    }
+  };
+
+  this._onFocus = function () {
+    if (!_this3.state.isActive && !_this3.props.disabled) {
+      _this3.setState({ isFocus: true });
+    }
+
+    if (_this3.props.onFocus) {
+      _this3.props.onFocus(event);
+    }
+  };
+
+  this._onKeyDown = function (event) {
+    if (!_this3.props.disabled) {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        _this3._onArrowDownKeyDown();
+      } else if (event.key === 'ArrowUp' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        _this3._onArrowUpKeyDown();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        _this3._onEnterSpaceKeyDown();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        _this3._onEscapeKeyDown();
+      }
+    }
+
+    if (_this3.props.onKeyDown) {
+      _this3.props.onKeyDown(event);
+    }
+  };
+
+  this._onArrowDownKeyDown = function () {
+    var newValue = _this3.state.focusedValue !== undefined ? _this3.state.focusedValue : _this3.state.value;
+    newValue = newValue > 0 ? newValue - 1 : 0;
+    _this3.setState({
+      focusedValue: newValue
+    });
+  };
+
+  this._onArrowUpKeyDown = function () {
+    var newValue = _this3.state.focusedValue !== undefined ? _this3.state.focusedValue : _this3.state.value;
+    if (!newValue) {
+      newValue = 1;
+    } else if (newValue < 5) {
+      newValue = newValue + 1;
+    } else {
+      newValue = 5;
+    }
+
+    _this3.setState({
+      focusedValue: newValue
+    });
+  };
+
+  this._onEnterSpaceKeyDown = function () {
+    var newValue = void 0;
+    if (_this3.state.focusedValue !== undefined) {
+      if (_this3.state.focusedValue === 0) {
+        newValue = undefined;
+      } else {
+        newValue = _this3.state.focusedValue;
+      }
+
+      _this3._triggerComponentUpdate(newValue);
+    }
+  };
+
+  this._onEscapeKeyDown = function () {
+    _this3.setState({
+      focusedValue: undefined
+    });
+  };
+};
+
+exports.default = Rating;
+},{"../config/rating":23,"../style/rating.js":35,"../utils/animation-frame-management":41,"../utils/helpers":44,"../utils/inject-style":45,"../utils/union-class-names":47,"exenv":49,"react":378}],14:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _helpers = require('../utils/helpers');
+
+var _exenv = require('exenv');
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _select = require('../style/select');
+
+var _select2 = _interopRequireDefault(_select);
+
+var _select3 = require('../config/select');
+
+var _select4 = _interopRequireDefault(_select3);
+
+var _isComponentOfType = require('../utils/is-component-of-type');
+
+var _isComponentOfType2 = _interopRequireDefault(_isComponentOfType);
+
+var _Option = require('../components/Option');
+
+var _Option2 = _interopRequireDefault(_Option);
+
+var _Placeholder = require('../components/Placeholder');
+
+var _Placeholder2 = _interopRequireDefault(_Placeholder);
+
+var _Separator = require('../components/Separator');
+
+var _Separator2 = _interopRequireDefault(_Separator);
+
+var _SelectItem = require('../components/SelectItem');
+
+var _SelectItem2 = _interopRequireDefault(_SelectItem);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Returns true if the provided property is a Placeholder component from Belle.
+ */
+function isPlaceholder(reactElement) {
+  return (0, _isComponentOfType2.default)(_Placeholder2.default, reactElement);
+}
+
+/**
+ * Returns true if the provided property is a Option component from Belle.
+ */
+function isOption(reactElement) {
+  return (0, _isComponentOfType2.default)(_Option2.default, reactElement);
+}
+
+/**
+ * Returns true if the provided property is a Separator component from Belle.
+ */
+function isSeparator(reactElement) {
+  return (0, _isComponentOfType2.default)(_Separator2.default, reactElement);
+}
+
+/**
+ * Verifies that the children is an array containing only Options & at maximum
+ * one Placeholder.
+ */
+function validateChildrenAreOptionsAndMaximumOnePlaceholder(props, propName, componentName) {
+  var validChildren = (0, _helpers.filterReactChildren)(props[propName], function (node) {
+    return isOption(node) || isSeparator(node) || isPlaceholder(node);
+  });
+  if (_react2.default.Children.count(props[propName]) !== _react2.default.Children.count(validChildren)) {
+    return new Error('Invalid children supplied to `' + componentName + '`, expected an Option, Separator or Placeholder component from Belle.');
+  }
+
+  var placeholders = (0, _helpers.filterReactChildren)(props[propName], function (node) {
+    return isPlaceholder(node);
+  });
+  if (_react2.default.Children.count(placeholders) > 1) {
+    return new Error('Invalid children supplied to `' + componentName + '`, expected only one Placeholder component.');
+  }
+
+  return undefined;
+}
+
+/**
+ * Update hover style for the speficied styleId.
+ *
+ * @param styleId {string} - a unique id that exists as class attribute in the DOM
+ * @param properties {object} - the components properties optionally containing hoverStyle
+ */
+function updatePseudoClassStyle(styleId, properties) {
+  var hoverStyle = _extends({}, _select2.default.hoverStyle, properties.hoverStyle);
+  var disabledHoverStyle = _extends({}, _select2.default.disabledHoverStyle, properties.disabledHoverStyle);
+
+  var styles = [{
+    id: styleId,
+    style: hoverStyle,
+    pseudoClass: 'hover'
+  }, {
+    id: styleId,
+    style: disabledHoverStyle,
+    pseudoClass: 'hover',
+    disabled: true
+  }];
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * Returns true in case there one more element in the list.
+ */
+var hasNext = function hasNext(list, currentIndex) {
+  return currentIndex + 2 <= list.length;
+};
+
+/**
+ * Returns true in case there is one previous element in the list.
+ */
+var hasPrevious = function hasPrevious(list, currentIndex) {
+  return currentIndex - 1 >= 0;
+};
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div of
+ * the selected option.
+ */
+function sanitizeSelectedOptionWrapperProps(properties) {
+  return (0, _helpers.omit)(properties, ['onClick', 'style', 'className', 'ref', 'shouldPositionOptions', 'positionOptions', 'focusStyle', 'hoverStyle', 'activeStyle', 'wrapperStyle', 'menuStyle', 'caretToOpenStyle', 'caretToCloseStyle', 'disabledCaretToOpenStyle', 'value', 'defaultValue', 'onUpdate', 'valueLink', 'role', 'aria-expanded', 'id', 'onTouchStart', 'onTouchEnd', 'onTouchCancel', 'onMouseDown', 'onMouseUp', 'disabledStyle', 'disabledHoverStyle']);
+}
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div of
+ * the selected option.
+ */
+function sanitizeWrapperProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'ref', 'tabIndex', 'onKeyDown', 'onBlur', 'onFocus']);
+}
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div of
+ * the selected option.
+ */
+function sanitizeMenuProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'ref', 'aria-labelledby', 'role']);
+}
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div of
+ * the selected option.
+ */
+function sanitizeCaretProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'ref']);
+}
+
+/**
+ * Select component.
+ *
+ * In its simplest form the select component behaves almost identical to the
+ * native HTML select which the exception that it comes with beautiful styles.
+ *
+ * Example:
+ *
+ *     <Select defaultValue="rome">
+ *       <Option value="vienna">Vienna</Option>
+ *       <Option value="rome">Rome</Option>
+ *     </Select>
+ *
+ * For more advanced examples please see:
+ * nikgraf.github.io/belle/#/component/select
+ *
+ * This component was inpired by:
+ * - Jet Watson: https://github.com/JedWatson/react-select
+ * - Instructure React Team: https://github.com/instructure-react/react-select-box
+ */
+
+var Select = function (_Component) {
+  _inherits(Select, _Component);
+
+  /*
+   * Initialize the component based on the provided properties.
+   *
+   * By default the Select is closed & the focused option in case the user opens
+   * it will be the selected option.
+   */
+
+  function Select(properties) {
+    _classCallCheck(this, Select);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Select).call(this, properties));
+
+    _this._onTouchStartAtOption = function (event, index) {
+      if (event.touches.length === 1) {
+        _this._touchStartedAt = _this._getValueForIndex(index);
+
+        // save the scroll position
+        var menuNode = _reactDom2.default.findDOMNode(_this.refs.menu);
+        if (menuNode.scrollHeight > menuNode.offsetHeight) {
+          _this._scrollTopPosition = menuNode.scrollTop;
+
+          // Note: don't use setState in here as it would prevent the scrolling
+        } else {
+            _this._scrollTopPosition = 0;
+            _this.setState({ focusedOptionValue: _this._touchStartedAt });
+          }
+
+        // reset interaction
+        _this._scrollActive = false;
+      }
+    };
+
+    _this._onTouchMoveAtOption = function () {
+      var menuNode = _reactDom2.default.findDOMNode(_this.refs.menu);
+      if (menuNode.scrollTop !== _this._scrollTopPosition) {
+        _this._scrollActive = true;
+      }
+    };
+
+    _this._onTouchEndAtOption = function (event, index) {
+      if (_this._touchStartedAt && !_this._scrollActive) {
+        var value = _this._getValueForIndex(index);
+        if (_this._touchStartedAt === value) {
+          event.preventDefault();
+          _this._triggerChange(value);
+        }
+      }
+
+      _this._touchStartedAt = undefined;
+    };
+
+    _this._onTouchCancelAtOption = function () {
+      _this._touchStartedAt = undefined;
+    };
+
+    _this._onClickAtOption = function (index) {
+      _this._triggerChange(_this._getValueForIndex(index));
+    };
+
+    _this._onBlur = function (event) {
+      _this.setState({
+        isOpen: false,
+        isFocused: false
+      });
+
+      if (_this.props.wrapperProps && _this.props.wrapperProps.onBlur) {
+        _this.props.wrapperProps.onBlur(event);
+      }
+    };
+
+    _this._onFocus = function (event) {
+      _this.setState({
+        isFocused: true
+      });
+
+      if (_this.props.wrapperProps && _this.props.wrapperProps.onFocus) {
+        _this.props.wrapperProps.onFocus(event);
+      }
+    };
+
+    _this._onMouseEnterAtOption = function (index) {
+      _this.setState({
+        focusedOptionValue: _this._getValueForIndex(index)
+      });
+    };
+
+    _this._onTouchStartToggleMenu = function (event) {
+      if (event.touches.length === 1) {
+        _this.setState({ isTouchedToToggle: true, isActive: true });
+      } else {
+        _this.setState({ isTouchedToToggle: false });
+      }
+
+      if (_this.props.onTouchStart) {
+        _this.props.onTouchStart(event);
+      }
+    };
+
+    _this._onTouchEndToggleMenu = function (event) {
+      // In case touch events are used preventDefault is applied to avoid
+      // triggering the click event which would cause trouble for toggling.
+      // In any case calling setState triggers a render. This leads to the fact
+      // that the click event won't be triggered anyways. Nik assumes it's due the
+      // element won't be in the DOM anymore.
+      // This also means the Select's onClick won't be triggered for touchDevices.
+      event.preventDefault();
+
+      /* To avoid weird behaviour we check before focusing again - no specific use-case found */
+      var wrapperNode = _reactDom2.default.findDOMNode(_this.refs.wrapper);
+      if (document.activeElement !== wrapperNode) {
+        wrapperNode.focus();
+      }
+
+      if (_this.state.isTouchedToToggle) {
+        if (_this.state.isOpen) {
+          _this.setState({ isOpen: false });
+        } else {
+          _this.setState({ isOpen: true });
+        }
+      }
+
+      _this.setState({ isTouchedToToggle: false, isActive: false });
+
+      if (_this.props.onTouchEnd) {
+        _this.props.onTouchEnd(event);
+      }
+    };
+
+    _this._onTouchCancelToggleMenu = function (event) {
+      _this.setState({ isTouchedToToggle: false, isActive: false });
+
+      if (_this.props.onTouchCancel) {
+        _this.props.onTouchCancel(event);
+      }
+    };
+
+    _this._onMouseDown = function (event) {
+      _this.setState({ isActive: true });
+
+      if (_this.props.onMouseDown) {
+        _this.props.onMouseDown(event);
+      }
+    };
+
+    _this._onMouseUp = function (event) {
+      _this.setState({ isActive: false });
+
+      if (_this.props.onMouseUp) {
+        _this.props.onMouseUp(event);
+      }
+    };
+
+    _this._onMouseUpOnDocument = function () {
+      _this.setState({ isActive: false });
+    };
+
+    _this._onContextMenu = function () {
+      _this.setState({ isActive: false });
+    };
+
+    _this._onArrowDownKeyDown = function () {
+      if (_this.state.focusedOptionValue !== void 0) {
+        var indexOfFocusedOption = _this._getIndexOfFocusedOption();
+
+        if (hasNext(_this.options, indexOfFocusedOption)) {
+          _this.setState({
+            focusedOptionValue: _this.options[indexOfFocusedOption + 1].props.value
+          });
+        }
+      } else {
+        _this.setState({
+          focusedOptionValue: (0, _helpers.first)(_this.options).props.value
+        });
+      }
+    };
+
+    _this._onArrowUpKeyDown = function () {
+      if (_this.state.focusedOptionValue !== void 0) {
+        var indexOfFocusedOption = _this._getIndexOfFocusedOption();
+
+        if (hasPrevious(_this.options, indexOfFocusedOption)) {
+          _this.setState({
+            focusedOptionValue: _this.options[indexOfFocusedOption - 1].props.value
+          });
+        }
+      } else {
+        _this.setState({
+          focusedOptionValue: (0, _helpers.last)(_this.options).props.value
+        });
+      }
+    };
+
+    _this._onEnterOrSpaceKeyDown = function () {
+      _this._triggerChange(_this.state.focusedOptionValue);
+    };
+
+    _this._onKeyDown = function (event) {
+      if (!_this.props.disabled) {
+        if (!(0, _helpers.isEmpty)(_this.options)) {
+          if (!_this.state.isOpen) {
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === ' ') {
+              event.preventDefault();
+              _this.setState({ isOpen: true });
+            }
+          } else {
+            // Updates the state to set focus on the next option
+            // In case no option is active it should jump to the first.
+            // In case it is the last it should stop there.
+            if (event.key === 'ArrowDown') {
+              event.preventDefault();
+              _this._onArrowDownKeyDown();
+            } else if (event.key === 'ArrowUp') {
+              event.preventDefault();
+              _this._onArrowUpKeyDown();
+            } else if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              _this._onEnterOrSpaceKeyDown();
+            }
+          }
+
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            _this.setState({ isOpen: false });
+          }
+        }
+      }
+
+      if (_this.props.wrapperProps && _this.props.wrapperProps.onKeyDown) {
+        _this.props.wrapperProps.onKeyDown(event);
+      }
+    };
+
+    _this._onClickToggleMenu = function (event) {
+      if (!_this.props.disabled) {
+        if (_this.state.isOpen) {
+          _this.setState({ isOpen: false });
+        } else {
+          _this.setState({ isOpen: true });
+        }
+      }
+
+      if (_this.props.onClick) {
+        _this.props.onClick(event);
+      }
+    };
+
+    var selectedValue = void 0;
+    var focusedOptionValue = void 0;
+
+    if (properties.children) {
+      _this.children = (0, _helpers.flattenReactChildren)(properties.children);
+      _this.options = (0, _helpers.filter)(_this.children, isOption);
+    }
+
+    if ((0, _helpers.has)(properties, 'valueLink')) {
+      selectedValue = properties.valueLink.value;
+      focusedOptionValue = selectedValue;
+    } else if ((0, _helpers.has)(properties, 'value')) {
+      selectedValue = properties.value;
+      focusedOptionValue = selectedValue;
+    } else if ((0, _helpers.has)(properties, 'defaultValue')) {
+      selectedValue = properties.defaultValue;
+      focusedOptionValue = selectedValue;
+    } else if (!(0, _helpers.isEmpty)(_this.children) && !(0, _helpers.some)(_this.children, isPlaceholder)) {
+      var firstOption = (0, _helpers.first)(_this.options);
+      selectedValue = firstOption ? firstOption.props.value : void 0;
+      focusedOptionValue = selectedValue;
+    } else if (!(0, _helpers.isEmpty)(_this.children)) {
+      var _firstOption = (0, _helpers.first)(_this.options);
+      focusedOptionValue = _firstOption ? _firstOption.props.value : void 0;
+    }
+
+    _this.state = {
+      isOpen: false,
+      isFocused: false,
+      selectedValue: selectedValue,
+      focusedOptionValue: focusedOptionValue,
+      selectedOptionWrapperProps: sanitizeSelectedOptionWrapperProps(properties),
+      wrapperProps: sanitizeWrapperProps(properties.wrapperProps),
+      menuProps: sanitizeMenuProps(properties.menuProps),
+      caretProps: sanitizeCaretProps(properties.caretProps),
+      isTouchedToToggle: false
+    };
+    return _this;
+  }
+
+  _createClass(Select, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      return {
+        isDisabled: this.props.disabled,
+        isHoveredValue: this.state.focusedOptionValue
+      };
+    }
+
+    /**
+     * Generates the style-id & inject the focus & hover style.
+     */
+
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var id = (0, _helpers.uniqueId)();
+
+      // Note: To ensure server side rendering creates the same results React's internal
+      // id for this element is leveraged.
+      this.selectedOptionWrapperId = this.props.id ? this.props.id : 'belle-select-id-' + id;
+      this._styleId = 'style-id' + id;
+      updatePseudoClassStyle(this._styleId, this.props);
+
+      if (_exenv.canUseDOM) {
+        this.mouseUpOnDocumentCallback = this._onMouseUpOnDocument;
+        document.addEventListener('mouseup', this.mouseUpOnDocumentCallback);
+      }
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      if (properties.children) {
+        this.children = (0, _helpers.flattenReactChildren)(properties.children);
+        this.options = (0, _helpers.filter)(this.children, isOption);
+      }
+
+      var newState = {
+        selectedOptionWrapperProps: sanitizeSelectedOptionWrapperProps(properties),
+        wrapperProps: sanitizeWrapperProps(properties.wrapperProps),
+        menuProps: sanitizeMenuProps(properties.menuProps),
+        caretProps: sanitizeCaretProps(properties.caretProps)
+      };
+
+      if ((0, _helpers.has)(properties, 'valueLink')) {
+        newState.selectedValue = properties.valueLink.value;
+        newState.focusedOptionValue = properties.valueLink.value;
+      } else if ((0, _helpers.has)(properties, 'value')) {
+        newState.selectedValue = properties.value;
+        newState.focusedOptionValue = properties.value;
+      }
+
+      this.setState(newState);
+      (0, _injectStyle.removeStyle)(this._styleId);
+      updatePseudoClassStyle(this._styleId, properties);
+    }
+
+    /**
+     * In case shouldPositionOptions is active the scrollTop position is stored
+     * to be applied later on. The menu is hidden to make sure it is
+     * not displayed beofre repositioned.
+     */
+
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProperties, nextState) {
+      var shouldPositionOptions = (0, _helpers.has)(nextProperties, 'shouldPositionOptions') ? nextProperties.shouldPositionOptions : _select4.default.shouldPositionOptions;
+
+      if (shouldPositionOptions) {
+        var menuNode = _reactDom2.default.findDOMNode(this.refs.menu);
+        this.cachedMenuScrollTop = menuNode.scrollTop;
+
+        if (!this.state.isOpen && nextState.isOpen) {
+          menuNode.style.display = 'none';
+        }
+      }
+    }
+
+    /**
+     * In case shouldPositionOptions is active when opening the menu it is
+     * repositioned & switched to be visible.
+     */
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(previousProperties, previousState) {
+      var shouldPositionOptions = (0, _helpers.has)(this.props, 'shouldPositionOptions') ? this.props.shouldPositionOptions : _select4.default.shouldPositionOptions;
+
+      if (shouldPositionOptions && !this.props.disabled) {
+        var menuNode = _reactDom2.default.findDOMNode(this.refs.menu);
+
+        // the menu was just opened
+        if (!previousState.isOpen && this.state.isOpen && this.children && this.children.length > 0) {
+          var positionOptions = (0, _helpers.has)(this.props, 'positionOptions') ? this.props.positionOptions : _select4.default.positionOptions;
+          positionOptions(this);
+
+          // restore the old scrollTop position
+        } else {
+            menuNode.scrollTop = this.cachedMenuScrollTop;
+          }
+
+        var separators = (0, _helpers.filter)(this.children, isSeparator);
+        var childrenPresent = !(0, _helpers.isEmpty)(this.options) || !(0, _helpers.isEmpty)(separators);
+        if (!previousState.isOpen && this.state.isOpen && childrenPresent) {
+          var menuStyle = _extends({}, _select2.default.menuStyle, this.props.menuStyle);
+          menuNode.style.display = menuStyle.display;
+        }
+      }
+    }
+
+    /**
+     * Remove a component's associated styles whenever it gets removed from the DOM.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeStyle)(this._styleId);
+      if (_exenv.canUseDOM) {
+        document.removeEventListener('mouseup', this.mouseUpOnDocumentCallback);
+      }
+    }
+
+    /**
+     * Update the focusedOption based on Option the user is touching.
+     *
+     * Unfortunately updating the focusedOption only works in case the menu
+     * is not scrollable.
+     * If a setState would be triggered during a touch with the intention to
+     * scroll the setState would trigger a re-render & prevent the scrolling.
+     */
+
+
+    /**
+     * Identifies if the menu is scrollable.
+     */
+
+
+    /**
+     * Triggers a change event after the user touched on an Option.
+     */
+
+
+    /**
+     * Triggers a change event after the user touched on an Option.
+     */
+
+
+    /**
+     * Triggers a change event after the user clicked on an Option.
+     */
+
+
+    /**
+     * In order to inform the user which element in the document is active the
+     * component keeps track of when it's de-selected and depending on that
+     * close the menu.
+     */
+
+
+    /**
+     * In order to inform the user which element in the document is active the
+     * component keeps track of when it's de-selected and depending on that
+     * close the menu.
+     */
+
+
+    /**
+     * In order to inform the user which Option is active the component keeps
+     * track of when an option is in focus by the user and depending on that
+     * provide a visual indicator.
+     */
+
+
+    /**
+     * Initiate the toggle for the menu.
+     */
+
+
+    /**
+     * Toggle the menu after a user touched it & resets the pressed state
+     * for to toggle.
+     */
+
+
+    /**
+     * Reset the precondition to initialize a toggle of the menu.
+     */
+
+
+    /**
+     * Set isActive to true on mouse-down.
+     */
+
+
+    /**
+     * Set isActive to false on mouse-up.
+     */
+
+
+    /**
+     * Set isActive to false on mouse-up.
+     */
+
+
+    /**
+     * Set isActive to false on is context menu opens on select's div.
+     */
+
+
+    /**
+     * Update focus for the options for an already open menu.
+     *
+     * The user experience of HTML's native select is good and the goal here is to
+     * achieve the same behaviour.
+     *
+     * - Focus on the first entry in case no options is focused on.
+     * - Switch focus to the next option in case one option already has focus.
+     */
+
+
+    /**
+     * Update focus for the options for an already open menu.
+     *
+     * The user experience of HTML's native select is good and the goal here is to
+     * achieve the same behaviour.
+     *
+     * - Focus on the last entry in case no options is focused on.
+     * - Switch focus to the previous option in case one option already has focus.
+     */
+
+
+    /**
+     * After the user pressed the `Enter` or `Space` key for an already open
+     * menu the focused option is selected.
+     *
+     * Same as _onClickAtOption this update the state & dispatches a change event.
+     */
+
+
+    /**
+     * Manages the keyboard events.
+     *
+     * In case the Select is in focus, but closed ArrowDown, ArrowUp, Enter and
+     * Space will result in opening the menu.
+     *
+     * In case the menu is already open each key press will have
+     * different effects already documented in the related methods.
+     *
+     * Pressing Escape will close the menu.
+     */
+
+
+    /**
+     * Toggle the menu after a user clicked on it.
+     */
+
+  }, {
+    key: '_getIndexOfFocusedOption',
+
+
+    /**
+     * Returns the index of the entry with a certain value from the component's
+     * children.
+     *
+     * The index search includes only option components.
+     */
+    value: function _getIndexOfFocusedOption() {
+      var _this2 = this;
+
+      return (0, _helpers.findIndex)(this.options, function (element) {
+        return element.props.value === _this2.state.focusedOptionValue;
+      });
+    }
+
+    /**
+     * Returns the value of the child with a certain index.
+     */
+
+  }, {
+    key: '_getValueForIndex',
+    value: function _getValueForIndex(index) {
+      return this.options[index].props.value;
+    }
+
+    /**
+     * After an option has been selected the menu gets closed and the
+     * selection processed.
+     *
+     * Depending on the component's properties the value gets updated and the
+     * provided change callback for onUpdate or valueLink is called.
+     */
+
+  }, {
+    key: '_triggerChange',
+    value: function _triggerChange(value) {
+      if ((0, _helpers.has)(this.props, 'valueLink')) {
+        this.props.valueLink.requestChange(value);
+        this.setState({
+          isOpen: false
+        });
+      } else if ((0, _helpers.has)(this.props, 'value')) {
+        this.setState({
+          isOpen: false
+        });
+      } else {
+        this.setState({
+          focusedOptionValue: value,
+          selectedValue: value,
+          isOpen: false
+        });
+      }
+
+      if (this.props.onUpdate) {
+        this.props.onUpdate({ value: value });
+      }
+    }
+  }, {
+    key: '_renderChildren',
+    value: function _renderChildren() {
+      var _this3 = this;
+
+      var optionsIndex = 0;
+
+      return _react2.default.Children.map(this.children, function (entry, index) {
+        if (isOption(entry)) {
+          // filter out all non-Option Components
+          var localOptionIndex = optionsIndex;
+          var isHovered = entry.props.value === _this3.state.focusedOptionValue;
+          var element = _react2.default.createElement(
+            _SelectItem2.default,
+            {
+              onItemClick: _this3._onClickAtOption,
+              onItemTouchStart: _this3._onTouchStartAtOption,
+              onItemTouchMove: _this3._onTouchMoveAtOption,
+              onItemTouchEnd: _this3._onTouchEndAtOption,
+              onItemTouchCancel: _this3._onTouchCancelAtOption,
+              onItemMouseEnter: _this3._onMouseEnterAtOption,
+              isHovered: isHovered,
+              index: localOptionIndex,
+              key: index
+            },
+            entry
+          );
+          optionsIndex++;
+
+          return element;
+        } else if (isSeparator(entry)) {
+          return _react2.default.createElement(
+            'li',
+            {
+              key: index,
+              role: 'presentation'
+            },
+            entry
+          );
+        }
+
+        return null;
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      var defaultStyle = _extends({}, _select2.default.style, this.props.style);
+      var hoverStyle = _extends({}, defaultStyle, _select2.default.hoverStyle, this.props.hoverStyle);
+      var focusStyle = _extends({}, defaultStyle, _select2.default.focusStyle, this.props.focusStyle);
+      var activeStyle = _extends({}, defaultStyle, _select2.default.activeStyle, this.props.activeStyle);
+      var disabledStyle = _extends({}, defaultStyle, _select2.default.disabledStyle, this.props.disabledStyle);
+      var disabledHoverStyle = _extends({}, disabledStyle, _select2.default.disabledHoverStyle, this.props.disabledHoverStyle);
+      var menuStyle = _extends({}, _select2.default.menuStyle, this.props.menuStyle);
+      var caretToCloseStyle = _extends({}, _select2.default.caretToCloseStyle, this.props.caretToCloseStyle);
+      var caretToOpenStyle = _extends({}, _select2.default.caretToOpenStyle, this.props.caretToOpenStyle);
+      var disabledCaretToOpenStyle = _extends({}, caretToOpenStyle, _select2.default.disabledCaretToOpenStyle, this.props.disabledCaretToOpenStyle);
+      var wrapperStyle = _extends({}, _select2.default.wrapperStyle, this.props.wrapperStyle);
+
+      var selectedOptionOrPlaceholder = void 0;
+      if (this.state.selectedValue !== void 0) {
+        var selectedEntry = (0, _helpers.find)(this.children, function (entry) {
+          return entry.props.value === _this4.state.selectedValue;
+        });
+
+        if (selectedEntry) {
+          selectedOptionOrPlaceholder = _react2.default.cloneElement(selectedEntry, {
+            _isDisplayedAsSelected: true
+          });
+        }
+      } else {
+        selectedOptionOrPlaceholder = (0, _helpers.find)(this.children, isPlaceholder);
+      }
+
+      var separators = (0, _helpers.filter)(this.children, isSeparator);
+      var childrenNotPresent = (0, _helpers.isEmpty)(this.options) && (0, _helpers.isEmpty)(separators);
+      var computedMenuStyle = this.props.disabled || !this.state.isOpen || childrenNotPresent ? { display: 'none' } : menuStyle;
+      var hasCustomTabIndex = this.props.wrapperProps && this.props.wrapperProps.tabIndex;
+      var tabIndex = hasCustomTabIndex ? this.props.wrapperProps.tabIndex : '0';
+
+      var selectedOptionWrapperStyle = void 0;
+      if (this.props.disabled) {
+        if (this.state.isTouchedToToggle) {
+          selectedOptionWrapperStyle = disabledHoverStyle;
+        } else {
+          selectedOptionWrapperStyle = disabledStyle;
+        }
+
+        tabIndex = -1;
+      } else {
+        if (this.state.isActive) {
+          selectedOptionWrapperStyle = activeStyle;
+        } else if (this.state.isFocused) {
+          selectedOptionWrapperStyle = focusStyle;
+        } else if (this.state.isTouchedToToggle) {
+          selectedOptionWrapperStyle = hoverStyle;
+        } else {
+          selectedOptionWrapperStyle = defaultStyle;
+        }
+      }
+
+      var caretStyle = void 0;
+      if (this.props.disabled) {
+        caretStyle = disabledCaretToOpenStyle;
+      } else if (this.state.isOpen) {
+        caretStyle = caretToCloseStyle;
+      } else {
+        caretStyle = caretToOpenStyle;
+      }
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          style: wrapperStyle,
+          tabIndex: tabIndex,
+          onKeyDown: this._onKeyDown,
+          onBlur: this._onBlur,
+          onFocus: this._onFocus,
+          ref: 'wrapper'
+        }, this.state.wrapperProps),
+        _react2.default.createElement(
+          'div',
+          _extends({
+            onClick: this._onClickToggleMenu,
+            onTouchStart: this._onTouchStartToggleMenu,
+            onTouchEnd: this._onTouchEndToggleMenu,
+            onTouchCancel: this._onTouchCancelToggleMenu,
+            onContextMenu: this._onContextMenu,
+            onMouseDown: this._onMouseDown,
+            onMouseUp: this._onMouseUp,
+            style: selectedOptionWrapperStyle,
+            className: (0, _unionClassNames2.default)(this.props.className, this._styleId),
+            ref: 'selectedOptionWrapper',
+            role: 'button',
+            'aria-expanded': this.state.isOpen,
+            id: this.selectedOptionWrapperId
+          }, this.state.selectedOptionWrapperProps),
+          selectedOptionOrPlaceholder,
+          _react2.default.createElement('span', _extends({
+            style: caretStyle
+          }, this.state.caretProps))
+        ),
+        _react2.default.createElement(
+          'ul',
+          _extends({
+            style: computedMenuStyle,
+            role: 'listbox',
+            'aria-labelledby': this.selectedOptionWrapperId,
+            ref: 'menu'
+          }, this.state.menuProps),
+          this._renderChildren()
+        )
+      );
+    }
+  }]);
+
+  return Select;
+}(_react.Component);
+
+Select.displayName = 'Select';
+Select.propTypes = {
+  children: validateChildrenAreOptionsAndMaximumOnePlaceholder,
+  value: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string, _react.PropTypes.number, _react.PropTypes.instanceOf(Date)]),
+  defaultValue: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string, _react.PropTypes.number]),
+  onUpdate: _react.PropTypes.func,
+  valueLink: _react.PropTypes.shape({
+    value: _react.PropTypes.string.isRequired,
+    requestChange: _react.PropTypes.func.isRequired
+  }),
+  className: _react.PropTypes.string,
+  shouldPositionOptions: _react.PropTypes.bool,
+  positionOptions: _react.PropTypes.func,
+  style: _react.PropTypes.object,
+  focusStyle: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  activeStyle: _react.PropTypes.object,
+  wrapperStyle: _react.PropTypes.object,
+  menuStyle: _react.PropTypes.object,
+  caretToOpenStyle: _react.PropTypes.object,
+  caretToCloseStyle: _react.PropTypes.object,
+  wrapperProps: _react.PropTypes.object,
+  menuProps: _react.PropTypes.object,
+  caretProps: _react.PropTypes.object,
+  disabled: _react.PropTypes.bool,
+  disabledStyle: _react.PropTypes.object,
+  disabledHoverStyle: _react.PropTypes.object,
+  disabledCaretToOpenStyle: _react.PropTypes.object,
+  id: _react.PropTypes.string,
+  onClick: _react.PropTypes.func,
+  onTouchCancel: _react.PropTypes.func,
+  onMouseDown: _react.PropTypes.func,
+  onMouseUp: _react.PropTypes.func,
+  onTouchEnd: _react.PropTypes.func,
+  onTouchStart: _react.PropTypes.func
+};
+Select.childContextTypes = {
+  isDisabled: _react.PropTypes.bool.isRequired,
+  isHoveredValue: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.string, _react.PropTypes.number])
+};
+Select.defaultProps = {
+  disabled: false
+};
+exports.default = Select;
+},{"../components/Option":11,"../components/Placeholder":12,"../components/SelectItem":15,"../components/Separator":16,"../config/select":24,"../style/select":36,"../utils/helpers":44,"../utils/inject-style":45,"../utils/is-component-of-type":46,"../utils/union-class-names":47,"exenv":49,"react":378,"react-dom":240}],15:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Belle internal component to wrap an Option in a Select.
+ *
+ * This component exists to avoid binding functions in JSX.
+ */
+
+var SelectItem = function (_Component) {
+  _inherits(SelectItem, _Component);
+
+  function SelectItem() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, SelectItem);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SelectItem)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this._onClick = function () {
+      _this.props.onItemClick(_this.props.index);
+    }, _this._onTouchStart = function (event) {
+      _this.props.onItemTouchStart(event, _this.props.index);
+    }, _this._onTouchMove = function () {
+      _this.props.onItemTouchMove();
+    }, _this._onTouchEnd = function (event) {
+      _this.props.onItemTouchEnd(event, _this.props.index);
+    }, _this._onTouchCancel = function () {
+      _this.props.onItemTouchCancel();
+    }, _this._onMouseEnter = function () {
+      _this.props.onItemMouseEnter(_this.props.index);
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(SelectItem, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'li',
+        {
+          onClick: this._onClick,
+          onTouchStart: this._onTouchStart,
+          onTouchMove: this._onTouchMove,
+          onTouchEnd: this._onTouchEnd,
+          onTouchCancel: this._onTouchCancel,
+          onMouseEnter: this._onMouseEnter,
+          role: 'option',
+          'aria-selected': this.props.isHovered
+        },
+        this.props.children
+      );
+    }
+  }]);
+
+  return SelectItem;
+}(_react.Component);
+
+SelectItem.displayName = 'SelectItem';
+SelectItem.propTypes = {
+  children: _react.PropTypes.node.isRequired,
+  isHovered: _react.PropTypes.bool.isRequired,
+  index: _react.PropTypes.number.isRequired,
+  onItemClick: _react.PropTypes.func.isRequired,
+  onItemTouchStart: _react.PropTypes.func.isRequired,
+  onItemTouchMove: _react.PropTypes.func.isRequired,
+  onItemTouchEnd: _react.PropTypes.func.isRequired,
+  onItemTouchCancel: _react.PropTypes.func.isRequired,
+  onItemMouseEnter: _react.PropTypes.func.isRequired
+};
+exports.default = SelectItem;
+},{"react":378}],16:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _helpers = require('../utils/helpers');
+
+var _separator = require('../style/separator');
+
+var _separator2 = _interopRequireDefault(_separator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Returns an object with properties that are relevant for the wrapping div.
+ */
+function sanitizeChildProps(properties) {
+  return (0, _helpers.omit)(properties, ['style']);
+}
+
+/**
+ * Separator component.
+ *
+ * This component should be used together with Belle's Select.
+ */
+
+var Separator = function (_Component) {
+  _inherits(Separator, _Component);
+
+  function Separator(properties) {
+    _classCallCheck(this, Separator);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Separator).call(this, properties));
+
+    _this.state = {
+      childProps: sanitizeChildProps(properties)
+    };
+    return _this;
+  }
+
+  _createClass(Separator, [{
+    key: 'componentWillReceiveProps',
+
+
+    /**
+     * Update the childProperties based on the updated properties passed to the
+     * Separator.
+     */
+    value: function componentWillReceiveProps(properties) {
+      this.setState({ childProps: sanitizeChildProps(properties) });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var computedStyle = _extends({}, _separator2.default.style, this.props.style);
+
+      return _react2.default.createElement(
+        'div',
+        _extends({ style: computedStyle }, this.state.childProps),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Separator;
+}(_react.Component);
+
+Separator.displayName = 'Separator';
+Separator.propTypes = {
+  children: _react.PropTypes.oneOfType([_react.PropTypes.arrayOf(_react.PropTypes.node), _react.PropTypes.node]),
+  style: _react.PropTypes.object
+};
+exports.default = Separator;
+},{"../style/separator":37,"../utils/helpers":44,"react":378}],17:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _spinner = require('../style/spinner');
+
+var _spinner2 = _interopRequireDefault(_spinner);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var animationDelay = function animationDelay(delay) {
+  return {
+    MozAnimationDelay: delay,
+    WebkitAnimationDelay: delay,
+    OAnimationDelay: delay,
+    animationDelay: delay
+  };
+};
+
+/**
+ * Spinner component to be used as loading indicator.
+ */
+
+var Spinner = function (_Component) {
+  _inherits(Spinner, _Component);
+
+  function Spinner() {
+    _classCallCheck(this, Spinner);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Spinner).apply(this, arguments));
+  }
+
+  _createClass(Spinner, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props;
+      var style = _props.style;
+      var characterProps = _props.characterProps;
+      var characterStyle = _props.characterStyle;
+
+      var childProps = _objectWithoutProperties(_props, ['style', 'characterProps', 'characterStyle']);
+
+      var computedCharStyle = _extends({}, _spinner2.default.characterStyle, characterStyle);
+      return _react2.default.createElement(
+        'span',
+        _extends({}, childProps, { style: _extends({}, _spinner2.default.style, style) }),
+        _react2.default.createElement(
+          'span',
+          _extends({}, characterProps, { style: computedCharStyle }),
+          '.'
+        ),
+        _react2.default.createElement(
+          'span',
+          _extends({}, characterProps, { style: _extends({}, computedCharStyle, animationDelay('400ms')) }),
+          '.'
+        ),
+        _react2.default.createElement(
+          'span',
+          _extends({}, characterProps, { style: _extends({}, computedCharStyle, animationDelay('800ms')) }),
+          '.'
+        )
+      );
+    }
+  }]);
+
+  return Spinner;
+}(_react.Component);
+
+Spinner.displayName = 'Spinner';
+Spinner.propTypes = {
+  characterProps: _react.PropTypes.object,
+  characterStyle: _react.PropTypes.object,
+  style: _react.PropTypes.object
+};
+exports.default = Spinner;
+},{"../style/spinner":38,"react":378}],18:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _calculateTextareaHeight = require('../utils/calculate-textarea-height');
+
+var _calculateTextareaHeight2 = _interopRequireDefault(_calculateTextareaHeight);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _helpers = require('../utils/helpers');
+
+var _textInput = require('../style/text-input');
+
+var _textInput2 = _interopRequireDefault(_textInput);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var newLineRegex = /[\r\n]/g;
+
+/**
+ * Returns an object with properties that are relevant for the TextInput's textarea.
+ *
+ * As the height of the textarea needs to be calculated valueLink can not be
+ * passed down to the textarea, but made available through this component.
+ */
+function sanitizeChildProps(properties) {
+  var childProps = (0, _helpers.omit)(properties, ['valueLink', 'onUpdate', 'onKeyDown', 'minHeight', 'maxHeight', 'minRows', 'maxRows', 'className', 'style', 'hoverStyle', 'focusStyle', 'disabledStyle', 'disabledHoverStyle']);
+  if (_typeof(properties.valueLink) === 'object') {
+    childProps.value = properties.valueLink.value;
+  }
+
+  return childProps;
+}
+
+/**
+ * Update hover & focus style for the speficied styleId.
+ *
+ * @param styleId {string} - a unique id that exists as class attribute in the DOM
+ * @param properties {object} - the components properties optionally containing hoverStyle & focusStyle
+ */
+function updatePseudoClassStyle(styleId, properties) {
+  var hoverStyle = _extends({}, _textInput2.default.hoverStyle, properties.hoverStyle);
+  var focusStyle = _extends({}, _textInput2.default.focusStyle, properties.focusStyle);
+  var disabledHoverStyle = _extends({}, _textInput2.default.disabledHoverStyle, properties.disabledHoverStyle);
+
+  var styles = [{
+    id: styleId,
+    style: hoverStyle,
+    pseudoClass: 'hover'
+  }, {
+    id: styleId,
+    style: focusStyle,
+    pseudoClass: 'focus'
+  }, {
+    id: styleId,
+    style: disabledHoverStyle,
+    pseudoClass: 'hover',
+    disabled: true
+  }];
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * TextInput component with great UX like autogrowing & handling states
+ *
+ * Note on styling: Right now this component doen't allow to change style after
+ * initialisation.
+ *
+ * Note on resizing:
+ * If you fill a textarea only with spaces and the cursor reaches the right end
+ * it won't break the line. This leads to unexpected behaviour for the automatic
+ * resizing.
+ *
+ * This component was highly inspired by the great work from these guys
+ * - Andrey Popp: https://github.com/andreypopp/react-textarea-autosize
+ * - Eugene: https://gist.github.com/eugene1g/5dbaa7d35d0c7d5c2c56
+ */
+
+var TextInput = function (_Component) {
+  _inherits(TextInput, _Component);
+
+  function TextInput(properties) {
+    _classCallCheck(this, TextInput);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TextInput).call(this, properties));
+
+    _this._onKeyDown = function (event) {
+      if (!_this.props.allowNewLine && event.key === 'Enter') {
+        event.preventDefault();
+      }
+
+      if (_this.props.onKeyDown) {
+        _this.props.onKeyDown(event);
+      }
+    };
+
+    _this._onChange = function (event) {
+      var value = event.target.value;
+
+      if (!_this.props.allowNewLine && value.match(newLineRegex) !== null) {
+        value = value.replace(newLineRegex, ' ');
+      }
+
+      if ((0, _helpers.has)(_this.props, 'valueLink')) {
+        _this.props.valueLink.requestChange(value);
+      } else if ((0, _helpers.has)(_this.props, 'defaultValue')) {
+        _this.setState({
+          inputValue: value
+        });
+      }
+
+      if (_this.props.onUpdate) {
+        _this.props.onUpdate({ value: value });
+      }
+
+      _this._triggerResize(value);
+    };
+
+    var inputValue = void 0;
+
+    if ((0, _helpers.has)(properties, 'valueLink')) {
+      inputValue = properties.valueLink.value;
+    } else if ((0, _helpers.has)(properties, 'value')) {
+      inputValue = properties.value;
+    } else if ((0, _helpers.has)(properties, 'defaultValue')) {
+      inputValue = properties.defaultValue;
+    }
+
+    _this.state = {
+      height: 'auto',
+      inputValue: inputValue
+    };
+    _this.textareaProps = sanitizeChildProps(properties);
+    return _this;
+  }
+
+  _createClass(TextInput, [{
+    key: 'componentWillMount',
+
+
+    /**
+     * Generates the style-id & inject the focus & hover style.
+     */
+    value: function componentWillMount() {
+      var id = (0, _helpers.uniqueId)();
+      this._styleId = 'style-id' + id;
+      updatePseudoClassStyle(this._styleId, this.props);
+    }
+
+    /**
+     * Right after the component go injected into the DOM it should be resized.
+     */
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this._triggerResize(this.state.inputValue);
+    }
+
+    /**
+     * Update the properties passed to the textarea and resize as with the new
+     * properties the height might have changed.
+     */
+
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      var _this2 = this;
+
+      // Makes sure we have inputValue available when triggering a resize.
+      var newState = {
+        inputValue: this.state.inputValue
+      };
+      if ((0, _helpers.has)(properties, 'valueLink')) {
+        newState.inputValue = properties.valueLink.value;
+      } else if ((0, _helpers.has)(properties, 'value')) {
+        newState.inputValue = properties.value;
+      }
+
+      this.textareaProps = sanitizeChildProps(properties);
+      (0, _injectStyle.removeStyle)(this._styleId);
+      updatePseudoClassStyle(this._styleId, properties);
+      this.setState(newState, function () {
+        return _this2._triggerResize(newState.inputValue);
+      });
+    }
+
+    /**
+     * Remove a component's associated styles whenever it gets removed from the DOM.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeStyle)(this._styleId);
+    }
+
+    /**
+     * Prevent any newline (except allowNewLine is active) and pass the event to
+     * the onKeyDown property.
+     *
+     * This is an optimization to avoid adding a newline char & removing it right
+     * away in the onUpdate callback.
+     */
+
+
+    /**
+     * Update the height and calls the provided change callback for onUpdate
+     * or valueLink.
+     *
+     * In addition newline characters are replaced by spaces in the textarea value
+     * in case allowNewLine is set to false and newLine characters could be found.
+     */
+
+  }, {
+    key: '_triggerResize',
+
+
+    /**
+     * Calculate the height and store the new height in the state to trigger a render.
+     */
+    value: function _triggerResize(textareaValue) {
+      var height = (0, _calculateTextareaHeight2.default)(_reactDom2.default.findDOMNode(this), textareaValue, this.props.minRows, this.props.maxRows, this.props.minHeight, this.props.maxHeight);
+      this.setState({ height: height });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var textareaStyle = _extends({}, _textInput2.default.style, this.props.style);
+
+      if (this.props.disabled) {
+        textareaStyle = _extends({}, textareaStyle, _textInput2.default.disabledStyle, this.props.disabledStyle);
+      }
+
+      textareaStyle.height = this.state.height;
+      return _react2.default.createElement('textarea', _extends({
+        style: textareaStyle,
+        value: this.state.inputValue,
+        className: (0, _unionClassNames2.default)(this.props.className, this._styleId),
+        onChange: this._onChange,
+        onKeyDown: this._onKeyDown
+      }, this.textareaProps));
+    }
+  }]);
+
+  return TextInput;
+}(_react.Component);
+
+TextInput.displayName = 'TextInput';
+TextInput.propTypes = {
+  className: _react.PropTypes.string,
+  minHeight: _react.PropTypes.number,
+  maxHeight: _react.PropTypes.number,
+  minRows: _react.PropTypes.number,
+  maxRows: _react.PropTypes.number,
+  style: _react.PropTypes.object,
+  hoverStyle: _react.PropTypes.object,
+  focusStyle: _react.PropTypes.object,
+  allowNewLine: _react.PropTypes.bool,
+  disabled: _react.PropTypes.bool,
+  disabledStyle: _react.PropTypes.object,
+  disabledHoverStyle: _react.PropTypes.object,
+  onUpdate: _react.PropTypes.func,
+  onKeyDown: _react.PropTypes.func,
+  valueLink: _react.PropTypes.shape({
+    value: _react.PropTypes.string.isRequired,
+    requestChange: _react.PropTypes.func.isRequired
+  })
+};
+TextInput.defaultProps = {
+  allowNewLine: false,
+  disabled: false
+};
+exports.default = TextInput;
+},{"../style/text-input":39,"../utils/calculate-textarea-height":42,"../utils/helpers":44,"../utils/inject-style":45,"../utils/union-class-names":47,"react":378,"react-dom":240}],19:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _injectStyle = require('../utils/inject-style');
+
+var _helpers = require('../utils/helpers');
+
+var _toggle = require('../style/toggle');
+
+var _toggle2 = _interopRequireDefault(_toggle);
+
+var _toggle3 = require('../config/toggle');
+
+var _toggle4 = _interopRequireDefault(_toggle3);
+
+var _isComponentOfType = require('../utils/is-component-of-type.js');
+
+var _isComponentOfType2 = _interopRequireDefault(_isComponentOfType);
+
+var _animationFrameManagement = require('../utils/animation-frame-management');
+
+var _unionClassNames = require('../utils/union-class-names');
+
+var _unionClassNames2 = _interopRequireDefault(_unionClassNames);
+
+var _Choice = require('../components/Choice');
+
+var _Choice2 = _interopRequireDefault(_Choice);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function sanitizeChildProps(properties) {
+  return (0, _helpers.omit)(properties, ['className', 'defaultValue', 'firstChoiceProps', 'focusStyle', 'handleProps', 'onFocus', 'onBlur', 'onUpdate', 'onMouseDown', 'onMouseLeave', 'onMouseUp', 'onTouchStart', 'secondChoiceProps', 'sliderProps', 'sliderWrapperProps', 'style', 'tabIndex', 'value']);
+}
+
+function sanitizeSliderProps(properties) {
+  return (0, _helpers.omit)(properties, ['style', 'onClick', 'onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel']);
+}
+
+function sanitizeSliderWrapperProps(properties) {
+  return (0, _helpers.omit)(properties, ['ref', 'style']);
+}
+
+function sanitizeChoiceProps(properties) {
+  return (0, _helpers.omit)(properties, ['ref', 'style']);
+}
+
+function sanitizeHandleProps(properties) {
+  return (0, _helpers.omit)(properties, ['onMouseDown', 'onMouseMove', 'onMouseUp', 'onMouseLeave', 'onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel', 'ref', 'style']);
+}
+
+/**
+ * Verifies that the provided property is a Choice from Belle.
+ */
+function choicePropType(props, propName, componentName) {
+  if (!(props[propName] && (0, _isComponentOfType2.default)(_Choice2.default, props[propName]))) {
+    return new Error('Invalid children supplied to `' + componentName + '`, expected a Choice component from Belle.');
+  }
+
+  return undefined;
+}
+
+/**
+ * Verifies that the children is an array containing only two choices with a
+ * different value.
+ */
+function validateChoices(props, propName, componentName) {
+  var error = _react.PropTypes.arrayOf(choicePropType)(props, propName, componentName);
+  if (error) return error;
+
+  if (props.children && props.children.length !== 2) {
+    return new Error('Invalid children supplied to `' + componentName + '`, expected exactly two Choice components.');
+  }
+
+  if (props.children && (0, _helpers.first)(props.children).props.value === (0, _helpers.last)(props.children).props.value) {
+    return new Error('Invalid children supplied to `' + componentName + '`, expected different value properties for the provided Choice components.');
+  }
+
+  return undefined;
+}
+
+/**
+ * Update focus style for the speficied styleId.
+ *
+ * @param styleId {string} - a unique id that exists as class attribute in the DOM
+ * @param properties {object} - the components properties optionally containing custom styles
+ */
+function updatePseudoClassStyle(styleId, properties, preventFocusStyleForTouchAndClick) {
+  var focusStyle = void 0;
+  if (preventFocusStyleForTouchAndClick) {
+    focusStyle = { outline: 0 };
+  } else {
+    focusStyle = _extends({}, _toggle2.default.focusStyle, properties.focusStyle);
+  }
+
+  var styles = [{
+    id: styleId,
+    style: focusStyle,
+    pseudoClass: 'focus'
+  }];
+
+  (0, _injectStyle.injectStyles)(styles);
+}
+
+/**
+ * Toggle component
+ */
+
+var Toggle = function (_Component) {
+  _inherits(Toggle, _Component);
+
+  function Toggle(properties) {
+    _classCallCheck(this, Toggle);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Toggle).call(this, properties));
+
+    _initialiseProps.call(_this);
+
+    var value = void 0;
+    if ((0, _helpers.has)(properties, 'valueLink')) {
+      value = properties.valueLink.value;
+    } else if ((0, _helpers.has)(properties, 'value')) {
+      value = properties.value;
+    } else if ((0, _helpers.has)(properties, 'defaultValue')) {
+      value = properties.defaultValue;
+    } else {
+      value = false;
+    }
+
+    _this.state = {
+      firstChoiceProps: sanitizeChoiceProps(properties.firstChoiceProps),
+      childProps: sanitizeChildProps(properties),
+      secondChoiceProps: sanitizeChoiceProps(properties.secondChoiceProps),
+      handleProps: sanitizeHandleProps(properties.handleProps),
+      isActive: false,
+      isDraggingWithMouse: false,
+      isDraggingWithTouch: false,
+      sliderProps: sanitizeSliderProps(properties.sliderProps),
+      sliderWrapperProps: sanitizeSliderWrapperProps(properties.sliderWrapperProps),
+      value: value,
+      wasFocusedWithClickOrTouch: false
+    };
+
+    _this._touchStartedAtSlider = false;
+    _this._touchEndedNotInSlider = false;
+
+    _this._preventTouchSwitch = false;
+
+    _this._mouseDragStart = undefined;
+    _this._mouseDragEnd = undefined;
+    _this._preventMouseSwitch = false;
+
+    // The isFocused attribute is used to apply the one-time focus animation.
+    // As it is reset after every render it can't be set inside state as this
+    // would trigger an endless loop.
+    _this.isFocused = false;
+
+    _this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _toggle4.default.preventFocusStyleForTouchAndClick;
+    return _this;
+  }
+
+  _createClass(Toggle, [{
+    key: 'componentWillMount',
+
+
+    /**
+     * Generates the style-id & inject the focus style.
+     */
+    value: function componentWillMount() {
+      var id = (0, _helpers.uniqueId)();
+      this.styleId = 'style-id' + id;
+      updatePseudoClassStyle(this.styleId, this.props, this.preventFocusStyleForTouchAndClick);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(properties) {
+      var newState = {
+        firstChoiceProps: sanitizeChoiceProps(properties.firstChoiceProps),
+        childProps: sanitizeChildProps(properties),
+        secondChoiceProps: sanitizeChoiceProps(properties.secondChoiceProps),
+        handleProps: sanitizeHandleProps(properties.handleProps),
+        sliderProps: sanitizeSliderProps(properties.sliderProps),
+        sliderWrapperProps: sanitizeSliderWrapperProps(properties.sliderWrapperProps)
+      };
+
+      if ((0, _helpers.has)(properties, 'valueLink')) {
+        newState.value = properties.valueLink.value;
+      } else if ((0, _helpers.has)(properties, 'value')) {
+        newState.value = properties.value;
+      }
+
+      this.setState(newState);
+
+      this.preventFocusStyleForTouchAndClick = (0, _helpers.has)(properties, 'preventFocusStyleForTouchAndClick') ? properties.preventFocusStyleForTouchAndClick : _toggle4.default.preventFocusStyleForTouchAndClick;
+
+      (0, _injectStyle.removeStyle)(this.styleId);
+      updatePseudoClassStyle(this.styleId, properties, this.preventFocusStyleForTouchAndClick);
+    }
+
+    /**
+     * Deactivate the focused attribute in order to make sure the focus animation
+     * only runs once when the component is focused on & not after re-rendering
+     * e.g when the user clicks on the toggle.
+     */
+
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.isFocused = false;
+    }
+
+    /**
+     * Remove a component's associated styles whenever it gets removed from the DOM.
+     */
+
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _injectStyle.removeStyle)(this.styleId);
+    }
+
+    /**
+     * Activate the focused attribute used to determine when to show the
+     * one-time focus animation and trigger a render.
+     */
+
+
+    /**
+     * Deactivate the focused attribute used to determine when to show the
+     * one-time focus animation and trigger a render.
+     */
+
+  }, {
+    key: '_onArrowLeftKeyDown',
+
+
+    /**
+     * Flip value in case it is false.
+     */
+    value: function _onArrowLeftKeyDown() {
+      if (this.state.value === true) {
+        this._triggerChange(false);
+      }
+    }
+
+    /**
+     * Flip value in case it is true.
+     */
+
+  }, {
+    key: '_onArrowRightKeyDown',
+    value: function _onArrowRightKeyDown() {
+      if (this.state.value === false) {
+        this._triggerChange(true);
+      }
+    }
+
+    /**
+     * Flip value and trigger change.
+     */
+
+  }, {
+    key: '_onEnterOrSpaceKeyDown',
+    value: function _onEnterOrSpaceKeyDown() {
+      this._triggerChange(!this.state.value);
+    }
+  }, {
+    key: '_getHandleHeight',
+    value: function _getHandleHeight() {
+      return (0, _helpers.has)(this.props.handleStyle, 'height') ? this.props.handleStyle.height : _toggle2.default.handleStyle.height;
+    }
+  }, {
+    key: '_getHandleWidth',
+    value: function _getHandleWidth() {
+      return (0, _helpers.has)(this.props.handleStyle, 'width') ? this.props.handleStyle.width : _toggle2.default.handleStyle.width;
+    }
+  }, {
+    key: '_getSliderOffset',
+    value: function _getSliderOffset() {
+      var firstChoiceWidth = (0, _helpers.has)(this.props.firstChoiceStyle, 'width') ? this.props.firstChoiceStyle.width : _toggle2.default.firstChoiceStyle.width;
+
+      return firstChoiceWidth - this._getHandleWidth() / 2;
+    }
+  }, {
+    key: '_getToggleWidth',
+    value: function _getToggleWidth() {
+      return (0, _helpers.has)(this.props.style, 'width') ? this.props.style.width : _toggle2.default.style.width;
+    }
+  }, {
+    key: '_triggerChange',
+    value: function _triggerChange(value) {
+      if ((0, _helpers.has)(this.props, 'valueLink')) {
+        this.props.valueLink.requestChange(value);
+        this.setState({
+          isDraggingWithMouse: false,
+          isDraggingWithTouch: false,
+          isActive: false
+        });
+      } else if ((0, _helpers.has)(this.props, 'value')) {
+        this.setState({
+          isDraggingWithMouse: false,
+          isDraggingWithTouch: false,
+          isActive: false
+        });
+      } else {
+        this.setState({
+          value: value,
+          isDraggingWithMouse: false,
+          isDraggingWithTouch: false,
+          isActive: false
+        });
+      }
+
+      if (this.props.onUpdate) {
+        this.props.onUpdate({ value: value });
+      }
+    }
+  }, {
+    key: '_triggerUpdateComponentOnMouseMove',
+    value: function _triggerUpdateComponentOnMouseMove(pageX) {
+      var difference = pageX - this._mouseDragStart;
+
+      if (this.state.value && this._mouseDragEnd && difference > this._mouseDragEnd) {
+        this._preventMouseSwitch = true;
+      } else if (!this.state.value && this._mouseDragEnd && difference < this._mouseDragEnd) {
+        this._preventMouseSwitch = true;
+      }
+
+      this._mouseDragEnd = difference;
+
+      if (difference < 0 || difference > this._getToggleWidth() - this._getHandleWidth()) return;
+
+      this.setState({
+        sliderOffset: difference
+      });
+    }
+  }, {
+    key: '_triggerUpdateComponentOnTouchMoveAtSlider',
+    value: function _triggerUpdateComponentOnTouchMoveAtSlider(touch) {
+      var touchedElement = document.elementFromPoint(touch.clientX, touch.clientY);
+      var firstChoiceNode = _reactDom2.default.findDOMNode(this.refs.firstChoice);
+      var secondChoiceNode = _reactDom2.default.findDOMNode(this.refs.secondChoice);
+
+      this._touchEndedNotInSlider = touchedElement !== firstChoiceNode && touchedElement !== secondChoiceNode;
+      if (this.state.isActive && this._touchEndedNotInSlider) {
+        this.setState({ isActive: false });
+      } else if (!this.state.isActive && !this._touchEndedNotInSlider) {
+        this.setState({ isActive: true });
+      }
+    }
+  }, {
+    key: '_triggerUpdateComponentOnTouchMoveAtHandle',
+    value: function _triggerUpdateComponentOnTouchMoveAtHandle(touch) {
+      var sliderWrapperNode = _reactDom2.default.findDOMNode(this.refs.sliderWrapper);
+      var rect = sliderWrapperNode.getBoundingClientRect();
+      var difference = touch.pageX - this._touchDragStart;
+      var horizontalTolerance = this._getHandleWidth() * 2;
+      var verticalTolerance = this._getHandleHeight() * 2;
+
+      // touch left the allowed handle drag area
+      if (touch.clientX < rect.left - horizontalTolerance || touch.clientX > rect.right + horizontalTolerance || touch.clientY < rect.top - verticalTolerance || touch.clientY > rect.bottom + verticalTolerance) {
+        if (this._preventTouchSwitch) {
+          var value = difference > this._getHandleWidth() / 2;
+          this._triggerChange(value);
+        } else {
+          this._triggerChange(!this.state.value);
+        }
+      } else if (this.state.isDraggingWithTouch) {
+        // is still dragging
+        if (this.state.value && this._touchDragEnd && difference > this._touchDragEnd) {
+          this._preventTouchSwitch = true;
+        } else if (!this.state.value && this._touchDragEnd && difference < this._touchDragEnd) {
+          this._preventTouchSwitch = true;
+        }
+
+        if (difference < 0 || difference > this._getToggleWidth() - this._getHandleWidth()) return;
+
+        this._touchDragEnd = difference;
+        this.setState({
+          sliderOffset: difference
+        });
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var wrapperStyle = _extends({}, _toggle2.default.style, this.props.style);
+
+      if (this.isFocused && !this.state.wasFocusedWithClickOrTouch) {
+        wrapperStyle = _extends({}, wrapperStyle, _toggle2.default.focusStyle, this.props.focusStyle);
+      }
+
+      var computedSliderStyle = void 0;
+      var handleStyle = void 0;
+
+      var sliderWrapperStyle = _extends({}, _toggle2.default.sliderWrapperStyle, this.props.sliderWrapperStyle);
+      var defaultSliderOffset = this._getSliderOffset();
+
+      if (this.state.isDraggingWithMouse || this.state.isDraggingWithTouch) {
+        computedSliderStyle = _extends({}, _toggle2.default.sliderStyle, this.props.sliderStyle, {
+          left: this.state.sliderOffset - defaultSliderOffset,
+          transition: 'none'
+        });
+
+        // right now even when handle is clicked, it momentarily shows this grabbing styles
+        // may be this.state.isDraggingWithMouse should be set to true only after mouse movement starts
+        var activeStyle = _extends({}, _toggle2.default.activeHandleStyle, this.props.handleStyle);
+        handleStyle = _extends({}, _toggle2.default.handleStyle, activeStyle, this.props.activeHandleStyle, {
+          left: this.state.sliderOffset,
+          transition: activeStyle.transition ? activeStyle.transition : 'none'
+        });
+      } else {
+        handleStyle = _extends({}, _toggle2.default.handleStyle, this.props.handleStyle);
+        computedSliderStyle = _extends({}, _toggle2.default.sliderStyle, {
+          left: this.state.value ? 0 : -defaultSliderOffset
+        });
+
+        if (this.state.isActive) {
+          handleStyle = _extends({}, handleStyle, _toggle2.default.activeHandleStyle, this.props.activeHandleStyle);
+        } else if (this.state.isHovered) {
+          handleStyle = _extends({}, handleStyle, _toggle2.default.hoverHandleStyle, this.props.hoverHandleStyle);
+        }
+
+        var position = {
+          left: this.state.value ? defaultSliderOffset : 0
+        };
+        handleStyle = _extends({}, handleStyle, position);
+      }
+
+      var computedTrueChoice = (0, _helpers.first)(this.props.children) ? (0, _helpers.first)(this.props.children) : '✓';
+      var computedFalseChoice = (0, _helpers.last)(this.props.children) ? (0, _helpers.last)(this.props.children) : '✘';
+
+      var computedTrueChoiceStyle = _extends({}, _toggle2.default.firstChoiceStyle, this.props.firstChoiceStyle);
+      var computedFalseChoiceStyle = _extends({}, _toggle2.default.secondChoiceStyle, this.props.secondChoiceStyle);
+
+      var hasCustomTabIndex = this.props.wrapperProps && this.props.wrapperProps.tabIndex;
+      var tabIndex = hasCustomTabIndex ? this.props.wrapperProps.tabIndex : '0';
+      if (this.props.disabled) {
+        tabIndex = -1;
+        wrapperStyle = _extends({}, wrapperStyle, _toggle2.default.disabledStyle, this.props.disabledStyle);
+        handleStyle = _extends({}, handleStyle, _toggle2.default.disabledHandleStyle, this.props.disabledHandleStyle);
+      }
+
+      var role = (0, _helpers.has)(this.state.childProps, 'role') ? this.state.childProps.role : 'checkbox';
+
+      return _react2.default.createElement(
+        'div',
+        _extends({
+          style: wrapperStyle,
+          tabIndex: tabIndex,
+          className: (0, _unionClassNames2.default)(this.props.className, this.styleId),
+          onKeyDown: this._onKeyDown,
+          onMouseDown: this._onMouseDownOnWrapper,
+          onMouseUp: this._onMouseUpOnWrapper,
+          onTouchStart: this._onTouchStartOnWrapper,
+          onFocus: this._onFocus,
+          onBlur: this._onBlur,
+          onMouseEnter: this._onMouseEnterAtSliderWrapper,
+          onMouseLeave: this._onMouseLeaveAtSliderWrapper,
+          role: role,
+          'aria-checked': this.state.value
+        }, this.state.childProps),
+        _react2.default.createElement(
+          'div',
+          _extends({
+            style: sliderWrapperStyle,
+            ref: 'sliderWrapper'
+          }, this.state.sliderWrapperProps),
+          _react2.default.createElement(
+            'div',
+            _extends({
+              style: computedSliderStyle,
+              onClick: this._onClickAtSlider,
+              onTouchStart: this._onTouchStartAtSlider,
+              onTouchMove: this._onTouchMoveAtSlider,
+              onTouchEnd: this._onTouchEndAtSlider,
+              onTouchCancel: this._onTouchCancelAtSlider
+            }, this.state.sliderProps),
+            _react2.default.createElement(
+              'div',
+              _extends({
+                ref: 'firstChoice',
+                style: computedTrueChoiceStyle
+              }, this.state.firstChoiceProps),
+              computedTrueChoice
+            ),
+            _react2.default.createElement(
+              'div',
+              _extends({
+                ref: 'secondChoice',
+                style: computedFalseChoiceStyle
+              }, this.state.secondChoiceProps),
+              computedFalseChoice
+            )
+          )
+        ),
+        _react2.default.createElement('div', _extends({
+          ref: 'handle',
+          style: handleStyle,
+          onMouseDown: this._onMouseDownOnHandle,
+          onMouseMove: this._onMouseMoveOnHandle,
+          onMouseUp: this._onMouseUpOnHandle,
+          onMouseLeave: this._onMouseLeaveOnHandle,
+          onTouchStart: this._onTouchStartHandle,
+          onTouchMove: this._onTouchMoveHandle,
+          onTouchEnd: this._onTouchEndHandle,
+          onTouchCancel: this._onTouchCancelHandle
+        }, this.state.handleProps))
+      );
+    }
+  }]);
+
+  return Toggle;
+}(_react.Component);
+
+Toggle.displayName = 'Toggle';
+Toggle.propTypes = {
+  activeHandleStyle: _react.PropTypes.object,
+  children: validateChoices,
+  className: _react.PropTypes.string,
+  defaultValue: _react.PropTypes.bool,
+  disabled: _react.PropTypes.bool,
+  disabledHandleStyle: _react.PropTypes.object,
+  disabledStyle: _react.PropTypes.object,
+  firstChoiceProps: _react.PropTypes.object,
+  firstChoiceStyle: _react.PropTypes.shape({
+    width: _react.PropTypes.number
+  }),
+  focusStyle: _react.PropTypes.object,
+  handleProps: _react.PropTypes.shape({
+    onMouseDown: _react.PropTypes.func,
+    onMouseMove: _react.PropTypes.func,
+    onMouseUp: _react.PropTypes.func,
+    onMouseLeave: _react.PropTypes.func,
+    onTouchStart: _react.PropTypes.func,
+    onTouchMove: _react.PropTypes.func,
+    onTouchEnd: _react.PropTypes.func,
+    onTouchCancel: _react.PropTypes.func
+  }),
+  handleStyle: _react.PropTypes.shape({
+    height: _react.PropTypes.number,
+    width: _react.PropTypes.number
+  }),
+  hoverHandleStyle: _react.PropTypes.object,
+  onBlur: _react.PropTypes.func,
+  onUpdate: _react.PropTypes.func,
+  onFocus: _react.PropTypes.func,
+  onKeyDown: _react.PropTypes.func,
+  onMouseDown: _react.PropTypes.func,
+  onMouseEnter: _react.PropTypes.func,
+  onMouseLeave: _react.PropTypes.func,
+  onMouseUp: _react.PropTypes.func,
+  onTouchStart: _react.PropTypes.func,
+  secondChoiceProps: _react.PropTypes.object,
+  secondChoiceStyle: _react.PropTypes.shape({
+    width: _react.PropTypes.number
+  }),
+  sliderProps: _react.PropTypes.shape({
+    onClick: _react.PropTypes.func,
+    onTouchStart: _react.PropTypes.func,
+    onTouchMove: _react.PropTypes.func,
+    onTouchEnd: _react.PropTypes.func,
+    onTouchCancel: _react.PropTypes.func
+  }),
+  sliderStyle: _react.PropTypes.object,
+  sliderWrapperProps: _react.PropTypes.object,
+  sliderWrapperStyle: _react.PropTypes.object,
+  style: _react.PropTypes.shape({
+    width: _react.PropTypes.number
+  }),
+  value: _react.PropTypes.bool,
+  valueLink: _react.PropTypes.shape({
+    value: _react.PropTypes.bool.isRequired,
+    requestChange: _react.PropTypes.func.isRequired
+  }),
+  wrapperProps: _react.PropTypes.object
+};
+Toggle.defaultProps = {
+  disabled: false
+};
+
+var _initialiseProps = function _initialiseProps() {
+  var _this2 = this;
+
+  this._onFocus = function (event) {
+    if (!_this2.props.disabled) {
+      _this2.isFocused = true;
+      _this2.forceUpdate();
+    }
+
+    if (_this2.props.onFocus) {
+      _this2.props.onFocus(event);
+    }
+  };
+
+  this._onBlur = function (event) {
+    _this2.isFocused = false;
+    _this2.setState({ wasFocusedWithClickOrTouch: false });
+
+    if (_this2.props.onBlur) {
+      _this2.props.onBlur(event);
+    }
+  };
+
+  this._onMouseDownOnWrapper = function (event) {
+    if (!_this2.props.disabled) {
+      _this2.setState({ wasFocusedWithClickOrTouch: true, isActive: true });
+    }
+
+    if (_this2.props.onMouseDown) {
+      _this2.props.onMouseDown(event);
+    }
+  };
+
+  this._onMouseUpOnWrapper = function (event) {
+    if (!_this2.props.disabled) {
+      _this2.setState({ isActive: false });
+    }
+
+    if (_this2.props.onMouseUp) {
+      _this2.props.onMouseUp(event);
+    }
+  };
+
+  this._onTouchStartOnWrapper = function (event) {
+    if (!_this2.props.disabled) {
+      _this2.setState({ wasFocusedWithClickOrTouch: true });
+    }
+
+    if (_this2.props.onTouchStart) {
+      _this2.props.onTouchStart(event);
+    }
+  };
+
+  this._onClickAtSlider = function (event) {
+    if (!_this2.props.disabled) {
+      _this2._triggerChange(!_this2.state.value);
+    }
+
+    if (_this2.props.sliderProps && _this2.props.sliderProps.onClick) {
+      _this2.props.sliderProps.onClick(event);
+    }
+  };
+
+  this._onMouseDownOnHandle = function (event) {
+    // check for left mouse button pressed
+    if (event.button === 0 && !_this2.props.disabled) {
+      var defaultSliderOffset = _this2._getSliderOffset();
+      _this2._mouseDragStart = event.pageX - (_this2.state.value ? defaultSliderOffset : 0);
+      _this2._preventMouseSwitch = false;
+
+      _this2.setState({
+        isDraggingWithMouse: true,
+        sliderOffset: _this2.state.value ? defaultSliderOffset : 0
+      });
+    }
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onMouseDown) {
+      _this2.props.handleProps.onMouseDown(event);
+    }
+  };
+
+  this._onMouseMoveOnHandle = function (event) {
+    if (_this2.state.isDraggingWithMouse && !_this2.props.disabled) {
+      // the requestAnimationFrame function must be executed in the context of window
+      // see http://stackoverflow.com/a/9678166/837709
+      var animationFrame = _animationFrameManagement.requestAnimationFrame.call(window, _this2._triggerUpdateComponentOnMouseMove.bind(_this2, event.pageX));
+
+      if (_this2.previousMouseMoveFrame) {
+        // the cancelAnimationFrame function must be executed in the context of window
+        // see http://stackoverflow.com/a/9678166/837709
+        _animationFrameManagement.cancelAnimationFrame.call(window, _this2.previousMouseMoveFrame);
+      }
+
+      _this2.previousMouseMoveFrame = animationFrame;
+    }
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onMouseMove) {
+      _this2.props.handleProps.onMouseMove(event);
+    }
+  };
+
+  this._onMouseUpOnHandle = function (event) {
+    if (!_this2.props.disabled) {
+      if (_this2._mouseDragEnd) {
+        if (!_this2._preventMouseSwitch) {
+          _this2._triggerChange(!_this2.state.value);
+        } else if (_this2._preventMouseSwitch) {
+          var value = _this2._mouseDragEnd > _this2._getHandleWidth() / 2;
+          _this2._triggerChange(value);
+        }
+      } else {
+        _this2._triggerChange(!_this2.state.value);
+      }
+    }
+
+    _this2._mouseDragStart = undefined;
+    _this2._mouseDragEnd = undefined;
+    _this2._preventMouseSwitch = false;
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onMouseUp) {
+      _this2.props.handleProps.onMouseUp(event);
+    }
+  };
+
+  this._onMouseLeaveOnHandle = function (event) {
+    if (!_this2.props.disabled) {
+      if (_this2._mouseDragStart && !_this2._preventMouseSwitch) {
+        _this2._triggerChange(!_this2.state.value);
+      } else if (_this2._mouseDragStart && _this2._preventMouseSwitch) {
+        var value = _this2._mouseDragEnd > _this2._getHandleWidth() / 2;
+        _this2._triggerChange(value);
+      } else {
+        _this2.setState({ isActive: false });
+      }
+    }
+
+    _this2._mouseDragStart = undefined;
+    _this2._mouseDragEnd = undefined;
+    _this2._preventMouseSwitch = false;
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onMouseLeave) {
+      _this2.props.handleProps.onMouseLeave(event);
+    }
+  };
+
+  this._onTouchStartAtSlider = function (event) {
+    if (event.touches.length === 1 && !_this2.props.disabled) {
+      _this2._touchStartedAtSlider = true;
+      _this2.setState({
+        isActive: true
+      });
+    }
+
+    if (_this2.props.sliderProps && _this2.props.sliderProps.onTouchStart) {
+      _this2.props.sliderProps.onTouchStart(event);
+    }
+  };
+
+  this._onTouchMoveAtSlider = function (event) {
+    if (event.touches.length === 1 && _this2._touchStartedAtSlider && !_this2.props.disabled) {
+      // the requestAnimationFrame function must be executed in the context of window
+      // see http://stackoverflow.com/a/9678166/837709
+      var animationFrame = _animationFrameManagement.requestAnimationFrame.call(window, _this2._triggerUpdateComponentOnTouchMoveAtSlider.bind(_this2, event.touches[0]));
+
+      if (_this2.previousTouchMoveAtSliderFrame) {
+        // the cancelAnimationFrame function must be executed in the context of window
+        // see http://stackoverflow.com/a/9678166/837709
+        _animationFrameManagement.cancelAnimationFrame.call(window, _this2.previousTouchMoveAtSliderFrame);
+      }
+
+      _this2.previousTouchMoveAtSliderFrame = animationFrame;
+    }
+
+    if (_this2.props.sliderProps && _this2.props.sliderProps.onTouchMove) {
+      _this2.props.sliderProps.onTouchMove(event);
+    }
+  };
+
+  this._onTouchEndAtSlider = function (event) {
+    // prevent the onClick to happen
+    event.preventDefault();
+
+    if (_this2._touchStartedAtSlider && !_this2._touchEndedNotInSlider && !_this2.props.disabled) {
+      _this2.setState({
+        isActive: false
+      });
+      _this2._triggerChange(!_this2.state.value);
+    } else {
+      _this2.setState({ isActive: false });
+    }
+
+    _this2._touchStartedAtSlider = false;
+    _this2._touchEndedNotInSlider = false;
+
+    if (_this2.props.sliderProps && _this2.props.sliderProps.onTouchEnd) {
+      _this2.props.sliderProps.onTouchEnd(event);
+    }
+  };
+
+  this._onTouchCancelAtSlider = function (event) {
+    _this2.setState({ isActive: false });
+    _this2._touchStartedAtSlider = false;
+    _this2._touchEndedNotInSlider = false;
+
+    if (_this2.props.sliderProps && _this2.props.sliderProps.onTouchCancel) {
+      _this2.props.sliderProps.onTouchCancel(event);
+    }
+  };
+
+  this._onTouchStartHandle = function (event) {
+    event.preventDefault();
+
+    // check for one touch as multiple could be browser gestures and only one
+    // is relevant for us
+    if (event.touches.length === 1 && !_this2.props.disabled) {
+      _this2._preventTouchSwitch = false;
+
+      var defaultSliderOffset = _this2._getSliderOffset();
+      _this2.setState({
+        isDraggingWithTouch: true,
+        sliderOffset: _this2.state.value ? defaultSliderOffset : 0
+      });
+
+      _this2._touchDragStart = event.touches[0].pageX - (_this2.state.value ? defaultSliderOffset : 0);
+    }
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onTouchStart) {
+      _this2.props.handleProps.onTouchStart(event);
+    }
+  };
+
+  this._onTouchMoveHandle = function (event) {
+    if (event.touches.length === 1 && _this2.state.isDraggingWithTouch && !_this2.props.disabled) {
+      // the requestAnimationFrame function must be executed in the context of window
+      // see http://stackoverflow.com/a/9678166/837709
+      var animationFrame = _animationFrameManagement.requestAnimationFrame.call(window, _this2._triggerUpdateComponentOnTouchMoveAtHandle.bind(_this2, event.touches[0]));
+
+      if (_this2.previousTouchMoveAtHandleFrame) {
+        // the cancelAnimationFrame function must be executed in the context of window
+        // see http://stackoverflow.com/a/9678166/837709
+        _animationFrameManagement.cancelAnimationFrame.call(window, _this2.previousTouchMoveAtHandleFrame);
+      }
+
+      _this2.previousTouchMoveAtHandleFrame = animationFrame;
+    }
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onTouchMove) {
+      _this2.props.handleProps.onTouchMove(event);
+    }
+  };
+
+  this._onTouchEndHandle = function (event) {
+    // prevent the onClick to happen
+    event.preventDefault();
+
+    if (_this2.state.isDraggingWithTouch && !_this2.props.disabled) {
+      // no click & move was involved
+      if (_this2._touchDragEnd) {
+        if (_this2._preventTouchSwitch) {
+          var value = _this2._touchDragEnd > _this2._getHandleWidth() / 2;
+          _this2._triggerChange(value);
+        } else {
+          _this2._triggerChange(!_this2.state.value);
+        }
+      } else {
+        // click like
+        _this2._triggerChange(!_this2.state.value);
+      }
+    } else {
+      _this2.setState({
+        isActive: false,
+        isDraggingWithTouch: false
+      });
+    }
+
+    _this2._touchDragStart = undefined;
+    _this2._touchDragEnd = undefined;
+    _this2._preventTouchSwitch = false;
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onTouchEnd) {
+      _this2.props.handleProps.onTouchEnd(event);
+    }
+  };
+
+  this._onTouchCancelHandle = function (event) {
+    _this2.setState({
+      isDraggingWithTouch: false
+    });
+    _this2._touchDragStart = undefined;
+    _this2._touchDragEnd = undefined;
+    _this2._preventTouchSwitch = false;
+
+    if (_this2.props.handleProps && _this2.props.handleProps.onTouchCancel) {
+      _this2.props.handleProps.onTouchCancel(event);
+    }
+  };
+
+  this._onKeyDown = function (event) {
+    if (!_this2.props.disabled) {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        _this2._onArrowLeftKeyDown();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        _this2._onArrowRightKeyDown();
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        _this2._onEnterOrSpaceKeyDown();
+      }
+    }
+
+    if (_this2.props.onKeyDown) {
+      _this2.props.onKeyDown(event);
+    }
+  };
+
+  this._onMouseEnterAtSliderWrapper = function () {
+    _this2.setState({
+      isHovered: true
+    });
+    if (_this2.props.onMouseEnter) {
+      _this2.props.onMouseEnter(event);
+    }
+  };
+
+  this._onMouseLeaveAtSliderWrapper = function () {
+    _this2.setState({
+      isHovered: false,
+      isActive: false
+    });
+    if (_this2.props.onMouseLeave) {
+      _this2.props.onMouseLeave(event);
+    }
+  };
+};
+
+exports.default = Toggle;
+},{"../components/Choice":5,"../config/toggle":25,"../style/toggle":40,"../utils/animation-frame-management":41,"../utils/helpers":44,"../utils/inject-style":45,"../utils/is-component-of-type.js":46,"../utils/union-class-names":47,"react":378,"react-dom":240}],20:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var buttonConfig = {
+  preventFocusStyleForTouchAndClick: true
+};
+
+exports.default = buttonConfig;
+},{}],21:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var datePickerConfig = {
+  preventFocusStyleForTouchAndClick: true
+};
+
+exports.default = datePickerConfig;
+},{}],22:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var i18nConfig = {
+
+  localeData: {
+    nl: {
+      monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+      dayNamesMin: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+      firstDay: 1,
+      weekEnd: 0,
+      isRTL: false
+    },
+    ar: {
+      monthNames: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+      dayNamesMin: ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'],
+      firstDay: 6,
+      weekEnd: 5,
+      isRTL: true
+    },
+    he: {
+      monthNames: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+      dayNamesMin: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
+      firstDay: 0,
+      weekEnd: 6,
+      isRTL: true
+    },
+    fr: {
+      monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+      dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+      firstDay: 1,
+      weekEnd: 0,
+      isRTL: false
+    },
+    'zh-CN': {
+      monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+      dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+      firstDay: 1,
+      weekEnd: 0,
+      isRTL: false
+    }
+  }
+
+};
+
+exports.default = i18nConfig;
+},{}],23:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var ratingConfig = {
+  preventFocusStyleForTouchAndClick: true
+};
+
+exports.default = ratingConfig;
+},{}],24:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _isComponentOfType = require('../utils/is-component-of-type.js');
+
+var _isComponentOfType2 = _interopRequireDefault(_isComponentOfType);
+
+var _helpers = require('../utils/helpers');
+
+var _Option = require('../components/Option');
+
+var _Option2 = _interopRequireDefault(_Option);
+
+var _Separator = require('../components/Separator');
+
+var _Separator2 = _interopRequireDefault(_Separator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Returns the index of the entry with a certain value from the component's
+ * children.
+ *
+ * The index search includes separator & option components.
+ */
+var findIndexOfSelectedOption = function findIndexOfSelectedOption(component) {
+  var filterFunction = function filterFunction(child) {
+    return (0, _isComponentOfType2.default)(_Option2.default, child) || (0, _isComponentOfType2.default)(_Separator2.default, child);
+  };
+  return (0, _helpers.findIndex)((0, _helpers.filterReactChildren)(component.props.children, filterFunction), function (element) {
+    return element.props.value === component.state.selectedValue;
+  });
+};
+
+var selectConfig = {
+
+  shouldPositionOptions: true,
+
+  /**
+   * Repositions to the menu to position the focusedOption right on top
+   * of the selected one.
+   *
+   * @param selectComponent {object} - the Select component itself accessible with `this`
+   */
+  positionOptions: function positionOptions(selectComponent) {
+    var menuNode = _reactDom2.default.findDOMNode(selectComponent.refs.menu);
+    var menuStyle = window.getComputedStyle(menuNode, null);
+    var menuWidth = parseFloat(menuStyle.getPropertyValue('width'));
+
+    // In case of a placeholder no option is focused on initially
+    var optionIndex = void 0;
+    if (selectComponent.state.selectedValue) {
+      optionIndex = findIndexOfSelectedOption(selectComponent);
+    } else {
+      optionIndex = 0;
+    }
+
+    var option = menuNode.childNodes[optionIndex];
+
+    var menuHeight = parseFloat(menuStyle.getPropertyValue('height'));
+    var menuTopBorderWidth = parseFloat(menuStyle.getPropertyValue('border-top-width'));
+
+    // In order to work with legacy browsers the second paramter for pseudoClass
+    // has to be provided http://caniuse.com/#feat=getcomputedstyle
+    var optionStyle = window.getComputedStyle(option.childNodes[0], null);
+    var optionPaddingTop = parseFloat(optionStyle.getPropertyValue('padding-top'));
+    var optionPaddingLeft = parseFloat(optionStyle.getPropertyValue('padding-top'));
+
+    var selectedOptionWrapperNode = _reactDom2.default.findDOMNode(selectComponent.refs.selectedOptionWrapper);
+    var selectedOptionWrapperStyle = window.getComputedStyle(selectedOptionWrapperNode, null);
+    var selectedOptionWrapperPaddingTop = parseFloat(selectedOptionWrapperStyle.getPropertyValue('padding-top'));
+
+    var newTop = option.offsetTop + optionPaddingTop - selectedOptionWrapperPaddingTop + menuTopBorderWidth;
+    var newLeft = option.offsetLeft + optionPaddingLeft;
+
+    // Top positioning
+    if (menuHeight < menuNode.scrollHeight) {
+      if (newTop + menuHeight > menuNode.scrollHeight) {
+        // In case scrolling is not enough the box needs to be moved more to
+        // the top to match the same position.
+        var maxScrollTop = menuNode.scrollHeight - menuHeight;
+        menuNode.scrollTop = maxScrollTop;
+        menuNode.style.top = '-' + (newTop - maxScrollTop) + 'px';
+      } else {
+        // In case it's the first entry scrolling is not used to respect the
+        // menu's paddingTop.
+        if (optionIndex === 0) {
+          menuNode.scrollTop = 0;
+          menuNode.style.top = '-' + newTop + 'px';
+        } else {
+          menuNode.scrollTop = newTop;
+        }
+      }
+    } else {
+      menuNode.style.top = '-' + newTop + 'px';
+    }
+
+    // Left positioning
+    menuNode.style.left = '-' + newLeft + 'px';
+
+    // Increasing the width
+    //
+    // Pro:
+    // - It gives a option in the menu the same width
+    // as in the selectedOptionWrapper.
+    // - There is space to keep the text of the option on the exact same pixel
+    // when opening. The menu is symetric in relation to the
+    // selectedOptionWrapper.
+    //
+    // Con:
+    // - Adding the padding could cause issue with design as it gets wider than
+    // the original field.
+    menuNode.style.width = menuWidth + newLeft * 2 + 'px';
+  }
+};
+
+exports.default = selectConfig;
+},{"../components/Option":11,"../components/Separator":16,"../utils/helpers":44,"../utils/is-component-of-type.js":46,"react-dom":240}],25:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var toggleConfig = {
+  preventFocusStyleForTouchAndClick: true
+};
+
+exports.default = toggleConfig;
+},{}],26:[function(require,module,exports){
+'use strict';
+
+var _Button = require('./components/Button');
+
+var _Button2 = _interopRequireDefault(_Button);
+
+var _Card = require('./components/Card');
+
+var _Card2 = _interopRequireDefault(_Card);
+
+var _Choice = require('./components/Choice');
+
+var _Choice2 = _interopRequireDefault(_Choice);
+
+var _Option = require('./components/Option');
+
+var _Option2 = _interopRequireDefault(_Option);
+
+var _Placeholder = require('./components/Placeholder');
+
+var _Placeholder2 = _interopRequireDefault(_Placeholder);
+
+var _Select = require('./components/Select');
+
+var _Select2 = _interopRequireDefault(_Select);
+
+var _Separator = require('./components/Separator');
+
+var _Separator2 = _interopRequireDefault(_Separator);
+
+var _TextInput = require('./components/TextInput');
+
+var _TextInput2 = _interopRequireDefault(_TextInput);
+
+var _Rating = require('./components/Rating');
+
+var _Rating2 = _interopRequireDefault(_Rating);
+
+var _ComboBox = require('./components/ComboBox');
+
+var _ComboBox2 = _interopRequireDefault(_ComboBox);
+
+var _Spinner = require('./components/Spinner');
+
+var _Spinner2 = _interopRequireDefault(_Spinner);
+
+var _Toggle = require('./components/Toggle');
+
+var _Toggle2 = _interopRequireDefault(_Toggle);
+
+var _DatePicker = require('./components/DatePicker');
+
+var _DatePicker2 = _interopRequireDefault(_DatePicker);
+
+var _actionArea = require('./style/actionArea');
+
+var _actionArea2 = _interopRequireDefault(_actionArea);
+
+var _button = require('./style/button');
+
+var _button2 = _interopRequireDefault(_button);
+
+var _card = require('./style/card');
+
+var _card2 = _interopRequireDefault(_card);
+
+var _placeholder = require('./style/placeholder');
+
+var _placeholder2 = _interopRequireDefault(_placeholder);
+
+var _option = require('./style/option');
+
+var _option2 = _interopRequireDefault(_option);
+
+var _select = require('./style/select');
+
+var _select2 = _interopRequireDefault(_select);
+
+var _separator = require('./style/separator');
+
+var _separator2 = _interopRequireDefault(_separator);
+
+var _textInput = require('./style/text-input');
+
+var _textInput2 = _interopRequireDefault(_textInput);
+
+var _spinner = require('./style/spinner');
+
+var _spinner2 = _interopRequireDefault(_spinner);
+
+var _toggle = require('./style/toggle');
+
+var _toggle2 = _interopRequireDefault(_toggle);
+
+var _rating = require('./style/rating');
+
+var _rating2 = _interopRequireDefault(_rating);
+
+var _comboBox = require('./style/combo-box');
+
+var _comboBox2 = _interopRequireDefault(_comboBox);
+
+var _datePicker = require('./style/date-picker');
+
+var _datePicker2 = _interopRequireDefault(_datePicker);
+
+var _select3 = require('./config/select');
+
+var _select4 = _interopRequireDefault(_select3);
+
+var _button3 = require('./config/button');
+
+var _button4 = _interopRequireDefault(_button3);
+
+var _rating3 = require('./config/rating');
+
+var _rating4 = _interopRequireDefault(_rating3);
+
+var _toggle3 = require('./config/toggle');
+
+var _toggle4 = _interopRequireDefault(_toggle3);
+
+var _i18n = require('./config/i18n');
+
+var _i18n2 = _interopRequireDefault(_i18n);
+
+var _datePicker3 = require('./config/datePicker');
+
+var _datePicker4 = _interopRequireDefault(_datePicker3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  Button: _Button2.default,
+  Card: _Card2.default,
+  Choice: _Choice2.default,
+  Option: _Option2.default,
+  Placeholder: _Placeholder2.default,
+  Select: _Select2.default,
+  Separator: _Separator2.default,
+  TextInput: _TextInput2.default,
+  Rating: _Rating2.default,
+  ComboBox: _ComboBox2.default,
+  Spinner: _Spinner2.default,
+  Toggle: _Toggle2.default,
+  DatePicker: _DatePicker2.default,
+  style: {
+    actionArea: _actionArea2.default,
+    button: _button2.default,
+    card: _card2.default,
+    comboBox: _comboBox2.default,
+    datePicker: _datePicker2.default,
+    option: _option2.default,
+    placeholder: _placeholder2.default,
+    rating: _rating2.default,
+    select: _select2.default,
+    separator: _separator2.default,
+    spinner: _spinner2.default,
+    textInput: _textInput2.default,
+    toggle: _toggle2.default
+  },
+  config: {
+    select: _select4.default,
+    button: _button4.default,
+    rating: _rating4.default,
+    toggle: _toggle4.default,
+    i18n: _i18n2.default,
+    datePicker: _datePicker4.default
+  }
+};
+},{"./components/Button":3,"./components/Card":4,"./components/Choice":5,"./components/ComboBox":6,"./components/DatePicker":8,"./components/Option":11,"./components/Placeholder":12,"./components/Rating":13,"./components/Select":14,"./components/Separator":16,"./components/Spinner":17,"./components/TextInput":18,"./components/Toggle":19,"./config/button":20,"./config/datePicker":21,"./config/i18n":22,"./config/rating":23,"./config/select":24,"./config/toggle":25,"./style/actionArea":27,"./style/button":29,"./style/card":30,"./style/combo-box":31,"./style/date-picker":32,"./style/option":33,"./style/placeholder":34,"./style/rating":35,"./style/select":36,"./style/separator":37,"./style/spinner":38,"./style/text-input":39,"./style/toggle":40}],27:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var actionAreaStyle = {
+
+  style: {
+    boxSizing: 'border-box',
+    color: '#716D6D',
+    fontSize: 17,
+    paddingTop: '11px',
+    paddingBottom: '11px',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    marginTop: -1,
+    textAlign: 'center',
+    textDecoration: 'none',
+    width: 48,
+    borderLeft: '1px solid #E0E0E0',
+    borderRight: '1px solid #E0E0E0',
+    borderTop: '1px solid #E0E0E0',
+    borderBottom: '1px solid #E0E0E0',
+
+    /* animations */
+    transition: 'background 0.1s, border-top 0.1s, border-bottom 0.1s, color 0.1s',
+    transitionTimingFunction: 'ease-out',
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  hoverStyle: {
+    background: '#EEE',
+    cursor: 'pointer'
+  },
+
+  activeStyle: {
+    borderTop: '1px solid #B1B1B1',
+    borderLeft: '1px solid #D0D0D0',
+    borderRight: '1px solid #D0D0D0',
+    borderBottom: '1px solid #D4D4D4',
+    background: '#E0E0E0'
+  }
+};
+
+exports.default = actionAreaStyle;
+},{}],28:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var animations = ['\n@-webkit-keyframes belle-button-focus {\n0% { box-shadow: 0 0 0 0 rgba(140, 224, 255, 1); }\n99% { box-shadow: 0 0 0 8px #fff }\n100% { box-shadow: 0 0 0 0 rgba(0, 131, 180, 0); }\n}\n@-webkit-keyframes belle-toggle-focus {\n0% { box-shadow: 0 0 0 0 rgba(140, 224, 255, 1); }\n99% { box-shadow: 0 0 0 8px #fff }\n100% { box-shadow: 0 0 0 0 rgba(0, 131, 180, 0); }\n}\n@-webkit-keyframes belle-rating-focus {\n0% { background: rgba(140, 224, 255, 0); box-shadow: 0 0 0 0 rgba(140, 224, 255, 1); }\n25% { background: rgba(140, 224, 255, 0.15) }\n99% { background: transparent; box-shadow: 0 0 0 8px #fff }\n100% { background: transparent; box-shadow: 0 0 0 0 rgba(0, 131, 180, 0); }\n}\n\n@keyframes belle-button-focus {\n0% { box-shadow: 0 0 0 0 rgba(140, 224, 255, 1); }\n99% { box-shadow: 0 0 0 8px #fff }\n100% { box-shadow: 0 0 0 0 rgba(0, 131, 180, 0); }\n}\n@keyframes belle-toggle-focus {\n0% { box-shadow: 0 0 0 0 rgba(140, 224, 255, 1); }\n99% { box-shadow: 0 0 0 8px #fff }\n100% { box-shadow: 0 0 0 0 rgba(0, 131, 180, 0); }\n}\n@keyframes belle-rating-focus {\n0% { background: rgba(140, 224, 255, 0); box-shadow: 0 0 0 0 rgba(140, 224, 255, 1); }\n25% { background: rgba(140, 224, 255, 0.15) }\n99% { background: transparent; box-shadow: 0 0 0 8px #fff }\n100% { background: transparent; box-shadow: 0 0 0 0 rgba(0, 131, 180, 0); }\n}\n@-webkit-keyframes belle-spinner-pulse {\n 0%,\n 90%,\n 100% {\n opacity: 0;\n }\n 50% {\n opacity: 1;\n }\n }\n @keyframes belle-spinner-pulse {\n 0%,\n 90%,\n 100% {\n opacity: 0;\n }\n 50% {\n opacity: 1;\n }\n }'];
+
+exports.default = animations;
+},{}],29:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var buttonStyle = {
+
+  style: {
+    background: '#EEEEEE',
+    border: 0,
+    borderTop: '1px solid #EEEEEE',
+    borderBottom: '1px solid #BDBDBD',
+    borderRadius: 2,
+    boxSizing: 'border-box',
+    color: '#616161',
+    cursor: 'pointer',
+    display: 'inline-block',
+    fontSize: 17,
+    lineHeight: '26px',
+    padding: '8px 14px 6px 14px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    verticalAlign: 'bottom',
+
+    /* animations */
+    transition: 'background 0.1s, border-top 0.1s, border-bottom 0.1s, color 0.1s',
+    transitionTimingFunction: 'ease-out',
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  hoverStyle: {
+    background: '#F5F5F5',
+    borderTop: '1px solid #F5F5F5',
+    color: '#757575'
+  },
+
+  focusStyle: {
+    WebkitAnimation: 'belle-button-focus 2s',
+    outline: 0 },
+
+  // avoid default focus behaviour
+  activeStyle: {
+    background: '#E0E0E0',
+    color: '#424242',
+    borderBottom: '1px solid #E0E0E0',
+    borderTop: '1px solid #BDBDBD'
+  },
+
+  disabledStyle: {
+    color: '#C5C4C4',
+    cursor: 'not-allowed'
+  },
+
+  disabledHoverStyle: {
+    color: '#D0D0D0'
+  },
+
+  primaryStyle: {
+    background: '#53C7F2',
+    border: 0,
+
+    // boxShadow: '0 1px 0px #3995B7',
+    borderTop: '1px solid #53C7F2',
+    borderBottom: '1px solid #3995B7',
+
+    borderRadius: 2,
+    boxSizing: 'border-box',
+    color: '#FAFAFA',
+    cursor: 'pointer',
+    display: 'inline-block',
+    fontSize: 17,
+    lineHeight: '26px',
+    padding: '8px 14px 6px 14px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    verticalAlign: 'bottom',
+
+    /* animations */
+    transition: 'border-top 0.1s, border-bottom 0.1s, color 0.1s',
+    transitionTimingFunction: 'ease-out',
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  primaryHoverStyle: {
+    background: '#82D9F9',
+    borderTop: '1px solid #82D9F9',
+    color: '#FFF'
+  },
+
+  primaryFocusStyle: {
+    WebkitAnimation: 'belle-button-focus 2s',
+    outline: 0 },
+
+  // avoid default focus behaviour
+  primaryActiveStyle: {
+    background: '#4DBEE8',
+    borderBottom: '1px solid #4DBEE8',
+    borderTop: '1px solid #3995B7',
+    color: '#F5F5F5'
+  },
+
+  primaryDisabledStyle: {
+    background: '#98DEF8',
+    color: '#FAFAFA',
+    borderTop: '1px solid #98DEF8',
+    borderBottom: '1px solid #74B4CC',
+    cursor: 'not-allowed'
+  },
+
+  primaryDisabledHoverStyle: {
+    background: '#A7E4FB',
+    color: '#FFF',
+    borderTop: '1px solid #A7E4FB'
+  }
+};
+
+exports.default = buttonStyle;
+},{}],30:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var cardStyle = {
+
+  style: {
+    marginBottom: 20,
+    padding: 40,
+    borderRadius: 2,
+    background: '#fff',
+    boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+    boxSizing: 'border-box'
+  }
+};
+
+exports.default = cardStyle;
+},{}],31:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var comboBoxStyle = {
+
+  style: {
+
+    background: 'transparent',
+
+    /* normalize.css v3.0.1 */
+    font: 'inherit',
+    margin: 0,
+
+    /* Reset the default borderRadius for Mobile Safari */
+    borderRadius: 0,
+
+    /* Belle TextInput style */
+    overflow: 'hidden',
+    resize: 'none',
+    width: '100%',
+    fontSize: 15,
+    paddingTop: '7px',
+    paddingBottom: '4px',
+    paddingLeft: 0,
+    color: '#505050',
+    border: '0 solid #fff',
+    borderBottom: '1px solid #ccc',
+    display: 'block',
+    boxSizing: 'border-box',
+    position: 'relative',
+
+    /* animations */
+    transition: 'border-bottom 0.2s',
+    transitionTimingFunction: 'ease-out',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  focusStyle: {
+    borderBottom: '1px solid #6EB8D4',
+    outline: 'none'
+  },
+
+  hoverStyle: {
+    borderBottom: '1px solid #92D6EF'
+  },
+
+  disabledStyle: {
+    borderBottom: '1px dotted #9F9F9F'
+  },
+
+  disabledHoverStyle: {
+    borderBottom: '1px dotted #92D6EF',
+    cursor: 'not-allowed'
+  },
+
+  wrapperStyle: {
+    outline: 0, // to avoid default focus behaviour
+    boxSizing: 'border-box',
+    position: 'relative'
+  },
+
+  menuStyle: {
+    display: 'block',
+    listStyleType: 'none',
+    background: '#FFF',
+    padding: '6px 0',
+    margin: 0,
+    position: 'absolute',
+    width: '100%',
+    zIndex: 10000,
+    boxSizing: 'border-box',
+    borderRadius: 2,
+    boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+    borderTop: '1px solid #f2f2f2',
+    /* Improve scrolling for mobile Safari */
+    WebkitOverflowScrolling: 'touch'
+  },
+
+  caretToOpenStyle: {
+    height: 0,
+    width: 0,
+    content: '-', // Avoid this warning: was passed a numeric string value for CSS property `content` (value: ` `)
+    position: 'absolute',
+    top: 15,
+    right: 8,
+    cursor: 'pointer',
+    borderTop: '6px solid #666',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent'
+  },
+
+  caretToCloseStyle: {
+    height: 0,
+    width: 0,
+    content: '-', // Avoid this warning: was passed a numeric string value for CSS property `content` (value: ` `)
+    position: 'absolute',
+    top: 15,
+    right: 8,
+    cursor: 'pointer',
+    borderBottom: '6px solid #666',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent'
+  },
+
+  caretFocusStyle: {
+    outline: 0
+  },
+
+  disabledCaretToOpenStyle: {
+    borderTop: '6px solid #9F9F9F'
+  },
+
+  hintStyle: {
+
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    outline: 'none',
+    color: '#ccc',
+    border: 'none',
+
+    /* normalize.css v3.0.1 */
+    font: 'inherit',
+    margin: 0,
+
+    /* Reset the default borderRadius for Mobile Safari */
+    borderRadius: 0,
+
+    /* Belle TextInput style */
+    overflow: 'hidden',
+    resize: 'none',
+    width: '100%',
+    fontSize: 15,
+    paddingTop: 7,
+    paddingBottom: 4,
+    paddingLeft: 0,
+    display: 'block',
+    boxSizing: 'border-box',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+     Prevent flickering while tapping on WebKit
+     http://stackoverflow.com/a/3516243/837709
+     */
+    WebkitTapHighlightColor: 'transparent'
+  }
+};
+
+exports.default = comboBoxStyle;
+},{}],32:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var datePickerStyle = {
+
+  // wrapper of entire component
+  style: {
+    borderRadius: 2,
+    width: 267,
+    fontSize: 14,
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    backgroundColor: 'white',
+
+    /*
+     To avoid any kind of flickering the user won't get feedback
+     for selecting the button text
+     */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+     Prevent flickering while tapping on WebKit
+     http://stackoverflow.com/a/3516243/837709
+     */
+    WebkitTapHighlightColor: 'transparent',
+
+    transition: 'color 0.1s',
+    transitionTimingFunction: 'ease-out'
+  },
+
+  disabledStyle: {},
+
+  readOnlyStyle: {},
+
+  hoverStyle: {},
+
+  focusStyle: {
+    WebkitAnimation: 'belle-button-focus 2s',
+    outline: 0 },
+
+  // avoid default focus behaviour
+  disabledHoverStyle: {
+    backgroundColor: '#E1E9EC'
+  },
+
+  // nav-bar at top for month navigation
+  navBarStyle: {
+    height: 38,
+    border: '1px solid #E0E0E0',
+    boxSizing: 'border-box'
+  },
+
+  // left button in nav-bar to go to previous month
+  prevMonthNavStyle: {
+    float: 'left',
+    marginLeft: -1,
+    paddingLeft: '15px',
+    paddingRight: '19px'
+  },
+
+  prevMonthNavIconStyle: {
+    width: 0,
+    height: 0,
+    borderTop: '7px solid transparent',
+    borderBottom: '7px solid transparent',
+    borderRight: '12px solid #666',
+    borderRadius: 2
+  },
+
+  hoverPrevMonthNavStyle: {},
+
+  activePrevMonthNavStyle: {},
+
+  // right button in nav-bar to go to previous month
+  nextMonthNavStyle: {
+    float: 'right',
+    marginRight: -1,
+    paddingLeft: '19px',
+    paddingRight: '15px'
+  },
+
+  nextMonthNavIconStyle: {
+    width: 0,
+    height: 0,
+    borderTop: '7px solid transparent',
+    borderBottom: '7px solid transparent',
+    borderLeft: '12px solid #666',
+    borderRadius: 2
+  },
+
+  hoverNextMonthNavStyle: {},
+
+  activeNextMonthNavStyle: {},
+
+  // styling for month label on top of calendar
+  monthLabelStyle: {
+    fontSize: 15,
+    boxSizing: 'border-box',
+    paddingTop: 7,
+    display: 'inline-block',
+
+    /*
+     User should be able to copy date.
+     */
+    WebkitUserSelect: 'initial',
+    MozUserSelect: 'initial',
+    MsUserSelect: 'initial',
+    userSelect: 'initial'
+  },
+
+  // styling for entire grid of week-header and weeks
+  weekGridStyle: {
+    boxSizing: 'border-box',
+    overflow: 'auto',
+    paddingBottom: 1
+  },
+
+  weekHeaderStyle: {
+    overflow: 'auto',
+    boxSizing: 'border-box',
+    boxShadow: '1px 0 0 0 #E0E0E0 inset, -1px 0 0 0 #E0E0E0 inset'
+  },
+
+  // styling for week's day label
+  dayLabelStyle: {
+    width: 39,
+    height: 32,
+    marginRight: -1,
+    color: '#666',
+    display: 'block',
+    float: 'left',
+    boxSizing: 'border-box',
+    paddingTop: 5,
+
+    /*
+     User should be able to copy date.
+     */
+    WebkitUserSelect: 'initial',
+    MozUserSelect: 'initial',
+    MsUserSelect: 'initial',
+    userSelect: 'initial'
+  },
+
+  disabledDayLabelStyle: {},
+
+  weekendLabelStyle: {
+    // color: '#8E8071',
+  },
+
+  // styling for individual day
+  dayStyle: {
+    width: 39,
+    height: 32,
+    borderLeft: '1px solid #E0E0E0',
+    borderRight: '1px solid #E0E0E0',
+    borderTop: '1px solid #E0E0E0',
+    borderBottom: '1px solid #E0E0E0',
+    color: '#716D6D',
+    float: 'left',
+    marginRight: -1,
+    marginBottom: -1,
+    boxSizing: 'border-box',
+    paddingTop: 5,
+    position: 'relative',
+    zIndex: 100,
+    cursor: 'default',
+
+    /*
+     To avoid any kind of flickering the user won't get feedback
+     for selecting the button text
+     */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+     Prevent flickering while tapping on WebKit
+     http://stackoverflow.com/a/3516243/837709
+     */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  readOnlyDayStyle: {},
+
+  activeDayStyle: {
+    borderTop: '1px solid #B1B1B1',
+    borderLeft: '1px solid #D0D0D0',
+    borderRight: '1px solid #D0D0D0',
+    borderBottom: '1px solid #D4D4D4',
+    background: '#E0E0E0',
+    zIndex: 200
+  },
+
+  focusDayStyle: {
+    background: '#EEE',
+    cursor: 'pointer'
+  },
+
+  disabledDayStyle: {
+    color: '#C1BABA',
+    cursor: 'not-allowed'
+  },
+
+  disabledFocusDayStyle: {
+    cursor: 'not-allowed'
+  },
+
+  todayStyle: {
+    color: '#2C87A9'
+  },
+
+  weekendStyle: {
+    color: '#8E8071'
+  },
+
+  selectedDayStyle: {
+    borderTop: '1px solid #B1B1B1',
+    borderLeft: '1px solid #D0D0D0',
+    borderRight: '1px solid #D0D0D0',
+    borderBottom: '1px solid #D4D4D4',
+    background: '#E0E0E0',
+    zIndex: 200
+  },
+
+  otherMonthDayStyle: {
+    color: '#BDBDBD'
+  }
+};
+
+exports.default = datePickerStyle;
+},{}],33:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var optionStyle = {
+  style: {
+    boxSizing: 'border-box',
+    color: '#666',
+    cursor: 'pointer',
+    padding: 10,
+    fontSize: 15,
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the option text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  hoverStyle: {
+    background: '#F5F5F5',
+    color: '#444'
+  },
+
+  selectStyle: {
+    boxSizing: 'border-box',
+    color: '#666',
+    padding: 0,
+    fontSize: 15,
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  disabledSelectStyle: {
+    color: '#9F9F9F',
+    padding: 0
+  }
+};
+
+exports.default = optionStyle;
+},{}],34:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var placeholderStyle = {
+  style: {
+    boxSizing: 'border-box',
+    color: '#666',
+    cursor: 'pointer',
+    padding: 0,
+    fontSize: 15,
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  disabledStyle: {
+    color: '#9F9F9F',
+    cursor: 'not-allowed'
+  }
+};
+
+exports.default = placeholderStyle;
+},{}],35:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var ratingStyle = {
+  style: {
+    position: 'relative',
+    display: 'inline-block',
+    cursor: 'pointer',
+    fontSize: '2.6rem',
+    lineHeight: '2.6rem',
+    color: '#e3e3e3',
+    textShadow: '0px 1px 0px #D2D1D1',
+
+    /*
+     To avoid any kind of flickering the user won't get feedback
+     for selecting the rating stars
+     */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'none',
+    touchAction: 'none',
+
+    /*
+     Prevent flickering while tapping on WebKit
+     http://stackoverflow.com/a/3516243/837709
+     */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  disabledStyle: {
+    opacity: 0.6,
+    cursor: 'not-allowed'
+  },
+
+  focusStyle: {
+    outline: 0,
+    WebkitAnimation: 'belle-rating-focus 2s',
+    borderRadius: 2
+  },
+
+  hoverStyle: {
+    opacity: 1
+  },
+
+  disabledHoverStyle: {
+    opacity: 0.6
+  },
+
+  characterStyle: {
+    color: '#FFCC00',
+    textShadow: '0px 1px 0px #DCB000',
+    top: 0,
+
+    /* animations */
+    transition: 'color 0.1s',
+    transitionTimingFunction: 'ease-out'
+  },
+
+  hoverCharacterStyle: {
+    color: '#FFDA46'
+  },
+
+  activeCharacterStyle: {
+    textShadow: '0px -1px 0px #D6AB00',
+    color: '#F3C200',
+    position: 'relative',
+    top: 1
+  }
+};
+
+exports.default = ratingStyle;
+},{}],36:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var selectStyle = {
+  style: {
+    borderBottom: '1px solid #CCC',
+    boxSizing: 'border-box',
+    cursor: 'pointer',
+    /*
+    While the Select should have the same padding as TextInput 4px for
+    paddingBottom was chosen as in Chrome the Text is larger by 1px than in
+    the textarea.
+     */
+    padding: '7px 0 4px 0',
+    position: 'relative',
+
+    /* animations */
+    transition: 'border-bottom 0.2s',
+    transitionTimingFunction: 'ease-out',
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  focusStyle: {
+    borderBottom: '1px solid #6EB8D4'
+  },
+
+  activeStyle: {
+    borderBottom: '1px solid #6EB8D4'
+  },
+
+  hoverStyle: {
+    borderBottom: '1px solid #92D6EF'
+  },
+
+  wrapperStyle: {
+    outline: 0, // to avoid default focus behaviour
+    boxSizing: 'border-box',
+    position: 'relative'
+  },
+
+  disabledStyle: {
+    borderBottom: '1px dotted #9F9F9F'
+  },
+
+  disabledHoverStyle: {
+    borderBottom: '1px dotted #92D6EF',
+    cursor: 'not-allowed'
+  },
+
+  menuStyle: {
+    display: 'block',
+    listStyleType: 'none',
+    background: '#FFF',
+    padding: '6px 0',
+    margin: 0,
+    position: 'absolute',
+    width: '100%',
+    zIndex: 10000,
+    boxSizing: 'border-box',
+    borderRadius: 2,
+    boxShadow: '0 1px 1px rgba(0, 0, 0, 0.2)',
+    borderTop: '1px solid #f2f2f2',
+    top: 0,
+    /* Improve scrolling for mobile Safari */
+    WebkitOverflowScrolling: 'touch'
+  },
+
+  caretToOpenStyle: {
+    height: 0,
+    width: 0,
+    content: '-', // Avoid this warning: was passed a numeric string value for CSS property `content` (value: ` `)
+    position: 'absolute',
+    top: 15,
+    right: 8,
+    borderTop: '6px solid #666',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent'
+  },
+
+  caretToCloseStyle: {
+    height: 0,
+    width: 0,
+    content: '-', // Avoid this warning: was passed a numeric string value for CSS property `content` (value: ` `)
+    position: 'absolute',
+    top: 15,
+    right: 8,
+    borderBottom: '6px solid #666',
+    borderLeft: '5px solid transparent',
+    borderRight: '5px solid transparent'
+  },
+
+  disabledCaretToOpenStyle: {
+    borderTop: '6px solid #9F9F9F'
+  }
+};
+
+exports.default = selectStyle;
+},{}],37:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var separatorStyle = {
+  style: {
+    boxSizing: 'border-box',
+    color: '#666',
+    fontWeight: 'bold',
+    padding: 10
+  }
+};
+
+exports.default = separatorStyle;
+},{}],38:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var spinnerStyle = {
+  style: {
+    display: 'inline-block',
+    fontSize: 15,
+    textAlign: 'center'
+  },
+
+  characterStyle: {
+    color: '#666',
+    display: 'inline-block',
+    WebkitAnimation: 'belle-spinner-pulse 2s infinite ease-in-out',
+    OAnimation: 'belle-spinner-pulse 2s infinite ease-in-out',
+    animation: 'belle-spinner-pulse 2s infinite ease-in-out'
+  }
+};
+
+exports.default = spinnerStyle;
+},{}],39:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var textInputStyle = {
+  style: {
+    /* normalize.css v3.0.1 */
+    font: 'inherit',
+    margin: 0,
+
+    /* Reset the default borderRadius for Mobile Safari */
+    borderRadius: 0,
+
+    /* Belle TextInput style */
+    overflow: 'hidden',
+    resize: 'none',
+    width: '100%',
+    fontSize: 15,
+    padding: '7px 0 5px 0',
+    color: '#505050',
+    border: '0 solid #fff',
+    borderBottom: '1px solid #ccc',
+    background: 'none',
+    display: 'block',
+    boxSizing: 'border-box',
+    minHeight: '0px',
+
+    /* animations */
+    transition: 'border-bottom 0.2s',
+    transitionTimingFunction: 'ease-out'
+  },
+
+  hoverStyle: {
+    borderBottom: '1px solid #92D6EF'
+  },
+
+  focusStyle: {
+    outline: 0, // to avoid default focus behaviour
+    borderBottom: '1px solid #6EB8D4'
+  },
+
+  disabledStyle: {
+    borderBottom: '1px dotted #9F9F9F',
+    color: '#9F9F9F'
+  },
+
+  disabledHoverStyle: {
+    borderBottom: '1px dotted #92D6EF',
+    color: '#9F9F9F',
+    cursor: 'not-allowed'
+  }
+};
+
+exports.default = textInputStyle;
+},{}],40:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var toggleStyle = {
+  style: {
+    boxSizing: 'border-box',
+    borderRadius: 32,
+    height: 32,
+    width: 68,
+    WebkitUserSelect: 'none',
+    position: 'relative',
+    cursor: 'pointer',
+    display: 'inline-block'
+  },
+
+  focusStyle: {
+    WebkitAnimation: 'belle-toggle-focus 2s',
+    outline: 0 },
+
+  // avoid default focus behaviour
+  disabledStyle: {
+    opacity: 0.6,
+    cursor: 'not-allowed'
+  },
+
+  sliderStyle: {
+    boxSizing: 'border-box',
+    position: 'relative',
+
+    // Calculated with 2 * the width of choice area
+    width: 104,
+    transition: 'left 0.1s',
+    transitionTimingFunction: 'ease-in-out',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  sliderWrapperStyle: {
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+    borderRadius: 32,
+    lineHeight: 1,
+    boxShadow: 'inset 0 1px 0px 0px rgba(0,0,0,0.6)'
+  },
+
+  handleStyle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    boxSizing: 'border-box',
+    borderRadius: 32,
+    backgroundColor: 'rgb(243, 243, 243)',
+    height: 31,
+    width: 32,
+    cursor: 'pointer',
+    border: '1px solid rgb(220, 220, 220)',
+    boxShadow: '0 1px 0px 0px rgb(185, 185, 185)',
+
+    /* animations */
+    transition: 'left 0.1s',
+    transitionTimingFunction: 'ease-in-out',
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'none',
+    touchAction: 'none',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  firstChoiceStyle: {
+    display: 'inline-block',
+    boxSizing: 'border-box',
+    height: 32,
+
+    // Calculated with the width of the whole toggle - half of the width from the handle
+    //
+    // This allows to have a round handle that is position exactly in on top of the
+    // border between the two choice areas.
+    width: 52,
+    lineHeight: '32px',
+    textAlign: 'center',
+    color: '#FFF',
+    backgroundColor: 'rgba(43, 206, 56, 0.8)',
+    textIndent: -10,
+    fontSize: 15,
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  secondChoiceStyle: {
+    display: 'inline-block',
+    boxSizing: 'border-box',
+    height: 32,
+
+    // Calculated with the width of the whole toggle - half of the width from the handle
+    //
+    // This allows to have a round handle that is position exactly in on top of the
+    // border between the two choice areas.
+    width: 52,
+    lineHeight: '32px',
+    textAlign: 'center',
+    color: '#FFF',
+    backgroundColor: 'rgba(205, 205, 205, 0.8)',
+    textIndent: 10,
+    fontSize: 15,
+
+    /*
+    To avoid any kind of flickering the user won't get feedback
+    for selecting the button text
+    */
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    MsUserSelect: 'none',
+    userSelect: 'none',
+
+    /* This button can only be pressed */
+    MsTouchAction: 'manipulation',
+    touchAction: 'manipulation',
+
+    /*
+    Prevent flickering while tapping on WebKit
+    http://stackoverflow.com/a/3516243/837709
+    */
+    WebkitTapHighlightColor: 'transparent'
+  },
+
+  hoverHandleStyle: {
+    backgroundColor: 'rgb(250, 250, 250)'
+  },
+
+  activeHandleStyle: {
+    height: 32,
+    backgroundColor: 'rgb(246, 246, 246)',
+    boxShadow: '0 0 0 0 rgb(189, 189, 189)'
+  },
+
+  disabledHandleStyle: {
+    cursor: 'not-allowed'
+  }
+};
+
+exports.default = toggleStyle;
+},{}],41:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cancelAnimationFrame = exports.requestAnimationFrame = undefined;
+
+var _exenv = require('exenv');
+
+var requestAnimationFrame = exports.requestAnimationFrame = void 0; // Inspired by https://gist.github.com/paulirish/1579671
+
+var cancelAnimationFrame = exports.cancelAnimationFrame = void 0;
+
+var lastTime = 0;
+
+if (_exenv.canUseDOM) {
+  exports.requestAnimationFrame = requestAnimationFrame = window.requestAnimationFrame;
+  exports.cancelAnimationFrame = cancelAnimationFrame = window.cancelAnimationFrame;
+
+  var vendors = ['ms', 'moz', 'webkit', 'o'];
+  for (var index = 0; index < vendors.length && !requestAnimationFrame; ++index) {
+    exports.requestAnimationFrame = requestAnimationFrame = window[vendors[index] + 'RequestAnimationFrame'];
+    exports.cancelAnimationFrame = cancelAnimationFrame = window[vendors[index] + 'CancelAnimationFrame'] || window[vendors[index] + 'CancelRequestAnimationFrame'];
+  }
+}
+
+if (!requestAnimationFrame) {
+  exports.requestAnimationFrame = requestAnimationFrame = function requestAnimationFrame(callback) {
+    var currTime = new Date().getTime();
+    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+    var id = window.setTimeout(function () {
+      callback(currTime + timeToCall);
+    }, timeToCall);
+    lastTime = currTime + timeToCall;
+    return id;
+  };
+}
+
+if (!cancelAnimationFrame) {
+  exports.cancelAnimationFrame = cancelAnimationFrame = function cancelAnimationFrame(id) {
+    clearTimeout(id);
+  };
+}
+},{"exenv":49}],42:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = calculateTextareaHeight;
+
+var _exenv = require('exenv');
+
+var hiddenTextarea = void 0; /* jscs:disable disallowSpacesInsideTemplateStringPlaceholders */
+
+var computedStyleCache = {};
+
+// !important is used here to avoid side-effects from global set CSS.
+var hiddenTextareaStyle = '\n  min-height:none !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n';
+
+var stylesToCopy = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'text-rendering', 'text-transform', 'width', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
+
+/**
+ * Returns an object containing the computed style and the combined vertical
+ * padding size, combined vertical border size and box-sizing value.
+ *
+ * This style is returned as string to be applied as attribute of an element.
+ */
+function calculateStyling(node) {
+  var reactId = node.getAttribute('data-reactid');
+
+  // calculate the computed style only once it's not in the cache
+  if (!computedStyleCache[reactId]) {
+    (function () {
+      // In order to work with legacy browsers the second paramter for pseudoClass
+      // has to be provided http://caniuse.com/#feat=getcomputedstyle
+      var computedStyle = window.getComputedStyle(node, null);
+
+      var boxSizing = computedStyle.getPropertyValue('box-sizing') || computedStyle.getPropertyValue('-moz-box-sizing') || computedStyle.getPropertyValue('-webkit-box-sizing');
+
+      var verticalPaddingSize = 0;
+      verticalPaddingSize = parseFloat(computedStyle.getPropertyValue('padding-bottom')) + parseFloat(computedStyle.getPropertyValue('padding-top'));
+
+      var verticalBorderSize = 0;
+      verticalBorderSize = parseFloat(computedStyle.getPropertyValue('border-bottom-width')) + parseFloat(computedStyle.getPropertyValue('border-top-width'));
+
+      var sizingStyle = stylesToCopy.map(function (styleName) {
+        return styleName + ':' + computedStyle.getPropertyValue(styleName) + '  !important';
+      }).join(';');
+
+      // store the style, vertical padding size, vertical border size and
+      // boxSizing inside the cache
+      computedStyleCache[reactId] = {
+        style: sizingStyle,
+        verticalPaddingSize: verticalPaddingSize,
+        verticalBorderSize: verticalBorderSize,
+        boxSizing: boxSizing
+      };
+    })();
+  }
+
+  return computedStyleCache[reactId];
+}
+
+/**
+ * Returns an object containing height of the textare as if all the content
+ * would be visible. The minHeight & maxHeight are in the object as well and are
+ * based on minRows & maxRows.
+ *
+ * In order to improve the performance a hidden textarea is added to the DOM
+ * and used for further caluculations. In addition the styling of each textarea
+ * is cached to improve performance.
+ */
+function calculateTextareaHeight(textareaElement) {
+  var textareaValue = arguments.length <= 1 || arguments[1] === undefined ? '-' : arguments[1];
+  var minRows = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+  var maxRows = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+  var minHeight = arguments.length <= 4 || arguments[4] === undefined ? null : arguments[4];
+  var maxHeight = arguments.length <= 5 || arguments[5] === undefined ? null : arguments[5];
+
+  // Regarding textareaValue: IE will return a height of 0 in case the textare is empty.
+  // To prevent reducing the size to 0 we simply use a dummy text.
+  if (!_exenv.canUseDOM) {
+    return 0;
+  }
+
+  if (!hiddenTextarea) {
+    hiddenTextarea = document.createElement('textarea');
+    document.body.appendChild(hiddenTextarea);
+    hiddenTextarea.setAttribute('class', 'belle-input-helper');
+  }
+
+  var _calculateStyling = calculateStyling(textareaElement);
+
+  var style = _calculateStyling.style;
+  var verticalPaddingSize = _calculateStyling.verticalPaddingSize;
+  var verticalBorderSize = _calculateStyling.verticalBorderSize;
+  var boxSizing = _calculateStyling.boxSizing;
+
+
+  hiddenTextarea.setAttribute('style', style + ';' + hiddenTextareaStyle);
+  hiddenTextarea.value = textareaValue;
+
+  var calculatedMinHeight = void 0;
+  var calculatedMaxHeight = void 0;
+  var height = hiddenTextarea.scrollHeight;
+
+  // for a textarea with border-box, the border width has to be added while
+  // for content-box it's necessary to subtract the padding
+  if (boxSizing === 'border-box') {
+    // border-box: content + padding + border
+    height = height + verticalBorderSize;
+  } else if (boxSizing === 'content-box') {
+    // content-box: content
+    height = height - verticalPaddingSize;
+  }
+
+  if (minRows !== null && minHeight === null || maxRows !== null && maxHeight === null) {
+    // measure height of a textarea with a single row
+    hiddenTextarea.value = '-';
+    var singleRowHeight = hiddenTextarea.scrollHeight - verticalPaddingSize;
+
+    if (minRows !== null && minHeight === null) {
+      calculatedMinHeight = singleRowHeight * minRows;
+      if (boxSizing === 'border-box') {
+        calculatedMinHeight = calculatedMinHeight + verticalPaddingSize + verticalBorderSize;
+      }
+    }
+
+    if (maxRows !== null && maxHeight === null) {
+      calculatedMaxHeight = singleRowHeight * maxRows;
+      if (boxSizing === 'border-box') {
+        calculatedMaxHeight = calculatedMaxHeight + verticalPaddingSize + verticalBorderSize;
+      }
+    }
+  }
+
+  var finalMinHeight = minHeight || calculatedMinHeight;
+  if (finalMinHeight) {
+    height = Math.max(finalMinHeight, height);
+  }
+
+  var finalMaxHeight = maxHeight || calculatedMaxHeight;
+  if (finalMaxHeight) {
+    height = Math.min(finalMaxHeight, height);
+  }
+
+  return height;
+}
+},{"exenv":49}],43:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.today = exports.convertDateToDateKey = exports.getDateForDateKey = exports.getDateKey = exports.getLocaleData = exports.getLastDayForMonth = exports.getWeekArrayForMonth = undefined;
+
+var _i18n = require('../config/i18n');
+
+var _i18n2 = _interopRequireDefault(_i18n);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * The function will take a month and year value and will return an array of weeks for that month.
+ * Each element in this array will be in-turn an array of days in the week.
+ * @param {number} month: the month for which array of weeks is needed
+ * @param {number} year: the year for which array of weeks is needed
+ * @param {number} firstDayOfWeek: first day of the week in the locale
+ * @returns {Array}: Array of weeks in a month, each week is in turn array of days in that week
+ */
+var getWeekArrayForMonth = exports.getWeekArrayForMonth = function getWeekArrayForMonth(month, year, firstDayOfWeek) {
+  var monthDay = new Date(year, month, 1);
+
+  // Todo: simplify this calculation of first date
+  var firstDate = 1 + firstDayOfWeek - monthDay.getDay();
+  firstDate = firstDate <= 1 ? firstDate : firstDate - 7;
+  monthDay.setDate(firstDate);
+  var lastDate = new Date(year, month + 1, 0);
+
+  var weekArray = [];
+  while (monthDay <= lastDate) {
+    var newWeek = [];
+    for (var dayCounter = 0; dayCounter < 7; dayCounter++) {
+      var weekDate = new Date(monthDay.getFullYear(), monthDay.getMonth(), monthDay.getDate());
+      newWeek.push(weekDate);
+      monthDay.setDate(monthDay.getDate() + 1);
+    }
+
+    weekArray.push(newWeek);
+  }
+
+  return weekArray;
+};
+
+var getLastDayForMonth = exports.getLastDayForMonth = function getLastDayForMonth(year, month) {
+  return new Date(year, month + 1, 0);
+};
+
+/**
+ * Function will return locale data for locale. If data is not available in config files it will return default data.
+ * @param locale - locale for which data is needed.
+ * @returns {Object}: Object containing locale data.
+ */
+var getLocaleData = exports.getLocaleData = function getLocaleData(locale) {
+  var localeResult = {};
+  var lData = void 0;
+  if (locale) {
+    lData = _i18n2.default.localeData[locale];
+  }
+
+  var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  localeResult.monthNames = lData && lData.monthNames ? lData.monthNames : monthNames;
+  localeResult.dayNamesMin = lData && lData.dayNamesMin ? lData.dayNamesMin : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  localeResult.firstDay = lData && lData.firstDay ? lData.firstDay : 0;
+  localeResult.weekEnd = lData && lData.weekEnd ? lData.weekEnd : 0;
+  localeResult.isRTL = lData && lData.isRTL ? lData.isRTL : false;
+  return localeResult;
+};
+
+/**
+ * Returns the string representation for a provided year, month & day.
+ *
+ * @param year {number} - any year
+ * @param month {number} - can be between 1 and 12
+ * @param day {number} - can be between 1 and 31 depending on the month
+ * @returns {string}: a string representing the date in the format yyyy-mm-dd
+ */
+var getDateKey = exports.getDateKey = function getDateKey(year, month, day) {
+  return year + '-' + month + '-' + day;
+};
+
+/**
+ * Returns the date for a date string representation.
+ *
+ * @param year {number} - any year
+ * @param month {number} - can be between 1 and 12
+ * @param day {number} - can be between 1 and 31 depending on the month
+ * @returns {date} - the parse date
+ */
+var getDateForDateKey = exports.getDateForDateKey = function getDateForDateKey(dateKey) {
+  var splittedDate = dateKey.split('-');
+  return new Date(parseInt(splittedDate[0], 10), parseInt(splittedDate[1], 10) - 1, parseInt(splittedDate[2], 10));
+};
+
+/**
+ * Returns the string representation for a provided date.
+ *
+ * @param date {date} - a valid date
+ * @returns {string}: a string representing the date in the format yyyy-mm-dd
+ */
+var convertDateToDateKey = exports.convertDateToDateKey = function convertDateToDateKey(date) {
+  return getDateKey(date.getFullYear(), date.getMonth() + 1, date.getDate());
+};
+
+/**
+ * Returns the date of today
+ *
+ * @returns {date}: today's date
+ */
+var today = exports.today = function today() {
+  return new Date();
+};
+},{"../config/i18n":22}],44:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.has = has;
+exports.omit = omit;
+exports.filter = filter;
+exports.isArrayLike = isArrayLike;
+exports.keys = keys;
+exports.map = map;
+exports.mapObject = mapObject;
+exports.find = find;
+exports.reverse = reverse;
+exports.shift = shift;
+exports.isEmpty = isEmpty;
+exports.findIndex = findIndex;
+exports.first = first;
+exports.last = last;
+exports.size = size;
+exports.some = some;
+exports.union = union;
+exports.flatten = flatten;
+exports.filterReactChildren = filterReactChildren;
+exports.getArrayForReactChildren = getArrayForReactChildren;
+exports.flattenReactChildren = flattenReactChildren;
+exports.uniqueId = uniqueId;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Returns true if the object contain the given key.
+ *
+ * @param {object} obj - object to be inspected
+ * @param {string} key - name of the property
+ */
+function has(obj, key) {
+  return obj !== undefined && obj !== null && Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+/**
+ * Return a copy of the object, filtered to omit the blacklisted keys (or array of keys).
+ *
+ * @param {object} obj - object the returned object is based on
+ * @param {string|string[]} fields - the key or list of keys of the property to omit
+ */
+function omit(obj, fields) {
+  if (obj) {
+    var result = {};
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key) && (!fields || fields.indexOf(key) < 0)) {
+        result[key] = obj[key];
+      }
+    }
+
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Looks through each value in the list, returning an array of all the values
+ * that pass a truth test (predicate).
+ *
+ * @param {array} iterable - the iterable object to be filtered
+ * @param {function} predicate - function returning true when provided with an entry as argument
+ * @param {object} [context] - context for the predicate function call
+ */
+function filter(iterable, predicate, context) {
+  if (iterable) {
+    var _ret = function () {
+      var result = [];
+      iterable.forEach(function (obj) {
+        if (predicate && predicate.call(context, obj)) {
+          result.push(obj);
+        }
+      });
+      return {
+        v: result
+      };
+    }();
+
+    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns true if the provided object is an iterable, except for strings for which it will return false.
+ *
+ * @param {object} obj - object to be inspected
+ */
+function isArrayLike(obj) {
+  if (Array.isArray(obj)) return true;
+  if (typeof obj === 'string') return false;
+  var length = obj.length;
+  return typeof length === 'number' && length >= 0;
+}
+
+/**
+ * Returns all the names of the object's own properties. This will not include properties inherited through prototypes.
+ *
+ * @param {object} obj - object to be used
+ */
+function keys(obj) {
+  var objKeys = [];
+  for (var key in obj) {
+    if (has(obj, key)) objKeys.push(key);
+  }return objKeys;
+}
+
+/**
+ * Returns a new array of values by mapping each value in list through a transformation function (predicate).
+ *
+ * @param {array} iterable - source iterable
+ * @param {function} predicate - function returning the transformed array entry
+ */
+function map(iterable, predicate) {
+  if (iterable) {
+    var _ret2 = function () {
+      var result = [];
+      iterable.forEach(function (elm, index) {
+        if (predicate) {
+          result[index] = predicate(elm, index);
+        }
+      });
+      return {
+        v: result
+      };
+    }();
+
+    if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns a new object by mapping each property in an object through a transformation function (predicate).
+ *
+ * @param {object} obj - object to be based upon
+ * @param {function} predicate - function to transform the property
+ */
+function mapObject(obj, predicate) {
+  if (obj) {
+    var _ret3 = function () {
+      var result = [];
+      var objKeys = keys(obj);
+      objKeys.forEach(function (key, index) {
+        if (predicate) {
+          result[index] = predicate(obj[key], key);
+        }
+      });
+      return {
+        v: result
+      };
+    }();
+
+    if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns the first value that passes a truth test (predicate), or undefined if
+ * no value passes the test. Only works for iterable objects e.g. arrays.
+ *
+ * @param {array} iterable - the iterable object to be searched
+ * @param {function} predicate - function returning true in case of a positive match
+ * @param {object} [context] - context for the predicate function call
+ */
+function find(iterable, predicate, context) {
+  if (iterable) {
+    var result = void 0;
+    for (var index = 0; index < iterable.length; index++) {
+      if (predicate && predicate.call(context, iterable[index])) {
+        result = iterable[index];
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Reverse the array passed to it.
+ * @param {array} iterable - the array to be reversed.
+ */
+function reverse(iterable) {
+  if (iterable) {
+    var result = [];
+    for (var index = iterable.length - 1; index >= 0; index--) {
+      result.push(iterable[index]);
+    }
+
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Shifts given array by given number of positions.
+ * @param {array} iterable - the array to be shifted.
+ * @param {array} positions - number of positions shifting is needed.
+ */
+function shift(iterable, positions) {
+  if (iterable) {
+    if (positions && positions > 0) {
+      var result = [];
+      var arrayLength = iterable.length;
+      for (var index = 0; index < iterable.length; index++) {
+        result.push(iterable[(index + positions) % arrayLength]);
+      }
+
+      return result;
+    }
+
+    return iterable;
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns true if object contains no values (no enumerable own-properties).
+ *
+ * @param {Object} obj - an object
+ */
+function isEmpty(obj) {
+  return !obj || Array.isArray(obj) && obj.length === 0 || Object.keys(obj).length === 0;
+}
+
+/**
+ * Returns the index of the first value that passes a truth test (predicate), or undefined if
+ * no value passes the test. Only works for iterable objects e.g. arrays.
+ *
+ * @param {array} iterable - the iterable object to be searched
+ * @param {function} predicate - function returning true in case of a positive match
+ * @param {object} [context] - context for the predicate function call
+ */
+function findIndex(iterable, predicate, context) {
+  if (iterable) {
+    var result = void 0;
+    for (var index = 0; index < iterable.length; index++) {
+      if (predicate && predicate.call(context, iterable[index])) {
+        result = index;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns the first element of an iterable object.
+ *
+ * @param {array} iterable - must be an iterable object
+ */
+function first(iterable) {
+  if (iterable && iterable.length > 0) {
+    return iterable[0];
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns the last element of an iterable object.
+ *
+ * @param {array} iterable - must be an iterable object
+ */
+function last(iterable) {
+  if (iterable && iterable.length > 0) {
+    return iterable[iterable.length - 1];
+  }
+
+  return undefined;
+}
+
+/**
+ * Return the number of values in the list.
+ *
+ * @param {array} iterable - must be an iterable object
+ */
+function size(iterable) {
+  if (iterable) {
+    return iterable.length;
+  }
+
+  return 0;
+}
+
+/**
+ * Returns true if any of the values in the list pass the predicate truth test.
+ *
+ * @param {array} iterable - iterable object to be searched
+ * @param {function} predicate - function returning true in case of a positive match
+ * @param {object} [context] - context for the predicate function call
+ */
+function some(iterable, predicate, context) {
+  if (iterable) {
+    var result = void 0;
+    for (var index = 0; index < iterable.length; index++) {
+      if (predicate && predicate.call(context, iterable[index])) {
+        result = true;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Returns the union of the passed-in arrays: the list of unique items, in order, that are present in one or more of the arrays.
+ *
+ * @param {...array} arrs - at least two iterable objects must be provide
+ */
+function union() {
+  for (var _len = arguments.length, arrs = Array(_len), _key = 0; _key < _len; _key++) {
+    arrs[_key] = arguments[_key];
+  }
+
+  if (arrs) {
+    var _ret4 = function () {
+      var result = [];
+      arrs.forEach(function (arr) {
+        if (arr) {
+          arr.forEach(function (obj) {
+            if (result.indexOf(obj) < 0) {
+              result.push(obj);
+            }
+          });
+        }
+      });
+      return {
+        v: result
+      };
+    }();
+
+    if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
+  }
+
+  return undefined;
+}
+
+/**
+ * Recursive function for flattening an iterable.
+ *
+ * @param {object} output - base object to be updated
+ * @param {object} element - input object to be merged into the output
+ */
+function flattenInternal(output, element) {
+  if (element) {
+    element.forEach(function (obj) {
+      if (Array.isArray(obj)) {
+        flattenInternal(output, obj);
+      } else {
+        output.push(obj);
+      }
+    });
+  }
+}
+
+/**
+ * Flattens a nested array (the nesting can be to any depth).
+ *
+ * @param {...array} arrays - at least one array must be provided
+ */
+function flatten() {
+  for (var _len2 = arguments.length, arrays = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    arrays[_key2] = arguments[_key2];
+  }
+
+  if (arrays) {
+    var result = [];
+    flattenInternal(result, arrays);
+    return result;
+  }
+
+  return undefined;
+}
+
+/**
+ * Looks through a collection of React children elements, filtering them according to the predicate passed.
+ *
+ * @param {Array/Object} children - colleciton of >=1 react elements
+ * @param {function} predicate - function returning true when provided with an entry as argument
+ */
+function filterReactChildren(children, predicate) {
+  var _this = this;
+
+  if (children) {
+    var _ret5 = function () {
+      var result = [];
+      _react2.default.Children.forEach(children, function (entry) {
+        if (predicate && predicate.call(_this, entry)) {
+          result.push(entry);
+        }
+      });
+      return {
+        v: result
+      };
+    }();
+
+    if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
+  }
+
+  return undefined;
+}
+
+/**
+ * Looks through a collection of React children elements, filtering them according to the predicate passed.
+ *
+ * @param {Array/Object} children - collection of >=1 react elements
+ */
+function getArrayForReactChildren(children) {
+  if (children) {
+    var _ret6 = function () {
+      var result = [];
+      _react2.default.Children.forEach(children, function (entry) {
+        result.push(entry);
+      });
+      return {
+        v: result
+      };
+    }();
+
+    if ((typeof _ret6 === 'undefined' ? 'undefined' : _typeof(_ret6)) === "object") return _ret6.v;
+  }
+
+  return undefined;
+}
+
+function flattenReactChildren(children) {
+  if (!isEmpty(children)) {
+    if (Array.isArray(children)) {
+      return flatten(children);
+    }
+
+    return getArrayForReactChildren(children);
+  }
+
+  return undefined;
+}
+
+function uniqueId() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+},{"react":378}],45:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.injectStyles = injectStyles;
+exports.removeStyle = removeStyle;
+exports.removeAllStyles = removeAllStyles;
+
+exports.default = function (styleId, style, pseudoClass, disabled) {
+  injectStyleTag();
+  updateStore(styleId, style, pseudoClass, disabled);
+  updateStyling();
+};
+
+var _helpers = require('../utils/helpers');
+
+var _CSSPropertyOperations = require('react/lib/CSSPropertyOperations');
+
+var _CSSPropertyOperations2 = _interopRequireDefault(_CSSPropertyOperations);
+
+var _exenv = require('exenv');
+
+var _animations = require('../style/animations');
+
+var _animations2 = _interopRequireDefault(_animations);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var styleElement = void 0;
+var styleStorage = {};
+
+/**
+ * Injects the provided style into the styleStore.
+ */
+function injectStyleTag() {
+  if (!styleElement && _exenv.canUseDOM) {
+    styleElement = document.createElement('style');
+    document.body.appendChild(styleElement);
+    styleElement.setAttribute('class', 'belle-style');
+  }
+}
+
+/**
+ * Injects the provided style into the styleStore.
+ */
+function updateStore(styleId, style, pseudoClass, disabled) {
+  styleStorage[styleId] = styleStorage[styleId] || {};
+  if (disabled) {
+    styleStorage[styleId].disabledPseudoClasses = styleStorage[styleId].disabledPseudoClasses || {};
+    styleStorage[styleId].disabledPseudoClasses[pseudoClass] = style;
+  } else {
+    styleStorage[styleId].pseudoClasses = styleStorage[styleId].pseudoClasses || {};
+    styleStorage[styleId].pseudoClasses[pseudoClass] = style;
+  }
+}
+
+/**
+ * Constructs all the stored styles & injects them to the DOM.
+ */
+function createMarkupOnPseudoClass(pseudoClasses, id, disabled) {
+  return (0, _helpers.mapObject)(pseudoClasses, function (style, pseudoClass) {
+    if (style && Object.keys(style).length > 0) {
+      var styleString = _CSSPropertyOperations2.default.createMarkupForStyles(style);
+      var styleWithImportant = styleString.replace(/;/g, ' !important;');
+
+      return disabled ? '.' + id + '[disabled]:' + pseudoClass + ' {' + styleWithImportant + '}' : '.' + id + ':' + pseudoClass + ' {' + styleWithImportant + '}';
+    }
+
+    return undefined;
+  });
+}
+
+function updateStyling() {
+  var styles = (0, _helpers.mapObject)(styleStorage, function (storageEntry, id) {
+    var pseudoClassesArray = [];
+
+    if (storageEntry.pseudoClasses) {
+      pseudoClassesArray.push(createMarkupOnPseudoClass(storageEntry.pseudoClasses, id, false));
+    }
+
+    if (storageEntry.disabledPseudoClasses) {
+      pseudoClassesArray.push(createMarkupOnPseudoClass(storageEntry.disabledPseudoClasses, id, true));
+    }
+
+    return pseudoClassesArray;
+  });
+  if (styleElement) {
+    styleElement.innerHTML = (0, _helpers.flatten)([_animations2.default, styles]).join(' ');
+  }
+}
+
+/**
+ * Injects a style tag and adds multiple passed styles.
+ *
+ * By using this function someone can make sure the DOM is updated only once.
+ *
+ * @example
+ * ```
+ * const styles = [
+ *   {
+ *     id: 'style-0.0.2',
+ *     style: { color: '#F00' },
+ *     pseudoClass: 'hover'
+ *   }
+ * ];
+ * injectStyles(styles);
+ * ```
+ */
+function injectStyles(styles) {
+  injectStyleTag();
+  styles.forEach(function (style) {
+    updateStore(style.id, style.style, style.pseudoClass, style.disabled);
+  });
+  updateStyling();
+}
+
+/**
+ * Removes all pseudoClass styles based on the provided styleId.
+ */
+function removeStyle(styleId) {
+  delete styleStorage[styleId];
+  updateStyling();
+}
+
+/**
+ * Removes all pseudoClass styles based on all provided styleIds.
+ */
+function removeAllStyles(styleIds) {
+  styleIds.forEach(function (styleId) {
+    delete styleStorage[styleId];
+  });
+  updateStyling();
+}
+
+/**
+ * Injects a style tag and adds the passed style for the provided pseudoClass.
+ */
+},{"../style/animations":28,"../utils/helpers":44,"exenv":49,"react/lib/CSSPropertyOperations":244}],46:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isComponentOfType;
+/**
+ * Returns true if the provided element is a component of the provided type.
+ *
+ * @param classType {ReactElement class} - the class of a React Element
+ * @param reactElement {ReactElement} - any React Element (not a real DOM node)
+ *
+ * @example
+ * // Checks if the component is an Autocomplete
+ * isComponentType(Autocomplete, this.props.children[0]);
+ */
+function isComponentOfType(classType, reactElement) {
+  return reactElement && reactElement.type === classType;
+}
+},{}],47:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = unionClassNames;
+
+var _helpers = require('../utils/helpers');
+
+/**
+ * Returns a string containing all classes without duplicates.
+ *
+ * @param existingClassNames {String} - one or multiple classes
+ * @param additionalClassNames {String} - one or multiple classes
+ *
+ * @example
+ * // returns 'style-id-23 button buy-button'
+ * unionClassNames('style-id-23 button', 'button buy-button')
+ *
+ * Originally inspired by https://github.com/rackt/react-autocomplete/blob/master/lib/union-class-names.js
+ */
+function unionClassNames(existingClassNames, additionalClassNames) {
+  if (!existingClassNames && !additionalClassNames) return '';
+  if (!existingClassNames) return additionalClassNames;
+  if (!additionalClassNames) return existingClassNames;
+  return (0, _helpers.union)(existingClassNames.split(' '), additionalClassNames.split(' ')).join(' ');
+}
+},{"../utils/helpers":44}],48:[function(require,module,exports){
 // (c) Dean McNamee <dean@gmail.com>, 2012.
 //
 // https://github.com/deanm/css-color-parser-js
@@ -561,7 +9759,49 @@ function parseCSSColor(css_str) {
 
 try { exports.parseCSSColor = parseCSSColor } catch(e) { }
 
-},{}],3:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
+/*!
+  Copyright (c) 2015 Jed Watson.
+  Based on code that is Copyright 2013-2015, Facebook, Inc.
+  All rights reserved.
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var canUseDOM = !!(
+		typeof window !== 'undefined' &&
+		window.document &&
+		window.document.createElement
+	);
+
+	var ExecutionEnvironment = {
+
+		canUseDOM: canUseDOM,
+
+		canUseWorkers: typeof Worker !== 'undefined',
+
+		canUseEventListeners:
+			canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+		canUseViewport: canUseDOM && !!window.screen
+
+	};
+
+	if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+		define(function () {
+			return ExecutionEnvironment;
+		});
+	} else if (typeof module !== 'undefined' && module.exports) {
+		module.exports = ExecutionEnvironment;
+	} else {
+		window.ExecutionEnvironment = ExecutionEnvironment;
+	}
+
+}());
+
+},{}],50:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -648,7 +9888,7 @@ var EventListener = {
 module.exports = EventListener;
 }).call(this,require('_process'))
 
-},{"./emptyFunction":10,"_process":192}],4:[function(require,module,exports){
+},{"./emptyFunction":57,"_process":239}],51:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -684,7 +9924,7 @@ var ExecutionEnvironment = {
 };
 
 module.exports = ExecutionEnvironment;
-},{}],5:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 "use strict";
 
 /**
@@ -716,7 +9956,7 @@ function camelize(string) {
 }
 
 module.exports = camelize;
-},{}],6:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -756,7 +9996,7 @@ function camelizeStyleName(string) {
 }
 
 module.exports = camelizeStyleName;
-},{"./camelize":5}],7:[function(require,module,exports){
+},{"./camelize":52}],54:[function(require,module,exports){
 'use strict';
 
 /**
@@ -800,7 +10040,7 @@ function containsNode(outerNode, innerNode) {
 }
 
 module.exports = containsNode;
-},{"./isTextNode":20}],8:[function(require,module,exports){
+},{"./isTextNode":67}],55:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -930,7 +10170,7 @@ function createArrayFromMixed(obj) {
 module.exports = createArrayFromMixed;
 }).call(this,require('_process'))
 
-},{"./invariant":18,"_process":192}],9:[function(require,module,exports){
+},{"./invariant":65,"_process":239}],56:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1017,7 +10257,7 @@ function createNodesFromMarkup(markup, handleScript) {
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
 
-},{"./ExecutionEnvironment":4,"./createArrayFromMixed":8,"./getMarkupWrap":14,"./invariant":18,"_process":192}],10:[function(require,module,exports){
+},{"./ExecutionEnvironment":51,"./createArrayFromMixed":55,"./getMarkupWrap":61,"./invariant":65,"_process":239}],57:[function(require,module,exports){
 "use strict";
 
 /**
@@ -1055,7 +10295,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],11:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1078,7 +10318,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = emptyObject;
 }).call(this,require('_process'))
 
-},{"_process":192}],12:[function(require,module,exports){
+},{"_process":239}],59:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1105,7 +10345,7 @@ function focusNode(node) {
 }
 
 module.exports = focusNode;
-},{}],13:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1140,7 +10380,7 @@ function getActiveElement() /*?DOMElement*/{
 }
 
 module.exports = getActiveElement;
-},{}],14:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1238,7 +10478,7 @@ function getMarkupWrap(nodeName) {
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
 
-},{"./ExecutionEnvironment":4,"./invariant":18,"_process":192}],15:[function(require,module,exports){
+},{"./ExecutionEnvironment":51,"./invariant":65,"_process":239}],62:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1277,7 +10517,7 @@ function getUnboundedScrollPosition(scrollable) {
 }
 
 module.exports = getUnboundedScrollPosition;
-},{}],16:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1310,7 +10550,7 @@ function hyphenate(string) {
 }
 
 module.exports = hyphenate;
-},{}],17:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1349,7 +10589,7 @@ function hyphenateStyleName(string) {
 }
 
 module.exports = hyphenateStyleName;
-},{"./hyphenate":16}],18:[function(require,module,exports){
+},{"./hyphenate":63}],65:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1402,7 +10642,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 }).call(this,require('_process'))
 
-},{"_process":192}],19:[function(require,module,exports){
+},{"_process":239}],66:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1425,7 +10665,7 @@ function isNode(object) {
 }
 
 module.exports = isNode;
-},{}],20:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1450,7 +10690,7 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-},{"./isNode":19}],21:[function(require,module,exports){
+},{"./isNode":66}],68:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -1501,7 +10741,7 @@ var keyMirror = function (obj) {
 module.exports = keyMirror;
 }).call(this,require('_process'))
 
-},{"./invariant":18,"_process":192}],22:[function(require,module,exports){
+},{"./invariant":65,"_process":239}],69:[function(require,module,exports){
 "use strict";
 
 /**
@@ -1536,7 +10776,7 @@ var keyOf = function (oneKeyObj) {
 };
 
 module.exports = keyOf;
-},{}],23:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1587,7 +10827,7 @@ function mapObject(object, callback, context) {
 }
 
 module.exports = mapObject;
-},{}],24:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1619,7 +10859,7 @@ function memoizeStringOnly(callback) {
 }
 
 module.exports = memoizeStringOnly;
-},{}],25:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1642,7 +10882,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
-},{"./ExecutionEnvironment":4}],26:[function(require,module,exports){
+},{"./ExecutionEnvironment":51}],73:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1676,7 +10916,7 @@ if (performance.now) {
 }
 
 module.exports = performanceNow;
-},{"./performance":25}],27:[function(require,module,exports){
+},{"./performance":72}],74:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1743,7 +10983,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],28:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -1803,7 +11043,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = warning;
 }).call(this,require('_process'))
 
-},{"./emptyFunction":10,"_process":192}],29:[function(require,module,exports){
+},{"./emptyFunction":57,"_process":239}],76:[function(require,module,exports){
 'use strict';
 
 module.exports = createFilter;
@@ -1885,7 +11125,7 @@ function compare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-},{}],30:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 var wgs84 = require('wgs84');
 
 module.exports.geometry = geometry;
@@ -1951,7 +11191,7 @@ function rad(_) {
     return _ * Math.PI / 180;
 }
 
-},{"wgs84":346}],31:[function(require,module,exports){
+},{"wgs84":393}],78:[function(require,module,exports){
 var geojsonArea = require('geojson-area');
 
 module.exports = rewind;
@@ -2002,7 +11242,7 @@ function cw(_) {
     return geojsonArea.ring(_) >= 0;
 }
 
-},{"geojson-area":30}],32:[function(require,module,exports){
+},{"geojson-area":77}],79:[function(require,module,exports){
 'use strict';
 
 module.exports = clip;
@@ -2155,7 +11395,7 @@ function newSlice(slices, slice, area, dist) {
     return [];
 }
 
-},{}],33:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 module.exports = convert;
@@ -2301,7 +11541,7 @@ function calcRingBBox(min, max, points) {
     }
 }
 
-},{"./simplify":35}],34:[function(require,module,exports){
+},{"./simplify":82}],81:[function(require,module,exports){
 'use strict';
 
 module.exports = geojsonvt;
@@ -2543,7 +11783,7 @@ function isClippedSquare(tile, extent, buffer) {
     return true;
 }
 
-},{"./clip":32,"./convert":33,"./tile":36,"./transform":37,"./wrap":38}],35:[function(require,module,exports){
+},{"./clip":79,"./convert":80,"./tile":83,"./transform":84,"./wrap":85}],82:[function(require,module,exports){
 'use strict';
 
 module.exports = simplify;
@@ -2619,7 +11859,7 @@ function getSqSegDist(p, a, b) {
     return dx * dx + dy * dy;
 }
 
-},{}],36:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict';
 
 module.exports = createTile;
@@ -2706,7 +11946,7 @@ function addFeature(tile, feature, tolerance, noSimplify) {
     }
 }
 
-},{}],37:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 'use strict';
 
 exports.tile = transformTile;
@@ -2749,7 +11989,7 @@ function transformPoint(p, extent, z2, tx, ty) {
     return [x, y];
 }
 
-},{}],38:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict';
 
 var clip = require('./clip');
@@ -2812,7 +12052,7 @@ function shiftCoords(points, offset) {
     return newPoints;
 }
 
-},{"./clip":32}],39:[function(require,module,exports){
+},{"./clip":79}],86:[function(require,module,exports){
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
@@ -2850,7 +12090,7 @@ exports.quat = require("./gl-matrix/quat.js");
 exports.vec2 = require("./gl-matrix/vec2.js");
 exports.vec3 = require("./gl-matrix/vec3.js");
 exports.vec4 = require("./gl-matrix/vec4.js");
-},{"./gl-matrix/common.js":40,"./gl-matrix/mat2.js":41,"./gl-matrix/mat2d.js":42,"./gl-matrix/mat3.js":43,"./gl-matrix/mat4.js":44,"./gl-matrix/quat.js":45,"./gl-matrix/vec2.js":46,"./gl-matrix/vec3.js":47,"./gl-matrix/vec4.js":48}],40:[function(require,module,exports){
+},{"./gl-matrix/common.js":87,"./gl-matrix/mat2.js":88,"./gl-matrix/mat2d.js":89,"./gl-matrix/mat3.js":90,"./gl-matrix/mat4.js":91,"./gl-matrix/quat.js":92,"./gl-matrix/vec2.js":93,"./gl-matrix/vec3.js":94,"./gl-matrix/vec4.js":95}],87:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2922,7 +12162,7 @@ glMatrix.equals = function(a, b) {
 
 module.exports = glMatrix;
 
-},{}],41:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3360,7 +12600,7 @@ mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
 
 module.exports = mat2;
 
-},{"./common.js":40}],42:[function(require,module,exports){
+},{"./common.js":87}],89:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3831,7 +13071,7 @@ mat2d.equals = function (a, b) {
 
 module.exports = mat2d;
 
-},{"./common.js":40}],43:[function(require,module,exports){
+},{"./common.js":87}],90:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4579,7 +13819,7 @@ mat3.equals = function (a, b) {
 
 module.exports = mat3;
 
-},{"./common.js":40}],44:[function(require,module,exports){
+},{"./common.js":87}],91:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -6717,7 +15957,7 @@ mat4.equals = function (a, b) {
 
 module.exports = mat4;
 
-},{"./common.js":40}],45:[function(require,module,exports){
+},{"./common.js":87}],92:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -7319,7 +16559,7 @@ quat.equals = vec4.equals;
 
 module.exports = quat;
 
-},{"./common.js":40,"./mat3.js":43,"./vec3.js":47,"./vec4.js":48}],46:[function(require,module,exports){
+},{"./common.js":87,"./mat3.js":90,"./vec3.js":94,"./vec4.js":95}],93:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -7908,7 +17148,7 @@ vec2.equals = function (a, b) {
 
 module.exports = vec2;
 
-},{"./common.js":40}],47:[function(require,module,exports){
+},{"./common.js":87}],94:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8687,7 +17927,7 @@ vec3.equals = function (a, b) {
 
 module.exports = vec3;
 
-},{"./common.js":40}],48:[function(require,module,exports){
+},{"./common.js":87}],95:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -9298,7 +18538,7 @@ vec4.equals = function (a, b) {
 
 module.exports = vec4;
 
-},{"./common.js":40}],49:[function(require,module,exports){
+},{"./common.js":87}],96:[function(require,module,exports){
 'use strict';
 
 module.exports = GridIndex;
@@ -9457,7 +18697,7 @@ GridIndex.prototype.toArrayBuffer = function() {
     return array.buffer;
 };
 
-},{}],50:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -9543,7 +18783,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],51:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -9568,7 +18808,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],52:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 'use strict';
 
 var sort = require('./sort');
@@ -9614,7 +18854,7 @@ KDBush.prototype = {
 function defaultGetX(p) { return p[0]; }
 function defaultGetY(p) { return p[1]; }
 
-},{"./range":53,"./sort":54,"./within":55}],53:[function(require,module,exports){
+},{"./range":100,"./sort":101,"./within":102}],100:[function(require,module,exports){
 'use strict';
 
 module.exports = range;
@@ -9662,7 +18902,7 @@ function range(ids, coords, minX, minY, maxX, maxY, nodeSize) {
     return result;
 }
 
-},{}],54:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 'use strict';
 
 module.exports = sortKD;
@@ -9730,7 +18970,7 @@ function swap(arr, i, j) {
     arr[j] = tmp;
 }
 
-},{}],55:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 'use strict';
 
 module.exports = within;
@@ -9782,7 +19022,7 @@ function sqDist(ax, ay, bx, by) {
     return dx * dx + dy * dy;
 }
 
-},{}],56:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 'use strict';
 
 function createFunction(parameters, defaultType) {
@@ -9949,7 +19189,7 @@ module.exports['piecewise-constant'] = function(parameters) {
     return createFunction(parameters, 'interval');
 };
 
-},{}],57:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 'use strict';
 
 if (typeof module !== 'undefined' && module.exports) {
@@ -10073,7 +19313,7 @@ function isWebGLSupported(failIfMajorPerformanceCaveat) {
     }
 }
 
-},{}],58:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 'use strict';
 
 var format = require('util').format;
@@ -10091,7 +19331,7 @@ function ValidationError(key, value /*, message, ...*/) {
 
 module.exports = ValidationError;
 
-},{"util":337}],59:[function(require,module,exports){
+},{"util":384}],106:[function(require,module,exports){
 'use strict';
 
 module.exports = function (output) {
@@ -10104,7 +19344,7 @@ module.exports = function (output) {
     return output;
 };
 
-},{}],60:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 'use strict';
 
 module.exports = function getType(val) {
@@ -10123,7 +19363,7 @@ module.exports = function getType(val) {
     }
 };
 
-},{}],61:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 'use strict';
 
 // Turn jsonlint-lines-primitives objects into primitive objects
@@ -10135,7 +19375,7 @@ module.exports = function unbundle(value) {
     }
 };
 
-},{}],62:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10202,7 +19442,7 @@ module.exports = function validate(options) {
     }
 };
 
-},{"../error/validation_error":58,"../util/extend":59,"../util/get_type":60,"./validate_array":63,"./validate_boolean":64,"./validate_color":65,"./validate_constants":66,"./validate_enum":67,"./validate_filter":68,"./validate_function":69,"./validate_layer":71,"./validate_number":73,"./validate_object":74,"./validate_source":76,"./validate_string":77}],63:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/extend":106,"../util/get_type":107,"./validate_array":110,"./validate_boolean":111,"./validate_color":112,"./validate_constants":113,"./validate_enum":114,"./validate_filter":115,"./validate_function":116,"./validate_layer":118,"./validate_number":120,"./validate_object":121,"./validate_source":123,"./validate_string":124}],110:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -10256,7 +19496,7 @@ module.exports = function validateArray(options) {
     return errors;
 };
 
-},{"../error/validation_error":58,"../util/get_type":60,"./validate":62}],64:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107,"./validate":109}],111:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -10274,7 +19514,7 @@ module.exports = function validateBoolean(options) {
     return [];
 };
 
-},{"../error/validation_error":58,"../util/get_type":60}],65:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107}],112:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10297,7 +19537,7 @@ module.exports = function validateColor(options) {
     return [];
 };
 
-},{"../error/validation_error":58,"../util/get_type":60,"csscolorparser":2}],66:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107,"csscolorparser":48}],113:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10331,7 +19571,7 @@ module.exports = function validateConstants(options) {
 
 };
 
-},{"../error/validation_error":58,"../util/get_type":60}],67:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107}],114:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10349,7 +19589,7 @@ module.exports = function validateEnum(options) {
     return errors;
 };
 
-},{"../error/validation_error":58,"../util/unbundle_jsonlint":61}],68:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/unbundle_jsonlint":108}],115:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10454,7 +19694,7 @@ module.exports = function validateFilter(options) {
     return errors;
 };
 
-},{"../error/validation_error":58,"../util/get_type":60,"../util/unbundle_jsonlint":61,"./validate_enum":67}],69:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107,"../util/unbundle_jsonlint":108,"./validate_enum":114}],116:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10578,7 +19818,7 @@ module.exports = function validateFunction(options) {
 
 };
 
-},{"../error/validation_error":58,"../util/get_type":60,"./validate":62,"./validate_array":63,"./validate_number":73,"./validate_object":74}],70:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107,"./validate":109,"./validate_array":110,"./validate_number":120,"./validate_object":121}],117:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10602,7 +19842,7 @@ module.exports = function(options) {
     return errors;
 };
 
-},{"../error/validation_error":58,"./validate_string":77}],71:[function(require,module,exports){
+},{"../error/validation_error":105,"./validate_string":124}],118:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10715,7 +19955,7 @@ module.exports = function validateLayer(options) {
     return errors;
 };
 
-},{"../error/validation_error":58,"../util/extend":59,"../util/unbundle_jsonlint":61,"./validate_filter":68,"./validate_layout_property":72,"./validate_object":74,"./validate_paint_property":75}],72:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/extend":106,"../util/unbundle_jsonlint":108,"./validate_filter":115,"./validate_layout_property":119,"./validate_object":121,"./validate_paint_property":122}],119:[function(require,module,exports){
 'use strict';
 
 var validate = require('./validate');
@@ -10754,7 +19994,7 @@ module.exports = function validateLayoutProperty(options) {
 
 };
 
-},{"../error/validation_error":58,"./validate":62}],73:[function(require,module,exports){
+},{"../error/validation_error":105,"./validate":109}],120:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -10781,7 +20021,7 @@ module.exports = function validateNumber(options) {
     return [];
 };
 
-},{"../error/validation_error":58,"../util/get_type":60}],74:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107}],121:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10834,7 +20074,7 @@ module.exports = function validateObject(options) {
     return errors;
 };
 
-},{"../error/validation_error":58,"../util/get_type":60,"./validate":62}],75:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107,"./validate":109}],122:[function(require,module,exports){
 'use strict';
 
 var validate = require('./validate');
@@ -10874,7 +20114,7 @@ module.exports = function validatePaintProperty(options) {
 
 };
 
-},{"../error/validation_error":58,"./validate":62}],76:[function(require,module,exports){
+},{"../error/validation_error":105,"./validate":109}],123:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -10951,7 +20191,7 @@ module.exports = function validateSource(options) {
     }
 };
 
-},{"../error/validation_error":58,"../util/unbundle_jsonlint":61,"./validate_enum":67,"./validate_object":74}],77:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/unbundle_jsonlint":108,"./validate_enum":114,"./validate_object":121}],124:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -10969,7 +20209,7 @@ module.exports = function validateString(options) {
     return [];
 };
 
-},{"../error/validation_error":58,"../util/get_type":60}],78:[function(require,module,exports){
+},{"../error/validation_error":105,"../util/get_type":107}],125:[function(require,module,exports){
 'use strict';
 
 var validateConstants = require('./validate/validate_constants');
@@ -11039,13 +20279,13 @@ function wrapCleanErrors(inner) {
 
 module.exports = validateStyleMin;
 
-},{"../reference/latest.min":80,"./validate/validate":62,"./validate/validate_constants":66,"./validate/validate_filter":68,"./validate/validate_glyphs_url":70,"./validate/validate_layer":71,"./validate/validate_layout_property":72,"./validate/validate_paint_property":75,"./validate/validate_source":76}],79:[function(require,module,exports){
+},{"../reference/latest.min":127,"./validate/validate":109,"./validate/validate_constants":113,"./validate/validate_filter":115,"./validate/validate_glyphs_url":117,"./validate/validate_layer":118,"./validate/validate_layout_property":119,"./validate/validate_paint_property":122,"./validate/validate_source":123}],126:[function(require,module,exports){
 module.exports = require('./v8.json');
 
-},{"./v8.json":81}],80:[function(require,module,exports){
+},{"./v8.json":128}],127:[function(require,module,exports){
 module.exports = require('./v8.min.json');
 
-},{"./v8.min.json":82}],81:[function(require,module,exports){
+},{"./v8.min.json":129}],128:[function(require,module,exports){
 module.exports={
   "$version": 8,
   "$root": {
@@ -12444,9 +21684,9 @@ module.exports={
   }
 }
 
-},{}],82:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","values":[8]},"name":{"type":"string"},"metadata":{"type":"*"},"center":{"type":"array","value":"number"},"zoom":{"type":"number"},"bearing":{"type":"number","default":0,"period":360,"units":"degrees"},"pitch":{"type":"number","default":0,"units":"degrees"},"sources":{"required":true,"type":"sources"},"sprite":{"type":"string"},"glyphs":{"type":"string"},"transition":{"type":"transition"},"layers":{"required":true,"type":"array","value":"layer"}},"sources":{"*":{"type":"source"}},"source":["source_tile","source_geojson","source_video","source_image"],"source_tile":{"type":{"required":true,"type":"enum","values":["vector","raster"]},"url":{"type":"string"},"tiles":{"type":"array","value":"string"},"minzoom":{"type":"number","default":0},"maxzoom":{"type":"number","default":22},"tileSize":{"type":"number","default":512,"units":"pixels"},"*":{"type":"*"}},"source_geojson":{"type":{"required":true,"type":"enum","values":["geojson"]},"data":{"type":"*"},"maxzoom":{"type":"number","default":14},"buffer":{"type":"number","default":64},"tolerance":{"type":"number","default":3},"cluster":{"type":"boolean","default":false},"clusterRadius":{"type":"number","default":400},"clusterMaxZoom":{"type":"number"}},"source_video":{"type":{"required":true,"type":"enum","values":["video"]},"urls":{"required":true,"type":"array","value":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"source_image":{"type":{"required":true,"type":"enum","values":["image"]},"url":{"required":true,"type":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"layer":{"id":{"type":"string","required":true},"type":{"type":"enum","values":["fill","line","symbol","circle","raster","background"]},"metadata":{"type":"*"},"ref":{"type":"string"},"source":{"type":"string"},"source-layer":{"type":"string"},"minzoom":{"type":"number","minimum":0,"maximum":22},"maxzoom":{"type":"number","minimum":0,"maximum":22},"interactive":{"type":"boolean","default":false},"filter":{"type":"filter"},"layout":{"type":"layout"},"paint":{"type":"paint"},"paint.*":{"type":"paint"}},"layout":["layout_fill","layout_line","layout_circle","layout_symbol","layout_raster","layout_background"],"layout_background":{"visibility":{"type":"enum","function":"piecewise-constant","values":["visible","none"],"default":"visible"}},"layout_fill":{"visibility":{"type":"enum","function":"piecewise-constant","values":["visible","none"],"default":"visible"}},"layout_circle":{"visibility":{"type":"enum","function":"piecewise-constant","values":["visible","none"],"default":"visible"}},"layout_line":{"line-cap":{"type":"enum","function":"piecewise-constant","values":["butt","round","square"],"default":"butt"},"line-join":{"type":"enum","function":"piecewise-constant","values":["bevel","round","miter"],"default":"miter"},"line-miter-limit":{"type":"number","default":2,"function":"interpolated","requires":[{"line-join":"miter"}]},"line-round-limit":{"type":"number","default":1.05,"function":"interpolated","requires":[{"line-join":"round"}]},"visibility":{"type":"enum","function":"piecewise-constant","values":["visible","none"],"default":"visible"}},"layout_symbol":{"symbol-placement":{"type":"enum","function":"piecewise-constant","values":["point","line"],"default":"point"},"symbol-spacing":{"type":"number","default":250,"minimum":1,"function":"interpolated","units":"pixels","requires":[{"symbol-placement":"line"}]},"symbol-avoid-edges":{"type":"boolean","function":"piecewise-constant","default":false},"icon-allow-overlap":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["icon-image"]},"icon-ignore-placement":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["icon-image"]},"icon-optional":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["icon-image","text-field"]},"icon-rotation-alignment":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"viewport","requires":["icon-image"]},"icon-size":{"type":"number","default":1,"minimum":0,"function":"interpolated","requires":["icon-image"]},"icon-image":{"type":"string","function":"piecewise-constant","tokens":true},"icon-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","units":"degrees","requires":["icon-image"]},"icon-padding":{"type":"number","default":2,"minimum":0,"function":"interpolated","units":"pixels","requires":["icon-image"]},"icon-keep-upright":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["icon-image",{"icon-rotation-alignment":"map"},{"symbol-placement":"line"}]},"icon-offset":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","requires":["icon-image"]},"text-rotation-alignment":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"viewport","requires":["text-field"]},"text-field":{"type":"string","function":"piecewise-constant","default":"","tokens":true},"text-font":{"type":"array","value":"string","function":"piecewise-constant","default":["Open Sans Regular","Arial Unicode MS Regular"],"requires":["text-field"]},"text-size":{"type":"number","default":16,"minimum":0,"units":"pixels","function":"interpolated","requires":["text-field"]},"text-max-width":{"type":"number","default":10,"minimum":0,"units":"em","function":"interpolated","requires":["text-field"]},"text-line-height":{"type":"number","default":1.2,"units":"em","function":"interpolated","requires":["text-field"]},"text-letter-spacing":{"type":"number","default":0,"units":"em","function":"interpolated","requires":["text-field"]},"text-justify":{"type":"enum","function":"piecewise-constant","values":["left","center","right"],"default":"center","requires":["text-field"]},"text-anchor":{"type":"enum","function":"piecewise-constant","values":["center","left","right","top","bottom","top-left","top-right","bottom-left","bottom-right"],"default":"center","requires":["text-field"]},"text-max-angle":{"type":"number","default":45,"units":"degrees","function":"interpolated","requires":["text-field",{"symbol-placement":"line"}]},"text-rotate":{"type":"number","default":0,"period":360,"units":"degrees","function":"interpolated","requires":["text-field"]},"text-padding":{"type":"number","default":2,"minimum":0,"units":"pixels","function":"interpolated","requires":["text-field"]},"text-keep-upright":{"type":"boolean","function":"piecewise-constant","default":true,"requires":["text-field",{"text-rotation-alignment":"map"},{"symbol-placement":"line"}]},"text-transform":{"type":"enum","function":"piecewise-constant","values":["none","uppercase","lowercase"],"default":"none","requires":["text-field"]},"text-offset":{"type":"array","value":"number","units":"ems","function":"interpolated","length":2,"default":[0,0],"requires":["text-field"]},"text-allow-overlap":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["text-field"]},"text-ignore-placement":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["text-field"]},"text-optional":{"type":"boolean","function":"piecewise-constant","default":false,"requires":["text-field","icon-image"]},"visibility":{"type":"enum","function":"piecewise-constant","values":["visible","none"],"default":"visible"}},"layout_raster":{"visibility":{"type":"enum","function":"piecewise-constant","values":["visible","none"],"default":"visible"}},"filter":{"type":"array","value":"*"},"filter_operator":{"type":"enum","values":["==","!=",">",">=","<","<=","in","!in","all","any","none","has","!has"]},"geometry_type":{"type":"enum","values":["Point","LineString","Polygon"]},"color_operation":{"type":"enum","values":["lighten","saturate","spin","fade","mix"]},"function":{"stops":{"type":"array","required":true,"value":"function_stop"},"base":{"type":"number","default":1,"minimum":0},"property":{"type":"string","default":"$zoom"},"type":{"type":"enum","values":["exponential","interval","categorical"],"default":"exponential"}},"function_stop":{"type":"array","minimum":0,"maximum":22,"value":["number","color"],"length":2},"paint":["paint_fill","paint_line","paint_circle","paint_symbol","paint_raster","paint_background"],"paint_fill":{"fill-antialias":{"type":"boolean","function":"piecewise-constant","default":true},"fill-opacity":{"type":"number","function":"interpolated","default":1,"minimum":0,"maximum":1,"transition":true},"fill-color":{"type":"color","default":"#000000","function":"interpolated","transition":true,"requires":[{"!":"fill-pattern"}]},"fill-outline-color":{"type":"color","function":"interpolated","transition":true,"requires":[{"!":"fill-pattern"},{"fill-antialias":true}]},"fill-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","transition":true,"units":"pixels"},"fill-translate-anchor":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"map","requires":["fill-translate"]},"fill-pattern":{"type":"string","function":"piecewise-constant","transition":true}},"paint_line":{"line-opacity":{"type":"number","function":"interpolated","default":1,"minimum":0,"maximum":1,"transition":true},"line-color":{"type":"color","default":"#000000","function":"interpolated","transition":true,"requires":[{"!":"line-pattern"}]},"line-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","transition":true,"units":"pixels"},"line-translate-anchor":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"map","requires":["line-translate"]},"line-width":{"type":"number","default":1,"minimum":0,"function":"interpolated","transition":true,"units":"pixels"},"line-gap-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","transition":true,"units":"pixels"},"line-offset":{"type":"number","default":0,"function":"interpolated","transition":true,"units":"pixels"},"line-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","transition":true,"units":"pixels"},"line-dasharray":{"type":"array","value":"number","function":"piecewise-constant","minimum":0,"transition":true,"units":"line widths","requires":[{"!":"line-pattern"}]},"line-pattern":{"type":"string","function":"piecewise-constant","transition":true}},"paint_circle":{"circle-radius":{"type":"number","default":5,"minimum":0,"function":"interpolated","transition":true,"units":"pixels"},"circle-color":{"type":"color","default":"#000000","function":"interpolated","transition":true},"circle-blur":{"type":"number","default":0,"function":"interpolated","transition":true},"circle-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","transition":true},"circle-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","transition":true,"units":"pixels"},"circle-translate-anchor":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"map","requires":["circle-translate"]}},"paint_symbol":{"icon-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","transition":true,"requires":["icon-image"]},"icon-color":{"type":"color","default":"#000000","function":"interpolated","transition":true,"requires":["icon-image"]},"icon-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","transition":true,"requires":["icon-image"]},"icon-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","transition":true,"units":"pixels","requires":["icon-image"]},"icon-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate-anchor":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"map","requires":["icon-image","icon-translate"]},"text-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","transition":true,"requires":["text-field"]},"text-color":{"type":"color","default":"#000000","function":"interpolated","transition":true,"requires":["text-field"]},"text-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","transition":true,"requires":["text-field"]},"text-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","transition":true,"units":"pixels","requires":["text-field"]},"text-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","transition":true,"units":"pixels","requires":["text-field"]},"text-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","transition":true,"units":"pixels","requires":["text-field"]},"text-translate-anchor":{"type":"enum","function":"piecewise-constant","values":["map","viewport"],"default":"map","requires":["text-field","text-translate"]}},"paint_raster":{"raster-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","transition":true},"raster-hue-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","transition":true,"units":"degrees"},"raster-brightness-min":{"type":"number","function":"interpolated","default":0,"minimum":0,"maximum":1,"transition":true},"raster-brightness-max":{"type":"number","function":"interpolated","default":1,"minimum":0,"maximum":1,"transition":true},"raster-saturation":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","transition":true},"raster-contrast":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","transition":true},"raster-fade-duration":{"type":"number","default":300,"minimum":0,"function":"interpolated","transition":true,"units":"milliseconds"}},"paint_background":{"background-color":{"type":"color","default":"#000000","function":"interpolated","transition":true,"requires":[{"!":"background-pattern"}]},"background-pattern":{"type":"string","function":"piecewise-constant","transition":true},"background-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","transition":true}},"transition":{"duration":{"type":"number","default":300,"minimum":0,"units":"milliseconds"},"delay":{"type":"number","default":0,"minimum":0,"units":"milliseconds"}}}
-},{}],83:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 'use strict';
 
 var featureFilter = require('feature-filter');
@@ -12880,7 +22120,7 @@ function createGetUniform(attribute, stopOffset) {
     };
 }
 
-},{"../render/vertex_array_object":109,"../util/struct_array":183,"../util/util":185,"./bucket/circle_bucket":84,"./bucket/fill_bucket":85,"./bucket/line_bucket":86,"./bucket/symbol_bucket":87,"./buffer":88,"feature-filter":29}],84:[function(require,module,exports){
+},{"../render/vertex_array_object":156,"../util/struct_array":230,"../util/util":232,"./bucket/circle_bucket":131,"./bucket/fill_bucket":132,"./bucket/line_bucket":133,"./bucket/symbol_bucket":134,"./buffer":135,"feature-filter":76}],131:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../bucket');
@@ -12983,7 +22223,7 @@ CircleBucket.prototype.addFeature = function(feature) {
     this.addPaintAttributes('circle', globalProperties, feature.properties, startGroup, startIndex);
 };
 
-},{"../../util/util":185,"../bucket":83,"../load_geometry":90}],85:[function(require,module,exports){
+},{"../../util/util":232,"../bucket":130,"../load_geometry":137}],132:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../bucket');
@@ -13059,7 +22299,7 @@ FillBucket.prototype.addFill = function(vertices) {
     }
 };
 
-},{"../../util/util":185,"../bucket":83,"../load_geometry":90}],86:[function(require,module,exports){
+},{"../../util/util":232,"../bucket":130,"../load_geometry":137}],133:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../bucket');
@@ -13492,7 +22732,7 @@ LineBucket.prototype.addPieSliceVertex = function(currentVertex, distance, extru
     }
 };
 
-},{"../../util/util":185,"../bucket":83,"../load_geometry":90}],87:[function(require,module,exports){
+},{"../../util/util":232,"../bucket":130,"../load_geometry":137}],134:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -14054,7 +23294,7 @@ function SymbolInstance(anchor, line, shapedText, shapedIcon, layout, addToBuffe
     }
 }
 
-},{"../../symbol/anchor":139,"../../symbol/clip_line":141,"../../symbol/collision_feature":143,"../../symbol/get_anchors":145,"../../symbol/mergelines":148,"../../symbol/quads":149,"../../symbol/resolve_text":150,"../../symbol/shaping":151,"../../util/token":184,"../../util/util":185,"../bucket":83,"../load_geometry":90,"point-geometry":191}],88:[function(require,module,exports){
+},{"../../symbol/anchor":186,"../../symbol/clip_line":188,"../../symbol/collision_feature":190,"../../symbol/get_anchors":192,"../../symbol/mergelines":195,"../../symbol/quads":196,"../../symbol/resolve_text":197,"../../symbol/shaping":198,"../../util/token":231,"../../util/util":232,"../bucket":130,"../load_geometry":137,"point-geometry":238}],135:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -14172,7 +23412,7 @@ Buffer.ELEMENT_ATTRIBUTE_TYPE = 'Uint16';
  */
 Buffer.VERTEX_ATTRIBUTE_ALIGNMENT = 4;
 
-},{"assert":1}],89:[function(require,module,exports){
+},{"assert":1}],136:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -14473,7 +23713,7 @@ function offsetLine(rings, offset) {
     return newRings;
 }
 
-},{"../util/dictionary_coder":176,"../util/intersection_tests":180,"../util/struct_array":183,"../util/util":185,"../util/vectortile_to_geojson":186,"./bucket":83,"./load_geometry":90,"feature-filter":29,"grid-index":49,"pbf":190,"point-geometry":191,"vector-tile":338}],90:[function(require,module,exports){
+},{"../util/dictionary_coder":223,"../util/intersection_tests":227,"../util/struct_array":230,"../util/util":232,"../util/vectortile_to_geojson":233,"./bucket":130,"./load_geometry":137,"feature-filter":76,"grid-index":96,"pbf":237,"point-geometry":238,"vector-tile":385}],137:[function(require,module,exports){
 'use strict';
 
 var EXTENT = require('./bucket').EXTENT;
@@ -14512,7 +23752,7 @@ module.exports = function loadGeometry(feature) {
     return geometry;
 };
 
-},{"./bucket":83}],91:[function(require,module,exports){
+},{"./bucket":130}],138:[function(require,module,exports){
 'use strict';
 
 module.exports = Coordinate;
@@ -14591,7 +23831,7 @@ Coordinate.prototype = {
     }
 };
 
-},{}],92:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 'use strict';
 
 module.exports = LngLat;
@@ -14685,7 +23925,7 @@ LngLat.convert = function (input) {
     return input;
 };
 
-},{"../util/util":185}],93:[function(require,module,exports){
+},{"../util/util":232}],140:[function(require,module,exports){
 'use strict';
 
 module.exports = LngLatBounds;
@@ -14859,7 +24099,7 @@ LngLatBounds.convert = function (input) {
     return new LngLatBounds(input);
 };
 
-},{"./lng_lat":92}],94:[function(require,module,exports){
+},{"./lng_lat":139}],141:[function(require,module,exports){
 'use strict';
 
 var LngLat = require('./lng_lat'),
@@ -15299,7 +24539,7 @@ Transform.prototype = {
     }
 };
 
-},{"../data/bucket":83,"../source/tile_coord":117,"../util/interpolate":179,"../util/util":185,"./coordinate":91,"./lng_lat":92,"gl-matrix":39,"point-geometry":191}],95:[function(require,module,exports){
+},{"../data/bucket":130,"../source/tile_coord":164,"../util/interpolate":226,"../util/util":232,"./coordinate":138,"./lng_lat":139,"gl-matrix":86,"point-geometry":238}],142:[function(require,module,exports){
 'use strict';
 
 // Font data From Hershey Simplex Font
@@ -15432,7 +24672,7 @@ module.exports = function textVertices(text, left, baseline, scale) {
     return strokes;
 };
 
-},{}],96:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 'use strict';
 
 /**
@@ -15480,7 +24720,7 @@ Object.defineProperty(mapboxgl, 'accessToken', {
     set: function(token) { config.ACCESS_TOKEN = token; }
 });
 
-},{"./geo/lng_lat":92,"./geo/lng_lat_bounds":93,"./source/geojson_source":110,"./source/image_source":112,"./source/video_source":120,"./style/style":126,"./ui/control/attribution":154,"./ui/control/control":155,"./ui/control/geolocate":156,"./ui/control/navigation":157,"./ui/map":167,"./ui/popup":168,"./util/ajax":170,"./util/browser":171,"./util/config":175,"./util/evented":177,"./util/util":185,"point-geometry":191}],97:[function(require,module,exports){
+},{"./geo/lng_lat":139,"./geo/lng_lat_bounds":140,"./source/geojson_source":157,"./source/image_source":159,"./source/video_source":167,"./style/style":173,"./ui/control/attribution":201,"./ui/control/control":202,"./ui/control/geolocate":203,"./ui/control/navigation":204,"./ui/map":214,"./ui/popup":215,"./util/ajax":217,"./util/browser":218,"./util/config":222,"./util/evented":224,"./util/util":232,"point-geometry":238}],144:[function(require,module,exports){
 'use strict';
 
 var TilePyramid = require('../source/tile_pyramid');
@@ -15582,7 +24822,7 @@ function drawBackground(painter, source, layer) {
     gl.stencilFunc(gl.EQUAL, 0x80, 0x80);
 }
 
-},{"../source/pixels_to_tile_units":113,"../source/tile_pyramid":118,"../util/util":185}],98:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":160,"../source/tile_pyramid":165,"../util/util":232}],145:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -15634,7 +24874,7 @@ function drawCircles(painter, source, layer, coords) {
     }
 }
 
-},{"../util/browser":171}],99:[function(require,module,exports){
+},{"../util/browser":218}],146:[function(require,module,exports){
 'use strict';
 
 module.exports = drawCollisionDebug;
@@ -15669,7 +24909,7 @@ function drawCollisionDebug(painter, source, layer, coords) {
     }
 }
 
-},{}],100:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 'use strict';
 
 var textVertices = require('../lib/debugtext');
@@ -15730,7 +24970,7 @@ function drawDebugTile(painter, source, coord) {
     gl.drawArrays(gl.LINES, 0, debugTextBuffer.length);
 }
 
-},{"../data/bucket":83,"../data/buffer":88,"../lib/debugtext":95,"../util/browser":171,"./vertex_array_object":109,"gl-matrix":39}],101:[function(require,module,exports){
+},{"../data/bucket":130,"../data/buffer":135,"../lib/debugtext":142,"../util/browser":218,"./vertex_array_object":156,"gl-matrix":86}],148:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -15974,7 +25214,7 @@ function setPattern(image, opacity, tile, coord, painter, program) {
     painter.spriteAtlas.bind(gl, true);
 }
 
-},{"../source/pixels_to_tile_units":113,"../util/util":185}],102:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":160,"../util/util":232}],149:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -16148,7 +25388,7 @@ module.exports = function drawLine(painter, source, layer, coords) {
 
 };
 
-},{"../source/pixels_to_tile_units":113,"../util/browser":171,"../util/util":185,"gl-matrix":39}],103:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":160,"../util/browser":218,"../util/util":232,"gl-matrix":86}],150:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -16292,7 +25532,7 @@ function getOpacities(tile, parentTile, layer, transform) {
     return opacity;
 }
 
-},{"../util/struct_array":183,"../util/util":185}],104:[function(require,module,exports){
+},{"../util/struct_array":230,"../util/util":232}],151:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -16504,7 +25744,7 @@ function drawSymbol(painter, layer, posMatrix, tile, bucket, bufferGroups, isTex
     }
 }
 
-},{"../source/pixels_to_tile_units":113,"../util/browser":171,"../util/util":185,"./draw_collision_debug":99}],105:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":160,"../util/browser":218,"../util/util":232,"./draw_collision_debug":146}],152:[function(require,module,exports){
 'use strict';
 
 module.exports = FrameHistory;
@@ -16576,7 +25816,7 @@ FrameHistory.prototype.bind = function(gl) {
     }
 };
 
-},{}],106:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 'use strict';
 
 module.exports = LineAtlas;
@@ -16721,7 +25961,7 @@ LineAtlas.prototype.bind = function(gl) {
     }
 };
 
-},{}],107:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 'use strict';
 
 var browser = require('../util/browser');
@@ -17060,7 +26300,7 @@ Painter.prototype.showOverdrawInspector = function(enabled) {
     }
 };
 
-},{"../data/bucket":83,"../data/buffer":88,"../source/pixels_to_tile_units":113,"../source/tile_pyramid":118,"../util/browser":171,"../util/struct_array":183,"../util/util":185,"./draw_background":97,"./draw_circle":98,"./draw_debug":100,"./draw_fill":101,"./draw_line":102,"./draw_raster":103,"./draw_symbol":104,"./frame_history":105,"./painter/use_program":108,"./vertex_array_object":109,"gl-matrix":39}],108:[function(require,module,exports){
+},{"../data/bucket":130,"../data/buffer":135,"../source/pixels_to_tile_units":160,"../source/tile_pyramid":165,"../util/browser":218,"../util/struct_array":230,"../util/util":232,"./draw_background":144,"./draw_circle":145,"./draw_debug":147,"./draw_fill":148,"./draw_line":149,"./draw_raster":150,"./draw_symbol":151,"./frame_history":152,"./painter/use_program":155,"./vertex_array_object":156,"gl-matrix":86}],155:[function(require,module,exports){
 'use strict';
 
 
@@ -17200,7 +26440,7 @@ module.exports.useProgram = function (nextProgramName, macros) {
     return nextProgram;
 };
 
-},{"../../util/util":185,"assert":1,"path":188}],109:[function(require,module,exports){
+},{"../../util/util":232,"assert":1,"path":235}],156:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -17296,7 +26536,7 @@ VertexArrayObject.prototype.destroy = function(gl) {
     }
 };
 
-},{"assert":1}],110:[function(require,module,exports){
+},{"assert":1}],157:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -17530,7 +26770,7 @@ GeoJSONSource.prototype = util.inherit(Evented, /** @lends GeoJSONSource.prototy
     }
 });
 
-},{"../data/bucket":83,"../util/evented":177,"../util/util":185,"./source":115,"./tile_pyramid":118,"resolve-url":332}],111:[function(require,module,exports){
+},{"../data/bucket":130,"../util/evented":224,"../util/util":232,"./source":162,"./tile_pyramid":165,"resolve-url":379}],158:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -17599,7 +26839,7 @@ FeatureWrapper.prototype.bbox = function() {
 
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON;
 
-},{"../data/bucket":83,"point-geometry":191,"vector-tile":338}],112:[function(require,module,exports){
+},{"../data/bucket":130,"point-geometry":238,"vector-tile":385}],159:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -17762,7 +27002,7 @@ ImageSource.prototype = util.inherit(Evented, /** @lends ImageSource.prototype *
     }
 });
 
-},{"../data/bucket":83,"../data/buffer":88,"../geo/lng_lat":92,"../render/draw_raster":103,"../render/vertex_array_object":109,"../util/ajax":170,"../util/evented":177,"../util/util":185,"./tile":116,"./tile_coord":117,"point-geometry":191}],113:[function(require,module,exports){
+},{"../data/bucket":130,"../data/buffer":135,"../geo/lng_lat":139,"../render/draw_raster":150,"../render/vertex_array_object":156,"../util/ajax":217,"../util/evented":224,"../util/util":232,"./tile":163,"./tile_coord":164,"point-geometry":238}],160:[function(require,module,exports){
 'use strict';
 
 var Bucket = require('../data/bucket');
@@ -17787,7 +27027,7 @@ module.exports = function(tile, pixelValue, z) {
 };
 
 
-},{"../data/bucket":83}],114:[function(require,module,exports){
+},{"../data/bucket":130}],161:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -17907,7 +27147,7 @@ RasterTileSource.prototype = util.inherit(Evented, {
     }
 });
 
-},{"../util/ajax":170,"../util/evented":177,"../util/mapbox":182,"../util/util":185,"./source":115}],115:[function(require,module,exports){
+},{"../util/ajax":217,"../util/evented":224,"../util/mapbox":229,"../util/util":232,"./source":162}],162:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -18102,7 +27342,7 @@ exports.is = function(source) {
     return false;
 };
 
-},{"../util/ajax":170,"../util/browser":171,"../util/mapbox":182,"../util/util":185,"./geojson_source":110,"./image_source":112,"./raster_tile_source":114,"./tile_coord":117,"./tile_pyramid":118,"./vector_tile_source":119,"./video_source":120}],116:[function(require,module,exports){
+},{"../util/ajax":217,"../util/browser":218,"../util/mapbox":229,"../util/util":232,"./geojson_source":157,"./image_source":159,"./raster_tile_source":161,"./tile_coord":164,"./tile_pyramid":165,"./vector_tile_source":166,"./video_source":167}],163:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -18284,7 +27524,7 @@ function unserializeBuckets(input, style) {
     return output;
 }
 
-},{"../data/bucket":83,"../data/feature_index":89,"../symbol/collision_box":142,"../symbol/collision_tile":144,"../util/util":185,"../util/vectortile_to_geojson":186,"feature-filter":29,"pbf":190,"vector-tile":338}],117:[function(require,module,exports){
+},{"../data/bucket":130,"../data/feature_index":136,"../symbol/collision_box":189,"../symbol/collision_tile":191,"../util/util":232,"../util/vectortile_to_geojson":233,"feature-filter":76,"pbf":237,"vector-tile":385}],164:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -18463,7 +27703,7 @@ TileCoord.cover = function(z, bounds, actualZ) {
     });
 };
 
-},{"../geo/coordinate":91,"assert":1}],118:[function(require,module,exports){
+},{"../geo/coordinate":138,"assert":1}],165:[function(require,module,exports){
 'use strict';
 
 var Tile = require('./tile');
@@ -18928,7 +28168,7 @@ function compareKeyZoom(a, b) {
     return (a % 32) - (b % 32);
 }
 
-},{"../data/bucket":83,"../geo/coordinate":91,"../util/lru_cache":181,"../util/util":185,"./tile":116,"./tile_coord":117,"point-geometry":191}],119:[function(require,module,exports){
+},{"../data/bucket":130,"../geo/coordinate":138,"../util/lru_cache":228,"../util/util":232,"./tile":163,"./tile_coord":164,"point-geometry":238}],166:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -19056,7 +28296,7 @@ VectorTileSource.prototype = util.inherit(Evented, {
     }
 });
 
-},{"../util/evented":177,"../util/mapbox":182,"../util/util":185,"./source":115}],120:[function(require,module,exports){
+},{"../util/evented":224,"../util/mapbox":229,"../util/util":232,"./source":162}],167:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -19247,7 +28487,7 @@ VideoSource.prototype = util.inherit(Evented, /** @lends VideoSource.prototype *
     }
 });
 
-},{"../data/bucket":83,"../data/buffer":88,"../geo/lng_lat":92,"../render/draw_raster":103,"../render/vertex_array_object":109,"../util/ajax":170,"../util/evented":177,"../util/util":185,"./tile":116,"./tile_coord":117,"point-geometry":191}],121:[function(require,module,exports){
+},{"../data/bucket":130,"../data/buffer":135,"../geo/lng_lat":139,"../render/draw_raster":150,"../render/vertex_array_object":156,"../util/ajax":217,"../util/evented":224,"../util/util":232,"./tile":163,"./tile_coord":164,"point-geometry":238}],168:[function(require,module,exports){
 'use strict';
 
 var Actor = require('../util/actor');
@@ -19492,7 +28732,7 @@ function createLayerFamilies(layers) {
     return families;
 }
 
-},{"../style/style_layer":129,"../util/actor":169,"../util/ajax":170,"../util/util":185,"./geojson_wrapper":111,"./worker_tile":122,"geojson-rewind":31,"geojson-vt":34,"pbf":190,"supercluster":334,"vector-tile":338,"vt-pbf":342}],122:[function(require,module,exports){
+},{"../style/style_layer":176,"../util/actor":216,"../util/ajax":217,"../util/util":232,"./geojson_wrapper":158,"./worker_tile":169,"geojson-rewind":78,"geojson-vt":81,"pbf":237,"supercluster":381,"vector-tile":385,"vt-pbf":389}],169:[function(require,module,exports){
 'use strict';
 
 var FeatureIndex = require('../data/feature_index');
@@ -19781,7 +29021,7 @@ function getLayerId(layer) {
     return layer.id;
 }
 
-},{"../data/bucket":83,"../data/feature_index":89,"../symbol/collision_box":142,"../symbol/collision_tile":144,"../util/dictionary_coder":176}],123:[function(require,module,exports){
+},{"../data/bucket":130,"../data/feature_index":136,"../symbol/collision_box":189,"../symbol/collision_tile":191,"../util/dictionary_coder":223}],170:[function(require,module,exports){
 'use strict';
 
 module.exports = AnimationLoop;
@@ -19813,7 +29053,7 @@ AnimationLoop.prototype.cancel = function(n) {
     });
 };
 
-},{}],124:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 'use strict';
 
 var Evented = require('../util/evented');
@@ -19894,7 +29134,7 @@ ImageSprite.prototype.getSpritePosition = function(name) {
     return new SpritePosition();
 };
 
-},{"../util/ajax":170,"../util/browser":171,"../util/evented":177,"../util/mapbox":182}],125:[function(require,module,exports){
+},{"../util/ajax":217,"../util/browser":218,"../util/evented":224,"../util/mapbox":229}],172:[function(require,module,exports){
 'use strict';
 
 var parseCSSColor = require('csscolorparser').parseCSSColor;
@@ -19942,7 +29182,7 @@ function colorDowngrade(color) {
 
 module.exports = parseColor;
 
-},{"../util/util":185,"csscolorparser":2}],126:[function(require,module,exports){
+},{"../util/util":232,"csscolorparser":48}],173:[function(require,module,exports){
 'use strict';
 
 var Evented = require('../util/evented');
@@ -20681,7 +29921,7 @@ Style.prototype = util.inherit(Evented, {
     }
 });
 
-},{"../render/line_atlas":106,"../source/source":115,"../symbol/glyph_source":147,"../symbol/sprite_atlas":152,"../util/ajax":170,"../util/browser":171,"../util/dispatcher":173,"../util/evented":177,"../util/mapbox":182,"../util/util":185,"./animation_loop":123,"./image_sprite":124,"./style_function":128,"./style_layer":129,"./style_spec":136,"./validate_style":138}],127:[function(require,module,exports){
+},{"../render/line_atlas":153,"../source/source":162,"../symbol/glyph_source":194,"../symbol/sprite_atlas":199,"../util/ajax":217,"../util/browser":218,"../util/dispatcher":220,"../util/evented":224,"../util/mapbox":229,"../util/util":232,"./animation_loop":170,"./image_sprite":171,"./style_function":175,"./style_layer":176,"./style_spec":183,"./validate_style":185}],174:[function(require,module,exports){
 'use strict';
 
 var MapboxGLFunction = require('./style_function');
@@ -20761,7 +30001,7 @@ function transitioned(calculate) {
     };
 }
 
-},{"../util/util":185,"./parse_color":125,"./style_function":128}],128:[function(require,module,exports){
+},{"../util/util":232,"./parse_color":172,"./style_function":175}],175:[function(require,module,exports){
 'use strict';
 
 var MapboxGLFunction = require('mapbox-gl-function');
@@ -20788,7 +30028,7 @@ exports['piecewise-constant'] = function(parameters) {
 
 exports.isFunctionDefinition = MapboxGLFunction.isFunctionDefinition;
 
-},{"mapbox-gl-function":56}],129:[function(require,module,exports){
+},{"mapbox-gl-function":103}],176:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -21125,7 +30365,7 @@ function getDeclarationValue(declaration) {
     return declaration.value;
 }
 
-},{"../util/evented":177,"../util/util":185,"./parse_color":125,"./style_declaration":127,"./style_layer/background_style_layer":130,"./style_layer/circle_style_layer":131,"./style_layer/fill_style_layer":132,"./style_layer/line_style_layer":133,"./style_layer/raster_style_layer":134,"./style_layer/symbol_style_layer":135,"./style_spec":136,"./style_transition":137,"./validate_style":138}],130:[function(require,module,exports){
+},{"../util/evented":224,"../util/util":232,"./parse_color":172,"./style_declaration":174,"./style_layer/background_style_layer":177,"./style_layer/circle_style_layer":178,"./style_layer/fill_style_layer":179,"./style_layer/line_style_layer":180,"./style_layer/raster_style_layer":181,"./style_layer/symbol_style_layer":182,"./style_spec":183,"./style_transition":184,"./validate_style":185}],177:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -21139,7 +30379,7 @@ module.exports = BackgroundStyleLayer;
 
 BackgroundStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":185,"../style_layer":129}],131:[function(require,module,exports){
+},{"../../util/util":232,"../style_layer":176}],178:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -21153,7 +30393,7 @@ module.exports = CircleStyleLayer;
 
 CircleStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":185,"../style_layer":129}],132:[function(require,module,exports){
+},{"../../util/util":232,"../style_layer":176}],179:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -21167,7 +30407,7 @@ module.exports = FillStyleLayer;
 
 FillStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":185,"../style_layer":129}],133:[function(require,module,exports){
+},{"../../util/util":232,"../style_layer":176}],180:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -21201,7 +30441,7 @@ LineStyleLayer.prototype = util.inherit(StyleLayer, {
     }
 });
 
-},{"../../util/util":185,"../style_layer":129}],134:[function(require,module,exports){
+},{"../../util/util":232,"../style_layer":176}],181:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -21215,7 +30455,7 @@ module.exports = RasterStyleLayer;
 
 RasterStyleLayer.prototype = util.inherit(StyleLayer, {});
 
-},{"../../util/util":185,"../style_layer":129}],135:[function(require,module,exports){
+},{"../../util/util":232,"../style_layer":176}],182:[function(require,module,exports){
 'use strict';
 
 var util = require('../../util/util');
@@ -21255,12 +30495,12 @@ SymbolStyleLayer.prototype = util.inherit(StyleLayer, {
 
 });
 
-},{"../../util/util":185,"../style_layer":129}],136:[function(require,module,exports){
+},{"../../util/util":232,"../style_layer":176}],183:[function(require,module,exports){
 'use strict';
 
 module.exports = require('mapbox-gl-style-spec/reference/latest');
 
-},{"mapbox-gl-style-spec/reference/latest":79}],137:[function(require,module,exports){
+},{"mapbox-gl-style-spec/reference/latest":126}],184:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -21340,7 +30580,7 @@ function interpZoomTransitioned(from, to, t) {
     };
 }
 
-},{"../util/interpolate":179,"../util/util":185}],138:[function(require,module,exports){
+},{"../util/interpolate":226,"../util/util":232}],185:[function(require,module,exports){
 'use strict';
 
 module.exports = require('mapbox-gl-style-spec/lib/validate_style.min');
@@ -21364,7 +30604,7 @@ module.exports.throwErrors = function throwErrors(emitter, errors) {
     }
 };
 
-},{"mapbox-gl-style-spec/lib/validate_style.min":78}],139:[function(require,module,exports){
+},{"mapbox-gl-style-spec/lib/validate_style.min":125}],186:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -21387,7 +30627,7 @@ Anchor.prototype.clone = function() {
     return new Anchor(this.x, this.y, this.angle, this.segment);
 };
 
-},{"point-geometry":191}],140:[function(require,module,exports){
+},{"point-geometry":238}],187:[function(require,module,exports){
 'use strict';
 
 module.exports = checkMaxAngle;
@@ -21467,7 +30707,7 @@ function checkMaxAngle(line, anchor, labelLength, windowSize, maxAngle) {
     return true;
 }
 
-},{}],141:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -21541,7 +30781,7 @@ function clipLine(lines, x1, y1, x2, y2) {
     return clippedLines;
 }
 
-},{"point-geometry":191}],142:[function(require,module,exports){
+},{"point-geometry":238}],189:[function(require,module,exports){
 'use strict';
 
 var StructArrayType = require('../util/struct_array');
@@ -21622,7 +30862,7 @@ util.extendAll(CollisionBoxArray.prototype.StructType.prototype, {
     }
 });
 
-},{"../util/struct_array":183,"../util/util":185,"point-geometry":191}],143:[function(require,module,exports){
+},{"../util/struct_array":230,"../util/util":232,"point-geometry":238}],190:[function(require,module,exports){
 'use strict';
 
 module.exports = CollisionFeature;
@@ -21756,7 +30996,7 @@ CollisionFeature.prototype._addLineCollisionBoxes = function(collisionBoxArray, 
     return bboxes;
 };
 
-},{}],144:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -22057,7 +31297,7 @@ CollisionTile.prototype.insertCollisionFeature = function(collisionFeature, minP
     }
 };
 
-},{"../data/bucket":83,"grid-index":49,"point-geometry":191}],145:[function(require,module,exports){
+},{"../data/bucket":130,"grid-index":96,"point-geometry":238}],192:[function(require,module,exports){
 'use strict';
 
 var interpolate = require('../util/interpolate');
@@ -22161,7 +31401,7 @@ function resample(line, offset, spacing, angleWindowSize, maxAngle, labelLength,
     return anchors;
 }
 
-},{"../symbol/anchor":139,"../util/interpolate":179,"./check_max_angle":140}],146:[function(require,module,exports){
+},{"../symbol/anchor":186,"../util/interpolate":226,"./check_max_angle":187}],193:[function(require,module,exports){
 'use strict';
 
 var ShelfPack = require('shelf-pack');
@@ -22329,7 +31569,7 @@ GlyphAtlas.prototype.updateTexture = function(gl) {
     }
 };
 
-},{"shelf-pack":333}],147:[function(require,module,exports){
+},{"shelf-pack":380}],194:[function(require,module,exports){
 'use strict';
 
 var normalizeURL = require('../util/mapbox').normalizeGlyphsURL;
@@ -22471,7 +31711,7 @@ function glyphUrl(fontstack, range, url, subdomains) {
         .replace('{range}', range);
 }
 
-},{"../symbol/glyph_atlas":146,"../util/ajax":170,"../util/glyphs":178,"../util/mapbox":182,"pbf":190}],148:[function(require,module,exports){
+},{"../symbol/glyph_atlas":193,"../util/ajax":217,"../util/glyphs":225,"../util/mapbox":229,"pbf":237}],195:[function(require,module,exports){
 'use strict';
 
 module.exports = function (features, textFeatures, geometries) {
@@ -22562,7 +31802,7 @@ module.exports = function (features, textFeatures, geometries) {
     };
 };
 
-},{}],149:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -22815,7 +32055,7 @@ function getSegmentGlyphs(glyphs, anchor, offset, line, segment, forward) {
     return placementScale;
 }
 
-},{"point-geometry":191}],150:[function(require,module,exports){
+},{"point-geometry":238}],197:[function(require,module,exports){
 'use strict';
 
 var resolveTokens = require('../util/token');
@@ -22858,7 +32098,7 @@ function resolveText(features, layoutProperties, codepoints) {
     return textFeatures;
 }
 
-},{"../util/token":184}],151:[function(require,module,exports){
+},{"../util/token":231}],198:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -23039,7 +32279,7 @@ function PositionedIcon(image, top, bottom, left, right) {
     this.right = right;
 }
 
-},{}],152:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 'use strict';
 
 var ShelfPack = require('shelf-pack');
@@ -23271,7 +32511,7 @@ function AtlasImage(rect, width, height, sdf, pixelRatio) {
     this.pixelRatio = pixelRatio;
 }
 
-},{"../util/browser":171,"shelf-pack":333}],153:[function(require,module,exports){
+},{"../util/browser":218,"shelf-pack":380}],200:[function(require,module,exports){
 'use strict';
 
 var util = require('../util/util');
@@ -24049,7 +33289,7 @@ util.extend(Camera.prototype, /** @lends Map.prototype */{
  * @property {EventData} data Original event data
  */
 
-},{"../geo/lng_lat":92,"../geo/lng_lat_bounds":93,"../util/browser":171,"../util/interpolate":179,"../util/util":185,"point-geometry":191}],154:[function(require,module,exports){
+},{"../geo/lng_lat":139,"../geo/lng_lat_bounds":140,"../util/browser":218,"../util/interpolate":226,"../util/util":232,"point-geometry":238}],201:[function(require,module,exports){
 'use strict';
 
 var Control = require('./control');
@@ -24130,7 +33370,7 @@ Attribution.prototype = util.inherit(Control, {
     }
 });
 
-},{"../../util/dom":174,"../../util/util":185,"./control":155}],155:[function(require,module,exports){
+},{"../../util/dom":221,"../../util/util":232,"./control":202}],202:[function(require,module,exports){
 'use strict';
 
 module.exports = Control;
@@ -24181,7 +33421,7 @@ Control.prototype = {
     }
 };
 
-},{}],156:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 'use strict';
 
 var Control = require('./control');
@@ -24258,7 +33498,7 @@ Geolocate.prototype = util.inherit(Control, {
 });
 
 
-},{"../../util/browser":171,"../../util/dom":174,"../../util/util":185,"./control":155}],157:[function(require,module,exports){
+},{"../../util/browser":218,"../../util/dom":221,"../../util/util":232,"./control":202}],204:[function(require,module,exports){
 'use strict';
 
 var Control = require('./control');
@@ -24376,7 +33616,7 @@ function copyMouseEvent(e) {
 }
 
 
-},{"../../util/dom":174,"../../util/util":185,"./control":155}],158:[function(require,module,exports){
+},{"../../util/dom":221,"../../util/util":232,"./control":202}],205:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -24552,7 +33792,7 @@ BoxZoomHandler.prototype = {
  * @property {EventData} data Original event data
  */
 
-},{"../../geo/lng_lat_bounds":93,"../../util/dom":174,"../../util/util":185}],159:[function(require,module,exports){
+},{"../../geo/lng_lat_bounds":140,"../../util/dom":221,"../../util/util":232}],206:[function(require,module,exports){
 'use strict';
 
 module.exports = DoubleClickZoomHandler;
@@ -24607,7 +33847,7 @@ DoubleClickZoomHandler.prototype = {
     }
 };
 
-},{}],160:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -24837,7 +34077,7 @@ DragPanHandler.prototype = {
  * @property {EventData} data Original event data
  */
 
-},{"../../util/dom":174,"../../util/util":185}],161:[function(require,module,exports){
+},{"../../util/dom":221,"../../util/util":232}],208:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -25081,7 +34321,7 @@ DragRotateHandler.prototype = {
  * @property {EventData} data Original event data
  */
 
-},{"../../util/dom":174,"../../util/util":185,"point-geometry":191}],162:[function(require,module,exports){
+},{"../../util/dom":221,"../../util/util":232,"point-geometry":238}],209:[function(require,module,exports){
 'use strict';
 
 module.exports = KeyboardHandler;
@@ -25205,7 +34445,7 @@ KeyboardHandler.prototype = {
     }
 };
 
-},{}],163:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -25383,7 +34623,7 @@ ScrollZoomHandler.prototype = {
  * @property {EventData} data Original event data, if fired interactively
  */
 
-},{"../../util/browser":171,"../../util/dom":174,"../../util/util":185}],164:[function(require,module,exports){
+},{"../../util/browser":218,"../../util/dom":221,"../../util/util":232}],211:[function(require,module,exports){
 'use strict';
 
 var DOM = require('../../util/dom'),
@@ -25592,7 +34832,7 @@ TouchZoomRotateHandler.prototype = {
     }
 };
 
-},{"../../util/dom":174,"../../util/util":185}],165:[function(require,module,exports){
+},{"../../util/dom":221,"../../util/util":232}],212:[function(require,module,exports){
 'use strict';
 
 /*
@@ -25667,7 +34907,7 @@ Hash.prototype = {
     }
 };
 
-},{"../util/util":185}],166:[function(require,module,exports){
+},{"../util/util":232}],213:[function(require,module,exports){
 'use strict';
 
 var handlers = {
@@ -25994,7 +35234,7 @@ Interaction.prototype = {
  * @property {EventData} data Original event data, if fired interactively
  */
 
-},{"../util/dom":174,"../util/util":185,"./handler/box_zoom":158,"./handler/dblclick_zoom":159,"./handler/drag_pan":160,"./handler/drag_rotate":161,"./handler/keyboard":162,"./handler/scroll_zoom":163,"./handler/touch_zoom_rotate":164,"point-geometry":191}],167:[function(require,module,exports){
+},{"../util/dom":221,"../util/util":232,"./handler/box_zoom":205,"./handler/dblclick_zoom":206,"./handler/drag_pan":207,"./handler/drag_rotate":208,"./handler/keyboard":209,"./handler/scroll_zoom":210,"./handler/touch_zoom_rotate":211,"point-geometry":238}],214:[function(require,module,exports){
 'use strict';
 
 var Canvas = require('../util/canvas');
@@ -27075,7 +36315,7 @@ function removeNode(node) {
   * @instance
   */
 
-},{"../geo/lng_lat":92,"../geo/lng_lat_bounds":93,"../geo/transform":94,"../render/painter":107,"../style/animation_loop":123,"../style/style":126,"../util/browser":171,"../util/canvas":172,"../util/dom":174,"../util/evented":177,"../util/util":185,"./camera":153,"./control/attribution":154,"./hash":165,"./interaction":166,"point-geometry":191}],168:[function(require,module,exports){
+},{"../geo/lng_lat":139,"../geo/lng_lat_bounds":140,"../geo/transform":141,"../render/painter":154,"../style/animation_loop":170,"../style/style":173,"../util/browser":218,"../util/canvas":219,"../util/dom":221,"../util/evented":224,"../util/util":232,"./camera":200,"./control/attribution":201,"./hash":212,"./interaction":213,"point-geometry":238}],215:[function(require,module,exports){
 'use strict';
 
 module.exports = Popup;
@@ -27307,7 +36547,7 @@ Popup.prototype = util.inherit(Evented, /** @lends Popup.prototype */{
     }
 });
 
-},{"../geo/lng_lat":92,"../util/dom":174,"../util/evented":177,"../util/util":185}],169:[function(require,module,exports){
+},{"../geo/lng_lat":139,"../util/dom":221,"../util/evented":224,"../util/util":232}],216:[function(require,module,exports){
 'use strict';
 
 module.exports = Actor;
@@ -27372,7 +36612,7 @@ Actor.prototype.postMessage = function(message, transferList) {
     this.target.postMessage(message, transferList);
 };
 
-},{}],170:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 'use strict';
 
 exports.getJSON = function(url, callback) {
@@ -27462,7 +36702,7 @@ exports.getVideo = function(urls, callback) {
     return video;
 };
 
-},{}],171:[function(require,module,exports){
+},{}],218:[function(require,module,exports){
 'use strict';
 
 /**
@@ -27555,7 +36795,7 @@ webpImgTest.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//
 
 exports.supportsGeolocation = !!navigator.geolocation;
 
-},{"mapbox-gl-js-supported":57}],172:[function(require,module,exports){
+},{"mapbox-gl-js-supported":104}],219:[function(require,module,exports){
 'use strict';
 
 var util = require('../util');
@@ -27599,7 +36839,7 @@ Canvas.prototype.getElement = function() {
     return this.canvas;
 };
 
-},{"../util":185,"mapbox-gl-js-supported":57}],173:[function(require,module,exports){
+},{"../util":232,"mapbox-gl-js-supported":104}],220:[function(require,module,exports){
 'use strict';
 
 var Actor = require('../actor');
@@ -27643,7 +36883,7 @@ Dispatcher.prototype = {
     }
 };
 
-},{"../../source/worker":121,"../actor":169,"webworkify":345}],174:[function(require,module,exports){
+},{"../../source/worker":168,"../actor":216,"webworkify":392}],221:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -27718,7 +36958,7 @@ exports.touchPos = function (el, e) {
     return points;
 };
 
-},{"point-geometry":191}],175:[function(require,module,exports){
+},{"point-geometry":238}],222:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -27726,7 +36966,7 @@ module.exports = {
     REQUIRE_ACCESS_TOKEN: true
 };
 
-},{}],176:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
 'use strict';
 
 var assert = require('assert');
@@ -27753,7 +36993,7 @@ DictionaryCoder.prototype.decode = function(n) {
     return this._numberToString[n];
 };
 
-},{"assert":1}],177:[function(require,module,exports){
+},{"assert":1}],224:[function(require,module,exports){
 'use strict';
 
 var util = require('./util');
@@ -27861,7 +37101,7 @@ var Evented = {
 
 module.exports = Evented;
 
-},{"./util":185}],178:[function(require,module,exports){
+},{"./util":232}],225:[function(require,module,exports){
 'use strict';
 
 module.exports = Glyphs;
@@ -27896,7 +37136,7 @@ function readGlyph(tag, glyph, pbf) {
     else if (tag === 7) glyph.advance = pbf.readVarint();
 }
 
-},{}],179:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 'use strict';
 
 module.exports = interpolate;
@@ -27937,7 +37177,7 @@ interpolate.array = function(from, to, t) {
     });
 };
 
-},{}],180:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -28103,7 +37343,7 @@ function polygonContainsPoint(ring, p) {
     return c;
 }
 
-},{}],181:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 'use strict';
 
 module.exports = LRUCache;
@@ -28228,7 +37468,7 @@ LRUCache.prototype.setMaxSize = function(max) {
     return this;
 };
 
-},{}],182:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
 'use strict';
 
 var config = require('./config');
@@ -28309,7 +37549,7 @@ module.exports.normalizeTileURL = function(url, sourceUrl, tileSize) {
     return url.replace(/\.((?:png|jpg)\d*)(?=$|\?)/, browser.devicePixelRatio >= 2 || tileSize === 512 ? '@2x.' + extension : '.' + extension);
 };
 
-},{"./browser":171,"./config":175}],183:[function(require,module,exports){
+},{"./browser":218,"./config":222}],230:[function(require,module,exports){
 'use strict';
 
 // Note: all "sizes" are measured in bytes
@@ -28632,7 +37872,7 @@ StructArray.prototype._refreshViews = function() {
     }
 };
 
-},{"assert":1}],184:[function(require,module,exports){
+},{"assert":1}],231:[function(require,module,exports){
 'use strict';
 
 module.exports = resolveTokens;
@@ -28651,7 +37891,7 @@ function resolveTokens(properties, text) {
     });
 }
 
-},{}],185:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 'use strict';
 
 var UnitBezier = require('unitbezier');
@@ -29120,7 +38360,7 @@ exports.arraysIntersect = function(a, b) {
     return false;
 };
 
-},{"../geo/coordinate":91,"unitbezier":335}],186:[function(require,module,exports){
+},{"../geo/coordinate":138,"unitbezier":382}],233:[function(require,module,exports){
 'use strict';
 
 var VectorTileFeature = require('vector-tile').VectorTileFeature;
@@ -29206,7 +38446,7 @@ function projectCoords(coords, extent, z, x, y) {
     return coords;
 }
 
-},{"vector-tile":338}],187:[function(require,module,exports){
+},{"vector-tile":385}],234:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -29291,7 +38531,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],188:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -29520,7 +38760,7 @@ var substr = 'ab'.substr(-1) === 'b'
 
 }).call(this,require('_process'))
 
-},{"_process":192}],189:[function(require,module,exports){
+},{"_process":239}],236:[function(require,module,exports){
 'use strict';
 
 // lightweight Buffer shim for pbf browser build
@@ -29681,7 +38921,7 @@ function encodeString(str) {
     return bytes;
 }
 
-},{"ieee754":50}],190:[function(require,module,exports){
+},{"ieee754":97}],237:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -30112,7 +39352,7 @@ function writePackedSFixed64(arr, pbf) { for (var i = 0; i < arr.length; i++) pb
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./buffer":189}],191:[function(require,module,exports){
+},{"./buffer":236}],238:[function(require,module,exports){
 'use strict';
 
 module.exports = Point;
@@ -30245,7 +39485,7 @@ Point.convert = function (a) {
     return a;
 };
 
-},{}],192:[function(require,module,exports){
+},{}],239:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -30341,12 +39581,12 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],193:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":229}],194:[function(require,module,exports){
+},{"react/lib/ReactDOM":276}],241:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -30371,7 +39611,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactDOMComponentTree":233,"fbjs/lib/focusNode":12}],195:[function(require,module,exports){
+},{"./ReactDOMComponentTree":280,"fbjs/lib/focusNode":59}],242:[function(require,module,exports){
 /**
  * Copyright 2013-present Facebook, Inc.
  * All rights reserved.
@@ -30760,7 +40000,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":209,"./EventPropagators":213,"./FallbackCompositionState":214,"./SyntheticCompositionEvent":289,"./SyntheticInputEvent":293,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/keyOf":22}],196:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPropagators":260,"./FallbackCompositionState":261,"./SyntheticCompositionEvent":336,"./SyntheticInputEvent":340,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/keyOf":69}],243:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -30909,7 +40149,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],197:[function(require,module,exports){
+},{}],244:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -31118,7 +40358,7 @@ ReactPerf.measureMethods(CSSPropertyOperations, 'CSSPropertyOperations', {
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
 
-},{"./CSSProperty":196,"./ReactPerf":274,"./dangerousStyleValue":306,"_process":192,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/camelizeStyleName":6,"fbjs/lib/hyphenateStyleName":17,"fbjs/lib/memoizeStringOnly":24,"fbjs/lib/warning":28}],198:[function(require,module,exports){
+},{"./CSSProperty":243,"./ReactPerf":321,"./dangerousStyleValue":353,"_process":239,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/camelizeStyleName":53,"fbjs/lib/hyphenateStyleName":64,"fbjs/lib/memoizeStringOnly":71,"fbjs/lib/warning":75}],245:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -31227,7 +40467,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
 
-},{"./PooledClass":218,"_process":192,"fbjs/lib/invariant":18,"object-assign":187}],199:[function(require,module,exports){
+},{"./PooledClass":265,"_process":239,"fbjs/lib/invariant":65,"object-assign":234}],246:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -31553,7 +40793,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":209,"./EventPluginHub":210,"./EventPropagators":213,"./ReactDOMComponentTree":233,"./ReactUpdates":282,"./SyntheticEvent":291,"./getEventTarget":314,"./isEventSupported":321,"./isTextInputElement":322,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/keyOf":22}],200:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPluginHub":257,"./EventPropagators":260,"./ReactDOMComponentTree":280,"./ReactUpdates":329,"./SyntheticEvent":338,"./getEventTarget":361,"./isEventSupported":368,"./isTextInputElement":369,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/keyOf":69}],247:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -31713,7 +40953,7 @@ ReactPerf.measureMethods(DOMChildrenOperations, 'DOMChildrenOperations', {
 });
 
 module.exports = DOMChildrenOperations;
-},{"./DOMLazyTree":201,"./Danger":205,"./ReactMultiChildUpdateTypes":269,"./ReactPerf":274,"./createMicrosoftUnsafeLocalFunction":305,"./setInnerHTML":326,"./setTextContent":327}],201:[function(require,module,exports){
+},{"./DOMLazyTree":248,"./Danger":252,"./ReactMultiChildUpdateTypes":316,"./ReactPerf":321,"./createMicrosoftUnsafeLocalFunction":352,"./setInnerHTML":373,"./setTextContent":374}],248:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -31819,7 +41059,7 @@ DOMLazyTree.queueHTML = queueHTML;
 DOMLazyTree.queueText = queueText;
 
 module.exports = DOMLazyTree;
-},{"./createMicrosoftUnsafeLocalFunction":305,"./setTextContent":327}],202:[function(require,module,exports){
+},{"./createMicrosoftUnsafeLocalFunction":352,"./setTextContent":374}],249:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -31840,7 +41080,7 @@ var DOMNamespaces = {
 };
 
 module.exports = DOMNamespaces;
-},{}],203:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -32057,7 +41297,7 @@ var DOMProperty = {
 module.exports = DOMProperty;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],204:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],251:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -32274,7 +41514,7 @@ ReactPerf.measureMethods(DOMPropertyOperations, 'DOMPropertyOperations', {
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":203,"./ReactDOMInstrumentation":241,"./ReactPerf":274,"./quoteAttributeValueForBrowser":324,"_process":192,"fbjs/lib/warning":28}],205:[function(require,module,exports){
+},{"./DOMProperty":250,"./ReactDOMInstrumentation":288,"./ReactPerf":321,"./quoteAttributeValueForBrowser":371,"_process":239,"fbjs/lib/warning":75}],252:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -32422,7 +41662,7 @@ var Danger = {
 module.exports = Danger;
 }).call(this,require('_process'))
 
-},{"./DOMLazyTree":201,"_process":192,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/createNodesFromMarkup":9,"fbjs/lib/emptyFunction":10,"fbjs/lib/getMarkupWrap":14,"fbjs/lib/invariant":18}],206:[function(require,module,exports){
+},{"./DOMLazyTree":248,"_process":239,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/createNodesFromMarkup":56,"fbjs/lib/emptyFunction":57,"fbjs/lib/getMarkupWrap":61,"fbjs/lib/invariant":65}],253:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -32450,7 +41690,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":22}],207:[function(require,module,exports){
+},{"fbjs/lib/keyOf":69}],254:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -32501,7 +41741,7 @@ var DisabledInputUtils = {
 };
 
 module.exports = DisabledInputUtils;
-},{}],208:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -32607,7 +41847,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":209,"./EventPropagators":213,"./ReactDOMComponentTree":233,"./SyntheticMouseEvent":295,"fbjs/lib/keyOf":22}],209:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPropagators":260,"./ReactDOMComponentTree":280,"./SyntheticMouseEvent":342,"fbjs/lib/keyOf":69}],256:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -32705,7 +41945,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":21}],210:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":68}],257:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -32944,7 +42184,7 @@ var EventPluginHub = {
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
 
-},{"./EventPluginRegistry":211,"./EventPluginUtils":212,"./ReactErrorUtils":257,"./accumulateInto":302,"./forEachAccumulated":310,"_process":192,"fbjs/lib/invariant":18}],211:[function(require,module,exports){
+},{"./EventPluginRegistry":258,"./EventPluginUtils":259,"./ReactErrorUtils":304,"./accumulateInto":349,"./forEachAccumulated":357,"_process":239,"fbjs/lib/invariant":65}],258:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -33189,7 +42429,7 @@ var EventPluginRegistry = {
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],212:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],259:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -33420,7 +42660,7 @@ var EventPluginUtils = {
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
 
-},{"./EventConstants":209,"./ReactErrorUtils":257,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],213:[function(require,module,exports){
+},{"./EventConstants":256,"./ReactErrorUtils":304,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],260:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -33561,7 +42801,7 @@ var EventPropagators = {
 module.exports = EventPropagators;
 }).call(this,require('_process'))
 
-},{"./EventConstants":209,"./EventPluginHub":210,"./EventPluginUtils":212,"./accumulateInto":302,"./forEachAccumulated":310,"_process":192,"fbjs/lib/warning":28}],214:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPluginHub":257,"./EventPluginUtils":259,"./accumulateInto":349,"./forEachAccumulated":357,"_process":239,"fbjs/lib/warning":75}],261:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -33657,7 +42897,7 @@ _assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./PooledClass":218,"./getTextContentAccessor":318,"object-assign":187}],215:[function(require,module,exports){
+},{"./PooledClass":265,"./getTextContentAccessor":365,"object-assign":234}],262:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -33867,7 +43107,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":203}],216:[function(require,module,exports){
+},{"./DOMProperty":250}],263:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -33926,7 +43166,7 @@ var KeyEscapeUtils = {
 };
 
 module.exports = KeyEscapeUtils;
-},{}],217:[function(require,module,exports){
+},{}],264:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -34063,7 +43303,7 @@ var LinkedValueUtils = {
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
 
-},{"./ReactPropTypeLocations":276,"./ReactPropTypes":277,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],218:[function(require,module,exports){
+},{"./ReactPropTypeLocations":323,"./ReactPropTypes":324,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],265:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -34186,7 +43426,7 @@ var PooledClass = {
 module.exports = PooledClass;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],219:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],266:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -34277,7 +43517,7 @@ var React = {
 module.exports = React;
 }).call(this,require('_process'))
 
-},{"./ReactChildren":222,"./ReactClass":223,"./ReactComponent":224,"./ReactDOMFactories":237,"./ReactElement":254,"./ReactElementValidator":255,"./ReactPropTypes":277,"./ReactVersion":283,"./onlyChild":323,"_process":192,"fbjs/lib/warning":28,"object-assign":187}],220:[function(require,module,exports){
+},{"./ReactChildren":269,"./ReactClass":270,"./ReactComponent":271,"./ReactDOMFactories":284,"./ReactElement":301,"./ReactElementValidator":302,"./ReactPropTypes":324,"./ReactVersion":330,"./onlyChild":370,"_process":239,"fbjs/lib/warning":75,"object-assign":234}],267:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -34595,7 +43835,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":209,"./EventPluginRegistry":211,"./ReactEventEmitterMixin":258,"./ViewportMetrics":301,"./getVendorPrefixedEventName":319,"./isEventSupported":321,"object-assign":187}],221:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPluginRegistry":258,"./ReactEventEmitterMixin":305,"./ViewportMetrics":348,"./getVendorPrefixedEventName":366,"./isEventSupported":368,"object-assign":234}],268:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -34724,7 +43964,7 @@ var ReactChildReconciler = {
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
 
-},{"./KeyEscapeUtils":216,"./ReactReconciler":279,"./instantiateReactComponent":320,"./shouldUpdateReactComponent":328,"./traverseAllChildren":329,"_process":192,"fbjs/lib/warning":28}],222:[function(require,module,exports){
+},{"./KeyEscapeUtils":263,"./ReactReconciler":326,"./instantiateReactComponent":367,"./shouldUpdateReactComponent":375,"./traverseAllChildren":376,"_process":239,"fbjs/lib/warning":75}],269:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -34908,7 +44148,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":218,"./ReactElement":254,"./traverseAllChildren":329,"fbjs/lib/emptyFunction":10}],223:[function(require,module,exports){
+},{"./PooledClass":265,"./ReactElement":301,"./traverseAllChildren":376,"fbjs/lib/emptyFunction":57}],270:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -35635,7 +44875,7 @@ var ReactClass = {
 module.exports = ReactClass;
 }).call(this,require('_process'))
 
-},{"./ReactComponent":224,"./ReactElement":254,"./ReactNoopUpdateQueue":272,"./ReactPropTypeLocationNames":275,"./ReactPropTypeLocations":276,"_process":192,"fbjs/lib/emptyObject":11,"fbjs/lib/invariant":18,"fbjs/lib/keyMirror":21,"fbjs/lib/keyOf":22,"fbjs/lib/warning":28,"object-assign":187}],224:[function(require,module,exports){
+},{"./ReactComponent":271,"./ReactElement":301,"./ReactNoopUpdateQueue":319,"./ReactPropTypeLocationNames":322,"./ReactPropTypeLocations":323,"_process":239,"fbjs/lib/emptyObject":58,"fbjs/lib/invariant":65,"fbjs/lib/keyMirror":68,"fbjs/lib/keyOf":69,"fbjs/lib/warning":75,"object-assign":234}],271:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -35760,7 +45000,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactComponent;
 }).call(this,require('_process'))
 
-},{"./ReactInstrumentation":264,"./ReactNoopUpdateQueue":272,"./canDefineProperty":304,"_process":192,"fbjs/lib/emptyObject":11,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],225:[function(require,module,exports){
+},{"./ReactInstrumentation":311,"./ReactNoopUpdateQueue":319,"./canDefineProperty":351,"_process":239,"fbjs/lib/emptyObject":58,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],272:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -35805,7 +45045,7 @@ ReactPerf.measureMethods(ReactComponentBrowserEnvironment, 'ReactComponentBrowse
 });
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./DOMChildrenOperations":200,"./ReactDOMIDOperations":239,"./ReactPerf":274}],226:[function(require,module,exports){
+},{"./DOMChildrenOperations":247,"./ReactDOMIDOperations":286,"./ReactPerf":321}],273:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -35860,7 +45100,7 @@ var ReactComponentEnvironment = {
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],227:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],274:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -36658,7 +45898,7 @@ var ReactCompositeComponent = {
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
 
-},{"./ReactComponentEnvironment":226,"./ReactCurrentOwner":228,"./ReactElement":254,"./ReactErrorUtils":257,"./ReactInstanceMap":263,"./ReactInstrumentation":264,"./ReactNodeTypes":271,"./ReactPerf":274,"./ReactPropTypeLocationNames":275,"./ReactPropTypeLocations":276,"./ReactReconciler":279,"./ReactUpdateQueue":281,"./shouldUpdateReactComponent":328,"_process":192,"fbjs/lib/emptyObject":11,"fbjs/lib/invariant":18,"fbjs/lib/warning":28,"object-assign":187}],228:[function(require,module,exports){
+},{"./ReactComponentEnvironment":273,"./ReactCurrentOwner":275,"./ReactElement":301,"./ReactErrorUtils":304,"./ReactInstanceMap":310,"./ReactInstrumentation":311,"./ReactNodeTypes":318,"./ReactPerf":321,"./ReactPropTypeLocationNames":322,"./ReactPropTypeLocations":323,"./ReactReconciler":326,"./ReactUpdateQueue":328,"./shouldUpdateReactComponent":375,"_process":239,"fbjs/lib/emptyObject":58,"fbjs/lib/invariant":65,"fbjs/lib/warning":75,"object-assign":234}],275:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -36690,7 +45930,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],229:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -36798,7 +46038,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = React;
 }).call(this,require('_process'))
 
-},{"./ReactDOMComponentTree":233,"./ReactDefaultInjection":251,"./ReactMount":267,"./ReactPerf":274,"./ReactReconciler":279,"./ReactUpdates":282,"./ReactVersion":283,"./findDOMNode":308,"./getNativeComponentFromComposite":316,"./renderSubtreeIntoContainer":325,"_process":192,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/warning":28}],230:[function(require,module,exports){
+},{"./ReactDOMComponentTree":280,"./ReactDefaultInjection":298,"./ReactMount":314,"./ReactPerf":321,"./ReactReconciler":326,"./ReactUpdates":329,"./ReactVersion":330,"./findDOMNode":355,"./getNativeComponentFromComposite":363,"./renderSubtreeIntoContainer":372,"_process":239,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/warning":75}],277:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -36823,7 +46063,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{"./DisabledInputUtils":207}],231:[function(require,module,exports){
+},{"./DisabledInputUtils":254}],278:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37736,7 +46976,7 @@ _assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mi
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
 
-},{"./AutoFocusUtils":194,"./CSSPropertyOperations":197,"./DOMLazyTree":201,"./DOMNamespaces":202,"./DOMProperty":203,"./DOMPropertyOperations":204,"./EventConstants":209,"./EventPluginHub":210,"./EventPluginRegistry":211,"./ReactBrowserEventEmitter":220,"./ReactComponentBrowserEnvironment":225,"./ReactDOMButton":230,"./ReactDOMComponentFlags":232,"./ReactDOMComponentTree":233,"./ReactDOMInput":240,"./ReactDOMOption":242,"./ReactDOMSelect":243,"./ReactDOMTextarea":246,"./ReactMultiChild":268,"./ReactPerf":274,"./escapeTextContentForBrowser":307,"./isEventSupported":321,"./validateDOMNesting":330,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/keyOf":22,"fbjs/lib/shallowEqual":27,"fbjs/lib/warning":28,"object-assign":187}],232:[function(require,module,exports){
+},{"./AutoFocusUtils":241,"./CSSPropertyOperations":244,"./DOMLazyTree":248,"./DOMNamespaces":249,"./DOMProperty":250,"./DOMPropertyOperations":251,"./EventConstants":256,"./EventPluginHub":257,"./EventPluginRegistry":258,"./ReactBrowserEventEmitter":267,"./ReactComponentBrowserEnvironment":272,"./ReactDOMButton":277,"./ReactDOMComponentFlags":279,"./ReactDOMComponentTree":280,"./ReactDOMInput":287,"./ReactDOMOption":289,"./ReactDOMSelect":290,"./ReactDOMTextarea":293,"./ReactMultiChild":315,"./ReactPerf":321,"./escapeTextContentForBrowser":354,"./isEventSupported":368,"./validateDOMNesting":377,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/keyOf":69,"fbjs/lib/shallowEqual":74,"fbjs/lib/warning":75,"object-assign":234}],279:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -37755,7 +46995,7 @@ var ReactDOMComponentFlags = {
 };
 
 module.exports = ReactDOMComponentFlags;
-},{}],233:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37945,7 +47185,7 @@ var ReactDOMComponentTree = {
 module.exports = ReactDOMComponentTree;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":203,"./ReactDOMComponentFlags":232,"_process":192,"fbjs/lib/invariant":18}],234:[function(require,module,exports){
+},{"./DOMProperty":250,"./ReactDOMComponentFlags":279,"_process":239,"fbjs/lib/invariant":65}],281:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37982,7 +47222,7 @@ function ReactDOMContainerInfo(topLevelWrapper, node) {
 module.exports = ReactDOMContainerInfo;
 }).call(this,require('_process'))
 
-},{"./validateDOMNesting":330,"_process":192}],235:[function(require,module,exports){
+},{"./validateDOMNesting":377,"_process":239}],282:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -38047,7 +47287,7 @@ ReactDOMDebugTool.addDevtool(ReactDOMUnknownPropertyDevtool);
 module.exports = ReactDOMDebugTool;
 }).call(this,require('_process'))
 
-},{"./ReactDOMUnknownPropertyDevtool":248,"_process":192,"fbjs/lib/warning":28}],236:[function(require,module,exports){
+},{"./ReactDOMUnknownPropertyDevtool":295,"_process":239,"fbjs/lib/warning":75}],283:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -38108,7 +47348,7 @@ _assign(ReactDOMEmptyComponent.prototype, {
 });
 
 module.exports = ReactDOMEmptyComponent;
-},{"./DOMLazyTree":201,"./ReactDOMComponentTree":233,"object-assign":187}],237:[function(require,module,exports){
+},{"./DOMLazyTree":248,"./ReactDOMComponentTree":280,"object-assign":234}],284:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -38288,7 +47528,7 @@ var ReactDOMFactories = mapObject({
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
 
-},{"./ReactElement":254,"./ReactElementValidator":255,"_process":192,"fbjs/lib/mapObject":23}],238:[function(require,module,exports){
+},{"./ReactElement":301,"./ReactElementValidator":302,"_process":239,"fbjs/lib/mapObject":70}],285:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -38307,7 +47547,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],239:[function(require,module,exports){
+},{}],286:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -38347,7 +47587,7 @@ ReactPerf.measureMethods(ReactDOMIDOperations, 'ReactDOMIDOperations', {
 });
 
 module.exports = ReactDOMIDOperations;
-},{"./DOMChildrenOperations":200,"./ReactDOMComponentTree":233,"./ReactPerf":274}],240:[function(require,module,exports){
+},{"./DOMChildrenOperations":247,"./ReactDOMComponentTree":280,"./ReactPerf":321}],287:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -38555,7 +47795,7 @@ function _handleChange(event) {
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
 
-},{"./DOMPropertyOperations":204,"./DisabledInputUtils":207,"./LinkedValueUtils":217,"./ReactDOMComponentTree":233,"./ReactUpdates":282,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28,"object-assign":187}],241:[function(require,module,exports){
+},{"./DOMPropertyOperations":251,"./DisabledInputUtils":254,"./LinkedValueUtils":264,"./ReactDOMComponentTree":280,"./ReactUpdates":329,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75,"object-assign":234}],288:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -38572,7 +47812,7 @@ module.exports = ReactDOMInput;
 var ReactDOMDebugTool = require('./ReactDOMDebugTool');
 
 module.exports = { debugTool: ReactDOMDebugTool };
-},{"./ReactDOMDebugTool":235}],242:[function(require,module,exports){
+},{"./ReactDOMDebugTool":282}],289:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -38685,7 +47925,7 @@ var ReactDOMOption = {
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
 
-},{"./ReactChildren":222,"./ReactDOMComponentTree":233,"./ReactDOMSelect":243,"_process":192,"fbjs/lib/warning":28,"object-assign":187}],243:[function(require,module,exports){
+},{"./ReactChildren":269,"./ReactDOMComponentTree":280,"./ReactDOMSelect":290,"_process":239,"fbjs/lib/warning":75,"object-assign":234}],290:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -38902,7 +48142,7 @@ function _handleChange(event) {
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
 
-},{"./DisabledInputUtils":207,"./LinkedValueUtils":217,"./ReactDOMComponentTree":233,"./ReactUpdates":282,"_process":192,"fbjs/lib/warning":28,"object-assign":187}],244:[function(require,module,exports){
+},{"./DisabledInputUtils":254,"./LinkedValueUtils":264,"./ReactDOMComponentTree":280,"./ReactUpdates":329,"_process":239,"fbjs/lib/warning":75,"object-assign":234}],291:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -39115,7 +48355,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":317,"./getTextContentAccessor":318,"fbjs/lib/ExecutionEnvironment":4}],245:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":364,"./getTextContentAccessor":365,"fbjs/lib/ExecutionEnvironment":51}],292:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -39288,7 +48528,7 @@ ReactPerf.measureMethods(ReactDOMTextComponent.prototype, 'ReactDOMTextComponent
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
 
-},{"./DOMChildrenOperations":200,"./DOMLazyTree":201,"./ReactDOMComponentTree":233,"./ReactPerf":274,"./escapeTextContentForBrowser":307,"./validateDOMNesting":330,"_process":192,"fbjs/lib/invariant":18,"object-assign":187}],246:[function(require,module,exports){
+},{"./DOMChildrenOperations":247,"./DOMLazyTree":248,"./ReactDOMComponentTree":280,"./ReactPerf":321,"./escapeTextContentForBrowser":354,"./validateDOMNesting":377,"_process":239,"fbjs/lib/invariant":65,"object-assign":234}],293:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -39434,7 +48674,7 @@ function _handleChange(event) {
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
 
-},{"./DOMPropertyOperations":204,"./DisabledInputUtils":207,"./LinkedValueUtils":217,"./ReactDOMComponentTree":233,"./ReactUpdates":282,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28,"object-assign":187}],247:[function(require,module,exports){
+},{"./DOMPropertyOperations":251,"./DisabledInputUtils":254,"./LinkedValueUtils":264,"./ReactDOMComponentTree":280,"./ReactUpdates":329,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75,"object-assign":234}],294:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -39572,7 +48812,7 @@ module.exports = {
 };
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],248:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],295:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -39640,7 +48880,7 @@ var ReactDOMUnknownPropertyDevtool = {
 module.exports = ReactDOMUnknownPropertyDevtool;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":203,"./EventPluginRegistry":211,"_process":192,"fbjs/lib/warning":28}],249:[function(require,module,exports){
+},{"./DOMProperty":250,"./EventPluginRegistry":258,"_process":239,"fbjs/lib/warning":75}],296:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -39716,7 +48956,7 @@ ReactDebugTool.addDevtool(ReactInvalidSetStateWarningDevTool);
 module.exports = ReactDebugTool;
 }).call(this,require('_process'))
 
-},{"./ReactInvalidSetStateWarningDevTool":265,"_process":192,"fbjs/lib/warning":28}],250:[function(require,module,exports){
+},{"./ReactInvalidSetStateWarningDevTool":312,"_process":239,"fbjs/lib/warning":75}],297:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -39785,7 +49025,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./ReactUpdates":282,"./Transaction":300,"fbjs/lib/emptyFunction":10,"object-assign":187}],251:[function(require,module,exports){
+},{"./ReactUpdates":329,"./Transaction":347,"fbjs/lib/emptyFunction":57,"object-assign":234}],298:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -39882,7 +49122,7 @@ module.exports = {
 };
 }).call(this,require('_process'))
 
-},{"./BeforeInputEventPlugin":195,"./ChangeEventPlugin":199,"./DefaultEventPluginOrder":206,"./EnterLeaveEventPlugin":208,"./HTMLDOMPropertyConfig":215,"./ReactComponentBrowserEnvironment":225,"./ReactDOMComponent":231,"./ReactDOMComponentTree":233,"./ReactDOMEmptyComponent":236,"./ReactDOMTextComponent":245,"./ReactDOMTreeTraversal":247,"./ReactDefaultBatchingStrategy":250,"./ReactDefaultPerf":252,"./ReactEventListener":259,"./ReactInjection":261,"./ReactReconcileTransaction":278,"./SVGDOMPropertyConfig":284,"./SelectEventPlugin":285,"./SimpleEventPlugin":286,"_process":192,"fbjs/lib/ExecutionEnvironment":4}],252:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":242,"./ChangeEventPlugin":246,"./DefaultEventPluginOrder":253,"./EnterLeaveEventPlugin":255,"./HTMLDOMPropertyConfig":262,"./ReactComponentBrowserEnvironment":272,"./ReactDOMComponent":278,"./ReactDOMComponentTree":280,"./ReactDOMEmptyComponent":283,"./ReactDOMTextComponent":292,"./ReactDOMTreeTraversal":294,"./ReactDefaultBatchingStrategy":297,"./ReactDefaultPerf":299,"./ReactEventListener":306,"./ReactInjection":308,"./ReactReconcileTransaction":325,"./SVGDOMPropertyConfig":331,"./SelectEventPlugin":332,"./SimpleEventPlugin":333,"_process":239,"fbjs/lib/ExecutionEnvironment":51}],299:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -40202,7 +49442,7 @@ var ReactDefaultPerf = {
 module.exports = ReactDefaultPerf;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":203,"./ReactDOMComponentTree":233,"./ReactDefaultPerfAnalysis":253,"./ReactMount":267,"./ReactPerf":274,"_process":192,"fbjs/lib/performanceNow":26,"fbjs/lib/warning":28}],253:[function(require,module,exports){
+},{"./DOMProperty":250,"./ReactDOMComponentTree":280,"./ReactDefaultPerfAnalysis":300,"./ReactMount":314,"./ReactPerf":321,"_process":239,"fbjs/lib/performanceNow":73,"fbjs/lib/warning":75}],300:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -40413,7 +49653,7 @@ var ReactDefaultPerfAnalysis = {
 };
 
 module.exports = ReactDefaultPerfAnalysis;
-},{"object-assign":187}],254:[function(require,module,exports){
+},{"object-assign":234}],301:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -40704,7 +49944,7 @@ ReactElement.isValidElement = function (object) {
 module.exports = ReactElement;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":228,"./canDefineProperty":304,"_process":192,"fbjs/lib/warning":28,"object-assign":187}],255:[function(require,module,exports){
+},{"./ReactCurrentOwner":275,"./canDefineProperty":351,"_process":239,"fbjs/lib/warning":75,"object-assign":234}],302:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -40989,7 +50229,7 @@ var ReactElementValidator = {
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":228,"./ReactElement":254,"./ReactPropTypeLocationNames":275,"./ReactPropTypeLocations":276,"./canDefineProperty":304,"./getIteratorFn":315,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],256:[function(require,module,exports){
+},{"./ReactCurrentOwner":275,"./ReactElement":301,"./ReactPropTypeLocationNames":322,"./ReactPropTypeLocations":323,"./canDefineProperty":351,"./getIteratorFn":362,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],303:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -41020,7 +50260,7 @@ var ReactEmptyComponent = {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{}],257:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -41100,7 +50340,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
 
-},{"_process":192}],258:[function(require,module,exports){
+},{"_process":239}],305:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41134,7 +50374,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":210}],259:[function(require,module,exports){
+},{"./EventPluginHub":257}],306:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41292,7 +50532,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./PooledClass":218,"./ReactDOMComponentTree":233,"./ReactUpdates":282,"./getEventTarget":314,"fbjs/lib/EventListener":3,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/getUnboundedScrollPosition":15,"object-assign":187}],260:[function(require,module,exports){
+},{"./PooledClass":265,"./ReactDOMComponentTree":280,"./ReactUpdates":329,"./getEventTarget":361,"fbjs/lib/EventListener":50,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/getUnboundedScrollPosition":62,"object-assign":234}],307:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41314,7 +50554,7 @@ var ReactFeatureFlags = {
 };
 
 module.exports = ReactFeatureFlags;
-},{}],261:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41353,7 +50593,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":203,"./EventPluginHub":210,"./EventPluginUtils":212,"./ReactBrowserEventEmitter":220,"./ReactClass":223,"./ReactComponentEnvironment":226,"./ReactEmptyComponent":256,"./ReactNativeComponent":270,"./ReactPerf":274,"./ReactUpdates":282}],262:[function(require,module,exports){
+},{"./DOMProperty":250,"./EventPluginHub":257,"./EventPluginUtils":259,"./ReactBrowserEventEmitter":267,"./ReactClass":270,"./ReactComponentEnvironment":273,"./ReactEmptyComponent":303,"./ReactNativeComponent":317,"./ReactPerf":321,"./ReactUpdates":329}],309:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41478,7 +50718,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":244,"fbjs/lib/containsNode":7,"fbjs/lib/focusNode":12,"fbjs/lib/getActiveElement":13}],263:[function(require,module,exports){
+},{"./ReactDOMSelection":291,"fbjs/lib/containsNode":54,"fbjs/lib/focusNode":59,"fbjs/lib/getActiveElement":60}],310:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41527,7 +50767,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],264:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -41544,7 +50784,7 @@ module.exports = ReactInstanceMap;
 var ReactDebugTool = require('./ReactDebugTool');
 
 module.exports = { debugTool: ReactDebugTool };
-},{"./ReactDebugTool":249}],265:[function(require,module,exports){
+},{"./ReactDebugTool":296}],312:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -41584,7 +50824,7 @@ var ReactInvalidSetStateWarningDevTool = {
 module.exports = ReactInvalidSetStateWarningDevTool;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/warning":28}],266:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/warning":75}],313:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -41635,7 +50875,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":303}],267:[function(require,module,exports){
+},{"./adler32":350}],314:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42117,7 +51357,7 @@ ReactPerf.measureMethods(ReactMount, 'ReactMount', {
 module.exports = ReactMount;
 }).call(this,require('_process'))
 
-},{"./DOMLazyTree":201,"./DOMProperty":203,"./ReactBrowserEventEmitter":220,"./ReactCurrentOwner":228,"./ReactDOMComponentTree":233,"./ReactDOMContainerInfo":234,"./ReactDOMFeatureFlags":238,"./ReactElement":254,"./ReactFeatureFlags":260,"./ReactInstrumentation":264,"./ReactMarkupChecksum":266,"./ReactPerf":274,"./ReactReconciler":279,"./ReactUpdateQueue":281,"./ReactUpdates":282,"./instantiateReactComponent":320,"./setInnerHTML":326,"./shouldUpdateReactComponent":328,"_process":192,"fbjs/lib/emptyObject":11,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],268:[function(require,module,exports){
+},{"./DOMLazyTree":248,"./DOMProperty":250,"./ReactBrowserEventEmitter":267,"./ReactCurrentOwner":275,"./ReactDOMComponentTree":280,"./ReactDOMContainerInfo":281,"./ReactDOMFeatureFlags":285,"./ReactElement":301,"./ReactFeatureFlags":307,"./ReactInstrumentation":311,"./ReactMarkupChecksum":313,"./ReactPerf":321,"./ReactReconciler":326,"./ReactUpdateQueue":328,"./ReactUpdates":329,"./instantiateReactComponent":367,"./setInnerHTML":373,"./shouldUpdateReactComponent":375,"_process":239,"fbjs/lib/emptyObject":58,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],315:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42523,7 +51763,7 @@ var ReactMultiChild = {
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
 
-},{"./ReactChildReconciler":221,"./ReactComponentEnvironment":226,"./ReactCurrentOwner":228,"./ReactMultiChildUpdateTypes":269,"./ReactReconciler":279,"./flattenChildren":309,"_process":192,"fbjs/lib/invariant":18}],269:[function(require,module,exports){
+},{"./ReactChildReconciler":268,"./ReactComponentEnvironment":273,"./ReactCurrentOwner":275,"./ReactMultiChildUpdateTypes":316,"./ReactReconciler":326,"./flattenChildren":356,"_process":239,"fbjs/lib/invariant":65}],316:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -42556,7 +51796,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":21}],270:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":68}],317:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -42655,7 +51895,7 @@ var ReactNativeComponent = {
 module.exports = ReactNativeComponent;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18,"object-assign":187}],271:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65,"object-assign":234}],318:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42696,7 +51936,7 @@ var ReactNodeTypes = {
 module.exports = ReactNodeTypes;
 }).call(this,require('_process'))
 
-},{"./ReactElement":254,"_process":192,"fbjs/lib/invariant":18}],272:[function(require,module,exports){
+},{"./ReactElement":301,"_process":239,"fbjs/lib/invariant":65}],319:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -42795,7 +52035,7 @@ var ReactNoopUpdateQueue = {
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/warning":28}],273:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/warning":75}],320:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42891,7 +52131,7 @@ var ReactOwner = {
 module.exports = ReactOwner;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],274:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],321:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -42991,7 +52231,7 @@ function _noMeasure(objName, fnName, func) {
 module.exports = ReactPerf;
 }).call(this,require('_process'))
 
-},{"_process":192}],275:[function(require,module,exports){
+},{"_process":239}],322:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -43019,7 +52259,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
 
-},{"_process":192}],276:[function(require,module,exports){
+},{"_process":239}],323:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43042,7 +52282,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":21}],277:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":68}],324:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43423,7 +52663,7 @@ function getClassName(propValue) {
 }
 
 module.exports = ReactPropTypes;
-},{"./ReactElement":254,"./ReactPropTypeLocationNames":275,"./getIteratorFn":315,"fbjs/lib/emptyFunction":10}],278:[function(require,module,exports){
+},{"./ReactElement":301,"./ReactPropTypeLocationNames":322,"./getIteratorFn":362,"fbjs/lib/emptyFunction":57}],325:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43586,7 +52826,7 @@ _assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
-},{"./CallbackQueue":198,"./PooledClass":218,"./ReactBrowserEventEmitter":220,"./ReactInputSelection":262,"./Transaction":300,"object-assign":187}],279:[function(require,module,exports){
+},{"./CallbackQueue":245,"./PooledClass":265,"./ReactBrowserEventEmitter":267,"./ReactInputSelection":309,"./Transaction":347,"object-assign":234}],326:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -43720,7 +52960,7 @@ var ReactReconciler = {
 module.exports = ReactReconciler;
 }).call(this,require('_process'))
 
-},{"./ReactInstrumentation":264,"./ReactRef":280,"_process":192}],280:[function(require,module,exports){
+},{"./ReactInstrumentation":311,"./ReactRef":327,"_process":239}],327:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43799,7 +53039,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":273}],281:[function(require,module,exports){
+},{"./ReactOwner":320}],328:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -44018,7 +53258,7 @@ var ReactUpdateQueue = {
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":228,"./ReactInstanceMap":263,"./ReactUpdates":282,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],282:[function(require,module,exports){
+},{"./ReactCurrentOwner":275,"./ReactInstanceMap":310,"./ReactUpdates":329,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],329:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -44263,7 +53503,7 @@ var ReactUpdates = {
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
 
-},{"./CallbackQueue":198,"./PooledClass":218,"./ReactFeatureFlags":260,"./ReactPerf":274,"./ReactReconciler":279,"./Transaction":300,"_process":192,"fbjs/lib/invariant":18,"object-assign":187}],283:[function(require,module,exports){
+},{"./CallbackQueue":245,"./PooledClass":265,"./ReactFeatureFlags":307,"./ReactPerf":321,"./ReactReconciler":326,"./Transaction":347,"_process":239,"fbjs/lib/invariant":65,"object-assign":234}],330:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44278,7 +53518,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '15.0.2';
-},{}],284:[function(require,module,exports){
+},{}],331:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44579,7 +53819,7 @@ Object.keys(ATTRS).forEach(function (key) {
 });
 
 module.exports = SVGDOMPropertyConfig;
-},{}],285:[function(require,module,exports){
+},{}],332:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44776,7 +54016,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":209,"./EventPropagators":213,"./ReactDOMComponentTree":233,"./ReactInputSelection":262,"./SyntheticEvent":291,"./isTextInputElement":322,"fbjs/lib/ExecutionEnvironment":4,"fbjs/lib/getActiveElement":13,"fbjs/lib/keyOf":22,"fbjs/lib/shallowEqual":27}],286:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPropagators":260,"./ReactDOMComponentTree":280,"./ReactInputSelection":309,"./SyntheticEvent":338,"./isTextInputElement":369,"fbjs/lib/ExecutionEnvironment":51,"fbjs/lib/getActiveElement":60,"fbjs/lib/keyOf":69,"fbjs/lib/shallowEqual":74}],333:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45407,7 +54647,7 @@ var SimpleEventPlugin = {
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
 
-},{"./EventConstants":209,"./EventPropagators":213,"./ReactDOMComponentTree":233,"./SyntheticAnimationEvent":287,"./SyntheticClipboardEvent":288,"./SyntheticDragEvent":290,"./SyntheticEvent":291,"./SyntheticFocusEvent":292,"./SyntheticKeyboardEvent":294,"./SyntheticMouseEvent":295,"./SyntheticTouchEvent":296,"./SyntheticTransitionEvent":297,"./SyntheticUIEvent":298,"./SyntheticWheelEvent":299,"./getEventCharCode":311,"_process":192,"fbjs/lib/EventListener":3,"fbjs/lib/emptyFunction":10,"fbjs/lib/invariant":18,"fbjs/lib/keyOf":22}],287:[function(require,module,exports){
+},{"./EventConstants":256,"./EventPropagators":260,"./ReactDOMComponentTree":280,"./SyntheticAnimationEvent":334,"./SyntheticClipboardEvent":335,"./SyntheticDragEvent":337,"./SyntheticEvent":338,"./SyntheticFocusEvent":339,"./SyntheticKeyboardEvent":341,"./SyntheticMouseEvent":342,"./SyntheticTouchEvent":343,"./SyntheticTransitionEvent":344,"./SyntheticUIEvent":345,"./SyntheticWheelEvent":346,"./getEventCharCode":358,"_process":239,"fbjs/lib/EventListener":50,"fbjs/lib/emptyFunction":57,"fbjs/lib/invariant":65,"fbjs/lib/keyOf":69}],334:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45447,7 +54687,7 @@ function SyntheticAnimationEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticAnimationEvent, AnimationEventInterface);
 
 module.exports = SyntheticAnimationEvent;
-},{"./SyntheticEvent":291}],288:[function(require,module,exports){
+},{"./SyntheticEvent":338}],335:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45486,7 +54726,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":291}],289:[function(require,module,exports){
+},{"./SyntheticEvent":338}],336:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45523,7 +54763,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":291}],290:[function(require,module,exports){
+},{"./SyntheticEvent":338}],337:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45560,7 +54800,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":295}],291:[function(require,module,exports){
+},{"./SyntheticMouseEvent":342}],338:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45825,7 +55065,7 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
 }
 }).call(this,require('_process'))
 
-},{"./PooledClass":218,"_process":192,"fbjs/lib/emptyFunction":10,"fbjs/lib/warning":28,"object-assign":187}],292:[function(require,module,exports){
+},{"./PooledClass":265,"_process":239,"fbjs/lib/emptyFunction":57,"fbjs/lib/warning":75,"object-assign":234}],339:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45862,7 +55102,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":298}],293:[function(require,module,exports){
+},{"./SyntheticUIEvent":345}],340:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45900,7 +55140,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":291}],294:[function(require,module,exports){
+},{"./SyntheticEvent":338}],341:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45985,7 +55225,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":298,"./getEventCharCode":311,"./getEventKey":312,"./getEventModifierState":313}],295:[function(require,module,exports){
+},{"./SyntheticUIEvent":345,"./getEventCharCode":358,"./getEventKey":359,"./getEventModifierState":360}],342:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46058,7 +55298,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":298,"./ViewportMetrics":301,"./getEventModifierState":313}],296:[function(require,module,exports){
+},{"./SyntheticUIEvent":345,"./ViewportMetrics":348,"./getEventModifierState":360}],343:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46104,7 +55344,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":298,"./getEventModifierState":313}],297:[function(require,module,exports){
+},{"./SyntheticUIEvent":345,"./getEventModifierState":360}],344:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46144,7 +55384,7 @@ function SyntheticTransitionEvent(dispatchConfig, dispatchMarker, nativeEvent, n
 SyntheticEvent.augmentClass(SyntheticTransitionEvent, TransitionEventInterface);
 
 module.exports = SyntheticTransitionEvent;
-},{"./SyntheticEvent":291}],298:[function(require,module,exports){
+},{"./SyntheticEvent":338}],345:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46204,7 +55444,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":291,"./getEventTarget":314}],299:[function(require,module,exports){
+},{"./SyntheticEvent":338,"./getEventTarget":361}],346:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46259,7 +55499,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":295}],300:[function(require,module,exports){
+},{"./SyntheticMouseEvent":342}],347:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46494,7 +55734,7 @@ var Transaction = {
 module.exports = Transaction;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],301:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],348:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46522,7 +55762,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],302:[function(require,module,exports){
+},{}],349:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -46585,7 +55825,7 @@ function accumulateInto(current, next) {
 module.exports = accumulateInto;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/invariant":18}],303:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/invariant":65}],350:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46629,7 +55869,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],304:[function(require,module,exports){
+},{}],351:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46657,7 +55897,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
 
-},{"_process":192}],305:[function(require,module,exports){
+},{"_process":239}],352:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46690,7 +55930,7 @@ var createMicrosoftUnsafeLocalFunction = function (func) {
 };
 
 module.exports = createMicrosoftUnsafeLocalFunction;
-},{}],306:[function(require,module,exports){
+},{}],353:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46771,7 +56011,7 @@ function dangerousStyleValue(name, value, component) {
 module.exports = dangerousStyleValue;
 }).call(this,require('_process'))
 
-},{"./CSSProperty":196,"_process":192,"fbjs/lib/warning":28}],307:[function(require,module,exports){
+},{"./CSSProperty":243,"_process":239,"fbjs/lib/warning":75}],354:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46810,7 +56050,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],308:[function(require,module,exports){
+},{}],355:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46870,7 +56110,7 @@ function findDOMNode(componentOrElement) {
 module.exports = findDOMNode;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":228,"./ReactDOMComponentTree":233,"./ReactInstanceMap":263,"./getNativeComponentFromComposite":316,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],309:[function(require,module,exports){
+},{"./ReactCurrentOwner":275,"./ReactDOMComponentTree":280,"./ReactInstanceMap":310,"./getNativeComponentFromComposite":363,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],356:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46923,7 +56163,7 @@ function flattenChildren(children) {
 module.exports = flattenChildren;
 }).call(this,require('_process'))
 
-},{"./KeyEscapeUtils":216,"./traverseAllChildren":329,"_process":192,"fbjs/lib/warning":28}],310:[function(require,module,exports){
+},{"./KeyEscapeUtils":263,"./traverseAllChildren":376,"_process":239,"fbjs/lib/warning":75}],357:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46954,7 +56194,7 @@ var forEachAccumulated = function (arr, cb, scope) {
 };
 
 module.exports = forEachAccumulated;
-},{}],311:[function(require,module,exports){
+},{}],358:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47005,7 +56245,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],312:[function(require,module,exports){
+},{}],359:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47108,7 +56348,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":311}],313:[function(require,module,exports){
+},{"./getEventCharCode":358}],360:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47152,7 +56392,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],314:[function(require,module,exports){
+},{}],361:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47188,7 +56428,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],315:[function(require,module,exports){
+},{}],362:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47229,7 +56469,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],316:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47260,7 +56500,7 @@ function getNativeComponentFromComposite(inst) {
 }
 
 module.exports = getNativeComponentFromComposite;
-},{"./ReactNodeTypes":271}],317:[function(require,module,exports){
+},{"./ReactNodeTypes":318}],364:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47335,7 +56575,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],318:[function(require,module,exports){
+},{}],365:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47369,7 +56609,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":4}],319:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":51}],366:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47471,7 +56711,7 @@ function getVendorPrefixedEventName(eventName) {
 }
 
 module.exports = getVendorPrefixedEventName;
-},{"fbjs/lib/ExecutionEnvironment":4}],320:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":51}],367:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47586,7 +56826,7 @@ function instantiateReactComponent(node) {
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
 
-},{"./ReactCompositeComponent":227,"./ReactEmptyComponent":256,"./ReactNativeComponent":270,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28,"object-assign":187}],321:[function(require,module,exports){
+},{"./ReactCompositeComponent":274,"./ReactEmptyComponent":303,"./ReactNativeComponent":317,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75,"object-assign":234}],368:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47647,7 +56887,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":4}],322:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":51}],369:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47689,7 +56929,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],323:[function(require,module,exports){
+},{}],370:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47726,7 +56966,7 @@ function onlyChild(children) {
 module.exports = onlyChild;
 }).call(this,require('_process'))
 
-},{"./ReactElement":254,"_process":192,"fbjs/lib/invariant":18}],324:[function(require,module,exports){
+},{"./ReactElement":301,"_process":239,"fbjs/lib/invariant":65}],371:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47753,7 +56993,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":307}],325:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":354}],372:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47770,7 +57010,7 @@ module.exports = quoteAttributeValueForBrowser;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":267}],326:[function(require,module,exports){
+},{"./ReactMount":314}],373:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47853,7 +57093,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"./createMicrosoftUnsafeLocalFunction":305,"fbjs/lib/ExecutionEnvironment":4}],327:[function(require,module,exports){
+},{"./createMicrosoftUnsafeLocalFunction":352,"fbjs/lib/ExecutionEnvironment":51}],374:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47894,7 +57134,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":307,"./setInnerHTML":326,"fbjs/lib/ExecutionEnvironment":4}],328:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":354,"./setInnerHTML":373,"fbjs/lib/ExecutionEnvironment":51}],375:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47937,7 +57177,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],329:[function(require,module,exports){
+},{}],376:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -48099,7 +57339,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
 
-},{"./KeyEscapeUtils":216,"./ReactCurrentOwner":228,"./ReactElement":254,"./getIteratorFn":315,"_process":192,"fbjs/lib/invariant":18,"fbjs/lib/warning":28}],330:[function(require,module,exports){
+},{"./KeyEscapeUtils":263,"./ReactCurrentOwner":275,"./ReactElement":301,"./getIteratorFn":362,"_process":239,"fbjs/lib/invariant":65,"fbjs/lib/warning":75}],377:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -48472,12 +57712,12 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
 
-},{"_process":192,"fbjs/lib/emptyFunction":10,"fbjs/lib/warning":28,"object-assign":187}],331:[function(require,module,exports){
+},{"_process":239,"fbjs/lib/emptyFunction":57,"fbjs/lib/warning":75,"object-assign":234}],378:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":219}],332:[function(require,module,exports){
+},{"./lib/React":266}],379:[function(require,module,exports){
 // Copyright 2014 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 
@@ -48526,7 +57766,7 @@ void (function(root, factory) {
 
 }));
 
-},{}],333:[function(require,module,exports){
+},{}],380:[function(require,module,exports){
 'use strict';
 
 module.exports = ShelfPack;
@@ -48769,7 +58009,7 @@ Shelf.prototype.resize = function(w) {
     return true;
 };
 
-},{}],334:[function(require,module,exports){
+},{}],381:[function(require,module,exports){
 'use strict';
 
 var kdbush = require('kdbush');
@@ -48984,7 +58224,7 @@ function getY(p) {
     return p.y;
 }
 
-},{"kdbush":52}],335:[function(require,module,exports){
+},{"kdbush":99}],382:[function(require,module,exports){
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
@@ -49091,14 +58331,14 @@ UnitBezier.prototype.solve = function(x, epsilon) {
     return this.sampleCurveY(this.solveCurveX(x, epsilon));
 };
 
-},{}],336:[function(require,module,exports){
+},{}],383:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],337:[function(require,module,exports){
+},{}],384:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -49689,12 +58929,12 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./support/isBuffer":336,"_process":192,"inherits":51}],338:[function(require,module,exports){
+},{"./support/isBuffer":383,"_process":239,"inherits":98}],385:[function(require,module,exports){
 module.exports.VectorTile = require('./lib/vectortile.js');
 module.exports.VectorTileFeature = require('./lib/vectortilefeature.js');
 module.exports.VectorTileLayer = require('./lib/vectortilelayer.js');
 
-},{"./lib/vectortile.js":339,"./lib/vectortilefeature.js":340,"./lib/vectortilelayer.js":341}],339:[function(require,module,exports){
+},{"./lib/vectortile.js":386,"./lib/vectortilefeature.js":387,"./lib/vectortilelayer.js":388}],386:[function(require,module,exports){
 'use strict';
 
 var VectorTileLayer = require('./vectortilelayer');
@@ -49713,7 +58953,7 @@ function readTile(tag, layers, pbf) {
 }
 
 
-},{"./vectortilelayer":341}],340:[function(require,module,exports){
+},{"./vectortilelayer":388}],387:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -49948,7 +59188,7 @@ function signedArea(ring) {
     return sum;
 }
 
-},{"point-geometry":191}],341:[function(require,module,exports){
+},{"point-geometry":238}],388:[function(require,module,exports){
 'use strict';
 
 var VectorTileFeature = require('./vectortilefeature.js');
@@ -50011,7 +59251,7 @@ VectorTileLayer.prototype.feature = function(i) {
     return new VectorTileFeature(this._pbf, end, this.extent, this._keys, this._values);
 };
 
-},{"./vectortilefeature.js":340}],342:[function(require,module,exports){
+},{"./vectortilefeature.js":387}],389:[function(require,module,exports){
 var Pbf = require('pbf')
 var vtpb = require('./vector-tile-pb')
 var GeoJSONWrapper = require('./lib/geojson_wrapper')
@@ -50166,7 +59406,7 @@ function wrapValue (value) {
   return result
 }
 
-},{"./lib/geojson_wrapper":343,"./vector-tile-pb":344,"pbf":190}],343:[function(require,module,exports){
+},{"./lib/geojson_wrapper":390,"./vector-tile-pb":391,"pbf":237}],390:[function(require,module,exports){
 'use strict'
 
 var Point = require('point-geometry')
@@ -50233,7 +59473,7 @@ FeatureWrapper.prototype.bbox = function () {
 
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON
 
-},{"point-geometry":191,"vector-tile":338}],344:[function(require,module,exports){
+},{"point-geometry":238,"vector-tile":385}],391:[function(require,module,exports){
 'use strict';
 
 // tile ========================================
@@ -50339,7 +59579,7 @@ function writeLayer(layer, pbf) {
     if (layer.extent !== undefined) pbf.writeVarintField(5, layer.extent);
 }
 
-},{}],345:[function(require,module,exports){
+},{}],392:[function(require,module,exports){
 var bundleFn = arguments[3];
 var sources = arguments[4];
 var cache = arguments[5];
@@ -50410,13 +59650,51 @@ module.exports = function (fn, options) {
     return worker;
 };
 
-},{}],346:[function(require,module,exports){
+},{}],393:[function(require,module,exports){
 module.exports.RADIUS = 6378137;
 module.exports.FLATTENING = 1/298.257223563;
 module.exports.POLAR_RADIUS = 6356752.3142;
 
-},{}],347:[function(require,module,exports){
+},{}],394:[function(require,module,exports){
 "use strict";
+
+var _reactDom = require("react-dom");
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _map = require("./components/map");
+
+var _map2 = _interopRequireDefault(_map);
+
+var _searchbox = require("./components/searchbox");
+
+var _searchbox2 = _interopRequireDefault(_searchbox);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var token = 'pk.eyJ1IjoiaWxhYm1lZGlhIiwiYSI6ImNpbHYycXZ2bTAxajZ1c2tzdWU1b3gydnYifQ.AHxl8pPZsjsqoz95-604nw';
+var mapStyle = 'mapbox://styles/ilabmedia/cimxgcwgq00njp1nhlyb25pw4';
+var containerStyle = {
+  width: 'auto',
+  height: 600
+};
+
+_reactDom2.default.render(_react2.default.createElement(
+  "div",
+  null,
+  _react2.default.createElement(_searchbox2.default, null)
+), document.getElementById('app'));
+
+},{"./components/map":395,"./components/searchbox":396,"react":378,"react-dom":240}],395:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -50427,10 +59705,6 @@ var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = require("react-dom");
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50497,18 +59771,168 @@ Map.defaultProps = {
   center: [94.49535790994639, 22.440381130024562],
   zoom: 3
 };
+exports.default = Map;
 
+},{"mapbox-gl/js/mapbox-gl":143,"react":378}],396:[function(require,module,exports){
+"use strict";
 
-var token = 'pk.eyJ1IjoiaWxhYm1lZGlhIiwiYSI6ImNpbHYycXZ2bTAxajZ1c2tzdWU1b3gydnYifQ.AHxl8pPZsjsqoz95-604nw';
-var mapStyle = 'mapbox://styles/ilabmedia/cimxgcwgq00njp1nhlyb25pw4';
-var containerStyle = {
-  width: 'auto',
-  height: 600
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _belle = require("belle");
+
+var _belle2 = _interopRequireDefault(_belle);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TextInput = _belle2.default.TextInput;
+var Button = _belle2.default.Button;
+
+// belle.style.textInput.style = {
+//   color: '#FFF',
+//   background: '#5FB1CF',
+// };
+
+var ExpandableSection = function (_Component) {
+  _inherits(ExpandableSection, _Component);
+
+  function ExpandableSection() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, ExpandableSection);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ExpandableSection)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+      expanded: false
+    }, _this.handleToggle = function (e) {
+      _this.setState({ expanded: !_this.state.expanded });
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(ExpandableSection, [{
+    key: "render",
+    value: function render() {
+      var toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
+      return _react2.default.createElement(
+        "section",
+        { className: "expandable" },
+        _react2.default.createElement(
+          "header",
+          null,
+          this.props.header || ""
+        ),
+        _react2.default.createElement(
+          "div",
+          { "class": "sectionBody" },
+          this.props.children
+        ),
+        _react2.default.createElement(
+          "footer",
+          null,
+          _react2.default.createElement(
+            Button,
+            { onClick: this.handleToggle },
+            toggleButtonText
+          )
+        )
+      );
+    }
+  }]);
+
+  return ExpandableSection;
+}(_react.Component);
+
+ExpandableSection.propTypes = {
+  header: _react.PropTypes.element
 };
 
-_reactDom2.default.render(_react2.default.createElement(Map, { accessToken: token, containerStyle: containerStyle, mapStyle: mapStyle }), document.getElementById('app'));
+var ProjectFilter = function (_Component2) {
+  _inherits(ProjectFilter, _Component2);
 
-},{"mapbox-gl/js/mapbox-gl":96,"react":331,"react-dom":193}]},{},[347])
+  function ProjectFilter() {
+    _classCallCheck(this, ProjectFilter);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(ProjectFilter).apply(this, arguments));
+  }
+
+  _createClass(ProjectFilter, [{
+    key: "render",
+    value: function render() {
+      var hed = _react2.default.createElement(
+        "div",
+        null,
+        _react2.default.createElement(TextInput, { placeholder: "Project Title", maxRows: 2 }),
+        _react2.default.createElement(
+          Button,
+          { primary: true, type: "submit" },
+          "Search"
+        )
+      );
+
+      return _react2.default.createElement(
+        ExpandableSection,
+        { header: hed },
+        _react2.default.createElement(
+          "p",
+          null,
+          "Hi"
+        )
+      );
+    }
+  }]);
+
+  return ProjectFilter;
+}(_react.Component);
+
+ProjectFilter.propTypes = {
+  fields: _react.PropTypes.arrayOf(_react.PropTypes.element)
+};
+
+var SearchBox = function (_Component3) {
+  _inherits(SearchBox, _Component3);
+
+  function SearchBox() {
+    _classCallCheck(this, SearchBox);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(SearchBox).apply(this, arguments));
+  }
+
+  _createClass(SearchBox, [{
+    key: "render",
+    value: function render() {
+
+      return _react2.default.createElement(
+        "div",
+        { className: "searchbox" },
+        _react2.default.createElement(ProjectFilter, null)
+      );
+    }
+  }]);
+
+  return SearchBox;
+}(_react.Component);
+
+exports.default = SearchBox;
+
+},{"belle":26,"react":378}]},{},[394])
 
 
 //# sourceMappingURL=mapapp.js.map
