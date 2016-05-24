@@ -548,24 +548,24 @@ header[role=banner] {
 ::-ms-backdrop, .content-wrap {
   background-position: 50% -72px; }
 
-footer {
+body > footer {
   position: relative;
   border-top: 3px solid #252d3a;
   color: #252d3a;
   padding: 14px; }
   @media screen and (min-width: 768px) {
-    footer {
+    body > footer {
       padding: 33px 0 0; } }
-  footer nav li {
+  body > footer nav li {
     margin-bottom: 16.5px; }
-  footer a {
+  body > footer a {
     color: #252d3a;
     text-decoration: none; }
-  footer .logo {
+  body > footer .logo {
     position: static;
     max-width: 100%; }
     @media screen and (min-width: 768px) {
-      footer .logo {
+      body > footer .logo {
         position: absolute;
         top: 138px;
         right: 60px;

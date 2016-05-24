@@ -187,7 +187,7 @@ header[role=banner] {
     background-position: 50% (-($section-spacing + 22));
 }
 
-footer {
+body > footer {
     @include position(relative);
     border-top: $thin-dark-border;
     color: $dark-night;
