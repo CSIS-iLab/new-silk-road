@@ -1,43 +1,44 @@
 import React, { Component, PropTypes } from "react";
+import Section from "./section";
+import SearchBar from "./searchbar";
 
-import belle from "belle";
-const { TextInput, Button } = belle;
 
-// belle.style.textInput.style = {
-//   color: '#FFF',
-//   background: '#5FB1CF',
-// };
-
-class ExpandableSection extends Component {
-  static propTypes = {
-    header: PropTypes.element
-  }
-
-  state = {
-    expanded: false
-  }
-
-  handleToggle = (e) => {
-    this.setState({expanded: !this.state.expanded});
-  }
-
+class InitiativeFilter extends Component {
   render() {
-    let toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
+    var hed = <SearchBar placeholder="Initiative Title" name="initiative__name" />;
+
     return (
-      <section className="expandable">
-        <header>
-        {this.props.header || ""}
-        </header>
-        <div class="sectionBody">
-        {this.props.children}
-        </div>
-        <footer>
-          <Button onClick={this.handleToggle}>{toggleButtonText}</Button>
-        </footer>
-      </section>
+      <Section header={hed}>
+        <select name="principal_agent__name" defaultValue="">
+          <option value="">Principal Agent</option>
+        </select>
+        <select name="region__name" defaultValue="">
+          <option value="">Region</option>
+        </select>
+      </Section>
     );
   }
 }
+
+
+class FunderFilter extends Component {
+  render() {
+    var hed = <SearchBar placeholder="Funder" name="projectfunding__sources__name" />;
+
+    return (
+      <Section header={hed}>
+      {/*Amount, Country*/}
+        <select name="principal_agent__name" defaultValue="">
+          <option value="">Principal Agent</option>
+        </select>
+        <select name="projectfunding__sources__countries__name" defaultValue="">
+          <option value="">Country</option>
+        </select>
+      </Section>
+    );
+  }
+}
+
 
 class ProjectFilter extends Component {
   static propTypes = {
@@ -45,16 +46,24 @@ class ProjectFilter extends Component {
   };
 
   render() {
-    var hed =
-    <div>
-      <TextInput placeholder="Project Title" maxRows={2} />
-      <Button primary type='submit'>Search</Button>
-    </div>;
+    var hed = <SearchBar placeholder="Project" name="name" />;
 
     return (
-      <ExpandableSection header={hed}>
-        <p>Hi</p>
-      </ExpandableSection>
+      <Section header={hed}>
+        <select defaultValue="">
+          <option value="">Infrastructure Type</option>
+          <option value="road">Road</option>
+          <option value="rail">Rail</option>
+          <option value="seaport">Seaport</option>
+        </select>
+        <select defaultValue="">
+          <option value="">Status</option>
+          <option value="started">Started</option>
+          <option value="completed">Completed</option>
+        </select>
+        <InitiativeFilter />
+        <FunderFilter />
+      </Section>
     );
   }
 }
@@ -64,7 +73,7 @@ export default class SearchBox extends Component {
   render() {
 
     return (
-      <div className="searchbox">
+      <div className="searchbox" style={{maxWidth: 360}}>
         <ProjectFilter />
       </div>
     );
