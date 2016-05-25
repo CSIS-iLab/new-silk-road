@@ -10,23 +10,26 @@ class Input extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    inputText: PropTypes.string,
+    onUserInput: PropTypes.func
   };
 
   state = {
     value: ''
   }
 
-  handleChange = (event) => {
-    this.setState({value: event.target.value});
+  handleUserInput = (e) => {
+    this.props.onUserInput(this.refs.inputEl.value, e);
   }
 
   render() {
     return (
       <input  {...this.props}
+              ref="inputEl"
               style={inputStyle.base}
-              value={this.state.value}
-              onChange={this.handleChange}
+              value={this.props.inputText}
+              onChange={this.handleUserInput}
                />
     )
   }
@@ -38,7 +41,8 @@ class Button extends Component {
     type: 'button'
   }
   static propTypes = {
-    type: PropTypes.oneOf(['submit', 'reset', 'button'])
+    type: PropTypes.oneOf(['submit', 'reset', 'button']),
+    onClick: PropTypes.func
   };
 
   render() {
@@ -54,10 +58,25 @@ Button = Radium(Button);
 
 
 class Select extends Component {
+    state = {
+      value: ''
+    }
+
+    handleChange = (event) => {
+      this.setState({value: event.target.value});
+    }
+
   render() {
+    var {
+      value,
+      ...other
+    } = this.props;
+
     return (
-      <select {...this.props}
-      style={selectStyle.base}
+      <select {...other}
+        value={this.state.value}
+        onChange={this.handleChange}
+        style={selectStyle.base}
       >
       {this.props.children}
       </select>

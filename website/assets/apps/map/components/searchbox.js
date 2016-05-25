@@ -23,92 +23,86 @@ let searchBoxStyle = {
   }
 }
 
-class InitiativeFilter extends Component {
-  render() {
-    var hed = <SearchBar label="Initiative" name="initiative__name" />;
-
-    return (
-      <Section header={hed}>
-        <Select name="principal_agent__name" defaultValue="">
-          <option value="">Principal Agent</option>
-        </Select>
-        <Select name="region__name" defaultValue="">
-          <option value="">Region</option>
-        </Select>
-      </Section>
-    );
-  }
-}
-
-
-class FunderFilter extends Component {
-  render() {
-    var hed = <SearchBar label="Funder" name="projectfunding__sources__name" />;
-
-    return (
-      <Section header={hed}>
-      <div className="section-row">
-        <label>
-        <span>Amount</span>
-        <Select name="compare" defaultValue="">
-        <option value="">----</option>
-        </Select>
-        <Select name="amount" defaultValue="">
-        <option value="">----</option>
-        <option value="100000">100,000</option>
-        </Select>
-        </label>
-      </div>
-      <div className="section-row">
-        <Select name="projectfunding__sources__countries__name" defaultValue="">
-        <option value="">Country</option>
-        </Select>
-      </div>
-      </Section>
-    );
-  }
-}
-
-
-class ProjectFilter extends Component {
-  static propTypes = {
-    fields: PropTypes.arrayOf(PropTypes.element)
-  };
-
-  render() {
-    var hed = <SearchBar label="Project" name="name" />;
-
-    return (
-      <Section header={hed}>
-        <Select name="infrastructure_type__name" defaultValue="">
-          <option value="">Infrastructure Type</option>
-          <option value="road">Road</option>
-          <option value="rail">Rail</option>
-          <option value="seaport">Seaport</option>
-        </Select>
-        <Select name="status__name" defaultValue="">
-          <option value="">Status</option>
-          <option value="started">Started</option>
-          <option value="completed">Completed</option>
-        </Select>
-        <InitiativeFilter />
-        <FunderFilter />
-      </Section>
-    );
-  }
-}
-
 export default class SearchBox extends Component {
+  state = {
+    name: '',
+    initiative__name: ''
+  }
+
+  handleValueUpdate = (inputName, value) => {
+    var stateUpdate = {};
+    stateUpdate[inputName] = value;
+    this.setState(stateUpdate);
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state);
+  }
 
   render() {
-
     return (
       <div className="searchbox">
         <Style
           scopeSelector=".searchbox"
           rules={searchBoxStyle}
         />
-        <ProjectFilter />
+        <form onSubmit={this.handleSubmit}>
+          <Section header={
+            <SearchBar
+              label="Project" name="name"
+              value={this.state.projectTitle}
+              onSearchInput={this.handleValueUpdate}
+            />
+          }>
+            <Select name="infrastructure_type__name" value="">
+              <option value="">Infrastructure Type</option>
+              <option value="road">Road</option>
+              <option value="rail">Rail</option>
+              <option value="seaport">Seaport</option>
+            </Select>
+            <Select name="status__name" value="">
+              <option value="">Status</option>
+              <option value="started">Started</option>
+              <option value="completed">Completed</option>
+            </Select>
+            <Section header={
+              <SearchBar label="Initiative" name="initiative__name"
+                onSearchInput={this.handleValueUpdate}
+               />
+            }>
+              <Select name="principal_agent__name" value="">
+                <option value="">Principal Agent</option>
+              </Select>
+              <Select name="region__name" value="">
+                <option value="">Region</option>
+              </Select>
+            </Section>
+            <Section header={
+              <SearchBar label="Funder" name="projectfunding__sources__name"
+                onSearchInput={this.handleValueUpdate}
+              />
+            }>
+              <div className="section-row">
+                <label>
+                  <span>Amount</span>
+                  <Select name="compare" value="">
+                    <option value="">----</option>
+                  </Select>
+                  <Select name="amount" value="">
+                    <option value="">----</option>
+                    <option value="100000">100,000</option>
+                  </Select>
+                </label>
+              </div>
+              <div className="section-row">
+                <Select name="projectfunding__sources__countries__name" value="">
+                  <option value="">Country</option>
+                </Select>
+              </div>
+            </Section>
+          </Section>
+        </form>
       </div>
     );
   }
