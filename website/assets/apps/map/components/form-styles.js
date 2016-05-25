@@ -19,7 +19,6 @@ const inputStyle = {
 
 const labelStyle = {
   base: {
-    width: '100%',
     span: {
       paddingRight: 6
     }
@@ -27,15 +26,11 @@ const labelStyle = {
 }
 
 const buttonStyle = {
-  base: Object.assign({
-    backgroundColor: 'transparent',
-  }, formStyles, bordered)
+  base: Object.assign({}, formStyles, bordered)
 };
 
 const selectStyle = {
-  base: Object.assign({
-    backgroundColor: 'transparent'
-  }, formStyles, bordered)
+  base: Object.assign({}, formStyles, bordered)
 };
 
 export {inputStyle, labelStyle, buttonStyle, selectStyle};

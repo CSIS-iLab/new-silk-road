@@ -22,8 +22,9 @@ class Section extends Component {
       base: {
         padding: '0 0 2px'
       },
-      body: {
-        display: this.state.expanded ? 'block' : 'none'
+      sectionBody: {
+        display: this.state.expanded ? 'block' : 'none',
+        margin: '4px 0'
       }
     }
     return (
@@ -31,7 +32,7 @@ class Section extends Component {
         <header>
         {this.props.header || ""}
         </header>
-        <div class="sectionBody" style={styles.body}>
+        <div class="sectionBody" style={styles.sectionBody}>
         {this.props.children}
         </div>
         <footer>

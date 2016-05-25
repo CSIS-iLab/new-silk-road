@@ -54238,13 +54238,59 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_searchbox2.default, null)
 ), document.getElementById('app'));
 
-},{"./components/map":409,"./components/searchbox":411,"react":391,"react-dom":253}],408:[function(require,module,exports){
+},{"./components/map":410,"./components/searchbox":412,"react":391,"react-dom":253}],408:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var formStyles = {
+  cursor: 'pointer',
+  padding: 2,
+  borderRadius: 0
+};
+
+var bordered = {
+  border: '1px solid #556377'
+};
+
+var inputStyle = {
+  base: Object.assign({}, formStyles, {
+    borderTop: 'none',
+    borderLeft: 'none',
+    borderBottom: '1px solid #af0623',
+    borderRight: 'none'
+  })
+};
+
+var labelStyle = {
+  base: {
+    span: {
+      paddingRight: 6
+    }
+  }
+};
+
+var buttonStyle = {
+  base: Object.assign({}, formStyles, bordered)
+};
+
+var selectStyle = {
+  base: Object.assign({}, formStyles, bordered)
+};
+
+exports.inputStyle = inputStyle;
+exports.labelStyle = labelStyle;
+exports.buttonStyle = buttonStyle;
+exports.selectStyle = selectStyle;
+
+},{}],409:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Button = exports.Input = undefined;
+exports.Select = exports.Button = exports.Input = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -54257,6 +54303,8 @@ var _react2 = _interopRequireDefault(_react);
 var _radium = require("radium");
 
 var _radium2 = _interopRequireDefault(_radium);
+
+var _formStyles = require("./form-styles");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -54290,16 +54338,8 @@ var Input = function (_Component) {
   _createClass(Input, [{
     key: "render",
     value: function render() {
-      var styles = {
-        base: {
-          borderTop: 'none',
-          borderRight: 'none',
-          borderBottom: '1px solid #af0623',
-          borderLeft: 'none'
-        }
-      };
       return _react2.default.createElement("input", _extends({}, this.props, {
-        style: styles.base,
+        style: _formStyles.inputStyle.base,
         value: this.state.value,
         onChange: this.handleChange
       }));
@@ -54332,20 +54372,10 @@ var Button = function (_Component2) {
   _createClass(Button, [{
     key: "render",
     value: function render() {
-      var styles = {
-        base: {
-          border: 0,
-          padding: '2px',
-          backgroundColor: 'transparent',
-          ':hover': {
-            cursor: 'pointer'
-          }
-        }
-      };
       return _react2.default.createElement(
         "button",
         { type: this.props.type,
-          style: styles.base,
+          style: _formStyles.buttonStyle.base,
           onClick: this.props.onClick
         },
         this.props.children
@@ -54365,10 +54395,36 @@ Button.propTypes = {
 
 exports.Button = Button = (0, _radium2.default)(Button);
 
+var Select = function (_Component3) {
+  _inherits(Select, _Component3);
+
+  function Select() {
+    _classCallCheck(this, Select);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Select).apply(this, arguments));
+  }
+
+  _createClass(Select, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "select",
+        _extends({}, this.props, {
+          style: _formStyles.selectStyle.base
+        }),
+        this.props.children
+      );
+    }
+  }]);
+
+  return Select;
+}(_react.Component);
+
 exports.Input = Input;
 exports.Button = Button;
+exports.Select = Select;
 
-},{"radium":237,"react":391}],409:[function(require,module,exports){
+},{"./form-styles":408,"radium":237,"react":391}],410:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -54452,7 +54508,7 @@ Map.defaultProps = {
 };
 exports.default = Map;
 
-},{"mapbox-gl/js/mapbox-gl":129,"react":391}],410:[function(require,module,exports){
+},{"mapbox-gl/js/mapbox-gl":129,"react":391}],411:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -54470,6 +54526,8 @@ var _radium = require("radium");
 var _radium2 = _interopRequireDefault(_radium);
 
 var _forms = require("./forms");
+
+var _formStyles = require("./form-styles");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -54491,11 +54549,6 @@ var SearchBar = function (_Component) {
   _createClass(SearchBar, [{
     key: "render",
     value: function render() {
-      var styles = {
-        label: {
-          paddingRight: 6
-        }
-      };
       return _react2.default.createElement(
         "div",
         { className: "searchbar" },
@@ -54504,7 +54557,7 @@ var SearchBar = function (_Component) {
           null,
           _react2.default.createElement(
             "span",
-            { style: styles.label },
+            { style: _formStyles.labelStyle.base },
             this.props.label
           ),
           _react2.default.createElement(_forms.Input, { type: "search", name: this.props.name, placeholder: this.props.placeholder })
@@ -54531,7 +54584,7 @@ SearchBar = (0, _radium2.default)(SearchBar);
 
 exports.default = SearchBar;
 
-},{"./forms":408,"radium":237,"react":391}],411:[function(require,module,exports){
+},{"./form-styles":408,"./forms":409,"radium":237,"react":391}],412:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -54552,6 +54605,12 @@ var _searchbar = require("./searchbar");
 
 var _searchbar2 = _interopRequireDefault(_searchbar);
 
+var _forms = require("./forms");
+
+var _radium = require("radium");
+
+var _radium2 = _interopRequireDefault(_radium);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -54559,6 +54618,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var searchBoxStyle = {
+  maxWidth: 360,
+  // position: 'absolute',
+  // left: 10,
+
+  '.section-row': {
+    display: 'block',
+    clear: 'both',
+    marginBottom: 4
+  },
+  footer: {
+    marginTop: 2
+  },
+  button: {
+    backgroundColor: '#eee'
+  }
+};
 
 var InitiativeFilter = function (_Component) {
   _inherits(InitiativeFilter, _Component);
@@ -54578,7 +54655,7 @@ var InitiativeFilter = function (_Component) {
         _section2.default,
         { header: hed },
         _react2.default.createElement(
-          "select",
+          _forms.Select,
           { name: "principal_agent__name", defaultValue: "" },
           _react2.default.createElement(
             "option",
@@ -54587,7 +54664,7 @@ var InitiativeFilter = function (_Component) {
           )
         ),
         _react2.default.createElement(
-          "select",
+          _forms.Select,
           { name: "region__name", defaultValue: "" },
           _react2.default.createElement(
             "option",
@@ -54620,21 +54697,52 @@ var FunderFilter = function (_Component2) {
         _section2.default,
         { header: hed },
         _react2.default.createElement(
-          "select",
-          { name: "principal_agent__name", defaultValue: "" },
+          "div",
+          { className: "section-row" },
           _react2.default.createElement(
-            "option",
-            { value: "" },
-            "Principal Agent"
+            "label",
+            null,
+            _react2.default.createElement(
+              "span",
+              null,
+              "Amount"
+            ),
+            _react2.default.createElement(
+              _forms.Select,
+              { name: "compare", defaultValue: "" },
+              _react2.default.createElement(
+                "option",
+                { value: "" },
+                "----"
+              )
+            ),
+            _react2.default.createElement(
+              _forms.Select,
+              { name: "amount", defaultValue: "" },
+              _react2.default.createElement(
+                "option",
+                { value: "" },
+                "----"
+              ),
+              _react2.default.createElement(
+                "option",
+                { value: "100000" },
+                "100,000"
+              )
+            )
           )
         ),
         _react2.default.createElement(
-          "select",
-          { name: "projectfunding__sources__countries__name", defaultValue: "" },
+          "div",
+          { className: "section-row" },
           _react2.default.createElement(
-            "option",
-            { value: "" },
-            "Country"
+            _forms.Select,
+            { name: "projectfunding__sources__countries__name", defaultValue: "" },
+            _react2.default.createElement(
+              "option",
+              { value: "" },
+              "Country"
+            )
           )
         )
       );
@@ -54662,8 +54770,8 @@ var ProjectFilter = function (_Component3) {
         _section2.default,
         { header: hed },
         _react2.default.createElement(
-          "select",
-          { defaultValue: "" },
+          _forms.Select,
+          { name: "infrastructure_type__name", defaultValue: "" },
           _react2.default.createElement(
             "option",
             { value: "" },
@@ -54686,8 +54794,8 @@ var ProjectFilter = function (_Component3) {
           )
         ),
         _react2.default.createElement(
-          "select",
-          { defaultValue: "" },
+          _forms.Select,
+          { name: "status__name", defaultValue: "" },
           _react2.default.createElement(
             "option",
             { value: "" },
@@ -54732,7 +54840,11 @@ var SearchBox = function (_Component4) {
 
       return _react2.default.createElement(
         "div",
-        { className: "searchbox", style: { maxWidth: 360 } },
+        { className: "searchbox" },
+        _react2.default.createElement(_radium.Style, {
+          scopeSelector: ".searchbox",
+          rules: searchBoxStyle
+        }),
         _react2.default.createElement(ProjectFilter, null)
       );
     }
@@ -54743,7 +54855,7 @@ var SearchBox = function (_Component4) {
 
 exports.default = SearchBox;
 
-},{"./searchbar":410,"./section":412,"react":391}],412:[function(require,module,exports){
+},{"./forms":409,"./searchbar":411,"./section":413,"radium":237,"react":391}],413:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -54799,8 +54911,9 @@ var Section = function (_Component) {
         base: {
           padding: '0 0 2px'
         },
-        body: {
-          display: this.state.expanded ? 'block' : 'none'
+        sectionBody: {
+          display: this.state.expanded ? 'block' : 'none',
+          margin: '4px 0'
         }
       };
       return _react2.default.createElement(
@@ -54813,7 +54926,7 @@ var Section = function (_Component) {
         ),
         _react2.default.createElement(
           "div",
-          { "class": "sectionBody", style: styles.body },
+          { "class": "sectionBody", style: styles.sectionBody },
           this.props.children
         ),
         _react2.default.createElement(
@@ -54840,7 +54953,7 @@ Section = (0, _radium2.default)(Section);
 
 exports.default = Section;
 
-},{"./forms":408,"radium":237,"react":391}]},{},[407])
+},{"./forms":409,"radium":237,"react":391}]},{},[407])
 
 
 //# sourceMappingURL=mapapp.js.map

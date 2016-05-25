@@ -2,7 +2,26 @@ import React, { Component, PropTypes } from "react";
 import Section from "./section";
 import SearchBar from "./searchbar";
 import {Select} from "./forms";
+import Radium, { Style } from "radium";
 
+
+let searchBoxStyle = {
+  maxWidth: 360,
+  // position: 'absolute',
+  // left: 10,
+
+  '.section-row': {
+    display: 'block',
+    clear: 'both',
+    marginBottom: 4
+  },
+  footer: {
+    marginTop: 2
+  },
+  button: {
+    backgroundColor: '#eee'
+  }
+}
 
 class InitiativeFilter extends Component {
   render() {
@@ -28,13 +47,23 @@ class FunderFilter extends Component {
 
     return (
       <Section header={hed}>
-      {/*Amount, Country*/}
-        <Select name="principal_agent__name" defaultValue="">
-          <option value="">Principal Agent</option>
+      <div className="section-row">
+        <label>
+        <span>Amount</span>
+        <Select name="compare" defaultValue="">
+        <option value="">----</option>
         </Select>
+        <Select name="amount" defaultValue="">
+        <option value="">----</option>
+        <option value="100000">100,000</option>
+        </Select>
+        </label>
+      </div>
+      <div className="section-row">
         <Select name="projectfunding__sources__countries__name" defaultValue="">
-          <option value="">Country</option>
+        <option value="">Country</option>
         </Select>
+      </div>
       </Section>
     );
   }
@@ -74,7 +103,11 @@ export default class SearchBox extends Component {
   render() {
 
     return (
-      <div className="searchbox" style={{maxWidth: 360}}>
+      <div className="searchbox">
+        <Style
+          scopeSelector=".searchbox"
+          rules={searchBoxStyle}
+        />
         <ProjectFilter />
       </div>
     );
