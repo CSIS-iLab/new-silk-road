@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from "react";
-import Radium from "radium";
+import Radium, { Style } from "radium";
+import {inputStyle, buttonStyle, selectStyle} from "./form-styles";
+
 
 class Input extends Component {
   static defaultProps = {
@@ -20,17 +22,9 @@ class Input extends Component {
   }
 
   render() {
-    let styles = {
-      base: {
-        borderTop: 'none',
-        borderRight: 'none',
-        borderBottom: '1px solid #af0623',
-        borderLeft: 'none'
-      }
-    }
     return (
       <input  {...this.props}
-              style={styles.base}
+              style={inputStyle.base}
               value={this.state.value}
               onChange={this.handleChange}
                />
@@ -48,19 +42,9 @@ class Button extends Component {
   };
 
   render() {
-    let styles = {
-      base: {
-        border: 0,
-        padding: '2px',
-        backgroundColor: 'transparent',
-        ':hover': {
-          cursor: 'pointer'
-        },
-      },
-    }
     return (
       <button type={this.props.type}
-              style={styles.base}
+              style={buttonStyle.base}
               onClick={this.props.onClick}
                >{this.props.children}</button>
     )
@@ -69,4 +53,16 @@ class Button extends Component {
 Button = Radium(Button);
 
 
-export { Input, Button };
+class Select extends Component {
+  render() {
+    return (
+      <select {...this.props}
+      style={selectStyle.base}
+      >
+      {this.props.children}
+      </select>
+    );
+  }
+}
+
+export { Input, Button, Select };

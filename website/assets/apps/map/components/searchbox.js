@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Section from "./section";
 import SearchBar from "./searchbar";
+import {Select} from "./forms";
 
 
 class InitiativeFilter extends Component {
@@ -9,12 +10,12 @@ class InitiativeFilter extends Component {
 
     return (
       <Section header={hed}>
-        <select name="principal_agent__name" defaultValue="">
+        <Select name="principal_agent__name" defaultValue="">
           <option value="">Principal Agent</option>
-        </select>
-        <select name="region__name" defaultValue="">
+        </Select>
+        <Select name="region__name" defaultValue="">
           <option value="">Region</option>
-        </select>
+        </Select>
       </Section>
     );
   }
@@ -28,12 +29,12 @@ class FunderFilter extends Component {
     return (
       <Section header={hed}>
       {/*Amount, Country*/}
-        <select name="principal_agent__name" defaultValue="">
+        <Select name="principal_agent__name" defaultValue="">
           <option value="">Principal Agent</option>
-        </select>
-        <select name="projectfunding__sources__countries__name" defaultValue="">
+        </Select>
+        <Select name="projectfunding__sources__countries__name" defaultValue="">
           <option value="">Country</option>
-        </select>
+        </Select>
       </Section>
     );
   }
@@ -50,17 +51,17 @@ class ProjectFilter extends Component {
 
     return (
       <Section header={hed}>
-        <select defaultValue="">
+        <Select name="infrastructure_type__name" defaultValue="">
           <option value="">Infrastructure Type</option>
           <option value="road">Road</option>
           <option value="rail">Rail</option>
           <option value="seaport">Seaport</option>
-        </select>
-        <select defaultValue="">
+        </Select>
+        <Select name="status__name" defaultValue="">
           <option value="">Status</option>
           <option value="started">Started</option>
           <option value="completed">Completed</option>
-        </select>
+        </Select>
         <InitiativeFilter />
         <FunderFilter />
       </Section>
