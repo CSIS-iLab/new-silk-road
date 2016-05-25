@@ -54246,6 +54246,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Button = exports.Input = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require("react");
@@ -54296,13 +54298,11 @@ var Input = function (_Component) {
           borderLeft: 'none'
         }
       };
-      return _react2.default.createElement("input", { type: this.props.type,
-        name: this.props.name,
-        placeholder: this.props.placeholder,
+      return _react2.default.createElement("input", _extends({}, this.props, {
         style: styles.base,
         value: this.state.value,
         onChange: this.handleChange
-      });
+      }));
     }
   }]);
 
@@ -54314,8 +54314,8 @@ Input.defaultProps = {
 };
 Input.propTypes = {
   name: _react.PropTypes.string.isRequired,
-  placeholder: _react.PropTypes.string.isRequired,
-  type: _react.PropTypes.oneOf(['text', 'search', 'submit'])
+  placeholder: _react.PropTypes.string,
+  type: _react.PropTypes.string
 };
 
 exports.Input = Input = (0, _radium2.default)(Input);
@@ -54488,12 +54488,23 @@ var SearchBar = function (_Component) {
     key: "render",
     value: function render() {
       var styles = {
-        base: {}
+        label: {
+          paddingRight: 6
+        }
       };
       return _react2.default.createElement(
         "div",
         { className: "searchbar" },
-        _react2.default.createElement(_forms.Input, { type: "search", name: this.props.name, placeholder: this.props.placeholder }),
+        _react2.default.createElement(
+          "label",
+          null,
+          _react2.default.createElement(
+            "span",
+            { style: styles.label },
+            this.props.label
+          ),
+          _react2.default.createElement(_forms.Input, { type: "search", name: this.props.name, placeholder: this.props.placeholder })
+        ),
         _react2.default.createElement(
           _forms.Button,
           { type: "submit" },
@@ -54508,7 +54519,8 @@ var SearchBar = function (_Component) {
 
 SearchBar.propTypes = {
   name: _react.PropTypes.string.isRequired,
-  placeholder: _react.PropTypes.string.isRequired
+  placeholder: _react.PropTypes.string,
+  label: _react.PropTypes.string.isRequired
 };
 
 
@@ -54555,7 +54567,7 @@ var InitiativeFilter = function (_Component) {
   _createClass(InitiativeFilter, [{
     key: "render",
     value: function render() {
-      var hed = _react2.default.createElement(_searchbar2.default, { placeholder: "Initiative Title", name: "initiative__name" });
+      var hed = _react2.default.createElement(_searchbar2.default, { label: "Initiative", name: "initiative__name" });
 
       return _react2.default.createElement(
         _section2.default,
@@ -54597,7 +54609,7 @@ var FunderFilter = function (_Component2) {
   _createClass(FunderFilter, [{
     key: "render",
     value: function render() {
-      var hed = _react2.default.createElement(_searchbar2.default, { placeholder: "Funder", name: "projectfunding__sources__name" });
+      var hed = _react2.default.createElement(_searchbar2.default, { label: "Funder", name: "projectfunding__sources__name" });
 
       return _react2.default.createElement(
         _section2.default,
@@ -54639,7 +54651,7 @@ var ProjectFilter = function (_Component3) {
   _createClass(ProjectFilter, [{
     key: "render",
     value: function render() {
-      var hed = _react2.default.createElement(_searchbar2.default, { placeholder: "Project", name: "name" });
+      var hed = _react2.default.createElement(_searchbar2.default, { label: "Project", name: "name" });
 
       return _react2.default.createElement(
         _section2.default,

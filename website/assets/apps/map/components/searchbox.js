@@ -5,7 +5,7 @@ import SearchBar from "./searchbar";
 
 class InitiativeFilter extends Component {
   render() {
-    var hed = <SearchBar placeholder="Initiative Title" name="initiative__name" />;
+    var hed = <SearchBar label="Initiative" name="initiative__name" />;
 
     return (
       <Section header={hed}>
@@ -23,7 +23,7 @@ class InitiativeFilter extends Component {
 
 class FunderFilter extends Component {
   render() {
-    var hed = <SearchBar placeholder="Funder" name="projectfunding__sources__name" />;
+    var hed = <SearchBar label="Funder" name="projectfunding__sources__name" />;
 
     return (
       <Section header={hed}>
@@ -46,7 +46,7 @@ class ProjectFilter extends Component {
   };
 
   render() {
-    var hed = <SearchBar placeholder="Project" name="name" />;
+    var hed = <SearchBar label="Project" name="name" />;
 
     return (
       <Section header={hed}>

@@ -7,8 +7,8 @@ class Input extends Component {
   }
   static propTypes = {
     name: PropTypes.string.isRequired,
-    placeholder: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text', 'search', 'submit'])
+    placeholder: PropTypes.string,
+    type: PropTypes.string
   };
 
   state = {
@@ -29,9 +29,7 @@ class Input extends Component {
       }
     }
     return (
-      <input type={this.props.type}
-              name={this.props.name}
-              placeholder={this.props.placeholder}
+      <input  {...this.props}
               style={styles.base}
               value={this.state.value}
               onChange={this.handleChange}
