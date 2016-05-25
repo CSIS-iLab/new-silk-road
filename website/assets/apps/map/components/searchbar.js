@@ -26,5 +26,6 @@ class SearchBar extends Component {
     )
   }
 }
+SearchBar = Radium(SearchBar)
 
-module.exports = Radium(SearchBar)
+export { SearchBar };

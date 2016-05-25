@@ -42,5 +42,6 @@ class Section extends Component {
 
   }
 }
+Section = Radium(Section);
 
-module.exports = Radium(Section);
+export { Section };
