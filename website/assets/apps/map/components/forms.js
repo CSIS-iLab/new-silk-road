@@ -37,7 +37,7 @@ class Input extends Component {
     )
   }
 }
-Input = Radium(Input)
+Input = Radium(Input);
 
 class Button extends Component {
   static defaultProps = {
@@ -66,7 +66,7 @@ class Button extends Component {
     )
   }
 }
-Button = Radium(Button)
+Button = Radium(Button);
 
 
 export { Input, Button };

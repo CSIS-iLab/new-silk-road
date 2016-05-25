@@ -26,6 +26,6 @@ class SearchBar extends Component {
     )
   }
 }
-SearchBar = Radium(SearchBar)
+SearchBar = Radium(SearchBar);
 
-export { SearchBar };
+export default SearchBar;
