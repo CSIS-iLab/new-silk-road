@@ -21,8 +21,8 @@ class SearchBar extends Component {
   render() {
     return (
       <div className="searchbar">
-        <label>
-          <span style={labelStyle.base}>{this.props.label}</span>
+        <label style={labelStyle.base}>
+          <span style={labelStyle.base.span}>{this.props.label}:</span>
           <Input type="search"
             ref="searchTextInput"
             inputText={this.props.inputText}

@@ -54308,6 +54308,8 @@ var _formStyles = require("./form-styles");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -54330,8 +54332,8 @@ var Input = function (_Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Input)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
       value: ''
-    }, _this.handleChange = function (event) {
-      _this.setState({ value: event.target.value });
+    }, _this.handleUserInput = function (e) {
+      _this.props.onUserInput(_this.refs.inputEl.value, e);
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
@@ -54339,9 +54341,10 @@ var Input = function (_Component) {
     key: "render",
     value: function render() {
       return _react2.default.createElement("input", _extends({}, this.props, {
+        ref: "inputEl",
         style: _formStyles.inputStyle.base,
-        value: this.state.value,
-        onChange: this.handleChange
+        value: this.props.inputText,
+        onChange: this.handleUserInput
       }));
     }
   }]);
@@ -54355,7 +54358,9 @@ Input.defaultProps = {
 Input.propTypes = {
   name: _react.PropTypes.string.isRequired,
   placeholder: _react.PropTypes.string,
-  type: _react.PropTypes.string
+  type: _react.PropTypes.string,
+  inputText: _react.PropTypes.string,
+  onUserInput: _react.PropTypes.func
 };
 
 exports.Input = Input = (0, _radium2.default)(Input);
@@ -54390,7 +54395,8 @@ Button.defaultProps = {
   type: 'button'
 };
 Button.propTypes = {
-  type: _react.PropTypes.oneOf(['submit', 'reset', 'button'])
+  type: _react.PropTypes.oneOf(['submit', 'reset', 'button']),
+  onClick: _react.PropTypes.func
 };
 
 exports.Button = Button = (0, _radium2.default)(Button);
@@ -54399,17 +54405,36 @@ var Select = function (_Component3) {
   _inherits(Select, _Component3);
 
   function Select() {
+    var _Object$getPrototypeO2;
+
+    var _temp2, _this3, _ret2;
+
     _classCallCheck(this, Select);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Select).apply(this, arguments));
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    return _ret2 = (_temp2 = (_this3 = _possibleConstructorReturn(this, (_Object$getPrototypeO2 = Object.getPrototypeOf(Select)).call.apply(_Object$getPrototypeO2, [this].concat(args))), _this3), _this3.state = {
+      value: ''
+    }, _this3.handleChange = function (event) {
+      _this3.setState({ value: event.target.value });
+    }, _temp2), _possibleConstructorReturn(_this3, _ret2);
   }
 
   _createClass(Select, [{
     key: "render",
     value: function render() {
+      var _props = this.props;
+      var value = _props.value;
+
+      var other = _objectWithoutProperties(_props, ["value"]);
+
       return _react2.default.createElement(
         "select",
-        _extends({}, this.props, {
+        _extends({}, other, {
+          value: this.state.value,
+          onChange: this.handleChange,
           style: _formStyles.selectStyle.base
         }),
         this.props.children
@@ -54541,9 +54566,21 @@ var SearchBar = function (_Component) {
   _inherits(SearchBar, _Component);
 
   function SearchBar() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, SearchBar);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(SearchBar).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SearchBar)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleUserInput = function (value, e) {
+      if (_this.props.onSearchInput) {
+        _this.props.onSearchInput(_this.props.name, value);
+      }
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(SearchBar, [{
@@ -54554,13 +54591,19 @@ var SearchBar = function (_Component) {
         { className: "searchbar" },
         _react2.default.createElement(
           "label",
-          null,
+          { style: _formStyles.labelStyle.base },
           _react2.default.createElement(
             "span",
-            { style: _formStyles.labelStyle.base },
-            this.props.label
+            { style: _formStyles.labelStyle.base.span },
+            this.props.label,
+            ":"
           ),
-          _react2.default.createElement(_forms.Input, { type: "search", name: this.props.name, placeholder: this.props.placeholder })
+          _react2.default.createElement(_forms.Input, { type: "search",
+            ref: "searchTextInput",
+            inputText: this.props.inputText,
+            onUserInput: this.handleUserInput,
+            name: this.props.name, placeholder: this.props.placeholder
+          })
         ),
         _react2.default.createElement(
           _forms.Button,
@@ -54577,7 +54620,9 @@ var SearchBar = function (_Component) {
 SearchBar.propTypes = {
   name: _react.PropTypes.string.isRequired,
   placeholder: _react.PropTypes.string,
-  label: _react.PropTypes.string.isRequired
+  label: _react.PropTypes.string.isRequired,
+  inputText: _react.PropTypes.string,
+  onSearchInput: _react.PropTypes.func
 };
 
 SearchBar = (0, _radium2.default)(SearchBar);
@@ -54637,207 +54682,36 @@ var searchBoxStyle = {
   }
 };
 
-var InitiativeFilter = function (_Component) {
-  _inherits(InitiativeFilter, _Component);
-
-  function InitiativeFilter() {
-    _classCallCheck(this, InitiativeFilter);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(InitiativeFilter).apply(this, arguments));
-  }
-
-  _createClass(InitiativeFilter, [{
-    key: "render",
-    value: function render() {
-      var hed = _react2.default.createElement(_searchbar2.default, { label: "Initiative", name: "initiative__name" });
-
-      return _react2.default.createElement(
-        _section2.default,
-        { header: hed },
-        _react2.default.createElement(
-          _forms.Select,
-          { name: "principal_agent__name", defaultValue: "" },
-          _react2.default.createElement(
-            "option",
-            { value: "" },
-            "Principal Agent"
-          )
-        ),
-        _react2.default.createElement(
-          _forms.Select,
-          { name: "region__name", defaultValue: "" },
-          _react2.default.createElement(
-            "option",
-            { value: "" },
-            "Region"
-          )
-        )
-      );
-    }
-  }]);
-
-  return InitiativeFilter;
-}(_react.Component);
-
-var FunderFilter = function (_Component2) {
-  _inherits(FunderFilter, _Component2);
-
-  function FunderFilter() {
-    _classCallCheck(this, FunderFilter);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(FunderFilter).apply(this, arguments));
-  }
-
-  _createClass(FunderFilter, [{
-    key: "render",
-    value: function render() {
-      var hed = _react2.default.createElement(_searchbar2.default, { label: "Funder", name: "projectfunding__sources__name" });
-
-      return _react2.default.createElement(
-        _section2.default,
-        { header: hed },
-        _react2.default.createElement(
-          "div",
-          { className: "section-row" },
-          _react2.default.createElement(
-            "label",
-            null,
-            _react2.default.createElement(
-              "span",
-              null,
-              "Amount"
-            ),
-            _react2.default.createElement(
-              _forms.Select,
-              { name: "compare", defaultValue: "" },
-              _react2.default.createElement(
-                "option",
-                { value: "" },
-                "----"
-              )
-            ),
-            _react2.default.createElement(
-              _forms.Select,
-              { name: "amount", defaultValue: "" },
-              _react2.default.createElement(
-                "option",
-                { value: "" },
-                "----"
-              ),
-              _react2.default.createElement(
-                "option",
-                { value: "100000" },
-                "100,000"
-              )
-            )
-          )
-        ),
-        _react2.default.createElement(
-          "div",
-          { className: "section-row" },
-          _react2.default.createElement(
-            _forms.Select,
-            { name: "projectfunding__sources__countries__name", defaultValue: "" },
-            _react2.default.createElement(
-              "option",
-              { value: "" },
-              "Country"
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return FunderFilter;
-}(_react.Component);
-
-var ProjectFilter = function (_Component3) {
-  _inherits(ProjectFilter, _Component3);
-
-  function ProjectFilter() {
-    _classCallCheck(this, ProjectFilter);
-
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(ProjectFilter).apply(this, arguments));
-  }
-
-  _createClass(ProjectFilter, [{
-    key: "render",
-    value: function render() {
-      var hed = _react2.default.createElement(_searchbar2.default, { label: "Project", name: "name" });
-
-      return _react2.default.createElement(
-        _section2.default,
-        { header: hed },
-        _react2.default.createElement(
-          _forms.Select,
-          { name: "infrastructure_type__name", defaultValue: "" },
-          _react2.default.createElement(
-            "option",
-            { value: "" },
-            "Infrastructure Type"
-          ),
-          _react2.default.createElement(
-            "option",
-            { value: "road" },
-            "Road"
-          ),
-          _react2.default.createElement(
-            "option",
-            { value: "rail" },
-            "Rail"
-          ),
-          _react2.default.createElement(
-            "option",
-            { value: "seaport" },
-            "Seaport"
-          )
-        ),
-        _react2.default.createElement(
-          _forms.Select,
-          { name: "status__name", defaultValue: "" },
-          _react2.default.createElement(
-            "option",
-            { value: "" },
-            "Status"
-          ),
-          _react2.default.createElement(
-            "option",
-            { value: "started" },
-            "Started"
-          ),
-          _react2.default.createElement(
-            "option",
-            { value: "completed" },
-            "Completed"
-          )
-        ),
-        _react2.default.createElement(InitiativeFilter, null),
-        _react2.default.createElement(FunderFilter, null)
-      );
-    }
-  }]);
-
-  return ProjectFilter;
-}(_react.Component);
-
-ProjectFilter.propTypes = {
-  fields: _react.PropTypes.arrayOf(_react.PropTypes.element)
-};
-
-var SearchBox = function (_Component4) {
-  _inherits(SearchBox, _Component4);
+var SearchBox = function (_Component) {
+  _inherits(SearchBox, _Component);
 
   function SearchBox() {
+    var _Object$getPrototypeO;
+
+    var _temp, _this, _ret;
+
     _classCallCheck(this, SearchBox);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(SearchBox).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SearchBox)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+      name: '',
+      initiative__name: ''
+    }, _this.handleValueUpdate = function (inputName, value) {
+      var stateUpdate = {};
+      stateUpdate[inputName] = value;
+      _this.setState(stateUpdate);
+    }, _this.handleSubmit = function (e) {
+      e.preventDefault();
+      console.log(_this.state);
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(SearchBox, [{
     key: "render",
     value: function render() {
-
       return _react2.default.createElement(
         "div",
         { className: "searchbox" },
@@ -54845,7 +54719,140 @@ var SearchBox = function (_Component4) {
           scopeSelector: ".searchbox",
           rules: searchBoxStyle
         }),
-        _react2.default.createElement(ProjectFilter, null)
+        _react2.default.createElement(
+          "form",
+          { onSubmit: this.handleSubmit },
+          _react2.default.createElement(
+            _section2.default,
+            { header: _react2.default.createElement(_searchbar2.default, {
+                label: "Project", name: "name",
+                value: this.state.projectTitle,
+                onSearchInput: this.handleValueUpdate
+              }) },
+            _react2.default.createElement(
+              _forms.Select,
+              { name: "infrastructure_type__name", value: "" },
+              _react2.default.createElement(
+                "option",
+                { value: "" },
+                "Infrastructure Type"
+              ),
+              _react2.default.createElement(
+                "option",
+                { value: "road" },
+                "Road"
+              ),
+              _react2.default.createElement(
+                "option",
+                { value: "rail" },
+                "Rail"
+              ),
+              _react2.default.createElement(
+                "option",
+                { value: "seaport" },
+                "Seaport"
+              )
+            ),
+            _react2.default.createElement(
+              _forms.Select,
+              { name: "status__name", value: "" },
+              _react2.default.createElement(
+                "option",
+                { value: "" },
+                "Status"
+              ),
+              _react2.default.createElement(
+                "option",
+                { value: "started" },
+                "Started"
+              ),
+              _react2.default.createElement(
+                "option",
+                { value: "completed" },
+                "Completed"
+              )
+            ),
+            _react2.default.createElement(
+              _section2.default,
+              { header: _react2.default.createElement(_searchbar2.default, { label: "Initiative", name: "initiative__name",
+                  onSearchInput: this.handleValueUpdate
+                }) },
+              _react2.default.createElement(
+                _forms.Select,
+                { name: "principal_agent__name", value: "" },
+                _react2.default.createElement(
+                  "option",
+                  { value: "" },
+                  "Principal Agent"
+                )
+              ),
+              _react2.default.createElement(
+                _forms.Select,
+                { name: "region__name", value: "" },
+                _react2.default.createElement(
+                  "option",
+                  { value: "" },
+                  "Region"
+                )
+              )
+            ),
+            _react2.default.createElement(
+              _section2.default,
+              { header: _react2.default.createElement(_searchbar2.default, { label: "Funder", name: "projectfunding__sources__name",
+                  onSearchInput: this.handleValueUpdate
+                }) },
+              _react2.default.createElement(
+                "div",
+                { className: "section-row" },
+                _react2.default.createElement(
+                  "label",
+                  null,
+                  _react2.default.createElement(
+                    "span",
+                    null,
+                    "Amount"
+                  ),
+                  _react2.default.createElement(
+                    _forms.Select,
+                    { name: "compare", value: "" },
+                    _react2.default.createElement(
+                      "option",
+                      { value: "" },
+                      "----"
+                    )
+                  ),
+                  _react2.default.createElement(
+                    _forms.Select,
+                    { name: "amount", value: "" },
+                    _react2.default.createElement(
+                      "option",
+                      { value: "" },
+                      "----"
+                    ),
+                    _react2.default.createElement(
+                      "option",
+                      { value: "100000" },
+                      "100,000"
+                    )
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                "div",
+                { className: "section-row" },
+                _react2.default.createElement(
+                  _forms.Select,
+                  { name: "projectfunding__sources__countries__name", value: "" },
+                  _react2.default.createElement(
+                    "option",
+                    { value: "" },
+                    "Country"
+                  )
+                )
+              )
+            )
+          )
+        )
       );
     }
   }]);
