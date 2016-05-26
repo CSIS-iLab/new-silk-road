@@ -8,7 +8,8 @@ from locations.models import (
     PointGeometry,
     PolygonGeometry,
     GeometryStore,
-    Region
+    Region,
+    Country
 )
 from api.serializers.locations import (
     LineStringGeometrySerializer,
@@ -17,6 +18,7 @@ from api.serializers.locations import (
     GeometryStoreSerializer,
     GeometryStoreCentroidSerializer,
     RegionBasicSerializer,
+    CountryBasicSerializer
 )
 from api.filters.locations import (
     GeometryStoreFilter,
@@ -105,4 +107,10 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
 class RegionListView(generics.ListAPIView):
     queryset = Region.objects.all()
     serializer_class = RegionBasicSerializer
+    pagination_class = None
+
+
+class CountryListView(generics.ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountryBasicSerializer
     pagination_class = None

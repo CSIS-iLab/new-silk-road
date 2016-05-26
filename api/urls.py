@@ -14,6 +14,7 @@ from api.views import (
     GeometryStoreViewSet,
     GeometryStoreCentroidViewSet,
     RegionListView,
+    CountryListView,
 )
 
 
@@ -30,6 +31,7 @@ app_name = 'api'
 urlpatterns = [
     url(r'^project-statuses/$', ProjectStatusListView.as_view()),
     url(r'^regions/$', RegionListView.as_view()),
+    url(r'^countries/$', CountryListView.as_view()),
     url(r'^infrastructure-types/$', InfrastructureTypeListView.as_view()),
     url(r'^', include(router.urls)),
 ]

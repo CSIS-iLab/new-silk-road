@@ -5,7 +5,8 @@ from locations.models import (
     PointGeometry,
     PolygonGeometry,
     GeometryStore,
-    Region
+    Region,
+    Country
 )
 from api.fields import DynamicFieldsMixin
 
@@ -77,4 +78,13 @@ class RegionBasicSerializer(serializers.ModelSerializer):
         fields = (
             'name',
             'id'
+        )
+
+
+class CountryBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = (
+            'name',
+            'alpha_3'
         )
