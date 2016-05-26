@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import Radium from "radium";
+import Radium, { Style } from "radium";
 import { Input, Button } from "./forms";
-import {labelStyle} from "./form-styles";
 
 class SearchBar extends Component {
   static propTypes = {
@@ -21,16 +20,16 @@ class SearchBar extends Component {
   render() {
     return (
       <div className="searchbar">
-        <label style={labelStyle.base}>
-          <span style={labelStyle.base.span}>{this.props.label}:</span>
-          <Input type="search"
-            ref="searchTextInput"
-            inputText={this.props.inputText}
-            onUserInput={this.handleUserInput}
-            name={this.props.name} placeholder={this.props.placeholder}
-          />
+        <label for={this.props.name}>
+        {this.props.label}:
         </label>
-        <Button type='submit'>Search</Button>
+        <Input type="search"
+        ref="searchTextInput"
+        inputText={this.props.inputText}
+        onUserInput={this.handleUserInput}
+        name={this.props.name} placeholder={this.props.placeholder}
+        />
+        <Button type='submit' bordered={true}>Search</Button>
       </div>
     )
   }

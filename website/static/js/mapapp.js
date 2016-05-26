@@ -54653,16 +54653,11 @@ var inputStyle = {
   })
 };
 
-var labelStyle = {
-  base: {
-    span: {
-      paddingRight: 6
-    }
-  }
-};
-
 var buttonStyle = {
-  base: Object.assign({}, formStyles, bordered)
+  base: Object.assign({
+    border: 'none'
+  }, formStyles),
+  bordered: Object.assign({}, bordered)
 };
 
 var selectStyle = {
@@ -54670,7 +54665,6 @@ var selectStyle = {
 };
 
 exports.inputStyle = inputStyle;
-exports.labelStyle = labelStyle;
 exports.buttonStyle = buttonStyle;
 exports.selectStyle = selectStyle;
 
@@ -54770,7 +54764,7 @@ var Button = function (_Component2) {
       return _react2.default.createElement(
         "button",
         { type: this.props.type,
-          style: _formStyles.buttonStyle.base,
+          style: [_formStyles.buttonStyle.base, this.props.bordered && _formStyles.buttonStyle.bordered],
           onClick: this.props.onClick
         },
         this.props.children
@@ -54782,11 +54776,13 @@ var Button = function (_Component2) {
 }(_react.Component);
 
 Button.defaultProps = {
-  type: 'button'
+  type: 'button',
+  bordered: false
 };
 Button.propTypes = {
   type: _react.PropTypes.oneOf(['submit', 'reset', 'button']),
-  onClick: _react.PropTypes.func
+  onClick: _react.PropTypes.func,
+  bordered: _react.PropTypes.bool
 };
 
 exports.Button = Button = (0, _radium2.default)(Button);
@@ -54942,8 +54938,6 @@ var _radium2 = _interopRequireDefault(_radium);
 
 var _forms = require("./forms");
 
-var _formStyles = require("./form-styles");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -54981,23 +54975,19 @@ var SearchBar = function (_Component) {
         { className: "searchbar" },
         _react2.default.createElement(
           "label",
-          { style: _formStyles.labelStyle.base },
-          _react2.default.createElement(
-            "span",
-            { style: _formStyles.labelStyle.base.span },
-            this.props.label,
-            ":"
-          ),
-          _react2.default.createElement(_forms.Input, { type: "search",
-            ref: "searchTextInput",
-            inputText: this.props.inputText,
-            onUserInput: this.handleUserInput,
-            name: this.props.name, placeholder: this.props.placeholder
-          })
+          { "for": this.props.name },
+          this.props.label,
+          ":"
         ),
+        _react2.default.createElement(_forms.Input, { type: "search",
+          ref: "searchTextInput",
+          inputText: this.props.inputText,
+          onUserInput: this.handleUserInput,
+          name: this.props.name, placeholder: this.props.placeholder
+        }),
         _react2.default.createElement(
           _forms.Button,
-          { type: "submit" },
+          { type: "submit", bordered: true },
           "Search"
         )
       );
@@ -55019,7 +55009,7 @@ SearchBar = (0, _radium2.default)(SearchBar);
 
 exports.default = SearchBar;
 
-},{"./form-styles":416,"./forms":417,"radium":241,"react":395}],420:[function(require,module,exports){
+},{"./forms":417,"radium":241,"react":395}],420:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -55060,19 +55050,40 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var searchBoxStyle = {
   maxWidth: 360,
-  // position: 'absolute',
-  // left: 10,
-
+  form: {
+    margin: '0 3px'
+  },
   '.section-row': {
     display: 'block',
     clear: 'both',
     marginBottom: 4
+  },
+  'section > footer > button': {
+    display: 'block',
+    fontSize: 12,
+    width: '100%'
   },
   footer: {
     marginTop: 2
   },
   button: {
     backgroundColor: '#eee'
+  },
+  label: {
+    display: 'inline-block',
+    width: 80,
+    marginRight: 3,
+    textAlign: 'right'
+  },
+  input: {
+    maxWidth: 204,
+    marginRight: 2
+  },
+  select: {
+    marginRight: 6
+  },
+  'label, input, button': {
+    display: 'inline-block'
   }
 };
 
@@ -55101,7 +55112,7 @@ var SearchBox = function (_Component) {
     };
 
     (0, _xhr2.default)({
-      uri: '/api/',
+      uri: '/api/regions/',
       headers: {
         "Accept": "application/json"
       }
@@ -55134,46 +55145,50 @@ var SearchBox = function (_Component) {
                 onSearchInput: this.handleValueUpdate
               }) },
             _react2.default.createElement(
-              _forms.Select,
-              { name: "infrastructure_type__name", value: "" },
+              "div",
+              { className: "section-row" },
               _react2.default.createElement(
-                "option",
-                { value: "" },
-                "Infrastructure Type"
+                _forms.Select,
+                { name: "infrastructure_type__name", value: "" },
+                _react2.default.createElement(
+                  "option",
+                  { value: "" },
+                  "Infrastructure Type"
+                ),
+                _react2.default.createElement(
+                  "option",
+                  { value: "road" },
+                  "Road"
+                ),
+                _react2.default.createElement(
+                  "option",
+                  { value: "rail" },
+                  "Rail"
+                ),
+                _react2.default.createElement(
+                  "option",
+                  { value: "seaport" },
+                  "Seaport"
+                )
               ),
               _react2.default.createElement(
-                "option",
-                { value: "road" },
-                "Road"
-              ),
-              _react2.default.createElement(
-                "option",
-                { value: "rail" },
-                "Rail"
-              ),
-              _react2.default.createElement(
-                "option",
-                { value: "seaport" },
-                "Seaport"
-              )
-            ),
-            _react2.default.createElement(
-              _forms.Select,
-              { name: "status__name", value: "" },
-              _react2.default.createElement(
-                "option",
-                { value: "" },
-                "Status"
-              ),
-              _react2.default.createElement(
-                "option",
-                { value: "started" },
-                "Started"
-              ),
-              _react2.default.createElement(
-                "option",
-                { value: "completed" },
-                "Completed"
+                _forms.Select,
+                { name: "status__name", value: "" },
+                _react2.default.createElement(
+                  "option",
+                  { value: "" },
+                  "Status"
+                ),
+                _react2.default.createElement(
+                  "option",
+                  { value: "started" },
+                  "Started"
+                ),
+                _react2.default.createElement(
+                  "option",
+                  { value: "completed" },
+                  "Completed"
+                )
               )
             ),
             _react2.default.createElement(
@@ -55210,34 +55225,30 @@ var SearchBox = function (_Component) {
                 { className: "section-row" },
                 _react2.default.createElement(
                   "label",
-                  null,
+                  { "for": "amount" },
+                  "Amount:"
+                ),
+                _react2.default.createElement(
+                  _forms.Select,
+                  { name: "compare", value: "" },
                   _react2.default.createElement(
-                    "span",
-                    null,
-                    "Amount"
+                    "option",
+                    { value: "" },
+                    "----"
+                  )
+                ),
+                _react2.default.createElement(
+                  _forms.Select,
+                  { name: "amount", value: "" },
+                  _react2.default.createElement(
+                    "option",
+                    { value: "" },
+                    "----"
                   ),
                   _react2.default.createElement(
-                    _forms.Select,
-                    { name: "compare", value: "" },
-                    _react2.default.createElement(
-                      "option",
-                      { value: "" },
-                      "----"
-                    )
-                  ),
-                  _react2.default.createElement(
-                    _forms.Select,
-                    { name: "amount", value: "" },
-                    _react2.default.createElement(
-                      "option",
-                      { value: "" },
-                      "----"
-                    ),
-                    _react2.default.createElement(
-                      "option",
-                      { value: "100000" },
-                      "100,000"
-                    )
+                    "option",
+                    { value: "100000" },
+                    "100,000"
                   )
                 )
               ),
@@ -55245,12 +55256,17 @@ var SearchBox = function (_Component) {
                 "div",
                 { className: "section-row" },
                 _react2.default.createElement(
+                  "label",
+                  { "for": "projectfunding__sources__countries__name" },
+                  "Country:"
+                ),
+                _react2.default.createElement(
                   _forms.Select,
                   { name: "projectfunding__sources__countries__name", value: "" },
                   _react2.default.createElement(
                     "option",
                     { value: "" },
-                    "Country"
+                    "---------"
                   )
                 )
               )

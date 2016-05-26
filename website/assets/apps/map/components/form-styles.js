@@ -17,20 +17,15 @@ const inputStyle = {
   })
 };
 
-const labelStyle = {
-  base: {
-    span: {
-      paddingRight: 6
-    }
-  }
-}
-
 const buttonStyle = {
-  base: Object.assign({}, formStyles, bordered)
+  base: Object.assign({
+    border: 'none'
+  }, formStyles),
+  bordered: Object.assign({}, bordered)
 };
 
 const selectStyle = {
   base: Object.assign({}, formStyles, bordered)
 };
 
-export {inputStyle, labelStyle, buttonStyle, selectStyle};
+export {inputStyle, buttonStyle, selectStyle};

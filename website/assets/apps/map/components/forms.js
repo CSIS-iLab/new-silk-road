@@ -38,17 +38,22 @@ Input = Radium(Input);
 
 class Button extends Component {
   static defaultProps = {
-    type: 'button'
+    type: 'button',
+    bordered: false
   }
   static propTypes = {
     type: PropTypes.oneOf(['submit', 'reset', 'button']),
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    bordered: PropTypes.bool
   };
 
   render() {
     return (
       <button type={this.props.type}
-              style={buttonStyle.base}
+              style={[
+                buttonStyle.base,
+                this.props.bordered && buttonStyle.bordered
+              ]}
               onClick={this.props.onClick}
                >{this.props.children}</button>
     )

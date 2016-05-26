@@ -7,19 +7,40 @@ import xhr from "xhr";
 
 let searchBoxStyle = {
   maxWidth: 360,
-  // position: 'absolute',
-  // left: 10,
-
+  form: {
+    margin: '0 3px'
+  },
   '.section-row': {
     display: 'block',
     clear: 'both',
     marginBottom: 4
+  },
+  'section > footer > button': {
+    display: 'block',
+    fontSize: 12,
+    width: '100%'
   },
   footer: {
     marginTop: 2
   },
   button: {
     backgroundColor: '#eee'
+  },
+  label: {
+    display: 'inline-block',
+    width: 80,
+    marginRight: 3,
+    textAlign: 'right'
+  },
+  input: {
+    maxWidth: 204,
+    marginRight: 2
+  },
+  select: {
+    marginRight: 6
+  },
+  'label, input, button': {
+    display: 'inline-block'
   }
 }
 
@@ -27,7 +48,7 @@ export default class SearchBox extends Component {
   constructor(props) {
     super(props);
     xhr({
-      uri: '/api/',
+      uri: '/api/regions/',
       headers: {
         "Accept": "application/json"
       }
@@ -68,17 +89,19 @@ export default class SearchBox extends Component {
               onSearchInput={this.handleValueUpdate}
             />
           }>
+          <div className="section-row">
             <Select name="infrastructure_type__name" value="">
-              <option value="">Infrastructure Type</option>
-              <option value="road">Road</option>
-              <option value="rail">Rail</option>
-              <option value="seaport">Seaport</option>
+            <option value="">Infrastructure Type</option>
+            <option value="road">Road</option>
+            <option value="rail">Rail</option>
+            <option value="seaport">Seaport</option>
             </Select>
             <Select name="status__name" value="">
-              <option value="">Status</option>
-              <option value="started">Started</option>
-              <option value="completed">Completed</option>
+            <option value="">Status</option>
+            <option value="started">Started</option>
+            <option value="completed">Completed</option>
             </Select>
+          </div>
             <Section header={
               <SearchBar label="Initiative" name="initiative__name"
                 onSearchInput={this.handleValueUpdate}
@@ -97,20 +120,21 @@ export default class SearchBox extends Component {
               />
             }>
               <div className="section-row">
-                <label>
-                  <span>Amount</span>
-                  <Select name="compare" value="">
-                    <option value="">----</option>
-                  </Select>
-                  <Select name="amount" value="">
-                    <option value="">----</option>
-                    <option value="100000">100,000</option>
-                  </Select>
-                </label>
+                <label for="amount">Amount:</label>
+                <Select name="compare" value="">
+                  <option value="">----</option>
+                </Select>
+                <Select name="amount" value="">
+                  <option value="">----</option>
+                  <option value="100000">100,000</option>
+                </Select>
               </div>
               <div className="section-row">
+                <label for="projectfunding__sources__countries__name">
+                Country:
+                </label>
                 <Select name="projectfunding__sources__countries__name" value="">
-                  <option value="">Country</option>
+                  <option value="">---------</option>
                 </Select>
               </div>
             </Section>
