@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from infrastructure.models import Project, ProjectFunding, Initiative
+from infrastructure.models import Project, ProjectFunding, Initiative, InfrastructureType
 from api.serializers.facts import OrganizationBasicSerializer
 from api.fields import DynamicFieldsMixin
 
@@ -94,4 +94,14 @@ class InitiativeSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         fields = (
             'name', 'initiative_type', 'founding_date',
             'geographic_scope', 'project_set'
+        )
+
+
+class InfrastructureTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InfrastructureType
+        fields = (
+            'id',
+            'name',
         )

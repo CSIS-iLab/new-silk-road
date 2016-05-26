@@ -5,12 +5,15 @@ from api.views import (
     # infrastructure
     ProjectViewSet,
     InitiativeViewSet,
+    InfrastructureTypeListView,
+    ProjectStatusListView,
     # locations
     LineStringGeometryViewSet,
     PointGeometryViewSet,
     PolygonGeometryViewSet,
     GeometryStoreViewSet,
-    GeometryStoreCentroidViewSet
+    GeometryStoreCentroidViewSet,
+    RegionListView,
 )
 
 
@@ -25,5 +28,8 @@ router.register(r'geostore-centroids', GeometryStoreCentroidViewSet, base_name='
 
 app_name = 'api'
 urlpatterns = [
+    url(r'^project-statuses/$', ProjectStatusListView.as_view()),
+    url(r'^regions/$', RegionListView.as_view()),
+    url(r'^infrastructure-types/$', InfrastructureTypeListView.as_view()),
     url(r'^', include(router.urls)),
 ]

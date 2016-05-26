@@ -5,6 +5,7 @@ from locations.models import (
     PointGeometry,
     PolygonGeometry,
     GeometryStore,
+    Region
 )
 from api.fields import DynamicFieldsMixin
 
@@ -68,3 +69,12 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
             'label': instance.label,
             'geostore': instance.identifier,
         }
+
+
+class RegionBasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = (
+            'name',
+            'id'
+        )

@@ -1,11 +1,14 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, generics, filters
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework_gis.filters import InBBoxFilter
 
 from locations.models import (
     LineStringGeometry,
     PointGeometry,
     PolygonGeometry,
-    GeometryStore
+    GeometryStore,
+    Region
 )
 from api.serializers.locations import (
     LineStringGeometrySerializer,
@@ -13,6 +16,7 @@ from api.serializers.locations import (
     PolygonGeometrySerializer,
     GeometryStoreSerializer,
     GeometryStoreCentroidSerializer,
+    RegionBasicSerializer,
 )
 from api.filters.locations import (
     GeometryStoreFilter,
@@ -21,8 +25,8 @@ from api.filters.locations import (
     PolygonGeometryFilter
 
 )
-from infrastructure.models import (Project, Initiative)
-from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer)
+from infrastructure.models import (Project, ProjectStatus, Initiative, InfrastructureType)
+from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer, InfrastructureTypeSerializer)
 from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 
 
@@ -42,6 +46,18 @@ class InitiativeViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = InitiativeSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = InitiativeFilter
+
+
+class InfrastructureTypeListView(generics.ListAPIView):
+    queryset = InfrastructureType.objects.all()
+    serializer_class = InfrastructureTypeSerializer
+    pagination_class = None
+
+
+class ProjectStatusListView(APIView):
+    def get(self, request, format=None):
+        statuses = [{'id': s[0], 'name': s[1]} for s in ProjectStatus.STATUSES]
+        return Response(statuses)
 
 
 # locations
@@ -83,4 +99,10 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = GeometryStoreCentroidSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
+    pagination_class = None
+
+
+class RegionListView(generics.ListAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionBasicSerializer
     pagination_class = None
