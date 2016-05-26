@@ -3,7 +3,7 @@ import Section from "./section";
 import SearchBar from "./searchbar";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
-
+import xhr from "xhr";
 
 let searchBoxStyle = {
   maxWidth: 360,
@@ -24,6 +24,19 @@ let searchBoxStyle = {
 }
 
 export default class SearchBox extends Component {
+  constructor(props) {
+    super(props);
+    xhr({
+      uri: '/api/',
+      headers: {
+        "Accept": "application/json"
+      }
+    }, function (err, resp, body) {
+      if (resp.statusCode == 200) {
+        console.log(JSON.parse(body));
+      }
+    });
+  }
   state = {
     name: '',
     initiative__name: ''
