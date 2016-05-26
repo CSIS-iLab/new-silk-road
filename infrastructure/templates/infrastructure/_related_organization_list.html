@@ -1,0 +1,6 @@
+<ul class="clean">{% for organization in organization_list %}
+    <li><a href="{{ organization.get_absolute_url }}">{{ organization.name }}</a></li>
+{% empty %}
+    <li>None found</li>
+{% endfor %}
+</ul>

@@ -1,0 +1,12 @@
+<nav>
+    <ul>{% if showhome %}
+        <li><a href="/">Home</a></li>{% endif %}
+        <li><a href="{% url 'website-map' %}">Map</a></li>
+        <li><a href="/kb/">Database</a></li>
+        <li><a href="/anaylsis/">Analysis</a></li>
+        <li><a href="/about/">About</a></li>
+    </ul>
+</nav>
+{% comment %}
+    TODO: Update URLs
+{% endcomment %}

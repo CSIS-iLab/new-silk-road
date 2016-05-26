@@ -1,36 +1,345 @@
-@import "_variables";
-@import "lib/bourbon/bourbon";
-@import "lib/neat/neat";
+@import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
+@import "variables";
+@import "lib/bourbon/bourbon", "lib/neat/neat";
+@import "normalize";
+@import "layout";
 @import "map";
-body {
-    font: $base-font-size $base-font-family;
-}
-#wrapper {
-    @include outer-container($max-page-width);
-}
-.row {
-    @include row();
-}
-@for $i from 1 through 12 {
-    .col-#{$i} {
-        @include span-columns($i);
-    }
-}
-.search-map {
-    @include row();
-    position: relative;
 
-    .map-container {
-        width: inherit;
+
+html {
+    font-size: $base-font-size;
+}
+body {
+    margin: 0;
+    font: 1rem $sans-font-family;
+    line-height: $base-line-height;
+    color: $gravel-grey;
+    @include font-feature-settings("liga", "kern");
+}
+
+a {
+    color: $medium-green;
+}
+
+h1 {
+    font-family: $serif-font-family;
+    font-size: $major-hed-size * 0.70;
+    line-height: 1.2em;
+    @include media($medium-break) {
+        font-size: $major-hed-size;
     }
-    .search-controls {
-        @include position(absolute, 2% 1.5% null null);
-        @include size(33% auto);
-        box-shadow: 0 0 5px rgba(51, 51, 51, 0.2);
-        input {
-            @include fill-parent;
-            padding: 8px;
+}
+
+h2,h3,h4,h5,h6 {
+    font-family: $sans-font-family;
+    line-height: 1.25rem;
+    margin: 0 0 0.75em;
+}
+
+p {
+    margin: 0 0 2rem;
+
+    @include media($small-break) {
+        margin: 0;
+    }
+}
+
+ul {
+    margin: 0 0 1em;
+    padding-left: 1em;
+    line-height: 1.1rem;
+
+    li {
+        margin-bottom: 6px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &.clean {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    &.compact {
+        margin: 0;
+        padding: 0;
+
+            li {
+                @extend li:last-child;
+                margin-bottom: 3px;
+            }
+    }
+}
+
+nav {
+    ul {
+        padding-left: 0;
+        li {
+            list-style-type: none;
+        }
+    }
+}
+
+body > header, body > footer {
+    &::before, &::after {
+        content: "";
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: block;
+        position: absolute;
+        z-index: -1;
+    }
+
+    &::before {
+        background: repeat left/$banner-img-size url($banner-bg-img) transparent;
+        opacity: 0.4;
+    }
+    // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
+    &::-ms-backdrop, &::before {
+        background: repeat left/$banner-img-size url($banner-bg-img-ie11) transparent;
+    }
+
+    &::after {
+        background-color: $pale-green;
+        z-index: -2;
+    }
+}
+
+header[role=banner] {
+    position: relative;
+    display: block;
+    height: auto;
+    width: 100%;
+    border-top: $thick-dark-border;
+    border-bottom: $thin-dark-border;
+
+    @include media($medium-break) {
+        height: 118px;
+    }
+
+    h1 {
+        float: none;
+        max-width: 100%;
+        margin: 15px auto 0;
+        @include hide-text;
+        background: url($logo-image) no-repeat;
+        @include media($medium-break) {
+            float: left;
+            margin: 33px 0 0;
+            max-width: $medium * .40;
+        }
+        @include media($large-break) {
+            width: 376px;
+            max-width: 376px;
+        }
+    }
+    nav {
+        float: none;
+        margin: $small-spacing auto $small-spacing*1.5 auto;
+        @include media($medium-break) {
+            float: right;
+            margin: 33px 0 0;
+        }
+        ul {
+            margin-bottom: 0;
+
+            li {
+                display: block;
+                margin: 0 0 16px 0;
+                font-size: $nav-text-size;
+                @include media($medium-break) {
+                    display: inline-block;
+                    margin: 0 0 8px 1em;
+                }
+                a {
+                    padding: 3px 0 2px 0.5em;
+                    font-weight: bold;
+                    text-decoration: none;
+                    color: $slate-grey;
+                    border-bottom: 1px solid $slate-grey;
+
+                    @include media($medium-break) {
+                        padding-left: 1em;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+.content-wrap {
+    padding: $medium-spacing 0 0;
+    @include media($medium-break) {
+        padding-top: $section-spacing;
+    }
+    background-image: url($main-arrow-img);
+    background-clip: border-box;
+    background-position: 50% -1px;
+    background-size: $main-arrow-width auto;
+    background-repeat: no-repeat;
+}
+
+::-ms-backdrop, .content-wrap {
+    background-position: 50% (-($section-spacing + 22));
+}
+
+body > footer {
+    @include position(relative);
+    border-top: $thin-dark-border;
+    color: $dark-night;
+    padding: $small-spacing;
+    @include media($medium-break) {
+        @include pad($large-spacing 0 0);
+    }
+    nav li {
+        margin-bottom: $large-spacing/2;
+    }
+    a {
+        color: $dark-night;
+        text-decoration: none;
+    }
+    .logo {
+        @include position(static);
+        max-width: 100%;
+        @include media($medium-break) {
+            @include position(absolute, 138px 60px null null);
+            margin: $medium-spacing auto 0;
+            max-width: 306px;
+        }
+    }
+}
+
+
+article > section {
+    margin-bottom: $section-spacing;
+}
+
+article {
+
+    header {
+        position: relative;
+
+        padding-bottom: $small-spacing;
+        @include media($medium-break) {
+            padding-bottom: $large-spacing;
         }
 
+        &::after {
+            content: "";
+            width: 100%;
+            display: block;
+            @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+            background-image: url($small-arrow-img);
+            background-position: 50% 100%;
+            background-size: $small-arrow-width auto;
+            background-repeat: no-repeat;
+            @include media($medium-break) {
+                @include position(absolute, 0 0 ($large-spacing - $thick-border-width - 2px) 0);
+            }
+        }
+        &::-ms-backdrop, &::after {
+            @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+            @include media($medium-break) {
+                @include position(absolute, 0 0 ($large-spacing - $thick-border-width) 0);
+            }
+        }
+    }
+
+    h1 {
+        color: $dark-night;
+        padding-bottom: 15px;
+        border-bottom: $thick-border-width solid $blue-steel;
+        margin: 0;
+        position: relative;
+
+    }
+    section {
+
+        .row:last-child {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font: $section-hed-size $serif-font-family;
+            color: $serious-green;
+        }
+
+        h3 {
+            display: inline-block;
+            font-size: $mid-text-size;
+            text-transform: uppercase;
+            color: $slate-grey;
+        }
+
+        ul:last-child {
+            margin-bottom: 0;
+        }
+
+        &.documents {
+            padding: $large-spacing;
+            background-color: $creamer;
+
+        }
+
+        table {
+            font-size: $minor-text-size;
+            width: 100%;
+
+            tbody td, thead th {
+                padding: 0;
+                &:first-child {
+                    padding-right: 6px;
+                }
+            }
+
+            @include media($medium-break) {
+                width: 80%;
+            }
+
+            tbody {
+                tr {
+                    color: $medium-green;
+                    a {
+                        color: $medium-green;
+                    }
+                }
+                tr:nth-of-type(even) {
+                    color: $slate-grey;
+                    a {
+                        color: $slate-grey;
+                    }
+                }
+            }
+            th, td {
+                padding: 2px 5px;
+                text-align: left;
+                vertical-align: text-top;
+                &:last-of-type {
+                    text-align: right;
+                }
+                li {
+                    margin-bottom: 4px;
+                }
+            }
+        }
+    }
+}
+
+
+.row {
+    h3 {
+        color: $slate-grey;
+        border-bottom: 2px solid $slate-grey;
+    }
+
+    @include media($medium-break) {
+        &:nth-child(odd) h3 {
+            color: $medium-green;
+            border-bottom: 2px solid $medium-green;
+        }
     }
 }

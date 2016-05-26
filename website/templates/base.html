@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>{% block pagetitle %}Website{% endblock %}</title>
+        <title>{% block pagetitle %}Reconnecting Asia{% endblock %}</title>
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <link rel="stylesheet" href='{% static "css/site.min.css" %}' media="screen">
 {% block extrahead %}{% endblock %}
@@ -15,13 +15,28 @@
         </script>
         <script async src='https://www.google-analytics.com/analytics.js'></script>
     </head>
-    <body>
-        <header>
-            <h1>Website</h1>
+    <body class="{% block bodyclass %}{% endblock %}">
+        <header role="banner">
+            <div class="wrap">
+                <a href="/"><h1>Reconnecting Asia</h1></a>
+                {% include "_navigation.html" %}
+            </div>
         </header>
-        <div id="wrapper">
-{% block content %}
-{% endblock content %}
+{% block content-shell %}
+        <div class="content-wrap">
+            {% block content %}{% endblock content %}
         </div>
+{% endblock %}
+        <footer>
+            <div class="wrap">
+                <div class="row">
+                    <div class="col-9">
+                        {% include "_navigation.html" with showhome=True %}
+                    </div>
+                </div>
+                <img class="logo" src="{% static 'img/csis_logo_gray.svg' %}" alt="Center for Strategic and International Studies">
+            </div>
+        </footer>
+{% block postbodyjs %}{% endblock %}
     </body>
 </html>

@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
+{% block pagetitle %}
+{{ object.name }} | {{ block.super }}
+{% endblock %}
+
 {% block content %}
-    <h2>{{ object.name }}</h2>
+<article class="">
+    <h1>{{ object.name }}</h1>
     <dl>
         <dt>Mission</dt>
         <dd>{% lorem 15 w %}</dd>
@@ -31,25 +36,26 @@
     {% endif %}
 
     <section class="projects">{% spaceless %}
-    {% if object.projects_consulted.exists %}
-    {% include "facts/_related_projects.html" with projects_list=object.projects_consulted.all organization_role="consultancies" %}
-    {% endif %}
+        {% if object.projects_consulted.exists %}
+        {% include "facts/_related_projects.html" with projects_list=object.projects_consulted.all organization_role="consultancies" %}
+        {% endif %}
 
-    {% if object.projects_contracted.exists %}
-    {% include "facts/_related_projects.html" with projects_list=object.projects_contracted.all organization_role="contracts" %}
-    {% endif %}
+        {% if object.projects_contracted.exists %}
+        {% include "facts/_related_projects.html" with projects_list=object.projects_contracted.all organization_role="contracts" %}
+        {% endif %}
 
-    {% if object.projects_funded.exists %}
-    {% include "facts/_related_projects.html" with projects_list=object.projects_funded.all organization_role="funded" %}
-    {% endif %}
+        {% if object.projectfunding_set.exists %}
+        {% include "facts/_related_funded_projects.html" with funding_list=object.projectfunding_set.all slice_size=":10" %}
+        {% endif %}
 
-    {% if object.projects_implemented.exists %}
-    {% include "facts/_related_projects.html" with projects_list=object.projects_implemented.all organization_role="implemented" %}
-    {% endif %}
+        {% if object.projects_implemented.exists %}
+        {% include "facts/_related_projects.html" with projects_list=object.projects_implemented.all organization_role="implemented" %}
+        {% endif %}
 
-    {% if object.projects_operated.exists %}
-    {% include "facts/_related_projects.html" with projects_list=object.projects_operated.all organization_role="operated" %}
-    {% endif %}
-    {% endspaceless %}
+        {% if object.projects_operated.exists %}
+        {% include "facts/_related_projects.html" with projects_list=object.projects_operated.all organization_role="operated" %}
+        {% endif %}
+        {% endspaceless %}
     </section>
+</article>
 {% endblock %}

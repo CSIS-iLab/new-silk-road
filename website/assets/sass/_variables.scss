@@ -1,3 +1,56 @@
-$base-font-size: 16px;
-$base-font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
-$max-page-width: 1000px;
+@import "lib/bourbon/bourbon";
+
+// Sizes
+$large: 1200px;
+$medium: 768px;
+$small: 400px; // for larger smartphones. $small is a bad label
+
+$max-content-width: 980px;
+
+// fonts
+$em-base: 18px;
+$base-font-size: $em-base;
+$major-hed-size: rem(40);
+$mid-hed-size: rem(22);
+$mid-text-size: rem($base-font-size);
+$section-hed-size: rem(26);
+$minor-text-size: rem(16);
+$nav-text-size: $minor-text-size;
+$base-line-height: 1.45em;
+$sans-font-family: Lato, $helvetica;
+$serif-font-family: Merriweather, $georgia;
+
+// Colors
+
+$pale-green: #d6e1d6;
+$medium-green: #75986a;
+$serious-green: #4e736c;
+$dark-night: #252d3a;
+$slate-grey: #556377;
+$blue-steel: #788ca8;
+$gravel-grey: #58585a;
+$creamer: #eee8e4;
+
+
+// Image URLs
+$img-url-base: '/static/img/';
+$logo-image: $img-url-base + 'ReConAsiaLogo.svg';
+$banner-bg-img: $img-url-base + 'topographic_texture.svg';
+$banner-bg-img-ie11: $img-url-base + 'topographic_texture.png';
+$banner-img-size: 300px;
+$main-arrow-img: $img-url-base + 'main-triangle.svg';
+$main-arrow-width: 55px;
+$small-arrow-img: $img-url-base + 'small-triangle.svg';
+$small-arrow-width: 35px;
+$small-arrow-height: 8px;
+
+// Reusables
+
+$thick-border-width: 5px;
+$thin-border-width: 3px;
+$thick-dark-border: $thick-border-width solid $dark-night;
+$thin-dark-border: $thin-border-width solid $dark-night;
+$section-spacing: 50px;
+$large-spacing: 33px;
+$medium-spacing: ceil($large-spacing * 0.6);
+$small-spacing: ceil($large-spacing * 0.4);

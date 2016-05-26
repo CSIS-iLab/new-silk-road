@@ -1,82 +1,71 @@
 {% extends "base.html" %}{% load staticfiles %}
 
 {% block extrahead %}
-<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.17.0/mapbox-gl.css' rel='stylesheet' />
-<style>
-    #map {
-        width:  100%;
-        height: 600px;
-        display: block;
-    }
-</style>
-<script src='{% static "js/mapmaker.js" %}'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.css' rel='stylesheet' />
 {% endblock %}
 
 {% block pagetitle %}
 Map | {{ block.super }}
 {% endblock %}
 
-{% block content %}
-<div class="search-map">
-    <section class="map-container">
-        <div id="map"></div>
-    </section>
-    <section class="search-controls">
-        <input type="text">
-        <div class="results"></div>
-    </section>
-</div>
+{% block bodyclass %}map{% endblock %}
+
+{% block content-shell %}
+<div id="app" class="search-map"></div>
+{% endblock %}
+
+{% block postbodyjs %}
+<script src='{% static "js/mapapp.js" %}'></script>
+{% endblock %}
+
+{% comment %}
+
+{% block postbodyjs %}
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function () {
-        function htmlLabelForFeature(feature) {
-            var hed = feature.properties.project_name || feature.properties.name || feature.properties.label;
-            label = "<h4>" + hed + "</h4>";
-            if (feature.properties.project_url) {
-                label += "<p><a target='_blank' href='" + feature.properties.project_url + "'>View Project</a></p>";
-            }
-            return label;
-        }
-        var paintStyles = {
-            lines: {
-                'line-width': 6,
-                'line-color': '#FF0000'
-            },
-            points: {
-                'circle-color': '#a81e3b',
-                'circle-radius': 6
-            },
-            polygons: {
-                'fill-color': '#0000FF'
-            }
-        }
-        mapboxgl.accessToken = '{{mapbox_token|safe}}';
-        var mm = new MapMaker(mapboxgl);
+document.addEventListener("DOMContentLoaded", function () {
+function htmlLabelForFeature(feature) {
+var hed = feature.properties.project_name || feature.properties.name || feature.properties.label;
+label = "<h4>" + hed + "</h4>";
+if (feature.properties.project_url) {
+label += "<p><a target='_blank' href='" + feature.properties.project_url + "'>View Project</a></p>";
+}
+return label;
+}
 
-        mm.makeMap({
-            container: 'map', // container id
-            style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
-            center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}, // starting position
-            zoom: 3 // starting zoom
-        });
-        mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
+mapboxgl.accessToken = '{{mapbox_token|safe}}';
+var mm = new MapMaker(mapboxgl);
+var paintStyle = {
+'circle-color': '#d61b42',
+'circle-radius': {
+"stops": [[3, 2], [7, 5]]
+}
+};
 
-        mm.map.on('load', function () {
-            httpRequest = new XMLHttpRequest();
-            httpRequest.addEventListener("readystatechange", function () {
-                if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                    geostore = JSON.parse(httpRequest.responseText);
-                    mm.map.addSource('projects-centroids-src', mm.createGeoJSONSource(geostore));
-                    mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle'));
-                    var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], htmlLabelForFeature);
-                    mm.map.on('click', centroidsPopupHandler);
-                }
-            })
+mm.makeMap({
+container: 'map', // container id
+style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
+center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}}, // starting position
+zoom: 3 // starting zoom
+});
+mm.map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
 
-            httpRequest.open('GET', '{% url "api:geostore-centroids-list" format="json" %}', true);
-            httpRequest.send();
-        });
-    });
+mm.map.on('load', function () {
+httpRequest = new XMLHttpRequest();
+httpRequest.addEventListener("readystatechange", function () {
+if (httpRequest.readyState === XMLHttpRequest.DONE) {
+geostore = JSON.parse(httpRequest.responseText);
+mm.map.addSource('projects-centroids-src', mm.createGeoJSONSource(geostore));
+mm.map.addLayer(mm.layerFromSource('projects-centroids-layer', 'projects-centroids-src', 'circle', paintStyle));
+var centroidsPopupHandler = mm.createPopUpHandlerForLayers(['projects-centroids-layer'], htmlLabelForFeature);
+mm.map.on('click', centroidsPopupHandler);
+}
+})
+
+httpRequest.open('GET', '{% url "api:geostore-centroids-list" format="json" %}', true);
+httpRequest.send();
+});
+});
 
 </script>
 {% endblock %}
+{% endcomment %}
