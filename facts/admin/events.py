@@ -27,11 +27,15 @@ class EventAdmin(admin.ModelAdmin):
         PersonEventInline,
         OrganizationEventInline
     )
-    list_display = ('name', 'start_date', 'end_date') + TEMPORAL_FIELDS + ('published',)
+    list_display = ('name', 'start_year', 'end_year') + TEMPORAL_FIELDS + ('published',)
     actions = [make_published, make_not_published]
     fieldsets = (
         (None, {
-            'fields': (('name', 'slug'), ('start_date', 'end_date'),)
+            'fields': (
+                ('name', 'slug'),
+                ('start_year', 'start_month', 'start_day'),
+                ('end_year', 'end_month', 'end_day'),
+            )
         }),
         (None, {
             'fields': ('event_type', 'description',)
