@@ -21,8 +21,13 @@ class Organization(MPTTModel, Publishable):
     headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
     notes = MarkdownField(blank=True)
     related_events = models.ManyToManyField('Event', blank=True)
-    founding_date = models.DateField(blank=True, null=True)
-    dissolution_date = models.DateField(blank=True, null=True)
+    founding_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    founding_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    founding_day = models.PositiveSmallIntegerField(blank=True, null=True)
+    dissolution_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    dissolution_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    dissolution_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
     parent = TreeForeignKey('self', null=True, blank=True,
                             verbose_name='parent organization',
                             related_name='children', db_index=True)
