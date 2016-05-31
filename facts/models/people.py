@@ -16,7 +16,10 @@ class Person(Publishable):
 
     # Biographical Info
     citizenships = models.ManyToManyField('locations.Country', blank=True)
-    birth_date = models.DateField(blank=True, null=True)
+
+    birth_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    birth_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    birth_day = models.PositiveSmallIntegerField(blank=True, null=True)
 
     # Notes
     notes = MarkdownField(blank=True)
@@ -44,8 +47,14 @@ class Position(models.Model):
     title = models.CharField(max_length=100)
     person = models.ForeignKey('Person')
     organization = models.ForeignKey('Organization')
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+
+    start_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    start_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    start_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    end_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    end_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    end_day = models.PositiveSmallIntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'position (job)'

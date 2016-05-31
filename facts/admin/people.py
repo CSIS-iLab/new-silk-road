@@ -41,7 +41,7 @@ class PersonForm(forms.ModelForm):
 
 class PersonAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display = ('full_display_name', 'birth_date', 'identifier',) + ('published',)
+    list_display = ('full_display_name', 'birth_year', 'identifier',) + ('published',)
     search_fields = (
         'family_name', 'given_name',
         'events__name',
@@ -69,7 +69,7 @@ class PersonAdmin(admin.ModelAdmin):
         ('Additional personal details', {
             'classes': ('collapse',),
             'fields': (
-                ('additional_name', 'birth_date'),
+                ('additional_name', 'birth_year'),
             )
         }),
     )
