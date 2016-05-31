@@ -142,7 +142,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
-    readonly_fields = ('extra_data',)
+    readonly_fields = ('extra_data', 'identifier')
     inlines = [
         ProjectFundingInline
     ]
