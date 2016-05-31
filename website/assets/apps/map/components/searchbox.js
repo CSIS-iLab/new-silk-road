@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Section from "./section";
 import SearchBar from "./searchbar";
+import CountrySelectContainer from "./CountrySelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import xhr from "xhr";
@@ -130,12 +131,7 @@ export default class SearchBox extends Component {
                 </Select>
               </div>
               <div className="section-row">
-                <label for="projectfunding__sources__countries__name">
-                Country:
-                </label>
-                <Select name="projectfunding__sources__countries__name" value="">
-                  <option value="">---------</option>
-                </Select>
+                <CountrySelectContainer name="projectfunding__sources__countries__name" />
               </div>
             </Section>
           </Section>
