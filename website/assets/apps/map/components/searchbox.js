@@ -61,7 +61,8 @@ export default class SearchBox extends Component {
   }
   state = {
     name: '',
-    initiative__name: ''
+    initiative__name: '',
+    projectfunding__sources__countries__name: ''
   }
 
   handleValueUpdate = (inputName, value) => {

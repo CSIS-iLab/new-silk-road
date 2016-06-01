@@ -10,11 +10,17 @@ class CountryActions {
     return (dispatch) => {
       dispatch();
       CountrySource.fetch()
-        .then((countries) => {
+        .then((response) => {
+          return response.json();
+        })
+        .then((json) => {
+          let countries = json.map(function(obj) {
+            return {name: obj.name, value: obj.alpha_3};
+          });
           this.updateCountries(countries);
         })
         .catch((errorMessage) => {
-          this.countriesFailed(message)
+          this.countriesFailed(errorMessage)
         });
     }
   }

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import connectToStores from 'alt-utils/lib/connectToStores';
 import CountrySelect from './CountrySelect';
 import CountryStore from '../stores/CountryStore';
 import CountryActions from '../actions/CountryActions';
@@ -9,22 +8,28 @@ class CountrySelectContainer extends Component {
     name: PropTypes.string.isRequired
   }
 
-  static getStores() {
-    return [CountryStore];
-  }
-  static getPropsFromStores() {
-    return CountryStore.getState();
+  state = {
+    countries: [],
+    errorMessage: null
   }
 
   componentDidMount() {
+    CountryStore.listen(this.onChange);
     CountryActions.fetchCountries();
+  }
+
+  onChange = (data) => {
+    this.setState({
+      countries: data.countries,
+      errorMessage: data.errorMessage
+    });
   }
 
   render() {
     return (
-      <CountrySelect name={this.props.name} countries={this.props.countries} />
+      <CountrySelect name={this.props.name} countries={this.state.countries} />
     )
   }
 }
 
-export default connectToStores(CountrySelectContainer);
+export default CountrySelectContainer;

@@ -24,7 +24,9 @@ export default class CountrySelect extends Component {
         <Select name={ name } value="">
         <option value="">---------</option>
         {countries.map((country, i) => {
-          <option value={country.value}>{country.name}</option>
+          return (
+            <option key={country.value} value={country.value}>{country.name}</option>
+          );
         })}
         </Select>
       </div>
