@@ -5,6 +5,7 @@ import Option from '../models/Option';
 export default class OptionSelect extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
+    displayName: PropTypes.string.isRequired,
     handleSelect: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.instanceOf(Option))
   }
@@ -15,12 +16,13 @@ export default class OptionSelect extends Component {
   render() {
     var {
       name,
+      displayName,
       options
     } = this.props;
     return (
       <div>
         <label for={ name }>
-        Country:
+        {displayName}:
         </label>
         <Select onSelect={this.props.handleSelect} name={ name } value="">
         <option value="">---------</option>
