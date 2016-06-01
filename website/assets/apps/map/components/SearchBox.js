@@ -5,6 +5,8 @@ import CountrySelectContainer from "./CountrySelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import xhr from "xhr";
+import SearchActions from '../actions/SearchActions';
+import SearchStore from '../stores/SearchStore';
 
 let searchBoxStyle = {
   maxWidth: 360,
@@ -55,25 +57,35 @@ export default class SearchBox extends Component {
       }
     }, function (err, resp, body) {
       if (resp.statusCode == 200) {
-        console.log(JSON.parse(body));
+        // console.log(JSON.parse(body));
       }
     });
   }
   state = {
-    name: '',
-    initiative__name: '',
-    projectfunding__sources__countries__name: ''
+    query: {},
+    results: [],
+    errorMessage: null
   }
 
-  handleValueUpdate = (inputName, value) => {
-    var stateUpdate = {};
-    stateUpdate[inputName] = value;
-    this.setState(stateUpdate);
+  componentDidMount() {
+    SearchStore.listen(this.onSearchResults);
+  }
+
+  handleQueryUpdate = (inputName, value) => {
+    var queryUpdate = Object.assign({}, this.state.query);
+    queryUpdate[inputName] = value;
+    this.setState({query: queryUpdate});
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state);
+    // TODO: prevent search when query is emptyish
+    SearchActions.search(this.state.query);
+  }
+
+  onSearchResults = (data) => {
+    var { results, errorMessage } = data;
+    this.setState({results: results, errorMessage: errorMessage});
   }
 
   render() {
@@ -88,7 +100,7 @@ export default class SearchBox extends Component {
             <SearchBar
               label="Project" name="name"
               value={this.state.projectTitle}
-              onSearchInput={this.handleValueUpdate}
+              onSearchInput={this.handleQueryUpdate}
             />
           }>
           <div className="section-row">
@@ -106,7 +118,7 @@ export default class SearchBox extends Component {
           </div>
             <Section header={
               <SearchBar label="Initiative" name="initiative__name"
-                onSearchInput={this.handleValueUpdate}
+                onSearchInput={this.handleQueryUpdate}
                />
             }>
               <Select name="principal_agent__name" value="">
@@ -117,8 +129,8 @@ export default class SearchBox extends Component {
               </Select>
             </Section>
             <Section header={
-              <SearchBar label="Funder" name="projectfunding__sources__name"
-                onSearchInput={this.handleValueUpdate}
+              <SearchBar label="Funder" name="funding__sources__name"
+                onSearchInput={this.handleQueryUpdate}
               />
             }>
               <div className="section-row">
@@ -132,7 +144,7 @@ export default class SearchBox extends Component {
                 </Select>
               </div>
               <div className="section-row">
-                <CountrySelectContainer onSelect={this.handleValueUpdate} name="projectfunding__sources__countries__name" />
+                <CountrySelectContainer onSelect={this.handleQueryUpdate} name="funding__sources__countries__code" />
               </div>
             </Section>
           </Section>
