@@ -14,10 +14,7 @@ class CountryActions {
           return response.json();
         })
         .then((json) => {
-          let countries = json.map(function(obj) {
-            return {name: obj.name, value: obj.alpha_3};
-          });
-          this.updateCountries(countries);
+          this.updateCountries(json);
         })
         .catch((errorMessage) => {
           this.countriesFailed(errorMessage)

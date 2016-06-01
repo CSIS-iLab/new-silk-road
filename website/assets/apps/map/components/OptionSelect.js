@@ -1,21 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import {Select} from './forms';
+import Option from '../models/Option';
 
-
-export default class CountrySelect extends Component {
+export default class OptionSelect extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     handleSelect: PropTypes.func,
-    countries: PropTypes.arrayOf(PropTypes.object)
+    options: PropTypes.arrayOf(PropTypes.instanceOf(Option))
   }
   static defaultProps = {
-    countries: []
+    options: []
   }
 
   render() {
     var {
       name,
-      countries
+      options
     } = this.props;
     return (
       <div>
@@ -24,9 +24,10 @@ export default class CountrySelect extends Component {
         </label>
         <Select onSelect={this.props.handleSelect} name={ name } value="">
         <option value="">---------</option>
-        {countries.map((country, i) => {
+        {options.map((opt, i) => {
+          let optKey = `${opt.name}-${i}`;
           return (
-            <option key={country.value} value={country.value}>{country.name}</option>
+            <option key={optKey} value={opt.value}>{opt.name}</option>
           );
         })}
         </Select>

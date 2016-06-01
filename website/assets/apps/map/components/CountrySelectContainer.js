@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import CountrySelect from './CountrySelect';
+import OptionSelect from './OptionSelect';
 import CountryStore from '../stores/CountryStore';
 import CountryActions from '../actions/CountryActions';
+import Option from '../models/Option';
 
 class CountrySelectContainer extends Component {
   static propTypes = {
@@ -33,8 +34,9 @@ class CountrySelectContainer extends Component {
   }
 
   render() {
+    let options = this.state.countries.map((country) => new Option(country.name, country.alpha_3));
     return (
-      <CountrySelect handleSelect={this.handleSelect} name={this.props.name} countries={this.state.countries} />
+      <OptionSelect handleSelect={this.handleSelect} name={this.props.name} options={options} />
     )
   }
 }
