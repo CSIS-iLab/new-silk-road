@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import Section from "./Section";
 import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
+import RegionSelectContainer from "./RegionSelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import xhr from "xhr";
@@ -124,9 +125,7 @@ export default class SearchBox extends Component {
               <Select name="principal_agent__name" value="">
                 <option value="">Principal Agent</option>
               </Select>
-              <Select name="region__name" value="">
-                <option value="">Region</option>
-              </Select>
+              <RegionSelectContainer onSelect={this.handleQueryUpdate} />
             </Section>
             <Section header={
               <SearchBar label="Funder" name="funding__sources__name"

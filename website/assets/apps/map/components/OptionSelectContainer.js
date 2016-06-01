@@ -6,12 +6,8 @@ class OptionSelectContainer extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
-    onSelect: PropTypes.func
-  }
-
-  state = {
-    options: [],
-    errorMessage: null
+    onSelect: PropTypes.func,
+    options: PropTypes.arrayOf(PropTypes.instanceOf(Option))
   }
 
   handleSelect = (value, event) => {
@@ -26,7 +22,7 @@ class OptionSelectContainer extends Component {
         handleSelect={this.handleSelect}
         name={this.props.name}
         displayName={this.props.displayName}
-        options={this.state.options}
+        options={this.props.options}
       />
     )
   }
