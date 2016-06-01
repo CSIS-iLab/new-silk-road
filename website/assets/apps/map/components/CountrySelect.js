@@ -5,6 +5,7 @@ import {Select} from './forms';
 export default class CountrySelect extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
+    handleSelect: PropTypes.func,
     countries: PropTypes.arrayOf(PropTypes.object)
   }
   static defaultProps = {
@@ -21,7 +22,7 @@ export default class CountrySelect extends Component {
         <label for={ name }>
         Country:
         </label>
-        <Select name={ name } value="">
+        <Select onSelect={this.props.handleSelect} name={ name } value="">
         <option value="">---------</option>
         {countries.map((country, i) => {
           return (

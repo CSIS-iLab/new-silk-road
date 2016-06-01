@@ -132,7 +132,7 @@ export default class SearchBox extends Component {
                 </Select>
               </div>
               <div className="section-row">
-                <CountrySelectContainer name="projectfunding__sources__countries__name" />
+                <CountrySelectContainer onSelect={this.handleValueUpdate} name="projectfunding__sources__countries__name" />
               </div>
             </Section>
           </Section>

@@ -63,12 +63,18 @@ Button = Radium(Button);
 
 
 class Select extends Component {
+  static propTypes = {
+    onSelect: PropTypes.func
+  };
     state = {
       value: ''
     }
 
     handleChange = (event) => {
       this.setState({value: event.target.value});
+      if (this.props.onSelect) {
+        this.props.onSelect(this.refs.selectEl.value, event);
+      }
     }
 
   render() {
@@ -79,6 +85,7 @@ class Select extends Component {
 
     return (
       <select {...other}
+        ref="selectEl"
         value={this.state.value}
         onChange={this.handleChange}
         style={selectStyle.base}

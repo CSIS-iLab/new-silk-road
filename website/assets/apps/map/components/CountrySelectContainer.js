@@ -5,7 +5,8 @@ import CountryActions from '../actions/CountryActions';
 
 class CountrySelectContainer extends Component {
   static propTypes = {
-    name: PropTypes.string.isRequired
+    name: PropTypes.string.isRequired,
+    onSelect: PropTypes.func
   }
 
   state = {
@@ -25,9 +26,15 @@ class CountrySelectContainer extends Component {
     });
   }
 
+  handleSelect = (value, event) => {
+    if (this.props.onSelect) {
+      this.props.onSelect(this.props.name, value);
+    }
+  }
+
   render() {
     return (
-      <CountrySelect name={this.props.name} countries={this.state.countries} />
+      <CountrySelect handleSelect={this.handleSelect} name={this.props.name} countries={this.state.countries} />
     )
   }
 }
