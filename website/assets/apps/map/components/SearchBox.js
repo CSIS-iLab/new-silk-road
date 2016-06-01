@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
-import Section from "./section";
-import SearchBar from "./searchbar";
+import Section from "./Section";
+import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
