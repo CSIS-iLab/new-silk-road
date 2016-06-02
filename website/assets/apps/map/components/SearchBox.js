@@ -73,6 +73,8 @@ export default class SearchBox extends Component {
   }
 
   handleQueryUpdate = (inputName, value) => {
+    console.log("handleQueryUpdate");
+    console.log(`${inputName}: ${value}`);
     var queryUpdate = Object.assign({}, this.state.query);
     queryUpdate[inputName] = value;
     this.setState({query: queryUpdate});
@@ -81,6 +83,7 @@ export default class SearchBox extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     // TODO: prevent search when query is emptyish
+    console.log(this.state.query);
     SearchActions.search(this.state.query);
   }
 
@@ -143,7 +146,7 @@ export default class SearchBox extends Component {
                 </Select>
               </div>
               <div className="section-row">
-                <CountrySelectContainer onSelect={this.handleQueryUpdate} name="funding__sources__countries__code" />
+                <CountrySelectContainer onSelect={this.handleQueryUpdate} />
               </div>
             </Section>
           </Section>

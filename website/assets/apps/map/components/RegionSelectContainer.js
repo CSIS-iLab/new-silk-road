@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Option from '../models/Option';
 import OptionSelect from './OptionSelect';
-import OptionSelectContainer from './OptionSelectContainer';
 import RegionStore from '../stores/RegionStore';
 import RegionActions from '../actions/RegionActions';
 
@@ -14,6 +13,10 @@ class RegionSelectContainer extends Component {
     options: [],
     errorMessage: null
   }
+
+  // TODO: Check on `regions` vs `initiatives__geographic_scope` (Initative regions or Project regions)
+  get selectName() { return 'regions'; }
+  get displayName() { return 'Regions'; }
 
   componentDidMount() {
     RegionStore.listen(this.onChange);
@@ -28,14 +31,19 @@ class RegionSelectContainer extends Component {
     });
   }
 
+  handleSelect = (value, event) => {
+    if (this.props.onSelect) {
+      this.props.onSelect(this.selectName, value);
+    }
+  }
+
   render() {
-    // TODO: Check on `regions__id` vs `initiatives__geographic_scope__id` (Initative regions or Project regions)
     return (
-      <OptionSelectContainer
-        name='regions'
-        displayName='Regions'
+      <OptionSelect
+        name={this.selectName}
+        displayName={this.displayName}
         options={this.state.options}
-        {...this.props}
+        onSelect={this.handleSelect}
         />
     );
   }

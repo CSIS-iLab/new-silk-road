@@ -6,14 +6,16 @@ import Option from '../models/Option';
 
 class CountrySelectContainer extends Component {
   static propTypes = {
-    name: PropTypes.string.isRequired,
     onSelect: PropTypes.func
   }
 
   state = {
-    countries: [],
+    options: [],
     errorMessage: null
   }
+
+  get selectName() { return 'funding__sources__countries__code'; }
+  get displayName() { return 'Countries'; }
 
   componentDidMount() {
     CountryStore.listen(this.onChange);
@@ -21,22 +23,26 @@ class CountrySelectContainer extends Component {
   }
 
   onChange = (data) => {
+    let options = data.countries.map((opt) => new Option(opt.name, opt.alpha_3));
     this.setState({
-      countries: data.countries,
+      options: options,
       errorMessage: data.errorMessage
     });
   }
 
   handleSelect = (value, event) => {
     if (this.props.onSelect) {
-      this.props.onSelect(this.props.name, value);
+      this.props.onSelect(this.selectName, value);
     }
   }
 
   render() {
-    let options = this.state.countries.map((country) => new Option(country.name, country.alpha_3));
     return (
-      <OptionSelect handleSelect={this.handleSelect} name={this.props.name} options={options} />
+      <OptionSelect
+        onSelect={this.handleSelect}
+        name={this.selectName}
+        displayName={this.displayName}
+        options={this.state.options} />
     )
   }
 }

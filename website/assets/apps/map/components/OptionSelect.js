@@ -6,7 +6,7 @@ export default class OptionSelect extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
-    handleSelect: PropTypes.func,
+    onSelect: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.instanceOf(Option))
   }
   static defaultProps = {
@@ -24,7 +24,7 @@ export default class OptionSelect extends Component {
         <label for={ name }>
         {displayName}:
         </label>
-        <Select onSelect={this.props.handleSelect} name={ name } value="">
+        <Select onSelect={this.props.onSelect} name={ name } value="">
         <option value="">---------</option>
         {options.map((opt, i) => {
           let optKey = `${opt.name}-${i}`;
