@@ -19,11 +19,11 @@ class CountrySelectContainer extends Component {
 
   componentDidMount() {
     CountryStore.listen(this.onChange);
-    CountryActions.fetchCountries();
+    CountryActions.fetch();
   }
 
   onChange = (data) => {
-    let options = data.countries.map((opt) => new Option(opt.name, opt.alpha_3));
+    let options = data.results.map((opt) => new Option(opt.name, opt.alpha_3));
     this.setState({
       options: options,
       errorMessage: data.errorMessage

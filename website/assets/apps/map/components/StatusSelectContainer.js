@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import Option from '../models/Option';
 import OptionSelect from './OptionSelect';
-import RegionStore from '../stores/RegionStore';
-import RegionActions from '../actions/RegionActions';
+import StatusStore from '../stores/StatusStore';
+import StatusActions from '../actions/StatusActions';
 
-class RegionSelectContainer extends Component {
+class StatusSelectContainer extends Component {
   static propTypes = {
     onSelect: PropTypes.func
   }
@@ -14,13 +14,12 @@ class RegionSelectContainer extends Component {
     errorMessage: null
   }
 
-  // TODO: Check on `regions` vs `initiatives__geographic_scope` (Initative regions or Project regions)
-  get selectName() { return 'regions'; }
-  get displayName() { return 'Regions'; }
+  get selectName() { return 'status'; }
+  get displayName() { return 'Status'; }
 
   componentDidMount() {
-    RegionStore.listen(this.onChange);
-    RegionActions.fetch();
+    StatusStore.listen(this.onChange);
+    StatusActions.fetch();
   }
 
   onChange = (data) => {
@@ -50,4 +49,4 @@ class RegionSelectContainer extends Component {
 
 }
 
-export default RegionSelectContainer;
+export default StatusSelectContainer;

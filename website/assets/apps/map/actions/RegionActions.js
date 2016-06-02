@@ -1,32 +1,8 @@
 import alt from '../alt';
-import RegionSource from '../sources/RegionSource';
+import {RegionSource} from '../sources/apisources';
 
-class RegionActions {
-  updateRegions(regions) {
-    return regions;
-  }
+import {createApiActions} from './apiactions';
 
-  fetchRegions() {
-    return (dispatch) => {
-      dispatch();
-      RegionSource.fetch()
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          this.updateRegions(json);
-        })
-        .catch((errorMessage) => {
-          this.regionsFailed(errorMessage)
-        });
-    }
-  }
-
-  regionsFailed(errorMessage) {
-    return errorMessage;
-  }
-}
-
-RegionActions = alt.createActions(RegionActions);
+var RegionActions = alt.createActions(createApiActions(RegionSource));
 
 export default RegionActions;

@@ -3,6 +3,7 @@ import Section from "./Section";
 import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
 import RegionSelectContainer from "./RegionSelectContainer";
+import StatusSelectContainer from "./StatusSelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import xhr from "xhr";
@@ -114,19 +115,17 @@ export default class SearchBox extends Component {
             <option value="rail">Rail</option>
             <option value="seaport">Seaport</option>
             </Select>
-            <Select name="status__name" value="">
-            <option value="">Status</option>
-            <option value="started">Started</option>
-            <option value="completed">Completed</option>
-            </Select>
+          </div>
+          <div className="section-row">
+            <StatusSelectContainer onSelect={this.handleQueryUpdate} />
           </div>
             <Section header={
               <SearchBar label="Initiative" name="initiative__name"
                 onSearchInput={this.handleQueryUpdate}
                />
             }>
-              <Select name="principal_agent__name" value="">
-                <option value="">Principal Agent</option>
+            <Select name="principal_agent__name" value="">
+              <option value="">Principal Agent</option>
               </Select>
               <RegionSelectContainer onSelect={this.handleQueryUpdate} />
             </Section>
