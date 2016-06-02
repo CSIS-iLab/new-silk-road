@@ -7,7 +7,6 @@ import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
-import xhr from "xhr";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
@@ -51,19 +50,6 @@ let searchBoxStyle = {
 }
 
 export default class SearchBox extends Component {
-  constructor(props) {
-    super(props);
-    xhr({
-      uri: '/api/regions/',
-      headers: {
-        "Accept": "application/json"
-      }
-    }, function (err, resp, body) {
-      if (resp.statusCode == 200) {
-        // console.log(JSON.parse(body));
-      }
-    });
-  }
   state = {
     query: {},
     results: [],
@@ -75,8 +61,6 @@ export default class SearchBox extends Component {
   }
 
   handleQueryUpdate = (inputName, value) => {
-    console.log("handleQueryUpdate");
-    console.log(`${inputName}: ${value}`);
     var queryUpdate = Object.assign({}, this.state.query);
     queryUpdate[inputName] = value;
     this.setState({query: queryUpdate});
@@ -84,9 +68,9 @@ export default class SearchBox extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: prevent search when query is emptyish
-    console.log(this.state.query);
-    SearchActions.search(this.state.query);
+    if (Object.keys(this.state.query).length > 0) {
+      SearchActions.search(this.state.query);
+    }
   }
 
   onSearchResults = (data) => {
