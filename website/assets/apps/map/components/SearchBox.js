@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
 import RegionSelectContainer from "./RegionSelectContainer";
 import StatusSelectContainer from "./StatusSelectContainer";
+import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import xhr from "xhr";
@@ -109,12 +110,7 @@ export default class SearchBox extends Component {
             />
           }>
           <div className="section-row">
-            <Select name="infrastructure_type__name" value="">
-            <option value="">Infrastructure Type</option>
-            <option value="road">Road</option>
-            <option value="rail">Rail</option>
-            <option value="seaport">Seaport</option>
-            </Select>
+            <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
           </div>
           <div className="section-row">
             <StatusSelectContainer onSelect={this.handleQueryUpdate} />
