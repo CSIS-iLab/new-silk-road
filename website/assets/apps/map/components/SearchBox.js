@@ -116,7 +116,7 @@ export default class SearchBox extends Component {
             <StatusSelectContainer onSelect={this.handleQueryUpdate} />
           </div>
             <Section header={
-              <SearchBar label="Initiative" name="initiative__name"
+              <SearchBar label="Initiative" name="initiatives__name__icontains"
                 onSearchInput={this.handleQueryUpdate}
                />
             }>
@@ -126,7 +126,7 @@ export default class SearchBox extends Component {
               <RegionSelectContainer onSelect={this.handleQueryUpdate} />
             </Section>
             <Section header={
-              <SearchBar label="Funder" name="funding__sources__name"
+              <SearchBar label="Funder" name="funding__sources__name__icontains"
                 onSearchInput={this.handleQueryUpdate}
               />
             }>
