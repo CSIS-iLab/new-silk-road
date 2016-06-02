@@ -53,7 +53,8 @@ export default class SearchBox extends Component {
   state = {
     query: {},
     results: [],
-    errorMessage: null
+    errorMessage: null,
+    searchEnabled: false
   }
 
   componentDidMount() {
@@ -61,9 +62,15 @@ export default class SearchBox extends Component {
   }
 
   handleQueryUpdate = (inputName, value) => {
-    var queryUpdate = Object.assign({}, this.state.query);
-    queryUpdate[inputName] = value;
-    this.setState({query: queryUpdate});
+    let queryUpdate = Object.assign({}, this.state.query);
+    let trimValue = value.trim();
+    if (trimValue !== '') {
+      queryUpdate[inputName] = trimValue;
+    } else {
+      delete queryUpdate[inputName];
+    }
+    let enableSearch = Object.keys(queryUpdate).length > 0;
+    this.setState({query: queryUpdate, searchEnabled: enableSearch});
   }
 
   handleSubmit = (e) => {
@@ -91,6 +98,7 @@ export default class SearchBox extends Component {
               label="Project" name="name__icontains"
               value={this.state.projectTitle}
               onSearchInput={this.handleQueryUpdate}
+              searchEnabled={this.state.searchEnabled}
             />
           }>
           <div className="section-row">
@@ -102,6 +110,7 @@ export default class SearchBox extends Component {
             <Section header={
               <SearchBar label="Initiative" name="initiatives__name__icontains"
                 onSearchInput={this.handleQueryUpdate}
+                searchEnabled={this.state.searchEnabled}
                />
             }>
             <Select name="principal_agent__name" value="">
@@ -112,6 +121,7 @@ export default class SearchBox extends Component {
             <Section header={
               <SearchBar label="Funder" name="funding__sources__name__icontains"
                 onSearchInput={this.handleQueryUpdate}
+                searchEnabled={this.state.searchEnabled}
               />
             }>
               <div className="section-row">

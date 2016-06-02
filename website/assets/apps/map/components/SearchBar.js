@@ -7,12 +7,13 @@ class SearchBar extends Component {
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     label: PropTypes.string.isRequired,
+    searchEnabled: PropTypes.bool.isRequired,
     inputText: PropTypes.string,
     onSearchInput: PropTypes.func
   };
 
   handleUserInput = (value, e) => {
-    if (this.props.onSearchInput && value.trim() !== '') {
+    if (this.props.onSearchInput) {
       this.props.onSearchInput(this.props.name, value.trim());
     }
   }
@@ -29,7 +30,10 @@ class SearchBar extends Component {
         onUserInput={this.handleUserInput}
         name={this.props.name} placeholder={this.props.placeholder}
         />
-        <Button type='submit' bordered={true}>Search</Button>
+        <Button type='submit'
+                bordered={true}
+                enabled={this.props.searchEnabled}
+        >Search</Button>
       </div>
     )
   }
