@@ -104,7 +104,7 @@ export default class SearchBox extends Component {
         <form onSubmit={this.handleSubmit}>
           <Section header={
             <SearchBar
-              label="Project" name="name"
+              label="Project" name="name__icontains"
               value={this.state.projectTitle}
               onSearchInput={this.handleQueryUpdate}
             />
