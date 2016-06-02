@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import OptionSelect from './OptionSelect';
 
 
-function createSelectContainer(Store, Actions, selectName, displayName, mapOptions) {
+function createSelectContainer(Store, Actions, selectName, labelName, mapOptions) {
   class SelectContainer extends Component {
     static propTypes = {
       onSelect: PropTypes.func
@@ -14,7 +14,7 @@ function createSelectContainer(Store, Actions, selectName, displayName, mapOptio
     }
 
     get selectName() { return selectName; }
-    get displayName() { return displayName; }
+    get labelName() { return labelName; }
 
     componentDidMount() {
       Store.listen(this.onChange);
@@ -38,7 +38,7 @@ function createSelectContainer(Store, Actions, selectName, displayName, mapOptio
       return (
         <OptionSelect
           name={this.selectName}
-          displayName={this.displayName}
+          labelName={this.labelName}
           options={this.state.options}
           onSelect={this.handleSelect}
           />

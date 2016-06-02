@@ -5,7 +5,7 @@ import Option from '../models/Option';
 export default class OptionSelect extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
-    displayName: PropTypes.string.isRequired,
+    labelName: PropTypes.string.isRequired,
     onSelect: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.instanceOf(Option))
   }
@@ -16,13 +16,13 @@ export default class OptionSelect extends Component {
   render() {
     var {
       name,
-      displayName,
+      labelName,
       options
     } = this.props;
     return (
       <div>
         <label for={ name }>
-        {displayName}:
+        {labelName}:
         </label>
         <Select onSelect={this.props.onSelect} name={ name } value="">
         <option value="">---------</option>
