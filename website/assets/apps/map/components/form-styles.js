@@ -21,7 +21,11 @@ const buttonStyle = {
   base: Object.assign({
     border: 'none'
   }, formStyles),
-  bordered: Object.assign({}, bordered)
+  bordered: Object.assign({}, bordered),
+  disabled: {
+    cursor: 'default',
+    border: '1px solid transparent'
+  }
 };
 
 const selectStyle = {

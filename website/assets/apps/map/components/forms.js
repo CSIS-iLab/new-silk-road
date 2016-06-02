@@ -55,7 +55,8 @@ class Button extends Component {
               disabled={!this.props.enabled}
               style={[
                 buttonStyle.base,
-                this.props.bordered && buttonStyle.bordered
+                this.props.bordered && buttonStyle.bordered,
+                !this.props.enabled && buttonStyle.disabled
               ]}
               onClick={this.props.onClick}
                >{this.props.children}</button>
