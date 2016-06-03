@@ -35,12 +35,14 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
     }
 
     render() {
+      const hasOptions = this.state.options.length > 0;
       return (
         <OptionSelect
           name={this.selectName}
           labelName={this.labelName}
           options={this.state.options}
           onSelect={this.handleSelect}
+          enabled={hasOptions}
           />
       );
     }

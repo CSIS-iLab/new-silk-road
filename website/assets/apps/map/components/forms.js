@@ -68,10 +68,12 @@ Button = Radium(Button);
 
 class Select extends Component {
   static propTypes = {
+    enabled: PropTypes.bool,
     onSelect: PropTypes.func
   };
     state = {
-      value: ''
+      value: '',
+      enabled: true
     }
 
     handleChange = (event) => {
@@ -93,6 +95,7 @@ class Select extends Component {
         value={this.state.value}
         onChange={this.handleChange}
         style={selectStyle.base}
+        disabled={!this.props.enabled}
       >
       {this.props.children}
       </select>
