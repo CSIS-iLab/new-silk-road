@@ -6,10 +6,10 @@ function createApiActions(Source) {
       return x;
     }
 
-    fetch() {
+    fetch(params) {
       return (dispatch) => {
         dispatch();
-        Source.fetch()
+        Source.fetch(params)
           .then((response) => {
             return response.json();
           })
