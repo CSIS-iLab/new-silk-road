@@ -27,9 +27,27 @@ from api.filters.locations import (
     PolygonGeometryFilter
 
 )
-from infrastructure.models import (Project, ProjectStatus, Initiative, InfrastructureType)
+from infrastructure.models import (
+    Project,
+    ProjectStatus,
+    Initiative,
+    InfrastructureType
+)
+from facts.models import (
+    Organization
+)
 from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer, InfrastructureTypeSerializer)
+from api.serializers.facts import (OrganizationBasicSerializer)
 from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
+from api.filters.facts import (OrganizationFilter)
+
+
+class OrganizationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Organization.objects.all()
+    lookup_field = 'identifier'
+    serializer_class = OrganizationBasicSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = OrganizationFilter
 
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):

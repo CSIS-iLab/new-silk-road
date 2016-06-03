@@ -2,6 +2,8 @@ from django.conf.urls import url, include
 from rest_framework import routers
 
 from api.views import (
+    # facts
+    OrganizationViewSet,
     # infrastructure
     ProjectViewSet,
     InitiativeViewSet,
@@ -19,6 +21,7 @@ from api.views import (
 
 
 router = routers.DefaultRouter()
+router.register(r'organizations', OrganizationViewSet)
 router.register(r'projects', ProjectViewSet)
 router.register(r'initiatives', InitiativeViewSet)
 router.register(r'lines', LineStringGeometryViewSet)
