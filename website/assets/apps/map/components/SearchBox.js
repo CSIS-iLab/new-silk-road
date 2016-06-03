@@ -5,6 +5,7 @@ import CountrySelectContainer from "./CountrySelectContainer";
 import RegionSelectContainer from "./RegionSelectContainer";
 import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
+import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer'
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import SearchActions from '../actions/SearchActions';
@@ -113,9 +114,7 @@ export default class SearchBox extends Component {
                 searchEnabled={this.state.searchEnabled}
                />
             }>
-            <Select name="principal_agent__name" value="">
-              <option value="">Principal Agent</option>
-              </Select>
+              <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
               <RegionSelectContainer onSelect={this.handleQueryUpdate} />
             </Section>
             <Section header={
