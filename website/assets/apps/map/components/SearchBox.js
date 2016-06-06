@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react";
+import Radium, { Style } from "radium";
 import Section from "./Section";
 import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
@@ -9,12 +10,18 @@ import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import ResultsBox from './ResultsBox';
 import {Select} from "./forms";
-import Radium, { Style } from "radium";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
-let searchBoxStyle = {
-  maxWidth: 360,
+
+const searchBoxStyle = {
+  maxWidth: 370,
+  maxHeight: '100%',
+  overflow: 'hidden',
+  backgroundColor: '#FFF',
+  position: 'absolute',
+  top: 0,
+  left: 0,
   form: {
     margin: '0 3px'
   },
@@ -41,11 +48,15 @@ let searchBoxStyle = {
     textAlign: 'right'
   },
   input: {
-    maxWidth: 204,
+    maxWidth: 214,
     marginRight: 2
   },
   select: {
-    marginRight: 6
+    maxWidth: 280,
+    marginRight: 6,
+  },
+  'select:last-of-type': {
+    marginRight: 0
   },
   'label, input, button': {
     display: 'inline-block'
@@ -53,13 +64,29 @@ let searchBoxStyle = {
   'ul.search-results': {
     listStyle: 'none',
     padding: '0 3px',
+    margin: 0
   },
+  '.searchWidget': {
+    zIndex: 3
+  },
+  '.scrollWrap': {
+    display: 'flex',
+  },
+  '.scrollWrap > .scrollContent': {
+    flex: '1 1',
+    overflowX: 'hidden',
+    overflowY: 'auto'
+  }
   // '.searchResults': {
     // fontSize: 12
   // }
 }
 
 export default class SearchBox extends Component {
+  static propTypes = {
+    maxHeight: PropTypes.number.isRequired,
+  }
+
   state = {
     query: {},
     results: [],
@@ -103,52 +130,63 @@ export default class SearchBox extends Component {
   }
 
   render() {
+    searchBoxStyle.maxHeight = this.props.maxHeight;
     return (
-      <div className="searchbox">
-        <Style
-          scopeSelector=".searchbox"
-          rules={searchBoxStyle}
-        />
-        <form onSubmit={this.handleSubmit}>
+      <div className="searchBox">
+        <div className="searchWidget">
+          <form onSubmit={this.handleSubmit}>
           <Section header={
             <SearchBar
-              label="Project" name="name__icontains"
-              value={this.state.projectTitle}
-              onSearchInput={this.handleQueryUpdate}
-              searchEnabled={this.state.searchEnabled}
+            label="Project" name="name__icontains"
+            value={this.state.projectTitle}
+            onSearchInput={this.handleQueryUpdate}
+            searchEnabled={this.state.searchEnabled}
             />
           }>
-          <div className="section-row">
-            <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
-          </div>
-          <div className="section-row">
-            <StatusSelectContainer onSelect={this.handleQueryUpdate} />
-          </div>
+            <div className="section-row">
+              <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="section-row">
+              <StatusSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
             <Section header={
               <SearchBar label="Initiative" name="initiatives__name__icontains"
-                onSearchInput={this.handleQueryUpdate}
-                searchEnabled={this.state.searchEnabled}
-               />
+              onSearchInput={this.handleQueryUpdate}
+              searchEnabled={this.state.searchEnabled}
+              />
             }>
+            <div className="section-row">
               <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="section-row">
               <RegionSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
             </Section>
             <Section header={
               <SearchBar label="Funder" name="funding__sources__name__icontains"
-                onSearchInput={this.handleQueryUpdate}
-                searchEnabled={this.state.searchEnabled}
+              onSearchInput={this.handleQueryUpdate}
+              searchEnabled={this.state.searchEnabled}
               />
             }>
-              <div className="section-row">
-                <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
-              </div>
-              <div className="section-row">
-                <CountrySelectContainer onSelect={this.handleQueryUpdate} />
-              </div>
+            <div className="section-row">
+              <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="section-row">
+              <CountrySelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
             </Section>
           </Section>
-        </form>
-        <ResultsBox results={this.state.results} />
+          </form>
+        </div>
+        <div className="scrollWrap">
+          <div className="scrollContent">
+          <ResultsBox results={this.state.results} />
+          </div>
+        </div>
+        <Style
+          scopeSelector=".searchBox"
+          rules={searchBoxStyle}
+        />
       </div>
     );
   }
