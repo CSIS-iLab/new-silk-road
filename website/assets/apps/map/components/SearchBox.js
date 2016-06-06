@@ -5,7 +5,8 @@ import CountrySelectContainer from "./CountrySelectContainer";
 import RegionSelectContainer from "./RegionSelectContainer";
 import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
-import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer'
+import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
+import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import SearchActions from '../actions/SearchActions';
@@ -131,14 +132,7 @@ export default class SearchBox extends Component {
               />
             }>
               <div className="section-row">
-                <label for="amount">Amount:</label>
-                <Select name="compare" value="">
-                  <option value="">----</option>
-                </Select>
-                <Select name="amount" value="">
-                  <option value="">----</option>
-                  <option value="100000">100,000</option>
-                </Select>
+                <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
               </div>
               <div className="section-row">
                 <CountrySelectContainer onSelect={this.handleQueryUpdate} />
