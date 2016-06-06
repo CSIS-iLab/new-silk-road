@@ -62,13 +62,20 @@ export default class SearchBox extends Component {
     SearchStore.listen(this.onSearchResults);
   }
 
-  handleQueryUpdate = (inputName, value) => {
+  handleQueryUpdate = (q) => {
     let queryUpdate = Object.assign({}, this.state.query);
-    let trimValue = value.trim();
-    if (trimValue !== '') {
-      queryUpdate[inputName] = trimValue;
-    } else {
-      delete queryUpdate[inputName];
+    for (var key in q) {
+      if (q.hasOwnProperty(key)) {
+        let value = q[key];
+        if (typeof value === "string") {
+          value = value.trim();
+        }
+        if (value && value !== '') {
+          queryUpdate[key] = value;
+        } else {
+          delete queryUpdate[key];
+        }
+      }
     }
     let enableSearch = Object.keys(queryUpdate).length > 0;
     this.setState({query: queryUpdate, searchEnabled: enableSearch});

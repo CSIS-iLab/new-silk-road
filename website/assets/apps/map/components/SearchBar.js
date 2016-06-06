@@ -14,7 +14,7 @@ class SearchBar extends Component {
 
   handleUserInput = (value, e) => {
     if (this.props.onSearchInput) {
-      this.props.onSearchInput(this.props.name, value.trim());
+      this.props.onSearchInput({ [this.props.name]: value.trim() });
     }
   }
 

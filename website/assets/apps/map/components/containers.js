@@ -30,7 +30,7 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
 
     handleSelect = (value, event) => {
       if (this.props.onSelect) {
-        this.props.onSelect(this.selectName, value);
+        this.props.onSelect({[this.selectName]: value});
       }
     }
 
