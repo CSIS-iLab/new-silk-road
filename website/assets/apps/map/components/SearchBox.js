@@ -20,6 +20,8 @@ const searchBoxStyle = {
   overflow: 'hidden',
   backgroundColor: '#FFF',
   position: 'absolute',
+  display: 'flex',
+  flexDirection: 'column',
   top: 0,
   left: 0,
   form: {
@@ -70,12 +72,14 @@ const searchBoxStyle = {
     zIndex: 3
   },
   '.scrollWrap': {
-    display: 'flex',
-  },
-  '.scrollWrap > .scrollContent': {
-    flex: '1 1',
+    flex: '1 1 auto',
+    order: 0,
     overflowX: 'hidden',
     overflowY: 'auto'
+  },
+  '.searchWidget': {
+    flex: '0 1 auto',
+    order: 0,
   }
   // '.searchResults': {
     // fontSize: 12
@@ -180,7 +184,7 @@ export default class SearchBox extends Component {
         </div>
         <div className="scrollWrap">
           <div className="scrollContent">
-          <ResultsBox results={this.state.results} />
+            <ResultsBox results={this.state.results} />
           </div>
         </div>
         <Style
