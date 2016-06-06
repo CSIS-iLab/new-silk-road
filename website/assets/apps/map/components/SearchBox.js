@@ -7,6 +7,7 @@ import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
+import ResultsBox from './ResultsBox';
 import {Select} from "./forms";
 import Radium, { Style } from "radium";
 import SearchActions from '../actions/SearchActions';
@@ -48,7 +49,14 @@ let searchBoxStyle = {
   },
   'label, input, button': {
     display: 'inline-block'
-  }
+  },
+  'ul.search-results': {
+    listStyle: 'none',
+    padding: '0 3px',
+  },
+  // '.searchResults': {
+    // fontSize: 12
+  // }
 }
 
 export default class SearchBox extends Component {
@@ -140,6 +148,7 @@ export default class SearchBox extends Component {
             </Section>
           </Section>
         </form>
+        <ResultsBox results={this.state.results} />
       </div>
     );
   }

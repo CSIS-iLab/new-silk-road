@@ -46,7 +46,8 @@ class Button extends Component {
     type: PropTypes.oneOf(['submit', 'reset', 'button']),
     onClick: PropTypes.func,
     bordered: PropTypes.bool,
-    enabled: PropTypes.bool
+    enabled: PropTypes.bool,
+    value: PropTypes.string
   };
 
   render() {
@@ -58,6 +59,7 @@ class Button extends Component {
                 this.props.bordered && buttonStyle.bordered,
                 !this.props.enabled && buttonStyle.disabled
               ]}
+              value={this.props.value}
               onClick={this.props.onClick}
                >{this.props.children}</button>
     )
