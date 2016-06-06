@@ -49,6 +49,12 @@ class ProjectFundingSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    identifier = serializers.UUIDField()
+    geo = serializers.HyperlinkedRelatedField(
+        view_name='api:geometrystore-detail',
+        lookup_field='identifier',
+        read_only=True
+    )
     infrastructure_type = serializers.StringRelatedField()
     initiatives = InitiativeBasicSerializer(many=True, read_only=True)
     funding = ProjectFundingSerializer(many=True, read_only=True)
@@ -66,6 +72,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         model = Project
         fields = (
             'name',
+            'identifier',
             'initiatives', 'infrastructure_type',
             'planned_completion_year',
             'planned_completion_month',
@@ -81,6 +88,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             'funding',
             'page_url',
             'url',
+            'geo',
             # 'operators', 'contractors', 'consultants', 'implementers',
         )
 
