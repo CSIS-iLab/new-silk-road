@@ -131,6 +131,7 @@ export default class SearchBox extends Component {
   }
 
   onSearchResults = (data) => {
+    console.log(data);
     var { results, errorMessage } = data;
     this.setState({results: results, errorMessage: errorMessage});
     this.refs.searchForm.collapse();

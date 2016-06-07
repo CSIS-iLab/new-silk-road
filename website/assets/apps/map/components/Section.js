@@ -31,8 +31,19 @@ class Section extends Component {
         padding: '0 0 2px'
       },
       sectionBody: {
-        display: this.state.expanded ? 'block' : 'none',
-        margin: '4px 0'
+        base: {
+          margin: '4px 0',
+          display: 'block',
+          overflow: 'hidden',
+          transition: 'max-height 0.25s ease-in',
+          maxHeight: 0
+        },
+        expanded: {
+          maxHeight: '500px'
+        },
+        collapsed: {
+          maxHeight: 0
+        }
       }
     }
     return (
@@ -40,7 +51,10 @@ class Section extends Component {
         <header>
         {this.props.header || ""}
         </header>
-        <div class="sectionBody" style={styles.sectionBody}>
+        <div class="sectionBody" style={[
+          styles.sectionBody.base,
+          styles.sectionBody[this.state.expanded ? 'expanded': 'collapsed']
+        ]}>
         {this.props.children}
         </div>
         <footer>
