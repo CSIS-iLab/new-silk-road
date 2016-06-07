@@ -24,11 +24,12 @@ export default class ResultsBox extends Component {
           return (
             <li key={index} className="result">
               <p>{result.name}</p>
-              <p>{result.infrastructure_type}</p>
+              <p>Type: <strong>{result.infrastructure_type}</strong></p>
               <div className='buttonBar'>
                 <Button type='button'
                   onClick={this.handleMapViewClick}
                   value={result.geo}
+                  enabled={result.geo !== null}
                 >View on Map</Button>
                 <Button type='button'
                   onClick={this.handleDetailClick}

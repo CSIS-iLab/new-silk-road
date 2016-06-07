@@ -78,8 +78,13 @@ const searchBoxStyle = {
     flex: '0 1 auto',
     order: 0,
   },
-  '.searchResults': {
-    fontSize: 15
+  '.buttonBar': {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  '.buttonBar > button': {
+    flex: '0.4 1 auto',
+    order: 0
   }
 }
 
