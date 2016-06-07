@@ -9,7 +9,7 @@ import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContain
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import ResultsBox from './ResultsBox';
-import {Select} from "./forms";
+import {Select, Button} from "./forms";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
@@ -24,9 +24,6 @@ const searchBoxStyle = {
   flexDirection: 'column',
   top: 0,
   left: 0,
-  form: {
-    margin: '0 3px'
-  },
   '.section-row': {
     display: 'block',
     clear: 'both',
@@ -85,6 +82,15 @@ const searchBoxStyle = {
   '.buttonBar > button': {
     flex: '0.4 1 auto',
     order: 0
+  },
+  '.resultsNav': {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  '.resultsNav button': {
+    width: 80,
+    flex: '0.475 1 auto',
+    order: 0
   }
 }
 
@@ -96,6 +102,9 @@ export default class SearchBox extends Component {
   state = {
     query: {},
     results: [],
+    count: 0,
+    nextURL: null,
+    previousURL: null,
     errorMessage: null,
     searchEnabled: false
   }
@@ -130,10 +139,15 @@ export default class SearchBox extends Component {
     }
   }
 
+  handleResultsNavClick = (e) => {
+    if (e.target.value) {
+      SearchActions.loadResults(e.target.value);
+    }
+  }
+
   onSearchResults = (data) => {
-    console.log(data);
-    var { results, errorMessage } = data;
-    this.setState({results: results, errorMessage: errorMessage});
+    var { count, results, next, previous, errorMessage } = data;
+    this.setState({count, results, nextURL: next, previousURL: previous, errorMessage});
     this.refs.searchForm.collapse();
   }
 
@@ -185,6 +199,18 @@ export default class SearchBox extends Component {
             </Section>
           </Section>
           </form>
+        </div>
+        <div className="resultsNav">
+          <Button
+            enabled={this.state.previousURL !== null}
+            onClick={this.handleResultsNavClick}
+            value={this.state.previousURL}
+          >Previous</Button>
+          <Button
+            enabled={this.state.nextURL !== null}
+            onClick={this.handleResultsNavClick}
+            value={this.state.nextURL}
+          >Next</Button>
         </div>
         <div className="scrollWrap">
           <div className="scrollContent">

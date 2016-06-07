@@ -1,5 +1,6 @@
 import alt from '../alt';
 import {SearchSource} from '../sources/apisources';
+import 'whatwg-fetch';
 
 class SearchActions {
 
@@ -20,6 +21,22 @@ class SearchActions {
       .catch((errorMessage) => {
         this.searchFailed(errorMessage);
       })
+    }
+  }
+
+  loadResults(url) {
+    return (dispatch) => {
+      dispatch();
+      fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        this.updateSearchResults(json);
+      })
+      .catch((errorMessage) => {
+        this.searchFailed(errorMessage);
+      });
     }
   }
 
