@@ -63,13 +63,10 @@ const searchBoxStyle = {
   'label, input, button': {
     display: 'inline-block'
   },
-  'ul.search-results': {
+  'ul.searchResults': {
     listStyle: 'none',
     padding: '0 3px',
     margin: 0
-  },
-  '.searchWidget': {
-    zIndex: 3
   },
   '.scrollWrap': {
     flex: '1 1 auto',
@@ -80,10 +77,10 @@ const searchBoxStyle = {
   '.searchWidget': {
     flex: '0 1 auto',
     order: 0,
+  },
+  '.searchResults': {
+    fontSize: 15
   }
-  // '.searchResults': {
-    // fontSize: 12
-  // }
 }
 
 export default class SearchBox extends Component {
@@ -131,6 +128,7 @@ export default class SearchBox extends Component {
   onSearchResults = (data) => {
     var { results, errorMessage } = data;
     this.setState({results: results, errorMessage: errorMessage});
+    this.refs.searchForm.collapse();
   }
 
   render() {
@@ -139,7 +137,7 @@ export default class SearchBox extends Component {
       <div className="searchBox">
         <div className="searchWidget">
           <form onSubmit={this.handleSubmit}>
-          <Section header={
+          <Section ref='searchForm' header={
             <SearchBar
             label="Project" name="name__icontains"
             value={this.state.projectTitle}

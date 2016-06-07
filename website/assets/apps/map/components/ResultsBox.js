@@ -18,14 +18,14 @@ export default class ResultsBox extends Component {
 
   render() {
     return (
-      <ul className="search-results">
+      <ul className="searchResults">
       {
         this.props.results.map((result, index) => {
           return (
             <li key={index} className="result">
               <p>{result.name}</p>
               <p>{result.infrastructure_type}</p>
-              <div className='button-bar'>
+              <div className='buttonBar'>
                 <Button type='button'
                   onClick={this.handleMapViewClick}
                   value={result.geo}

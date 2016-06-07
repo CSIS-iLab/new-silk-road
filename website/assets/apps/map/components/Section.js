@@ -16,6 +16,14 @@ class Section extends Component {
     this.setState({expanded: !this.state.expanded});
   }
 
+  collapse = () => {
+    this.setState({expanded: false});
+  }
+
+  expand = () => {
+    this.setState({expanded: True});
+  }
+
   render() {
     let toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
     let styles = {
