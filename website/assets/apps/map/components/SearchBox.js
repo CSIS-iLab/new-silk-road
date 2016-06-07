@@ -8,16 +8,14 @@ import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
-import ResultsBox from './ResultsBox';
-import {Select, Button} from "./forms";
+import ResultsView from './ResultsView';
+import {Select} from "./forms";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
 
 const searchBoxStyle = {
   maxWidth: 370,
-  maxHeight: '100%',
-  overflow: 'hidden',
   backgroundColor: '#FFF',
   position: 'absolute',
   display: 'flex',
@@ -65,14 +63,8 @@ const searchBoxStyle = {
     padding: '0 3px',
     margin: 0
   },
-  '.scrollWrap': {
-    flex: '1 1 auto',
-    order: 0,
-    overflowX: 'hidden',
-    overflowY: 'auto'
-  },
   '.searchWidget': {
-    flex: '0 1 auto',
+    flex: '0 0 auto',
     order: 0,
   },
   '.buttonBar': {
@@ -81,15 +73,6 @@ const searchBoxStyle = {
   },
   '.buttonBar > button': {
     flex: '0.4 1 auto',
-    order: 0
-  },
-  '.resultsNav': {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  '.resultsNav button': {
-    width: 80,
-    flex: '0.475 1 auto',
     order: 0
   }
 }
@@ -200,23 +183,13 @@ export default class SearchBox extends Component {
           </Section>
           </form>
         </div>
-        <div className="resultsNav">
-          <Button
-            enabled={this.state.previousURL !== null}
-            onClick={this.handleResultsNavClick}
-            value={this.state.previousURL}
-          >Previous</Button>
-          <Button
-            enabled={this.state.nextURL !== null}
-            onClick={this.handleResultsNavClick}
-            value={this.state.nextURL}
-          >Next</Button>
-        </div>
-        <div className="scrollWrap">
-          <div className="scrollContent">
-            <ResultsBox results={this.state.results} />
-          </div>
-        </div>
+        <ResultsView
+          results={this.state.results}
+          onNextClick={this.handleResultsNavClick}
+          nextURL={this.state.nextURL}
+          onPreviousClick={this.handleResultsNavClick}
+          previousURL={this.state.previousURL}
+        />
         <Style
           scopeSelector=".searchBox"
           rules={searchBoxStyle}

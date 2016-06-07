@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import {Button} from './forms';
 
-export default class ResultsBox extends Component {
+export default class ResultsList extends Component {
   static propTypes = {
     results: PropTypes.array.isRequired,
   }
