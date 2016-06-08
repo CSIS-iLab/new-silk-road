@@ -40,7 +40,8 @@ class Button extends Component {
   static defaultProps = {
     type: 'button',
     bordered: false,
-    enabled: true
+    enabled: true,
+    value: null
   }
   static propTypes = {
     type: PropTypes.oneOf(['submit', 'reset', 'button']),

@@ -85,7 +85,6 @@ export default class SearchBox extends Component {
   state = {
     query: {},
     results: [],
-    count: 0,
     nextURL: null,
     previousURL: null,
     errorMessage: null,
@@ -129,8 +128,8 @@ export default class SearchBox extends Component {
   }
 
   onSearchResults = (data) => {
-    var { count, results, next, previous, errorMessage } = data;
-    this.setState({count, results, nextURL: next, previousURL: previous, errorMessage});
+    var { results, next, previous, errorMessage } = data;
+    this.setState({results, nextURL: next, previousURL: previous, errorMessage});
     this.refs.searchForm.collapse();
   }
 

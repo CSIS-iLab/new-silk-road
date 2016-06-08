@@ -3,7 +3,6 @@ import SearchActions from '../actions/SearchActions';
 
 class SearchStore {
   constructor() {
-    this.count = 0;
     this.results = [];
     this.next = null;
     this.previous = null;
@@ -23,7 +22,6 @@ class SearchStore {
 
   handleSearchResults(data) {
     this.results = data.results;
-    this.count = data.count;
     this.next = data.next;
     this.previous = data.previous;
     this.errorMessage = null;
