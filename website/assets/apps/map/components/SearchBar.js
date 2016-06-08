@@ -20,11 +20,11 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <div className="searchbar">
+      <div className="searchBar">
         <label for={this.props.name}>
         {this.props.label}:
         </label>
-        <Input type="search"
+        <Input
         ref="searchTextInput"
         inputText={this.props.inputText}
         onUserInput={this.handleUserInput}

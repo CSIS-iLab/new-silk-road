@@ -20,6 +20,7 @@ const searchBoxStyle = {
   position: 'absolute',
   display: 'flex',
   flexDirection: 'column',
+  fontSize: 16,
   top: 0,
   left: 0,
   '.section-row': {
@@ -74,6 +75,14 @@ const searchBoxStyle = {
   '.buttonBar > button': {
     flex: '0.4 1 auto',
     order: 0
+  },
+  '.searchBar': {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'space-between'
+  },
+  '.searchBar > input, .searchBar > button, .searchBar > label': {
+    flex: '1 0 auto'
   }
 }
 
