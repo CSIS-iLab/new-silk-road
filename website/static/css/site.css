@@ -564,13 +564,19 @@ body > footer {
   body > footer .logo {
     position: static;
     max-width: 100%; }
+    @media screen and (min-width: 400px) {
+      body > footer .logo {
+        position: absolute;
+        top: 138px;
+        right: 14px;
+        width: 60%;
+        max-width: 306px; } }
     @media screen and (min-width: 768px) {
       body > footer .logo {
         position: absolute;
         top: 138px;
         right: 60px;
-        margin: 20px auto 0;
-        max-width: 306px; } }
+        margin: 20px auto 0; } }
 
 article > section {
   margin-bottom: 50px; }

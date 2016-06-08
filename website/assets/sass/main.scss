@@ -205,10 +205,14 @@ body > footer {
     .logo {
         @include position(static);
         max-width: 100%;
+        @include media($small-break) {
+            @include position(absolute, 138px $small-spacing null null);
+            width: 60%;
+            max-width: 306px;
+        }
         @include media($medium-break) {
             @include position(absolute, 138px 60px null null);
             margin: $medium-spacing auto 0;
-            max-width: 306px;
         }
     }
 }

@@ -6,6 +6,8 @@ import uuid
 
 
 class GeometryRecord(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     label = models.CharField(max_length=400)
     attributes = JSONField(blank=True, default=dict)
     geom = None
