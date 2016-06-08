@@ -80,7 +80,7 @@ class GeoUploadView(LoginRequiredMixin, FormView):
             self.success_url = reverse('admin:locations_geometrystore_change', args=(geo.id,))
             return super(GeoUploadView, self).form_valid(form)
         except Exception as e:
-            err_msg = "Unable to create geodata from uploaded file!"
             logger.error(e)
-            logger.error(err_msg)
-            return HttpResponseServerError(err_msg)
+            err_msg = "Unable to create geodata from uploaded file!"
+            error_response = '<h1>{}</h1><p>{}</p>'.format(err_msg, str(e))
+            return HttpResponseServerError(error_response)
