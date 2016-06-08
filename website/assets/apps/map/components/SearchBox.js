@@ -135,7 +135,8 @@ export default class SearchBox extends Component {
   }
 
   render() {
-    searchBoxStyle.maxHeight = this.props.maxHeight;
+    // searchBoxStyle.maxHeight = this.props.maxHeight;
+    searchBoxStyle['.resultsView'] = {height: this.props.maxHeight - 76};
     return (
       <div className="searchBox">
         <div className="searchWidget">

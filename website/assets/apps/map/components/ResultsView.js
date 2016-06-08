@@ -20,15 +20,15 @@ const resultsViewStyle = {
   flex: '1 1 auto',
   order: 0,
   '.resultsNav button': {
-    width: 80,
+    minWidth: 80,
     display: 'block',
-    flex: '0.475 0 auto',
+    flex: '0 0 auto',
     order: 0
   },
   '.scrollWrap': {
-    maxHeight: '100%',
+    maxHeight: '93%',
     overflowX: 'hidden',
-    overflowY: 'auto',
+    overflowY: 'scroll',
   },
   '.scrollContent': {
     padding: '4px 3px'
