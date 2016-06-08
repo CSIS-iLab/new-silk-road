@@ -51,6 +51,11 @@ class ResultsView extends Component {
     onPreviousClick: null
   }
 
+  componentWillUpdate() {
+    console.log("ResultsView componentWillUpdate");
+    this.refs.scrollWrap.scrollTop = 0;
+  }
+
   handleNextClick = (e) => {
     if (this.props.onNextClick) {
       this.props.onNextClick(e);
@@ -81,7 +86,7 @@ class ResultsView extends Component {
             value={this.props.nextURL}
           >Next</Button>
         </div>
-        <div className="scrollWrap">
+        <div className="scrollWrap" ref="scrollWrap">
           <div className="scrollContent">
             <ResultsList results={this.props.results} />
           </div>
