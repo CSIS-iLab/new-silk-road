@@ -283,7 +283,7 @@ MAINTENANCE_IGNORE_URLS = (
 
 # Rest API
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.StandardLimitPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.ApiPagination',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
