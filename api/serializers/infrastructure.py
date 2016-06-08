@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from infrastructure.models import Project, ProjectFunding, Initiative, InfrastructureType
 from api.serializers.facts import OrganizationBasicSerializer
+from api.serializers.locations import GeometryStoreCentroidSerializer
 from api.fields import DynamicFieldsMixin
 
 
@@ -50,11 +51,7 @@ class ProjectFundingSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     identifier = serializers.UUIDField()
-    geo = serializers.HyperlinkedRelatedField(
-        view_name='api:geometrystore-detail',
-        lookup_field='identifier',
-        read_only=True
-    )
+    geo = GeometryStoreCentroidSerializer(read_only=True)
     infrastructure_type = serializers.StringRelatedField()
     initiatives = InitiativeBasicSerializer(many=True, read_only=True)
     funding = ProjectFundingSerializer(many=True, read_only=True)

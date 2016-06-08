@@ -64,6 +64,7 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = GeometryStore
         geo_field = 'centroid'
+        id_field = 'identifier'
 
     def get_properties(self, instance, fields):
         return {
