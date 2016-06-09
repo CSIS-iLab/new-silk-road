@@ -86,7 +86,7 @@ const searchBoxStyle = {
   }
 }
 
-export default class SearchBox extends Component {
+export default class SearchView extends Component {
   static propTypes = {
     maxHeight: PropTypes.number.isRequired,
   }

@@ -2,7 +2,7 @@ import "babel-polyfill";
 import ReactDOM from "react-dom";
 import React from "react";
 import MapContainer from "./components/MapContainer";
-import SearchBox from "./components/SearchBox";
+import SearchView from "./components/SearchView";
 import Radium, { StyleRoot } from "radium";
 
 
@@ -19,7 +19,7 @@ const containerStyle = {
 ReactDOM.render(
   <StyleRoot style={{height: appHeight}}>
     <MapContainer accessToken={token} containerStyle={containerStyle} mapStyle={mapStyle} />
-    <SearchBox maxHeight={appHeight} />
+    <SearchView maxHeight={appHeight} />
   </StyleRoot>,
   document.getElementById('app')
 );
