@@ -22,6 +22,7 @@ var InfrastructureTypeSource = createApiSource('/api/infrastructure-types/');
 var RegionSource = createApiSource('/api/regions/');
 var StatusSource = createApiSource('/api/project-statuses/');
 var SearchSource = createApiSource('/api/projects/');
+var GeoCentroidSource = createApiSource('/api/geostore-centroids/');
 
 export {
   createApiSource,
@@ -30,5 +31,6 @@ export {
   InfrastructureTypeSource,
   RegionSource,
   StatusSource,
-  SearchSource
+  SearchSource,
+  GeoCentroidSource
 };
