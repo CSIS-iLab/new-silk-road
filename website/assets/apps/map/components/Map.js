@@ -21,8 +21,19 @@ export default class Map extends Component {
   }
 
   addLayer = (layer) => {
-    console.log(`addLayer: ${layer.toString()}`);
     this.map.addLayer(layer);
+  }
+
+  filterLayer = (layerId, filter) => {
+    this.map.setFilter(layerId, filter);
+  }
+
+  hideLayer = (layerId) => {
+    this.map.setLayoutProperty(layerId, 'visibility', 'none');
+  }
+
+  showLayer = (layerId) => {
+    this.map.setLayoutProperty(layerId, 'visibility', 'visible');
   }
 
   componentDidMount() {

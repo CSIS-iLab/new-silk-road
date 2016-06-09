@@ -3,6 +3,7 @@ import Map from './Map';
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoCentroidStore from '../stores/GeoCentroidStore';
 import {GeoJSONSource} from "mapbox-gl/js/mapbox-gl";
+import SearchStore from '../stores/SearchStore';
 
 const centroidsStyle = {
   type: 'symbol',
@@ -15,37 +16,43 @@ const centroidsStyle = {
   }
 }
 
-export default class MapContainer extends Component {
+const centroidsLayerId = 'project-centroids';
 
-  state = {
-    centroids: null,
-    lines: null,
-    points: null,
-    polygons: null
-  }
+export default class MapContainer extends Component {
 
   componentDidMount() {
     GeoCentroidStore.listen(this.onGeoCentroids);
+    SearchStore.listen(this.onSearchResults);
   }
 
   handleMapLoad = () => {
-    console.log('handleMapLoad');
     GeoCentroidActions.fetch();
   }
 
   onGeoCentroids = (data) => {
     this.setState({centroids: data.geo || null});
     if (data.geo) {
-      const centroidsSource = new GeoJSONSource({
-        data: data.geo
-      });
+      const centroidsSource = new GeoJSONSource({ data: data.geo });
       this.refs.map.addSource('project-centroids-src', centroidsSource);
-      let centroidsLayer = Object.assign({
-        id: 'project-centroids',
+      const centroidsLayer = Object.assign({
+        id: centroidsLayerId,
         source: 'project-centroids-src'
       }, centroidsStyle);
-      console.log(centroidsLayer);
       this.refs.map.addLayer(centroidsLayer);
+    }
+  }
+
+  onSearchResults = (data) => {
+    const {results} = data;
+    if (results && results.length > 0) {
+      const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
+                                    .map((element) => element.geo.id);
+      if (geoIdentifiers.length > 0) {
+        this.refs.map.showLayer(centroidsLayerId);
+      }
+      this.refs.map.filterLayer(centroidsLayerId, ['in', 'geostore'].concat(geoIdentifiers));
+    } else {
+      this.refs.map.hideLayer(centroidsLayerId);
     }
   }
 
