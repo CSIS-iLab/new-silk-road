@@ -52,7 +52,6 @@ class ResultsView extends Component {
   }
 
   componentWillUpdate() {
-    console.log("ResultsView componentWillUpdate");
     this.refs.scrollWrap.scrollTop = 0;
   }
 

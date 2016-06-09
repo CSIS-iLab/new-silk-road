@@ -12,8 +12,9 @@ export default class ResultsList extends Component {
     }
   }
 
-  handleMapViewClick = (event) => {
-    console.log(`handleMapViewClick: ${event.target.value}`);
+  handleMapButtonClick = (event) => {
+    // TODO: Event/Action on MapButton click
+    console.log(`handleMapButtonClick: ${event.target.value}`);
   }
 
   render() {
@@ -28,7 +29,7 @@ export default class ResultsList extends Component {
               <p>Type: <strong>{result.infrastructure_type}</strong></p>
               <div className='buttonBar'>
                 <Button type='button'
-                  onClick={this.handleMapViewClick}
+                  onClick={this.handleMapButtonClick}
                   value={geoid || ''}
                   enabled={geoid !== null}
                 >View on Map</Button>
