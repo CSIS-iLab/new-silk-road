@@ -7,7 +7,7 @@ var CountrySelectContainer = createSelectContainer(
   CountryStore, CountryActions,
   'funding__sources__countries__code', 'Country',
   function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.id));
+    return data.results.map((obj) => new Option(obj.name, obj.alpha_3));
   }
 );
 
