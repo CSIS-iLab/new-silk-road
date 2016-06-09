@@ -8,6 +8,7 @@ export default class Map extends Component {
     center: PropTypes.arrayOf(PropTypes.number),
     zoom: PropTypes.number,
     containerStyle: PropTypes.object,
+    onMapLoad: PropTypes.func
   };
 
   static defaultProps = {
@@ -15,23 +16,36 @@ export default class Map extends Component {
     zoom: 3
   }
 
+  addSource = (id, src) => {
+    this.map.addSource(id, src);
+  }
+
+  addLayer = (layer) => {
+    console.log(`addLayer: ${layer.toString()}`);
+    this.map.addLayer(layer);
+  }
+
   componentDidMount() {
     const { accessToken, mapStyle, zoom, center } = this.props;
 
     MapboxGl.accessToken = accessToken;
 
-    const map = new MapboxGl.Map({
+    this.map = new MapboxGl.Map({
       container: this.refs.mapContainer,
       style: mapStyle,
       center,
       zoom
     });
+
+    this.map.on('load', () => {
+      this.props.onMapLoad();
+    });
   }
 
   render() {
-    const { containerStyle, map } = this.props;
+    const { containerStyle } = this.props;
     return (
-      <div className="map" ref="mapContainer" style={containerStyle}>{ map }</div>
+      <div className="map" ref="mapContainer" style={containerStyle}></div>
     );
   }
 }

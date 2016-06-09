@@ -1,13 +1,13 @@
 import "babel-polyfill";
 import ReactDOM from "react-dom";
 import React from "react";
-import Map from "./components/map";
+import MapContainer from "./components/MapContainer";
 import SearchBox from "./components/SearchBox";
 import Radium, { StyleRoot } from "radium";
 
 
 const token = 'pk.eyJ1IjoiaWxhYm1lZGlhIiwiYSI6ImNpbHYycXZ2bTAxajZ1c2tzdWU1b3gydnYifQ.AHxl8pPZsjsqoz95-604nw';
-const mapStyle = 'mapbox://styles/ilabmedia/cimxgcwgq00njp1nhlyb25pw4';
+const mapStyle = 'mapbox://styles/ilabmedia/cinm5o9pu001tbom67ql6snhg';
 
 const appHeight = 600;
 const containerStyle = {
@@ -18,7 +18,7 @@ const containerStyle = {
 
 ReactDOM.render(
   <StyleRoot style={{height: appHeight}}>
-    {/*<Map accessToken={token} containerStyle={containerStyle} mapStyle={mapStyle} />*/}
+    <MapContainer accessToken={token} containerStyle={containerStyle} mapStyle={mapStyle} />
     <SearchBox maxHeight={appHeight} />
   </StyleRoot>,
   document.getElementById('app')
