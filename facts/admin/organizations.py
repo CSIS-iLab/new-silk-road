@@ -85,6 +85,9 @@ class OrganizationType(MPTTModelAdmin):
 
 class OrganizationDetailsAdmin(admin.ModelAdmin):
     list_display = ['__str__']
+    search_fields = (
+        'organization__name',
+    )
 
     class Media:
         css = {
@@ -96,6 +99,9 @@ class CompanyDetailsAdmin(OrganizationDetailsAdmin):
     form = CompanyDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['sector', 'structure', 'org_type']
     list_filter = ('sector', 'org_type')
+    search_fields = OrganizationDetailsAdmin.search_fields + (
+        'structure__name',
+    )
 
 
 class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
@@ -107,6 +113,9 @@ class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
 class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
     form = GovernmentDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['country']
+    search_fields = OrganizationDetailsAdmin.search_fields + (
+        'country__name',
+    )
 
 
 class MilitaryDetailsAdmin(OrganizationDetailsAdmin):
