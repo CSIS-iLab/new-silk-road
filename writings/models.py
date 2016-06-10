@@ -55,9 +55,9 @@ class Entry(Publishable):
     def __str__(self):
         return self.title
 
-    def save(self, **kwargs):
+    def save(self, *args, **kwargs):
         if self.published and not self.published_at:
             self.published_at = timezone.now()
         self.content_rendered = render_markdown(self.content)
         self.teaser_rendered = render_markdown(self.teaser)
-        super(Entry, self).save(**kwargs)
+        super(Entry, self).save(*args, **kwargs)
