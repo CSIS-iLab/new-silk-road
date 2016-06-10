@@ -16,14 +16,14 @@ function createApiActions(Source) {
           .then((json) => {
             this.update(json);
           })
-          .catch((errorMessage) => {
-            this.failed(errorMessage)
+          .catch((error) => {
+            this.failed(error)
           });
       }
     }
 
-    failed(errorMessage) {
-      return errorMessage;
+    failed(error) {
+      return error;
     }
   }
 

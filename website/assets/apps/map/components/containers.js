@@ -10,7 +10,7 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
 
     state = {
       options: [],
-      errorMessage: null
+      error: null
     }
 
     get selectName() { return selectName; }
@@ -24,7 +24,7 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
     onChange = (data) => {
       this.setState({
         options: mapOptions(data),
-        errorMessage: data.errorMessage
+        error: data.error
       });
     }
 

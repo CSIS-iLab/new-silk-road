@@ -4,11 +4,12 @@ import GeoCentroidActions from '../actions/GeoCentroidActions';
 class GeoCentroidStore {
   constructor() {
     this.geo = null;
-    this.errorMessage = null;
+    this.error = null;
 
     this.bindListeners({
       handleFetchCentroids: GeoCentroidActions.FETCH,
-      handleCentroidsUpdate: GeoCentroidActions.UPDATE
+      handleCentroidsUpdate: GeoCentroidActions.UPDATE,
+      handleFailed: GeoCentroidActions.FAILED
     })
   }
 
@@ -18,7 +19,12 @@ class GeoCentroidStore {
 
   handleCentroidsUpdate(data) {
     this.geo = data;
-    this.errorMessage = null;
+    this.error = null;
+  }
+
+  handleFailed(error) {
+    this.geo = null;
+    this.error = error;
   }
 
 }

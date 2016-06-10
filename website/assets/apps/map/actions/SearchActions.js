@@ -4,7 +4,7 @@ import 'whatwg-fetch';
 
 class SearchActions {
 
-  updateSearchResults(data) {
+  update(data) {
     return data;
   }
 
@@ -16,15 +16,15 @@ class SearchActions {
         return response.json();
       })
       .then((json) => {
-        this.updateSearchResults(json);
+        this.update(json);
       })
-      .catch((errorMessage) => {
-        this.searchFailed(errorMessage);
+      .catch((error) => {
+        this.failed(error);
       })
     }
   }
 
-  loadResults(url) {
+  load(url) {
     return (dispatch) => {
       dispatch();
       fetch(url)
@@ -32,16 +32,16 @@ class SearchActions {
         return response.json();
       })
       .then((json) => {
-        this.updateSearchResults(json);
+        this.update(json);
       })
-      .catch((errorMessage) => {
-        this.searchFailed(errorMessage);
+      .catch((error) => {
+        this.failed(error);
       });
     }
   }
 
-  searchFailed(errorMessage) {
-    return errorMessage;
+  failed(error) {
+    return error;
   }
 }
 

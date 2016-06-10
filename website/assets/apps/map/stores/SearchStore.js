@@ -6,11 +6,12 @@ class SearchStore {
     this.results = [];
     this.next = null;
     this.previous = null;
-    this.errorMessage = null;
+    this.error = null;
 
     this.bindListeners({
       handleSearch: SearchActions.SEARCH,
-      handleSearchResults: SearchActions.UPDATE_SEARCH_RESULTS
+      handleSearchResults: SearchActions.UPDATE,
+      handleSearchFail: SearchActions.FAILED
     })
   }
 
@@ -24,7 +25,13 @@ class SearchStore {
     this.results = data.results;
     this.next = data.next;
     this.previous = data.previous;
-    this.errorMessage = null;
+    this.error = null;
+  }
+
+  handleSearchFail(error) {
+    this.results = [];
+    console.log(error);
+    this.error = error;
   }
 
 

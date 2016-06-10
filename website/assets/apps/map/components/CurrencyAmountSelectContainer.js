@@ -12,7 +12,7 @@ export default class CurrencyAmountSelectContainer extends Component {
   state = {
     options: [],
     lookups: {},
-    errorMessage: null
+    error: null
   }
 
   get labelName() { return 'Cost'; }
@@ -26,7 +26,7 @@ export default class CurrencyAmountSelectContainer extends Component {
     this.setState({
       lookups: data.lookups,
       options: Object.keys(data.lookups).map((key) => new Option(key, key)),
-      errorMessage: data.errorMessage
+      error: data.error
     });
   }
 

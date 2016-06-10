@@ -3,7 +3,7 @@ function createApiStore(Actions) {
   class ApiStore {
     constructor() {
       this.results = [];
-      this.errorMessage = null;
+      this.error = null;
 
       this.bindListeners({
         handleFetch: Actions.FETCH,
@@ -14,15 +14,16 @@ function createApiStore(Actions) {
 
     handleUpdate(results) {
       this.results = results;
-      this.errorMessage = null;
+      this.error = null;
     }
 
     handleFetch() {
       this.results = [];
     }
 
-    handleFailed(errorMessage) {
-      this.errorMessage = errorMessage;
+    handleFailed(error) {
+      this.results = [];
+      this.error = error;
     }
   }
   return ApiStore;

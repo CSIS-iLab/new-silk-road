@@ -14,14 +14,14 @@ class CurrencyActions {
       .then((lookups) => {
         this.update(lookups);
       })
-      .catch((errorMessage) => {
-        this.failed(errorMessage);
+      .catch((error) => {
+        this.failed(error);
       })
     }
   }
 
-  failed(errorMessage) {
-    return errorMessage;
+  failed(error) {
+    return error;
   }
 }
 
