@@ -9,6 +9,7 @@ import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContain
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import ResultsView from './ResultsView';
+import ErrorView from './ErrorView';
 import {Select} from "./forms";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
@@ -96,7 +97,7 @@ export default class SearchView extends Component {
     results: [],
     nextURL: null,
     previousURL: null,
-    errorMessage: null,
+    error: null,
     searchEnabled: false
   }
 
@@ -132,21 +133,22 @@ export default class SearchView extends Component {
 
   handleResultsNavClick = (e) => {
     if (e.target.value) {
-      SearchActions.loadResults(e.target.value);
+      SearchActions.load(e.target.value);
     }
   }
 
   onSearchResults = (data) => {
-    var { results, next, previous, errorMessage } = data;
-    this.setState({results, nextURL: next, previousURL: previous, errorMessage});
+    var { results, next, previous, error } = data;
+    this.setState({results, nextURL: next, previousURL: previous, error});
     this.refs.searchForm.collapse();
   }
 
   render() {
     const { maxHeight } = this.props;
-    const { results } = this.state;
+    const { results, nextURL, previousURL, error } = this.state;
     const resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
     searchBoxStyle['.resultsView'] = { height: resultsViewHeight };
+    const errorView = error ? (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
     return (
       <div className="searchBox">
         <div className="searchWidget">
@@ -195,12 +197,13 @@ export default class SearchView extends Component {
           </form>
         </div>
         <ResultsView
-          results={this.state.results}
+          results={results}
           onNextClick={this.handleResultsNavClick}
-          nextURL={this.state.nextURL}
+          nextURL={nextURL}
           onPreviousClick={this.handleResultsNavClick}
-          previousURL={this.state.previousURL}
+          previousURL={previousURL}
         />
+        {errorView}
         <Style
           scopeSelector=".searchBox"
           rules={searchBoxStyle}
