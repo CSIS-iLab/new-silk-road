@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from publish.models import Publishable, Temporal
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
+from markymark.utils import render_markdown
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
 from utilities.validators import URLLikeValidator
 import uuid
@@ -75,6 +76,14 @@ class Project(Publishable):
     """Describes a project"""
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField("Project name/title", max_length=300)
+    alternate_name = models.CharField(
+        blank=True,
+        max_length=100,
+        help_text='Alternate name for project, suitable for display as a header'
+    )
+    description = MarkdownField(blank=True)
+    description_rendered = models.TextField(blank=True, editable=False)
+
     slug = models.SlugField(max_length=310, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
@@ -176,6 +185,10 @@ class Project(Publishable):
 
     class Meta:
         ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        self.description_rendered = render_markdown(self.description)
+        super(Project, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
