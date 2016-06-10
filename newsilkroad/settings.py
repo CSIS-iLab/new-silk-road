@@ -64,6 +64,10 @@ INSTALLED_APPS = [
     'api',
 
     'utilities',
+
+    'taggit',
+    'writings',
+
     'fieldbook_importer',
 ]
 
@@ -278,6 +282,8 @@ SUIT_CONFIG = {
         '-',
         'filer',
         'sources',
+        '-',
+        'writings',
         '-',
         'auth',
     )

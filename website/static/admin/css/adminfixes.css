@@ -1,3 +1,7 @@
 .form-horizontal .inline-related .select2 span {
     display: block;
 }
+
+.filerFile .related-lookup {
+    text-indent: 0%;
+}
