@@ -249,7 +249,7 @@ SUIT_CONFIG = {
         )},
         {'label': 'Upload Geodata', 'url': 'infrastructure-admin:project-geo-upload', },
         '-',
-        'media',
+        'filer',
         'sources',
         '-',
         'auth',
