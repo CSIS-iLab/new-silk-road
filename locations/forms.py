@@ -3,7 +3,10 @@ from django_select2.forms import (
     ModelSelect2Widget,
     ModelSelect2MultipleWidget,
 )
-from locations.models import Country
+from locations.models import (
+    Country,
+    Place
+)
 
 
 class CountrySearchMultiWidget(ModelSelect2MultipleWidget):
@@ -39,3 +42,16 @@ class GeometryStoreUploadForm(forms.Form):
         required=True,
         help_text='Single file that holds geometry, such as GeoJSON or KML'
     )
+
+
+class PlaceSearchWidget(ModelSelect2Widget):
+    model = Place
+    search_fields = [
+        'label__icontains',
+        'city__icontains',
+    ]
+
+
+class PlaceSearchField(forms.ModelMultipleChoiceField):
+    widget = PlaceSearchWidget
+    help_text = "Select field and begin typing a place's label or city"

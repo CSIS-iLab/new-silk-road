@@ -22,6 +22,7 @@ from facts.forms import (
     NGODetailsForm,
     PoliticalDetailsForm,
 )
+from facts.forms import OrganizationForm
 
 
 class ShareholderAdmin(admin.ModelAdmin):
@@ -49,6 +50,13 @@ class PersonShareholderInline(admin.TabularInline):
 
 
 class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
+    form = OrganizationForm
+    filter_horizontal = [
+        'leaders',
+        'initiatives',
+        'related_organizations',
+        'related_events'
+    ]
     save_on_top = True
     select_related = True
     search_fields = (

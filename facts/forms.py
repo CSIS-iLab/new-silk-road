@@ -17,6 +17,8 @@ from facts.models import (
     NGODetails,
     PoliticalDetails,
 )
+from locations.models import (Country, Place)
+from locations.forms import (CountrySearchMultiField, PlaceSearchField)
 
 
 class NameSearchFieldMixin(object):
@@ -57,6 +59,35 @@ class PersonSearchMultiWidget(PersonSearchFieldsMixin, ModelSelect2MultipleWidge
 class PersonSearchMultiField(forms.ModelMultipleChoiceField):
     widget = PersonSearchMultiWidget
     help_text = "Select field and begin typing a person's name to search"
+
+
+class OrganizationForm(forms.ModelForm):
+    countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+    headquarters = PlaceSearchField(
+        required=False,
+        queryset=Place.objects.all(),
+        help_text=PlaceSearchField.help_text
+    )
+
+    class Meta:
+        model = Organization
+        fields = '__all__'
+
+
+class PersonForm(forms.ModelForm):
+    citizenships = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+
+    class Meta:
+        model = Person
+        fields = '__all__'
 
 
 class ShareholderFormBase(forms.ModelForm):
