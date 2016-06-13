@@ -36,6 +36,10 @@ export default class Map extends Component {
     this.map.setLayoutProperty(layerId, 'visibility', 'visible');
   }
 
+  onZoomEnd = (event) => {
+    // console.log('zoomed!');
+  }
+
   componentDidMount() {
     const { accessToken, mapStyle, zoom, center } = this.props;
 
@@ -51,6 +55,17 @@ export default class Map extends Component {
     this.map.on('load', () => {
       this.props.onMapLoad();
     });
+
+    this.map.on('zoomend', (event) => {
+      this.onZoomEnd(event);
+    })
+  }
+
+  componentDidUpdate() {
+    const mapZoom = this.map.getZoom();
+    if (this.props.zoom != mapZoom) {
+      this.map.zoomTo(this.props.zoom);
+    }
   }
 
   render() {

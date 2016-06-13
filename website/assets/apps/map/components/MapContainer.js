@@ -18,7 +18,14 @@ const centroidsStyle = {
 
 const centroidsLayerId = 'project-centroids';
 
+const defaultZoom = 2;
+// const center = [];
+
 export default class MapContainer extends Component {
+
+  state = {
+    zoom: defaultZoom
+  }
 
   componentDidMount() {
     GeoCentroidStore.listen(this.onGeoCentroids);
@@ -45,6 +52,7 @@ export default class MapContainer extends Component {
   onSearchResults = (data) => {
     const {results} = data;
     if (results && results.length > 0) {
+      this.setState({zoom: defaultZoom});
       const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
                                     .map((element) => element.geo.id);
       if (geoIdentifiers.length > 0) {
@@ -59,7 +67,7 @@ export default class MapContainer extends Component {
   render() {
     const mapProps = this.props;
     return (
-      <Map {...mapProps} ref="map" onMapLoad={this.handleMapLoad} />
+      <Map {...mapProps} zoom={this.state.zoom} ref="map" onMapLoad={this.handleMapLoad} />
     )
   }
 }
