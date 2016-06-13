@@ -97,11 +97,15 @@ class OrganizationDetailsAdmin(admin.ModelAdmin):
 
 class CompanyDetailsAdmin(OrganizationDetailsAdmin):
     form = CompanyDetailsForm
-    list_display = OrganizationDetailsAdmin.list_display + ['sector', 'structure', 'org_type']
-    list_filter = ('sector', 'org_type')
+    list_display = OrganizationDetailsAdmin.list_display + ['get_sectors_display', 'structure', 'org_type']
+    list_filter = ('org_type',)
     search_fields = OrganizationDetailsAdmin.search_fields + (
         'structure__name',
     )
+
+    def get_sectors_display(self, obj):
+        return ','.join((str(x) for x in obj.sectors))
+    get_sectors_display.short_description = 'Sectors'
 
 
 class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):

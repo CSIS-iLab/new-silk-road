@@ -3,6 +3,7 @@
 from .organizations import (
     # Organizations
     Organization,
+    CompanySector,
     CompanyDetails, FinancingOrganizationDetails, GovernmentDetails,
     MilitaryDetails, MultilateralDetails, NGODetails, PoliticalDetails,
     # Organization types

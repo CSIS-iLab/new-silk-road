@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from publish.models import Publishable
@@ -130,20 +131,30 @@ class OrganizationDetails(models.Model):
         )
 
 
-class CompanyDetails(OrganizationDetails):
-    """Details of an company"""
-
+class CompanySector(object):
     SECTOR_PRIMARY = 1
     SECTOR_SECONDARY = 2
     SECTOR_TERTIARY = 3
 
-    SECTOR_CHOICES = (
+    CHOICES = (
         (SECTOR_PRIMARY, "Primary (raw materials)"),
         (SECTOR_SECONDARY, "Secondary (manufacturing)"),
         (SECTOR_TERTIARY, "Tertiary (sales and services)"),
     )
+
+    def get_label_for_sector(self, sector_value):
+        return CompanySector.SECTOR_CHOICES[sector_value][1]
+
+
+class CompanyDetails(OrganizationDetails):
+    """Details of an company"""
+
     structure = models.ForeignKey('facts.CompanyStructure', models.SET_NULL, blank=True, null=True)
-    sector = models.PositiveSmallIntegerField(blank=True, null=True, choices=SECTOR_CHOICES)
+    sectors = ArrayField(
+        models.PositiveSmallIntegerField(blank=True, null=True, choices=CompanySector.CHOICES),
+        blank=True,
+        default=list
+    )
     org_type = models.ForeignKey('facts.CompanyType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')

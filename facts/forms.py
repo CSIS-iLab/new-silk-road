@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.postgres.forms import SplitArrayField
 from django_select2.forms import (
     ModelSelect2Widget,
     ModelSelect2MultipleWidget,
@@ -9,6 +10,7 @@ from facts.models import (
     OrganizationShareholder,
     PersonShareholder,
     Organization,
+    CompanySector,
     CompanyDetails,
     FinancingOrganizationDetails,
     GovernmentDetails,
@@ -131,6 +133,17 @@ class OrganizationDetailForm(forms.ModelForm):
 
 
 class CompanyDetailsForm(OrganizationDetailForm):
+    sectors = SplitArrayField(
+        forms.TypedChoiceField(
+            choices=((None, '-----'),) + CompanySector.CHOICES,
+            required=False,
+            empty_value=None,
+            coerce=int
+        ),
+        size=len(CompanySector.CHOICES),
+        remove_trailing_nulls=True
+    )
+
     class Meta:
         model = CompanyDetails
         fields = '__all__'
