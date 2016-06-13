@@ -52,6 +52,6 @@ class PlaceSearchWidget(ModelSelect2Widget):
     ]
 
 
-class PlaceSearchField(forms.ModelMultipleChoiceField):
+class PlaceSearchField(forms.ModelChoiceField):
     widget = PlaceSearchWidget
     help_text = "Select field and begin typing a place's label or city"
