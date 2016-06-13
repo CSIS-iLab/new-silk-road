@@ -102,9 +102,10 @@ class ShareholderFormBase(forms.ModelForm):
 
 class OrganizationShareholderForm(ShareholderFormBase):
     shareholder = forms.ModelChoiceField(
+        label='Organization',
         queryset=Organization.objects.all(),
         widget=NameSearchWidget(model=Organization),
-        required=False
+        required=True
     )
 
     class Meta:
@@ -114,9 +115,10 @@ class OrganizationShareholderForm(ShareholderFormBase):
 
 class PersonShareholderForm(ShareholderFormBase):
     shareholder = forms.ModelChoiceField(
+        label='Person',
         queryset=Person.objects.all(),
         widget=PersonSearchWidget,
-        required=False
+        required=True
     )
 
     class Meta:
