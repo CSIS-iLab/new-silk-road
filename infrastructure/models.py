@@ -76,15 +76,20 @@ class Project(Publishable):
     """Describes a project"""
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField("Project name/title", max_length=300)
+    slug = models.SlugField(max_length=310, allow_unicode=True)
     alternate_name = models.CharField(
         blank=True,
         max_length=100,
         help_text='Alternate name for project, suitable for display as a header'
     )
+    alternate_slug = models.SlugField(
+        blank=True,
+        max_length=110,
+        allow_unicode=True
+    )
     description = MarkdownField(blank=True)
     description_rendered = models.TextField(blank=True, editable=False)
 
-    slug = models.SlugField(max_length=310, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
         'locations.Region',
@@ -197,7 +202,7 @@ class Project(Publishable):
         return reverse(
             'infrastructure:project-detail',
             kwargs={
-                'slug': self.slug,
+                'slug': self.alternate_slug or self.slug,
                 'identifier': str(self.identifier)
             }
         )
