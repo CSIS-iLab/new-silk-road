@@ -27,9 +27,6 @@ class Section extends Component {
   render() {
     let toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
     let styles = {
-      base: {
-        padding: '0 0 2px'
-      },
       sectionBody: {
         base: {
           margin: '4px 0',
@@ -47,7 +44,7 @@ class Section extends Component {
       }
     }
     return (
-      <section className="expandable" style={styles.base}>
+      <section className="expandable">
         <header>
         {this.props.header || ""}
         </header>

@@ -3,24 +3,20 @@
     Map styles
 */
 .mapboxgl-popup {
-        max-width: 400px;
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    max-width: 400px;
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 .marker-title {
     font-weight: 700;
 }
-
 .map-container {
     @include fill-parent;
-
     .mapboxgl-map {
         overflow: visible;
     }
 }
-
 .search-map {
     position: relative;
-
     .search-controls {
         @include position(absolute, 2% 1.5% null null);
         @include size(33% auto);
@@ -29,6 +25,85 @@
             @include fill-parent;
             padding: 8px;
         }
+    }
+}
 
+.popup-content {
+    width: 240px;
+}
+
+.searchBox {
+    max-width: 370px;
+    background-color: #FFF;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    top: 0;
+    left: 0;
+    .section-row {
+        display: block;
+        clear: both;
+        margin-bottom: 4px;
+    }
+    footer {
+        margin-top: 2px;
+        button {
+            display: block;
+            font-size: 12px;
+            width: 100%;
+        }
+    }
+    button {
+        background-color: #eee;
+    }
+    label {
+        display: inline-block;
+        width: 80px;
+        margin-right: 3px;
+        text-align: right;
+    }
+    input {
+        max-width: 214px;
+        margin-right: 2px;
+    }
+    select {
+        max-width: 280px;
+        margin-right: 6px;
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+    button,
+    input,
+    label {
+        display: inline-block;
+    }
+    ul.searchResults {
+        list-style: none;
+        padding: 0 3px;
+        margin: 0;
+    }
+    .searchWidget {
+        flex: 0 0 auto;
+        order: 0;
+    }
+    .buttonBar {
+        display: flex;
+        justify-content: space-between;
+    }
+    .buttonBar > button {
+        flex: 0.4 1 auto;
+        order: 0;
+    }
+    .searchBar {
+        display: flex;
+        flex-direction: row;
+        align-content: space-between;
+        button,
+        input,
+        label {
+            flex: 1 0 auto;
+        }
     }
 }

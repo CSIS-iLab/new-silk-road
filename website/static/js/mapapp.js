@@ -64806,16 +64806,16 @@ var Map = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Map)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.addSource = function (id, src) {
-      _this.map.addSource(id, src);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Map)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this._map = null, _this.addSource = function (id, src) {
+      _this._map.addSource(id, src);
     }, _this.addLayer = function (layer) {
-      _this.map.addLayer(layer);
+      _this._map.addLayer(layer);
     }, _this.filterLayer = function (layerId, filter) {
-      _this.map.setFilter(layerId, filter);
+      _this._map.setFilter(layerId, filter);
     }, _this.hideLayer = function (layerId) {
-      _this.map.setLayoutProperty(layerId, 'visibility', 'none');
+      _this._map.setLayoutProperty(layerId, 'visibility', 'none');
     }, _this.showLayer = function (layerId) {
-      _this.map.setLayoutProperty(layerId, 'visibility', 'visible');
+      _this._map.setLayoutProperty(layerId, 'visibility', 'visible');
     }, _this.onZoomEnd = function (event) {
       // console.log('zoomed!');
     }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -64835,27 +64835,41 @@ var Map = function (_Component) {
 
       _mapboxGl2.default.accessToken = accessToken;
 
-      this.map = new _mapboxGl2.default.Map({
+      this._map = new _mapboxGl2.default.Map({
         container: this.refs.mapContainer,
         style: mapStyle,
         center: center,
         zoom: zoom
       });
 
-      this.map.on('load', function () {
-        _this2.props.onMapLoad();
+      this._map.on('load', function () {
+        if (_this2.props.onMapLoad) {
+          _this2.props.onMapLoad();
+        }
       });
 
-      this.map.on('zoomend', function (event) {
+      this._map.on('click', function (event) {
+        if (_this2.props.onClick) {
+          _this2.props.onClick(event);
+        }
+      });
+
+      this._map.on('mousemove', function (event) {
+        if (_this2.props.onMouseMove) {
+          _this2.props.onMouseMove(event);
+        }
+      });
+
+      this._map.on('zoomend', function (event) {
         _this2.onZoomEnd(event);
       });
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      var mapZoom = this.map.getZoom();
+      var mapZoom = this._map.getZoom();
       if (this.props.zoom != mapZoom) {
-        this.map.zoomTo(this.props.zoom);
+        this._map.zoomTo(this.props.zoom);
       }
     }
   }, {
@@ -64876,7 +64890,9 @@ Map.propTypes = {
   center: _react.PropTypes.arrayOf(_react.PropTypes.number),
   zoom: _react.PropTypes.number,
   containerStyle: _react.PropTypes.object,
-  onMapLoad: _react.PropTypes.func
+  onMapLoad: _react.PropTypes.func,
+  onClick: _react.PropTypes.func,
+  onMouseMove: _react.PropTypes.func
 };
 Map.defaultProps = {
   center: [94.49535790994639, 22.440381130024562],
@@ -64885,7 +64901,7 @@ Map.defaultProps = {
 exports.default = Map;
 
 },{"mapbox-gl/js/mapbox-gl":439,"react":704}],739:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -64895,25 +64911,25 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Map = require('./Map');
+var _Map = require("./Map");
 
 var _Map2 = _interopRequireDefault(_Map);
 
-var _GeoCentroidActions = require('../actions/GeoCentroidActions');
+var _mapboxGl = require("mapbox-gl/js/mapbox-gl");
+
+var _GeoCentroidActions = require("../actions/GeoCentroidActions");
 
 var _GeoCentroidActions2 = _interopRequireDefault(_GeoCentroidActions);
 
-var _GeoCentroidStore = require('../stores/GeoCentroidStore');
+var _GeoCentroidStore = require("../stores/GeoCentroidStore");
 
 var _GeoCentroidStore2 = _interopRequireDefault(_GeoCentroidStore);
 
-var _mapboxGl = require('mapbox-gl/js/mapbox-gl');
-
-var _SearchStore = require('../stores/SearchStore');
+var _SearchStore = require("../stores/SearchStore");
 
 var _SearchStore2 = _interopRequireDefault(_SearchStore);
 
@@ -64956,11 +64972,33 @@ var MapContainer = function (_Component) {
     }
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(MapContainer)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
-      zoom: defaultZoom
+      zoom: defaultZoom,
+      centroids: null,
+      popupLayerId: null,
+      currentPopUp: null
     }, _this.handleMapLoad = function () {
       _GeoCentroidActions2.default.fetch();
+    }, _this.handleMapClick = function (event) {
+      if (_this.state.popupLayerId && event.point) {
+        var features = _this.queryRenderedFeatures(event.point, { layers: [_this.state.popupLayerId] });
+
+        if (!features.length) return;
+
+        var feat = features[0];
+        var popup = new _mapboxGl.Popup();
+
+        popup.setLngLat(feat.geometry.coordinates).setHTML("<div class='popup-content'>\n           <h4>" + feat.properties.label + "</h4>\n           <button value='" + feat.id + "'>Zoom to Detail</button>\n           </div>").addTo(_this.refs.map._map);
+
+        _this.setState({ currentPopUp: popup });
+      }
+    }, _this.queryRenderedFeatures = function (pointOrBox, options) {
+      return _this.refs.map._map.queryRenderedFeatures(pointOrBox, options);
+    }, _this.removeCurrentPopup = function () {
+      if (_this.state.currentPopUp) {
+        _this.state.currentPopUp.remove();
+        _this.setState({ currentPopUp: null });
+      }
     }, _this.onGeoCentroids = function (data) {
-      _this.setState({ centroids: data.geo || null });
       if (data.geo) {
         var centroidsSource = new _mapboxGl.GeoJSONSource({ data: data.geo });
         _this.refs.map.addSource('project-centroids-src', centroidsSource);
@@ -64970,9 +65008,12 @@ var MapContainer = function (_Component) {
         }, centroidsStyle);
         _this.refs.map.addLayer(centroidsLayer);
       }
+      _this.removeCurrentPopup();
+      _this.setState({ centroids: data.geo || null, popupLayerId: centroidsLayerId });
     }, _this.onSearchResults = function (data) {
       var results = data.results;
 
+      _this.removeCurrentPopup();
       if (results && results.length > 0) {
         _this.setState({ zoom: defaultZoom });
         var geoIdentifiers = results.filter(function (element, index) {
@@ -64991,16 +65032,23 @@ var MapContainer = function (_Component) {
   }
 
   _createClass(MapContainer, [{
-    key: 'componentDidMount',
+    key: "componentDidMount",
     value: function componentDidMount() {
       _GeoCentroidStore2.default.listen(this.onGeoCentroids);
       _SearchStore2.default.listen(this.onSearchResults);
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var mapProps = this.props;
-      return _react2.default.createElement(_Map2.default, _extends({}, mapProps, { zoom: this.state.zoom, ref: 'map', onMapLoad: this.handleMapLoad }));
+      var zoom = this.state.zoom;
+
+      return _react2.default.createElement(_Map2.default, _extends({}, mapProps, {
+        zoom: zoom,
+        ref: "map",
+        onMapLoad: this.handleMapLoad,
+        onClick: this.handleMapClick
+      }));
     }
   }]);
 
@@ -65326,14 +65374,20 @@ var resultsViewStyle = {
     display: 'block',
     flex: '0 0 auto',
     order: 0
-  },
-  '.scrollWrap': {
+  }
+};
+
+var scrollWrap = {
+  base: {
     maxHeight: '93%',
     overflowX: 'hidden',
-    overflowY: 'scroll'
+    overflowY: 'scroll',
+    '.scrollContent': {
+      padding: '4px 3px'
+    }
   },
-  '.scrollContent': {
-    padding: '4px 3px'
+  hidden: {
+    display: 'none'
   }
 };
 
@@ -65397,7 +65451,8 @@ var ResultsView = function (_Component) {
         ),
         _react2.default.createElement(
           "div",
-          { className: "scrollWrap", ref: "scrollWrap" },
+          { className: "scrollWrap", ref: "scrollWrap",
+            style: [scrollWrap.base, this.props.results.length === 0 && scrollWrap.hidden] },
           _react2.default.createElement(
             "div",
             { className: "scrollContent" },
@@ -65542,10 +65597,6 @@ var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _radium = require("radium");
-
-var _radium2 = _interopRequireDefault(_radium);
-
 var _Section = require("./Section");
 
 var _Section2 = _interopRequireDefault(_Section);
@@ -65603,78 +65654,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var searchBoxStyle = {
-  maxWidth: 370,
-  backgroundColor: '#FFF',
-  position: 'absolute',
-  display: 'flex',
-  flexDirection: 'column',
-  fontSize: 16,
-  top: 0,
-  left: 0,
-  '.section-row': {
-    display: 'block',
-    clear: 'both',
-    marginBottom: 4
-  },
-  'section > footer > button': {
-    display: 'block',
-    fontSize: 12,
-    width: '100%'
-  },
-  footer: {
-    marginTop: 2
-  },
-  button: {
-    backgroundColor: '#eee'
-  },
-  label: {
-    display: 'inline-block',
-    width: 80,
-    marginRight: 3,
-    textAlign: 'right'
-  },
-  input: {
-    maxWidth: 214,
-    marginRight: 2
-  },
-  select: {
-    maxWidth: 280,
-    marginRight: 6
-  },
-  'select:last-of-type': {
-    marginRight: 0
-  },
-  'label, input, button': {
-    display: 'inline-block'
-  },
-  'ul.searchResults': {
-    listStyle: 'none',
-    padding: '0 3px',
-    margin: 0
-  },
-  '.searchWidget': {
-    flex: '0 0 auto',
-    order: 0
-  },
-  '.buttonBar': {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  '.buttonBar > button': {
-    flex: '0.4 1 auto',
-    order: 0
-  },
-  '.searchBar': {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'space-between'
-  },
-  '.searchBar > input, .searchBar > button, .searchBar > label': {
-    flex: '1 0 auto'
-  }
-};
 
 var SearchView = function (_Component) {
   _inherits(SearchView, _Component);
@@ -65750,7 +65729,6 @@ var SearchView = function (_Component) {
       var error = _state.error;
 
       var resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
-      searchBoxStyle['.resultsView'] = { height: resultsViewHeight };
       var errorView = error ? _react2.default.createElement(_ErrorView2.default, { errorMessage: "Sorry, the application encountered an error." }) : null;
       return _react2.default.createElement(
         "div",
@@ -65780,54 +65758,59 @@ var SearchView = function (_Component) {
                 _react2.default.createElement(_StatusSelectContainer2.default, { onSelect: this.handleQueryUpdate })
               ),
               _react2.default.createElement(
-                _Section2.default,
-                { header: _react2.default.createElement(_SearchBar2.default, { label: "Initiative", name: "initiatives__name__icontains",
-                    onSearchInput: this.handleQueryUpdate,
-                    searchEnabled: this.state.searchEnabled
-                  }) },
+                "div",
+                { className: "section-row" },
                 _react2.default.createElement(
-                  "div",
-                  { className: "section-row" },
-                  _react2.default.createElement(_PrincipalAgentSelectContainer2.default, { onSelect: this.handleQueryUpdate })
-                ),
-                _react2.default.createElement(
-                  "div",
-                  { className: "section-row" },
-                  _react2.default.createElement(_RegionSelectContainer2.default, { onSelect: this.handleQueryUpdate })
+                  _Section2.default,
+                  { header: _react2.default.createElement(_SearchBar2.default, { label: "Initiative", name: "initiatives__name__icontains",
+                      onSearchInput: this.handleQueryUpdate,
+                      searchEnabled: this.state.searchEnabled
+                    }) },
+                  _react2.default.createElement(
+                    "div",
+                    { className: "section-row" },
+                    _react2.default.createElement(_PrincipalAgentSelectContainer2.default, { onSelect: this.handleQueryUpdate })
+                  ),
+                  _react2.default.createElement(
+                    "div",
+                    { className: "section-row" },
+                    _react2.default.createElement(_RegionSelectContainer2.default, { onSelect: this.handleQueryUpdate })
+                  )
                 )
               ),
               _react2.default.createElement(
-                _Section2.default,
-                { header: _react2.default.createElement(_SearchBar2.default, { label: "Funder", name: "funding__sources__name__icontains",
-                    onSearchInput: this.handleQueryUpdate,
-                    searchEnabled: this.state.searchEnabled
-                  }) },
+                "div",
+                { className: "section-row" },
                 _react2.default.createElement(
-                  "div",
-                  { className: "section-row" },
-                  _react2.default.createElement(_CurrencyAmountSelectContainer2.default, { onSelect: this.handleQueryUpdate })
-                ),
-                _react2.default.createElement(
-                  "div",
-                  { className: "section-row" },
-                  _react2.default.createElement(_CountrySelectContainer2.default, { onSelect: this.handleQueryUpdate })
+                  _Section2.default,
+                  { header: _react2.default.createElement(_SearchBar2.default, { label: "Funder", name: "funding__sources__name__icontains",
+                      onSearchInput: this.handleQueryUpdate,
+                      searchEnabled: this.state.searchEnabled
+                    }) },
+                  _react2.default.createElement(
+                    "div",
+                    { className: "section-row" },
+                    _react2.default.createElement(_CurrencyAmountSelectContainer2.default, { onSelect: this.handleQueryUpdate })
+                  ),
+                  _react2.default.createElement(
+                    "div",
+                    { className: "section-row" },
+                    _react2.default.createElement(_CountrySelectContainer2.default, { onSelect: this.handleQueryUpdate })
+                  )
                 )
               )
             )
           )
         ),
         _react2.default.createElement(_ResultsView2.default, {
+          style: { height: resultsViewHeight },
           results: results,
           onNextClick: this.handleResultsNavClick,
           nextURL: nextURL,
           onPreviousClick: this.handleResultsNavClick,
           previousURL: previousURL
         }),
-        errorView,
-        _react2.default.createElement(_radium.Style, {
-          scopeSelector: ".searchBox",
-          rules: searchBoxStyle
-        })
+        errorView
       );
     }
   }]);
@@ -65840,7 +65823,7 @@ SearchView.propTypes = {
 };
 exports.default = SearchView;
 
-},{"../actions/SearchActions":729,"../stores/SearchStore":762,"./CountrySelectContainer":734,"./CurrencyAmountSelectContainer":735,"./ErrorView":736,"./InfrastructureTypeSelectContainer":737,"./PrincipalAgentSelectContainer":741,"./RegionSelectContainer":742,"./ResultsView":744,"./SearchBar":745,"./Section":747,"./StatusSelectContainer":748,"./forms":751,"radium":550,"react":704}],747:[function(require,module,exports){
+},{"../actions/SearchActions":729,"../stores/SearchStore":762,"./CountrySelectContainer":734,"./CurrencyAmountSelectContainer":735,"./ErrorView":736,"./InfrastructureTypeSelectContainer":737,"./PrincipalAgentSelectContainer":741,"./RegionSelectContainer":742,"./ResultsView":744,"./SearchBar":745,"./Section":747,"./StatusSelectContainer":748,"./forms":751,"react":704}],747:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -65897,9 +65880,6 @@ var Section = function (_Component) {
     value: function render() {
       var toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
       var styles = {
-        base: {
-          padding: '0 0 2px'
-        },
         sectionBody: {
           base: {
             margin: '4px 0',
@@ -65918,7 +65898,7 @@ var Section = function (_Component) {
       };
       return _react2.default.createElement(
         "section",
-        { className: "expandable", style: styles.base },
+        { className: "expandable" },
         _react2.default.createElement(
           "header",
           null,

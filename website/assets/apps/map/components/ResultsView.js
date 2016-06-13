@@ -25,13 +25,19 @@ const resultsViewStyle = {
     flex: '0 0 auto',
     order: 0
   },
-  '.scrollWrap': {
+}
+
+const scrollWrap = {
+  base: {
     maxHeight: '93%',
     overflowX: 'hidden',
     overflowY: 'scroll',
+    '.scrollContent': {
+      padding: '4px 3px'
+    }
   },
-  '.scrollContent': {
-    padding: '4px 3px'
+  hidden: {
+    display: 'none'
   }
 }
 
@@ -85,7 +91,11 @@ class ResultsView extends Component {
             value={this.props.nextURL}
           >Next</Button>
         </div>
-        <div className="scrollWrap" ref="scrollWrap">
+        <div className="scrollWrap" ref="scrollWrap"
+        style={[
+          scrollWrap.base,
+          this.props.results.length === 0 && scrollWrap.hidden
+        ]}>
           <div className="scrollContent">
             <ResultsList results={this.props.results} />
           </div>

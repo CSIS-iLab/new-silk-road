@@ -402,6 +402,69 @@ html {
       width: 100%;
       padding: 8px; }
 
+.popup-content {
+  width: 240px; }
+
+.searchBox {
+  max-width: 370px;
+  background-color: #FFF;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  top: 0;
+  left: 0; }
+  .searchBox .section-row {
+    display: block;
+    clear: both;
+    margin-bottom: 4px; }
+  .searchBox footer {
+    margin-top: 2px; }
+    .searchBox footer button {
+      display: block;
+      font-size: 12px;
+      width: 100%; }
+  .searchBox button {
+    background-color: #eee; }
+  .searchBox label {
+    display: inline-block;
+    width: 80px;
+    margin-right: 3px;
+    text-align: right; }
+  .searchBox input {
+    max-width: 214px;
+    margin-right: 2px; }
+  .searchBox select {
+    max-width: 280px;
+    margin-right: 6px; }
+    .searchBox select:last-of-type {
+      margin-right: 0; }
+  .searchBox button,
+  .searchBox input,
+  .searchBox label {
+    display: inline-block; }
+  .searchBox ul.searchResults {
+    list-style: none;
+    padding: 0 3px;
+    margin: 0; }
+  .searchBox .searchWidget {
+    flex: 0 0 auto;
+    order: 0; }
+  .searchBox .buttonBar {
+    display: flex;
+    justify-content: space-between; }
+  .searchBox .buttonBar > button {
+    flex: 0.4 1 auto;
+    order: 0; }
+  .searchBox .searchBar {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between; }
+    .searchBox .searchBar button,
+    .searchBox .searchBar input,
+    .searchBox .searchBar label {
+      flex: 1 0 auto; }
+
 html {
   font-size: 18px; }
 
@@ -717,3 +780,66 @@ html {
     .search-map .search-controls input {
       width: 100%;
       padding: 8px; }
+
+.popup-content {
+  width: 240px; }
+
+.searchBox {
+  max-width: 370px;
+  background-color: #FFF;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  top: 0;
+  left: 0; }
+  .searchBox .section-row {
+    display: block;
+    clear: both;
+    margin-bottom: 4px; }
+  .searchBox footer {
+    margin-top: 2px; }
+    .searchBox footer button {
+      display: block;
+      font-size: 12px;
+      width: 100%; }
+  .searchBox button {
+    background-color: #eee; }
+  .searchBox label {
+    display: inline-block;
+    width: 80px;
+    margin-right: 3px;
+    text-align: right; }
+  .searchBox input {
+    max-width: 214px;
+    margin-right: 2px; }
+  .searchBox select {
+    max-width: 280px;
+    margin-right: 6px; }
+    .searchBox select:last-of-type {
+      margin-right: 0; }
+  .searchBox button,
+  .searchBox input,
+  .searchBox label {
+    display: inline-block; }
+  .searchBox ul.searchResults {
+    list-style: none;
+    padding: 0 3px;
+    margin: 0; }
+  .searchBox .searchWidget {
+    flex: 0 0 auto;
+    order: 0; }
+  .searchBox .buttonBar {
+    display: flex;
+    justify-content: space-between; }
+  .searchBox .buttonBar > button {
+    flex: 0.4 1 auto;
+    order: 0; }
+  .searchBox .searchBar {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between; }
+    .searchBox .searchBar button,
+    .searchBox .searchBar input,
+    .searchBox .searchBar label {
+      flex: 1 0 auto; }

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import Radium, { Style } from "radium";
 import Section from "./Section";
 import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
@@ -14,78 +13,6 @@ import {Select} from "./forms";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
-
-const searchBoxStyle = {
-  maxWidth: 370,
-  backgroundColor: '#FFF',
-  position: 'absolute',
-  display: 'flex',
-  flexDirection: 'column',
-  fontSize: 16,
-  top: 0,
-  left: 0,
-  '.section-row': {
-    display: 'block',
-    clear: 'both',
-    marginBottom: 4
-  },
-  'section > footer > button': {
-    display: 'block',
-    fontSize: 12,
-    width: '100%'
-  },
-  footer: {
-    marginTop: 2
-  },
-  button: {
-    backgroundColor: '#eee'
-  },
-  label: {
-    display: 'inline-block',
-    width: 80,
-    marginRight: 3,
-    textAlign: 'right'
-  },
-  input: {
-    maxWidth: 214,
-    marginRight: 2
-  },
-  select: {
-    maxWidth: 280,
-    marginRight: 6,
-  },
-  'select:last-of-type': {
-    marginRight: 0
-  },
-  'label, input, button': {
-    display: 'inline-block'
-  },
-  'ul.searchResults': {
-    listStyle: 'none',
-    padding: '0 3px',
-    margin: 0
-  },
-  '.searchWidget': {
-    flex: '0 0 auto',
-    order: 0,
-  },
-  '.buttonBar': {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  '.buttonBar > button': {
-    flex: '0.4 1 auto',
-    order: 0
-  },
-  '.searchBar': {
-    display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'space-between'
-  },
-  '.searchBar > input, .searchBar > button, .searchBar > label': {
-    flex: '1 0 auto'
-  }
-}
 
 export default class SearchView extends Component {
   static propTypes = {
@@ -147,7 +74,6 @@ export default class SearchView extends Component {
     const { maxHeight } = this.props;
     const { results, nextURL, previousURL, error } = this.state;
     const resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
-    searchBoxStyle['.resultsView'] = { height: resultsViewHeight };
     const errorView = error ? (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
     return (
       <div className="searchBox">
@@ -167,36 +93,41 @@ export default class SearchView extends Component {
             <div className="section-row">
               <StatusSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
+            <div className="section-row">
             <Section header={
               <SearchBar label="Initiative" name="initiatives__name__icontains"
               onSearchInput={this.handleQueryUpdate}
               searchEnabled={this.state.searchEnabled}
               />
             }>
-            <div className="section-row">
-              <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="section-row">
-              <RegionSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
+              <div className="section-row">
+                <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
+              </div>
+              <div className="section-row">
+                <RegionSelectContainer onSelect={this.handleQueryUpdate} />
+              </div>
             </Section>
-            <Section header={
-              <SearchBar label="Funder" name="funding__sources__name__icontains"
-              onSearchInput={this.handleQueryUpdate}
-              searchEnabled={this.state.searchEnabled}
-              />
-            }>
+            </div>
             <div className="section-row">
+              <Section header={
+                <SearchBar label="Funder" name="funding__sources__name__icontains"
+                onSearchInput={this.handleQueryUpdate}
+                searchEnabled={this.state.searchEnabled}
+                />
+              }>
+              <div className="section-row">
               <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="section-row">
+              </div>
+              <div className="section-row">
               <CountrySelectContainer onSelect={this.handleQueryUpdate} />
+              </div>
+              </Section>
             </div>
-            </Section>
           </Section>
           </form>
         </div>
         <ResultsView
+          style={{height: resultsViewHeight}}
           results={results}
           onNextClick={this.handleResultsNavClick}
           nextURL={nextURL}
@@ -204,10 +135,6 @@ export default class SearchView extends Component {
           previousURL={previousURL}
         />
         {errorView}
-        <Style
-          scopeSelector=".searchBox"
-          rules={searchBoxStyle}
-        />
       </div>
     );
   }
