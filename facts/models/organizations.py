@@ -162,7 +162,6 @@ class CompanyDetails(OrganizationDetails):
                                  verbose_name='type')
 
     def get_sector_list_display(self):
-        # print(self.sectors)
         return ','.join((CompanySector.get_label_for_sector(x) for x in self.sectors if x))
 
     class Meta:
