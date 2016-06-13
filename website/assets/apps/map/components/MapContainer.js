@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Map from './Map';
+import {Popup} from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoCentroidStore from '../stores/GeoCentroidStore';
 import {GeoJSONSource} from "mapbox-gl/js/mapbox-gl";
@@ -24,7 +25,10 @@ const defaultZoom = 2;
 export default class MapContainer extends Component {
 
   state = {
-    zoom: defaultZoom
+    zoom: defaultZoom,
+    centroids: null,
+    popupLayerId: null,
+    currentPopUp: null
   }
 
   componentDidMount() {
@@ -36,8 +40,38 @@ export default class MapContainer extends Component {
     GeoCentroidActions.fetch();
   }
 
+  handleMapClick = (event) => {
+    if (this.state.popupLayerId && event.point) {
+      const features = this.queryRenderedFeatures(event.point, {layers: [this.state.popupLayerId]});
+
+      if(!features.length) return;
+
+      const feat = features[0];
+      const popup = new Popup();
+
+      popup.setLngLat(feat.geometry.coordinates)
+           .setHTML(`<div class='popup-content'>
+           <h4>${feat.properties.label}</h4>
+           <button value='${feat.id}'>Zoom to Detail</button>
+           </div>`)
+           .addTo(this.refs.map._map);
+
+      this.setState({currentPopUp: popup});
+    }
+  }
+
+  queryRenderedFeatures = (pointOrBox, options) => {
+    return this.refs.map._map.queryRenderedFeatures(pointOrBox, options)
+  }
+
+  removeCurrentPopup = () => {
+    if (this.state.currentPopUp) {
+      this.state.currentPopUp.remove();
+      this.setState({currentPopUp: null});
+    }
+  }
+
   onGeoCentroids = (data) => {
-    this.setState({centroids: data.geo || null});
     if (data.geo) {
       const centroidsSource = new GeoJSONSource({ data: data.geo });
       this.refs.map.addSource('project-centroids-src', centroidsSource);
@@ -47,10 +81,13 @@ export default class MapContainer extends Component {
       }, centroidsStyle);
       this.refs.map.addLayer(centroidsLayer);
     }
+    this.removeCurrentPopup()
+    this.setState({ centroids: data.geo || null, popupLayerId: centroidsLayerId });
   }
 
   onSearchResults = (data) => {
     const {results} = data;
+    this.removeCurrentPopup()
     if (results && results.length > 0) {
       this.setState({zoom: defaultZoom});
       const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
@@ -66,8 +103,14 @@ export default class MapContainer extends Component {
 
   render() {
     const mapProps = this.props;
+    const {zoom} = this.state;
     return (
-      <Map {...mapProps} zoom={this.state.zoom} ref="map" onMapLoad={this.handleMapLoad} />
+      <Map {...mapProps}
+        zoom={zoom}
+        ref="map"
+        onMapLoad={this.handleMapLoad}
+        onClick={this.handleMapClick}
+      />
     )
   }
 }

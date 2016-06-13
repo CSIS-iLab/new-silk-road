@@ -8,7 +8,9 @@ export default class Map extends Component {
     center: PropTypes.arrayOf(PropTypes.number),
     zoom: PropTypes.number,
     containerStyle: PropTypes.object,
-    onMapLoad: PropTypes.func
+    onMapLoad: PropTypes.func,
+    onClick: PropTypes.func,
+    onMouseMove: PropTypes.func,
   };
 
   static defaultProps = {
@@ -16,24 +18,26 @@ export default class Map extends Component {
     zoom: 3
   }
 
+  _map = null;
+
   addSource = (id, src) => {
-    this.map.addSource(id, src);
+    this._map.addSource(id, src);
   }
 
   addLayer = (layer) => {
-    this.map.addLayer(layer);
+    this._map.addLayer(layer);
   }
 
   filterLayer = (layerId, filter) => {
-    this.map.setFilter(layerId, filter);
+    this._map.setFilter(layerId, filter);
   }
 
   hideLayer = (layerId) => {
-    this.map.setLayoutProperty(layerId, 'visibility', 'none');
+    this._map.setLayoutProperty(layerId, 'visibility', 'none');
   }
 
   showLayer = (layerId) => {
-    this.map.setLayoutProperty(layerId, 'visibility', 'visible');
+    this._map.setLayoutProperty(layerId, 'visibility', 'visible');
   }
 
   onZoomEnd = (event) => {
@@ -45,26 +49,41 @@ export default class Map extends Component {
 
     MapboxGl.accessToken = accessToken;
 
-    this.map = new MapboxGl.Map({
+    this._map = new MapboxGl.Map({
       container: this.refs.mapContainer,
       style: mapStyle,
       center,
       zoom
     });
 
-    this.map.on('load', () => {
-      this.props.onMapLoad();
+    this._map.on('load', () => {
+      if (this.props.onMapLoad) {
+        this.props.onMapLoad();
+      }
     });
 
-    this.map.on('zoomend', (event) => {
+    this._map.on('click', (event) => {
+      if(this.props.onClick) {
+        this.props.onClick(event);
+      }
+    });
+
+    this._map.on('mousemove', (event) => {
+      if (this.props.onMouseMove) {
+        this.props.onMouseMove(event);
+      }
+    });
+
+    this._map.on('zoomend', (event) => {
       this.onZoomEnd(event);
-    })
+    });
+
   }
 
   componentDidUpdate() {
-    const mapZoom = this.map.getZoom();
+    const mapZoom = this._map.getZoom();
     if (this.props.zoom != mapZoom) {
-      this.map.zoomTo(this.props.zoom);
+      this._map.zoomTo(this.props.zoom);
     }
   }
 
