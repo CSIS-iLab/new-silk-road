@@ -142,8 +142,10 @@ class CompanySector(object):
         (SECTOR_TERTIARY, "Tertiary (sales and services)"),
     )
 
-    def get_label_for_sector(self, sector_value):
-        return CompanySector.SECTOR_CHOICES[sector_value][1]
+    @classmethod
+    def get_label_for_sector(cls, value):
+        print("Value", value)
+        return dict(CompanySector.CHOICES).get(value, "")
 
 
 class CompanyDetails(OrganizationDetails):
@@ -158,6 +160,10 @@ class CompanyDetails(OrganizationDetails):
     org_type = models.ForeignKey('facts.CompanyType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
+
+    def get_sector_list_display(self):
+        # print(self.sectors)
+        return ','.join((CompanySector.get_label_for_sector(x) for x in self.sectors if x))
 
     class Meta:
         verbose_name_plural = "company details"

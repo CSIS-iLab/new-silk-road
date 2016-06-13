@@ -1,6 +1,7 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 from facts.models import (
+    CompanySector,
     # shareholders
     FinancingOrganizationDetails,
 )
@@ -23,6 +24,18 @@ from facts.forms import (
     PoliticalDetailsForm,
 )
 from facts.forms import OrganizationForm
+
+
+class CompanySectorListFilter(admin.SimpleListFilter):
+    title = 'sector'
+    parameter_name = 'sector'
+
+    def lookups(self, request, model_admin):
+        return CompanySector.CHOICES
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(sectors__contains=[int(self.value())])
 
 
 class ShareholderAdmin(admin.ModelAdmin):
@@ -98,13 +111,13 @@ class OrganizationDetailsAdmin(admin.ModelAdmin):
 class CompanyDetailsAdmin(OrganizationDetailsAdmin):
     form = CompanyDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['get_sectors_display', 'structure', 'org_type']
-    list_filter = ('org_type',)
+    list_filter = ('org_type', CompanySectorListFilter)
     search_fields = OrganizationDetailsAdmin.search_fields + (
         'structure__name',
     )
 
     def get_sectors_display(self, obj):
-        return ','.join((str(x) for x in obj.sectors))
+        return obj.get_sector_list_display()
     get_sectors_display.short_description = 'Sectors'
 
 
