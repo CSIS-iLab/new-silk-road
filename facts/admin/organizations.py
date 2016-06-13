@@ -22,6 +22,7 @@ from facts.forms import (
     NGODetailsForm,
     PoliticalDetailsForm,
 )
+from facts.forms import OrganizationForm
 
 
 class ShareholderAdmin(admin.ModelAdmin):
@@ -49,6 +50,13 @@ class PersonShareholderInline(admin.TabularInline):
 
 
 class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
+    form = OrganizationForm
+    filter_horizontal = [
+        'leaders',
+        'initiatives',
+        'related_organizations',
+        'related_events'
+    ]
     save_on_top = True
     select_related = True
     search_fields = (
@@ -77,6 +85,9 @@ class OrganizationType(MPTTModelAdmin):
 
 class OrganizationDetailsAdmin(admin.ModelAdmin):
     list_display = ['__str__']
+    search_fields = (
+        'organization__name',
+    )
 
     class Media:
         css = {
@@ -88,6 +99,9 @@ class CompanyDetailsAdmin(OrganizationDetailsAdmin):
     form = CompanyDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['sector', 'structure', 'org_type']
     list_filter = ('sector', 'org_type')
+    search_fields = OrganizationDetailsAdmin.search_fields + (
+        'structure__name',
+    )
 
 
 class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
@@ -99,6 +113,9 @@ class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
 class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):
     form = GovernmentDetailsForm
     list_display = OrganizationDetailsAdmin.list_display + ['country']
+    search_fields = OrganizationDetailsAdmin.search_fields + (
+        'country__name',
+    )
 
 
 class MilitaryDetailsAdmin(OrganizationDetailsAdmin):

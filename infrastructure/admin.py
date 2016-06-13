@@ -90,7 +90,10 @@ class HasGeoListFilter(admin.SimpleListFilter):
 class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     save_on_top = True
     form = ProjectForm
-    prepopulated_fields = {"slug": ("name",)}
+    prepopulated_fields = {
+        "slug": ("name",),
+        "alternate_slug": ("alternate_name",)
+    }
     list_display = (
         'id',
         'fieldbook_id',

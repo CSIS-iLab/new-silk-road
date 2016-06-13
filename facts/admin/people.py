@@ -1,18 +1,15 @@
 from django.contrib import admin
-from django import forms
 from django.db import models
 
-from facts.models.people import (Person, Position)
+from facts.models.people import (Position)
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
 from infrastructure.admin import PersonInitiativeInline
-from locations.models import Country
-from locations.forms import CountrySearchMultiField
 from publish.admin import (
     make_published,
     make_not_published
 )
-from facts.forms import NameSearchWidget
+from facts.forms import (NameSearchWidget, PersonForm)
 
 
 class PositionInline(admin.TabularInline):
@@ -25,18 +22,6 @@ class PositionInline(admin.TabularInline):
         css = {
             "all": ("admin/css/adminfixes.css",)
         }
-
-
-class PersonForm(forms.ModelForm):
-    citizenships = CountrySearchMultiField(
-        required=False,
-        queryset=Country.objects.all(),
-        help_text=CountrySearchMultiField.help_text
-    )
-
-    class Meta:
-        model = Person
-        fields = '__all__'
 
 
 class PersonAdmin(admin.ModelAdmin):
