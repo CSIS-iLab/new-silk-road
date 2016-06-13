@@ -1,6 +1,6 @@
-from rest_framework.pagination import CursorPagination
+from rest_framework.pagination import LimitOffsetPagination
 
 
-class ApiPagination(CursorPagination):
-    ordering = 'created_at'
-    page_size = 50
+class ApiPagination(LimitOffsetPagination):
+    default_limit = 50
+    max_limit = 200
