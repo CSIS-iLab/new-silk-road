@@ -3,8 +3,10 @@ import Map from './Map';
 import {Popup} from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoCentroidStore from '../stores/GeoCentroidStore';
-import {GeoJSONSource} from "mapbox-gl/js/mapbox-gl";
 import SearchStore from '../stores/SearchStore';
+import GeoStoreActions from '../actions/GeoStoreActions';
+import GeoStore from '../stores/GeoStore';
+import MapActions from '../actions/MapActions';
 
 const centroidsStyle = {
   type: 'symbol',
@@ -28,12 +30,14 @@ export default class MapContainer extends Component {
     zoom: defaultZoom,
     centroids: null,
     popupLayerId: null,
-    currentPopUp: null
+    currentPopUp: null,
+    currentGeoStoreId: null
   }
 
   componentDidMount() {
     GeoCentroidStore.listen(this.onGeoCentroids);
     SearchStore.listen(this.onSearchResults);
+    GeoStore.listen(this.onGeoStoreUpdate);
   }
 
   handleMapLoad = () => {
@@ -73,13 +77,16 @@ export default class MapContainer extends Component {
 
   onGeoCentroids = (data) => {
     if (data.geo) {
-      const centroidsSource = new GeoJSONSource({ data: data.geo });
-      this.refs.map.addSource('project-centroids-src', centroidsSource);
-      const centroidsLayer = Object.assign({
-        id: centroidsLayerId,
-        source: 'project-centroids-src'
-      }, centroidsStyle);
-      this.refs.map.addLayer(centroidsLayer);
+      const config = {
+        sourceId: 'project-centroids-src',
+        layerId: centroidsLayerId,
+        style: centroidsStyle,
+        type: 'symbol'
+      };
+      const source = MapActions.createGeoJSONSource({data: data.geo})
+      const layer = MapActions.createLayer(config);
+      this.refs.map.addSource(layer.source, source);
+      this.refs.map.addLayer(layer);
     }
     this.removeCurrentPopup()
     this.setState({ centroids: data.geo || null, popupLayerId: centroidsLayerId });
@@ -98,6 +105,19 @@ export default class MapContainer extends Component {
       this.refs.map.filterLayer(centroidsLayerId, ['in', 'geostore'].concat(geoIdentifiers));
     } else {
       this.refs.map.hideLayer(centroidsLayerId);
+    }
+  }
+
+  onGeoStoreUpdate = (data) => {
+    console.log("onGeoStoreUpdate");
+    console.log(data);
+    if (data.geoStoreId !== this.state.currentGeoStoreId) {
+      console.log("onGeoStoreUpdate -> currentGeoStoreId");
+      this.setState({currentGeoStoreId: data.geoStoreId});
+      GeoStoreActions.getGeoStore.defer(data.geoStoreId);
+    }
+    if (data.geoStore) {
+      console.log("onGeoStoreUpdate -> Do something with data.geoStore");
     }
   }
 
