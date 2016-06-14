@@ -52,10 +52,14 @@ class GeometryStoreSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     lines = LineStringGeometrySerializer(many=True, read_only=True)
     points = PointGeometrySerializer(many=True, read_only=True)
     polygons = PolygonGeometrySerializer(many=True, read_only=True)
+    extent = serializers.SerializerMethodField()
+
+    def get_extent(self, obj):
+        return obj.calculate_overall_extent()
 
     class Meta:
         model = GeometryStore
-        fields = ('identifier', 'attributes', 'centroid', 'lines', 'points', 'polygons')
+        fields = ('identifier', 'attributes', 'centroid', 'lines', 'points', 'polygons', 'extent')
         indelible_fields = ('identifier',)
 
 
