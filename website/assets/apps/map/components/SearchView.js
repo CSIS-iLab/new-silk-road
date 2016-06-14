@@ -73,10 +73,11 @@ export default class SearchView extends Component {
   render() {
     const { maxHeight } = this.props;
     const { results, nextURL, previousURL, error } = this.state;
+    const searchViewHeight = results.length > 0 ? maxHeight : 'auto';
     const resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
     const errorView = error ? (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
     return (
-      <div className="searchBox">
+      <div className="searchView" style={{height: searchViewHeight}}>
         <div className="searchWidget">
           <form onSubmit={this.handleSubmit}>
           <Section ref='searchForm' header={

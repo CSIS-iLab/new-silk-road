@@ -29,7 +29,7 @@ const resultsViewStyle = {
 
 const scrollWrap = {
   base: {
-    maxHeight: '93%',
+    maxHeight: '94%',
     overflowX: 'hidden',
     overflowY: 'scroll',
     '.scrollContent': {
@@ -44,6 +44,7 @@ const scrollWrap = {
 
 class ResultsView extends Component {
   static propTypes = {
+    style: PropTypes.object,
     results: PropTypes.array.isRequired,
     previousURL: PropTypes.string,
     nextURL: PropTypes.string,
@@ -51,6 +52,7 @@ class ResultsView extends Component {
     onPreviousClick: PropTypes.func
   }
   static defaultProps = {
+    style: {},
     previousURL: null,
     nextURL: null,
     onNextClick: null,
@@ -75,7 +77,7 @@ class ResultsView extends Component {
 
   render() {
     return (
-      <div className="resultsView">
+      <div className="resultsView" style={this.props.style}>
         <div className="resultsNav" style={[
           resultsNavStyle.base,
           this.props.results.length === 0 && resultsNavStyle.hidden
