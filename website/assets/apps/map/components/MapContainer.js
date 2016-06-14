@@ -8,14 +8,25 @@ import GeoStoreActions from '../actions/GeoStoreActions';
 import GeoStore from '../stores/GeoStore';
 import MapActions from '../actions/MapActions';
 
-const centroidsStyle = {
-  type: 'symbol',
-  layout: {
-    'icon-allow-overlap': true,
-    'icon-image': 'dot'
+const geoStyles = {
+  centroids: {
+    type: 'symbol',
+    layout: {
+      'icon-allow-overlap': true,
+      'icon-image': 'dot'
+    },
+    paint: {
+      'icon-opacity': 1
+    }
   },
-  paint: {
-    'icon-opacity': 1
+  lines: {
+    type: 'line',
+    layout: {
+    },
+    paint: {
+      'line-color': '#be2323',
+      'line-width': 3
+    }
   }
 }
 
@@ -27,7 +38,6 @@ const defaultZoom = 2;
 export default class MapContainer extends Component {
 
   state = {
-    zoom: defaultZoom,
     centroids: null,
     popupLayerId: null,
     currentPopUp: null,
@@ -75,12 +85,16 @@ export default class MapContainer extends Component {
     }
   }
 
+  resetZoom = () => {
+    this.refs.map.resetZoom();
+  }
+
   onGeoCentroids = (data) => {
     if (data.geo) {
       const config = {
         sourceId: 'project-centroids-src',
         layerId: centroidsLayerId,
-        style: centroidsStyle,
+        style: geoStyles.centroids,
         type: 'symbol'
       };
       const source = MapActions.createGeoJSONSource({data: data.geo})
@@ -94,9 +108,9 @@ export default class MapContainer extends Component {
 
   onSearchResults = (data) => {
     const {results} = data;
-    this.removeCurrentPopup()
+    this.removeCurrentPopup();
     if (results && results.length > 0) {
-      this.setState({zoom: defaultZoom});
+      this.resetZoom();
       const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
                                     .map((element) => element.geo.id);
       if (geoIdentifiers.length > 0) {
@@ -118,15 +132,33 @@ export default class MapContainer extends Component {
     }
     if (data.geoStore) {
       console.log("onGeoStoreUpdate -> Do something with data.geoStore");
+      const {identifier} = data.geoStore;
+      this.refs.map.hideLayer(centroidsLayerId);
+      const geoTypes = ['lines'];
+      for (let t of geoTypes) {
+        console.log(`geoTypes t = ${t}`);
+        let layerId = `${identifier}-${t}`;
+        let config = {
+          sourceId: `${layerId}-src`,
+          layerId: layerId,
+          style: geoStyles[t],
+          type: t.slice(0, -1)
+        };
+        let geodata = data.geoStore[t];
+        console.log(geodata);
+        let source = MapActions.createGeoJSONSource({data: geodata})
+        let layer = MapActions.createLayer(config);
+        this.refs.map.addSource(layer.source, source);
+        this.refs.map.addLayer(layer);
+      }
     }
   }
 
   render() {
     const mapProps = this.props;
-    const {zoom} = this.state;
     return (
       <Map {...mapProps}
-        zoom={zoom}
+        initialZoom={defaultZoom}
         ref="map"
         onMapLoad={this.handleMapLoad}
         onClick={this.handleMapClick}

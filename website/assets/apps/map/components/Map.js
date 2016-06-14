@@ -6,7 +6,7 @@ export default class Map extends Component {
     accessToken: PropTypes.string.isRequired,
     mapStyle: PropTypes.string.isRequired,
     center: PropTypes.arrayOf(PropTypes.number),
-    zoom: PropTypes.number,
+    initialZoom: PropTypes.number,
     containerStyle: PropTypes.object,
     onMapLoad: PropTypes.func,
     onClick: PropTypes.func,
@@ -15,7 +15,7 @@ export default class Map extends Component {
 
   static defaultProps = {
     center: [94.49535790994639, 22.440381130024562],
-    zoom: 3
+    initialZoom: 3
   }
 
   _map = null;
@@ -40,12 +40,20 @@ export default class Map extends Component {
     this._map.setLayoutProperty(layerId, 'visibility', 'visible');
   }
 
+  zoomTo = (zoomLevel) => {
+    this._map.zoomTo(zoomLevel);
+  }
+
+  resetZoom = () => {
+    this._map.zoomTo(this.props.initialZoom);
+  }
+
   onZoomEnd = (event) => {
     // console.log('zoomed!');
   }
 
   componentDidMount() {
-    const { accessToken, mapStyle, zoom, center } = this.props;
+    const { accessToken, mapStyle, initialZoom, center } = this.props;
 
     MapboxGl.accessToken = accessToken;
 
@@ -53,7 +61,7 @@ export default class Map extends Component {
       container: this.refs.mapContainer,
       style: mapStyle,
       center,
-      zoom
+      initialZoom
     });
 
     this._map.on('load', () => {
@@ -78,13 +86,6 @@ export default class Map extends Component {
       this.onZoomEnd(event);
     });
 
-  }
-
-  componentDidUpdate() {
-    const mapZoom = this._map.getZoom();
-    if (this.props.zoom != mapZoom) {
-      this._map.zoomTo(this.props.zoom);
-    }
   }
 
   render() {
