@@ -5,6 +5,7 @@ class GeoStore {
   constructor() {
     this.geoStoreId = null;
     this.geoStore = null;
+    this.layers = [];
 
     this.bindListeners({
       handleSelectGeoStoreId: GeoStoreActions.SELECT_GEO_STORE_ID,

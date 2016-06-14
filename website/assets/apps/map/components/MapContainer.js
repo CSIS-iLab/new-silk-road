@@ -150,6 +150,10 @@ export default class MapContainer extends Component {
         let layer = MapActions.createLayer(config);
         this.refs.map.addSource(layer.source, source);
         this.refs.map.addLayer(layer);
+        if (data.geoStore.extent) {
+          console.log(`data.geoStore.extent: ${data.geoStore.extent.toString()}`);
+          this.refs.map._map.fitBounds(data.geoStore.extent, {padding: 15});
+        }
       }
     }
   }
