@@ -8,65 +8,20 @@ import SearchStore from '../stores/SearchStore';
 import GeoStoreActions from '../actions/GeoStoreActions';
 import GeoStore from '../stores/GeoStore';
 import MapActions from '../actions/MapActions';
+import Cartographer, {defaultZoom} from '../helpers/Cartographer';
 
-const geoStyles = {
-  centroids: {
-    type: 'symbol',
-    layout: {
-      'icon-allow-overlap': true,
-      'icon-image': 'dot'
-    },
-    paint: {
-      'icon-opacity': 1
-    }
-  },
-  lines: {
-    type: 'line',
-    layout: {
-    },
-    paint: {
-      'line-color': '#be2323',
-      'line-width': 3
-    }
-  },
-  points: {
-    type: 'symbol',
-    layout: {
-      'icon-allow-overlap': true,
-      'icon-image': 'dot'
-    },
-    paint: {
-      'icon-opacity': 1
-    }
-  },
-  polygons: {
-    type: 'fill',
-    layout: {},
-    paint: {
-      'fill-color': '#be2323'
-    }
-  }
-}
-
-const centroidsLayerId = 'project-centroids';
-
-const defaultZoom = 2;
-const maxFitZoom = 6;
-// const center = [];
 
 export default class MapContainer extends Component {
 
   state = {
-    centroids: null,
-    popupLayerId: null,
-    currentPopUp: null,
     currentGeoStoreId: null
   }
 
   componentDidMount() {
-    GeoCentroidStore.listen(this.onGeoCentroids);
     SearchStore.listen(this.onSearchResults);
     GeoStore.listen(this.onGeoStoreUpdate);
+
+    this.mapCtl = new Cartographer(this.refs.map._map);
   }
 
   handleMapLoad = () => {
@@ -74,70 +29,21 @@ export default class MapContainer extends Component {
   }
 
   handleMapClick = (event) => {
-    if (this.state.popupLayerId && event.point) {
-      const features = this.queryRenderedFeatures(event.point, {layers: [this.state.popupLayerId]});
-
-      if(!features.length) return;
-
-      const feat = features[0];
-      const popup = new Popup();
-
-      popup.setLngLat(feat.geometry.coordinates)
-           .setHTML(`<div class='popup-content'>
-           <h4>${feat.properties.label}</h4>
-           <button value='${feat.id}'>Zoom to Detail</button>
-           </div>`)
-           .addTo(this.refs.map._map);
-
-      this.setState({currentPopUp: popup});
-    }
-  }
-
-  queryRenderedFeatures = (pointOrBox, options) => {
-    return this.refs.map._map.queryRenderedFeatures(pointOrBox, options)
-  }
-
-  removeCurrentPopup = () => {
-    if (this.state.currentPopUp) {
-      this.state.currentPopUp.remove();
-      this.setState({currentPopUp: null});
-    }
-  }
-
-  resetZoom = () => {
-    this.refs.map.resetZoom();
-  }
-
-  onGeoCentroids = (data) => {
-    if (data.geo) {
-      const config = {
-        sourceId: 'project-centroids-src',
-        layerId: centroidsLayerId,
-        style: geoStyles.centroids,
-        type: 'symbol'
-      };
-      const source = MapActions.createGeoJSONSource({data: data.geo})
-      const layer = MapActions.createLayer(config);
-      this.refs.map.addSource(layer.source, source);
-      this.refs.map.addLayer(layer);
-    }
-    this.removeCurrentPopup()
-    this.setState({ centroids: data.geo || null, popupLayerId: centroidsLayerId });
+    this.mapCtl.queryForPopup(event);
   }
 
   onSearchResults = (data) => {
     const {results} = data;
-    this.removeCurrentPopup();
+    this.mapCtl.removePopup();
     if (results && results.length > 0) {
-      this.resetZoom();
+      this.mapCtl.resetMapZoom();
       const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
                                     .map((element) => element.geo.id);
       if (geoIdentifiers.length > 0) {
-        this.refs.map.showLayer(centroidsLayerId);
+        this.mapCtl.showCentroids(geoIdentifiers);
       }
-      this.refs.map.filterLayer(centroidsLayerId, ['in', 'geostore'].concat(geoIdentifiers));
     } else {
-      this.refs.map.hideLayer(centroidsLayerId);
+      this.mapCtl.hideCentroids();
     }
   }
 

@@ -20,38 +20,6 @@ export default class Map extends Component {
 
   _map = null;
 
-  addSource = (id, src) => {
-    this._map.addSource(id, src);
-  }
-
-  addLayer = (layer) => {
-    this._map.addLayer(layer);
-  }
-
-  filterLayer = (layerId, filter) => {
-    this._map.setFilter(layerId, filter);
-  }
-
-  hideLayer = (layerId) => {
-    this._map.setLayoutProperty(layerId, 'visibility', 'none');
-  }
-
-  showLayer = (layerId) => {
-    this._map.setLayoutProperty(layerId, 'visibility', 'visible');
-  }
-
-  zoomTo = (zoomLevel) => {
-    this._map.zoomTo(zoomLevel);
-  }
-
-  resetZoom = () => {
-    this._map.zoomTo(this.props.initialZoom);
-  }
-
-  onZoomEnd = (event) => {
-    // console.log('zoomed!');
-  }
-
   componentDidMount() {
     const { accessToken, mapStyle, initialZoom, center } = this.props;
 
@@ -80,10 +48,6 @@ export default class Map extends Component {
       if (this.props.onMouseMove) {
         this.props.onMouseMove(event);
       }
-    });
-
-    this._map.on('zoomend', (event) => {
-      this.onZoomEnd(event);
     });
 
   }
