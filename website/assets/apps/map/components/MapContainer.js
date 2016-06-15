@@ -30,10 +30,20 @@ const geoStyles = {
     }
   },
   points: {
-    type: 'circle',
+    type: 'symbol',
     layout: {
+      'icon-allow-overlap': true,
+      'icon-image': 'dot'
     },
     paint: {
+      'icon-opacity': 1
+    }
+  },
+  polygons: {
+    type: 'fill',
+    layout: {},
+    paint: {
+      'fill-color': '#be2323'
     }
   }
 }
@@ -41,6 +51,7 @@ const geoStyles = {
 const centroidsLayerId = 'project-centroids';
 
 const defaultZoom = 2;
+const maxFitZoom = 6;
 // const center = [];
 
 export default class MapContainer extends Component {
@@ -143,7 +154,7 @@ export default class MapContainer extends Component {
       this.removeCurrentPopup()
       const {identifier} = data.geoStore;
       this.refs.map.hideLayer(centroidsLayerId);
-      const geoTypes = ['lines', 'points'];
+      const geoTypes = ['lines', 'points', 'polygons'];
       for (let t of geoTypes) {
         console.log(`geoTypes t = ${t}`);
         let geodata = data.geoStore[t];
@@ -176,7 +187,7 @@ export default class MapContainer extends Component {
           const bounds = new MapboxGl.LngLatBounds.convert(data.geoStore.extent);
           console.log(data.geoStore.extent);
           console.log(bounds);
-          this.refs.map._map.fitBounds(bounds, {padding: 15});
+          this.refs.map._map.fitBounds(bounds, {padding: 15, maxZoom: maxFitZoom});
         }
       }
     }
