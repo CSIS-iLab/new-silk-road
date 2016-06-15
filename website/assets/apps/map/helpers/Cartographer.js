@@ -8,7 +8,6 @@ import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
 
 const centroidsLayerId = 'project-centroids';
-const centroidsSourceId = `${centroidsLayerId}-src`;
 
 const geoStyles = {
   centroids: {
@@ -46,33 +45,12 @@ const geoStyles = {
 const defaultZoom = 2;
 const maxFitZoom = 6;
 
-class MapUtils {
-  static createGeoJSONSource(config) {
-    return new GeoJSONSource(config);
-  }
-
-  static createLayer(config) {
-    const {
-      sourceId,
-      layerId,
-      type,
-      style
-    } = config;
-    return Object.assign({
-      id: layerId,
-      type: type,
-      source: sourceId
-    }, style || {});
-  }
-}
-
 export default class Cartographer {
 
   constructor(map) {
     this._map = map;
     this._al = new ActionListeners(alt);
-    this._layerRefs = new Set();
-    this._sourceRefs = new Set();
+    this._manager = new Map();
     this._popup = null;
     this._addListeners();
   }
@@ -86,51 +64,65 @@ export default class Cartographer {
   // Handlers
 
   _handleCentroidsUpdate(data) {
-    const config = {
-      sourceId: centroidsSourceId,
-      layerId: centroidsLayerId,
-      style: geoStyles.centroids,
-      type: 'symbol'
-    };
-    const source = MapUtils.createGeoJSONSource({
+    const source = new GeoJSONSource({
       data
     });
-    const layer = MapUtils.createLayer(config);
+    const layer = Object.assign({
+      source: centroidsLayerId,
+      id: centroidsLayerId,
+    }, geoStyles.centroids);
     this.setSource(layer.source, source);
     this.addLayer(layer);
+    this._manager.set('centroids', {
+      identifiers: [centroidsLayerId]
+    });
     this._removePopup();
     this._setPopupLayer(layer.id);
   }
 
   _handleGeoStoreSelect(identifier) {
-    if (!this._geostores.had(identifier)) {
+    if (!this._manager.has(identifier)) {
       GeoStoreActions.getGeoStore.defer(identifier);
     } else {
-      // Zoom to existing geo instead
-      console.log('Zoom to existing geo instead');
+      const {
+        extent
+      } = this._manager.get(identifier);
+      if (extent) {
+        this._zoomToExtent(extent)
+      }
     }
   }
 
   _handleGeoStoreUpdate(geostore) {
     this.removePopup()
     this.hideCentroids();
-    const {identifier, extent} = geostore;
-    const geoTypes = ['lines', 'points', 'polygons'];
-    for (let t of geoTypes) {
-      const data = geostore[t];
-      if (data.features.length) {
-        const layerId = `${identifier}-${t}`;
-        const config = {
-          sourceId: `${layerId}-src`,
-          layerId: layerId,
-          style: geoStyles[t],
-          type: t.slice(0, -1)
-        };
-        const source = MapUtils.createGeoJSONSource({data})
-        const layer = MapUtils.createLayer(config);
-        this.setSource(layer.source, source, false);
-        this.addLayer(layer);
+    const {
+      identifier,
+      extent
+    } = geostore;
+    if (!this._manager.has(identifier)) {
+      const geoTypes = ['lines', 'points', 'polygons'];
+      let identifiers = [];
+      for (let t of geoTypes) {
+        const data = geostore[t];
+        if (data.features.length) {
+          const layerId = `${identifier}-${t}`;
+          identifiers.push(layerId);
+          const source = new GeoJSONSource({
+            data
+          })
+          const layer = Object.assign({
+            source: layerId,
+            id: layerId,
+          }, geoStyles[t]);
+          this.setSource(layer.source, source, false);
+          this.addLayer(layer);
+        }
       }
+      this._manager.set(identifier, {
+        identifiers,
+        extent
+      });
     }
     if (extent) {
       this._zoomToExtent(extent)
@@ -138,15 +130,14 @@ export default class Cartographer {
   }
 
   setSource(id, source, replace = true) {
-    if (this._sourceRefs.has(id) && replace) {
+    const src = this._map.getSource(id);
+    if (src && replace) {
       this._map.removeSource(id);
     }
-    this._sourceRefs.add(id);
     this._map.addSource(id, source);
   }
 
   addLayer(layer) {
-    this._layerRefs.add(layer.id);
     this._map.addLayer(layer);
   }
 
@@ -175,11 +166,17 @@ export default class Cartographer {
   _zoomToExtent(extent) {
     const isPoint = extent[0] === extent[2] && extent[1] === extent[3];
     if (isPoint) {
-      const pt = extent.slice(0,2);
-      this._map.flyTo({center: pt, zoom: 6});
+      const pt = extent.slice(0, 2);
+      this._map.flyTo({
+        center: pt,
+        zoom: 6
+      });
     } else if (extent.length === 4) {
       const bounds = new MapboxGl.LngLatBounds.convert(extent);
-      this._map.fitBounds(bounds, {padding: 15, maxZoom: maxFitZoom});
+      this._map.fitBounds(bounds, {
+        padding: 15,
+        maxZoom: maxFitZoom
+      });
     }
   }
 
