@@ -14,8 +14,6 @@ export default class ResultsList extends Component {
   }
 
   handleMapButtonClick = (event) => {
-    // TODO: Event/Action on MapButton click
-    console.log(`handleMapButtonClick: ${event.target.value}`);
     if (event.target.value) {
       GeoStoreActions.selectGeoStoreId(event.target.value);
     }
