@@ -29,8 +29,11 @@ const geoStyles = {
     }
   },
   points: {
-    type: 'sy',
-    layout: {},
+    type: 'symbol',
+    layout: {
+      'icon-allow-overlap': true,
+      'icon-image': 'dot'
+    },
     paint: {}
   },
   polygons: {
