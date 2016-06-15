@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import Map from './Map';
+import MapboxGl from "mapbox-gl/js/mapbox-gl";
 import {Popup} from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoCentroidStore from '../stores/GeoCentroidStore';
@@ -26,6 +27,13 @@ const geoStyles = {
     paint: {
       'line-color': '#be2323',
       'line-width': 3
+    }
+  },
+  points: {
+    type: 'circle',
+    layout: {
+    },
+    paint: {
     }
   }
 }
@@ -132,27 +140,43 @@ export default class MapContainer extends Component {
     }
     if (data.geoStore) {
       console.log("onGeoStoreUpdate -> Do something with data.geoStore");
+      this.removeCurrentPopup()
       const {identifier} = data.geoStore;
       this.refs.map.hideLayer(centroidsLayerId);
-      const geoTypes = ['lines'];
+      const geoTypes = ['lines', 'points'];
       for (let t of geoTypes) {
         console.log(`geoTypes t = ${t}`);
-        let layerId = `${identifier}-${t}`;
-        let config = {
-          sourceId: `${layerId}-src`,
-          layerId: layerId,
-          style: geoStyles[t],
-          type: t.slice(0, -1)
-        };
         let geodata = data.geoStore[t];
         console.log(geodata);
-        let source = MapActions.createGeoJSONSource({data: geodata})
-        let layer = MapActions.createLayer(config);
-        this.refs.map.addSource(layer.source, source);
-        this.refs.map.addLayer(layer);
-        if (data.geoStore.extent) {
+        if (geodata.features.length) {
+          let layerId = `${identifier}-${t}`;
+          let config = {
+            sourceId: `${layerId}-src`,
+            layerId: layerId,
+            style: geoStyles[t],
+            type: t.slice(0, -1)
+          };
+          let source = MapActions.createGeoJSONSource({data: geodata})
+          let layer = MapActions.createLayer(config);
+          this.refs.map.addSource(layer.source, source);
+          this.refs.map.addLayer(layer);
+        }
+      }
+      if (data.geoStore.extent) {
+        const isPoint = (
+          data.geoStore.extent[0] === data.geoStore.extent[2] &&
+          data.geoStore.extent[1] === data.geoStore.extent[3]
+        );
+        if (isPoint) {
+          console.log('isPoint!');
+          const pt = data.geoStore.extent.slice(0,2);
+          this.refs.map._map.flyTo({center: pt, zoom: 6});
+        } else {
           console.log(`data.geoStore.extent: ${data.geoStore.extent.toString()}`);
-          this.refs.map._map.fitBounds(data.geoStore.extent, {padding: 15});
+          const bounds = new MapboxGl.LngLatBounds.convert(data.geoStore.extent);
+          console.log(data.geoStore.extent);
+          console.log(bounds);
+          this.refs.map._map.fitBounds(bounds, {padding: 15});
         }
       }
     }
