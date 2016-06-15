@@ -60,8 +60,8 @@ export default class Map extends Component {
     this._map = new MapboxGl.Map({
       container: this.refs.mapContainer,
       style: mapStyle,
-      center,
-      initialZoom
+      zoom: initialZoom,
+      center
     });
 
     this._map.on('load', () => {
