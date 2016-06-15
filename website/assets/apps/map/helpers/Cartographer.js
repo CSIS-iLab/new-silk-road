@@ -46,7 +46,8 @@ const geoStyles = {
 }
 
 const defaultZoom = 2;
-const maxFitZoom = 6;
+const maxFitZoom = 7;
+const boundsPadding = 15;
 
 export default class Cartographer {
 
@@ -172,12 +173,12 @@ export default class Cartographer {
       const pt = extent.slice(0, 2);
       this._map.flyTo({
         center: pt,
-        zoom: 6
+        zoom: maxFitZoom
       });
     } else if (extent.length === 4) {
       const bounds = new MapboxGl.LngLatBounds.convert(extent);
       this._map.fitBounds(bounds, {
-        padding: 15,
+        padding: boundsPadding,
         maxZoom: maxFitZoom
       });
     }
