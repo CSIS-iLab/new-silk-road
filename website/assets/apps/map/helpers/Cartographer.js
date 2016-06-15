@@ -5,6 +5,7 @@ import MapboxGl, {
   GeoJSONSource
 } from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
+import GeoStoreActions from '../actions/GeoStoreActions';
 
 const centroidsLayerId = 'project-centroids';
 const centroidsSourceId = `${centroidsLayerId}-src`;
@@ -78,7 +79,11 @@ export default class Cartographer {
 
   _addListeners() {
     this._al.addActionListener(GeoCentroidActions.UPDATE, this._handleCentroidsUpdate.bind(this));
+    this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this))
+    this._al.addActionListener(GeoStoreActions.UPDATE_GEO_STORE, this._handleGeoStoreUpdate.bind(this))
   }
+
+  // Handlers
 
   _handleCentroidsUpdate(data) {
     const config = {
@@ -95,6 +100,41 @@ export default class Cartographer {
     this.addLayer(layer);
     this._removePopup();
     this._setPopupLayer(layer.id);
+  }
+
+  _handleGeoStoreSelect(identifier) {
+    if (!this._geostores.had(identifier)) {
+      GeoStoreActions.getGeoStore.defer(identifier);
+    } else {
+      // Zoom to existing geo instead
+      console.log('Zoom to existing geo instead');
+    }
+  }
+
+  _handleGeoStoreUpdate(geostore) {
+    this.removePopup()
+    this.hideCentroids();
+    const {identifier, extent} = geostore;
+    const geoTypes = ['lines', 'points', 'polygons'];
+    for (let t of geoTypes) {
+      const data = geostore[t];
+      if (data.features.length) {
+        const layerId = `${identifier}-${t}`;
+        const config = {
+          sourceId: `${layerId}-src`,
+          layerId: layerId,
+          style: geoStyles[t],
+          type: t.slice(0, -1)
+        };
+        const source = MapUtils.createGeoJSONSource({data})
+        const layer = MapUtils.createLayer(config);
+        this.setSource(layer.source, source, false);
+        this.addLayer(layer);
+      }
+    }
+    if (extent) {
+      this._zoomToExtent(extent)
+    }
   }
 
   setSource(id, source, replace = true) {
@@ -130,6 +170,17 @@ export default class Cartographer {
 
   resetMapZoom() {
     this._map.zoomTo(defaultZoom);
+  }
+
+  _zoomToExtent(extent) {
+    const isPoint = extent[0] === extent[2] && extent[1] === extent[3];
+    if (isPoint) {
+      const pt = extent.slice(0,2);
+      this._map.flyTo({center: pt, zoom: 6});
+    } else if (extent.length === 4) {
+      const bounds = new MapboxGl.LngLatBounds.convert(extent);
+      this._map.fitBounds(bounds, {padding: 15, maxZoom: maxFitZoom});
+    }
   }
 
   // centroids
