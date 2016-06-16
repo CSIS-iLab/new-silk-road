@@ -5,7 +5,6 @@ import {Popup} from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoCentroidStore from '../stores/GeoCentroidStore';
 import SearchStore from '../stores/SearchStore';
-import GeoStoreActions from '../actions/GeoStoreActions';
 import Cartographer, {defaultZoom} from '../helpers/Cartographer';
 
 

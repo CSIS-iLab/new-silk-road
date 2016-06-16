@@ -6,7 +6,7 @@ class GeoStoreActions {
     return identifier;
   }
 
-  updateGeoStore(json) {
+  didGetGeoStore(json) {
     return json;
   }
 
@@ -18,7 +18,7 @@ class GeoStoreActions {
         return response.json();
       })
       .then((json) => {
-        this.updateGeoStore(json);
+        this.didGetGeoStore(json);
       })
       .catch((error) => {
         this.fetchFailed(error);

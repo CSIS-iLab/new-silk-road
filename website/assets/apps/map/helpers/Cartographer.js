@@ -8,6 +8,10 @@ import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
 
 const centroidsLayerId = 'project-centroids';
+const defaultZoom = 2.0;
+const minDetailZoom = 4.0;
+const maxFitZoom = 7.0;
+const boundsPadding = 15;
 
 const geoStyles = {
   centroids: {
@@ -22,6 +26,7 @@ const geoStyles = {
   },
   lines: {
     type: 'line',
+    minzoom: minDetailZoom,
     layout: {},
     paint: {
       'line-color': '#be2323',
@@ -30,6 +35,7 @@ const geoStyles = {
   },
   points: {
     type: 'symbol',
+    minzoom: minDetailZoom,
     layout: {
       'icon-allow-overlap': true,
       'icon-image': 'dot'
@@ -38,16 +44,13 @@ const geoStyles = {
   },
   polygons: {
     type: 'fill',
+    minzoom: minDetailZoom,
     layout: {},
     paint: {
       'fill-color': '#be2323'
     }
   }
 }
-
-const defaultZoom = 2;
-const maxFitZoom = 7;
-const boundsPadding = 15;
 
 export default class Cartographer {
 
@@ -56,13 +59,15 @@ export default class Cartographer {
     this._al = new ActionListeners(alt);
     this._manager = new Map();
     this._popup = null;
+    this._popupLayerId = null;
     this._addListeners();
   }
 
   _addListeners() {
     this._al.addActionListener(GeoCentroidActions.UPDATE, this._handleCentroidsUpdate.bind(this));
-    this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this))
-    this._al.addActionListener(GeoStoreActions.UPDATE_GEO_STORE, this._handleGeoStoreUpdate.bind(this))
+    this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
+    this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
+    this._map.on('zoomend', this._handleEndMapZoom.bind(this));
   }
 
   // Handlers
@@ -97,7 +102,7 @@ export default class Cartographer {
     }
   }
 
-  _handleGeoStoreUpdate(geostore) {
+  _handleDidGetGeoStore(geostore) {
     this.removePopup()
     const {
       identifier,
@@ -133,6 +138,21 @@ export default class Cartographer {
     const managedCentroids = [...this._manager.keys()];
     this.hideCentroids(managedCentroids);
   }
+
+  _handleEndMapZoom(event) {
+    const zoomLevel = this._map.getZoom();
+    console.log(zoomLevel);
+    if (zoomLevel >= minDetailZoom) {
+      console.log(this._map.getBounds());
+      const identifiers = this._findCentroidsInBounds(this._map.getBounds())
+                              .map((obj) => obj.properties.geostore)
+                              .filter((id) => id);
+      console.log(identifiers);
+    }
+  }
+
+
+  // Manage map
 
   setSource(id, source, replace = true) {
     const src = this._map.getSource(id);
@@ -201,6 +221,12 @@ export default class Cartographer {
     } else {
       this.hideLayer(centroidsLayerId);
     }
+  }
+
+  _findCentroidsInBounds(bounds) {
+    return this.queryRenderedFeatures(bounds, {
+      layers: [centroidsLayerId]
+    });
   }
 
 
