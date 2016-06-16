@@ -3,7 +3,6 @@ import Map from './Map';
 import MapboxGl from "mapbox-gl/js/mapbox-gl";
 import {Popup} from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
-import GeoCentroidStore from '../stores/GeoCentroidStore';
 import SearchStore from '../stores/SearchStore';
 import Cartographer, {defaultZoom} from '../helpers/Cartographer';
 
@@ -12,10 +11,10 @@ export default class MapContainer extends Component {
 
   componentDidMount() {
     SearchStore.listen(this.onSearchResults);
-    this.mapCtl = new Cartographer(this.refs.map._map);
   }
 
   handleMapLoad = () => {
+    this.mapCtl = new Cartographer(this.refs.map._map);
     GeoCentroidActions.fetch();
   }
 
