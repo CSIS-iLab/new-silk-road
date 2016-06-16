@@ -407,7 +407,7 @@ html {
 
 .searchView {
   max-width: 370px;
-  background-color: #FFF;
+  background-color: rgba(255, 255, 255, 0.9);
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -432,6 +432,7 @@ html {
     margin-right: 3px;
     text-align: right; }
   .searchView input {
+    background-color: transparent;
     max-width: 214px;
     margin-right: 2px; }
   .searchView select {
@@ -786,7 +787,7 @@ html {
 
 .searchView {
   max-width: 370px;
-  background-color: #FFF;
+  background-color: rgba(255, 255, 255, 0.9);
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -811,6 +812,7 @@ html {
     margin-right: 3px;
     text-align: right; }
   .searchView input {
+    background-color: transparent;
     max-width: 214px;
     margin-right: 2px; }
   .searchView select {
