@@ -23,7 +23,6 @@ var RegionSource = createApiSource('/api/regions/');
 var StatusSource = createApiSource('/api/project-statuses/');
 var SearchSource = createApiSource('/api/projects/');
 var GeoCentroidSource = createApiSource('/api/geostore-centroids/');
-var GeoStoreSourceBase = createApiSource('/api/geostore/');
 
 export {
   createApiSource,
@@ -34,5 +33,4 @@ export {
   StatusSource,
   SearchSource,
   GeoCentroidSource,
-  GeoStoreSourceBase
 };
