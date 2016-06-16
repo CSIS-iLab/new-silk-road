@@ -58,10 +58,11 @@ const geoStyles = {
 
 class GeoManager {
   constructor() {
+    this._id_q = new Set();
+    this._q = new Queue(maxConcurrent, maxQueue);
     this._selectedGeoIdentifer = null;
     this._geodata = new Map();
     this._centroidsLoaded = false;
-    this._q = new Queue(maxConcurrent, maxQueue);
   }
 
   get centroidsLoaded() {
@@ -101,11 +102,20 @@ class GeoManager {
   }
 
   loadGeoStore(id) {
-    this._q.add(() => {
-      console.log(`loadGeoStore: ${id}`);
-      GeoStoreActions.getGeoStore(id);
-    })
+    // TODO: Make sure geostores aren't requested a bunch
+    // TODO: Queue fetching of geostores
+    if (!this.hasGeo(id) && !this._id_q.has(id)) {
+      this._id_q.add(id);
+      this._q.add(() => {
+        GeoStoreActions.getGeoStore(id);
+      });
+    }
   }
+
+  resolveGeoStore(identifier) {
+    this._id_q.delete(identifier);
+  }
+
 }
 
 export default class Cartographer {
@@ -167,6 +177,7 @@ export default class Cartographer {
       identifier,
       extent
     } = geostore;
+    this._gm.resolveGeoStore(identifier);
     if (!this._gm.hasGeo(identifier)) {
       const geoTypes = ['lines', 'points', 'polygons'];
       let identifiers = [];
@@ -194,7 +205,7 @@ export default class Cartographer {
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
     }
-    // this.hideCentroids(this._gm.geoIdentifiers);
+    this.hideCentroids(this._gm.geoIdentifiers);
   }
 
   _handleEndMapMove(event) {
@@ -218,10 +229,8 @@ export default class Cartographer {
   _updateGeometries(identifiers) {
     console.log(`identifiers: ${identifiers.length}`);
     identifiers.forEach((id) => {
-      console.log(`_updateGeometries: ${id}`);
       this._gm.loadGeoStore(id);
     })
-    // TODO: Queue fetching of geostores
   }
 
 
