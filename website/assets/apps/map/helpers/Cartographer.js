@@ -99,7 +99,6 @@ export default class Cartographer {
 
   _handleGeoStoreUpdate(geostore) {
     this.removePopup()
-    this.hideCentroids();
     const {
       identifier,
       extent
@@ -131,6 +130,8 @@ export default class Cartographer {
     if (extent) {
       this._zoomToExtent(extent)
     }
+    const managedCentroids = [...this._manager.keys()];
+    this.hideCentroids(managedCentroids);
   }
 
   setSource(id, source, replace = true) {
