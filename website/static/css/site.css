@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
+@import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
 html {
   box-sizing: border-box; }
 
@@ -748,6 +749,7 @@ article section table {
     color: #75986a;
     border-bottom: 2px solid #75986a; } }
 
+@import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
 html {
   box-sizing: border-box; }
 
