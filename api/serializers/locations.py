@@ -48,18 +48,34 @@ class PolygonGeometrySerializer(GeometryStoreRelatedSerializer):
         geo_field = 'geom'
 
 
-class GeometryStoreSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+class GeometryStoreDetailSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     lines = LineStringGeometrySerializer(many=True, read_only=True)
     points = PointGeometrySerializer(many=True, read_only=True)
     polygons = PolygonGeometrySerializer(many=True, read_only=True)
     extent = serializers.SerializerMethodField()
+    infrastructure_type = serializers.SerializerMethodField()
 
     def get_extent(self, obj):
         return obj.calculate_overall_extent()
 
+    def get_infrastructure_type(self, obj):
+        proj = obj.project_set.first()
+        if proj and proj.infrastructure_type:
+            return proj.infrastructure_type.name.lower()
+        return None
+
     class Meta:
         model = GeometryStore
-        fields = ('identifier', 'attributes', 'centroid', 'lines', 'points', 'polygons', 'extent')
+        fields = (
+            'identifier',
+            'attributes',
+            'centroid',
+            'lines',
+            'points',
+            'polygons',
+            'extent',
+            'infrastructure_type'
+        )
         indelible_fields = ('identifier',)
 
 

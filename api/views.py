@@ -15,7 +15,7 @@ from api.serializers.locations import (
     LineStringGeometrySerializer,
     PointGeometrySerializer,
     PolygonGeometrySerializer,
-    GeometryStoreSerializer,
+    GeometryStoreDetailSerializer,
     GeometryStoreCentroidSerializer,
     RegionBasicSerializer,
     CountryBasicSerializer
@@ -105,10 +105,10 @@ class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
     filter_class = PolygonGeometryFilter
 
 
-class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
+class GeometryStoreDetailView(generics.RetrieveAPIView):
     queryset = GeometryStore.objects.filter(project__isnull=False)
     lookup_field = 'identifier'
-    serializer_class = GeometryStoreSerializer
+    serializer_class = GeometryStoreDetailSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
 

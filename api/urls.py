@@ -13,7 +13,7 @@ from api.views import (
     LineStringGeometryViewSet,
     PointGeometryViewSet,
     PolygonGeometryViewSet,
-    GeometryStoreViewSet,
+    GeometryStoreDetailView,
     GeometryStoreCentroidViewSet,
     RegionListView,
     CountryListView,
@@ -27,11 +27,12 @@ router.register(r'initiatives', InitiativeViewSet)
 router.register(r'lines', LineStringGeometryViewSet)
 router.register(r'points', PointGeometryViewSet)
 router.register(r'polygons', PolygonGeometryViewSet)
-router.register(r'geostore', GeometryStoreViewSet)
 router.register(r'geostore-centroids', GeometryStoreCentroidViewSet, base_name='geostore-centroids')
 
 app_name = 'api'
 urlpatterns = [
+    url(r'geostore/(?P<identifier>[a-f0-9-]{32,36})/?', GeometryStoreDetailView.as_view(), name='geometrystore-detail'),
+    url(r'geostore/(?P<identifier>[a-f0-9-]{32,36})\.(?P<format>[a-z0-9]+)/?', GeometryStoreDetailView.as_view(), name='geometrystore-detail'),
     url(r'^project-statuses/$', ProjectStatusListView.as_view()),
     url(r'^regions/$', RegionListView.as_view()),
     url(r'^countries/$', CountryListView.as_view()),
