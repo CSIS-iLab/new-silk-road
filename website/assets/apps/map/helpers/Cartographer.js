@@ -14,7 +14,7 @@ const minDetailZoom = 5.0;
 const maxFitZoom = 8.0;
 const onMoveDelayTime = 750;
 const boundsPadding = 15;
-const maxConcurrent = 3;
+const maxConcurrent = 6;
 const maxQueue = Infinity;
 
 const geoStyles = {
@@ -56,10 +56,29 @@ const geoStyles = {
   }
 }
 
-class GeoManager {
+class GeoStoreQueue {
   constructor() {
     this._id_q = new Set();
     this._q = new Queue(maxConcurrent, maxQueue);
+  }
+
+  loadGeoStore(id) {
+    if (!this._id_q.has(id)) {
+      this._id_q.add(id);
+      this._q.add(() => {
+        GeoStoreActions.getGeoStore(id);
+      });
+    }
+  }
+
+  resolveGeoStore(identifier) {
+    this._id_q.delete(identifier);
+  }
+
+}
+
+class GeoManager {
+  constructor() {
     this._selectedGeoIdentifer = null;
     this._geodata = new Map();
     this._centroidsLoaded = false;
@@ -81,7 +100,9 @@ class GeoManager {
   }
 
   get selectedGeoExtent() {
-    const {extent} = this._geodata.get(this._selectedGeoIdentifer);
+    const {
+      extent
+    } = this._geodata.get(this._selectedGeoIdentifer);
     return extent;
   }
 
@@ -100,22 +121,6 @@ class GeoManager {
   get geoIdentifiers() {
     return [...this._geodata.keys()];
   }
-
-  loadGeoStore(id) {
-    // TODO: Make sure geostores aren't requested a bunch
-    // TODO: Queue fetching of geostores
-    if (!this.hasGeo(id) && !this._id_q.has(id)) {
-      this._id_q.add(id);
-      this._q.add(() => {
-        GeoStoreActions.getGeoStore(id);
-      });
-    }
-  }
-
-  resolveGeoStore(identifier) {
-    this._id_q.delete(identifier);
-  }
-
 }
 
 export default class Cartographer {
@@ -124,6 +129,7 @@ export default class Cartographer {
     this._map = map;
     this._al = new ActionListeners(alt);
     this._gm = new GeoManager();
+    this._gq = new GeoStoreQueue();
     this._updateDelayId = null;
     this._popup = null;
     this._popupLayerId = null;
@@ -177,7 +183,7 @@ export default class Cartographer {
       identifier,
       extent
     } = geostore;
-    this._gm.resolveGeoStore(identifier);
+    this._gq.resolveGeoStore(identifier);
     if (!this._gm.hasGeo(identifier)) {
       const geoTypes = ['lines', 'points', 'polygons'];
       let identifiers = [];
@@ -217,20 +223,19 @@ export default class Cartographer {
         const zoomLevel = this._map.getZoom();
         console.log(zoomLevel);
         if (zoomLevel >= minDetailZoom) {
-          const identifiers = this._findCentroidsInBounds(this._map.getBounds())
-                                  .map((obj) => obj.properties.geostore)
-                                  .filter((id) => id);
-          this._updateGeometries(identifiers);
+          const identifiers = this._getCurrentCentroids()
+            .map((obj) => obj.properties.geostore);
+          this._updateGeometries([...new Set(identifiers)]);
         }
       }, onMoveDelayTime);
     }
   }
 
   _updateGeometries(identifiers) {
-    console.log(`identifiers: ${identifiers.length}`);
-    identifiers.forEach((id) => {
-      this._gm.loadGeoStore(id);
-    })
+    identifiers.filter((id) => !this._gm.hasGeo(id))
+      .forEach((id) => {
+        this._gq.loadGeoStore(id);
+      });
   }
 
 
@@ -305,8 +310,8 @@ export default class Cartographer {
     }
   }
 
-  _findCentroidsInBounds(bounds) {
-    return this.queryRenderedFeatures(bounds, {
+  _getCurrentCentroids() {
+    return this.queryRenderedFeatures({
       layers: [centroidsLayerId]
     });
   }
