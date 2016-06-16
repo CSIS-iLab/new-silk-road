@@ -38,7 +38,7 @@ const geoStyles = {
     minzoom: minDetailZoom,
     layout: {
       'icon-allow-overlap': true,
-      'icon-image': 'dot'
+      'icon-image': 'marker-15'
     },
     paint: {}
   },
@@ -52,12 +52,55 @@ const geoStyles = {
   }
 }
 
+class GeoManager {
+  constructor() {
+    this._selectedGeoIdentifer = null;
+    this._geodata = new Map();
+    this._centroidsLoaded = false;
+  }
+
+  get centroidsLoaded() {
+    return this._centroidsLoaded;
+  }
+
+  set centroidsLoaded(value) {
+    this._centroidsLoaded = value;
+  }
+
+  get selectedGeoStore() {
+    return this._selectedGeoIdentifer;
+  }
+  set selectedGeoStore(value) {
+    this._selectedGeoIdentifer = value;
+  }
+
+  get selectedGeoExtent() {
+    const {extend} = this._geodata.get(this._selectedGeoIdentifer);
+  }
+
+  addGeoData(identifier, object) {
+    this._geodata.set(identifier, object);
+  }
+
+  removeGeoData(identifier) {
+    this._geodata.delete(identifier);
+  }
+
+  hasGeo(identifier) {
+    return this._geodata.has(identifier);
+  }
+
+  get geoIdentifiers() {
+    return [...this._geodata.keys()];
+  }
+}
+
 export default class Cartographer {
 
   constructor(map) {
     this._map = map;
     this._al = new ActionListeners(alt);
-    this._manager = new Map();
+    this._gm = new GeoManager();
     this._popup = null;
     this._popupLayerId = null;
     this._addListeners();
@@ -82,20 +125,17 @@ export default class Cartographer {
     }, geoStyles.centroids);
     this.setSource(layer.source, source);
     this.addLayer(layer);
-    this._manager.set('centroids', {
-      identifiers: [centroidsLayerId]
-    });
+    this._gm.centroidsLoaded = true;
     this._removePopup();
     this._setPopupLayer(layer.id);
   }
 
   _handleGeoStoreSelect(identifier) {
-    if (!this._manager.has(identifier)) {
+    if (!this._gm.hasGeo(identifier)) {
       GeoStoreActions.getGeoStore.defer(identifier);
+      this._gm.selectedGeoStore = identifier;
     } else {
-      const {
-        extent
-      } = this._manager.get(identifier);
+      const extent = this._gm.selectedGeoExtent;
       if (extent) {
         this._zoomToExtent(extent)
       }
@@ -108,7 +148,7 @@ export default class Cartographer {
       identifier,
       extent
     } = geostore;
-    if (!this._manager.has(identifier)) {
+    if (!this._gm.hasGeo(identifier)) {
       const geoTypes = ['lines', 'points', 'polygons'];
       let identifiers = [];
       for (let t of geoTypes) {
@@ -127,16 +167,15 @@ export default class Cartographer {
           this.addLayer(layer);
         }
       }
-      this._manager.set(identifier, {
+      this._gm.addGeoData(identifier, {
         identifiers,
         extent
       });
     }
-    if (extent) {
+    if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent)
     }
-    const managedCentroids = [...this._manager.keys()];
-    this.hideCentroids(managedCentroids);
+    this.hideCentroids(this._gm.geoIdentifiers);
   }
 
   _handleEndMapZoom(event) {
@@ -147,8 +186,17 @@ export default class Cartographer {
       const identifiers = this._findCentroidsInBounds(this._map.getBounds())
                               .map((obj) => obj.properties.geostore)
                               .filter((id) => id);
-      console.log(identifiers);
+      console.log(`identifiers: ${identifiers}`);
+      this._updateGeometries(identifiers);
     }
+  }
+
+  _updateGeometries(identifiers) {
+    const ungotten = identifiers.filter((id) => !this._gm.hasGeo(id));
+    console.log(`ungotten: ${ungotten}`);
+    // ungotten.forEach((identifier) => {
+    //   this._gm.fetchGeoStore(identifier);
+    // })
   }
 
 
@@ -215,7 +263,7 @@ export default class Cartographer {
   }
 
   hideCentroids(centroidsIds) {
-    if (centroidsIds) {
+    if (centroidsIds && this._gm.centroidsLoaded) {
       this.showLayer(centroidsLayerId);
       this.filterMap(centroidsLayerId, ['!in', 'geostore'].concat(centroidsIds))
     } else {
