@@ -1,5 +1,6 @@
 import alt from '../alt';
 import ActionListeners from 'alt-utils/lib/ActionListeners';
+import Queue from 'promise-queue';
 import MapboxGl, {
   Popup,
   GeoJSONSource
@@ -9,10 +10,12 @@ import GeoStoreActions from '../actions/GeoStoreActions';
 
 const centroidsLayerId = 'project-centroids';
 const defaultZoom = 2.0;
-const minDetailZoom = 4.0;
-const maxFitZoom = 7.0;
+const minDetailZoom = 5.0;
+const maxFitZoom = 8.0;
 const onMoveDelayTime = 750;
 const boundsPadding = 15;
+const maxConcurrent = 3;
+const maxQueue = Infinity;
 
 const geoStyles = {
   centroids: {
@@ -58,6 +61,7 @@ class GeoManager {
     this._selectedGeoIdentifer = null;
     this._geodata = new Map();
     this._centroidsLoaded = false;
+    this._q = new Queue(maxConcurrent, maxQueue);
   }
 
   get centroidsLoaded() {
@@ -95,6 +99,13 @@ class GeoManager {
   get geoIdentifiers() {
     return [...this._geodata.keys()];
   }
+
+  loadGeoStore(id) {
+    this._q.add(() => {
+      console.log(`loadGeoStore: ${id}`);
+      GeoStoreActions.getGeoStore(id);
+    })
+  }
 }
 
 export default class Cartographer {
@@ -111,12 +122,17 @@ export default class Cartographer {
 
   _addListeners() {
     this._al.addActionListener(GeoCentroidActions.UPDATE, this._handleCentroidsUpdate.bind(this));
+    this._al.addActionListener(GeoCentroidActions.FAIL, this._handleCentroidsFail.bind(this));
     this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
     this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
     this._map.on('moveend', this._handleEndMapMove.bind(this));
   }
 
   // Handlers
+
+  _handleCentroidsFail(error) {
+    console.log('Error!');
+  }
 
   _handleCentroidsUpdate(data) {
     const source = new GeoJSONSource({
@@ -178,7 +194,7 @@ export default class Cartographer {
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
     }
-    this.hideCentroids(this._gm.geoIdentifiers);
+    // this.hideCentroids(this._gm.geoIdentifiers);
   }
 
   _handleEndMapMove(event) {
@@ -201,12 +217,10 @@ export default class Cartographer {
 
   _updateGeometries(identifiers) {
     console.log(`identifiers: ${identifiers.length}`);
-    // const ungotten = identifiers.filter((id) => !this._gm.hasGeo(id));
-    // console.log(`ungotten: ${ungotten.length}`);
-    // ungotten.forEach((identifier) => {
-    //   this._gm.fetchGeoStore(identifier);
-    // })
-    // TODO: Handle search after a delay?
+    identifiers.forEach((id) => {
+      console.log(`_updateGeometries: ${id}`);
+      this._gm.loadGeoStore(id);
+    })
     // TODO: Queue fetching of geostores
   }
 
