@@ -11,6 +11,7 @@ const centroidsLayerId = 'project-centroids';
 const defaultZoom = 2.0;
 const minDetailZoom = 4.0;
 const maxFitZoom = 7.0;
+const onMoveDelayTime = 750;
 const boundsPadding = 15;
 
 const geoStyles = {
@@ -18,7 +19,7 @@ const geoStyles = {
     type: 'symbol',
     layout: {
       'icon-allow-overlap': true,
-      'icon-image': 'dot'
+      'icon-image': 'marker_icon'
     },
     paint: {
       'icon-opacity': 1
@@ -38,7 +39,7 @@ const geoStyles = {
     minzoom: minDetailZoom,
     layout: {
       'icon-allow-overlap': true,
-      'icon-image': 'marker-15'
+      'icon-image': 'dot'
     },
     paint: {}
   },
@@ -75,7 +76,8 @@ class GeoManager {
   }
 
   get selectedGeoExtent() {
-    const {extend} = this._geodata.get(this._selectedGeoIdentifer);
+    const {extent} = this._geodata.get(this._selectedGeoIdentifer);
+    return extent;
   }
 
   addGeoData(identifier, object) {
@@ -101,6 +103,7 @@ export default class Cartographer {
     this._map = map;
     this._al = new ActionListeners(alt);
     this._gm = new GeoManager();
+    this._updateDelayId = null;
     this._popup = null;
     this._popupLayerId = null;
     this._addListeners();
@@ -110,7 +113,7 @@ export default class Cartographer {
     this._al.addActionListener(GeoCentroidActions.UPDATE, this._handleCentroidsUpdate.bind(this));
     this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
     this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
-    this._map.on('zoomend', this._handleEndMapZoom.bind(this));
+    this._map.on('moveend', this._handleEndMapMove.bind(this));
   }
 
   // Handlers
@@ -131,13 +134,13 @@ export default class Cartographer {
   }
 
   _handleGeoStoreSelect(identifier) {
+    this._gm.selectedGeoStore = identifier;
     if (!this._gm.hasGeo(identifier)) {
       GeoStoreActions.getGeoStore.defer(identifier);
-      this._gm.selectedGeoStore = identifier;
     } else {
       const extent = this._gm.selectedGeoExtent;
       if (extent) {
-        this._zoomToExtent(extent)
+        this._zoomToExtent(extent);
       }
     }
   }
@@ -173,30 +176,38 @@ export default class Cartographer {
       });
     }
     if (this._gm.selectedGeoStore === identifier && extent) {
-      this._zoomToExtent(extent)
+      this._zoomToExtent(extent);
     }
     this.hideCentroids(this._gm.geoIdentifiers);
   }
 
-  _handleEndMapZoom(event) {
-    const zoomLevel = this._map.getZoom();
-    console.log(zoomLevel);
-    if (zoomLevel >= minDetailZoom) {
-      console.log(this._map.getBounds());
-      const identifiers = this._findCentroidsInBounds(this._map.getBounds())
-                              .map((obj) => obj.properties.geostore)
-                              .filter((id) => id);
-      console.log(`identifiers: ${identifiers}`);
-      this._updateGeometries(identifiers);
+  _handleEndMapMove(event) {
+    if (this._updateDelayId) {
+      clearTimeout(this._updateDelayId);
+    } else {
+      this._updateDelayId = setTimeout(() => {
+        this._updateDelayId = null;
+        const zoomLevel = this._map.getZoom();
+        console.log(zoomLevel);
+        if (zoomLevel >= minDetailZoom) {
+          const identifiers = this._findCentroidsInBounds(this._map.getBounds())
+                                  .map((obj) => obj.properties.geostore)
+                                  .filter((id) => id);
+          this._updateGeometries(identifiers);
+        }
+      }, onMoveDelayTime);
     }
   }
 
   _updateGeometries(identifiers) {
-    const ungotten = identifiers.filter((id) => !this._gm.hasGeo(id));
-    console.log(`ungotten: ${ungotten}`);
+    console.log(`identifiers: ${identifiers.length}`);
+    // const ungotten = identifiers.filter((id) => !this._gm.hasGeo(id));
+    // console.log(`ungotten: ${ungotten.length}`);
     // ungotten.forEach((identifier) => {
     //   this._gm.fetchGeoStore(identifier);
     // })
+    // TODO: Handle search after a delay?
+    // TODO: Queue fetching of geostores
   }
 
 
