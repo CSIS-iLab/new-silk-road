@@ -6,7 +6,6 @@ import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoCentroidStore from '../stores/GeoCentroidStore';
 import SearchStore from '../stores/SearchStore';
 import GeoStoreActions from '../actions/GeoStoreActions';
-import GeoStore from '../stores/GeoStore';
 import Cartographer, {defaultZoom} from '../helpers/Cartographer';
 
 
