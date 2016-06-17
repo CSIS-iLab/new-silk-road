@@ -99,12 +99,15 @@ class GeoManager {
     return [...this._layerIdentifiers];
   }
 
-  get selectedGeoIdentifiers() {
-    return [...this._selectedGeoReferences];
-  }
-
   set selectedGeoIdentifiers(values) {
     this._selectedGeoReferences = new Set(values);
+  }
+
+  get selectedGeoIdentifiers() {
+    if (this._selectedGeoReferences.size > 0) {
+      return this._selectedGeoReferences;
+    }
+    return this._geoIdentifiers;
   }
 
   get selectedGeoStore() {
@@ -119,7 +122,7 @@ class GeoManager {
   }
 
   get loadedGeoIdentifiers() {
-    return [...this._geoReferences.keys()];
+    return new Set(this._geoReferences.keys());
   }
 
   addGeoRecord(identifier, layerIds, extent) {
@@ -219,11 +222,11 @@ export default class Cartographer {
         }
       }
       this._gm.addGeoRecord(identifier, identifiers, extent);
+      this._updateMapState();
     }
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
     }
-    // this.hideCentroids(this._gm.geoIdentifiers);
   }
 
   _handleEndMapMove(event) {
@@ -235,17 +238,13 @@ export default class Cartographer {
       this._updateDelayId = setTimeout(() => {
         self._updateDelayId = null;
         const zoomLevel = self._map.getZoom();
-        console.log(zoomLevel);
         if (zoomLevel >= minDetailZoom) {
           const identifiers = self._getCurrentCentroids()
             .map((obj) => obj.properties.geostore);
           self._updateGeometries([...new Set(identifiers)]);
         }
+        self._updateMapState();
       }, onMoveDelayTime);
-    }
-
-    if (this._map.getZoom() < minDetailZoom) {
-      this.showCentroids();
     }
   }
 
@@ -280,6 +279,8 @@ export default class Cartographer {
     }
   }
 
+    // Manage map
+
   _updateGeometries(identifiers) {
     identifiers.filter((id) => !this._gm.hasGeo(id))
       .forEach((id) => {
@@ -287,8 +288,13 @@ export default class Cartographer {
       });
   }
 
-
-  // Manage map
+  _updateMapState() {
+    let visibleCentroids = [...this._gm.selectedGeoIdentifiers];
+    if (this._map.getZoom() >= minDetailZoom) {
+      visibleCentroids = visibleCentroids.filter(x => !this._gm.loadedGeoIdentifiers.has(x));
+    }
+    this.showCentroids(visibleCentroids);
+  }
 
   setSource(id, source, replace = true) {
     const src = this._map.getSource(id);
@@ -341,15 +347,7 @@ export default class Cartographer {
 
   setCurrentGeo(identifiers) {
     this._gm.selectedGeoIdentifiers = identifiers;
-    this._updateVisibleGeo();
-  }
-
-  _updateVisibleGeo() {
-    if (this._gm.selectedGeoIdentifiers) {
-      this.showCentroids(this._gm.selectedGeoIdentifiers)
-    } else {
-
-    }
+    this._updateMapState();
   }
 
   showCentroids(centroidsIds) {
