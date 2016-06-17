@@ -89,6 +89,15 @@ class GeoManager {
     this._selectedGeoIdentifer = null;
     this._geodata = new Map();
     this._centroidsLoaded = false;
+    this._selectedCentroids = new Set();
+  }
+
+  get selectedCentroids() {
+    return [...this._selectedCentroids];
+  }
+
+  set selectedCentroids(values) {
+    this._selectedCentroids = new Set(values);
   }
 
   get centroidsLoaded() {
@@ -215,7 +224,7 @@ export default class Cartographer {
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
     }
-    this.hideCentroids(this._gm.geoIdentifiers);
+    // this.hideCentroids(this._gm.geoIdentifiers);
   }
 
   _handleEndMapMove(event) {
@@ -236,7 +245,7 @@ export default class Cartographer {
     }
 
     if (this._map.getZoom() < minDetailZoom) {
-      this.showCentroids();
+      this.showCentroids(this._gm.selectedCentroids);
     }
   }
 
@@ -302,6 +311,11 @@ export default class Cartographer {
   }
 
   // centroids
+
+  set selectedCentroids(centroidIds) {
+    this._gm.selectedCentroids = centroidIds;
+    this.showCentroids(this._gm.selectedCentroids);
+  }
 
   showCentroids(centroidsIds) {
     this.showLayer(centroidsLayerId);

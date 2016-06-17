@@ -30,10 +30,10 @@ export default class MapContainer extends Component {
       const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
                                     .map((element) => element.geo.id);
       if (geoIdentifiers.length > 0) {
-        this.mapCtl.showCentroids(geoIdentifiers);
+        this.mapCtl.selectedCentroids = geoIdentifiers;
       }
     } else {
-      this.mapCtl.hideCentroids();
+      this.mapCtl.selectedCentroids = [];
     }
   }
 
