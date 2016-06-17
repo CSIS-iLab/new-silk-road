@@ -77,6 +77,13 @@ class GeoStoreQueue {
 
 }
 
+class GeoRecord {
+  constructor(layerIdentifiers, extent=null) {
+    this.identifiers = layerIdentifiers;
+    this.extent = extent;
+  }
+}
+
 class GeoManager {
   constructor() {
     this._selectedGeoIdentifer = null;
@@ -106,12 +113,12 @@ class GeoManager {
     return extent;
   }
 
-  addGeoData(identifier, object) {
-    this._geodata.set(identifier, object);
+  addGeoData(identifier, record) {
+    this._geodata.set(identifier, record);
   }
 
   removeGeoData(identifier) {
-    this._geodata.delete(identifier);
+    return this._geodata.delete(identifier);
   }
 
   hasGeo(identifier) {
@@ -203,10 +210,7 @@ export default class Cartographer {
           this.addLayer(layer);
         }
       }
-      this._gm.addGeoData(identifier, {
-        identifiers,
-        extent
-      });
+      this._gm.addGeoData(identifier, new GeoRecord(identifiers, extent));
     }
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
