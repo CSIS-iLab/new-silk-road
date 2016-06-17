@@ -8,7 +8,8 @@ import MapboxGl, {
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
 
-const centroidsLayerId = 'project-centroids';
+const identiferSep = ' : ';
+const centroidsLayerId = 'project : centroids';
 const defaultZoom = 2.0;
 const minDetailZoom = 5.0;
 const maxFitZoom = 8.0;
@@ -78,7 +79,7 @@ class GeoStoreQueue {
 }
 
 class GeoRecord {
-  constructor(layerIdentifiers, extent=null) {
+  constructor(layerIdentifiers, extent = null) {
     this.identifiers = layerIdentifiers;
     this.extent = extent;
   }
@@ -88,8 +89,18 @@ class GeoManager {
   constructor() {
     this._selectedGeoIdentifer = null;
     this._geodata = new Map();
+    this._layerIdentifiers = new Set();
     this._centroidsLoaded = false;
     this._selectedCentroids = new Set();
+  }
+
+  _updateLayerIdentifiers(layerIds) {
+    const updated = [...this._layerIdentifiers].concat(layerIds);
+    this._layerIdentifiers = new Set(updated);
+  }
+
+  get layerIdentifiers() {
+    return [...this._layerIdentifiers];
   }
 
   get selectedCentroids() {
@@ -122,12 +133,9 @@ class GeoManager {
     return extent;
   }
 
-  addGeoData(identifier, record) {
+  addGeoRecord(identifier, record) {
     this._geodata.set(identifier, record);
-  }
-
-  removeGeoData(identifier) {
-    return this._geodata.delete(identifier);
+    this._updateLayerIdentifiers(record.identifiers)
   }
 
   hasGeo(identifier) {
@@ -158,6 +166,7 @@ export default class Cartographer {
     this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
     this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
     this._map.on('moveend', this._handleEndMapMove.bind(this));
+    this._map.on('click', this._handleMapClick.bind(this));
   }
 
   // Handlers
@@ -197,7 +206,8 @@ export default class Cartographer {
     this.removePopup()
     const {
       identifier,
-      extent
+      extent,
+      infrastructure_type: infrastructureType
     } = geostore;
     this._gq.resolveGeoStore(identifier);
     if (!this._gm.hasGeo(identifier)) {
@@ -206,7 +216,7 @@ export default class Cartographer {
       for (let t of geoTypes) {
         const data = geostore[t];
         if (data.features.length) {
-          const layerId = `${identifier}-${t}`;
+          const layerId = `${identifier}${identiferSep}${t}`;
           identifiers.push(layerId);
           const source = new GeoJSONSource({
             data
@@ -214,12 +224,16 @@ export default class Cartographer {
           const layer = Object.assign({
             source: layerId,
             id: layerId,
+            metadata: {
+              'cartographer:identifier': identifier,
+              'cartographer:infrastructureType': infrastructureType
+            }
           }, geoStyles[t]);
           this.setSource(layer.source, source, false);
           this.addLayer(layer);
         }
       }
-      this._gm.addGeoData(identifier, new GeoRecord(identifiers, extent));
+      this._gm.addGeoRecord(identifier, new GeoRecord(identifiers, extent));
     }
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
@@ -249,6 +263,34 @@ export default class Cartographer {
     }
   }
 
+  _handleMapClick(event) {
+    const layers = this._gm.layerIdentifiers;
+    if (layers.length) {
+      const width = 20,
+        height = 20;
+      const bbox = [
+        [event.point.x - width / 2, event.point.y - height / 2],
+        [event.point.x + width / 2, event.point.y + height / 2]
+      ]
+      const features = this._map.queryRenderedFeatures(bbox, {
+        layers
+      });
+
+      if (!features.length) return;
+
+      const feat = features[0];
+      console.log('Selected Feature!');
+      // const popup = new Popup();
+      //
+      // popup.setLngLat(event.point)
+      //   .setHTML(`<div class='popup-content'>
+      //      <h4>${feat.properties.label}</h4>
+      //      </div>`);
+      //
+      // this._addPopup(popup);
+    }
+  }
+
   _updateGeometries(identifiers) {
     identifiers.filter((id) => !this._gm.hasGeo(id))
       .forEach((id) => {
@@ -269,10 +311,6 @@ export default class Cartographer {
 
   addLayer(layer) {
     this._map.addLayer(layer);
-  }
-
-  queryRenderedFeatures(pointOrBox, options) {
-    return this._map.queryRenderedFeatures(pointOrBox, options)
   }
 
   filterMap(layerId, filterArray) {
@@ -336,7 +374,7 @@ export default class Cartographer {
   }
 
   _getCurrentCentroids() {
-    return this.queryRenderedFeatures({
+    return this._map.queryRenderedFeatures({
       layers: [centroidsLayerId]
     });
   }
@@ -349,7 +387,7 @@ export default class Cartographer {
 
   queryForPopup(event) {
     if (this._popupLayerId && event.point) {
-      const features = this.queryRenderedFeatures(event.point, {
+      const features = this._map.queryRenderedFeatures(event.point, {
         layers: [this._popupLayerId]
       });
 
