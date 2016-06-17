@@ -221,6 +221,7 @@ export default class Cartographer {
   _handleEndMapMove(event) {
     if (this._updateDelayId) {
       clearTimeout(this._updateDelayId);
+      this._updateDelayId = null;
     } else {
       this._updateDelayId = setTimeout(() => {
         this._updateDelayId = null;
@@ -232,6 +233,10 @@ export default class Cartographer {
           this._updateGeometries([...new Set(identifiers)]);
         }
       }, onMoveDelayTime);
+    }
+
+    if (this._map.getZoom() < minDetailZoom) {
+      this.showCentroids();
     }
   }
 
@@ -302,6 +307,8 @@ export default class Cartographer {
     this.showLayer(centroidsLayerId);
     if (centroidsIds) {
       this.filterMap(centroidsLayerId, ['in', 'geostore'].concat(centroidsIds))
+    } else {
+      this.filterMap(centroidsLayerId, ['!in', 'geostore', false]);
     }
   }
 
