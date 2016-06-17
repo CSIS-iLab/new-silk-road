@@ -19,7 +19,7 @@ export default class MapContainer extends Component {
   }
 
   handleMapClick = (event) => {
-    this.mapCtl.queryForPopup(event);
+    // this.mapCtl.queryForPopup(event);
   }
 
   onSearchResults = (data) => {
@@ -30,10 +30,10 @@ export default class MapContainer extends Component {
       const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
                                     .map((element) => element.geo.id);
       if (geoIdentifiers.length > 0) {
-        this.mapCtl.selectedCentroids = geoIdentifiers;
+        this.mapCtl.setCurrentGeo(geoIdentifiers);
       }
     } else {
-      this.mapCtl.selectedCentroids = [];
+      this.mapCtl.setCurrentGeo();
     }
   }
 

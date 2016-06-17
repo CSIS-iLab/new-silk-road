@@ -12,7 +12,7 @@ const identiferSep = ' : ';
 const centroidsLayerId = 'project : centroids';
 const defaultZoom = 2.0;
 const minDetailZoom = 5.0;
-const maxFitZoom = 8.0;
+const maxFitZoom = 6.0;
 const onMoveDelayTime = 750;
 const boundsPadding = 15;
 const maxConcurrent = 6;
@@ -78,20 +78,12 @@ class GeoStoreQueue {
 
 }
 
-class GeoRecord {
-  constructor(layerIdentifiers, extent = null) {
-    this.identifiers = layerIdentifiers;
-    this.extent = extent;
-  }
-}
-
 class GeoManager {
   constructor() {
-    this._selectedGeoIdentifer = null;
-    this._geodata = new Map();
+    this._selectedGeo = null;
+    this._geoReferences = new Map();
+    this._selectedGeoReferences = new Set();
     this._layerIdentifiers = new Set();
-    this._centroidsLoaded = false;
-    this._selectedCentroids = new Set();
   }
 
   _updateLayerIdentifiers(layerIds) {
@@ -99,51 +91,44 @@ class GeoManager {
     this._layerIdentifiers = new Set(updated);
   }
 
+  setGeoIdentifiers(identifiers) {
+    this._geoIdentifiers = new Set(identifiers);
+  }
+
   get layerIdentifiers() {
     return [...this._layerIdentifiers];
   }
 
-  get selectedCentroids() {
-    return [...this._selectedCentroids];
+  get selectedGeoIdentifiers() {
+    return [...this._selectedGeoReferences];
   }
 
-  set selectedCentroids(values) {
-    this._selectedCentroids = new Set(values);
-  }
-
-  get centroidsLoaded() {
-    return this._centroidsLoaded;
-  }
-
-  set centroidsLoaded(value) {
-    this._centroidsLoaded = value;
+  set selectedGeoIdentifiers(values) {
+    this._selectedGeoReferences = new Set(values);
   }
 
   get selectedGeoStore() {
-    return this._selectedGeoIdentifer;
+    return this._selectedGeo;
   }
   set selectedGeoStore(value) {
-    this._selectedGeoIdentifer = value;
+    this._selectedGeo = value;
   }
 
   get selectedGeoExtent() {
-    const {
-      extent
-    } = this._geodata.get(this._selectedGeoIdentifer);
-    return extent;
+    return this._geoReferences.get(this._selectedGeo);
   }
 
-  addGeoRecord(identifier, record) {
-    this._geodata.set(identifier, record);
-    this._updateLayerIdentifiers(record.identifiers)
+  get loadedGeoIdentifiers() {
+    return [...this._geoReferences.keys()];
+  }
+
+  addGeoRecord(identifier, layerIds, extent) {
+    this._geoReferences.set(identifier, extent);
+    this._updateLayerIdentifiers(layerIds)
   }
 
   hasGeo(identifier) {
-    return this._geodata.has(identifier);
-  }
-
-  get geoIdentifiers() {
-    return [...this._geodata.keys()];
+    return this._geoReferences.has(identifier);
   }
 }
 
@@ -176,6 +161,7 @@ export default class Cartographer {
   }
 
   _handleCentroidsUpdate(data) {
+    this._gm.setGeoIdentifiers(data.features.map((feat) => feat.id));
     const source = new GeoJSONSource({
       data
     });
@@ -185,7 +171,6 @@ export default class Cartographer {
     }, geoStyles.centroids);
     this.setSource(layer.source, source);
     this.addLayer(layer);
-    this._gm.centroidsLoaded = true;
     this._removePopup();
     this._setPopupLayer(layer.id);
   }
@@ -233,7 +218,7 @@ export default class Cartographer {
           this.addLayer(layer);
         }
       }
-      this._gm.addGeoRecord(identifier, new GeoRecord(identifiers, extent));
+      this._gm.addGeoRecord(identifier, identifiers, extent);
     }
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
@@ -246,31 +231,36 @@ export default class Cartographer {
       clearTimeout(this._updateDelayId);
       this._updateDelayId = null;
     } else {
+      let self = this;
       this._updateDelayId = setTimeout(() => {
-        this._updateDelayId = null;
-        const zoomLevel = this._map.getZoom();
+        self._updateDelayId = null;
+        const zoomLevel = self._map.getZoom();
         console.log(zoomLevel);
         if (zoomLevel >= minDetailZoom) {
-          const identifiers = this._getCurrentCentroids()
+          const identifiers = self._getCurrentCentroids()
             .map((obj) => obj.properties.geostore);
-          this._updateGeometries([...new Set(identifiers)]);
+          self._updateGeometries([...new Set(identifiers)]);
         }
       }, onMoveDelayTime);
     }
 
     if (this._map.getZoom() < minDetailZoom) {
-      this.showCentroids(this._gm.selectedCentroids);
+      this.showCentroids();
     }
   }
 
   _handleMapClick(event) {
+    const {
+      point,
+      lngLat
+    } = event;
     const layers = this._gm.layerIdentifiers;
     if (layers.length) {
       const width = 20,
         height = 20;
       const bbox = [
-        [event.point.x - width / 2, event.point.y - height / 2],
-        [event.point.x + width / 2, event.point.y + height / 2]
+        [point.x - width / 2, point.y - height / 2],
+        [point.x + width / 2, point.y + height / 2]
       ]
       const features = this._map.queryRenderedFeatures(bbox, {
         layers
@@ -279,15 +269,14 @@ export default class Cartographer {
       if (!features.length) return;
 
       const feat = features[0];
-      console.log('Selected Feature!');
-      // const popup = new Popup();
-      //
-      // popup.setLngLat(event.point)
-      //   .setHTML(`<div class='popup-content'>
-      //      <h4>${feat.properties.label}</h4>
-      //      </div>`);
-      //
-      // this._addPopup(popup);
+      const popup = new Popup();
+
+      popup.setLngLat(lngLat)
+        .setHTML(`<div class='popup-content'>
+           <h4>${feat.properties.name}</h4>
+           </div>`);
+
+      this._addPopup(popup);
     }
   }
 
@@ -348,11 +337,19 @@ export default class Cartographer {
     }
   }
 
-  // centroids
+  // search results
 
-  set selectedCentroids(centroidIds) {
-    this._gm.selectedCentroids = centroidIds;
-    this.showCentroids(this._gm.selectedCentroids);
+  setCurrentGeo(identifiers) {
+    this._gm.selectedGeoIdentifiers = identifiers;
+    this._updateVisibleGeo();
+  }
+
+  _updateVisibleGeo() {
+    if (this._gm.selectedGeoIdentifiers) {
+      this.showCentroids(this._gm.selectedGeoIdentifiers)
+    } else {
+
+    }
   }
 
   showCentroids(centroidsIds) {
