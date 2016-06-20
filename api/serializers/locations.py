@@ -8,6 +8,7 @@ from locations.models import (
     Region,
     Country
 )
+from api.serializers.infrastructure import (ProjectNestableSerializer,)
 from api.fields import DynamicFieldsMixin
 
 
@@ -53,16 +54,10 @@ class GeometryStoreDetailSerializer(DynamicFieldsMixin, serializers.ModelSeriali
     points = PointGeometrySerializer(many=True, read_only=True)
     polygons = PolygonGeometrySerializer(many=True, read_only=True)
     extent = serializers.SerializerMethodField()
-    infrastructure_type = serializers.SerializerMethodField()
+    project = ProjectNestableSerializer()
 
     def get_extent(self, obj):
         return obj.calculate_overall_extent()
-
-    def get_infrastructure_type(self, obj):
-        proj = obj.project_set.first()
-        if proj and proj.infrastructure_type:
-            return proj.infrastructure_type.name.lower()
-        return None
 
     class Meta:
         model = GeometryStore
@@ -74,7 +69,7 @@ class GeometryStoreDetailSerializer(DynamicFieldsMixin, serializers.ModelSeriali
             'points',
             'polygons',
             'extent',
-            'infrastructure_type'
+            'project'
         )
         indelible_fields = ('identifier',)
 
