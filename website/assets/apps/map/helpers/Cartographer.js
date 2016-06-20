@@ -22,9 +22,9 @@ const identiferSep = ' : ';
 const centroidsLayerId = 'project : centroids';
 const metadataIdentifier = 'cartographer:identifier';
 const metadataInfrastructureType = 'cartographer:infrastructureType';
-const metadataProjectIdentifier = 'cartographer:project_identifier';
-const metadataProjectName = 'cartographer:project_name';
-const metadataProjectURL = 'cartographer:project_URL';
+const metadataProjectIdentifier = 'cartographer:projectIdentifier';
+const metadataProjectName = 'cartographer:projectName';
+const metadataProjectURL = 'cartographer:projectURL';
 
 
 export default class Cartographer {
@@ -34,6 +34,7 @@ export default class Cartographer {
     this._al = new ActionListeners(alt);
     this._gm = new GeoManager();
     this._gq = new GeoStoreQueue();
+    this._stylo = new GeoStyles();
     this._updateDelayId = null;
     this._popup = null;
     this._popupLayerId = null;
@@ -63,7 +64,7 @@ export default class Cartographer {
     const layer = Object.assign({
       source: centroidsLayerId,
       id: centroidsLayerId,
-    }, GeoStyles.centroids);
+    }, this._stylo.getStyleFor('centroids'));
     this.setSource(layer.source, source);
     this.addLayer(layer);
     this._removePopup();
@@ -117,7 +118,7 @@ export default class Cartographer {
               metadataProjectName: project_name,
               metadataProjectURL: page_url
             }
-          }, GeoStyles[t]);
+          }, this._stylo.getStyleFor(t, infrastructure_type));
           this.setSource(layer.source, source, false);
           this.addLayer(layer);
         }
