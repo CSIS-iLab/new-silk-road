@@ -24,7 +24,7 @@ export default class ResultsList extends Component {
       <ul className="searchResults">
       {
         this.props.results.map((result, index) => {
-          let geoid = result.geo && result.geo.id;
+          let geoid = result.geo;
           return (
             <li key={index} className="result">
               <p>{result.name}</p>
@@ -32,7 +32,7 @@ export default class ResultsList extends Component {
               <div className='buttonBar'>
                 <Button type='button'
                   onClick={this.handleMapButtonClick}
-                  value={geoid || ''}
+                  value={geoid}
                   enabled={geoid !== null}
                 >View on Map</Button>
                 <Button type='button'

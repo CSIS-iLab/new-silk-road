@@ -17,6 +17,12 @@ const onMoveDelayTime = 750;
 const boundsPadding = 15;
 const maxConcurrent = 6;
 const maxQueue = Infinity;
+const metadataIdentifier = 'cartographer:identifier';
+const metadataInfrastructureType = 'cartographer:infrastructureType';
+const metadataProjectIdentifier = 'cartographer:project_identifier';
+const metadataProjectName = 'cartographer:project_name';
+const metadataProjectURL = 'cartographer:project_URL';
+
 
 const geoStyles = {
   centroids: {
@@ -195,8 +201,14 @@ export default class Cartographer {
     const {
       identifier,
       extent,
-      infrastructure_type: infrastructureType
+      project,
     } = geostore;
+    const {
+      infrastructure_type,
+      page_url,
+      name: project_name,
+      identifier: project_id,
+    } = project;
     this._gq.resolveGeoStore(identifier);
     if (!this._gm.hasGeo(identifier)) {
       const geoTypes = ['lines', 'points', 'polygons'];
@@ -213,8 +225,11 @@ export default class Cartographer {
             source: layerId,
             id: layerId,
             metadata: {
-              'cartographer:identifier': identifier,
-              'cartographer:infrastructureType': infrastructureType
+              metadataIdentifier: identifier,
+              metadataInfrastructureType: infrastructure_type,
+              metadataProjectIdentifier: project_id,
+              metadataProjectName: project_name,
+              metadataProjectURL: page_url
             }
           }, geoStyles[t]);
           this.setSource(layer.source, source, false);
@@ -268,11 +283,22 @@ export default class Cartographer {
       if (!features.length) return;
 
       const feat = features[0];
+      const {
+        metadataIdentifier: identifier,
+        metadataInfrastructureType: infrastructureType,
+        metadataProjectIdentifier: projectIdentifier,
+        metadataProjectName: projectName,
+        metadataProjectURL: projectURL,
+      } = feat.layer.metadata;
+
+
       const popup = new Popup();
 
       popup.setLngLat(lngLat)
         .setHTML(`<div class='popup-content'>
-           <h4>${feat.properties.name}</h4>
+           <h4>${projectName}</h4>
+           <p>${feat.properties.name}</p>
+           <p><a class='button' href='${projectURL}' target='_blank'>Open detail page</a></p>
            </div>`);
 
       this._addPopup(popup);
