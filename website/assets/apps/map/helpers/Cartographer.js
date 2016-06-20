@@ -1,145 +1,31 @@
 import alt from '../alt';
 import ActionListeners from 'alt-utils/lib/ActionListeners';
-import Queue from 'promise-queue';
 import MapboxGl, {
   Popup,
   GeoJSONSource
 } from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
+import GeoStoreQueue from './GeoStoreQueue';
+import GeoManager from './GeoManager';
+import GeoStyles from './GeoStyles';
+import {
+  defaultZoom,
+  minDetailZoom,
+  maxFitZoom,
+  onMoveDelayTime,
+  boundsPadding,
+} from './map-constants';
+
 
 const identiferSep = ' : ';
 const centroidsLayerId = 'project : centroids';
-const defaultZoom = 2.0;
-const minDetailZoom = 5.0;
-const maxFitZoom = 6.0;
-const onMoveDelayTime = 750;
-const boundsPadding = 15;
-const maxConcurrent = 6;
-const maxQueue = Infinity;
 const metadataIdentifier = 'cartographer:identifier';
 const metadataInfrastructureType = 'cartographer:infrastructureType';
 const metadataProjectIdentifier = 'cartographer:project_identifier';
 const metadataProjectName = 'cartographer:project_name';
 const metadataProjectURL = 'cartographer:project_URL';
 
-
-const geoStyles = {
-  centroids: {
-    type: 'symbol',
-    layout: {
-      'icon-allow-overlap': true,
-      'icon-image': 'marker_icon'
-    },
-    paint: {
-      'icon-opacity': 1
-    }
-  },
-  lines: {
-    type: 'line',
-    minzoom: minDetailZoom,
-    layout: {},
-    paint: {
-      'line-color': '#be2323',
-      'line-width': 3
-    }
-  },
-  points: {
-    type: 'symbol',
-    minzoom: minDetailZoom,
-    layout: {
-      'icon-allow-overlap': true,
-      'icon-image': 'dot'
-    },
-    paint: {}
-  },
-  polygons: {
-    type: 'fill',
-    minzoom: minDetailZoom,
-    layout: {},
-    paint: {
-      'fill-color': '#be2323'
-    }
-  }
-}
-
-class GeoStoreQueue {
-  constructor() {
-    this._id_q = new Set();
-    this._q = new Queue(maxConcurrent, maxQueue);
-  }
-
-  loadGeoStore(id) {
-    if (!this._id_q.has(id)) {
-      this._id_q.add(id);
-      this._q.add(() => {
-        GeoStoreActions.getGeoStore(id);
-      });
-    }
-  }
-
-  resolveGeoStore(identifier) {
-    this._id_q.delete(identifier);
-  }
-
-}
-
-class GeoManager {
-  constructor() {
-    this._selectedGeo = null;
-    this._geoReferences = new Map();
-    this._selectedGeoReferences = new Set();
-    this._layerIdentifiers = new Set();
-  }
-
-  _updateLayerIdentifiers(layerIds) {
-    const updated = [...this._layerIdentifiers].concat(layerIds);
-    this._layerIdentifiers = new Set(updated);
-  }
-
-  setGeoIdentifiers(identifiers) {
-    this._geoIdentifiers = new Set(identifiers);
-  }
-
-  get layerIdentifiers() {
-    return [...this._layerIdentifiers];
-  }
-
-  set selectedGeoIdentifiers(values) {
-    this._selectedGeoReferences = new Set(values);
-  }
-
-  get selectedGeoIdentifiers() {
-    if (this._selectedGeoReferences.size > 0) {
-      return this._selectedGeoReferences;
-    }
-    return this._geoIdentifiers;
-  }
-
-  get selectedGeoStore() {
-    return this._selectedGeo;
-  }
-  set selectedGeoStore(value) {
-    this._selectedGeo = value;
-  }
-
-  get selectedGeoExtent() {
-    return this._geoReferences.get(this._selectedGeo);
-  }
-
-  get loadedGeoIdentifiers() {
-    return new Set(this._geoReferences.keys());
-  }
-
-  addGeoRecord(identifier, layerIds, extent) {
-    this._geoReferences.set(identifier, extent);
-    this._updateLayerIdentifiers(layerIds)
-  }
-
-  hasGeo(identifier) {
-    return this._geoReferences.has(identifier);
-  }
-}
 
 export default class Cartographer {
 
@@ -177,7 +63,7 @@ export default class Cartographer {
     const layer = Object.assign({
       source: centroidsLayerId,
       id: centroidsLayerId,
-    }, geoStyles.centroids);
+    }, GeoStyles.centroids);
     this.setSource(layer.source, source);
     this.addLayer(layer);
     this._removePopup();
@@ -231,7 +117,7 @@ export default class Cartographer {
               metadataProjectName: project_name,
               metadataProjectURL: page_url
             }
-          }, geoStyles[t]);
+          }, GeoStyles[t]);
           this.setSource(layer.source, source, false);
           this.addLayer(layer);
         }
@@ -297,7 +183,6 @@ export default class Cartographer {
       popup.setLngLat(lngLat)
         .setHTML(`<div class='popup-content'>
            <h4>${projectName}</h4>
-           <p>${feat.properties.name}</p>
            <p><a class='button' href='${projectURL}' target='_blank'>Open detail page</a></p>
            </div>`);
 

@@ -27,8 +27,8 @@ export default class MapContainer extends Component {
     this.mapCtl.removePopup();
     if (results && results.length > 0) {
       this.mapCtl.resetMapZoom();
-      const geoIdentifiers = results.filter((element, index) => element.geo && element.geo.id)
-                                    .map((element) => element.geo.id);
+      const geoIdentifiers = results.filter((element, index) => element.geo)
+                                    .map((element) => element.geo);
       if (geoIdentifiers.length > 0) {
         this.mapCtl.setCurrentGeo(geoIdentifiers);
       }
