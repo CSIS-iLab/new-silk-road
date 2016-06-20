@@ -19,7 +19,7 @@ export default class MapContainer extends Component {
   }
 
   handleMapClick = (event) => {
-    // this.mapCtl.queryForPopup(event);
+    this.mapCtl.queryForPopup(event);
   }
 
   onSearchResults = (data) => {

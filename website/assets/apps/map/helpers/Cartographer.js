@@ -302,11 +302,18 @@ export default class Cartographer {
       const feat = features[0];
       const popup = new Popup();
 
+      // Create popup HTML, the hard way. (So we can easily add the event listener to that button)
+      let popupContainer = document.createElement('div');
+      popupContainer.className = 'popup-content';
+      let header = document.createElement('h4');
+      header.appendChild(document.createTextNode(feat.properties.label || ''));
+      let button = document.createElement('button');
+      button.appendChild(document.createTextNode('Zoom to Detail'));
+      button.addEventListener('click', (event) => GeoStoreActions.selectGeoStoreId(feat.properties.geostore));
+      popupContainer.appendChild(header);
+      popupContainer.appendChild(button);
       popup.setLngLat(feat.geometry.coordinates)
-        .setHTML(`<div class='popup-content'>
-           <h4>${feat.properties.label}</h4>
-           <button value='${feat.id}'>Zoom to Detail</button>
-           </div>`);
+           .setDOMContent(popupContainer);
 
       this._addPopup(popup);
 
