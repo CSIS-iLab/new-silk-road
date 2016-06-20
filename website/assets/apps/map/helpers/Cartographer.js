@@ -35,6 +35,7 @@ export default class Cartographer {
     this._gm = new GeoManager();
     this._gq = new GeoStoreQueue();
     this._stylo = new GeoStyles();
+    this._lastMapUpdate = Date.now();
     this._updateDelayId = null;
     this._popup = null;
     this._popupLayerId = null;
@@ -46,6 +47,7 @@ export default class Cartographer {
     this._al.addActionListener(GeoCentroidActions.FAIL, this._handleCentroidsFail.bind(this));
     this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
     this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
+    this._map.on('move', this._handleMapMove.bind(this));
     this._map.on('moveend', this._handleEndMapMove.bind(this));
     this._map.on('click', this._handleMapClick.bind(this));
   }
@@ -131,6 +133,15 @@ export default class Cartographer {
     }
   }
 
+  _handleMapMove(event) {
+    const now = Date.now();
+    const delta = now - this._lastMapUpdate;
+    if (delta > 250) {
+      this._lastMapUpdate = now;
+      this._updateMapState();
+    }
+  }
+
   _handleEndMapMove(event) {
     if (this._updateDelayId) {
       clearTimeout(this._updateDelayId);
@@ -206,6 +217,7 @@ export default class Cartographer {
       visibleCentroids = visibleCentroids.filter(x => !this._gm.loadedGeoIdentifiers.has(x));
     }
     this.showCentroids(visibleCentroids);
+    this._lastMapUpdate = Date.now();
   }
 
   setSource(id, source, replace = true) {
