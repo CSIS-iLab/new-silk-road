@@ -19,7 +19,7 @@ const containerStyle = {
 ReactDOM.render(
   <StyleRoot style={{height: appHeight}}>
     <MapContainer accessToken={token} containerStyle={containerStyle} mapStyle={mapStyle} />
-    <SearchView maxHeight={appHeight} />
+    <SearchView maxHeight={appHeight - 40} />
   </StyleRoot>,
   document.getElementById('app')
 );

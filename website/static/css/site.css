@@ -413,9 +413,19 @@ html {
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  top: 0;
-  left: 0; }
-  .searchView .section-row {
+  top: 20px;
+  right: 20px; }
+  .searchView .sectionHeader {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between; }
+    .searchView .sectionHeader button {
+      flex: 0 0 auto; }
+    .searchView .sectionHeader h4 {
+      display: inline-block;
+      flex: 1 0 auto;
+      margin: 0; }
+  .searchView .sectionRow {
     display: block;
     clear: both;
     margin-bottom: 4px; }
@@ -794,9 +804,19 @@ html {
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  top: 0;
-  left: 0; }
-  .searchView .section-row {
+  top: 20px;
+  right: 20px; }
+  .searchView .sectionHeader {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between; }
+    .searchView .sectionHeader button {
+      flex: 0 0 auto; }
+    .searchView .sectionHeader h4 {
+      display: inline-block;
+      flex: 1 0 auto;
+      margin: 0; }
+  .searchView .sectionRow {
     display: block;
     clear: both;
     margin-bottom: 4px; }

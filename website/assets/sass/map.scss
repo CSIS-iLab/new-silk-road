@@ -40,9 +40,22 @@
     display: flex;
     flex-direction: column;
     font-size: 16px;
-    top: 0;
-    left: 0;
-    .section-row {
+    top: 20px;
+    right: 20px;
+    .sectionHeader {
+        display: flex;
+        flex-direction: row;
+        align-content: space-between;
+        button {
+            flex: 0 0 auto;
+        }
+        h4 {
+            display: inline-block;
+            flex: 1 0 auto;
+            margin: 0;
+        }
+    }
+    .sectionRow {
         display: block;
         clear: both;
         margin-bottom: 4px;

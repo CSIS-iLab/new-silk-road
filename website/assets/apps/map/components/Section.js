@@ -3,9 +3,6 @@ import Radium from "radium";
 import { Button } from "./forms";
 
 class Section extends Component {
-  static propTypes = {
-    header: PropTypes.element
-  }
 
   state = {
     expanded: false
@@ -45,9 +42,6 @@ class Section extends Component {
     }
     return (
       <section className="expandable">
-        <header>
-        {this.props.header || ""}
-        </header>
         <div class="sectionBody" style={[
           styles.sectionBody.base,
           styles.sectionBody[this.state.expanded ? 'expanded': 'collapsed']

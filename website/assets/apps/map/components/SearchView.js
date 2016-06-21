@@ -9,7 +9,7 @@ import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
-import {Select} from "./forms";
+import {Select, Button} from "./forms";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
@@ -25,7 +25,8 @@ export default class SearchView extends Component {
     nextURL: null,
     previousURL: null,
     error: null,
-    searchEnabled: false
+    searchEnabled: false,
+    expanded: false
   }
 
   componentDidMount() {
@@ -67,7 +68,6 @@ export default class SearchView extends Component {
   onSearchResults = (data) => {
     var { results, next, previous, error } = data;
     this.setState({results, nextURL: next, previousURL: previous, error});
-    this.refs.searchForm.collapse();
   }
 
   render() {
@@ -80,49 +80,46 @@ export default class SearchView extends Component {
       <div className="searchView" style={{height: searchViewHeight}}>
         <div className="searchWidget">
           <form onSubmit={this.handleSubmit}>
-          <Section ref='searchForm' header={
-            <SearchBar
-            label="Project" name="name__icontains"
-            value={this.state.projectTitle}
-            onSearchInput={this.handleQueryUpdate}
-            searchEnabled={this.state.searchEnabled}
-            />
-          }>
-            <div className="section-row">
+          <SearchBar
+          label="Project" name="name__icontains"
+          value={this.state.projectTitle}
+          onSearchInput={this.handleQueryUpdate}
+          searchEnabled={this.state.searchEnabled}
+          />
+          <Section>
+            <div className="sectionRow">
               <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
-            <div className="section-row">
+            <div className="sectionRow">
               <StatusSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
-            <div className="section-row">
-            <Section header={
+          </Section>
+          <Section>
+            <div className="sectionRow">
               <SearchBar label="Initiative" name="initiatives__name__icontains"
               onSearchInput={this.handleQueryUpdate}
               searchEnabled={this.state.searchEnabled}
               />
-            }>
-              <div className="section-row">
-                <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
-              </div>
-              <div className="section-row">
-                <RegionSelectContainer onSelect={this.handleQueryUpdate} />
-              </div>
-            </Section>
             </div>
-            <div className="section-row">
-              <Section header={
-                <SearchBar label="Funder" name="funding__sources__name__icontains"
-                onSearchInput={this.handleQueryUpdate}
-                searchEnabled={this.state.searchEnabled}
-                />
-              }>
-              <div className="section-row">
+            <div className="sectionRow">
+              <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="sectionRow">
+              <RegionSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
+          </Section>
+          <Section>
+            <div className="sectionRow">
+              <SearchBar label="Funder" name="funding__sources__name__icontains"
+              onSearchInput={this.handleQueryUpdate}
+              searchEnabled={this.state.searchEnabled}
+              />
+            </div>
+            <div className="sectionRow">
               <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
-              </div>
-              <div className="section-row">
+            </div>
+            <div className="sectionRow">
               <CountrySelectContainer onSelect={this.handleQueryUpdate} />
-              </div>
-              </Section>
             </div>
           </Section>
           </form>

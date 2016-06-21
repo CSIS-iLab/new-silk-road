@@ -53,14 +53,13 @@ class Button extends Component {
 
   render() {
     return (
-      <button type={this.props.type}
+      <button {...this.props}
               disabled={!this.props.enabled}
               style={[
                 buttonStyle.base,
                 this.props.bordered && buttonStyle.bordered,
                 !this.props.enabled && buttonStyle.disabled
               ]}
-              value={this.props.value}
               onClick={this.props.onClick}
                >{this.props.children}</button>
     )
