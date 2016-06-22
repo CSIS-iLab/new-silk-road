@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
-@import url(../../../node_modules/react-select/dist/react-select.css);
 @import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
+@import url(../../../node_modules/react-select/dist/react-select.css);
 html {
   box-sizing: border-box; }
 
@@ -408,26 +408,28 @@ html {
   width: 240px; }
 
 .searchView {
-  max-width: 370px;
+  width: 300px;
   padding: 4px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #d6e1d6;
   position: absolute;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   top: 20px;
   right: 20px; }
-  .searchView .expandable header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center; }
-    .searchView .expandable header button {
-      flex: 0 0 auto; }
-    .searchView .expandable header h4 {
-      display: inline-block;
-      flex: 1 0 auto;
-      margin: 0; }
+  .searchView section {
+    margin-top: 4px; }
+    .searchView section header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center; }
+      .searchView section header button {
+        flex: 0 0 auto; }
+      .searchView section header h4 {
+        display: inline-block;
+        flex: 1 0 auto;
+        margin: 0; }
   .searchView .sectionRow {
     display: block;
     clear: both;
@@ -438,25 +440,34 @@ html {
       display: block;
       font-size: 12px;
       width: 100%; }
-  .searchView button {
-    background-color: #eee; }
+  .searchView button,
+  .searchView input,
   .searchView label {
-    display: inline-block;
+    display: inline-block; }
+  .searchView button, .searchView input {
+    color: #eee8e4;
+    background-color: #556377;
+    border: none;
+    padding: 3px 8px; }
+    .searchView button:focus, .searchView input:focus {
+      outline: none; }
+    .searchView button::-webkit-input-placeholder, .searchView input::-webkit-input-placeholder {
+      color: #a6b0bf; }
+    .searchView button::-moz-placeholder, .searchView input::-moz-placeholder {
+      color: #a6b0bf; }
+    .searchView button:-moz-placeholder, .searchView input:-moz-placeholder {
+      color: #a6b0bf; }
+    .searchView button:-ms-input-placeholder, .searchView input:-ms-input-placeholder {
+      color: #a6b0bf; }
+  .searchView label {
     width: 90px;
     margin-right: 3px;
     text-align: right; }
-  .searchView input {
-    background-color: transparent;
-    margin-right: 6px; }
   .searchView select {
     max-width: 240px;
     margin-right: 6px; }
     .searchView select:last-of-type {
       margin-right: 0; }
-  .searchView button,
-  .searchView input,
-  .searchView label {
-    display: inline-block; }
   .searchView ul.searchResults {
     list-style: none;
     padding: 0 3px;
@@ -473,12 +484,36 @@ html {
   .searchView .searchBar {
     display: flex;
     flex-direction: row;
-    justify-content: space-between; }
+    justify-content: space-between;
+    background-color: #75986a; }
     .searchView .searchBar button {
       flex: 0 1 auto; }
     .searchView .searchBar input,
     .searchView .searchBar label {
       flex: 1 0 auto; }
+  .searchView #primarySearch input, .searchView #primarySearch button {
+    background-color: #252d3a; }
+  .searchView #primarySearch input {
+    padding: 8px; }
+
+.Select .Select-control {
+  color: #eee8e4;
+  background-color: #556377;
+  border-radius: 0; }
+  .Select .Select-control .Select-value {
+    max-width: 85%; }
+  .Select .Select-control .Select-value-label, .Select .Select-control .Select-clear-zone {
+    color: #eee8e4; }
+
+.Select .Select-placeholder {
+  color: #a6b0bf; }
+
+.Select .Select-arrow {
+  border-color: #eee8e4 transparent transparent; }
+
+.has-value.Select > .Select-control > .Select-value .Select-value-label,
+.has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
+  color: #eee8e4; }
 
 html {
   font-size: 18px; }
@@ -762,7 +797,6 @@ article section table {
     color: #75986a;
     border-bottom: 2px solid #75986a; } }
 
-@import url(../../../node_modules/react-select/dist/react-select.css);
 @import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
 html {
   box-sizing: border-box; }
@@ -801,27 +835,30 @@ html {
 .popup-content {
   width: 240px; }
 
+@import url(../../../node_modules/react-select/dist/react-select.css);
 .searchView {
-  max-width: 370px;
+  width: 300px;
   padding: 4px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #d6e1d6;
   position: absolute;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   top: 20px;
   right: 20px; }
-  .searchView .expandable header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center; }
-    .searchView .expandable header button {
-      flex: 0 0 auto; }
-    .searchView .expandable header h4 {
-      display: inline-block;
-      flex: 1 0 auto;
-      margin: 0; }
+  .searchView section {
+    margin-top: 4px; }
+    .searchView section header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center; }
+      .searchView section header button {
+        flex: 0 0 auto; }
+      .searchView section header h4 {
+        display: inline-block;
+        flex: 1 0 auto;
+        margin: 0; }
   .searchView .sectionRow {
     display: block;
     clear: both;
@@ -832,25 +869,34 @@ html {
       display: block;
       font-size: 12px;
       width: 100%; }
-  .searchView button {
-    background-color: #eee; }
+  .searchView button,
+  .searchView input,
   .searchView label {
-    display: inline-block;
+    display: inline-block; }
+  .searchView button, .searchView input {
+    color: #eee8e4;
+    background-color: #556377;
+    border: none;
+    padding: 3px 8px; }
+    .searchView button:focus, .searchView input:focus {
+      outline: none; }
+    .searchView button::-webkit-input-placeholder, .searchView input::-webkit-input-placeholder {
+      color: #a6b0bf; }
+    .searchView button::-moz-placeholder, .searchView input::-moz-placeholder {
+      color: #a6b0bf; }
+    .searchView button:-moz-placeholder, .searchView input:-moz-placeholder {
+      color: #a6b0bf; }
+    .searchView button:-ms-input-placeholder, .searchView input:-ms-input-placeholder {
+      color: #a6b0bf; }
+  .searchView label {
     width: 90px;
     margin-right: 3px;
     text-align: right; }
-  .searchView input {
-    background-color: transparent;
-    margin-right: 6px; }
   .searchView select {
     max-width: 240px;
     margin-right: 6px; }
     .searchView select:last-of-type {
       margin-right: 0; }
-  .searchView button,
-  .searchView input,
-  .searchView label {
-    display: inline-block; }
   .searchView ul.searchResults {
     list-style: none;
     padding: 0 3px;
@@ -867,9 +913,33 @@ html {
   .searchView .searchBar {
     display: flex;
     flex-direction: row;
-    justify-content: space-between; }
+    justify-content: space-between;
+    background-color: #75986a; }
     .searchView .searchBar button {
       flex: 0 1 auto; }
     .searchView .searchBar input,
     .searchView .searchBar label {
       flex: 1 0 auto; }
+  .searchView #primarySearch input, .searchView #primarySearch button {
+    background-color: #252d3a; }
+  .searchView #primarySearch input {
+    padding: 8px; }
+
+.Select .Select-control {
+  color: #eee8e4;
+  background-color: #556377;
+  border-radius: 0; }
+  .Select .Select-control .Select-value {
+    max-width: 85%; }
+  .Select .Select-control .Select-value-label, .Select .Select-control .Select-clear-zone {
+    color: #eee8e4; }
+
+.Select .Select-placeholder {
+  color: #a6b0bf; }
+
+.Select .Select-arrow {
+  border-color: #eee8e4 transparent transparent; }
+
+.has-value.Select > .Select-control > .Select-value .Select-value-label,
+.has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
+  color: #eee8e4; }

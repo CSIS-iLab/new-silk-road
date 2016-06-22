@@ -88,6 +88,7 @@ export default class SearchView extends Component {
         <div className="searchWidget">
           <form onSubmit={this.handleSubmit}>
           <SearchBar
+          id="primarySearch"
           placeholder="Project Title" name="name__icontains"
           value={this.state.projectTitle}
           onSearchInput={this.handleQueryUpdate}
@@ -106,6 +107,7 @@ export default class SearchView extends Component {
               <SearchBar placeholder="Initiative Title" name="initiatives__name__icontains"
               onSearchInput={this.handleQueryUpdate}
               searchEnabled={this.state.searchEnabled}
+              showSubmit={false}
               />
             </div>
             <div className="sectionRow">
@@ -120,6 +122,7 @@ export default class SearchView extends Component {
               <SearchBar placeholder="Funder Name" name="funding__sources__name__icontains"
               onSearchInput={this.handleQueryUpdate}
               searchEnabled={this.state.searchEnabled}
+              showSubmit={false}
               />
             </div>
             <div className="sectionRow">

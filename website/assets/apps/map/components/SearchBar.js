@@ -4,13 +4,19 @@ import { Input, Button } from "./forms";
 
 class SearchBar extends Component {
   static propTypes = {
+    id: PropTypes.string,
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     label: PropTypes.string,
     searchEnabled: PropTypes.bool.isRequired,
     inputText: PropTypes.string,
-    onSearchInput: PropTypes.func
+    onSearchInput: PropTypes.func,
+    showSubmit: PropTypes.bool
   };
+
+  static defaultProps = {
+    showSubmit: true
+  }
 
   handleUserInput = (value, e) => {
     if (this.props.onSearchInput) {
@@ -20,7 +26,7 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <div className="searchBar">
+      <div className="searchBar" id={this.props.id}>
         {(() => {
           if (this.props.label) {
             console.log('label');
@@ -37,10 +43,16 @@ class SearchBar extends Component {
         onUserInput={this.handleUserInput}
         name={this.props.name} placeholder={this.props.placeholder}
         />
-        <Button type='submit'
-                bordered={true}
-                enabled={this.props.searchEnabled}
-        >Search</Button>
+        {(()=> {
+          if (this.props.showSubmit) {
+            return (
+              <Button type='submit'
+              bordered={true}
+              enabled={this.props.searchEnabled}
+              >Search</Button>
+            );
+          }
+        })()}
       </div>
     )
   }
