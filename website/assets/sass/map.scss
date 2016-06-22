@@ -1,4 +1,5 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
+@import "variables";
 @import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
 /*
     Map styles
@@ -6,6 +7,12 @@
 .mapboxgl-popup {
     max-width: 400px;
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+.mapboxgl-popup-content {
+    background-color: $pale-green;
+}
+.mapboxgl-popup-close-button {
+    color: $serious-green;
 }
 .marker-title {
     font-weight: 700;

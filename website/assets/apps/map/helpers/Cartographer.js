@@ -1,6 +1,7 @@
 import alt from '../alt';
 import ActionListeners from 'alt-utils/lib/ActionListeners';
 import MapboxGl, {
+  Navigation,
   Popup,
   GeoJSONSource
 } from "mapbox-gl/js/mapbox-gl";
@@ -40,6 +41,7 @@ export default class Cartographer {
     this._popup = null;
     this._popupLayerId = null;
     this._addListeners();
+    this._configureMap();
   }
 
   _addListeners() {
@@ -50,6 +52,11 @@ export default class Cartographer {
     this._map.on('move', this._handleMapMove.bind(this));
     this._map.on('moveend', this._handleEndMapMove.bind(this));
     this._map.on('click', this._handleMapClick.bind(this));
+  }
+
+  _configureMap() {
+    this._map.addControl(new Navigation({position: 'top-left'}));
+    this._map['scrollZoom'].disable();
   }
 
   // Handlers
@@ -126,8 +133,8 @@ export default class Cartographer {
         }
       }
       this._gm.addGeoRecord(identifier, identifiers, extent);
-      this._updateMapState();
     }
+    this._updateMapState();
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
     }

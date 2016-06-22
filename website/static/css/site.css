@@ -383,6 +383,12 @@ html {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
 
+.mapboxgl-popup-content {
+  background-color: #d6e1d6; }
+
+.mapboxgl-popup-close-button {
+  color: #4e736c; }
+
 .marker-title {
   font-weight: 700; }
 
@@ -605,6 +611,13 @@ ul {
     padding: 0; }
     ul.compact li {
       margin-bottom: 3px; }
+
+button {
+  cursor: pointer;
+  background-color: #556377;
+  color: #eee8e4;
+  border: none;
+  padding: 4px 8px; }
 
 nav ul {
   padding-left: 0; }
@@ -849,6 +862,12 @@ html {
 .mapboxgl-popup {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
+
+.mapboxgl-popup-content {
+  background-color: #d6e1d6; }
+
+.mapboxgl-popup-close-button {
+  color: #4e736c; }
 
 .marker-title {
   font-weight: 700; }
