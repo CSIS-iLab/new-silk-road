@@ -9,6 +9,7 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
     }
 
     state = {
+      isLoading: true,
       options: [],
       value: '',
       error: null
@@ -25,14 +26,14 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
     updateOptions = (data) => {
       this.setState({
         options: mapOptions(data),
-        error: data.error
+        error: data.error,
+        isLoading: false
       });
     }
 
     onChange = (option, event) => {
-      console.log(option);
       const value = option ? option.value : '';
-      this.setState({value: value});
+      this.setState({value});
       if (this.props.onSelect) {
         this.props.onSelect({[this.selectName]: value});
       }
@@ -44,9 +45,10 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
         <Select
           value={this.state.value}
           name={this.selectName}
-          labelName={this.labelName}
+          placeholder={this.labelName}
           options={this.state.options}
           onChange={this.onChange}
+          isLoading={this.state.isLoading}
           />
       );
     }
