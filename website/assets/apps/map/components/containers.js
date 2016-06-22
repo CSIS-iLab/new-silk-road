@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import OptionSelect from './OptionSelect';
+import Select from 'react-select';
 
 
 function createSelectContainer(Store, Actions, selectName, labelName, mapOptions, fetchParams=null) {
@@ -10,6 +10,7 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
 
     state = {
       options: [],
+      value: '',
       error: null
     }
 
@@ -17,18 +18,21 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
     get labelName() { return labelName; }
 
     componentDidMount() {
-      Store.listen(this.onChange);
+      Store.listen(this.updateOptions);
       Actions.fetch(fetchParams);
     }
 
-    onChange = (data) => {
+    updateOptions = (data) => {
       this.setState({
         options: mapOptions(data),
         error: data.error
       });
     }
 
-    handleSelect = (value, event) => {
+    onChange = (option, event) => {
+      console.log(option);
+      const value = option ? option.value : '';
+      this.setState({value: value});
       if (this.props.onSelect) {
         this.props.onSelect({[this.selectName]: value});
       }
@@ -37,12 +41,12 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
     render() {
       const hasOptions = this.state.options.length > 0;
       return (
-        <OptionSelect
+        <Select
+          value={this.state.value}
           name={this.selectName}
           labelName={this.labelName}
           options={this.state.options}
-          onSelect={this.handleSelect}
-          enabled={hasOptions}
+          onChange={this.onChange}
           />
       );
     }

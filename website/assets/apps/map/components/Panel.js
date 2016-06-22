@@ -31,15 +31,12 @@ class Panel extends Component {
         base: {
           margin: '4px 0',
           display: 'block',
-          overflow: 'hidden',
-          transition: 'max-height 0.25s ease-in',
-          maxHeight: 0
         },
         expanded: {
-          maxHeight: '500px'
+          display: 'block',
         },
         collapsed: {
-          maxHeight: 0
+          display: 'none',
         }
       }
     }
