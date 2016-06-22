@@ -6,7 +6,7 @@ class SearchBar extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     searchEnabled: PropTypes.bool.isRequired,
     inputText: PropTypes.string,
     onSearchInput: PropTypes.func
@@ -21,9 +21,16 @@ class SearchBar extends Component {
   render() {
     return (
       <div className="searchBar">
-        <label for={this.props.name}>
-        {this.props.label}:
-        </label>
+        {(() => {
+          if (this.props.label) {
+            console.log('label');
+            return (
+              <label for={this.props.name}>
+              {this.props.label}:
+              </label>
+            );
+          }
+        })()}
         <Input
         ref="searchTextInput"
         inputText={this.props.inputText}

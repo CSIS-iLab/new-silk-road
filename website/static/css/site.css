@@ -419,7 +419,8 @@ html {
   .searchView .expandable header {
     display: flex;
     flex-direction: row;
-    align-content: space-between; }
+    justify-content: space-between;
+    align-items: center; }
     .searchView .expandable header button {
       flex: 0 0 auto; }
     .searchView .expandable header h4 {
@@ -445,8 +446,7 @@ html {
     text-align: right; }
   .searchView input {
     background-color: transparent;
-    max-width: 214px;
-    margin-right: 2px; }
+    margin-right: 6px; }
   .searchView select {
     max-width: 240px;
     margin-right: 6px; }
@@ -472,8 +472,9 @@ html {
   .searchView .searchBar {
     display: flex;
     flex-direction: row;
-    align-content: space-between; }
-    .searchView .searchBar button,
+    justify-content: space-between; }
+    .searchView .searchBar button {
+      flex: 0 1 auto; }
     .searchView .searchBar input,
     .searchView .searchBar label {
       flex: 1 0 auto; }
@@ -811,7 +812,8 @@ html {
   .searchView .expandable header {
     display: flex;
     flex-direction: row;
-    align-content: space-between; }
+    justify-content: space-between;
+    align-items: center; }
     .searchView .expandable header button {
       flex: 0 0 auto; }
     .searchView .expandable header h4 {
@@ -837,8 +839,7 @@ html {
     text-align: right; }
   .searchView input {
     background-color: transparent;
-    max-width: 214px;
-    margin-right: 2px; }
+    margin-right: 6px; }
   .searchView select {
     max-width: 240px;
     margin-right: 6px; }
@@ -864,8 +865,9 @@ html {
   .searchView .searchBar {
     display: flex;
     flex-direction: row;
-    align-content: space-between; }
-    .searchView .searchBar button,
+    justify-content: space-between; }
+    .searchView .searchBar button {
+      flex: 0 1 auto; }
     .searchView .searchBar input,
     .searchView .searchBar label {
       flex: 1 0 auto; }

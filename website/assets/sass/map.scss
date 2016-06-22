@@ -46,7 +46,8 @@
     .expandable header {
         display: flex;
         flex-direction: row;
-        align-content: space-between;
+        justify-content: space-between;
+        align-items: center;
         button {
             flex: 0 0 auto;
         }
@@ -80,8 +81,7 @@
     }
     input {
         background-color: transparent;
-        max-width: 214px;
-        margin-right: 2px;
+        margin-right: 6px;
     }
     select {
         max-width: 240px;
@@ -115,8 +115,10 @@
     .searchBar {
         display: flex;
         flex-direction: row;
-        align-content: space-between;
-        button,
+        justify-content: space-between;
+        button {
+            flex: 0 1 auto;
+        }
         input,
         label {
             flex: 1 0 auto;

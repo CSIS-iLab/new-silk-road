@@ -88,7 +88,7 @@ export default class SearchView extends Component {
         <div className="searchWidget">
           <form onSubmit={this.handleSubmit}>
           <SearchBar
-          label="Project" name="name__icontains"
+          placeholder="Project Title" name="name__icontains"
           value={this.state.projectTitle}
           onSearchInput={this.handleQueryUpdate}
           searchEnabled={this.state.searchEnabled}
@@ -103,7 +103,7 @@ export default class SearchView extends Component {
           </Panel>
           <Panel title='Initiatives' ref='initiativesPanel'>
             <div className="sectionRow">
-              <SearchBar label="Initiative" name="initiatives__name__icontains"
+              <SearchBar placeholder="Initiative Title" name="initiatives__name__icontains"
               onSearchInput={this.handleQueryUpdate}
               searchEnabled={this.state.searchEnabled}
               />
@@ -117,7 +117,7 @@ export default class SearchView extends Component {
           </Panel>
           <Panel title='Funders' ref='fundersPanel'>
             <div className="sectionRow">
-              <SearchBar label="Funder" name="funding__sources__name__icontains"
+              <SearchBar placeholder="Funder Name" name="funding__sources__name__icontains"
               onSearchInput={this.handleQueryUpdate}
               searchEnabled={this.state.searchEnabled}
               />
