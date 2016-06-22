@@ -408,6 +408,7 @@ html {
 
 .searchView {
   max-width: 370px;
+  padding: 4px;
   background-color: rgba(255, 255, 255, 0.9);
   position: absolute;
   display: flex;
@@ -415,13 +416,13 @@ html {
   font-size: 16px;
   top: 20px;
   right: 20px; }
-  .searchView .sectionHeader {
+  .searchView .expandable header {
     display: flex;
     flex-direction: row;
     align-content: space-between; }
-    .searchView .sectionHeader button {
+    .searchView .expandable header button {
       flex: 0 0 auto; }
-    .searchView .sectionHeader h4 {
+    .searchView .expandable header h4 {
       display: inline-block;
       flex: 1 0 auto;
       margin: 0; }
@@ -439,7 +440,7 @@ html {
     background-color: #eee; }
   .searchView label {
     display: inline-block;
-    width: 80px;
+    width: 90px;
     margin-right: 3px;
     text-align: right; }
   .searchView input {
@@ -447,7 +448,7 @@ html {
     max-width: 214px;
     margin-right: 2px; }
   .searchView select {
-    max-width: 280px;
+    max-width: 240px;
     margin-right: 6px; }
     .searchView select:last-of-type {
       margin-right: 0; }
@@ -799,6 +800,7 @@ html {
 
 .searchView {
   max-width: 370px;
+  padding: 4px;
   background-color: rgba(255, 255, 255, 0.9);
   position: absolute;
   display: flex;
@@ -806,13 +808,13 @@ html {
   font-size: 16px;
   top: 20px;
   right: 20px; }
-  .searchView .sectionHeader {
+  .searchView .expandable header {
     display: flex;
     flex-direction: row;
     align-content: space-between; }
-    .searchView .sectionHeader button {
+    .searchView .expandable header button {
       flex: 0 0 auto; }
-    .searchView .sectionHeader h4 {
+    .searchView .expandable header h4 {
       display: inline-block;
       flex: 1 0 auto;
       margin: 0; }
@@ -830,7 +832,7 @@ html {
     background-color: #eee; }
   .searchView label {
     display: inline-block;
-    width: 80px;
+    width: 90px;
     margin-right: 3px;
     text-align: right; }
   .searchView input {
@@ -838,7 +840,7 @@ html {
     max-width: 214px;
     margin-right: 2px; }
   .searchView select {
-    max-width: 280px;
+    max-width: 240px;
     margin-right: 6px; }
     .searchView select:last-of-type {
       margin-right: 0; }

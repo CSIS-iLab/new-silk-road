@@ -2,7 +2,10 @@ import React, { Component, PropTypes } from "react";
 import Radium from "radium";
 import { Button } from "./forms";
 
-class Section extends Component {
+class Panel extends Component {
+  static propTypes = {
+    title: PropTypes.string,
+  }
 
   state = {
     expanded: false
@@ -42,20 +45,21 @@ class Section extends Component {
     }
     return (
       <section className="expandable">
+        <header>
+        <h4>{this.props.title}</h4>
+        <Button onClick={this.handleToggle}>{toggleButtonText}</Button>
+        </header>
         <div class="sectionBody" style={[
           styles.sectionBody.base,
           styles.sectionBody[this.state.expanded ? 'expanded': 'collapsed']
         ]}>
         {this.props.children}
         </div>
-        <footer>
-          <Button onClick={this.handleToggle}>{toggleButtonText}</Button>
-        </footer>
       </section>
     );
 
   }
 }
-Section = Radium(Section);
+Panel = Radium(Panel);
 
-export default Section;
+export default Panel;

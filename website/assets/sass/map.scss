@@ -35,6 +35,7 @@
 
 .searchView {
     max-width: 370px;
+    padding: 4px;
     background-color: rgba(255, 255, 255, 0.9);
     position: absolute;
     display: flex;
@@ -42,7 +43,7 @@
     font-size: 16px;
     top: 20px;
     right: 20px;
-    .sectionHeader {
+    .expandable header {
         display: flex;
         flex-direction: row;
         align-content: space-between;
@@ -73,7 +74,7 @@
     }
     label {
         display: inline-block;
-        width: 80px;
+        width: 90px;
         margin-right: 3px;
         text-align: right;
     }
@@ -83,7 +84,7 @@
         margin-right: 2px;
     }
     select {
-        max-width: 280px;
+        max-width: 240px;
         margin-right: 6px;
         &:last-of-type {
             margin-right: 0;

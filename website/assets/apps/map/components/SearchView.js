@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import Section from "./Section";
+import Panel from "./Panel";
 import SearchBar from "./SearchBar";
 import CountrySelectContainer from "./CountrySelectContainer";
 import RegionSelectContainer from "./RegionSelectContainer";
@@ -65,9 +65,16 @@ export default class SearchView extends Component {
     }
   }
 
+  _collapsePanels() {
+    this.refs.projectsPanel.collapse();
+    this.refs.initiativesPanel.collapse();
+    this.refs.fundersPanel.collapse();
+  }
+
   onSearchResults = (data) => {
     var { results, next, previous, error } = data;
     this.setState({results, nextURL: next, previousURL: previous, error});
+    this._collapsePanels();
   }
 
   render() {
@@ -86,15 +93,15 @@ export default class SearchView extends Component {
           onSearchInput={this.handleQueryUpdate}
           searchEnabled={this.state.searchEnabled}
           />
-          <Section>
+          <Panel title='Projects' ref='projectsPanel'>
             <div className="sectionRow">
               <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
             <div className="sectionRow">
               <StatusSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
-          </Section>
-          <Section>
+          </Panel>
+          <Panel title='Initiatives' ref='initiativesPanel'>
             <div className="sectionRow">
               <SearchBar label="Initiative" name="initiatives__name__icontains"
               onSearchInput={this.handleQueryUpdate}
@@ -107,8 +114,8 @@ export default class SearchView extends Component {
             <div className="sectionRow">
               <RegionSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
-          </Section>
-          <Section>
+          </Panel>
+          <Panel title='Funders' ref='fundersPanel'>
             <div className="sectionRow">
               <SearchBar label="Funder" name="funding__sources__name__icontains"
               onSearchInput={this.handleQueryUpdate}
@@ -121,7 +128,7 @@ export default class SearchView extends Component {
             <div className="sectionRow">
               <CountrySelectContainer onSelect={this.handleQueryUpdate} />
             </div>
-          </Section>
+          </Panel>
           </form>
         </div>
         <ResultsView
