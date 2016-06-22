@@ -76,11 +76,12 @@ class ResultsView extends Component {
   }
 
   render() {
+    const noResults = this.props.results.length === 0;
     return (
       <div className="resultsView" style={this.props.style}>
         <div className="resultsNav" style={[
           resultsNavStyle.base,
-          this.props.results.length === 0 && resultsNavStyle.hidden
+          noResults && resultsNavStyle.hidden
         ]}>
           <Button
             enabled={this.props.previousURL !== null}

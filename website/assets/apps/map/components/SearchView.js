@@ -26,7 +26,8 @@ export default class SearchView extends Component {
     previousURL: null,
     error: null,
     searchEnabled: false,
-    expanded: false
+    expanded: false,
+    hasSearched: false
   }
 
   componentDidMount() {
@@ -73,13 +74,13 @@ export default class SearchView extends Component {
 
   onSearchResults = (data) => {
     var { results, next, previous, error } = data;
-    this.setState({results, nextURL: next, previousURL: previous, error});
+    this.setState({results, nextURL: next, previousURL: previous, error, hasSearched: true});
     this._collapsePanels();
   }
 
   render() {
-    const { maxHeight } = this.props;
-    const { results, nextURL, previousURL, error } = this.state;
+    const { maxHeight, hasSearched } = this.props;
+    const { results, nextURL, previousURL, error, query } = this.state;
     const searchViewHeight = results.length > 0 ? maxHeight : 'auto';
     const resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
     const errorView = error ? (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
@@ -134,6 +135,17 @@ export default class SearchView extends Component {
           </Panel>
           </form>
         </div>
+        {(() => {
+          if (!error &&
+              hasSearched &&
+              results.length === 0) {
+            return (
+              <div className="sectionRow">
+                <p>Sorry, we didn't find any matches.</p>
+              </div>
+            );
+          }
+        })()}
         <ResultsView
           style={{height: resultsViewHeight}}
           results={results}

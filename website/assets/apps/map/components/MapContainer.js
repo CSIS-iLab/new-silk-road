@@ -9,12 +9,9 @@ import Cartographer, {defaultZoom} from '../helpers/Cartographer';
 
 export default class MapContainer extends Component {
 
-  componentDidMount() {
-    SearchStore.listen(this.onSearchResults);
-  }
-
   handleMapLoad = () => {
     this.mapCtl = new Cartographer(this.refs.map._map);
+    SearchStore.listen(this.onSearchResults);
     GeoCentroidActions.fetch();
   }
 
