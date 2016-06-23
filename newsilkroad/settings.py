@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 import dj_database_url
 import raven
+from memcacheify import memcacheify
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
 
     'maintenancemode',
+    'cachalot',
 
     'django_extensions',
     'storages',
@@ -65,11 +67,14 @@ INSTALLED_APPS = [
 ]
 
 if DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True":
+    from debug_toolbar.settings import PANELS_DEFAULTS
     INSTALLED_APPS.append('debug_toolbar')
+    DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + ['cachalot.panels.CachalotPanel']
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,6 +83,7 @@ MIDDLEWARE_CLASSES = [
     'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'newsilkroad.urls'
@@ -159,6 +165,11 @@ RAVEN_CONFIG = {
 DATABASES = {'default': dj_database_url.config()}
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 DATABASES['default']['CONN_MAX_AGE'] = 500
+
+# Cache
+
+CACHES = memcacheify()
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -288,3 +299,8 @@ REST_FRAMEWORK = {
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
 }
+
+# Silence cachealot check as it seems to work
+SILENCED_SYSTEM_CHECKS = [
+    "cachalot.E001",
+]
