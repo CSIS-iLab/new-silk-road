@@ -20,7 +20,23 @@ class InitiativeBasicSerializer(serializers.ModelSerializer):
         )
 
 
-class ProjectBasicSerializer(serializers.ModelSerializer):
+class ProjectNestableSerializer(serializers.ModelSerializer):
+    infrastructure_type = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    page_url = serializers.CharField(source='get_absolute_url', read_only=True)
+
+    class Meta:
+        model = Project
+        fields = (
+            'name',
+            'identifier',
+            'infrastructure_type',
+            'total_cost',
+            'total_cost_currency',
+            'page_url',
+        )
+
+
+class ProjectLinksSerializer(serializers.ModelSerializer):
     page_url = serializers.CharField(source='get_absolute_url', read_only=True)
     url = serializers.HyperlinkedIdentityField(
         view_name='api:project-detail',
@@ -49,6 +65,8 @@ class ProjectFundingSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    identifier = serializers.UUIDField()
+    geo = serializers.SlugRelatedField(read_only=True, slug_field='identifier')
     infrastructure_type = serializers.StringRelatedField()
     initiatives = InitiativeBasicSerializer(many=True, read_only=True)
     funding = ProjectFundingSerializer(many=True, read_only=True)
@@ -66,6 +84,7 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
         model = Project
         fields = (
             'name',
+            'identifier',
             'initiatives', 'infrastructure_type',
             'planned_completion_year',
             'planned_completion_month',
@@ -81,13 +100,14 @@ class ProjectSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             'funding',
             'page_url',
             'url',
+            'geo',
             # 'operators', 'contractors', 'consultants', 'implementers',
         )
 
 
 class InitiativeSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     geographic_scope = serializers.StringRelatedField()
-    project_set = ProjectBasicSerializer(many=True, read_only=True)
+    project_set = ProjectLinksSerializer(many=True, read_only=True)
 
     class Meta:
         model = Initiative

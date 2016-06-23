@@ -1,26 +1,33 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
+@import "variables";
+@import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
 /*
     Map styles
 */
 .mapboxgl-popup {
-        max-width: 400px;
-        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    max-width: 400px;
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+    border-top-color: $pale-green;
+}
+.mapboxgl-popup-content {
+    background-color: $pale-green;
+}
+.mapboxgl-popup-close-button {
+    color: $serious-green;
 }
 .marker-title {
     font-weight: 700;
 }
-
 .map-container {
     @include fill-parent;
-
     .mapboxgl-map {
         overflow: visible;
     }
 }
-
 .search-map {
     position: relative;
-
     .search-controls {
         @include position(absolute, 2% 1.5% null null);
         @include size(33% auto);
@@ -29,6 +36,9 @@
             @include fill-parent;
             padding: 8px;
         }
-
     }
+}
+
+.popup-content {
+    width: 240px;
 }

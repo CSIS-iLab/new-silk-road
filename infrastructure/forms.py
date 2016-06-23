@@ -8,10 +8,8 @@ from infrastructure.models import (
 from facts.forms import (
     NameSearchWidget,
     NameSearchMultiField,
-    PersonSearchWidget,
 )
 from facts.models.organizations import Organization
-from facts.models import (Person,)
 from locations.forms import (
     GeometryStoreUploadForm,
     GeometrySearchField,

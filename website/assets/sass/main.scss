@@ -4,6 +4,7 @@
 @import "normalize";
 @import "layout";
 @import "map";
+@import "searchview";
 
 
 html {
@@ -70,6 +71,14 @@ ul {
                 margin-bottom: 3px;
             }
     }
+}
+
+button {
+    cursor: pointer;
+    background-color: $slate-grey;
+    color: $creamer;
+    border: none;
+    padding: 4px 8px;
 }
 
 nav {

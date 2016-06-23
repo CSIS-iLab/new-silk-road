@@ -198,6 +198,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', None)
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_IS_GZIPPED = True
 
 STATICFILES_LOCATION = 'static'
 STATICFILES_STORAGE = 'newsilkroad.project_storages.StaticStorage'
@@ -282,7 +283,7 @@ MAINTENANCE_IGNORE_URLS = (
 
 # Rest API
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.StandardLimitPagination',
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.ApiPagination',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),

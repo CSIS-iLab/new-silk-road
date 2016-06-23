@@ -15,7 +15,7 @@ from api.serializers.locations import (
     LineStringGeometrySerializer,
     PointGeometrySerializer,
     PolygonGeometrySerializer,
-    GeometryStoreSerializer,
+    GeometryStoreDetailSerializer,
     GeometryStoreCentroidSerializer,
     RegionBasicSerializer,
     CountryBasicSerializer
@@ -27,9 +27,27 @@ from api.filters.locations import (
     PolygonGeometryFilter
 
 )
-from infrastructure.models import (Project, ProjectStatus, Initiative, InfrastructureType)
+from infrastructure.models import (
+    Project,
+    ProjectStatus,
+    Initiative,
+    InfrastructureType
+)
+from facts.models import (
+    Organization
+)
 from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer, InfrastructureTypeSerializer)
+from api.serializers.facts import (OrganizationBasicSerializer)
 from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
+from api.filters.facts import (OrganizationFilter)
+
+
+class OrganizationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Organization.objects.all()
+    lookup_field = 'identifier'
+    serializer_class = OrganizationBasicSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = OrganizationFilter
 
 
 class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
@@ -87,10 +105,10 @@ class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
     filter_class = PolygonGeometryFilter
 
 
-class GeometryStoreViewSet(viewsets.ReadOnlyModelViewSet):
+class GeometryStoreDetailView(generics.RetrieveAPIView):
     queryset = GeometryStore.objects.filter(project__isnull=False)
     lookup_field = 'identifier'
-    serializer_class = GeometryStoreSerializer
+    serializer_class = GeometryStoreDetailSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
 

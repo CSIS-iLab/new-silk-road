@@ -8,6 +8,7 @@ from locations.models import (
     Region,
     Country
 )
+from api.serializers.infrastructure import (ProjectNestableSerializer,)
 from api.fields import DynamicFieldsMixin
 
 
@@ -48,14 +49,28 @@ class PolygonGeometrySerializer(GeometryStoreRelatedSerializer):
         geo_field = 'geom'
 
 
-class GeometryStoreSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+class GeometryStoreDetailSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     lines = LineStringGeometrySerializer(many=True, read_only=True)
     points = PointGeometrySerializer(many=True, read_only=True)
     polygons = PolygonGeometrySerializer(many=True, read_only=True)
+    extent = serializers.SerializerMethodField()
+    project = ProjectNestableSerializer()
+
+    def get_extent(self, obj):
+        return obj.calculate_overall_extent()
 
     class Meta:
         model = GeometryStore
-        fields = ('identifier', 'attributes', 'centroid', 'lines', 'points', 'polygons')
+        fields = (
+            'identifier',
+            'attributes',
+            'centroid',
+            'lines',
+            'points',
+            'polygons',
+            'extent',
+            'project'
+        )
         indelible_fields = ('identifier',)
 
 
@@ -64,6 +79,7 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = GeometryStore
         geo_field = 'centroid'
+        id_field = 'identifier'
 
     def get_properties(self, instance, fields):
         return {

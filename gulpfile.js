@@ -26,11 +26,7 @@ var production = process.env.NODE_ENV === 'production';
 // Input file.
 watchify.args.debug = !production;
 var bundler = watchify(browserify(assetsBase + '/apps/map/app.js', watchify.args));
-bundler.transform(babelify.configure({
-    sourceMapRelative: 'apps/map',
-    presets: ["es2015", "react"],
-    plugins: ["transform-class-properties", "transform-object-rest-spread"]
-}));
+bundler.transform(babelify.configure({sourceMapRelative: 'apps/map',}));
 bundler.on('update', bundle);
 
 function bundle() {

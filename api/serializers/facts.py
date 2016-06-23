@@ -10,7 +10,7 @@ class OrganizationBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = (
-            'name', 'page_url',
+            'name', 'slug', 'page_url',
         )
 
 

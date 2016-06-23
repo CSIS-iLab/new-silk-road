@@ -82,10 +82,15 @@ class ProjectFundingFilter(filters.FilterSet):
 
 class ProjectFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(name='name')
+    status = filters.AllLookupsFilter(name='status')
     countries = filters.RelatedFilter(
         'api.filters.locations.CountryFilter', name='countries'
     )
     geo__identifier = filters.CharFilter(name='geo__identifier')
+
+    regions = filters.RelatedFilter(
+        'api.filters.locations.RegionFilter', name='regions'
+    )
 
     initiatives = filters.RelatedFilter(InitiativeFilter, name='initiatives')
     initiatives__count = filters.MethodFilter()

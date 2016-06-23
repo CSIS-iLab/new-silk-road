@@ -182,7 +182,7 @@ class Project(Publishable):
     )
 
     # Geodata
-    geo = models.ForeignKey(
+    geo = models.OneToOneField(
         'locations.GeometryStore',
         models.SET_NULL,
         blank=True, null=True

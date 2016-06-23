@@ -1,0 +1,228 @@
+@import "variables";
+@import "../../../node_modules/react-select/dist/react-select.css";
+
+$placeholder-color: lighten($slate-grey, 30%);
+
+.searchView {
+    width: 300px;
+    padding: 4px;
+    background-color: $pale-green;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    top: 20px;
+    right: 20px;
+    section {
+        margin-top: 4px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid $slate-grey;
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            button {
+                flex: 0 0 auto;
+                padding: 0 4px;
+            }
+            h4 {
+                display: inline-block;
+                flex: 1 0 auto;
+                margin: 0;
+            }
+        }
+    }
+    .sectionRow {
+        display: block;
+        clear: both;
+        margin-bottom: 4px;
+    }
+    footer {
+        margin-top: 2px;
+        button {
+            display: block;
+            font-size: 12px;
+            width: 100%;
+        }
+    }
+    button,
+    input,
+    label {
+        display: inline-block;
+    }
+    button, input {
+        color: $creamer;
+        background-color: $slate-grey;
+        border: none;
+        padding: 3px 8px;
+        &:focus {
+            outline: none;
+        }
+        &:disabled {
+            color: $placeholder-color;
+        }
+        @include placeholder {
+            color: $placeholder-color;
+            font-style: italic;
+        }
+    }
+    label {
+        width: 90px;
+        margin-right: 3px;
+        text-align: right;
+    }
+    input {
+        font-family: $serif-font-family;
+        overflow: hidden;
+    }
+    select {
+        max-width: 240px;
+        margin-right: 6px;
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+}
+
+
+.searchWidget {
+    flex: 0 0 auto;
+    order: 0;
+}
+
+.buttonBar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonBar > button {
+    flex: 0.25 1 auto;
+    order: 0;
+}
+
+.searchBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: $medium-green;
+    button {
+        flex: 0 1 auto;
+    }
+    input,
+    label {
+        flex: 1 1 auto;
+    }
+}
+
+#primarySearch {
+    input, button {
+        background-color: $dark-night;
+    }
+    input {
+        padding: 8px 4px 8px 8px;
+    }
+}
+
+
+.resultsView {
+    padding-top: 4px;
+    .resultsNav {
+        margin-bottom: 4px;
+    }
+    ul.searchResults {
+        list-style: none;
+        padding: 0 3px;
+        margin: 0;
+
+        li {
+            margin: 0 10px 8px 6px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid $slate-grey;
+
+            &:last-of-type {
+                border: none;
+            }
+
+            p {
+                margin-bottom: 4px;
+            }
+        }
+    }
+}
+
+
+.dateRangeSelect {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    > span {
+        flex: 0.25 0 auto;
+        padding: 0 2px;
+        text-align: center;
+    }
+    .Select {
+        flex: 1 0 100%;
+    }
+    .Select-menu-outer {
+        width: auto;
+    }
+    input {
+        flex: 0.5 1 auto;
+        overflow: hidden;
+    }
+}
+
+
+.Select {
+    font-family: $serif-font-family;
+    .Select-input input {
+        padding: 8px 0 12px;
+    }
+    .Select-control {
+        color: $creamer;
+        background-color: $slate-grey;
+        border-radius: 0;
+
+        .Select-value {
+            max-width: 85%;
+        }
+        .Select-value-label, .Select-clear-zone {
+            color: $creamer;
+            &:hover {
+                color: $dark-night transparent transparent;
+            }
+        }
+    }
+    .Select-placeholder {
+        color: $placeholder-color;
+    }
+    .Select-arrow-zone{
+        &:hover {
+            .Select-arrow {
+                border-color: $dark-night transparent transparent;
+            }
+        }
+    }
+    .Select-arrow {
+        border-color: $creamer transparent transparent;
+    }
+
+    .Select-menu-outer {
+        background-color: $slate-grey;
+    }
+    .Select-option {
+        color: $creamer;
+        background-color: $slate-grey;
+
+        &:hover {
+            background-color: $dark-night;
+        }
+    }
+}
+.has-value.Select > .Select-control > .Select-value .Select-value-label,
+.has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
+    color: $creamer;
+}

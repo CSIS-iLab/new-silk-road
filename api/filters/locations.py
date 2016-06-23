@@ -1,4 +1,5 @@
 import rest_framework_filters as filters
+from django_filters.filters import UUIDFilter
 from rest_framework_gis.filterset import GeoFilterSet
 from locations.models import (
     LineStringGeometry,
@@ -13,12 +14,19 @@ from locations.models import (
 
 class GeometryStoreFilter(filters.FilterSet):
     label = filters.AllLookupsFilter(name='label')
-    name = filters.CharFilter(name='attributes__name', lookup_expr='iexact')
+    identifier = UUIDFilter()
     project = filters.RelatedFilter(
         'api.filters.infrastructure.ProjectFilter',
         name='project',
         distinct=True
     )
+    project_identifiers = filters.MethodFilter()
+
+    def filter_project_identifiers(self, name, queryset, value):
+        value_list = [v for v in value.split(',') if len(v) == 36 or len(v) == 32]
+        if value_list:
+            return queryset.filter(project__identifier__in=value_list)
+        return queryset.none()
 
     class Meta:
         model = GeometryStore
