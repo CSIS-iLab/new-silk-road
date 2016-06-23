@@ -7,12 +7,27 @@ import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
+import DateRangeSelect from './DateRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import {Select, Button} from "./forms";
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 
+const yearLookupOptions = [
+  {
+    label: 'Completion Year',
+    value: 'planned_completion_year'
+  },
+  {
+    label: 'Commencement Year',
+    value: 'commencement_year'
+  },
+  {
+    label: 'Start Year',
+    value: 'start_year'
+  }
+]
 
 export default class SearchView extends Component {
   static propTypes = {
@@ -56,6 +71,7 @@ export default class SearchView extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     if (Object.keys(this.state.query).length > 0) {
+      this.setState({hasSearched: false});
       SearchActions.search(this.state.query);
     }
   }
@@ -79,8 +95,8 @@ export default class SearchView extends Component {
   }
 
   render() {
-    const { maxHeight, hasSearched } = this.props;
-    const { results, nextURL, previousURL, error, query } = this.state;
+    const { maxHeight } = this.props;
+    const { results, nextURL, previousURL, error, query, hasSearched } = this.state;
     const searchViewHeight = results.length > 0 ? maxHeight : 'auto';
     const resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
     const errorView = error ? (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
@@ -101,6 +117,14 @@ export default class SearchView extends Component {
             </div>
             <div className="sectionRow">
               <StatusSelectContainer onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="sectionRow">
+              <DateRangeSelect
+              dateLookupOptions={yearLookupOptions}
+              lowerBoundLabel='Year'
+              upperBoundLabel='Year'
+              onSelect={this.handleQueryUpdate}
+              />
             </div>
           </Panel>
           <Panel title='Initiatives' ref='initiativesPanel'>

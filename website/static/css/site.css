@@ -383,6 +383,9 @@ html {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
 
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: #d6e1d6; }
+
 .mapboxgl-popup-content {
   background-color: #d6e1d6; }
 
@@ -486,29 +489,35 @@ html {
     margin-right: 6px; }
     .searchView select:last-of-type {
       margin-right: 0; }
-  .searchView .searchWidget {
-    flex: 0 0 auto;
-    order: 0; }
-  .searchView .buttonBar {
-    display: flex;
-    justify-content: space-between; }
-  .searchView .buttonBar > button {
-    flex: 0.25 1 auto;
-    order: 0; }
-  .searchView .searchBar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #75986a; }
-    .searchView .searchBar button {
-      flex: 0 1 auto; }
-    .searchView .searchBar input,
-    .searchView .searchBar label {
-      flex: 1 1 auto; }
-  .searchView #primarySearch input, .searchView #primarySearch button {
-    background-color: #252d3a; }
-  .searchView #primarySearch input {
-    padding: 8px 4px 8px 8px; }
+
+.searchWidget {
+  flex: 0 0 auto;
+  order: 0; }
+
+.buttonBar {
+  display: flex;
+  justify-content: space-between; }
+
+.buttonBar > button {
+  flex: 0.25 1 auto;
+  order: 0; }
+
+.searchBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #75986a; }
+  .searchBar button {
+    flex: 0 1 auto; }
+  .searchBar input,
+  .searchBar label {
+    flex: 1 1 auto; }
+
+#primarySearch input, #primarySearch button {
+  background-color: #252d3a; }
+
+#primarySearch input {
+  padding: 8px 4px 8px 8px; }
 
 .resultsView {
   padding-top: 4px; }
@@ -527,34 +536,51 @@ html {
       .resultsView ul.searchResults li p {
         margin-bottom: 4px; }
 
-.Select .Select-control {
-  color: #eee8e4;
-  background-color: #556377;
-  border-radius: 0; }
-  .Select .Select-control .Select-value {
-    max-width: 85%; }
-  .Select .Select-control .Select-value-label, .Select .Select-control .Select-clear-zone {
-    color: #eee8e4; }
-    .Select .Select-control .Select-value-label:hover, .Select .Select-control .Select-clear-zone:hover {
-      color: #252d3a transparent transparent; }
+.dateRangeSelect {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center; }
+  .dateRangeSelect > span {
+    flex: 0.25 0 auto;
+    padding: 0 2px;
+    text-align: center; }
+  .dateRangeSelect .Select {
+    flex: 1 0 100%; }
+  .dateRangeSelect .Select-menu-outer {
+    width: auto; }
+  .dateRangeSelect input {
+    flex: 0.5 1 auto;
+    overflow: hidden; }
 
-.Select .Select-placeholder {
-  color: #a6b0bf; }
-
-.Select .Select-arrow-zone:hover .Select-arrow {
-  border-color: #252d3a transparent transparent; }
-
-.Select .Select-arrow {
-  border-color: #eee8e4 transparent transparent; }
-
-.Select .Select-menu-outer {
-  background-color: #556377; }
-
-.Select .Select-option {
-  color: #eee8e4;
-  background-color: #556377; }
-  .Select .Select-option:hover {
-    background-color: #252d3a; }
+.Select {
+  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif; }
+  .Select .Select-input input {
+    padding: 8px 0 12px; }
+  .Select .Select-control {
+    color: #eee8e4;
+    background-color: #556377;
+    border-radius: 0; }
+    .Select .Select-control .Select-value {
+      max-width: 85%; }
+    .Select .Select-control .Select-value-label, .Select .Select-control .Select-clear-zone {
+      color: #eee8e4; }
+      .Select .Select-control .Select-value-label:hover, .Select .Select-control .Select-clear-zone:hover {
+        color: #252d3a transparent transparent; }
+  .Select .Select-placeholder {
+    color: #a6b0bf; }
+  .Select .Select-arrow-zone:hover .Select-arrow {
+    border-color: #252d3a transparent transparent; }
+  .Select .Select-arrow {
+    border-color: #eee8e4 transparent transparent; }
+  .Select .Select-menu-outer {
+    background-color: #556377; }
+  .Select .Select-option {
+    color: #eee8e4;
+    background-color: #556377; }
+    .Select .Select-option:hover {
+      background-color: #252d3a; }
 
 .has-value.Select > .Select-control > .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
@@ -863,6 +889,9 @@ html {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif; }
 
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: #d6e1d6; }
+
 .mapboxgl-popup-content {
   background-color: #d6e1d6; }
 
@@ -967,29 +996,35 @@ html {
     margin-right: 6px; }
     .searchView select:last-of-type {
       margin-right: 0; }
-  .searchView .searchWidget {
-    flex: 0 0 auto;
-    order: 0; }
-  .searchView .buttonBar {
-    display: flex;
-    justify-content: space-between; }
-  .searchView .buttonBar > button {
-    flex: 0.25 1 auto;
-    order: 0; }
-  .searchView .searchBar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: #75986a; }
-    .searchView .searchBar button {
-      flex: 0 1 auto; }
-    .searchView .searchBar input,
-    .searchView .searchBar label {
-      flex: 1 1 auto; }
-  .searchView #primarySearch input, .searchView #primarySearch button {
-    background-color: #252d3a; }
-  .searchView #primarySearch input {
-    padding: 8px 4px 8px 8px; }
+
+.searchWidget {
+  flex: 0 0 auto;
+  order: 0; }
+
+.buttonBar {
+  display: flex;
+  justify-content: space-between; }
+
+.buttonBar > button {
+  flex: 0.25 1 auto;
+  order: 0; }
+
+.searchBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #75986a; }
+  .searchBar button {
+    flex: 0 1 auto; }
+  .searchBar input,
+  .searchBar label {
+    flex: 1 1 auto; }
+
+#primarySearch input, #primarySearch button {
+  background-color: #252d3a; }
+
+#primarySearch input {
+  padding: 8px 4px 8px 8px; }
 
 .resultsView {
   padding-top: 4px; }
@@ -1008,34 +1043,51 @@ html {
       .resultsView ul.searchResults li p {
         margin-bottom: 4px; }
 
-.Select .Select-control {
-  color: #eee8e4;
-  background-color: #556377;
-  border-radius: 0; }
-  .Select .Select-control .Select-value {
-    max-width: 85%; }
-  .Select .Select-control .Select-value-label, .Select .Select-control .Select-clear-zone {
-    color: #eee8e4; }
-    .Select .Select-control .Select-value-label:hover, .Select .Select-control .Select-clear-zone:hover {
-      color: #252d3a transparent transparent; }
+.dateRangeSelect {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center; }
+  .dateRangeSelect > span {
+    flex: 0.25 0 auto;
+    padding: 0 2px;
+    text-align: center; }
+  .dateRangeSelect .Select {
+    flex: 1 0 100%; }
+  .dateRangeSelect .Select-menu-outer {
+    width: auto; }
+  .dateRangeSelect input {
+    flex: 0.5 1 auto;
+    overflow: hidden; }
 
-.Select .Select-placeholder {
-  color: #a6b0bf; }
-
-.Select .Select-arrow-zone:hover .Select-arrow {
-  border-color: #252d3a transparent transparent; }
-
-.Select .Select-arrow {
-  border-color: #eee8e4 transparent transparent; }
-
-.Select .Select-menu-outer {
-  background-color: #556377; }
-
-.Select .Select-option {
-  color: #eee8e4;
-  background-color: #556377; }
-  .Select .Select-option:hover {
-    background-color: #252d3a; }
+.Select {
+  font-family: Merriweather, "Georgia", "Cambria", "Times New Roman", "Times", serif; }
+  .Select .Select-input input {
+    padding: 8px 0 12px; }
+  .Select .Select-control {
+    color: #eee8e4;
+    background-color: #556377;
+    border-radius: 0; }
+    .Select .Select-control .Select-value {
+      max-width: 85%; }
+    .Select .Select-control .Select-value-label, .Select .Select-control .Select-clear-zone {
+      color: #eee8e4; }
+      .Select .Select-control .Select-value-label:hover, .Select .Select-control .Select-clear-zone:hover {
+        color: #252d3a transparent transparent; }
+  .Select .Select-placeholder {
+    color: #a6b0bf; }
+  .Select .Select-arrow-zone:hover .Select-arrow {
+    border-color: #252d3a transparent transparent; }
+  .Select .Select-arrow {
+    border-color: #eee8e4 transparent transparent; }
+  .Select .Select-menu-outer {
+    background-color: #556377; }
+  .Select .Select-option {
+    color: #eee8e4;
+    background-color: #556377; }
+    .Select .Select-option:hover {
+      background-color: #252d3a; }
 
 .has-value.Select > .Select-control > .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {

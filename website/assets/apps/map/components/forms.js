@@ -5,12 +5,15 @@ import {inputStyle, buttonStyle, selectStyle} from "./form-styles";
 
 class Input extends Component {
   static defaultProps = {
-    type: 'text'
+    type: 'text',
+    inputText: '',
+    size: 10
   }
   static propTypes = {
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
     type: PropTypes.string,
+    size: PropTypes.number,
     inputText: PropTypes.string,
     onUserInput: PropTypes.func
   };
@@ -20,7 +23,10 @@ class Input extends Component {
   }
 
   handleUserInput = (e) => {
-    this.props.onUserInput(this.refs.inputEl.value, e);
+    const {onUserInput} = this.props;
+    if (onUserInput) {
+      onUserInput(this.refs.inputEl.value, e);
+    }
   }
 
   render() {
