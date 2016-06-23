@@ -7,6 +7,8 @@ class SearchStore {
     this.next = null;
     this.previous = null;
     this.error = null;
+    this.isSearching = false;
+    this.searchCount = 0;
 
     this.bindListeners({
       handleSearch: SearchActions.SEARCH,
@@ -19,6 +21,8 @@ class SearchStore {
     this.results = [];
     this.next = null;
     this.previous = null;
+    this.isSearching = true;
+    this.searchCount++;
   }
 
   handleSearchResults(data) {
@@ -26,10 +30,12 @@ class SearchStore {
     this.next = data.next;
     this.previous = data.previous;
     this.error = null;
+    this.isSearching = false;
   }
 
   handleSearchFail(error) {
     this.results = [];
+    this.isSearching = false;
     console.log(error);
     this.error = error;
   }

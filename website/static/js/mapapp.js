@@ -68277,7 +68277,8 @@ var SearchView = function (_Component) {
       error: null,
       searchEnabled: false,
       expanded: false,
-      hasSearched: false
+      isSearching: false,
+      searchCount: 0
     }, _this.handleQueryUpdate = function (q) {
       var queryUpdate = Object.assign({}, _this.state.query);
       for (var key in q) {
@@ -68298,7 +68299,6 @@ var SearchView = function (_Component) {
     }, _this.handleSubmit = function (e) {
       e.preventDefault();
       if (Object.keys(_this.state.query).length > 0) {
-        _this.setState({ hasSearched: false });
         _SearchActions2.default.search(_this.state.query);
       }
     }, _this.handleResultsNavClick = function (e) {
@@ -68310,8 +68310,10 @@ var SearchView = function (_Component) {
       var next = data.next;
       var previous = data.previous;
       var error = data.error;
+      var isSearching = data.isSearching;
+      var searchCount = data.searchCount;
 
-      _this.setState({ results: results, nextURL: next, previousURL: previous, error: error, hasSearched: true });
+      _this.setState({ results: results, nextURL: next, previousURL: previous, error: error, isSearching: isSearching, searchCount: searchCount });
       _this._collapsePanels();
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
@@ -68338,7 +68340,8 @@ var SearchView = function (_Component) {
       var previousURL = _state.previousURL;
       var error = _state.error;
       var query = _state.query;
-      var hasSearched = _state.hasSearched;
+      var isSearching = _state.isSearching;
+      var searchCount = _state.searchCount;
 
       var searchViewHeight = results.length > 0 ? maxHeight : 'auto';
       var resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
@@ -68432,7 +68435,7 @@ var SearchView = function (_Component) {
           )
         ),
         function () {
-          if (!error && hasSearched && results.length === 0) {
+          if (searchCount > 0 && !isSearching && results.length === 0) {
             return _react2.default.createElement(
               "div",
               { className: "sectionRow" },
@@ -69920,6 +69923,8 @@ var SearchStore = function () {
     this.next = null;
     this.previous = null;
     this.error = null;
+    this.isSearching = false;
+    this.searchCount = 0;
 
     this.bindListeners({
       handleSearch: _SearchActions2.default.SEARCH,
@@ -69934,6 +69939,8 @@ var SearchStore = function () {
       this.results = [];
       this.next = null;
       this.previous = null;
+      this.isSearching = true;
+      this.searchCount++;
     }
   }, {
     key: 'handleSearchResults',
@@ -69942,11 +69949,13 @@ var SearchStore = function () {
       this.next = data.next;
       this.previous = data.previous;
       this.error = null;
+      this.isSearching = false;
     }
   }, {
     key: 'handleSearchFail',
     value: function handleSearchFail(error) {
       this.results = [];
+      this.isSearching = false;
       console.log(error);
       this.error = error;
     }
