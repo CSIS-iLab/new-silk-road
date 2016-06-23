@@ -68100,9 +68100,15 @@ var SearchBar = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SearchBar)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleUserInput = function (value, e) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SearchBar)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+      inputText: ''
+
+    }, _this.handleUserInput = function (value, e) {
+      var name = _this.props.name;
+
       if (_this.props.onSearchInput) {
-        _this.props.onSearchInput(_defineProperty({}, _this.props.name, value.trim()));
+        _this.setState({ inputText: value });
+        _this.props.onSearchInput(_defineProperty({}, name, value.trim()));
       }
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
@@ -68128,8 +68134,8 @@ var SearchBar = function (_Component) {
         }(),
         _react2.default.createElement(_forms.Input, {
           ref: "searchTextInput",
-          inputText: this.props.inputText,
-          onUserInput: this.handleUserInput,
+          inputText: this.state.inputText,
+          onUserInput: this.handleUserInput.bind(this),
           name: this.props.name, placeholder: this.props.placeholder
         }),
         function () {
@@ -68157,7 +68163,6 @@ SearchBar.propTypes = {
   placeholder: _react.PropTypes.string,
   label: _react.PropTypes.string,
   searchEnabled: _react.PropTypes.bool.isRequired,
-  inputText: _react.PropTypes.string,
   onSearchInput: _react.PropTypes.func,
   showSubmit: _react.PropTypes.bool
 };
@@ -68358,7 +68363,6 @@ var SearchView = function (_Component) {
             _react2.default.createElement(_SearchBar2.default, {
               id: "primarySearch",
               placeholder: "Project Title", name: "name__icontains",
-              value: this.state.projectTitle,
               onSearchInput: this.handleQueryUpdate,
               searchEnabled: this.state.searchEnabled
             }),
@@ -68688,9 +68692,7 @@ var Input = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Input)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
-      value: ''
-    }, _this.handleUserInput = function (e) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Input)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleUserInput = function (e) {
       var onUserInput = _this.props.onUserInput;
 
       if (onUserInput) {
@@ -68706,7 +68708,7 @@ var Input = function (_Component) {
         ref: "inputEl",
         style: _formStyles.inputStyle.base,
         value: this.props.inputText,
-        onChange: this.handleUserInput
+        onChange: this.handleUserInput.bind(this)
       }));
     }
   }]);

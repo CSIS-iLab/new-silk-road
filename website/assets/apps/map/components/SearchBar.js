@@ -9,7 +9,6 @@ class SearchBar extends Component {
     placeholder: PropTypes.string,
     label: PropTypes.string,
     searchEnabled: PropTypes.bool.isRequired,
-    inputText: PropTypes.string,
     onSearchInput: PropTypes.func,
     showSubmit: PropTypes.bool
   };
@@ -18,9 +17,16 @@ class SearchBar extends Component {
     showSubmit: true
   }
 
+  state = {
+    inputText: '',
+
+  }
+
   handleUserInput = (value, e) => {
+    const {name} = this.props;
     if (this.props.onSearchInput) {
-      this.props.onSearchInput({ [this.props.name]: value.trim() });
+      this.setState({inputText: value});
+      this.props.onSearchInput({ [name]: value.trim() });
     }
   }
 
@@ -39,8 +45,8 @@ class SearchBar extends Component {
         })()}
         <Input
         ref="searchTextInput"
-        inputText={this.props.inputText}
-        onUserInput={this.handleUserInput}
+        inputText={this.state.inputText}
+        onUserInput={this.handleUserInput.bind(this)}
         name={this.props.name} placeholder={this.props.placeholder}
         />
         {(()=> {

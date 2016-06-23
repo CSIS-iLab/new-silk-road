@@ -107,7 +107,6 @@ export default class SearchView extends Component {
           <SearchBar
           id="primarySearch"
           placeholder="Project Title" name="name__icontains"
-          value={this.state.projectTitle}
           onSearchInput={this.handleQueryUpdate}
           searchEnabled={this.state.searchEnabled}
           />

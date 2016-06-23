@@ -18,10 +18,6 @@ class Input extends Component {
     onUserInput: PropTypes.func
   };
 
-  state = {
-    value: ''
-  }
-
   handleUserInput = (e) => {
     const {onUserInput} = this.props;
     if (onUserInput) {
@@ -35,7 +31,7 @@ class Input extends Component {
               ref="inputEl"
               style={inputStyle.base}
               value={this.props.inputText}
-              onChange={this.handleUserInput}
+              onChange={this.handleUserInput.bind(this)}
                />
     )
   }
