@@ -1,6 +1,7 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 @import "variables";
-@import url("https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.0/mapbox-gl.css");
+@import "../../../node_modules/mapbox-gl/dist/mapbox-gl.css";
+
 /*
     Map styles
 */
@@ -8,8 +9,13 @@
     max-width: 400px;
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
-.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-    border-top-color: $pale-green;
+
+@each $aside, $bside in (top, bottom), (right, left), (bottom, top), (left, right) {
+    .mapboxgl-popup-anchor-#{$aside} {
+        .mapboxgl-popup-tip {
+            border-#{$bside}-color: $pale-green;
+        }
+    }
 }
 .mapboxgl-popup-content {
     background-color: $pale-green;
