@@ -141,14 +141,23 @@ class MilitaryDetailsAdmin(OrganizationDetailsAdmin):
 
 class MultilateralDetailsAdmin(OrganizationDetailsAdmin):
     form = MultilateralDetailsForm
+    filter_horizontal = [
+        'members',
+    ]
 
 
 class NGODetailsAdmin(OrganizationDetailsAdmin):
     form = NGODetailsForm
+    filter_horizontal = [
+        'members',
+    ]
 
 
 class PoliticalDetailsAdmin(OrganizationDetailsAdmin):
     form = PoliticalDetailsForm
+    filter_horizontal = [
+        'countries',
+    ]
 
 
 class CompanyStructureAdmin(admin.ModelAdmin):
