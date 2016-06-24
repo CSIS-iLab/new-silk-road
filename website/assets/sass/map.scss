@@ -34,6 +34,7 @@
 }
 .search-map {
     position: relative;
+    background-color: $pale-green;
     .search-controls {
         @include position(absolute, 2% 1.5% null null);
         @include size(33% auto);
@@ -48,8 +49,6 @@
 .popup-content-inner {
     width: 220px;
     padding: 0 10px;
-    // max-height: 120px;
-    // overflow-y: scroll;
 
     ul {
         margin: 0;
