@@ -32,8 +32,8 @@ class Organization(MPTTModel, Publishable):
     parent = TreeForeignKey('self', null=True, blank=True,
                             verbose_name='parent organization',
                             related_name='children', db_index=True)
-    staff_size = models.PositiveSmallIntegerField("Staff/Personnel count",
-                                                  blank=True, null=True)
+    staff_size = models.PositiveIntegerField("Staff/Personnel count",
+                                             blank=True, null=True)
     mission = MarkdownField("Mandate/Mission Statement", blank=True)
     related_organizations = models.ManyToManyField('self', blank=True)
 
