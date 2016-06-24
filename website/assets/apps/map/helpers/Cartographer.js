@@ -16,6 +16,7 @@ import {
   maxFitZoom,
   onMoveDelayTime,
   boundsPadding,
+  updateInterval,
 } from './map-constants';
 
 
@@ -36,7 +37,8 @@ export default class Cartographer {
     this._gm = new GeoManager();
     this._gq = new GeoStoreQueue();
     this._stylo = new GeoStyles();
-    this._lastMapUpdate = Date.now();
+    this._lastUpdate = null;
+    this._updateFrameId = null;
     this._updateDelayId = null;
     this._popup = null;
     this._popupLayerId = null;
@@ -49,14 +51,29 @@ export default class Cartographer {
     this._al.addActionListener(GeoCentroidActions.FAIL, this._handleCentroidsFail.bind(this));
     this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
     this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
-    this._map.on('move', this._handleMapMove.bind(this));
+    this._map.on('movestart', this._handleStartMapMove.bind(this));
     this._map.on('moveend', this._handleEndMapMove.bind(this));
     this._map.on('click', this._handleMapClick.bind(this));
+  }
+
+  _beginPeriodicUpdates() {
+    this._updateFrameId = window.requestAnimationFrame(this._periodicallyUpdate.bind(this));
+  }
+
+  _periodicallyUpdate(timestamp) {
+    if (!this._lastUpdate) this._lastUpdate = timestamp;
+    const progress = timestamp - this._lastUpdate;
+    if (progress > updateInterval && !this._mapIsMoving) {
+      this._updateMapState();
+      this._lastUpdate = timestamp;
+    }
+    this._updateFrameId = window.requestAnimationFrame(this._periodicallyUpdate.bind(this));
   }
 
   _configureMap() {
     this._map.addControl(new Navigation({position: 'top-left'}));
     this._map['scrollZoom'].disable();
+    this._beginPeriodicUpdates();
   }
 
   // Handlers
@@ -134,22 +151,19 @@ export default class Cartographer {
       }
       this._gm.addGeoRecord(identifier, identifiers, extent);
     }
-    this._updateMapState();
     if (this._gm.selectedGeoStore === identifier && extent) {
       this._zoomToExtent(extent);
     }
   }
 
-  _handleMapMove(event) {
-    const now = Date.now();
-    const delta = now - this._lastMapUpdate;
-    if (delta > 250) {
-      this._lastMapUpdate = now;
-      this._updateMapState();
+  _handleStartMapMove(event) {
+    if (this._updateFrameId) {
+      window.cancelAnimationFrame(this._updateFrameId);
     }
   }
 
   _handleEndMapMove(event) {
+    this._beginPeriodicUpdates();
     if (this._updateDelayId) {
       clearTimeout(this._updateDelayId);
       this._updateDelayId = null;
@@ -163,7 +177,6 @@ export default class Cartographer {
             .map((obj) => obj.properties.geostore);
           self._updateGeometries([...new Set(identifiers)]);
         }
-        self._updateMapState();
       }, onMoveDelayTime);
     }
   }
@@ -219,12 +232,13 @@ export default class Cartographer {
   }
 
   _updateMapState() {
-    let visibleCentroids = [...this._gm.selectedGeoIdentifiers];
-    if (this._map.getZoom() >= minDetailZoom) {
-      visibleCentroids = visibleCentroids.filter(x => !this._gm.loadedGeoIdentifiers.has(x));
+    if (this._gm.selectedGeoIdentifiers) {
+      let visibleCentroids = [...this._gm.selectedGeoIdentifiers];
+      if (this._map.getZoom() >= minDetailZoom) {
+        visibleCentroids = visibleCentroids.filter(x => !this._gm.loadedGeoIdentifiers.has(x));
+      }
+      this.showCentroids(visibleCentroids);
     }
-    this.showCentroids(visibleCentroids);
-    this._lastMapUpdate = Date.now();
   }
 
   setSource(id, source, replace = true) {
@@ -278,7 +292,6 @@ export default class Cartographer {
 
   setCurrentGeo(identifiers) {
     this._gm.selectedGeoIdentifiers = identifiers;
-    this._updateMapState();
   }
 
   showCentroids(centroidsIds) {
