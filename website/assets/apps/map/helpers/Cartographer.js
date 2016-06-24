@@ -17,6 +17,7 @@ import {
   onMoveDelayTime,
   boundsPadding,
   updateInterval,
+  popContentClass,
 } from './map-constants';
 
 
@@ -24,9 +25,7 @@ const identiferSep = ' : ';
 const centroidsLayerId = 'project : centroids';
 const metadataIdentifier = 'cartographer:identifier';
 const metadataInfrastructureType = 'cartographer:infrastructureType';
-const metadataProjectIdentifier = 'cartographer:projectIdentifier';
-const metadataProjectName = 'cartographer:projectName';
-const metadataProjectURL = 'cartographer:projectURL';
+const metadataProjects = 'cartographer:projects';
 
 
 export default class Cartographer {
@@ -114,14 +113,9 @@ export default class Cartographer {
     const {
       identifier,
       extent,
-      project,
+      projects,
     } = geostore;
-    const {
-      infrastructure_type,
-      page_url,
-      name: project_name,
-      identifier: project_id,
-    } = project;
+    const [{infrastructure_type}] = projects;
     this._gq.resolveGeoStore(identifier);
     if (!this._gm.hasGeo(identifier)) {
       const geoTypes = ['lines', 'points', 'polygons'];
@@ -140,9 +134,7 @@ export default class Cartographer {
             metadata: {
               metadataIdentifier: identifier,
               metadataInfrastructureType: infrastructure_type,
-              metadataProjectIdentifier: project_id,
-              metadataProjectName: project_name,
-              metadataProjectURL: page_url
+              metadataProjects: projects,
             }
           }, this._stylo.getStyleFor(t, infrastructure_type));
           this.setSource(layer.source, source, false);
@@ -204,18 +196,19 @@ export default class Cartographer {
       const {
         metadataIdentifier: identifier,
         metadataInfrastructureType: infrastructureType,
-        metadataProjectIdentifier: projectIdentifier,
-        metadataProjectName: projectName,
-        metadataProjectURL: projectURL,
+        metadataProjects: projects,
       } = feat.layer.metadata;
 
 
       const popup = new Popup();
 
+      const itemsListHTML = projects.map((project, index) => `<li><h4>${project.name}</h4>
+      <p><a class='button' href='${project.page_url}' target='_blank'>Open detail page</a></p></li>`)
+        .join('');
+
       popup.setLngLat(lngLat)
-        .setHTML(`<div class='popup-content'>
-           <h4>${projectName}</h4>
-           <p><a class='button' href='${projectURL}' target='_blank'>Open detail page</a></p>
+        .setHTML(`<div class='${popContentClass}'>
+           <ul class='clean'>${itemsListHTML}</ul>
            </div>`);
 
       this._addPopup(popup);
@@ -337,7 +330,7 @@ export default class Cartographer {
 
       // Create popup HTML, the hard way. (So we can easily add the event listener to that button)
       let popupContainer = document.createElement('div');
-      popupContainer.className = 'popup-content';
+      popupContainer.className = popContentClass;
       let header = document.createElement('h4');
       header.appendChild(document.createTextNode(feat.properties.label || ''));
       let button = document.createElement('button');

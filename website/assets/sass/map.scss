@@ -45,6 +45,22 @@
     }
 }
 
-.popup-content {
-    width: 240px;
+.popup-content-inner {
+    width: 220px;
+    padding: 0 10px;
+    // max-height: 120px;
+    // overflow-y: scroll;
+
+    ul {
+        margin: 0;
+        li {
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid $dark-night;
+            &:last-of-type {
+                margin: 0;
+                border-bottom: none;
+            }
+        }
+    }
 }
