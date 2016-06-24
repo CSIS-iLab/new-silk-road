@@ -55,11 +55,11 @@ gulp.task('bundle', function () {
 gulp.task('sass', function () {
     var cssDest = destBase + '/css';
     return gulp.src(assetsBase + sassGlob)
+               .pipe(sourcemaps.init())
                .pipe(sass().on('error', sass.logError))
-               .pipe(concat('site.css'))
-               .pipe(gulp.dest(cssDest))
-               .pipe(rename({ extname: '.min.css' }))
-               .pipe(cleanCss())
+               .pipe(cleanCss({processImportFrom: ['local']}))
+               .pipe(concat('site.min.css'))
+               .pipe(sourcemaps.write('./maps'))
                .pipe(gulp.dest(cssDest))
 });
 
