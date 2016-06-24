@@ -91,7 +91,7 @@ ROOT_URLCONF = 'newsilkroad.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['website/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': True if os.getenv('TEMPLATE_DEBUG', 'True') == 'True' else DEBUG,
