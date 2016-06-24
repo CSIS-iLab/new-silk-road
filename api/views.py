@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import viewsets, generics, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -106,7 +107,9 @@ class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GeometryStoreDetailView(generics.RetrieveAPIView):
-    queryset = GeometryStore.objects.filter(project__isnull=False)
+    queryset = GeometryStore.objects\
+        .annotate(num_projects=Count('projects'))\
+        .filter(num_projects__gt=0)
     lookup_field = 'identifier'
     serializer_class = GeometryStoreDetailSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -114,7 +117,9 @@ class GeometryStoreDetailView(generics.RetrieveAPIView):
 
 
 class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = GeometryStore.objects.filter(project__isnull=False)
+    queryset = GeometryStore.objects\
+        .annotate(num_projects=Count('projects'))\
+        .filter(num_projects__gt=0)
     lookup_field = 'identifier'
     serializer_class = GeometryStoreCentroidSerializer
     filter_backends = (filters.DjangoFilterBackend,)

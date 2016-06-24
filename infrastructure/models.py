@@ -182,10 +182,11 @@ class Project(Publishable):
     )
 
     # Geodata
-    geo = models.OneToOneField(
+    geo = models.ForeignKey(
         'locations.GeometryStore',
         models.SET_NULL,
-        blank=True, null=True
+        blank=True, null=True,
+        related_name='projects'
     )
 
     class Meta:

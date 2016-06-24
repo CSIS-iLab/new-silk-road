@@ -54,7 +54,7 @@ class GeometryStoreDetailSerializer(DynamicFieldsMixin, serializers.ModelSeriali
     points = PointGeometrySerializer(many=True, read_only=True)
     polygons = PolygonGeometrySerializer(many=True, read_only=True)
     extent = serializers.SerializerMethodField()
-    project = ProjectNestableSerializer()
+    projects = ProjectNestableSerializer(many=True, read_only=True)
 
     def get_extent(self, obj):
         return obj.calculate_overall_extent()
@@ -69,7 +69,7 @@ class GeometryStoreDetailSerializer(DynamicFieldsMixin, serializers.ModelSeriali
             'points',
             'polygons',
             'extent',
-            'project'
+            'projects',
         )
         indelible_fields = ('identifier',)
 
