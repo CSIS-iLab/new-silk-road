@@ -55,6 +55,7 @@ $placeholder-color: lighten($slate-grey, 30%);
         color: $creamer;
         background-color: $slate-grey;
         border: none;
+        border-radius: 0;
         padding: 3px 8px;
         &:focus {
             outline: none;
@@ -108,10 +109,12 @@ $placeholder-color: lighten($slate-grey, 30%);
     background-color: $medium-green;
     button {
         flex: 0 1 auto;
+        background-color: transparent;
     }
     input,
     label {
         flex: 1 1 auto;
+        background-color: transparent;
     }
 }
 
