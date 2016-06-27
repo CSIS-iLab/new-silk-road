@@ -168,7 +168,7 @@ DATABASES['default']['CONN_MAX_AGE'] = 500
 
 # Cache
 
-if os.getenv('DISABLE_CACHE', 'False') == 'True':
+if os.getenv('DISABLE_CACHE', 'False') != 'True':
     CACHES = memcacheify()
     CACHALOT_UNCACHABLE_TABLES = frozenset((
         'django_migrations',
