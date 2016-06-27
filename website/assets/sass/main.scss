@@ -180,16 +180,27 @@ header[role=banner] {
 
 }
 
-.content-wrap {
-    padding: $medium-spacing 0 0;
-    @include media($medium-break) {
-        padding-top: $section-spacing;
-    }
+.widows-peak {
+    position: absolute;
     background-image: url($main-arrow-img);
     background-clip: border-box;
     background-position: 50% -1px;
     background-size: $main-arrow-width auto;
     background-repeat: no-repeat;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: $main-arrow-width;
+    height: 12px;
+    z-index: 1;
+}
+
+.content-wrap {
+    padding: $medium-spacing 0 0;
+    @include media($medium-break) {
+        padding-top: $section-spacing;
+    }
 }
 
 ::-ms-backdrop, .content-wrap {
