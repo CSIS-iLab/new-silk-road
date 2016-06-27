@@ -1,6 +1,7 @@
 from django.contrib import admin
 from facts.models import Person
 from facts.models.organizations import Organization
+from infrastructure.models import Initiative
 from publish.admin import (
     TEMPORAL_FIELDS,
     make_published,
@@ -16,6 +17,10 @@ class OrganizationEventInline(admin.TabularInline):
     model = Organization.related_events.through
 
 
+class InitiativeEventInline(admin.TabularInline):
+    model = Initiative.affiliated_events.through
+
+
 class EventAdmin(admin.ModelAdmin):
     save_on_top = True
     search_fields = ['name']
@@ -25,7 +30,8 @@ class EventAdmin(admin.ModelAdmin):
     )
     inlines = (
         PersonEventInline,
-        OrganizationEventInline
+        OrganizationEventInline,
+        InitiativeEventInline
     )
     list_display = ('name', 'start_year', 'end_year') + TEMPORAL_FIELDS + ('published',)
     actions = [make_published, make_not_published]
