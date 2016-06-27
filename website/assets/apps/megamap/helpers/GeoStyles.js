@@ -18,7 +18,7 @@ export default class GeoStyles {
         minzoom: minDetailZoom,
         layout: {},
         paint: {
-          'line-color': '#be2323',
+          'line-color': '#f68b3f',
           'line-width': 3
         }
       },
