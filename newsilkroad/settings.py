@@ -168,8 +168,15 @@ DATABASES['default']['CONN_MAX_AGE'] = 500
 
 # Cache
 
-CACHES = memcacheify()
-
+if os.getenv('DISABLE_CACHE', 'False') == 'True':
+    CACHES = memcacheify()
+    CACHALOT_UNCACHABLE_TABLES = frozenset((
+        'django_migrations',
+        'locations_geometrystore',
+        'locations_linestringgeometry',
+        'locations_pointgeometry',
+        'locations_polygongeometry',
+    ))
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
