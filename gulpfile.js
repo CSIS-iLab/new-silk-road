@@ -51,12 +51,13 @@ function buildScript(entryFile, appName, watch=false) {
   return rebundle();
 }
 
+const megamapAppName = 'megamap';
+const megamapEntry = `${assetsBase}/apps/megamap/app.js`
 gulp.task('megamap:build', function () {
-    return buildScript(assetsBase + '/apps/map/app.js', 'mapapp');
+    return buildScript(megamapEntry, megamapAppName);
 });
-
 gulp.task('megamap:watch', function () {
-    return buildScript(assetsBase + '/apps/map/app.js', 'mapapp', true);
+    return buildScript(megamapEntry, megamapAppName, true);
 });
 
 gulp.task('sass:build', function () {

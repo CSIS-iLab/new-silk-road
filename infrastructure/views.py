@@ -35,7 +35,7 @@ class ProjectDetailView(DetailView):
 
 class ProjectsMapView(ListView):
     model = Project
-    template_name = 'infrastructure/all_projects_map.html'
+    template_name = 'infrastructure/megamap.html'
 
     def get_context_data(self, **kwargs):
         context = super(ProjectsMapView, self).get_context_data(**kwargs)
