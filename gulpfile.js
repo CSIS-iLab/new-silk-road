@@ -1,58 +1,65 @@
 'use strict';
 
-var gulp        = require('gulp');
-var gutil       = require('gulp-util');
-var gulpif      = require('gulp-if');
-var source      = require('vinyl-source-stream');
-var buffer      = require('vinyl-buffer');
-var babelify    = require('babelify');
-var watchify    = require('watchify');
-var sourcemaps  = require('gulp-sourcemaps');
-var browserify  = require('browserify');
-var uglify      = require('gulp-uglify');
-var browserSync = require('browser-sync').create();
-var sass        = require('gulp-sass');
-var cleanCss    = require('gulp-clean-css');
-var svgmin      = require('gulp-svgmin');
-var concat      = require('gulp-concat');
-var rename      = require('gulp-rename');
+const gulp        = require('gulp');
+const gutil       = require('gulp-util');
+const gulpif      = require('gulp-if');
+const source      = require('vinyl-source-stream');
+const buffer      = require('vinyl-buffer');
+const babelify    = require('babelify');
+const watchify    = require('watchify');
+const sourcemaps  = require('gulp-sourcemaps');
+const browserify  = require('browserify');
+const uglify      = require('gulp-uglify');
+const browserSync = require('browser-sync').create();
+const sass        = require('gulp-sass');
+const cleanCss    = require('gulp-clean-css');
+const svgmin      = require('gulp-svgmin');
+const concat      = require('gulp-concat');
+const rename      = require('gulp-rename');
 
-var assetsBase = './website/assets',
+const assetsBase = './website/assets',
     destBase   = './website/static',
     sassGlob   = '/**/*.scss';
 
-var production = process.env.NODE_ENV === 'production';
+const production = process.env.NODE_ENV === 'production';
 
-// Input file.
-watchify.args.debug = !production;
-var bundler = watchify(browserify(assetsBase + '/apps/map/app.js', watchify.args));
-bundler.transform(babelify.configure({sourceMapRelative: 'apps/map',}));
-bundler.on('update', bundle);
+function buildScript(entryFile, appName, watch=false) {
+  let args = { entries: [entryFile], cache: {}, packageCache: {}, debug: !production};
+  let bundler = watch ? watchify(browserify(args)) : browserify(args);
+  bundler.transform(babelify.configure({sourceMapRelative: 'apps/map',}));
+  function rebundle() {
+    let bindle = bundler.bundle();
 
-function bundle() {
-    gutil.log('Compiling JS...');
-
-    return bundler.bundle()
-        .on('error', function (err) {
-            gutil.log(err.message);
-            browserSync.notify("Browserify Error!");
-            this.emit("end");
-        })
-        .pipe(source('mapapp.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(gulpif(production, uglify()))
-        .on('error', gutil.log)
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(destBase + '/js'))
-        .pipe(browserSync.stream({once: true}));
+    return bindle.on('error', function (err) {
+        gutil.log(err.message);
+        browserSync.notify("Browserify Error!");
+        this.emit("end");
+    })
+    .pipe(source(`${appName}.js`))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(gulpif(production, uglify()))
+    .on('error', gutil.log)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(destBase + '/js'))
+    .pipe(gulpif(watch, browserSync.stream({once: true})));
+  }
+  bundler.on('update', function () {
+    rebundle();
+    gutil.log('Rebundle...');
+  });
+  return rebundle();
 }
 
-gulp.task('bundle', function () {
-    return bundle();
+gulp.task('megamap:build', function () {
+    return buildScript(assetsBase + '/apps/map/app.js', 'mapapp');
 });
 
-gulp.task('sass', function () {
+gulp.task('megamap:watch', function () {
+    return buildScript(assetsBase + '/apps/map/app.js', 'mapapp', true);
+});
+
+gulp.task('sass:build', function () {
     var cssDest = destBase + '/css';
     return gulp.src(assetsBase + sassGlob)
                .pipe(sourcemaps.init())
@@ -81,8 +88,8 @@ gulp.task('svg', function () {
 });
 
 
-gulp.task('default', ['build'], function () {
-    gulp.watch(assetsBase + sassGlob, ['sass']);
+gulp.task('default', ['megamap:watch'], function () {
+    gulp.watch(assetsBase + sassGlob, ['sass:build']);
     browserSync.init({
         proxy: "localhost:8000",
         serveStatic: [destBase],
@@ -91,8 +98,8 @@ gulp.task('default', ['build'], function () {
     });
 });
 
-gulp.task('build', ['sass', 'bundle']);
+gulp.task('build', ['sass:build', 'megamap:build']);
 
-gulp.task('watch', function() {
-    gulp.watch(assetsBase + sassGlob, ['sass']);
+gulp.task('sass:watch', function() {
+    gulp.watch(assetsBase + sassGlob, ['sass:build']);
 })
