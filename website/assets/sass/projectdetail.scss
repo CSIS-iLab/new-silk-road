@@ -1,0 +1,26 @@
+@import "variables";
+@import "lib/neat/neat";
+
+.details {
+    .row {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        margin-bottom: $large-spacing;
+        section {
+            flex: 1 1 auto;
+            margin-bottom: $small-spacing;
+        }
+        &::after {
+            content: normal;
+        }
+        @include media($medium-break) {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        @include media($large-break) {
+            flex-wrap: nowrap;
+        }
+    }
+}

@@ -5,6 +5,7 @@
 @import "layout";
 @import "map";
 @import "searchview";
+@import "projectdetail";
 
 
 html {
@@ -38,10 +39,14 @@ h2,h3,h4,h5,h6 {
 }
 
 p {
-    margin: 0 0 2rem;
+    margin: 0 0 1rem;
 
     @include media($small-break) {
         margin: 0;
+    }
+
+    @include media($medium-break) {
+        margin-bottom: 1.5rem;
     }
 }
 
