@@ -43,7 +43,7 @@ header {
     }
 }
 
-@for $i from 1 through 12 {
+@for $i from 1 through $grid-columns {
     .col-#{$i} {
         @include span-columns(1 of 1);
         margin-bottom: $large-spacing;
@@ -51,7 +51,7 @@ header {
 }
 
 @include media($medium-break) {
-    @for $i from 1 through 12 {
+    @for $i from 1 through $grid-columns {
         .col-#{$i} {
             @include span-columns($i/(12/$grid-columns));
             margin-bottom: $medium-spacing;
@@ -60,9 +60,12 @@ header {
 }
 
 @include media($large-break) {
-    @for $i from 1 through 12 {
+    @for $i from 1 through $grid-columns {
         .col-#{$i} {
             @include span-columns($i);
+        }
+        .col-shift-#{$i} {
+            @include shift($i of $grid-columns);
         }
     }
 }
