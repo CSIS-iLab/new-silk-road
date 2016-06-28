@@ -1,6 +1,25 @@
 @import "variables";
 @import "lib/neat/neat";
+article {
+    section {
+        &.documents {
+            padding: $large-spacing;
+            background-color: $creamer;
 
+            .wrap {
+                display: flex;
+                flex-wrap: wrap;
+                > div {
+                    flex: 1 0 50%;
+                    margin-bottom: $small-spacing;
+                    @include media($medium-break) {
+                        margin-bottom: $medium-spacing;
+                    }
+                }
+            }
+        }
+    }
+}
 .details {
     .row {
         display: flex;
