@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'website',
     'api',
 
+    'utilities',
     'fieldbook_importer',
 ]
 
