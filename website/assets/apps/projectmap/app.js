@@ -62,6 +62,7 @@ class Map {
           source: layerId,
           id: layerId,
         }, this._stylo.getStyleFor('lines'));
+        delete layer.minzoom; // Some big shapes won't show otherwise
         this._map.addLayer(layer);
       }
     }
