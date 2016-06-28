@@ -7,7 +7,7 @@ from django.http import HttpResponseServerError
 
 from tempfile import NamedTemporaryFile
 from locations.utils import geostore_from_file
-from .models import (Project, Initiative)
+from .models import (Project, ProjectDocument, Initiative)
 from .forms import ProjectGeoUploadForm
 
 import logging
@@ -30,6 +30,10 @@ class ProjectDetailView(DetailView):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
+        # context['project_documents'] = (
+        #     (li[1], self.object.documents.filter(document_type=li[0]))
+        #     for _, ol in ProjectDocument.DOCUMENT_TYPES for li in ol
+        # )
         return context
 
 
