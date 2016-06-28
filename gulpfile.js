@@ -114,4 +114,10 @@ gulp.task('build', ['sass:build', 'megamap:build', 'projectmap:build']);
 
 gulp.task('sass:watch', function() {
     gulp.watch(assetsBase + sassGlob, ['sass:build']);
+    browserSync.init({
+        proxy: "localhost:8000",
+        serveStatic: [destBase],
+        files: [destBase + '/css/*.css'],
+        open: false
+    });
 })
