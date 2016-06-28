@@ -29,5 +29,5 @@ class fuzzydate:
             raise TypeError('filldate a date object to fill in missing values')
         return date(self.year or arg.year, self.month or arg.month, self.day or arg.day)
 
-    def __str__(self):
+    def __repr__(self):
         return 'fuzzydate({self.year}, {self.month}, {self.day})'.format(self=self)
