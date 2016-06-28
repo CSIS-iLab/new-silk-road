@@ -8,6 +8,7 @@ from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
 from finance.currency import CURRENCY_CHOICES, DEFAULT_CURRENCY_CHOICE
 from utilities.validators import URLLikeValidator
+from utilities.date import fuzzydate
 import uuid
 
 
@@ -116,13 +117,25 @@ class Project(Publishable):
     start_month = models.PositiveSmallIntegerField(blank=True, null=True)
     start_day = models.PositiveSmallIntegerField(blank=True, null=True)
 
+    @property
+    def fuzzy_start_date(self):
+        return fuzzydate(self.start_year, self.start_month, self.start_day)
+
     commencement_year = models.PositiveSmallIntegerField('Year of commencement of works', blank=True, null=True)
     commencement_month = models.PositiveSmallIntegerField('Month of commencement of works', blank=True, null=True)
     commencement_day = models.PositiveSmallIntegerField('Day of commencement of works', blank=True, null=True)
 
+    @property
+    def fuzzy_commencement_date(self):
+        return fuzzydate(self.commencement_year, self.commencement_month, self.commencement_day)
+
     planned_completion_year = models.PositiveSmallIntegerField(blank=True, null=True)
     planned_completion_month = models.PositiveSmallIntegerField(blank=True, null=True)
     planned_completion_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    @property
+    def fuzzy_planned_completion_date(self):
+        return fuzzydate(self.planned_completion_year, self.planned_completion_month, self.planned_completion_day)
 
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
