@@ -356,13 +356,5 @@ article {
 .row {
     h3 {
         color: $slate-grey;
-        border-bottom: 2px solid $slate-grey;
-    }
-
-    @include media($medium-break) {
-        &:nth-child(odd) h3 {
-            color: $medium-green;
-            border-bottom: 2px solid $medium-green;
-        }
     }
 }

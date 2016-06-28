@@ -11,10 +11,7 @@ article {
                 flex-wrap: wrap;
                 > div {
                     flex: 1 0 50%;
-                    margin-bottom: $small-spacing;
-                    @include media($medium-break) {
-                        margin-bottom: $medium-spacing;
-                    }
+                    margin-bottom: $large-spacing;
                 }
             }
         }
@@ -27,12 +24,29 @@ article {
         justify-content: space-between;
         align-items: stretch;
         margin-bottom: $large-spacing;
-        section {
-            flex: 1 1 auto;
-            margin-bottom: $small-spacing;
-        }
         &::after {
             content: normal;
+        }
+        h3 {
+            border-bottom: 2px solid $slate-grey;
+        }
+        @include media($medium-break) {
+            &:nth-child(odd) h3 {
+                color: $medium-green;
+                border-bottom: 2px solid $medium-green;
+            }
+        }
+        section {
+            flex: 0 1 auto;
+            margin-bottom: $small-spacing;
+
+            @include media($large-break) {
+                padding-left: $large-spacing * 1.5;
+            }
+
+            &:first-of-type {
+                padding-left: 0;
+            }
         }
         @include media($medium-break) {
             flex-direction: row;
@@ -41,5 +55,11 @@ article {
         @include media($large-break) {
             flex-wrap: nowrap;
         }
+    }
+}
+
+.document-list {
+    ul > li {
+        margin-bottom: $small-spacing;
     }
 }
