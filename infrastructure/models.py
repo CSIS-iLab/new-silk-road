@@ -345,6 +345,9 @@ class ProjectDocument(models.Model):
         choices=ProjectStatus.STATUSES
     )
 
+    class Meta:
+        ordering = ['document_type', 'source_url']
+
     def __str__(self):
         if self.source_url:
             return self.source_url
