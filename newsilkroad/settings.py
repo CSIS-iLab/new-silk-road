@@ -167,8 +167,9 @@ DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 DATABASES['default']['CONN_MAX_AGE'] = 500
 
 # Cache
+CACHE_DISABLED = os.getenv('DISABLE_CACHE', 'False') == 'True'
 
-if os.getenv('DISABLE_CACHE', 'False') != 'True':
+if not CACHE_DISABLED:
     CACHES = memcacheify()
     CACHALOT_UNCACHABLE_TABLES = frozenset((
         'django_migrations',
@@ -177,6 +178,12 @@ if os.getenv('DISABLE_CACHE', 'False') != 'True':
         'locations_pointgeometry',
         'locations_polygongeometry',
     ))
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
