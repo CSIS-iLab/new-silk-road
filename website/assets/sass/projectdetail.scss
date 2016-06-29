@@ -7,10 +7,10 @@ article {
             background-color: $creamer;
 
             .wrap {
-                display: flex;
-                flex-wrap: wrap;
+                @include display(flex);
+                @include flex-wrap(wrap);
                 > div {
-                    flex: 1 0 50%;
+                    @include flex(1 0 50%);
                     margin-bottom: $large-spacing;
                 }
             }
@@ -19,10 +19,10 @@ article {
 }
 .details {
     .row {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: stretch;
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
+        @include align-items(stretch);
         margin-bottom: $large-spacing;
         &::after {
             content: normal;
@@ -37,7 +37,7 @@ article {
             }
         }
         section {
-            flex: 0 1 auto;
+            @include flex(0 1 auto);
             margin-bottom: $small-spacing;
 
             @include media($large-break) {
@@ -57,11 +57,11 @@ article {
             }
         }
         @include media($medium-break) {
-            flex-direction: row;
-            flex-wrap: wrap;
+            @include flex-direction(row);
+            @include flex-wrap(wrap);
         }
         @include media($large-break) {
-            flex-wrap: nowrap;
+            @include flex-wrap(nowrap);
         }
     }
 }
