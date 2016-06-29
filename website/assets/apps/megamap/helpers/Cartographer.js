@@ -50,6 +50,7 @@ export default class Cartographer {
     this._al.addActionListener(GeoCentroidActions.FAIL, this._handleCentroidsFail.bind(this));
     this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
     this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
+    this._map.on('mousemove', this._handleMapMove.bind(this));
     this._map.on('movestart', this._handleStartMapMove.bind(this));
     this._map.on('moveend', this._handleEndMapMove.bind(this));
     this._map.on('click', this._handleMapClick.bind(this));
@@ -152,6 +153,11 @@ export default class Cartographer {
     if (this._updateFrameId) {
       window.cancelAnimationFrame(this._updateFrameId);
     }
+  }
+
+  _handleMapMove(event) {
+    let features = this._map.queryRenderedFeatures(event.point, { layers: [centroidsLayerId] });
+    this._map.getCanvas().style.cursor = features.length ? 'pointer' : '';
   }
 
   _handleEndMapMove(event) {
