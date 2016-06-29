@@ -16,7 +16,7 @@ from .views import (
 
 app_name = 'facts'
 urlpatterns = [
-    url(r'^people/(?P<identifier>[a-f0-9-]{32,36})/$', PersonDetailView.as_view(), name='person-detail'),
+    url(r'^people/(?P<slug>\S+)/(?P<identifier>[a-f0-9-]{32,36})/$', PersonDetailView.as_view(), name='person-detail'),
     url(r'^people/$', PersonListView.as_view(), name='person-list'),
     url(r'^organizations/(?P<slug>\S+)/$', OrganizationDetailView.as_view(), name='organization-detail'),
     url(r'^organizations/$', OrganizationListView.as_view(), name='organization-list'),
