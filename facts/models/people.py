@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 from markymark.fields import MarkdownField
 from publish.models import Publishable
 import uuid
@@ -28,6 +29,7 @@ class Person(Publishable):
     events = models.ManyToManyField('Event', blank=True)
 
     class Meta:
+        ordering = ['family_name', 'given_name', 'additional_name']
         verbose_name_plural = 'people'
 
     def __str__(self):
@@ -39,7 +41,10 @@ class Person(Publishable):
     full_display_name.short_description = "Full name"
 
     def get_absolute_url(self):
-        return reverse('facts:person-detail', args=[str(self.identifier)])
+        return reverse('facts:person-detail', kwargs={
+            'slug': slugify(self.full_display_name()),
+            'identifier': str(self.identifier)
+        })
 
 
 class Position(models.Model):
