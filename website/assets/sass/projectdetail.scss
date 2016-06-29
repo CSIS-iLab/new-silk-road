@@ -47,6 +47,14 @@ article {
             &:first-of-type {
                 padding-left: 0;
             }
+
+            &.multidimensional {
+                flex: 1 1 auto;
+
+                table {
+                    width: 100%;
+                }
+            }
         }
         @include media($medium-break) {
             flex-direction: row;

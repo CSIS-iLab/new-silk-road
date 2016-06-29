@@ -5,9 +5,72 @@
 {% endblock %}
 
 {% block content %}
-<article>
-    <h1>{{ object.full_display_name }}</h1>
-    {% lorem 2 p %}
+<article class='person'>
+    <header>
+        <h1>{{ object.full_display_name }}</h1>
+    </header>
+    <section class=>
+        {% lorem 2 p %}
+    </section>
+    <section class="details">
+        <div class="row">
+            <section>
+                <h3>Citizenships</h3>
+                <ul class="clean">{% for country in object.citizenships.all %}
+                    <li>{{ country.name }}</li>
+                    {% empty %}
+                    <li>Not available</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            <section class="multidimensional">
+                <h3>Positions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Organization</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>{% for position in object.position_set.all %}
+                        <tr>
+                            <td>{{ position.title }}</td>
+                            <td><a href="{{ position.organization.get_absolute_url }}">{{ position.organization.name }}</a></td>
+                            <td>{% if position.start_year or position.end_year %}
+                                {{ position.start_year|default:"" }} &ndash; {{ position.end_year|default:"" }}
+                                {% else %}
+                                Not Available
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <div class="row">
+            <section>
+                <h3>Events</h3>
+                <ul class="clean">{% for event in object.events.all %}
+                    <li><a href="{{ event.get_absolute_url }}">{{ event.name }}</a></li>
+                    {% empty %}
+                    <li>Not available</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            <section>
+                <h3>Initiatives</h3>
+                <ul class="clean">{% for initiative in object.initiative_set.all %}
+                    <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>
+                    {% empty %}
+                    <li>Not available</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+    </section>
 
 </article>
 {% endblock %}
