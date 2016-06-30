@@ -6,6 +6,7 @@ import Option from '../models/Option';
 export default class DateRangeSelect extends Component {
   static propTypes = {
     dateLookupOptions: PropTypes.array.isRequired,
+    labelName: PropTypes.string,
     lowerBoundLabel: PropTypes.string.isRequired,
     upperBoundLabel: PropTypes.string.isRequired,
     boundLength: PropTypes.number,
@@ -102,14 +103,15 @@ export default class DateRangeSelect extends Component {
       dateLookupOptions,
       lowerBoundLabel,
       upperBoundLabel,
-      boundLength
+      labelName,
+      boundLength,
     } = this.props;
     return (
       <div className='dateRangeSelect'>
         <Select
         value={dateLookupType}
         name='date_lookup_type'
-        placeholder={this.labelName}
+        placeholder={labelName}
         options={dateLookupOptions}
         onChange={this.onLookupChange}
         />

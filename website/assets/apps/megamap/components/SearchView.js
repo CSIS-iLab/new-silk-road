@@ -125,6 +125,7 @@ export default class SearchView extends Component {
             </div>
             <div className="sectionRow">
               <DateRangeSelect
+              labelName="Filter by Year..."
               dateLookupOptions={yearLookupOptions}
               lowerBoundLabel='Year'
               upperBoundLabel='Year'
