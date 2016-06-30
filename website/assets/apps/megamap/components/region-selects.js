@@ -3,7 +3,7 @@ import Option from '../models/Option';
 import RegionStore from '../stores/RegionStore';
 import RegionActions from '../actions/RegionActions';
 
-var RegionSelectContainer = createSelectContainer(
+var ProjectRegionSelect = createSelectContainer(
   RegionStore, RegionActions,
   'regions', 'Region',
   function(data) {
@@ -11,4 +11,4 @@ var RegionSelectContainer = createSelectContainer(
   }
 );
 
-export default RegionSelectContainer;
+export {ProjectRegionSelect};

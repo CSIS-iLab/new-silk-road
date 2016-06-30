@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from "react";
 import Panel from "./Panel";
 import SearchBar from "./SearchBar";
-import CountrySelectContainer from "./CountrySelectContainer";
-import RegionSelectContainer from "./RegionSelectContainer";
+import {FunderCountrySelect, ProjectCountrySelect} from "./country-selects";
+import {ProjectRegionSelect} from "./region-selects";
 import StatusSelectContainer from "./StatusSelectContainer";
 import InfrastructureTypeSelectContainer from "./InfrastructureTypeSelectContainer";
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
@@ -118,6 +118,12 @@ export default class SearchView extends Component {
               <StatusSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
             <div className="sectionRow">
+              <ProjectRegionSelect onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="sectionRow">
+              <ProjectCountrySelect onSelect={this.handleQueryUpdate} />
+            </div>
+            <div className="sectionRow">
               <DateRangeSelect
               dateLookupOptions={yearLookupOptions}
               lowerBoundLabel='Year'
@@ -137,9 +143,6 @@ export default class SearchView extends Component {
             <div className="sectionRow">
               <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
-            <div className="sectionRow">
-              <RegionSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
           </Panel>
           <Panel title='Funders' ref='fundersPanel'>
             <div className="sectionRow">
@@ -153,7 +156,7 @@ export default class SearchView extends Component {
               <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
             </div>
             <div className="sectionRow">
-              <CountrySelectContainer onSelect={this.handleQueryUpdate} />
+              <FunderCountrySelect onSelect={this.handleQueryUpdate} />
             </div>
           </Panel>
           </form>
