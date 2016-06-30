@@ -29,7 +29,7 @@ const resultsViewStyle = {
 
 const scrollWrap = {
   base: {
-    maxHeight: '94%',
+    maxHeight: '90%',
     overflowX: 'hidden',
     overflowY: 'scroll',
     '.scrollContent': {
