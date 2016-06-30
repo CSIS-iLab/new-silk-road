@@ -134,12 +134,26 @@ header[role=banner] {
         height: 118px;
     }
 
-    h1 {
+    .headers {
         float: none;
-        max-width: 100%;
+        max-width: 98%;
         margin: 15px auto 0;
-        @include hide-text;
-        background: url($logo-image) no-repeat;
+        > a {
+            padding: $small-spacing/2 0 $small-spacing/2;
+            display: block;
+        }
+        h1 {
+            @include hide-text;
+            background: url($logo-image) no-repeat;
+            line-height: inherit;
+            margin: 0;
+        }
+        h2 {
+            font-family: $serif-font-family;
+            font-size: $minor-text-size;
+            font-weight: 400;
+            font-style: italic;
+        }
         @include media($medium-break) {
             float: left;
             margin: 33px 0 0;
@@ -155,7 +169,7 @@ header[role=banner] {
         margin: $small-spacing auto $small-spacing*1.5 auto;
         @include media($medium-break) {
             float: right;
-            margin: 33px 0 0;
+            margin: 45px 0 0;
         }
         ul {
             margin-bottom: 0;
