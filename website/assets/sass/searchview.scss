@@ -128,9 +128,9 @@ $placeholder-color: lighten($slate-grey, 30%);
 
 
 .resultsView {
-    padding-top: 4px;
+    padding-top: 0;
     .resultsNav {
-        margin-bottom: 4px;
+        margin: 4px 0;
     }
     ul.searchResults {
         list-style: none;
