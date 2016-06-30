@@ -66,11 +66,28 @@ export default class DateRangeSelect extends Component {
       lowerValue,
       upperValue,
     } = this.state;
-    let q = {};
-    for (let option of this.props.dateLookupOptions) {
-      const lookupType = option ? option.value : '';
-      q[`${lookupType}__gte`] = lookupType === dateLookupType ? lowerValue : null;
-      q[`${lookupType}__lt`] = lookupType === dateLookupType ? upperValue : null;
+    const lookupMap = this.props.dateLookupOptions.map(function (obj) {
+      let lObj = {};
+      if (obj && obj.value) {
+        lObj[obj.value] = null;
+        lObj[`${obj.value}__gte`] = null;
+        lObj[`${obj.value}__lt`] = null;
+      }
+      return lObj;
+    });
+    let q = Object.assign({}, ...lookupMap);
+    // See if our input can update q
+    if (dateLookupType) {
+      const lowerNum = +lowerValue || null;
+      const upperNum = +upperValue || null;
+      if (lowerNum || upperNum) {
+        if (lowerNum === upperNum) {
+          q[dateLookupType] = lowerNum;
+        } else {
+          q[`${dateLookupType}__gte`] = lowerNum;
+          q[`${dateLookupType}__lt`] = upperNum;
+        }
+      }
     }
     return q;
   }
