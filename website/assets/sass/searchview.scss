@@ -10,7 +10,7 @@ $placeholder-color: lighten($slate-grey, 30%);
     position: absolute;
     @include display(flex);
     @include flex-direction(column);
-    font-size: 16px;
+    font-size: $minor-text-size;
     top: 20px;
     right: 20px;
     section {
@@ -128,6 +128,9 @@ $placeholder-color: lighten($slate-grey, 30%);
 
 
 .resultsView {
+    section {
+        border: none;
+    }
     padding-top: 0;
     .resultsNav {
         margin: 4px 0;
@@ -137,7 +140,7 @@ $placeholder-color: lighten($slate-grey, 30%);
         padding: 0 3px;
         margin: 0;
 
-        li {
+        > li {
             margin: 0 10px 8px 6px;
             padding-bottom: 8px;
             border-bottom: 2px solid $slate-grey;
@@ -149,6 +152,17 @@ $placeholder-color: lighten($slate-grey, 30%);
             p {
                 margin-bottom: 4px;
             }
+        }
+    }
+}
+
+.initiativesList {
+    ul {
+        margin: 0 0 0 6px;
+        li {
+            font-size: $minor-text-size * 0.9;
+            list-style-type: none;
+            margin-bottom: 3px;
         }
     }
 }

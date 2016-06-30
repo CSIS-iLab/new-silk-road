@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import {Button} from './forms';
 import GeoStoreActions from '../actions/GeoStoreActions';
+import ProjectResultView from './ProjectResultView';
 
 export default class ResultsList extends Component {
   static propTypes = {
@@ -27,8 +28,7 @@ export default class ResultsList extends Component {
           let geoid = result.geo;
           return (
             <li key={index} className="result">
-              <p>{result.name}</p>
-              <p>Type: <strong>{result.infrastructure_type}</strong></p>
+              <ProjectResultView key={result.identifier} project={result} />
               <div className='buttonBar'>
                 <Button type='button'
                   onClick={this.handleMapButtonClick}
