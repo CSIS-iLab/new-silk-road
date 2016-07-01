@@ -5,6 +5,7 @@
     @include display(flex);
     @include flex-direction(row);
     @include justify-content(space-between);
+
     button {
         @include flex(0 1 auto);
         background-color: transparent;
@@ -28,7 +29,7 @@
         > input,
         > select {
             @include flex(0 1 auto);
-            margin: 0 0 3px;
+            margin: 0 0 6px;
             @include media($medium-break) {
                 margin: 0;
             }

@@ -3,16 +3,29 @@
 article {
     section {
         &.documents {
-            padding: $large-spacing;
+            padding: $small-spacing;
             background-color: $creamer;
+
+            @include media($medium-break) {
+                padding: $large-spacing;
+            }
 
             .wrap {
                 @include display(flex);
-                @include flex-wrap(wrap);
+                @include flex-direction(column);
                 > div {
-                    @include flex(1 0 50%);
+                    @include flex(1 0 auto);
                     margin-bottom: $large-spacing;
+                    @include media($medium-break) {
+                        @include flex(1 0 50%);
+                    }
                 }
+
+                @include media($medium-break) {
+                    @include flex-direction(row);
+                    @include flex-wrap(wrap);
+                }
+
             }
         }
     }
@@ -67,7 +80,54 @@ article {
 }
 
 .document-list {
+    display: block;
+
     ul > li {
         margin-bottom: $small-spacing;
+
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+
+.database-landing {
+    .content-wrap {
+        header {
+            h1 {
+                text-align: center;
+            }
+        }
+
+        nav {
+
+        }
+    }
+}
+
+.content-wrap nav {
+    ul {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            @include justify-content(space-around);
+        }
+
+        li {
+            @include flex(1 1 auto);
+
+            @include media($medium-break) {
+                @include flex(0 1 auto);
+            }
+
+            a.button {
+                width: 100%;
+            }
+        }
     }
 }

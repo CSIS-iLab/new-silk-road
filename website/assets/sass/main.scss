@@ -26,7 +26,6 @@ a {
 }
 
 h1 {
-    font-family: $serif-font-family;
     font-size: $major-hed-size * 0.70;
     line-height: 1.2em;
     @include media($medium-break) {
@@ -34,8 +33,15 @@ h1 {
     }
 }
 
-h2,h3,h4,h5,h6 {
+h1,h2 {
+    font-family: $serif-font-family;
+}
+
+h3,h4,h5,h6 {
     font-family: $sans-font-family;
+}
+
+h2,h3,h4,h5,h6 {
     line-height: 1.25rem;
     margin: 0 0 0.75em;
 }
@@ -153,12 +159,15 @@ header[role=banner] {
             background: url($logo-image) no-repeat;
             line-height: inherit;
             margin: 0;
+            text-overflow: clip;
         }
         h2 {
-            font-family: $serif-font-family;
-            font-size: $minor-text-size;
+            font-size: $compact-text-size;
             font-weight: 400;
             font-style: italic;
+            @include media($medium-break) {
+                font-size: $minor-text-size;
+            }
         }
         @include media($medium-break) {
             float: left;
@@ -377,13 +386,5 @@ article {
 .row {
     h3 {
         color: $slate-grey;
-    }
-}
-
-.database-landing {
-    header {
-        h1 {
-            text-align: center;
-        }
     }
 }

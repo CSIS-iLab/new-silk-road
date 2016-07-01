@@ -24,7 +24,10 @@ input.primary {
     padding: 8px 4px 8px 8px;
 }
 a.button {
+    display: inline-block;
     text-decoration: none;
+    text-align: center;
+    padding: 8px;
 }
 fieldset {
     border: none;
