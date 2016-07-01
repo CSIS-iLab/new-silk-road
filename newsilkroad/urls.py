@@ -27,8 +27,6 @@ DEBUG = getattr(settings, 'DEBUG', False)
 
 urlpatterns = [
     url(r'^', include('website.urls')),
-    url(r'^database/', include('infrastructure.urls')),
-    url(r'^database/', include('facts.urls')),
     url(r'^api/', include('api.urls')),
     url(r'^admin/infrastructure/', include(adminpatterns, namespace='infrastructure-admin')),
     url(r'^admin/', admin.site.urls),

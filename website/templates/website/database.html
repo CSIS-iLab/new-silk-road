@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block bodyclass %}database-landing{% endblock %}
+
+{% block content %}
+    <header class="decorated">
+        <h1>The Database</h1>
+    </header>
+    <div class="search">
+        <form>
+            <select class="" name="">
+                <option value="option">option</option>
+            </select>
+            <div class="searchBar">
+                <input type="text" class="primary" name="name" value="">
+                <button type="button" name="search">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="featured">
+    {% comment %}
+        TODO: Featured item selector.
+    {% endcomment %}
+    </div>
+    <nav>
+        <ul>
+            <li><a class="button" href="">Glossary</a></li>
+            <li><a class="button" href="">Methodology</a></li>
+        </ul>
+    </nav>
+{% endblock %}
