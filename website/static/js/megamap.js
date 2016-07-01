@@ -66473,7 +66473,7 @@ var CountryActions = _alt2.default.createActions((0, _apiactions.createApiAction
 
 exports.default = CountryActions;
 
-},{"../alt":748,"../sources/apisources":776,"./apiactions":747}],739:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777,"./apiactions":747}],739:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66531,7 +66531,7 @@ var CurrencyActions = function () {
 CurrencyActions = _alt2.default.createActions(CurrencyActions);
 exports.default = CurrencyActions;
 
-},{"../alt":748,"../sources/CurrencySource":774}],740:[function(require,module,exports){
+},{"../alt":748,"../sources/CurrencySource":775}],740:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66591,7 +66591,7 @@ var GeoCentroidActions = function () {
 GeoCentroidActions = _alt2.default.createActions(GeoCentroidActions);
 exports.default = GeoCentroidActions;
 
-},{"../alt":748,"../sources/apisources":776,"whatwg-fetch":736}],741:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777,"whatwg-fetch":736}],741:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66656,7 +66656,7 @@ var GeoStoreActions = function () {
 GeoStoreActions = _alt2.default.createActions(GeoStoreActions);
 exports.default = GeoStoreActions;
 
-},{"../alt":748,"../sources/GeoStoreSource":775}],742:[function(require,module,exports){
+},{"../alt":748,"../sources/GeoStoreSource":776}],742:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66677,7 +66677,7 @@ var InfrastructureTypeActions = _alt2.default.createActions((0, _apiactions.crea
 
 exports.default = InfrastructureTypeActions;
 
-},{"../alt":748,"../sources/apisources":776,"./apiactions":747}],743:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777,"./apiactions":747}],743:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66735,7 +66735,7 @@ var PrincipalAgentActions = function () {
 PrincipalAgentActions = _alt2.default.createActions(PrincipalAgentActions);
 exports.default = PrincipalAgentActions;
 
-},{"../alt":748,"../sources/apisources":776}],744:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777}],744:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66756,7 +66756,7 @@ var RegionActions = _alt2.default.createActions((0, _apiactions.createApiActions
 
 exports.default = RegionActions;
 
-},{"../alt":748,"../sources/apisources":776,"./apiactions":747}],745:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777,"./apiactions":747}],745:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66832,7 +66832,7 @@ var SearchActions = function () {
 SearchActions = _alt2.default.createActions(SearchActions);
 exports.default = SearchActions;
 
-},{"../alt":748,"../sources/apisources":776,"whatwg-fetch":736}],746:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777,"whatwg-fetch":736}],746:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66853,7 +66853,7 @@ var StatusActions = _alt2.default.createActions((0, _apiactions.createApiActions
 
 exports.default = StatusActions;
 
-},{"../alt":748,"../sources/apisources":776,"./apiactions":747}],747:[function(require,module,exports){
+},{"../alt":748,"../sources/apisources":777,"./apiactions":747}],747:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -66966,7 +66966,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_SearchView2.default, { maxHeight: appHeight - 40 })
 ), document.getElementById('app'));
 
-},{"./components/MapContainer":755,"./components/SearchView":761,"babel-polyfill":11,"radium":558,"react":718,"react-dom":574}],750:[function(require,module,exports){
+},{"./components/MapContainer":755,"./components/SearchView":762,"babel-polyfill":11,"radium":558,"react":718,"react-dom":574}],750:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67075,7 +67075,7 @@ CurrencyAmountSelectContainer.propTypes = {
 };
 exports.default = CurrencyAmountSelectContainer;
 
-},{"../actions/CurrencyActions":739,"../models/Option":773,"../stores/CurrencyStore":779,"react":718,"react-select":578}],751:[function(require,module,exports){
+},{"../actions/CurrencyActions":739,"../models/Option":774,"../stores/CurrencyStore":780,"react":718,"react-select":578}],751:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67222,6 +67222,7 @@ var DateRangeSelect = function (_Component) {
       var dateLookupOptions = _props.dateLookupOptions;
       var lowerBoundLabel = _props.lowerBoundLabel;
       var upperBoundLabel = _props.upperBoundLabel;
+      var labelName = _props.labelName;
       var boundLength = _props.boundLength;
 
       return _react2.default.createElement(
@@ -67230,7 +67231,7 @@ var DateRangeSelect = function (_Component) {
         _react2.default.createElement(_reactSelect2.default, {
           value: dateLookupType,
           name: 'date_lookup_type',
-          placeholder: this.labelName,
+          placeholder: labelName,
           options: dateLookupOptions,
           onChange: this.onLookupChange
         }),
@@ -67267,6 +67268,7 @@ var DateRangeSelect = function (_Component) {
 
 DateRangeSelect.propTypes = {
   dateLookupOptions: _react.PropTypes.array.isRequired,
+  labelName: _react.PropTypes.string,
   lowerBoundLabel: _react.PropTypes.string.isRequired,
   upperBoundLabel: _react.PropTypes.string.isRequired,
   boundLength: _react.PropTypes.number,
@@ -67277,7 +67279,7 @@ DateRangeSelect.defaultProps = {
 };
 exports.default = DateRangeSelect;
 
-},{"../models/Option":773,"./forms":766,"react":718,"react-select":578}],752:[function(require,module,exports){
+},{"../models/Option":774,"./forms":767,"react":718,"react-select":578}],752:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67361,7 +67363,7 @@ var InfrastructureTypeSelectContainer = (0, _containers.createSelectContainer)(_
 
 exports.default = InfrastructureTypeSelectContainer;
 
-},{"../actions/InfrastructureTypeActions":742,"../models/Option":773,"../stores/InfrastructureTypeStore":780,"./containers":763}],754:[function(require,module,exports){
+},{"../actions/InfrastructureTypeActions":742,"../models/Option":774,"../stores/InfrastructureTypeStore":781,"./containers":764}],754:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67571,7 +67573,7 @@ var MapContainer = function (_Component) {
 
 exports.default = MapContainer;
 
-},{"../actions/GeoCentroidActions":740,"../helpers/Cartographer":768,"../stores/SearchStore":783,"./Map":754,"mapbox-gl/js/mapbox-gl":441,"react":718}],756:[function(require,module,exports){
+},{"../actions/GeoCentroidActions":740,"../helpers/Cartographer":769,"../stores/SearchStore":784,"./Map":754,"mapbox-gl/js/mapbox-gl":441,"react":718}],756:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67678,7 +67680,7 @@ Panel = (0, _radium2.default)(Panel);
 
 exports.default = Panel;
 
-},{"./forms":766,"radium":558,"react":718}],757:[function(require,module,exports){
+},{"./forms":767,"radium":558,"react":718}],757:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67709,7 +67711,104 @@ var PrincipalAgentSelectContainer = (0, _containers.createSelectContainer)(_Prin
 
 exports.default = PrincipalAgentSelectContainer;
 
-},{"../actions/PrincipalAgentActions":743,"../models/Option":773,"../stores/PrincipalAgentStore":781,"./containers":763}],758:[function(require,module,exports){
+},{"../actions/PrincipalAgentActions":743,"../models/Option":774,"../stores/PrincipalAgentStore":782,"./containers":764}],758:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ProjectResultView = function (_Component) {
+  _inherits(ProjectResultView, _Component);
+
+  function ProjectResultView() {
+    _classCallCheck(this, ProjectResultView);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(ProjectResultView).apply(this, arguments));
+  }
+
+  _createClass(ProjectResultView, [{
+    key: "render",
+    value: function render() {
+      var project = this.props.project;
+
+
+      return _react2.default.createElement(
+        "section",
+        { className: "projectResult" },
+        _react2.default.createElement(
+          "p",
+          null,
+          project.name
+        ),
+        _react2.default.createElement(
+          "p",
+          null,
+          "Type: ",
+          _react2.default.createElement(
+            "strong",
+            null,
+            project.infrastructure_type
+          )
+        ),
+        function () {
+          var listItems = project.initiatives.map(function (init) {
+            var url = init.page_url || null;
+            return _react2.default.createElement(
+              "li",
+              { key: init.name },
+              _react2.default.createElement(
+                "a",
+                { href: url, target: "_blank" },
+                init.name
+              )
+            );
+          });
+          if (listItems.length > 0) {
+            return _react2.default.createElement(
+              "section",
+              { className: "initiativesList" },
+              _react2.default.createElement(
+                "p",
+                null,
+                "Initiatives:"
+              ),
+              _react2.default.createElement(
+                "ul",
+                { className: "clean" },
+                listItems
+              )
+            );
+          }
+          return;
+        }()
+      );
+    }
+  }]);
+
+  return ProjectResultView;
+}(_react.Component);
+
+ProjectResultView.propTypes = {
+  project: _react.PropTypes.object.isRequired
+};
+exports.default = ProjectResultView;
+
+},{"react":718}],759:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67727,6 +67826,10 @@ var _forms = require('./forms');
 var _GeoStoreActions = require('../actions/GeoStoreActions');
 
 var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
+
+var _ProjectResultView = require('./ProjectResultView');
+
+var _ProjectResultView2 = _interopRequireDefault(_ProjectResultView);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -67774,21 +67877,7 @@ var ResultsList = function (_Component) {
           return _react2.default.createElement(
             'li',
             { key: index, className: 'result' },
-            _react2.default.createElement(
-              'p',
-              null,
-              result.name
-            ),
-            _react2.default.createElement(
-              'p',
-              null,
-              'Type: ',
-              _react2.default.createElement(
-                'strong',
-                null,
-                result.infrastructure_type
-              )
-            ),
+            _react2.default.createElement(_ProjectResultView2.default, { key: result.identifier, project: result }),
             _react2.default.createElement(
               'div',
               { className: 'buttonBar' },
@@ -67824,7 +67913,7 @@ ResultsList.propTypes = {
 };
 exports.default = ResultsList;
 
-},{"../actions/GeoStoreActions":741,"./forms":766,"react":718}],759:[function(require,module,exports){
+},{"../actions/GeoStoreActions":741,"./ProjectResultView":758,"./forms":767,"react":718}],760:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67992,7 +68081,7 @@ ResultsView.defaultProps = {
 ResultsView = (0, _radium2.default)(ResultsView);
 exports.default = ResultsView;
 
-},{"./ResultsList":758,"./forms":766,"radium":558,"react":718}],760:[function(require,module,exports){
+},{"./ResultsList":759,"./forms":767,"radium":558,"react":718}],761:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68109,7 +68198,7 @@ SearchBar = (0, _radium2.default)(SearchBar);
 
 exports.default = SearchBar;
 
-},{"./forms":766,"radium":558,"react":718}],761:[function(require,module,exports){
+},{"./forms":767,"radium":558,"react":718}],762:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68324,6 +68413,7 @@ var SearchView = function (_Component) {
                 "div",
                 { className: "sectionRow" },
                 _react2.default.createElement(_DateRangeSelect2.default, {
+                  labelName: "Filter by Year...",
                   dateLookupOptions: yearLookupOptions,
                   lowerBoundLabel: "Year",
                   upperBoundLabel: "Year",
@@ -68408,7 +68498,7 @@ SearchView.propTypes = {
 };
 exports.default = SearchView;
 
-},{"../actions/SearchActions":745,"../stores/SearchStore":783,"./CurrencyAmountSelectContainer":750,"./DateRangeSelect":751,"./ErrorView":752,"./InfrastructureTypeSelectContainer":753,"./Panel":756,"./PrincipalAgentSelectContainer":757,"./ResultsView":759,"./SearchBar":760,"./StatusSelectContainer":762,"./country-selects":764,"./forms":766,"./region-selects":767,"react":718}],762:[function(require,module,exports){
+},{"../actions/SearchActions":745,"../stores/SearchStore":784,"./CurrencyAmountSelectContainer":750,"./DateRangeSelect":751,"./ErrorView":752,"./InfrastructureTypeSelectContainer":753,"./Panel":756,"./PrincipalAgentSelectContainer":757,"./ResultsView":760,"./SearchBar":761,"./StatusSelectContainer":763,"./country-selects":765,"./forms":767,"./region-selects":768,"react":718}],763:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68439,7 +68529,7 @@ var StatusSelectContainer = (0, _containers.createSelectContainer)(_StatusStore2
 
 exports.default = StatusSelectContainer;
 
-},{"../actions/StatusActions":746,"../models/Option":773,"../stores/StatusStore":784,"./containers":763}],763:[function(require,module,exports){
+},{"../actions/StatusActions":746,"../models/Option":774,"../stores/StatusStore":785,"./containers":764}],764:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68548,7 +68638,7 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
 
 exports.createSelectContainer = createSelectContainer;
 
-},{"react":718,"react-select":578}],764:[function(require,module,exports){
+},{"react":718,"react-select":578}],765:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68587,7 +68677,7 @@ var ProjectCountrySelect = (0, _containers.createSelectContainer)(_CountryStore2
 exports.FunderCountrySelect = FunderCountrySelect;
 exports.ProjectCountrySelect = ProjectCountrySelect;
 
-},{"../actions/CountryActions":738,"../models/Option":773,"../stores/CountryStore":778,"./containers":763}],765:[function(require,module,exports){
+},{"../actions/CountryActions":738,"../models/Option":774,"../stores/CountryStore":779,"./containers":764}],766:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68621,7 +68711,7 @@ exports.inputStyle = inputStyle;
 exports.buttonStyle = buttonStyle;
 exports.selectStyle = selectStyle;
 
-},{}],766:[function(require,module,exports){
+},{}],767:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68808,7 +68898,7 @@ exports.Input = Input;
 exports.Button = Button;
 exports.Select = Select;
 
-},{"./form-styles":765,"radium":558,"react":718}],767:[function(require,module,exports){
+},{"./form-styles":766,"radium":558,"react":718}],768:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68840,7 +68930,7 @@ var ProjectRegionSelect = (0, _containers.createSelectContainer)(_RegionStore2.d
 
 exports.ProjectRegionSelect = ProjectRegionSelect;
 
-},{"../actions/RegionActions":744,"../models/Option":773,"../stores/RegionStore":782,"./containers":763}],768:[function(require,module,exports){
+},{"../actions/RegionActions":744,"../models/Option":774,"../stores/RegionStore":783,"./containers":764}],769:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69324,7 +69414,7 @@ var Cartographer = function () {
 exports.default = Cartographer;
 exports.defaultZoom = _mapConstants.defaultZoom;
 
-},{"../actions/GeoCentroidActions":740,"../actions/GeoStoreActions":741,"../alt":748,"./GeoManager":769,"./GeoStoreQueue":770,"./GeoStyles":771,"./map-constants":772,"alt-utils/lib/ActionListeners":1,"mapbox-gl/js/mapbox-gl":441}],769:[function(require,module,exports){
+},{"../actions/GeoCentroidActions":740,"../actions/GeoStoreActions":741,"../alt":748,"./GeoManager":770,"./GeoStoreQueue":771,"./GeoStyles":772,"./map-constants":773,"alt-utils/lib/ActionListeners":1,"mapbox-gl/js/mapbox-gl":441}],770:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69410,7 +69500,7 @@ var GeoManager = function () {
 
 exports.default = GeoManager;
 
-},{}],770:[function(require,module,exports){
+},{}],771:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69464,7 +69554,7 @@ var GeoStoreQueue = function () {
 
 exports.default = GeoStoreQueue;
 
-},{"../actions/GeoStoreActions":741,"promise-queue":543}],771:[function(require,module,exports){
+},{"../actions/GeoStoreActions":741,"promise-queue":543}],772:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69571,7 +69661,7 @@ var GeoStyles = function () {
 
 exports.default = GeoStyles;
 
-},{"./map-constants":772}],772:[function(require,module,exports){
+},{"./map-constants":773}],773:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69593,7 +69683,7 @@ exports.boundsPadding = boundsPadding;
 exports.updateInterval = updateInterval;
 exports.popContentClass = popContentClass;
 
-},{}],773:[function(require,module,exports){
+},{}],774:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69611,7 +69701,7 @@ var Option = function Option(name, value) {
 
 exports.default = Option;
 
-},{}],774:[function(require,module,exports){
+},{}],775:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69663,7 +69753,7 @@ var CurrencySource = function () {
 
 exports.default = CurrencySource;
 
-},{}],775:[function(require,module,exports){
+},{}],776:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69695,7 +69785,7 @@ var GeoStoreSource = function () {
 GeoStoreSource.baseURL = '/api/geostore/';
 exports.default = GeoStoreSource;
 
-},{"whatwg-fetch":736}],776:[function(require,module,exports){
+},{"whatwg-fetch":736}],777:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69764,7 +69854,7 @@ exports.StatusSource = StatusSource;
 exports.SearchSource = SearchSource;
 exports.GeoCentroidSource = GeoCentroidSource;
 
-},{"./utils":777,"whatwg-fetch":736}],777:[function(require,module,exports){
+},{"./utils":778,"whatwg-fetch":736}],778:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69781,7 +69871,7 @@ function parameterizeQuery(query) {
 
 exports.parameterizeQuery = parameterizeQuery;
 
-},{}],778:[function(require,module,exports){
+},{}],779:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69805,7 +69895,7 @@ CountryStore = _alt2.default.createStore(CountryStore, 'CountryStore');
 
 exports.default = CountryStore;
 
-},{"../actions/CountryActions":738,"../alt":748,"./apistores":785}],779:[function(require,module,exports){
+},{"../actions/CountryActions":738,"../alt":748,"./apistores":786}],780:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69856,7 +69946,7 @@ CurrencyStore = _alt2.default.createStore(CurrencyStore, 'CurrencyStore');
 
 exports.default = CurrencyStore;
 
-},{"../actions/CurrencyActions":739,"../alt":748}],780:[function(require,module,exports){
+},{"../actions/CurrencyActions":739,"../alt":748}],781:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69880,7 +69970,7 @@ InfrastructureTypeStore = _alt2.default.createStore(InfrastructureTypeStore, 'In
 
 exports.default = InfrastructureTypeStore;
 
-},{"../actions/InfrastructureTypeActions":742,"../alt":748,"./apistores":785}],781:[function(require,module,exports){
+},{"../actions/InfrastructureTypeActions":742,"../alt":748,"./apistores":786}],782:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69904,7 +69994,7 @@ PrincipalAgentStore = _alt2.default.createStore(PrincipalAgentStore, 'PrincipalA
 
 exports.default = PrincipalAgentStore;
 
-},{"../actions/PrincipalAgentActions":743,"../alt":748,"./apistores":785}],782:[function(require,module,exports){
+},{"../actions/PrincipalAgentActions":743,"../alt":748,"./apistores":786}],783:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69928,7 +70018,7 @@ RegionStore = _alt2.default.createStore(RegionStore, 'RegionStore');
 
 exports.default = RegionStore;
 
-},{"../actions/RegionActions":744,"../alt":748,"./apistores":785}],783:[function(require,module,exports){
+},{"../actions/RegionActions":744,"../alt":748,"./apistores":786}],784:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70002,7 +70092,7 @@ SearchStore = _alt2.default.createStore(SearchStore, 'SearchStore');
 
 exports.default = SearchStore;
 
-},{"../actions/SearchActions":745,"../alt":748}],784:[function(require,module,exports){
+},{"../actions/SearchActions":745,"../alt":748}],785:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70026,7 +70116,7 @@ StatusStore = _alt2.default.createStore(StatusStore, 'StatusStore');
 
 exports.default = StatusStore;
 
-},{"../actions/StatusActions":746,"../alt":748,"./apistores":785}],785:[function(require,module,exports){
+},{"../actions/StatusActions":746,"../alt":748,"./apistores":786}],786:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
