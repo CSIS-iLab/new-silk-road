@@ -1,0 +1,33 @@
+@import "variables";
+.button,
+button,
+input {
+    font-family: $serif-font-family;
+    color: $creamer;
+    background-color: $slate-grey;
+    border: none;
+    border-radius: 0;
+    padding: 3px 8px;
+    &:focus {
+        outline: none;
+    }
+    &:disabled {
+        color: $placeholder-color;
+    }
+    @include placeholder {
+        color: $placeholder-color;
+        font-style: italic;
+    }
+}
+input.primary {
+    background-color: $dark-night;
+    padding: 8px 4px 8px 8px;
+}
+a.button {
+    text-decoration: none;
+}
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}

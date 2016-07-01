@@ -1,8 +1,6 @@
 @import "variables";
 @import "../../../node_modules/react-select/dist/react-select.css";
 
-$placeholder-color: lighten($slate-grey, 30%);
-
 .searchView {
     width: 300px;
     padding: 4px;
@@ -51,30 +49,12 @@ $placeholder-color: lighten($slate-grey, 30%);
     label {
         display: inline-block;
     }
-    button, input {
-        color: $creamer;
-        background-color: $slate-grey;
-        border: none;
-        border-radius: 0;
-        padding: 3px 8px;
-        &:focus {
-            outline: none;
-        }
-        &:disabled {
-            color: $placeholder-color;
-        }
-        @include placeholder {
-            color: $placeholder-color;
-            font-style: italic;
-        }
-    }
     label {
         width: 90px;
         margin-right: 3px;
         text-align: right;
     }
     input {
-        font-family: $serif-font-family;
         overflow: hidden;
     }
     select {
@@ -100,21 +80,6 @@ $placeholder-color: lighten($slate-grey, 30%);
 .buttonBar > button {
     @include flex(0.25 1 auto);
     @include order(0);
-}
-
-.searchBar {
-    @include display(flex);
-    @include flex-direction(row);
-    @include justify-content(space-between);
-    background-color: $medium-green;
-    button {
-        @include flex(0 1 auto);
-        background-color: transparent;
-    }
-    input,
-    label {
-        @include flex(1 1 auto);
-    }
 }
 
 #primarySearch {

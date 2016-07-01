@@ -37,7 +37,7 @@ $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
 $creamer: #eee8e4;
-
+$placeholder-color: lighten($slate-grey, 30%);
 
 // Image URLs
 $img-url-base: '/static/img/';

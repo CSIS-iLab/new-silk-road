@@ -1,0 +1,37 @@
+@import "variables";
+
+.searchBar {
+    background-color: $dark-night;
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(space-between);
+    button {
+        @include flex(0 1 auto);
+        background-color: transparent;
+    }
+    input,
+    label {
+        @include flex(1 1 auto);
+    }
+}
+.search {
+    margin-bottom: $small-spacing;
+    form {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-around);
+        @include media($medium-break) {
+             @include flex-direction(row);
+        }
+        > button,
+        > div,
+        > input,
+        > select {
+            @include flex(0 1 auto);
+            margin: 0 0 3px;
+            @include media($medium-break) {
+                margin: 0;
+            }
+        }
+    }
+}

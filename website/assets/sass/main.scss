@@ -3,9 +3,11 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 @import "normalize";
 @import "layout";
+@import "interactives";
+@import "search";
 @import "map";
 @import "searchview";
-@import "detailpages";
+@import "pages";
 
 
 html {
@@ -53,7 +55,7 @@ p {
 ul {
     margin: 0 0 1em;
     padding-left: 1em;
-    line-height: 1.1rem;
+    line-height: normal;
 
     li {
         margin-bottom: 6px;
@@ -119,6 +121,10 @@ body > header, body > footer {
     &::after {
         background-color: $pale-green;
         z-index: -2;
+    }
+
+    nav ul {
+        line-height: 1.1rem;
     }
 }
 
@@ -196,6 +202,46 @@ header[role=banner] {
             }
         }
     }
+}
+
+article > header, header.decorated {
+    position: relative;
+
+    padding-bottom: $small-spacing;
+    @include media($medium-break) {
+        padding-bottom: $large-spacing;
+    }
+
+    h1 {
+        color: $dark-night;
+        padding-bottom: 15px;
+        margin: 0;
+        position: relative;
+
+    }
+
+    > :last-child {
+        border-bottom: $thick-border-width solid $blue-steel;
+    }
+    &::after {
+        content: "";
+        width: 100%;
+        display: block;
+        @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+        background-image: url($small-arrow-img);
+        background-position: 50% 100%;
+        background-size: $small-arrow-width auto;
+        background-repeat: no-repeat;
+        @include media($medium-break) {
+            @include position(absolute, 0 0 ($large-spacing - $thick-border-width - 2px) 0);
+        }
+    }
+    &::-ms-backdrop, &::after {
+        @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+        @include media($medium-break) {
+            @include position(absolute, 0 0 ($large-spacing - $thick-border-width) 0);
+        }
+    }
 
 }
 
@@ -256,50 +302,11 @@ body > footer {
     }
 }
 
-
 article > section {
     margin-bottom: $section-spacing;
 }
 
 article {
-
-    header {
-        position: relative;
-
-        padding-bottom: $small-spacing;
-        @include media($medium-break) {
-            padding-bottom: $large-spacing;
-        }
-
-        &::after {
-            content: "";
-            width: 100%;
-            display: block;
-            @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
-            background-image: url($small-arrow-img);
-            background-position: 50% 100%;
-            background-size: $small-arrow-width auto;
-            background-repeat: no-repeat;
-            @include media($medium-break) {
-                @include position(absolute, 0 0 ($large-spacing - $thick-border-width - 2px) 0);
-            }
-        }
-        &::-ms-backdrop, &::after {
-            @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
-            @include media($medium-break) {
-                @include position(absolute, 0 0 ($large-spacing - $thick-border-width) 0);
-            }
-        }
-    }
-
-    h1 {
-        color: $dark-night;
-        padding-bottom: 15px;
-        border-bottom: $thick-border-width solid $blue-steel;
-        margin: 0;
-        position: relative;
-
-    }
     section {
 
         .row:last-child {
@@ -370,5 +377,13 @@ article {
 .row {
     h3 {
         color: $slate-grey;
+    }
+}
+
+.database-landing {
+    header {
+        h1 {
+            text-align: center;
+        }
     }
 }
