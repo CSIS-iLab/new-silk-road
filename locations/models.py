@@ -152,6 +152,7 @@ class Place(models.Model):
 
 class Country(models.Model):
     name = models.CharField('Display name', max_length=200)
+    slug = models.SlugField(max_length=110, allow_unicode=True)
     numeric = models.PositiveSmallIntegerField(unique=True, help_text='ISO 3166 numeric')
     alpha_3 = models.CharField(max_length=3, unique=True, help_text='ISO 3166 alpha-3 name')
 

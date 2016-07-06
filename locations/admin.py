@@ -48,6 +48,7 @@ class RegionAdmin(MapAdmin):
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'alpha_3', 'numeric')
     search_fields = ('name',)
 
