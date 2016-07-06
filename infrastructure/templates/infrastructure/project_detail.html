@@ -60,7 +60,7 @@
                     <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>{% endfor %}
                 </ul>
                 {% else %}
-                <p>&mdash;</p>
+                <p>Not Available.</p>
                 {% endif %}
             </section>
         </div>
@@ -71,15 +71,15 @@
             </section>
             <section>
                 <h3>Start Date</h3>
-                <p>{{object.fuzzy_start_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
+                <p>{{object.fuzzy_start_date|fuzzydate:'N d Y'|default:'Not Available.'}}</p>
             </section>
             <section>
                 <h3>Start of Construction</h3>
-                <p>{{object.fuzzy_commencement_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
+                <p>{{object.fuzzy_commencement_date|fuzzydate:'N d Y'|default:'Not Available.'}}</p>
             </section>
             <section>
                 <h3>Planned Completion Date</h3>
-                <p>{{object.fuzzy_planned_completion_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
+                <p>{{object.fuzzy_planned_completion_date|fuzzydate:'N d Y'|default:'Not Available.'}}</p>
             </section>
         </div>
     </section>
@@ -104,7 +104,7 @@
         </div>
         {% endfor %}
         {% else %}
-        <p>&mdash;</p>
+        <p>Not Available.</p>
         {% endif %}
 {% comment %}
 {% for doc_key, doc_set in project_documents %}
@@ -116,7 +116,7 @@
                     </li>
                     {% endfor %}
                     {% else %}
-                    <li>&mdash;</li>
+                    <li>Not Available.</li>
                     {% endif %}
                 </ul>
             </div>
