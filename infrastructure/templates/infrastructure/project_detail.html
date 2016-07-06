@@ -67,7 +67,13 @@
         <div class="row">
             <section>
                 <h3>Total Reported Cost</h3>
+                {% spaceless %}
+                {% if object.total_cost %}
                 <p>{{ object.total_cost|intword }} {{ object.total_cost_currency|default:"(Unspecified currency)" }}</p>
+                {% else %}
+                <p>Not Available.</p>
+                {% endif %}
+                {% endspaceless %}
             </section>
             <section>
                 <h3>Start Date</h3>
