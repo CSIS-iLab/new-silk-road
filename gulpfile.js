@@ -56,7 +56,7 @@ const megamapEntry = `${assetsBase}/apps/megamap/app.js`
 gulp.task('megamap:build', function () {
     return buildScript(megamapEntry, megamapAppName);
 });
-gulp.task('megamap:watch', function () {
+gulp.task('megamap:watch', ['sass:watch'], function () {
     return buildScript(megamapEntry, megamapAppName, true);
 });
 
@@ -65,11 +65,9 @@ const projectmapEntry = `${assetsBase}/apps/projectmap/app.js`
 gulp.task('projectmap:build', function () {
     return buildScript(projectmapEntry, projectmapAppName);
 });
-gulp.task('projectmap:watch', function () {
+gulp.task('projectmap:watch', ['sass:watch'], function () {
     return buildScript(projectmapEntry, projectmapAppName, true);
 });
-
-gulp.task('js:watch', ['megamap:watch', 'projectmap:watch']);
 
 gulp.task('sass:build', function () {
     var cssDest = destBase + '/css';
@@ -100,15 +98,7 @@ gulp.task('svg', function () {
 });
 
 
-gulp.task('default', ['js:watch'], function () {
-    gulp.watch(assetsBase + sassGlob, ['sass:build']);
-    browserSync.init({
-        proxy: "localhost:8000",
-        serveStatic: [destBase],
-        files: [destBase + '/css/*.css'],
-        open: false
-    });
-});
+gulp.task('default', ['sass:watch', 'megamap:watch', 'projectmap:watch']);
 
 gulp.task('build', ['sass:build', 'megamap:build', 'projectmap:build']);
 
