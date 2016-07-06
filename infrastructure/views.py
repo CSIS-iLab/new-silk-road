@@ -53,6 +53,16 @@ class ProjectListView(ListView):
     paginate_by = 50
 
 
+class CountryProjectListView(ProjectListView):
+
+    def get_queryset(self):
+        self.queryset = self.model.objects.all()
+        country_identifier = self.kwargs.get('country_slug', None)
+        if country_identifier:
+            self.queryset = self.queryset.filter(countries__slug=country_identifier)
+        return self.queryset
+
+
 class InitiativeDetailView(DetailView):
     model = Initiative
     slug_field = 'identifier'

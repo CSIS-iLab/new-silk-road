@@ -36,7 +36,7 @@
             <section>
                 <h3>Countries</h3>
                 <ul class="clean">{% for country in object.countries.all %}
-                    <li>{{ country.name }}</li>{% endfor %}
+                    <li><a href="{% url 'infrastructure:country-project-list' country_slug=country.slug %}">{{ country.name }}</a></li>{% endfor %}
                 </ul>
             </section>
             <section>
