@@ -6,7 +6,7 @@
     <header class="decorated">
         <h1>The Database</h1>
     </header>
-    <div class="search">
+    <section role="search" class="search">
         <form>
             <select class="" name="">
                 <option value="option">option</option>
@@ -16,13 +16,15 @@
                 <button type="button" name="search">Search</button>
             </div>
         </form>
-    </div>
-    <div class="featured">
+    </section>
+    <section class="featured">
+        <h2>Featured Entries</h2>
+        {% lorem 2 p %}
     {% comment %}
         TODO: Featured item selector.
     {% endcomment %}
-    </div>
-    <nav>
+    </section>
+    <nav role="navigation">
         <ul>
             <li><a class="button" href="">Glossary</a></li>
             <li><a class="button" href="">Methodology</a></li>
