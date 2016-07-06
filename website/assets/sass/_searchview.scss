@@ -36,14 +36,6 @@
         clear: both;
         margin-bottom: 4px;
     }
-    footer {
-        margin-top: 2px;
-        button {
-            display: block;
-            font-size: 12px;
-            width: 100%;
-        }
-    }
     button,
     input,
     label {
@@ -78,7 +70,9 @@
 }
 
 .buttonBar > button {
-    @include flex(0.25 1 auto);
+    font-size: $compact-text-size;
+    padding: 6px 8px;
+    @include flex(0 1 auto);
     @include order(0);
 }
 
@@ -114,6 +108,12 @@
                 border: none;
             }
 
+            h1 {
+                font-family: $sans-font-family;
+                font-size: $minor-text-size;
+                margin: 0 0 4px 0;
+            }
+
             p {
                 margin-bottom: 4px;
             }
@@ -122,12 +122,23 @@
 }
 
 .initiativesList {
+    h2 {
+        font-family: $sans-font-family;
+        font-size: $minor-text-size;
+        font-weight: normal;
+        font-style: italic;
+        margin-bottom: 3px;
+    }
     ul {
-        margin: 0 0 0 6px;
+        padding: 0 0 0 12px;
+        margin: 0;
+        list-style: square inside;
         li {
             font-size: $minor-text-size * 0.9;
-            list-style-type: none;
             margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }
@@ -159,13 +170,17 @@
 
 .Select {
     font-family: $serif-font-family;
-    .Select-input input {
-        padding: 8px 0 12px;
+    .Select-input  {
+        height: 30px;
+        input {
+            padding: 4px 0 6px;
+        }
     }
     .Select-control {
         color: $creamer;
         background-color: $slate-grey;
         border-radius: 0;
+        height: 24px;
 
         .Select-value {
             max-width: 85%;

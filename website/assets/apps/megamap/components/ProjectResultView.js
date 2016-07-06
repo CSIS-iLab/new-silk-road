@@ -12,9 +12,9 @@ export default class ProjectResultView extends Component {
     } = this.props;
 
     return (
-      <section className="projectResult">
-      <p>{project.name}</p>
-      <p>Type: <strong>{project.infrastructure_type}</strong></p>
+      <section className="projectResult" title={project.name}>
+      <h1>{project.name}</h1>
+      <p><em>Type:</em> {project.infrastructure_type}</p>
 
       {(() => {
         const listItems = project.initiatives.map((init) => {
@@ -28,8 +28,8 @@ export default class ProjectResultView extends Component {
         if (listItems.length > 0) {
           return (
             <section className="initiativesList">
-            <p>Initiatives:</p>
-            <ul className="clean">
+            <h2>Initiatives:</h2>
+            <ul>
             {listItems}
             </ul>
             </section>
