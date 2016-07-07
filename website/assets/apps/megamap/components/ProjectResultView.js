@@ -12,7 +12,7 @@ export default class ProjectResultView extends Component {
     } = this.props;
 
     return (
-      <section className="projectResult" title={project.name}>
+      <section className="projectResult">
       <h1>{project.name}</h1>
       <p><em>Type:</em> {project.infrastructure_type}</p>
 

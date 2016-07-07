@@ -165,6 +165,7 @@ export default class SearchView extends Component {
         {(() => {
           if (searchCount > 0 &&
               !isSearching &&
+              !errorView &&
               results.length === 0) {
             return (
               <div className="sectionRow">
