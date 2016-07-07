@@ -173,6 +173,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     var geostore_url = "{% url 'api:geometrystore-detail' identifier=object.geo.identifier format='json' %}";
+    var infrastructureType = "{{ object.infrastructure_type.name|lower|default:'' }}";
 
     var app = new ProjectDetail.Map(geostore_url, {
         accessToken: '{{mapbox_token|safe}}',
@@ -180,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
         interactive: false,
         style: '{{mapbox_style|default:"mapbox://styles/mapbox/streets-v8"}}',
         center: {{default_center|default:"[94.49535790994639, 22.440381130024562]"}},
-    });
+    }, infrastructureType);
 
 });
 </script>

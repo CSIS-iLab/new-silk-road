@@ -8,9 +8,10 @@ import GeoStyles from '../megamap/helpers/GeoStyles';
 var ProjectDetail = window.ProjectDetail || {};
 
 class Map {
-  constructor(geoURL, mapConfig) {
+  constructor(geoURL, mapConfig, infrastructureType = null) {
     this._geoURL = geoURL;
     this._geoLoaded = false;
+    this._infrastructureType = infrastructureType;
     const {accessToken, ...config} = mapConfig;
     MapboxGl.accessToken = accessToken;
     this._map = new MapboxGl.Map(config);
@@ -49,7 +50,7 @@ class Map {
         maxZoom: 15,
         padding: 40
     };
-    const geoTypes = ['lines'];
+    const geoTypes = ['lines', 'points', 'polygons'];
     for (let t of geoTypes) {
       const data = json[t];
       if (data.features.length) {
@@ -61,7 +62,7 @@ class Map {
         const layer = Object.assign({
           source: layerId,
           id: layerId,
-        }, this._stylo.getStyleFor('lines'));
+        }, this._stylo.getStyleFor(t, this._infrastructureType));
         delete layer.minzoom; // Some big shapes won't show otherwise
         this._map.addLayer(layer);
       }

@@ -1,7 +1,34 @@
 import {minDetailZoom} from './map-constants';
+import objectMerge from 'object-merge';
 
 export default class GeoStyles {
   constructor() {
+    let lineStyle = {
+      type: 'line',
+      minzoom: minDetailZoom,
+      layout: {},
+      paint: {
+        'line-color': '#4d8d8e',
+        'line-width': 2
+      }
+    };
+    let pointStyle = {
+      type: 'symbol',
+      minzoom: minDetailZoom,
+      layout: {
+        'icon-allow-overlap': true,
+        'icon-image': 'dot'
+      },
+      paint: {}
+    };
+    let polygonStyle = {
+      type: 'fill',
+      minzoom: minDetailZoom,
+      layout: {},
+      paint: {
+        'fill-color': '#4d8d8e'
+      }
+    };
     this._styles = {
       centroids: {
         type: 'symbol',
@@ -13,70 +40,47 @@ export default class GeoStyles {
           'icon-opacity': 1
         }
       },
-      lines: {
-        type: 'line',
-        minzoom: minDetailZoom,
-        layout: {},
+      lines: lineStyle,
+      points: pointStyle,
+      polygons: polygonStyle,
+      rail: objectMerge(lineStyle, {
+        paint: {
+          'line-color': '#c34242',
+        }
+      }),
+      road: objectMerge(lineStyle, {
         paint: {
           'line-color': '#f68b3f',
-          'line-width': 3
         }
-      },
-      points: {
-        type: 'symbol',
-        minzoom: minDetailZoom,
+      }),
+      seaport: objectMerge(pointStyle, {
         layout: {
-          'icon-allow-overlap': true,
-          'icon-image': 'dot'
-        },
-        paint: {}
-      },
-      polygons: {
-        type: 'fill',
-        minzoom: minDetailZoom,
-        layout: {},
-        paint: {
-          'fill-color': '#be2323'
-        }
-      },
-      rail: {
-        type: 'line',
-        minzoom: minDetailZoom,
-        layout: {},
-        paint: {
-          'line-color': '#269d28',
-          'line-width': 4
-        }
-      },
-      road: {
-        type: 'line',
-        minzoom: minDetailZoom,
-        layout: {},
-        paint: {
-          'line-color': '#f68b3f',
-          'line-width': 2
-        }
-      },
-      seaport: {
-        type: 'symbol',
-        minzoom: minDetailZoom,
-        layout: {
-          'icon-allow-overlap': true,
           'icon-image': 'Seaport'
         },
-        paint: {}
-      }
+      }),
+      pipeline: objectMerge(lineStyle, {
+        paint: {
+          'line-color': '#7e3c22',
+        }
+      }),
+      ict: objectMerge(lineStyle, {
+        paint: {
+          'line-color': '#65bc46',
+        }
+      }),
     };
-    this._infraStructureMap = {
-      rail: 'lines',
-      road: 'lines',
-      seaport: 'points'
-    };
+
+    this._compatibilityTable = {
+      'lines': new Set(['rail', 'road', 'pipeline', 'ict']),
+      'points': new Set(['seaport',]),
+      'polygons': new Set([]),
+    }
   }
 
   getStyleFor(geometryType, infrastructureType = null) {
-    const typeLookup = infrastructureType ? infrastructureType.toLowerCase() : infrastructureType;
-    if (this._infraStructureMap[typeLookup] === geometryType) {
+    const typeLookup = infrastructureType ? infrastructureType.toLowerCase() : null;
+    const isGeometryCompatible = this._compatibilityTable[geometryType].has(typeLookup);
+    if (this._styles.hasOwnProperty(typeLookup) && isGeometryCompatible) {
       return this._styles[typeLookup];
     }
     return this._styles[geometryType];

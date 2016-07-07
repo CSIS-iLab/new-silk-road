@@ -44,7 +44,7 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 .mapboxgl-popup {
     max-width: 400px;
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font: $compact-text-size/rem(20) 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 
 @each $aside, $bside in (top, bottom), (right, left), (bottom, top), (left, right) {
@@ -87,6 +87,10 @@ $creamer-str: str-slice("#{$creamer}", 2);
     width: 220px;
     padding: 0 10px;
 
+    p {
+        margin-bottom: 4px;
+    }
+
     ul {
         margin: 0;
         li {
@@ -95,6 +99,7 @@ $creamer-str: str-slice("#{$creamer}", 2);
             border-bottom: 1px solid $dark-night;
             &:last-of-type {
                 margin: 0;
+                padding: 0;
                 border-bottom: none;
             }
         }
