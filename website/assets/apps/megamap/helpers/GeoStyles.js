@@ -79,7 +79,7 @@ export default class GeoStyles {
 
   getStyleFor(geometryType, infrastructureType = null) {
     const typeLookup = infrastructureType ? infrastructureType.toLowerCase() : null;
-    const isGeometryCompatible = this._compatibilityTable[geometryType].has(typeLookup);
+    const isGeometryCompatible = typeLookup ? this._compatibilityTable[geometryType].has(typeLookup) : false;
     if (this._styles.hasOwnProperty(typeLookup) && isGeometryCompatible) {
       return this._styles[typeLookup];
     }
