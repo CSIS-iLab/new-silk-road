@@ -101,6 +101,7 @@ class CountryBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = (
+            'id',
             'name',
             'alpha_3'
         )

@@ -1,10 +1,15 @@
 import rest_framework_filters as filters
-from django.db.models import Count, Q
+from django.db.models import Count
 from infrastructure.models import (
     Project,
+    ProjectStatus,
     ProjectFunding,
     Initiative,
     InfrastructureType
+)
+from locations.models import (
+    Region,
+    Country,
 )
 from finance.currency import CURRENCY_CHOICES
 
@@ -20,6 +25,10 @@ class InitiativeFilter(filters.FilterSet):
 
     geographic_scope = filters.RelatedFilter(
         'api.filters.locations.RegionFilter', name='geographic_scope'
+    )
+
+    principal_agent = filters.RelatedFilter(
+        'api.filters.facts.OrganizationFilter', name='principal_agent'
     )
 
     class Meta:
@@ -82,15 +91,18 @@ class ProjectFundingFilter(filters.FilterSet):
 
 class ProjectFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(name='name')
-    status = filters.AllLookupsFilter(name='status')
-    countries = filters.RelatedFilter(
+    status = filters.MultipleChoiceFilter(choices=ProjectStatus.STATUSES)
+    country = filters.RelatedFilter(
         'api.filters.locations.CountryFilter', name='countries'
     )
+    countries = filters.ModelMultipleChoiceFilter(queryset=Country.objects.all(), name='countries')
+
     geo__identifier = filters.CharFilter(name='geo__identifier')
 
-    regions = filters.RelatedFilter(
+    region = filters.RelatedFilter(
         'api.filters.locations.RegionFilter', name='regions'
     )
+    regions = filters.ModelMultipleChoiceFilter(queryset=Region.objects.all(), name='regions')
 
     initiatives = filters.RelatedFilter(InitiativeFilter, name='initiatives')
     initiatives__count = filters.MethodFilter()
@@ -99,7 +111,7 @@ class ProjectFilter(filters.FilterSet):
     initiatives__count__lt = filters.MethodFilter()
     initiatives__count__lte = filters.MethodFilter()
 
-    infrastructure_type = filters.RelatedFilter(InfrastructureTypeFilter, name='infrastructure_type')
+    infrastructure_type = filters.ModelMultipleChoiceFilter(queryset=InfrastructureType.objects.all())
 
     funding = filters.RelatedFilter(ProjectFundingFilter, name='funding', distinct=True)
 
