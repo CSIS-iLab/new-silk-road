@@ -2,10 +2,25 @@ import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 
 
-function createSelectContainer(Store, Actions, selectName, labelName, mapOptions, fetchParams=null) {
+function createSelectContainer(Store, Actions, options) {
+  const {
+    selectName,
+    labelName,
+    fetchParams,
+    mapOptions,
+    selectMultiple = false,
+    delimiter = '|',
+  } = options;
   class SelectContainer extends Component {
     static propTypes = {
-      onSelect: PropTypes.func
+      onSelect: PropTypes.func,
+      selectMultiple: PropTypes.bool,
+      delimiter: PropTypes.string,
+    }
+
+    static defaultProps = {
+      selectMultiple: selectMultiple,
+      delimiter: delimiter,
     }
 
     state = {
@@ -31,24 +46,38 @@ function createSelectContainer(Store, Actions, selectName, labelName, mapOptions
       });
     }
 
-    onChange = (option, event) => {
-      const value = option ? option.value : '';
-      this.setState({value});
+    onChange = (optionOrOptions, event) => {
+      let submitValue;
+      if (Array.isArray(optionOrOptions)) {
+        submitValue = optionOrOptions.map( (x) => x.value).join(this.props.delimiter);
+      } else {
+        submitValue = optionOrOptions ? optionOrOptions.value : null;
+      }
+      this.setState({value: optionOrOptions});
       if (this.props.onSelect) {
-        this.props.onSelect({[this.selectName]: value});
+        this.props.onSelect({[this.selectName]: submitValue});
       }
     }
 
     render() {
-      const hasOptions = this.state.options.length > 0;
+      const {
+        options,
+        isLoading,
+        value,
+      } = this.state;
+      const {
+        selectMultiple,
+      } = this.props;
       return (
         <Select
-          value={this.state.value}
+          value={value}
           name={this.selectName}
           placeholder={this.labelName}
-          options={this.state.options}
+          options={options}
           onChange={this.onChange}
-          isLoading={this.state.isLoading}
+          isLoading={isLoading}
+          multi={selectMultiple}
+          clearable={!selectMultiple}
           />
       );
     }

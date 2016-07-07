@@ -186,7 +186,7 @@
         height: 24px;
 
         .Select-value {
-            max-width: 85%;
+            // max-width: 85%;
         }
         .Select-value-label, .Select-clear-zone {
             color: $creamer;
@@ -224,4 +224,16 @@
 .has-value.Select > .Select-control > .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
     color: $creamer;
+}
+
+.Select--multi {
+    .Select-value {
+        margin: 3px 0 3px 3px;
+        background-color: rgba(#000, 0.2);
+        color: $blue-steel;
+        border-color: $blue-steel;
+    }
+    .Select-value-icon {
+        border-right-color: $blue-steel;
+    }
 }
