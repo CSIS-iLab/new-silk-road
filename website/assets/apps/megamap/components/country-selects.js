@@ -5,17 +5,21 @@ import Option from '../models/Option';
 
 var FunderCountrySelect = createSelectContainer(
   CountryStore, CountryActions,
-  'funding__sources__countries__code', 'Country',
-  function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.alpha_3));
+  {
+    selectName: 'funding__sources__countries',
+    labelName: 'Country',
+    selectMultiple: true,
+    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
   }
 );
 
 var ProjectCountrySelect = createSelectContainer(
   CountryStore, CountryActions,
-  'countries__code', 'Country',
-  function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.alpha_3));
+  {
+    selectName: 'countries',
+    labelName: 'Country',
+    selectMultiple: true,
+    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
   }
 );
 

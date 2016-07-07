@@ -49,7 +49,7 @@ function createSelectContainer(Store, Actions, options) {
     onChange = (optionOrOptions, event) => {
       let submitValue;
       if (Array.isArray(optionOrOptions)) {
-        submitValue = optionOrOptions.map( (x) => x.value).join(this.props.delimiter);
+        submitValue = optionOrOptions.map( (x) => x.value);
       } else {
         submitValue = optionOrOptions ? optionOrOptions.value : null;
       }

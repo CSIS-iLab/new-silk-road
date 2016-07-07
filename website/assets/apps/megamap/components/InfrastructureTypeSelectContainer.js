@@ -5,9 +5,11 @@ import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
 
 var InfrastructureTypeSelectContainer = createSelectContainer(
   InfrastructureTypeStore, InfrastructureTypeActions,
-  'infrastructure_type', 'Infrastructure Type',
-  function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.id));
+  {
+    selectName: 'infrastructure_type',
+    labelName: 'Infrastructure Type',
+    selectMultiple: true,
+    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
   }
 );
 

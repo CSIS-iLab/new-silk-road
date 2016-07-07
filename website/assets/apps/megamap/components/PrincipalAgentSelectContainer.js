@@ -5,11 +5,12 @@ import Option from '../models/Option';
 
 var PrincipalAgentSelectContainer = createSelectContainer(
   PrincipalAgentStore, PrincipalAgentActions,
-  'principal_agent__name', 'Principal Agent',
-  function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.slug));
-  },
-  {'principal_initiatives__isnull': 'False'}
+  {
+    selectName: 'initiatives__principal_agent__slug',
+    labelName: 'Principal Agent',
+    fetchParams: {'principal_initiatives__isnull': 'False'},
+    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.slug)) },
+  }
 );
 
 export default PrincipalAgentSelectContainer;

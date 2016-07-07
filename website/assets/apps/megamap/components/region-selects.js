@@ -5,9 +5,11 @@ import RegionActions from '../actions/RegionActions';
 
 var ProjectRegionSelect = createSelectContainer(
   RegionStore, RegionActions,
-  'regions', 'Region',
-  function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.id));
+  {
+    selectName: 'region',
+    labelName: 'Region',
+    selectMultiple: true,
+    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
   }
 );
 

@@ -5,9 +5,11 @@ import StatusActions from '../actions/StatusActions';
 
 var StatusSelectContainer = createSelectContainer(
   StatusStore, StatusActions,
-  'status', 'Status',
-  function(data) {
-    return data.results.map((obj) => new Option(obj.name, obj.id));
+  {
+    selectName: 'status',
+    labelName: 'Status',
+    selectMultiple: true,
+    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
   }
 );
 
