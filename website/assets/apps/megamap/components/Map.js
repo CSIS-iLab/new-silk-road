@@ -14,7 +14,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
-    center: [94.49535790994639, 22.440381130024562],
+    center: [0, 0],
     initialZoom: 3
   }
 

@@ -4,7 +4,7 @@ import React from "react";
 import MapContainer from "./components/MapContainer";
 import SearchView from "./components/SearchView";
 import Radium, { StyleRoot } from "radium";
-
+import {defaultCenter} from "./helpers/map-constants";
 
 const token = 'pk.eyJ1IjoiaWxhYm1lZGlhIiwiYSI6ImNpbHYycXZ2bTAxajZ1c2tzdWU1b3gydnYifQ.AHxl8pPZsjsqoz95-604nw';
 const mapStyle = 'mapbox://styles/ilabmedia/cinm5o9pu001tbom67ql6snhg';
@@ -18,7 +18,7 @@ const containerStyle = {
 
 ReactDOM.render(
   <StyleRoot style={{height: appHeight}}>
-    <MapContainer accessToken={token} containerStyle={containerStyle} mapStyle={mapStyle} />
+    <MapContainer accessToken={token} containerStyle={containerStyle} mapStyle={mapStyle} center={defaultCenter} />
     <SearchView maxHeight={appHeight - 40} />
   </StyleRoot>,
   document.getElementById('app')
