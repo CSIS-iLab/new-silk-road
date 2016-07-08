@@ -111,6 +111,8 @@ class ProjectFilter(filters.FilterSet):
     initiatives__count__lt = filters.MethodFilter()
     initiatives__count__lte = filters.MethodFilter()
 
+    principal_agents = filters.MethodFilter()
+
     infrastructure_type = filters.ModelMultipleChoiceFilter(queryset=InfrastructureType.objects.all())
 
     funding = filters.RelatedFilter(ProjectFundingFilter, name='funding', distinct=True)
@@ -156,6 +158,12 @@ class ProjectFilter(filters.FilterSet):
 
     def filter_initiatives__count__lte(self, name, queryset, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__lte')
+
+    def filter_principal_agents(self, name, queryset, value):
+        if value:
+            import ipdb; ipdb.set_trace()
+
+        return queryset
 
     class Meta:
         model = Project

@@ -34,7 +34,8 @@ export default class GeoStyles {
         type: 'symbol',
         layout: {
           'icon-allow-overlap': true,
-          'icon-image': 'marker_icon'
+          'icon-image': '{infrastructureType}',
+          'icon-size': 0.5,
         },
         paint: {
           'icon-opacity': 1
@@ -55,7 +56,8 @@ export default class GeoStyles {
       }),
       seaport: objectMerge(pointStyle, {
         layout: {
-          'icon-image': 'Seaport'
+          'icon-image': 'Seaport',
+          'icon-size': 0.5,
         },
       }),
       pipeline: objectMerge(lineStyle, {
