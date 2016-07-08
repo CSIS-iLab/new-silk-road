@@ -5,10 +5,6 @@ import {Button} from './forms';
 
 
 const resultsNavStyle = {
-  base: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
   hidden: {
     display: 'none'
   }
@@ -17,19 +13,11 @@ const resultsNavStyle = {
 const resultsViewStyle = {
   maxHeight: '100%',
   overflow: 'hidden',
-  flex: '1 1 auto',
-  order: 0,
-  '.resultsNav button': {
-    minWidth: 80,
-    display: 'block',
-    flex: '0 0 auto',
-    order: 0
-  },
 }
 
 const scrollWrap = {
   base: {
-    maxHeight: '90%',
+    maxHeight: '88%',
     overflowX: 'hidden',
     overflowY: 'scroll',
     '.scrollContent': {
@@ -80,7 +68,6 @@ class ResultsView extends Component {
     return (
       <div className="resultsView" style={this.props.style}>
         <div className="resultsNav" style={[
-          resultsNavStyle.base,
           noResults && resultsNavStyle.hidden
         ]}>
           <Button

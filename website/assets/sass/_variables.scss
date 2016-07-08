@@ -24,6 +24,7 @@ $section-hed-size: rem(26);
 $minor-text-size: rem(16);
 $compact-text-size: rem(12);
 $nav-text-size: $minor-text-size;
+$search-text-size: rem(14);
 $base-line-height: 1.45em;
 $sans-font-family: Lato, $helvetica;
 $serif-font-family: Merriweather, $georgia;
@@ -38,7 +39,8 @@ $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
 $creamer: #eee8e4;
-$placeholder-color: lighten($slate-grey, 30%);
+$searchheader-color: #323c49;
+$placeholder-color: #788da9;
 
 // Image URLs
 $img-url-base: '/static/img/';
@@ -62,6 +64,7 @@ $section-spacing: 50px;
 $large-spacing: 33px;
 $medium-spacing: ceil($large-spacing * 0.6);
 $small-spacing: ceil($large-spacing * 0.4);
+$tiny-spacing: 4px;
 
 
 // Grid

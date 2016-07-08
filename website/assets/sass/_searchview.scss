@@ -1,19 +1,41 @@
 @import "variables";
 @import "../../../node_modules/react-select/dist/react-select.css";
 
+
 .searchView {
-    width: 300px;
-    padding: 4px;
-    background-color: $pale-green;
+    width: 260px;
+    max-height: 572px;
+    background-color: transparent;
     position: absolute;
     @include display(flex);
     @include flex-direction(column);
-    font-size: $minor-text-size;
-    top: 20px;
+    font-size: $search-text-size;
+    top: 5px;
     right: 20px;
+
+    h2 {
+        font: $minor-text-size $sans-font-family;
+        font-weight: bold;
+        color: $slate-grey;
+        margin-left: $tiny-spacing;
+        margin-bottom: $tiny-spacing/2;
+    }
+
+    .inner {
+        background-color: $pale-green;
+        padding: $tiny-spacing;
+        overflow-y: hidden;
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
+
+        .searchWidget, .resultsView {
+            @include flex(1 1 auto);
+        }
+    }
     section {
-        margin-top: 4px;
-        padding-bottom: 4px;
+        margin-top: $tiny-spacing;
+        padding-bottom: $tiny-spacing;
         border-bottom: 1px solid $slate-grey;
         header {
             @include display(flex);
@@ -22,11 +44,14 @@
             @include align-items(center);
             button {
                 @include flex(0 0 auto);
-                padding: 0 4px;
+                padding: 0 $tiny-spacing;
             }
             h4 {
                 display: inline-block;
                 @include flex(1 0 auto);
+                color: $searchheader-color;
+                font-size: $search-text-size;
+                font-weight: normal;
                 margin: 0;
             }
         }
@@ -34,12 +59,13 @@
     .sectionRow {
         display: block;
         clear: both;
-        margin-bottom: 4px;
+        margin-bottom: $tiny-spacing;
     }
     button,
     input,
     label {
         display: inline-block;
+        font-size: $compact-text-size;
     }
     label {
         width: 90px;
@@ -81,41 +107,62 @@
         background-color: $dark-night;
     }
     input {
-        padding: 8px 4px 8px 8px;
+        padding: 8px $tiny-spacing 8px 8px;
     }
 }
 
 
 .resultsView {
+    padding-top: 0;
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+
     section {
         border: none;
     }
-    padding-top: 0;
+    .resultsNav, .scrollWrap {
+        @include flex(1 1 auto);
+    }
     .resultsNav {
-        margin: 4px 0;
+        margin: $tiny-spacing 0;
+        min-height: 30px;
+
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        @include align-content(stretch);
+
+        button {
+            display: block;
+            min-width: 80px;
+            @include flex(0.2 1 auto);
+        }
     }
     ul.searchResults {
         list-style: none;
-        padding: 0 3px;
+        padding: 0;
         margin: 0;
 
         > li {
             margin: 0 10px 8px 6px;
             padding-bottom: 8px;
-            border-bottom: 2px solid $slate-grey;
+            border-bottom: 1px solid $slate-grey;
 
             &:last-of-type {
                 border: none;
+                margin-bottom: 0;
+                padding-bottom: 0;
             }
 
             h1 {
                 font-family: $sans-font-family;
-                font-size: $minor-text-size;
-                margin: 0 0 4px 0;
+                font-size: $search-text-size;
+                margin: 0 0 $tiny-spacing 0;
             }
 
             p {
-                margin-bottom: 4px;
+                margin-bottom: $tiny-spacing;
             }
         }
     }
@@ -124,7 +171,7 @@
 .initiativesList {
     h2 {
         font-family: $sans-font-family;
-        font-size: $minor-text-size;
+        font-size: $search-text-size;
         font-weight: normal;
         font-style: italic;
         margin-bottom: 3px;
@@ -134,7 +181,7 @@
         margin: 0;
         list-style: square inside;
         li {
-            font-size: $minor-text-size * 0.9;
+            font-size: $search-text-size;
             margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
@@ -173,6 +220,7 @@
 
 .Select {
     font-family: $serif-font-family;
+    font-size: $compact-text-size;
     .Select-input  {
         height: 30px;
         input {
@@ -186,7 +234,7 @@
         height: 24px;
 
         .Select-value {
-            // max-width: 85%;
+            font-size: $compact-text-size;
         }
         .Select-value-label, .Select-clear-zone {
             color: $creamer;
@@ -196,6 +244,7 @@
         }
     }
     .Select-placeholder {
+        font-size: $compact-text-size;
         color: $placeholder-color;
     }
     .Select-arrow-zone{
@@ -215,9 +264,14 @@
     .Select-option {
         color: $creamer;
         background-color: $slate-grey;
+        padding: 4px 6px;
 
         &:hover {
             background-color: $dark-night;
+        }
+        &:last-child {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
         }
     }
 }
@@ -232,6 +286,7 @@
         background-color: rgba(#000, 0.2);
         color: $blue-steel;
         border-color: $blue-steel;
+        font-size: $compact-text-size;
     }
     .Select-value-icon {
         border-right-color: $blue-steel;

@@ -30,9 +30,6 @@ const yearLookupOptions = [
 ]
 
 export default class SearchView extends Component {
-  static propTypes = {
-    maxHeight: PropTypes.number.isRequired,
-  }
 
   state = {
     query: {},
@@ -95,14 +92,15 @@ export default class SearchView extends Component {
   }
 
   render() {
-    const { maxHeight } = this.props;
     const { results, nextURL, previousURL, error, query, isSearching, searchCount } = this.state;
-    const searchViewHeight = results.length > 0 ? maxHeight : 'auto';
-    const resultsViewHeight = results.length > 0 ? maxHeight - 76 : 0;
     const errorView = error ? (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
     return (
-      <div className="searchView" style={{height: searchViewHeight}}>
-        <div className="searchWidget">
+      <div className="searchView">
+        <header>
+          <h2>Search for Projects</h2>
+        </header>
+        <div className="inner">
+          <div className="searchWidget">
           <form onSubmit={this.handleSubmit}>
           <SearchBar
           id="primarySearch"
@@ -111,78 +109,78 @@ export default class SearchView extends Component {
           searchEnabled={this.state.searchEnabled}
           />
           <Panel title='Projects' ref='projectsPanel'>
-            <div className="sectionRow">
-              <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="sectionRow">
-              <StatusSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="sectionRow">
-              <ProjectRegionSelect onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="sectionRow">
-              <ProjectCountrySelect onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="sectionRow">
-              <DateRangeSelect
-              labelName="Filter by Year..."
-              dateLookupOptions={yearLookupOptions}
-              lowerBoundLabel='Year'
-              upperBoundLabel='Year'
-              onSelect={this.handleQueryUpdate}
-              />
-            </div>
+          <div className="sectionRow">
+          <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
+          </div>
+          <div className="sectionRow">
+          <StatusSelectContainer onSelect={this.handleQueryUpdate} />
+          </div>
+          <div className="sectionRow">
+          <ProjectRegionSelect onSelect={this.handleQueryUpdate} />
+          </div>
+          <div className="sectionRow">
+          <ProjectCountrySelect onSelect={this.handleQueryUpdate} />
+          </div>
+          <div className="sectionRow">
+          <DateRangeSelect
+          labelName="Filter by Year..."
+          dateLookupOptions={yearLookupOptions}
+          lowerBoundLabel='Year'
+          upperBoundLabel='Year'
+          onSelect={this.handleQueryUpdate}
+          />
+          </div>
           </Panel>
           <Panel title='Initiatives' ref='initiativesPanel'>
-            <div className="sectionRow">
-              <SearchBar placeholder="Initiative Title" name="initiatives__name__icontains"
-              onSearchInput={this.handleQueryUpdate}
-              searchEnabled={this.state.searchEnabled}
-              showSubmit={false}
-              />
-            </div>
-            <div className="sectionRow">
-              <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
+          <div className="sectionRow">
+          <SearchBar placeholder="Initiative Title" name="initiatives__name__icontains"
+          onSearchInput={this.handleQueryUpdate}
+          searchEnabled={this.state.searchEnabled}
+          showSubmit={false}
+          />
+          </div>
+          <div className="sectionRow">
+          <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
+          </div>
           </Panel>
           <Panel title='Funders' ref='fundersPanel'>
-            <div className="sectionRow">
-              <SearchBar placeholder="Funder Name" name="funding__sources__name__icontains"
-              onSearchInput={this.handleQueryUpdate}
-              searchEnabled={this.state.searchEnabled}
-              showSubmit={false}
-              />
-            </div>
-            <div className="sectionRow">
-              <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
-            </div>
-            <div className="sectionRow">
-              <FunderCountrySelect onSelect={this.handleQueryUpdate} />
-            </div>
+          <div className="sectionRow">
+          <SearchBar placeholder="Funder Name" name="funding__sources__name__icontains"
+          onSearchInput={this.handleQueryUpdate}
+          searchEnabled={this.state.searchEnabled}
+          showSubmit={false}
+          />
+          </div>
+          <div className="sectionRow">
+          <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
+          </div>
+          <div className="sectionRow">
+          <FunderCountrySelect onSelect={this.handleQueryUpdate} />
+          </div>
           </Panel>
           </form>
-        </div>
-        {(() => {
-          if (searchCount > 0 &&
+          </div>
+          {(() => {
+            if (searchCount > 0 &&
               !isSearching &&
               !errorView &&
               results.length === 0) {
-            return (
-              <div className="sectionRow">
-                <p>Sorry, we didn't find any matches.</p>
-              </div>
-            );
-          }
-        })()}
-        <ResultsView
-          style={{height: resultsViewHeight}}
-          results={results}
-          onNextClick={this.handleResultsNavClick}
-          nextURL={nextURL}
-          onPreviousClick={this.handleResultsNavClick}
-          previousURL={previousURL}
-        />
-        {errorView}
+                return (
+                  <div className="sectionRow">
+                  <p>Sorry, we didn't find any matches.</p>
+                  </div>
+                );
+              }
+            })()}
+            <ResultsView
+            results={results}
+            onNextClick={this.handleResultsNavClick}
+            nextURL={nextURL}
+            onPreviousClick={this.handleResultsNavClick}
+            previousURL={previousURL}
+            />
+            {errorView}
+        </div>
       </div>
     );
   }
