@@ -92,6 +92,9 @@ button {
     color: $creamer;
     border: none;
     padding: 2px 8px;
+    &[disabled] {
+        cursor: default;
+    }
 }
 
 nav {

@@ -71,12 +71,19 @@
         }
     }
     .searchBar {
-        > button {
+        > button[type='submit'] {
             @include hide-text;
             padding: 0;
             margin-right: 8px;
             background: url($search-btn-img) center no-repeat;
             width: $search-btn-width;
+        }
+        > button[type='reset'] {
+            // @include hide-text;
+            padding: 0;
+            margin-right: 8px;
+            // background: url($search-btn-img) center no-repeat;
+            // width: $search-btn-width;
         }
     }
     .sectionRow {
