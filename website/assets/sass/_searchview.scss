@@ -24,7 +24,6 @@
     .inner {
         background-color: $pale-green;
         padding: $tiny-spacing;
-        overflow-y: hidden;
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(space-between);
@@ -56,6 +55,15 @@
             }
         }
     }
+    .searchBar {
+        > button {
+            @include hide-text;
+            padding: 0;
+            margin-right: 8px;
+            background: url($search-btn-img) center no-repeat;
+            width: $search-btn-width;
+        }
+    }
     .sectionRow {
         display: block;
         clear: both;
@@ -80,6 +88,25 @@
         margin-right: 6px;
         &:last-of-type {
             margin-right: 0;
+        }
+    }
+
+    .expandable {
+        header {
+            margin: 0 10px;
+        }
+        .sectionBody {
+            margin: 4px 20px 4px 10px;
+        }
+        button.toggle {
+            @include hide-text;
+            padding: 0;
+            background: url($expand-btn-img) center no-repeat;
+            width: $expand-collapse-btn-width;
+
+            &.expanded {
+                background: url($collapse-btn-img) center no-repeat;
+            }
         }
     }
 }
@@ -222,7 +249,7 @@
     font-family: $serif-font-family;
     font-size: $compact-text-size;
     .Select-input  {
-        height: 30px;
+        height: 24px;
         input {
             padding: 4px 0 6px;
         }
@@ -231,7 +258,7 @@
         color: $creamer;
         background-color: $slate-grey;
         border-radius: 0;
-        height: 24px;
+        height: auto;
 
         .Select-value {
             font-size: $compact-text-size;
@@ -246,6 +273,7 @@
     .Select-placeholder {
         font-size: $compact-text-size;
         color: $placeholder-color;
+        line-height: 24px;
     }
     .Select-arrow-zone{
         &:hover {
@@ -260,6 +288,7 @@
 
     .Select-menu-outer {
         background-color: $slate-grey;
+        width: 100%;
     }
     .Select-option {
         color: $creamer;

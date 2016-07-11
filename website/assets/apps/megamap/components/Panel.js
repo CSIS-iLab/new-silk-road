@@ -29,7 +29,6 @@ class Panel extends Component {
     let styles = {
       sectionBody: {
         base: {
-          margin: '4px 0',
           display: 'block',
         },
         expanded: {
@@ -40,13 +39,14 @@ class Panel extends Component {
         }
       }
     }
+    let buttonClass = `toggle ${this.state.expanded ? 'expanded' : 'collapsed'}`;
     return (
       <section className="expandable">
         <header>
         <h4>{this.props.title}</h4>
-        <Button onClick={this.handleToggle}>{toggleButtonText}</Button>
+        <Button className={buttonClass} onClick={this.handleToggle}>{toggleButtonText}</Button>
         </header>
-        <div class="sectionBody" style={[
+        <div className="sectionBody" style={[
           styles.sectionBody.base,
           styles.sectionBody[this.state.expanded ? 'expanded': 'collapsed']
         ]}>
