@@ -54,7 +54,6 @@ class SearchBar extends Component {
             return (
               <Button type='submit'
               title='Search'
-              bordered={true}
               enabled={this.props.searchEnabled}
               >Search</Button>
             );

@@ -1,6 +1,4 @@
 import React, { Component, PropTypes } from "react";
-import Radium, { Style } from "radium";
-import {inputStyle, buttonStyle, selectStyle} from "./form-styles";
 
 
 class Input extends Component {
@@ -26,48 +24,40 @@ class Input extends Component {
   }
 
   render() {
+    const {inputText, onUserInput, ...inputProps} = this.props;
     return (
-      <input  {...this.props}
+      <input  {...inputProps}
               ref="inputEl"
-              style={inputStyle.base}
               value={this.props.inputText}
               onChange={this.handleUserInput.bind(this)}
                />
     )
   }
 }
-Input = Radium(Input);
 
 class Button extends Component {
   static defaultProps = {
     type: 'button',
-    bordered: false,
     enabled: true,
     value: null
   }
   static propTypes = {
     type: PropTypes.oneOf(['submit', 'reset', 'button']),
     onClick: PropTypes.func,
-    bordered: PropTypes.bool,
     enabled: PropTypes.bool,
     value: PropTypes.string
   };
 
   render() {
+    const {enabled, ...buttonProps} = this.props;
     return (
-      <button {...this.props}
+      <button {...buttonProps}
               disabled={!this.props.enabled}
-              style={[
-                buttonStyle.base,
-                this.props.bordered && buttonStyle.bordered,
-                !this.props.enabled && buttonStyle.disabled
-              ]}
               onClick={this.props.onClick}
                >{this.props.children}</button>
     )
   }
 }
-Button = Radium(Button);
 
 
 class Select extends Component {
@@ -90,15 +80,15 @@ class Select extends Component {
   render() {
     var {
       value,
-      ...other
+      enabled,
+      ...selectProps
     } = this.props;
 
     return (
-      <select {...other}
+      <select {...selectProps}
         ref="selectEl"
         value={this.state.value}
         onChange={this.handleChange}
-        style={selectStyle.base}
         disabled={!this.props.enabled}
       >
       {this.props.children}
