@@ -174,7 +174,7 @@ header[role=banner] {
         }
         @include media($medium-break) {
             float: left;
-            margin: 33px 0 0;
+            margin: 24px 0 0;
             max-width: $medium * .40;
         }
         @include media($large-break) {
