@@ -3,7 +3,7 @@
 
 
 .searchView {
-    width: 260px;
+    width: 290px;
     max-height: 572px;
     background-color: transparent;
     position: absolute;
@@ -11,17 +11,32 @@
     @include flex-direction(column);
     font-size: $search-text-size;
     top: 5px;
-    right: 20px;
+    right: 10px;
 
     h2 {
         font: $minor-text-size $sans-font-family;
         font-weight: bold;
         color: $slate-grey;
+        text-shadow: 0 0 1px $pale-green;
         margin-left: $tiny-spacing;
         margin-bottom: $tiny-spacing/2;
     }
 
+    footer {
+        position: absolute;
+        right: 0;
+        top: 25px;
+
+        a.button.help {
+            @include hide-text;
+            background: url($help-btn-img) center no-repeat;
+            width: $search-btn-width;
+            padding: 0;
+        }
+    }
+
     .inner {
+        width: 260px;
         background-color: $pale-green;
         padding: $tiny-spacing;
         @include display(flex);

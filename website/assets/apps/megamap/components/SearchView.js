@@ -181,6 +181,9 @@ export default class SearchView extends Component {
             />
             {errorView}
         </div>
+        <footer>
+          <p><a href="/map/help/" target="_blank" className='button help' title='Help'>Help</a></p>
+        </footer>
       </div>
     );
   }
