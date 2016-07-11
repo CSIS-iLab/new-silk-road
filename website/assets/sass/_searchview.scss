@@ -116,6 +116,10 @@
     .expandable {
         header {
             margin: 0 10px;
+
+            &:hover {
+                cursor: pointer;
+            }
         }
         .sectionBody {
             margin: 4px 20px 4px 10px;
@@ -296,6 +300,7 @@
         font-size: $compact-text-size;
         color: $placeholder-color;
         line-height: 24px;
+        top: 2px;
     }
     .Select-arrow-zone{
         &:hover {
