@@ -22,7 +22,7 @@
 {% block content %}
 <article class="project">
     <header
-    class='decorated infrastructure {% if object.infrastructure_type %}{{object.infrastructure_type.slug}}{% endif %}'
+    class='decorated infrastructure{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}'
     >
         <h1>{% if object.alternate_name %}{{ object.alternate_name }}
         {% else %}{{ object.name }}{% endif %}
@@ -152,12 +152,6 @@
             <section class="col-6">
                 <h3>Operators</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.operators.all %}
-            </section>
-        </div>
-        <div class="row">
-            <section class="col-6">
-                <h3>Contacts</h3>
-                {% include "infrastructure/_related_people_list.html" with people_list=object.contacts.all %}
             </section>
         </div>
         <section>

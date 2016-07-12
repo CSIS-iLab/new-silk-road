@@ -65,17 +65,19 @@ $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 
 // Project & other images
-$project-img: $img-url-base + 'Project.svg';
-$rail-img: $img-url-base + 'Rail.svg';
-$road-img: $img-url-base + 'Road.svg';
-$seaport-img: $img-url-base + 'Seaport.svg';
-$ict-img: $img-url-base + 'ICT.svg';
-$energy-img: $img-url-base + 'Energy.svg';
-$pipeline-img: $img-url-base + 'Pipeline.svg';
-$organization-img: $img-url-base + 'Organization.svg';
-$initiative-img: $img-url-base + 'Initiative.svg';
-$event-img: $img-url-base + 'Event.svg';
-$person-img: $img-url-base + 'Person.svg';
+$icons: (
+    'infrastructure': $img-url-base + 'Project.svg',
+    'rail': $img-url-base + 'Rail.svg',
+    'road': $img-url-base + 'Road.svg',
+    'seaport': $img-url-base + 'Seaport.svg',
+    'ict': $img-url-base + 'ICT.svg',
+    'energy': $img-url-base + 'Energy.svg',
+    'pipeline': $img-url-base + 'Pipeline.svg',
+    'organization': $img-url-base + 'Organization.svg',
+    'initiative': $img-url-base + 'Initiative.svg',
+    'event': $img-url-base + 'Event.svg',
+    'person': $img-url-base + 'Person.svg'
+);
 $decorated-bg-size: 50px;
 
 // Reusables
