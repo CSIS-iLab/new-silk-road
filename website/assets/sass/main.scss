@@ -216,42 +216,37 @@ header[role=banner] {
     }
 }
 
-article > header, header.decorated {
+article > header.decorated {
     position: relative;
 
-    padding-bottom: $small-spacing;
-    @include media($medium-break) {
-        padding-bottom: $large-spacing;
-    }
+    border-bottom: $thick-border-width solid $blue-steel;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
 
     h1 {
         color: $dark-night;
-        padding-bottom: 15px;
         margin: 0;
         position: relative;
-
     }
 
-    > :last-child {
-        border-bottom: $thick-border-width solid $blue-steel;
-    }
     &::after {
         content: "";
         width: 100%;
+        height: 12px;
         display: block;
-        @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+        @include position(absolute, 100% 0 ($small-spacing - $thick-border-width - 2px) 0);
         background-image: url($small-arrow-img);
         background-position: 50% 100%;
         background-size: $small-arrow-width auto;
         background-repeat: no-repeat;
         @include media($medium-break) {
-            @include position(absolute, 0 0 ($large-spacing - $thick-border-width - 2px) 0);
+            @include position(absolute, 100% 0 ($large-spacing - $thick-border-width - 2px) 0);
         }
     }
     &::-ms-backdrop, &::after {
-        @include position(absolute, 0 0 ($small-spacing - $thick-border-width - 2px) 0);
+        @include position(absolute, 100% 0 ($small-spacing - $thick-border-width - 2px) 0);
         @include media($medium-break) {
-            @include position(absolute, 0 0 ($large-spacing - $thick-border-width) 0);
+            @include position(absolute, 100% 0 ($large-spacing - $thick-border-width) 0);
         }
     }
 

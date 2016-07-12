@@ -21,7 +21,9 @@
 
 {% block content %}
 <article class="project">
-    <header>
+    <header
+    class='decorated infrastructure {% if object.infrastructure_type %}{{object.infrastructure_type.slug}}{% endif %}'
+    >
         <h1>{% if object.alternate_name %}{{ object.alternate_name }}
         {% else %}{{ object.name }}{% endif %}
         </h1>

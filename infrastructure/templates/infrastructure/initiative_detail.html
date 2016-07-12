@@ -2,14 +2,16 @@
 
 {% block content %}
 <article class="initiative">
-    <h2>{{ object.name }}</h2>
+    <header class="decorated initiative">
+        <h1>{{ object.name }}</h1>
+    </header>
     <h3>Type: {{ object.initiative_type.name|default:"Not specified" }}</h3>
+    {% if object.founding_date %}
     <dl>
-        {% if object.founding_date %}
         <dt>Founded</dt>
         <dd>{{ object.founding_date }}</dd>
-        {% endif %}
     </dl>
+    {% endif %}
     <section class="projects">
         <h2>Projects ({{ object.project_set.count }})</h2>
         <ul>{% for related_object in object.project_set.all %}

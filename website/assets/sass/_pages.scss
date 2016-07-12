@@ -131,3 +131,45 @@ article {
         }
     }
 }
+
+header.decorated {
+    display: block;
+    height: 120px;
+    background-repeat: no-repeat;
+    background-size: 100px auto;
+    background-position: 0 0;
+    &.infrastructure {
+        background-image: url($project-img);
+    }
+    &.rail {
+        background-image: url($rail-img);
+    }
+    &.road {
+        background-image: url($road-img);
+    }
+    &.seaport {
+        background-image: url($seaport-img);
+    }
+    &.event {
+        background-image: url($event-img);
+    }
+    &.organization {
+        background-image: url($organization-img);
+    }
+    &.initiative {
+        background-image: url($initiative-img);
+    }
+    &.person {
+        background-image: url($person-img);
+    }
+
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(center);
+    h1 {
+        @include flex(0 0 auto);
+        padding-left: 120px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+}

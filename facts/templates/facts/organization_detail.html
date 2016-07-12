@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load markymark %}
 
 {% block pagetitle %}
 {{ object.name }} | {{ block.super }}
@@ -6,13 +6,15 @@
 
 {% block content %}
 <article class="">
-    <h1>{{ object.name }}</h1>
-    <dl>
-        <dt>Mission</dt>
-        <dd>{% lorem 15 w %}</dd>
-    </dl>
-
-
+    <header class="decorated organization">
+        <h1>{{ object.name }}</h1>
+    </header>
+    {% if object.mission %}
+    <section>
+        <h2>Mission</h2>
+        {{object.mission|markdown}}
+    </section>
+    {% endif %}
     {% if object.companydetails %}
     <section class="details company">
         <h2>Company Details</h2>
