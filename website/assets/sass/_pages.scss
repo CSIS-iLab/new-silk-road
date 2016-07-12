@@ -134,65 +134,6 @@ article {
 
 @mixin decorated-bg {
     background-repeat: no-repeat;
-    background-size: 100px 100px; // IE 11 won't render properly unless both dimensions set
-    background-position: 0 0;
-}
-
-header.decorated {
-    display: block;
-    min-height: 120px;
-    &.infrastructure {
-        background-image: url($project-img);
-        @include decorated-bg;
-    }
-    &.rail {
-        background-image: url($rail-img);
-        @include decorated-bg;
-    }
-    &.road {
-        background-image: url($road-img);
-        @include decorated-bg;
-    }
-    &.seaport {
-        background-image: url($seaport-img);
-        @include decorated-bg;
-    }
-    &.ict {
-        background-image: url($ict-img);
-        @include decorated-bg;
-    }
-    &.energy {
-        background-image: url($energy-img);
-        @include decorated-bg;
-    }
-    &.pipeline {
-        background-image: url($pipeline-img);
-        @include decorated-bg;
-    }
-    &.event {
-        background-image: url($event-img);
-        @include decorated-bg;
-    }
-    &.organization {
-        background-image: url($organization-img);
-        @include decorated-bg;
-    }
-    &.initiative {
-        background-image: url($initiative-img);
-        @include decorated-bg;
-    }
-    &.person {
-        background-image: url($person-img);
-        @include decorated-bg;
-    }
-
-    @include display(flex);
-    @include flex-direction(column);
-    @include justify-content(center);
-    h1 {
-        @include flex(0 0 auto);
-        padding-left: 120px;
-        display: inline-block;
-        vertical-align: middle;
-    }
+    background-size: $decorated-bg-size $decorated-bg-size; // IE 11 won't render properly unless both dimensions set
+    background-position: 0 center;
 }
