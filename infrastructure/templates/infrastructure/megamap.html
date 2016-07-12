@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load staticfiles %}
+{% extends "base.html" %}{% load static from staticfiles %}
 
 {% block pagetitle %}
 Map | {{ block.super }}
@@ -7,7 +7,33 @@ Map | {{ block.super }}
 {% block bodyclass %}map{% endblock %}
 
 {% block content-shell %}
-<div id="app" class="search-map"></div>
+<div class="app-wrap">
+    <div id="app" class="search-map"></div>
+    <div class="map-legend">
+        <ul class="clean">
+            <li>
+                <span>Road</span>
+                <img class="line-art" src='{% static "img/Road_line.svg" %}' alt="Image representing visual display of a railroad on a map">
+            </li>
+            <li>
+                <span>Road</span>
+                <img src='{% static "img/Road.svg" %}' alt="Icon representing a Road project">
+            </li>
+            <li>
+                <span>Railroad</span>
+                <img class="line-art" src='{% static "img/Rail_line.svg" %}' alt="Image representing visual display of a railroad on a map">
+            </li>
+            <li>
+                <span>Railroad</span>
+                <img src='{% static "img/Rail.svg" %}' alt="Icon representing a Railroad project">
+            </li>
+            <li>
+                <span>Seaport</span>
+                <img src='{% static "img/Seaport.svg" %}' alt="Icon representing a Seaport project">
+            </li>
+        </ul>
+    </div>
+</div>
 {% endblock %}
 
 {% block postbodyjs %}
