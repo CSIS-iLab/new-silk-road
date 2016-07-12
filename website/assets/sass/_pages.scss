@@ -132,35 +132,46 @@ article {
     }
 }
 
+@mixin decorated-bg {
+    background-repeat: no-repeat;
+    background-size: 100px 100px; // IE 11 won't render properly unless both dimensions set
+    background-position: 0 0;
+}
+
 header.decorated {
     display: block;
-    height: 120px;
-    background-repeat: no-repeat;
-    background-size: 100px auto;
-    background-position: 0 0;
+    min-height: 120px;
     &.infrastructure {
         background-image: url($project-img);
+        @include decorated-bg;
     }
     &.rail {
         background-image: url($rail-img);
+        @include decorated-bg;
     }
     &.road {
         background-image: url($road-img);
+        @include decorated-bg;
     }
     &.seaport {
         background-image: url($seaport-img);
+        @include decorated-bg;
     }
     &.event {
         background-image: url($event-img);
+        @include decorated-bg;
     }
     &.organization {
         background-image: url($organization-img);
+        @include decorated-bg;
     }
     &.initiative {
         background-image: url($initiative-img);
+        @include decorated-bg;
     }
     &.person {
         background-image: url($person-img);
+        @include decorated-bg;
     }
 
     @include display(flex);

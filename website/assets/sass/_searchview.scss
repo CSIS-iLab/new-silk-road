@@ -170,7 +170,7 @@
                 @include justify-content(space-around);
                 @include align-items(center);
                 margin: 0;
-                max-height: 25px;
+                height: 25px;
                 span, img {
                     @include flex(0 1 50%);
                 }
