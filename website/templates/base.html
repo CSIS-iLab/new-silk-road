@@ -33,12 +33,13 @@
 {% endblock %}
         <footer>
             <div class="wrap">
-                <div class="row">
-                    <div class="col-9">
-                        {% include "_navigation.html" with showhome=True %}
-                    </div>
+                {% include "_navigation.html" with showhome=True %}
+                <div class="branding">
+                    <img class="logo" src="{% static 'img/csis_logo_gray.svg' %}" alt="Center for Strategic and International Studies">
+                    <aside>
+                        <p>This project, like many of the efforts it tracks, is a work in progress. <a href="#"><strong>Help us improve this site</strong></a>.</p>
+                    </aside>
                 </div>
-                <img class="logo" src="{% static 'img/csis_logo_gray.svg' %}" alt="Center for Strategic and International Studies">
             </div>
         </footer>
 {% block postbodyjs %}{% endblock %}

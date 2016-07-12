@@ -33,7 +33,11 @@ header {
 
     @include media($large-break) {
         margin-bottom: $large-spacing;
+        &:last-of-type {
+            margin-bottom: 0;
+        }
     }
+
 }
 
 @for $i from 1 through $grid-columns {

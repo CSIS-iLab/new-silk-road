@@ -311,31 +311,62 @@ article > header.decorated {
 
 body > footer {
     @include position(relative);
+
     border-top: $thin-dark-border;
     color: $dark-night;
     padding: $small-spacing;
     @include media($medium-break) {
         @include pad($large-spacing 0 0);
     }
-    nav li {
-        margin-bottom: $large-spacing/2;
+    .wrap {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
+        @include align-items(stretch);
+
+        .branding {
+            @include flex(0 1 50%);
+            padding-top: $medium-spacing;
+        }
+        nav {
+            @include flex(1 0 50%);
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+
+            .branding {
+                padding-top: 0;
+            }
+        }
+
+        @include media($large-break) {
+            .branding {
+                @include flex(0 1 33%);
+            }
+
+        }
+
+    }
+    nav {
+        li {
+            margin-bottom: $large-spacing/2;
+        }
     }
     a {
         color: $dark-night;
         text-decoration: none;
     }
     .logo {
-        @include position(static);
         max-width: 100%;
         @include media($small-break) {
-            @include position(absolute, 138px $small-spacing null null);
-            width: 60%;
+            width: 100%;
             max-width: 306px;
         }
-        @include media($medium-break) {
-            @include position(absolute, 138px 60px null null);
-            margin: $medium-spacing auto 0;
-        }
+    }
+    aside {
+        font-size: $minorer-text-size;
+        margin-top: $medium-spacing;
     }
 }
 
