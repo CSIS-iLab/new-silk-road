@@ -2,7 +2,11 @@
 @import "lib/neat/neat";
 article {
     section {
-        &.documents {
+        > img {
+            width: 100%;
+            margin-bottom: $small-spacing;
+        }
+        &.featured {
             padding: $small-spacing;
             background-color: $creamer;
 
@@ -10,6 +14,9 @@ article {
                 padding: $large-spacing;
             }
 
+        }
+
+        &.documents {
             .wrap {
                 @include display(flex);
                 @include flex-direction(column);
