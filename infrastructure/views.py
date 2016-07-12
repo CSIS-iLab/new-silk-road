@@ -71,6 +71,7 @@ class InitiativeDetailView(DetailView):
 
 class InitiativeListView(ListView):
     model = Initiative
+    ordering = ['name']
     paginate_by = 50
 
 
