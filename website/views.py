@@ -7,3 +7,7 @@ class HomeView(TemplateView):
 
 class DatabaseView(TemplateView):
     template_name = "website/database.html"
+
+
+class CompetingVisionsView(TemplateView):
+    template_name = "website/competing_visions.html"
