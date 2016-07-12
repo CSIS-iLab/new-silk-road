@@ -157,6 +157,18 @@ header.decorated {
         background-image: url($seaport-img);
         @include decorated-bg;
     }
+    &.ict {
+        background-image: url($ict-img);
+        @include decorated-bg;
+    }
+    &.energy {
+        background-image: url($energy-img);
+        @include decorated-bg;
+    }
+    &.pipeline {
+        background-image: url($pipeline-img);
+        @include decorated-bg;
+    }
     &.event {
         background-image: url($event-img);
         @include decorated-bg;
