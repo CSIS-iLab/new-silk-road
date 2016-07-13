@@ -1,7 +1,8 @@
 import "babel-polyfill";
 import 'whatwg-fetch';
 import MapboxGl, {
-  GeoJSONSource
+  GeoJSONSource,
+  Navigation,
 } from "mapbox-gl/js/mapbox-gl";
 import GeoStyles from '../megamap/helpers/GeoStyles';
 
@@ -12,9 +13,15 @@ class Map {
     this._geoURL = geoURL;
     this._geoLoaded = false;
     this._infrastructureType = infrastructureType;
-    const {accessToken, ...config} = mapConfig;
+    const {accessToken, disableHandlers, hideNavigation, ...config} = mapConfig;
     MapboxGl.accessToken = accessToken;
     this._map = new MapboxGl.Map(config);
+    for (let handler of disableHandlers) {
+      this._map[handler].disable()
+    }
+    if (hideNavigation !== true) {
+      this._map.addControl(new Navigation({position: 'top-left'}));
+    }
     this._map.on('load', this._handleMapDidLoad.bind(this));
     this._stylo = new GeoStyles();
   }
@@ -47,7 +54,7 @@ class Map {
     } = json;
     const camera = {
         bounds: extent,
-        maxZoom: 15,
+        maxZoom: 10,
         padding: 40
     };
     const geoTypes = ['lines', 'points', 'polygons'];
