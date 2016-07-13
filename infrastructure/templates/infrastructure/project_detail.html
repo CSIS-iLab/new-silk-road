@@ -93,7 +93,7 @@
     </section>
     {% if object.description_rendered %}
     <section class="notes">
-    {{ object.description_rendered }}
+    {{ object.description_rendered|safe }}
     </section>
     {% endif %}
     <section class="documents featured">

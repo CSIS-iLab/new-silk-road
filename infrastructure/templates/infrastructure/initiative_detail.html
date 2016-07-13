@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block pagetitle %}
+{{ object.name }} | {{ block.super }}
+{% endblock %}
+
+
 {% block content %}
 <article class="initiative">
     <header class="decorated initiative">
