@@ -118,6 +118,8 @@ class GeometryStoreDetailView(generics.RetrieveAPIView):
 
 class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = GeometryStore.objects\
+        .exclude(lines=None, points=None, polygons=None)\
+        .exclude(centroid__isnull=True)\
         .annotate(num_projects=Count('projects'))\
         .filter(num_projects__gt=0)
     lookup_field = 'identifier'
