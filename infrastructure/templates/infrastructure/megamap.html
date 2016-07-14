@@ -6,6 +6,16 @@ Map | {{ block.super }}
 
 {% block bodyclass %}map{% endblock %}
 
+{% block extrahead %}
+{{ block.super }}
+<style media="screen">
+    .search-map {
+        height: 600px;
+    }
+</style>
+
+{% endblock %}
+
 {% block content-shell %}
 <div class="app-wrap">
     <div id="app" class="search-map"></div>
