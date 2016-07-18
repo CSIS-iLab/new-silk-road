@@ -7,9 +7,13 @@ from .views import (
     InitiativeDetailView, InitiativeListView,
     GeoUploadView
 )
+from .export.views import (
+    ProjectExportView,
+)
 
 adminpatterns = [
-    url(r'^add-geo/$', staff_member_required()(GeoUploadView.as_view()), name='project-geo-upload')
+    url(r'^add-geo/$', staff_member_required()(GeoUploadView.as_view()), name='project-geo-upload'),
+    url(r'^export-projects/csv/$', staff_member_required()(ProjectExportView.as_view()), name='projects-export-view'),
 ]
 
 app_name = 'infrastructure'
