@@ -290,9 +290,9 @@ SUIT_CONFIG = {
 }
 
 # markymark
-# MARKYMARK_EXTENSIONS = [
+MARKYMARK_EXTENSIONS = [
 #     'markymark.extensions.contrib.filer',
-# ]
+]
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (31.5975071, 97.173225),
