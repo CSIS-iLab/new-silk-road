@@ -14,11 +14,14 @@ class EntryAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
+            'fields': ('published',)
+        }),
+        (None, {
             'fields': ('title', 'slug', 'content')
         }),
         (None, {
             'description': 'Elements that can be used to tease/share post',
-            'fields': ('share_text', 'primary_image', 'teaser')
+            'fields': ('share_text', 'featured_image', 'description')
         }),
         (None, {
             'fields': ('category', 'tags',)
