@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('filer', '0006_auto_20160623_1627'),
+        ('filer', '0002_auto_20150606_2003'),
         ('taggit', '0002_auto_20150616_2121'),
     ]
 
