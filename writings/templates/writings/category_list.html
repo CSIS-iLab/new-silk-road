@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Entry Categories | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+{% for object in object_list %}
+<section>
+    <header>
+        <h2><a href="{{object.get_absolute_url}}">{{object.name}}</a></h2>
+    </header>
+    <ul class="clean">{% for entry in object.entries.all|slice:":5"  %}
+        <li><a href="{{entry.get_absolute_url}}">{{entry.title}}</a> | <small>{{entry.published_at}}</small></li>
+{% endfor %}
+        <li><a href="{{object.get_absolute_url}}">More &hellip;</a></li>
+    </ul>
+</section>
+{% endfor %}
+{% endblock %}

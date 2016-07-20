@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block pagetitle %}Entries | {{ block.super }}{% endblock %}
+
 {% block content %}
 <ul class="clean">{% for object in object_list %}
     <li><a href="{{object.get_absolute_url}}">{{object.title}}</a> | <small>{{object.published_at}}</small></li>

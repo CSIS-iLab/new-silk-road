@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}{{category.name}} | {{ block.super }}{% endblock %}
+
+{% block content %}
+<section>
+    <header>
+        <h2>{{category.name}}</h2>
+    </header>
+    {% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
+    <ul class="clean">{% for entry in entry_list  %}
+        <li>
+            <h3>
+                <a href="{{entry.get_absolute_url}}">{{entry.title}}</a> | <small>{{entry.published_at}}</small>
+            </h3>
+            {% if entry.description %}
+            {{entry.description_rendered|safe}}
+            {% endif %}
+        </li>
+{% endfor %}
+    </ul>
+
+    {% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
+</section>
+{% endblock %}

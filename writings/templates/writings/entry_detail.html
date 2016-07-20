@@ -6,9 +6,9 @@
 <meta property="og:title" content="{{object.title}}">
 <meta name="twitter:title" content="{{object.title|truncatechars:70}}">
 {% if object.description %}
-<meta name="description" content="{{object.description}}">
-<meta property="og:description" content="{{object.description}}">
-<meta name="twitter:description" content="{{object.description|truncatechars:200}}">
+<meta name="description" content="{{object.description_rendered|striptags}}">
+<meta property="og:description" content="{{object.description_rendered|striptags}}">
+<meta name="twitter:description" content="{{object.description_rendered|striptags|truncatechars:200}}">
 {% endif %}
 {% if object.featured_image %}
 <meta property="og:image" content="{{object.featured_image.url}}">

@@ -20,6 +20,14 @@ class Category(Temporal):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse(
+            'writings:category-detail',
+            kwargs={
+                'slug': self.slug,
+            }
+        )
+
 
 class Entry(Publishable):
     """An entry in a 'blog' or whatever you want to call it."""
