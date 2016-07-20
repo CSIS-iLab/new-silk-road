@@ -11,7 +11,7 @@
     <ul class="clean">{% for entry in entry_list  %}
         <li>
             <h3>
-                <a href="{{entry.get_absolute_url}}">{{entry.title}}</a> | <small>{{entry.published_at}}</small>
+                <a href="{{entry.get_absolute_url}}">{{entry.title}}</a> | <small>{{entry.publication_date}}</small>
             </h3>
             {% if entry.description %}
             {{entry.description_rendered|safe}}

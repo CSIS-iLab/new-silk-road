@@ -19,8 +19,18 @@
 {% block pagetitle %}{{object.title}} | {{ block.super }}{% endblock %}
 
 {% block content %}
+{% if not entry_visible  %}
+<div class="message banner">
+    <p>This entry is currently not visible to the public. <a href="{% url 'admin:writings_entry_change' object.id %}">Look the admin</a> for details.</p>
+</div>
+{% endif %}
 <article class="">
     <h2>{{object.title}}</h2>
+    {% if object.author %}
+    <div class="byline">
+        <p>{{object.author}}</p>
+    </div>
+    {% endif %}
     {{object.content_rendered|safe}}
 </article>
 

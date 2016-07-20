@@ -33,6 +33,7 @@ class Entry(Publishable):
     """An entry in a 'blog' or whatever you want to call it."""
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=110, allow_unicode=True, unique=True)
+    author = models.CharField('Author(s)', blank=True, max_length=100)
 
     content = MarkdownField(blank=True)
     content_rendered = models.TextField(blank=True, editable=False)
@@ -42,23 +43,27 @@ class Entry(Publishable):
     )
     description_rendered = models.TextField(blank=True, editable=False)
     share_text = models.CharField(blank=True, max_length=140)
-
     featured_image = FilerImageField(blank=True, null=True)
 
-    published_at = models.DateTimeField(blank=True, null=True)
-
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
+    publication_date = models.DateTimeField(
         blank=True,
         null=True,
+        help_text="""<p>Publication date will be set to the current time automatically, when <em>published</em> is selected.
+        <p>You may set a date/time manually, but <strong>you must
+            select <em>published</em> for the post to appear!</strong>
+        """
+    )
+
+    categories = models.ManyToManyField(
+        Category,
+        blank=True,
         related_name='entries',
     )
     tags = TaggableManager(blank=True)
 
     class Meta:
-        ordering = ("-published_at", "-created_at")
-        get_latest_by = "published_at"
+        ordering = ("-publication_date", "-created_at")
+        get_latest_by = "publication_date"
         verbose_name = "entry"
         verbose_name_plural = "entries"
 
@@ -66,8 +71,8 @@ class Entry(Publishable):
         return self.title
 
     def save(self, *args, **kwargs):
-        if self.published and not self.published_at:
-            self.published_at = timezone.now()
+        if self.published and not self.publication_date:
+            self.publication_date = timezone.now()
         self.content_rendered = render_markdown(self.content)
         self.description_rendered = render_markdown(self.description)
         super(Entry, self).save(*args, **kwargs)

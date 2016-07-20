@@ -5,6 +5,7 @@ from .models import (
     Category,
     Entry,
 )
+from django.utils import timezone
 
 
 class CategoryListView(ListView):
@@ -12,12 +13,29 @@ class CategoryListView(ListView):
 
 
 class EntryDetailView(DetailView):
-    queryset = Entry.objects.filter(published=True)
+    model = Entry
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated():
+            queryset = queryset.filter(published=True, publication_date__lte=timezone.now())
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entry_visible'] = (self.object.published and
+                                    self.object.publication_date < timezone.now())
+        return context
 
 
 class EntryListView(ListView):
-    queryset = Entry.objects.filter(published=True)
     paginate_by = 50
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated():
+            queryset = queryset.filter(published=True, publication_date__lte=timezone.now())
+        return queryset
 
 
 class EntryCategoryListView(EntryListView):
