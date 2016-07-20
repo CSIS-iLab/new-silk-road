@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% block extrahead %}{% spaceless %}
+<meta property="og:url" content="{{request.build_absolute_uri}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{object.title}}">
+<meta name="twitter:title" content="{{object.title|truncatechars:70}}">
+{% if object.description %}
+<meta name="description" content="{{object.description}}">
+<meta property="og:description" content="{{object.description}}">
+<meta name="twitter:description" content="{{object.description|truncatechars:200}}">
+{% endif %}
+{% if object.featured_image %}
+<meta property="og:image" content="{{object.featured_image.url}}">
+<meta name="twitter:image" content="{{object.featured_image.url}}">
+{% endif %}
+{% endspaceless %}{% endblock %}
+
+{% block pagetitle %}{{object.title}} | {{ block.super }}{% endblock %}
+
 {% block content %}
 <article class="">
     <h2>{{object.title}}</h2>

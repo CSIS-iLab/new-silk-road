@@ -18,7 +18,7 @@ class Category(Temporal):
         verbose_name_plural = "categories"
 
     def __str__(self):
-        return u"Category"
+        return self.name
 
 
 class Entry(Publishable):
@@ -43,7 +43,8 @@ class Entry(Publishable):
         Category,
         on_delete=models.SET_NULL,
         blank=True,
-        null=True
+        null=True,
+        related_name='entries',
     )
     tags = TaggableManager(blank=True)
 
