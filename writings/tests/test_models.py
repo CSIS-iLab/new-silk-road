@@ -1,7 +1,10 @@
 from django.test import TestCase
+from django.db.utils import IntegrityError
 from .factories import (
     CategoryFactory,
     EntryFactory,
+    CollectionWithConflictingEntriesFactory,
+    CollectionWithSortedEntriesFactory,
 )
 
 
@@ -17,3 +20,14 @@ class EntryTestCase(TestCase):
         obj = EntryFactory.create(categories=CategoryFactory.create_batch(2))
 
         self.assertEqual(obj.categories.count(), 2)
+
+
+class EntryCollectionTestCase(TestCase):
+
+    def test_entrycollection_fails_with_duplicate_order(self):
+        with self.assertRaises(IntegrityError):
+            CollectionWithConflictingEntriesFactory.create()
+
+    def test_entrycollection_succeeds_with_different_order(self):
+        obj = CollectionWithSortedEntriesFactory.create()
+        self.assertEqual(obj.entries.count(), 2)

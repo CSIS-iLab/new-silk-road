@@ -43,3 +43,33 @@ class EntryFactory(factory.django.DjangoModelFactory):
     @factory.post_generation
     def slug(self, create, extracted, **kwargs):
         self.slug = slugify(self.title)
+
+
+class EntryCollectionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'writings.EntryCollection'
+
+    name = factory.Faker('text', max_nb_chars=40)
+
+    @factory.post_generation
+    def slug(self, create, extracted, **kwargs):
+        self.slug = slugify(self.name)
+
+
+class OrderedEntryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'writings.OrderedEntry'
+
+    entry = factory.SubFactory(EntryFactory)
+    collection = factory.SubFactory(EntryCollectionFactory)
+    order = 1
+
+
+class CollectionWithConflictingEntriesFactory(EntryCollectionFactory):
+    entry1 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 1')
+    entry2 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 2')
+
+
+class CollectionWithSortedEntriesFactory(EntryCollectionFactory):
+    entry1 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 1', order=1)
+    entry2 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 2', order=2)

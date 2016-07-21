@@ -60,6 +60,7 @@ class Entry(Publishable):
         related_name='entries',
     )
     tags = TaggableManager(blank=True)
+    related_entries = models.ManyToManyField('self')
 
     class Meta:
         ordering = ("-publication_date", "-created_at")
@@ -84,3 +85,33 @@ class Entry(Publishable):
                 'slug': self.slug,
             }
         )
+
+
+class EntryCollection(Temporal):
+    """An ordered collection of Entries"""
+    name = models.CharField(max_length=40)
+    slug = models.SlugField(allow_unicode=True, unique=True)
+    entries = models.ManyToManyField(
+        Entry,
+        through='OrderedEntry',
+        related_name='ordered_collections'
+    )
+
+    class Meta:
+        get_latest_by = "publication_date"
+        verbose_name = "entry collection"
+        verbose_name_plural = "collections"
+
+    def __str__(self):
+        return self.name
+
+
+class OrderedEntry(models.Model):
+    entry = models.ForeignKey(Entry, models.CASCADE)
+    collection = models.ForeignKey(EntryCollection, models.CASCADE)
+    order = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ("collection", "order")
+        verbose_name = "ordered entry"
+        verbose_name_plural = "ordered entries"

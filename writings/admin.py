@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.utils.html import format_html, format_html_join
+from suit.admin import SortableStackedInline
 from .models import (
     Category,
-    Entry
+    Entry,
+    EntryCollection,
+    OrderedEntry,
 )
 from django.utils import timezone
 
@@ -30,7 +33,7 @@ class EntryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     list_display = ('title', 'categories_display', 'published', 'publication_date', 'page_is_visble', 'page_link', 'updated_at')
     list_filter = ('published', 'categories')
-    filter_horizontal = ('categories',)
+    filter_horizontal = ('categories', 'related_entries',)
     fieldsets = (
         (None, {
             'fields': ('published', 'publication_date')
@@ -43,7 +46,7 @@ class EntryAdmin(admin.ModelAdmin):
             'fields': ('share_text', 'featured_image', 'description')
         }),
         (None, {
-            'fields': ('categories', 'tags',)
+            'fields': ('categories', 'tags', 'related_entries',)
         })
     )
     actions = [
@@ -77,5 +80,24 @@ class EntryAdmin(admin.ModelAdmin):
     page_is_visble.boolean = True
 
 
+class OrderedEntryInline(SortableStackedInline):
+    model = OrderedEntry
+    sortable = 'order'
+
+
+class EntryCollectionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    list_display = ('name', 'entry_count')
+
+    inlines = [
+        OrderedEntryInline,
+    ]
+
+    def entry_count(self, obj):
+        return obj.entries.count()
+    entry_count.short_description = 'No. of entries'
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Entry, EntryAdmin)
+admin.site.register(EntryCollection, EntryCollectionAdmin)
