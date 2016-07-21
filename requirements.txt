@@ -5,7 +5,7 @@ django-cachalot==1.2.1
 django-extensions>=1.6,<2.0
 django-heroku-memcacheify==1.0.0
 django-leaflet==0.18.1
-git+git@github.com:CSIS-iLab/django-markymark.git@517f46958dde3c9ee20172c15dbaa10356e93092#egg=django_markymark
+git+https://github.com/moccu/django-markymark.git@b97fad8#egg=django_markymark
 django-maintenancemode==0.11.2
 django-mptt==0.8.4
 django-filter==0.13.0
