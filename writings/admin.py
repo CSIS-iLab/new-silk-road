@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html, format_html_join
 from suit.admin import SortableStackedInline
+from markymark.fields import MarkdownField
+from markymark.widgets import MarkdownTextarea
 from .models import (
     Category,
     Entry,
@@ -49,6 +51,9 @@ class EntryAdmin(admin.ModelAdmin):
             'fields': ('categories', 'tags', 'related_entries',)
         })
     )
+    formfield_overrides = {
+        MarkdownField: {'widget': MarkdownTextarea(attrs={'rows': 30})},
+    }
     actions = [
         make_published_with_date,
         make_not_published_reset_date,
