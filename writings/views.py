@@ -29,6 +29,7 @@ class EntryDetailView(DetailView):
 
 
 class EntryListView(ListView):
+    model = Entry
     paginate_by = 50
 
     def get_queryset(self):
