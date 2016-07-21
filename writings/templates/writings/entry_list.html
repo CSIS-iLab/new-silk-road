@@ -4,7 +4,7 @@
 
 {% block content %}
 <ul class="clean">{% for object in object_list %}
-    <li><a href="{{object.get_absolute_url}}">{{object.title}}</a> | <small>{{object.publication_date}}</small></li>
+    <li><a href="{{object.get_absolute_url}}">{{object.title}}</a> | <small>{{object.publication_date|default:"No publication date"}}</small></li>
 {% endfor %}
 </ul>
 {% include "website/_pagination_controls.html" %}
