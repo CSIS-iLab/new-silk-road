@@ -60,7 +60,7 @@ class Entry(Publishable):
         related_name='entries',
     )
     tags = TaggableManager(blank=True)
-    related_entries = models.ManyToManyField('self')
+    related_entries = models.ManyToManyField('self', blank=True)
 
     class Meta:
         ordering = ("-publication_date", "-created_at")

@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='entry',
             name='related_entries',
-            field=models.ManyToManyField(related_name='_entry_related_entries_+', to='writings.Entry'),
+            field=models.ManyToManyField(blank=True, related_name='_entry_related_entries_+', to='writings.Entry'),
         ),
         migrations.AlterField(
             model_name='entry',
