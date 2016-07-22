@@ -52,17 +52,13 @@
                 <p>{{ object.infrastructure_type.name }}</p>
             </section>
             <section>
-                <h3>Status</h3>
-                <p>{{ object.get_status_display }}</p>
-            </section>
-            <section>
                 <h3>Initiatives</h3>
                 {% if object.initiatives.all %}
                 <ul class="clean">{% for initiative in object.initiatives.all %}
                     <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>{% endfor %}
                 </ul>
                 {% else %}
-                <p>Not Available.</p>
+                <p>&mdash;</p>
                 {% endif %}
             </section>
         </div>
@@ -73,21 +69,25 @@
                 {% if object.total_cost %}
                 <p>{{ object.total_cost|intword }} {{ object.total_cost_currency|default:"(Unspecified currency)" }}</p>
                 {% else %}
-                <p>Not Available.</p>
+                <p>&mdash;</p>
                 {% endif %}
                 {% endspaceless %}
             </section>
             <section>
+                <h3>Status</h3>
+                <p>{{ object.get_status_display|default:'&mdash;' }}</p>
+            </section>
+            <section>
                 <h3>Start Date</h3>
-                <p>{{object.fuzzy_start_date|fuzzydate:'N d Y'|default:'Not Available.'}}</p>
+                <p>{{object.fuzzy_start_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
             <section>
                 <h3>Start of Construction</h3>
-                <p>{{object.fuzzy_commencement_date|fuzzydate:'N d Y'|default:'Not Available.'}}</p>
+                <p>{{object.fuzzy_commencement_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
             <section>
                 <h3>Planned Completion Date</h3>
-                <p>{{object.fuzzy_planned_completion_date|fuzzydate:'N d Y'|default:'Not Available.'}}</p>
+                <p>{{object.fuzzy_planned_completion_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
         </div>
     </section>
@@ -112,7 +112,7 @@
         </div>
         {% endfor %}
         {% else %}
-        <p>Not Available.</p>
+        <p>&mdash;</p>
         {% endif %}
 {% comment %}
 {% for doc_key, doc_set in project_documents %}
@@ -124,7 +124,7 @@
                     </li>
                     {% endfor %}
                     {% else %}
-                    <li>Not Available.</li>
+                    <li>&mdash;</li>
                     {% endif %}
                 </ul>
             </div>

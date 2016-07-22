@@ -19,7 +19,7 @@
                 <ul class="clean">{% for country in object.citizenships.all %}
                     <li>{{ country.name }}</li>
                     {% empty %}
-                    <li>Not available</li>
+                    <li>&mdash;</li>
                     {% endfor %}
                 </ul>
             </section>
@@ -38,9 +38,9 @@
                             <td>{{ position.title }}</td>
                             <td><a href="{{ position.organization.get_absolute_url }}">{{ position.organization.name }}</a></td>
                             <td>{% if position.start_year or position.end_year %}
-                                {{ position.start_year|default:"" }} &ndash; {{ position.end_year|default:"" }}
+                                {{ position.start_year|default:"" }} &mdash; {{ position.end_year|default:"" }}
                                 {% else %}
-                                Not Available
+                                &mdash;
                                 {% endif %}
                             </td>
                         </tr>
@@ -56,7 +56,7 @@
                 <ul class="clean">{% for event in object.events.all %}
                     <li><a href="{{ event.get_absolute_url }}">{{ event.name }}</a></li>
                     {% empty %}
-                    <li>Not available</li>
+                    <li>&mdash;</li>
                     {% endfor %}
                 </ul>
             </section>
@@ -65,7 +65,7 @@
                 <ul class="clean">{% for initiative in object.initiative_set.all %}
                     <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>
                     {% empty %}
-                    <li>Not available</li>
+                    <li>&mdash;</li>
                     {% endfor %}
                 </ul>
             </section>

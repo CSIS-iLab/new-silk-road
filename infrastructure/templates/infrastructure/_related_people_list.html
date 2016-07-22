@@ -1,6 +1,6 @@
 <ul class="clean">{% for person in people_list %}
     <li><a href="{{ person.get_absolute_url }}">{{ person.full_display_name }}</a></li>
 {% empty %}
-    <li>Not Available.</li>
+    <li>&mdash;</li>
 {% endfor %}
 </ul>
