@@ -328,7 +328,10 @@ class ProjectDocument(models.Model):
         )),
         ('Miscellaneous Reports', (
             (21, 'Miscellaneous Reports'),
-        ))
+        )),
+        ('Unofficial Sources', (
+            (22, 'Unofficial Sources'),
+        )),
     )
 
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
