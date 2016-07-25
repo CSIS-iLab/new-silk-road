@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from publish.models import Publishable
 from markymark.fields import MarkdownField
+from markymark.utils import render_markdown
 from mptt.models import MPTTModel, TreeForeignKey
 from finance.credit import (MOODYS_LONG_TERM,
                             STANDARD_POORS_LONG_TERM,
@@ -20,6 +21,10 @@ class Organization(MPTTModel, Publishable):
                                      related_name='organizations_led')
     initiatives = models.ManyToManyField('infrastructure.Initiative', blank=True)
     headquarters = models.ForeignKey('locations.Place', models.SET_NULL, blank=True, null=True)
+
+    description = MarkdownField(blank=True)
+    description_rendered = models.TextField(blank=True, editable=False)
+
     notes = MarkdownField(blank=True)
     related_events = models.ManyToManyField('Event', blank=True)
     founding_year = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -53,6 +58,7 @@ class Organization(MPTTModel, Publishable):
         return reverse('facts:organization-detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
+        self.description_rendered = render_markdown(self.description)
         if not self.slug or self.slug == '':
             self.slug = slugify(self.name, allow_unicode=True)
         super(Organization, self).save(*args, **kwargs)
