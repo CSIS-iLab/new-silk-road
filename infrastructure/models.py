@@ -251,6 +251,7 @@ class Initiative(MPTTModel, Publishable):
     parent = TreeForeignKey('self', null=True, blank=True,
                             verbose_name='parent initiative',
                             related_name='children', db_index=True)
+    related_initiatives = models.ManyToManyField('self', blank=True)
 
     founding_year = models.PositiveSmallIntegerField('Founding/Signing Year', blank=True, null=True)
     founding_month = models.PositiveSmallIntegerField('Founding/Signing Month', blank=True, null=True)

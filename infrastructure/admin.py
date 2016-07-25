@@ -204,6 +204,7 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'affiliated_events__name',
     )
     filter_horizontal = [
+        'related_initiatives',
         'affiliated_people',
         'affiliated_organizations',
         'affiliated_events'
