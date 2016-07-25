@@ -125,6 +125,9 @@ class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
     form = FinancingOrganizationDetailsForm
     inlines = [OrganizationShareholderInline, PersonShareholderInline]
     list_display = OrganizationDetailsAdmin.list_display + ['approved_capital', 'moodys_credit_rating']
+    filter_horizontal = [
+        'scope_of_operations',
+    ]
 
 
 class GovernmentDetailsDetailsAdmin(OrganizationDetailsAdmin):

@@ -194,7 +194,7 @@ class FinancingOrganizationDetails(OrganizationDetails):
     shareholder_people = models.ManyToManyField('facts.Person',
                                                 related_name='holds_shares_of',
                                                 through='PersonShareholder')
-    scope_of_operations = models.CharField(blank=True, max_length=100)
+    scope_of_operations = models.ManyToManyField('locations.Place', blank=True)
     procurement = models.CharField(blank=True, max_length=100)
     org_type = models.ForeignKey('facts.FinancingType',
                                  models.SET_NULL, blank=True, null=True,
