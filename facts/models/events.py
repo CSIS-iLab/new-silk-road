@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from publish.models import Publishable
 from markymark.fields import MarkdownField
+from markymark.utils import render_markdown
 
 
 class EventType(MPTTModel):
@@ -32,6 +33,7 @@ class Event(Publishable):
                                    on_delete=models.SET_NULL,
                                    blank=True, null=True)
     description = MarkdownField(blank=True)
+    description_rendered = models.TextField(blank=True, editable=False)
     start_year = models.PositiveSmallIntegerField(blank=True, null=True)
     start_month = models.PositiveSmallIntegerField(blank=True, null=True)
     start_day = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -49,6 +51,7 @@ class Event(Publishable):
         return reverse('facts:event-detail', args=[self.slug])
 
     def save(self, *args, **kwargs):
+        self.description_rendered = render_markdown(self.description)
         if not self.slug or self.slug == '':
             self.slug = slugify(self.name, allow_unicode=True)
         super(Event, self).save(*args, **kwargs)

@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from markymark.fields import MarkdownField
 from publish.models import Publishable
+from markymark.utils import render_markdown
+from filer.fields.image import FilerImageField
 import uuid
 
 
@@ -15,7 +17,11 @@ class Person(Publishable):
                                                                               such as a 'middle' name.")
     family_name = models.CharField('Last name', blank=True, max_length=140, help_text="A person's family or 'last' name(s).")
 
+    image = FilerImageField(blank=True, null=True, help_text='Preferably a portrait/"head shot".')
+
     # Biographical Info
+    description = MarkdownField('Bio/Description', blank=True)
+    description_rendered = models.TextField(blank=True, editable=False)
     citizenships = models.ManyToManyField('locations.Country', blank=True)
 
     birth_year = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -45,6 +51,10 @@ class Person(Publishable):
             'slug': slugify(self.full_display_name()),
             'identifier': str(self.identifier)
         })
+
+    def save(self, *args, **kwargs):
+        self.description_rendered = render_markdown(self.description)
+        super(Person, self).save(*args, **kwargs)
 
 
 class Position(models.Model):
