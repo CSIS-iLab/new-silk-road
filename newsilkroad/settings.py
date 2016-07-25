@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.humanize',
 
     'raven.contrib.django.raven_compat',
@@ -68,8 +70,12 @@ INSTALLED_APPS = [
     'taggit',
     'writings',
 
+    'reversion',
+
     'fieldbook_importer',
 ]
+
+SITE_ID = 1
 
 if DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True":
     from debug_toolbar.settings import PANELS_DEFAULTS
@@ -284,6 +290,9 @@ SUIT_CONFIG = {
         'sources',
         '-',
         'writings',
+        '-',
+        'flatpages',
+        'sites',
         '-',
         'auth',
     )

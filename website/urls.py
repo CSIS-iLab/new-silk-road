@@ -1,9 +1,9 @@
 from django.conf.urls import include, url
+from django.contrib.flatpages import views
 
 from .views import (
     HomeView,
     DatabaseView,
-    CompetingVisionsView,
 )
 from infrastructure.views import (
     ProjectsMapView,
@@ -13,7 +13,8 @@ from .feeds import LatestEntriesFeed
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='website-home'),
-    url(r'^analysis/competing-visions/$', CompetingVisionsView.as_view()),
+    url(r'^about/$', views.flatpage, {'url': '/about/'}, name='about'),
+    url(r'^analysis/competing-visions/$', views.flatpage, {'url': '/analysis/competing-visions/'}, name='competing-visions'),
     url(r'^analysis/feed/$', LatestEntriesFeed()),
     url(r'^analysis/', include('writings.urls')),
     url(r'^database/$', DatabaseView.as_view(), name='database-home'),
