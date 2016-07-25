@@ -1,12 +1,11 @@
 from django.test import TestCase
-from locations.models import COUNTRY_CHOICES
-from .organization_factories import (
+from facts.tests.organization_factories import (
     OrganizationFactory,
     CompanyDetailsFactory,
     FinancingOrganizationDetailsFactory,
     GovernmentDetailsFactory,
     MilitaryDetailsFactory,
-    MultilateralDetailsFactory,
+    # MultilateralDetailsFactory,
     NGODetailsFactory,
     PoliticalDetailsFactory,
 )
@@ -66,11 +65,6 @@ class FinancingOrganizationTestCase(TestCase):
 
 class GovernmentTestCase(TestCase):
 
-    def test_government_has_country(self):
-        obj = GovernmentDetailsFactory(country=COUNTRY_CHOICES[0][0])
-
-        self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
-
     def test_organization_has_details(self):
         obj = GovernmentDetailsFactory()
 
@@ -80,11 +74,6 @@ class GovernmentTestCase(TestCase):
 
 
 class MilitaryDetailsTestCase(TestCase):
-
-    def test_military_has_country(self):
-        obj = MilitaryDetailsFactory(country=COUNTRY_CHOICES[0][0])
-
-        self.assertEqual(obj.get_country_display(), COUNTRY_CHOICES[0][1])
 
     def test_organization_has_details(self):
         obj = MilitaryDetailsFactory()

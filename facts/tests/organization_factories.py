@@ -1,4 +1,5 @@
 import factory
+import random
 
 
 class OrganizationFactory(factory.django.DjangoModelFactory):
@@ -6,12 +7,40 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
         model = 'facts.Organization'
 
     name = factory.Sequence(lambda n: 'Test Organization%s' % n)
-    mission = factory.Faker('paragraph')
+    staff_size = random.randint(0, 1000000)
+
+    # documents
+    @factory.lazy_attribute
+    def mission(self):
+        fake = factory.Faker('paragraphs')
+        return '\n\n'.join(fake.generate({'nb': 4}))
+
+    @factory.post_generation
+    def parent(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            self.parent = extracted
+
+    @factory.lazy_attribute
+    def description(self):
+        fake = factory.Faker('paragraphs')
+        return '\n\n'.join(fake.generate({'nb': 4}))
+
     # leaders = factory.SubFactory(PersonFactory)
-    notes = factory.Faker('paragraph')
+    @factory.lazy_attribute
+    def notes(self):
+        fake = factory.Faker('paragraphs')
+        return '\n\n'.join(fake.generate({'nb': 4}))
+
     # headquarters = factory.SubFactory(PlaceFactory)
-    founding_date = factory.Faker('date')
-    dissolution_date = factory.Faker('date')
+    founding_day = factory.Faker('day_of_month')
+    founding_month = factory.Faker('month')
+    founding_year = factory.Faker('year')
+    dissolution_day = factory.Faker('day_of_month')
+    dissolution_month = factory.Faker('month')
+    dissolution_year = factory.Faker('year')
 
     @factory.post_generation
     def related_organizations(self, create, extracted, **kwargs):
@@ -32,13 +61,13 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
                 self.initiatives.add(obj)
 
     @factory.post_generation
-    def events(self, create, extracted, **kwargs):
+    def related_events(self, create, extracted, **kwargs):
         if not create:
             return
 
         if extracted:
             for obj in extracted:
-                self.events.add(obj)
+                self.related_events.add(obj)
 
 
 class SubOrganizationFactory(OrganizationFactory):
@@ -63,7 +92,7 @@ class CompanyDetailsFactory(DetailsFactory):
         model = 'facts.CompanyDetails'
 
     structure = factory.SubFactory(CompanyStructureFactory)
-    sector = factory.Iterator(range(1, 4))
+    sectors = [1, 3]
     # org_type =
 
 
