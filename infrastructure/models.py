@@ -262,10 +262,12 @@ class Initiative(MPTTModel, Publishable):
     affiliated_organizations = models.ManyToManyField('facts.Organization', blank=True)
     affiliated_events = models.ManyToManyField('facts.Event', blank=True)
     affiliated_people = models.ManyToManyField('facts.Person', blank=True)
-    member_countries = models.ManyToManyField('locations.Country', blank=True)
-    geographic_scope = models.ForeignKey('locations.Region',
-                                         on_delete=models.SET_NULL,
-                                         blank=True, null=True)
+    member_countries = models.ManyToManyField(
+        'locations.Country', blank=True, related_name='initiatives_joined'
+    )
+    geographic_scope = models.ManyToManyField(
+        'locations.Country', blank=True, related_name='initiatives_in_scope'
+    )
 
     appeared_year = models.PositiveSmallIntegerField('First Apperance Year', blank=True, null=True)
     appeared_month = models.PositiveSmallIntegerField('First Apperance Month', blank=True, null=True)

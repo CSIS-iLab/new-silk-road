@@ -190,7 +190,6 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'initiative_type',
         'principal_agent',
         'parent',
-        'geographic_scope',
         'published',
     )
     list_filter = ('geographic_scope', 'initiative_type', 'member_countries')
@@ -209,6 +208,7 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'affiliated_organizations',
         'affiliated_events',
         'documents',
+        'geographic_scope',
     ]
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']
