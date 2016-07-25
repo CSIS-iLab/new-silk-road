@@ -248,8 +248,11 @@ class NGODetails(OrganizationDetails):
     members = models.ManyToManyField('Organization',
                                      related_name='ngo_memberships'
                                      )
-    geographic_scope = models.ForeignKey('locations.Region',
-                                         models.SET_NULL, blank=True, null=True)
+    geographic_scope = models.ManyToManyField(
+        'locations.Place',
+        blank=True,
+        help_text='Geographic scope as defined by a selection of Place records.'
+    )
     endowment = models.DecimalField(blank=True, null=True,
                                     max_digits=17, decimal_places=2)
     org_type = models.ForeignKey('NGOType',

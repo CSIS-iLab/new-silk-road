@@ -152,6 +152,7 @@ class MultilateralDetailsAdmin(OrganizationDetailsAdmin):
 class NGODetailsAdmin(OrganizationDetailsAdmin):
     form = NGODetailsForm
     filter_horizontal = [
+        'geographic_scope',
         'members',
     ]
 
