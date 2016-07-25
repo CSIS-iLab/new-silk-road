@@ -20,7 +20,6 @@ class EntryFactory(factory.django.DjangoModelFactory):
 
     title = factory.Faker('text', max_nb_chars=100)
     author = factory.Faker('name')
-    content = factory.Faker('paragraphs', nb=4)
     description = factory.Faker('paragraph')
     share_text = factory.Faker('text', max_nb_chars=140)
     # TODO: Figure out how to fake FilerImageField
@@ -28,6 +27,11 @@ class EntryFactory(factory.django.DjangoModelFactory):
     publication_date = factory.Faker('date_time_this_year', tzinfo=pytz.utc)
     # NOTE: tags is taggit TaggableManager, so ???
     # tags
+
+    @factory.lazy_attribute
+    def content(self):
+        fake = factory.Faker('paragraphs')
+        return '\n\n'.join(fake.generate({'nb': 6}))
 
     @factory.post_generation
     def categories(self, create, extracted, **kwargs):
