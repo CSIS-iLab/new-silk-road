@@ -68,7 +68,8 @@ class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'leaders',
         'initiatives',
         'related_organizations',
-        'related_events'
+        'related_events',
+        'documents',
     ]
     save_on_top = True
     select_related = True

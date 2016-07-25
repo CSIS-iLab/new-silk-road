@@ -37,6 +37,8 @@ class Organization(MPTTModel, Publishable):
     mission = MarkdownField("Mandate/Mission Statement", blank=True)
     related_organizations = models.ManyToManyField('self', blank=True)
 
+    documents = models.ManyToManyField('sources.Document', blank=True)
+
     class MPTTMeta:
             order_insertion_by = ['name']
 

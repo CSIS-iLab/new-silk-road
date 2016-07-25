@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='ngodetails',
             name='geographic_scope',
-            field=models.ManyToManyField(blank=True, to='locations.Place'),
+            field=models.ManyToManyField(blank=True, help_text='Geographic scope as defined by a selection of Place records.', to='locations.Place'),
         ),
     ]
