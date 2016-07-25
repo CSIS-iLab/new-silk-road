@@ -207,7 +207,8 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'related_initiatives',
         'affiliated_people',
         'affiliated_organizations',
-        'affiliated_events'
+        'affiliated_events',
+        'documents',
     ]
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at']

@@ -253,6 +253,8 @@ class Initiative(MPTTModel, Publishable):
                             related_name='children', db_index=True)
     related_initiatives = models.ManyToManyField('self', blank=True)
 
+    documents = models.ManyToManyField('sources.Document', blank=True)
+
     founding_year = models.PositiveSmallIntegerField('Founding/Signing Year', blank=True, null=True)
     founding_month = models.PositiveSmallIntegerField('Founding/Signing Month', blank=True, null=True)
     founding_day = models.PositiveSmallIntegerField('Founding/Signing Day', blank=True, null=True)
