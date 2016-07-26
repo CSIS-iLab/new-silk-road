@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
-from publish.models import Publishable, Temporal
+from publish.models import Publishable, Temporal, PublishableQuerySet
 from mptt.models import MPTTModel, TreeForeignKey
 from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
@@ -275,6 +275,8 @@ class Initiative(MPTTModel, Publishable):
 
     class Meta:
         ordering = ['name']
+
+    publishable_objects = PublishableQuerySet.as_manager()
 
     def __str__(self):
         return self.name

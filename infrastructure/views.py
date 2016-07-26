@@ -9,6 +9,7 @@ from tempfile import NamedTemporaryFile
 from locations.utils import geostore_from_file
 from .models import (Project, ProjectDocument, Initiative)
 from .forms import ProjectGeoUploadForm
+from publish.views import PublicationMixin
 
 import logging
 from django.conf import settings
@@ -21,7 +22,7 @@ DEFAULT_CENTER = LEAFLET_CONFIG.get('DEFAULT_CENTER') if LEAFLET_CONFIG else Non
 logger = logging.getLogger(__name__)
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(PublicationMixin, DetailView):
     model = Project
     slug_field = 'identifier'
     slug_url_kwarg = 'identifier'
@@ -37,7 +38,7 @@ class ProjectDetailView(DetailView):
         return context
 
 
-class ProjectsMapView(ListView):
+class ProjectsMapView(PublicationMixin, ListView):
     model = Project
     template_name = 'infrastructure/megamap.html'
 
@@ -63,14 +64,14 @@ class CountryProjectListView(ProjectListView):
         return self.queryset
 
 
-class InitiativeDetailView(DetailView):
-    model = Initiative
+class InitiativeDetailView(PublicationMixin, DetailView):
+    queryset = Initiative.publishable_objects.all()
     slug_field = 'identifier'
     slug_url_kwarg = 'identifier'
 
 
-class InitiativeListView(ListView):
-    model = Initiative
+class InitiativeListView(PublicationMixin, ListView):
+    queryset = Initiative.publishable_objects.all()
     ordering = ['name']
     paginate_by = 50
 
