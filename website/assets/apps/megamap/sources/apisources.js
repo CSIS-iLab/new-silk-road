@@ -10,7 +10,7 @@ function createApiSource(endpoint) {
         const queryString = parameterizeQuery(query);
         fetchURL = `${ApiSource.baseURL}?${queryString}`;
       }
-      return fetch(fetchURL);
+      return fetch(fetchURL, { credentials: 'same-origin',});
     }
   }
   return ApiSource;

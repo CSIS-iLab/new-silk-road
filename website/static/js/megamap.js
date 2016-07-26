@@ -69775,7 +69775,7 @@ var GeoStoreSource = function () {
     key: 'get',
     value: function get(identifier) {
       var fetchURL = '' + GeoStoreSource.baseURL + identifier + '/';
-      return fetch(fetchURL);
+      return fetch(fetchURL, { credentials: 'same-origin' });
     }
   }]);
 
@@ -69825,7 +69825,7 @@ function createApiSource(endpoint) {
           var queryString = (0, _utils.parameterizeQuery)(query);
           fetchURL = ApiSource.baseURL + '?' + queryString;
         }
-        return fetch(fetchURL);
+        return fetch(fetchURL, { credentials: 'same-origin' });
       })
     }]);
 

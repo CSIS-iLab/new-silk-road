@@ -5,7 +5,7 @@ class GeoStoreSource {
 
   static get(identifier) {
     let fetchURL = `${GeoStoreSource.baseURL}${identifier}/`;
-    return fetch(fetchURL);
+    return fetch(fetchURL, { credentials: 'same-origin',});
   }
 }
 
