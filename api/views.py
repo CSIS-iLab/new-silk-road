@@ -41,6 +41,7 @@ from api.serializers.infrastructure import (ProjectSerializer, InitiativeSeriali
 from api.serializers.facts import (OrganizationBasicSerializer)
 from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 from api.filters.facts import (OrganizationFilter)
+from publish.views import PublicationMixin
 
 
 class OrganizationViewSet(viewsets.ReadOnlyModelViewSet):
@@ -51,7 +52,7 @@ class OrganizationViewSet(viewsets.ReadOnlyModelViewSet):
     filter_class = OrganizationFilter
 
 
-class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
+class ProjectViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Project.objects.select_related(
         'infrastructure_type',
     ).all()
@@ -61,7 +62,7 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
     filter_class = ProjectFilter
 
 
-class InitiativeViewSet(viewsets.ReadOnlyModelViewSet):
+class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Initiative.objects.all()
     lookup_field = 'identifier'
     serializer_class = InitiativeSerializer
@@ -107,26 +108,40 @@ class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GeometryStoreDetailView(generics.RetrieveAPIView):
-    queryset = GeometryStore.objects\
-        .annotate(num_projects=Count('projects'))\
-        .filter(num_projects__gt=0)
     lookup_field = 'identifier'
     serializer_class = GeometryStoreDetailSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
 
+    def get_queryset(self):
+        queryset = GeometryStore.objects\
+            .annotate(num_projects=Count('projects'))\
+            .filter(num_projects__gt=0)
+
+        if not self.request.user.is_authenticated():
+            queryset = queryset.filter(projects__published=True).distinct()
+
+        return queryset
+
 
 class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = GeometryStore.objects\
-        .exclude(lines=None, points=None, polygons=None)\
-        .exclude(centroid__isnull=True)\
-        .annotate(num_projects=Count('projects'))\
-        .filter(num_projects__gt=0)
     lookup_field = 'identifier'
     serializer_class = GeometryStoreCentroidSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = GeometryStoreFilter
     pagination_class = None
+
+    def get_queryset(self):
+        queryset = GeometryStore.objects\
+            .exclude(lines=None, points=None, polygons=None)\
+            .exclude(centroid__isnull=True)\
+            .annotate(num_projects=Count('projects'))\
+            .filter(num_projects__gt=0)
+
+        if not self.request.user.is_authenticated():
+            queryset = queryset.filter(projects__published=True).distinct()
+
+        return queryset
 
 
 class RegionListView(generics.ListAPIView):
