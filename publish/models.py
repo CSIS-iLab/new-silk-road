@@ -1,13 +1,13 @@
 from django.db import models
 
 
-class PublicationManager(models.Manager):
+class PublishableQuerySet(models.QuerySet):
 
     def published(self):
-        return self.get_queryset().filter(published=True)
+        return self.filter(published=True)
 
     def unpublished(self):
-        return self.get_queryset().filter(published=False)
+        return self.filter(published=False)
 
 
 class Temporal(models.Model):
@@ -21,7 +21,7 @@ class Temporal(models.Model):
 class Publishable(Temporal):
     published = models.BooleanField(default=False)
 
-    objects = PublicationManager()
+    objects = PublishableQuerySet.as_manager()
 
     class Meta:
         abstract = True
