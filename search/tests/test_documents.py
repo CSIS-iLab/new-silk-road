@@ -5,8 +5,8 @@ from elasticsearch_dsl import Index, Search
 from elasticsearch_dsl.connections import connections
 from urllib.parse import urlparse
 from writings.tests.factories import EntryFactory
-from .mappings import EntryMapping
-from .documents import EntryDoc
+from search.mappings import EntryMapping
+from search.documents import EntryDoc
 
 import datetime
 
