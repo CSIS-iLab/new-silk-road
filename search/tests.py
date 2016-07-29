@@ -40,6 +40,6 @@ class SearchTestCase(TestCase):
             doc_obj = mapper.to_doc(obj)
             doc_obj.save()
 
-        response = Search().query().execute()
+        s = Search()
 
-        self.assertEqual(len(entry_objects), response.hits.total)
+        self.assertEqual(len(entry_objects), s.count())
