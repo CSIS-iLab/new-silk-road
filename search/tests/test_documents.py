@@ -8,16 +8,14 @@ from writings.tests.factories import EntryFactory
 from search.mappings import EntryMapping
 from search.documents import EntryDoc
 
-import datetime
 
 ELASTICSEARCH_URL = getattr(settings, 'ELASTICSEARCH_URL', 'http://localhost:9200')
 TEST_INDEX = 'test_reconnectingasia'
 
 
-class SearchTestCase(TestCase):
+class DocumentsTestCase(TestCase):
 
     def setUp(self):
-        # TODO: default connection that is parsed from url to dict like {"host": "localhost", "port": 9200}
         parsed_url = urlparse(ELASTICSEARCH_URL)
         connections.create_connection(hosts=[parsed_url.netloc], timeout=20)
         self.client = Elasticsearch([ELASTICSEARCH_URL])
