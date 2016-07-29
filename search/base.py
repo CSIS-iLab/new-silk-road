@@ -64,9 +64,6 @@ class ModelMapping:
         obj_dict = self.serialize(instance)
         return self.Meta.doc_type(**obj_dict)
 
-    def save_to_elasticsearch(self, instance, created, **kwargs):
-        pass
-
 
 class RelatedMapping:
 
