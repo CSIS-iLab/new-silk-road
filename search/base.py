@@ -45,6 +45,7 @@ class ModelMapping:
             raise TypeError('Instance must match model class')
 
         obj_dict = model_to_dict(instance, fields=self._simple_fields)
+        obj_dict['app_label'] = self.model_class._meta.label
 
         for f in self._relfields:
             rel_map = getattr(self, f)
@@ -58,6 +59,10 @@ class ModelMapping:
                 obj_dict[f] = get_display_value()
 
         return obj_dict
+
+    def to_doc(self, instance):
+        obj_dict = self.serialize(instance)
+        return self.Meta.doc_type(**obj_dict)
 
     def save_to_elasticsearch(self, instance, created, **kwargs):
         pass
