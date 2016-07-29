@@ -21,25 +21,21 @@ class SearchTestCase(TestCase):
         self.client = Elasticsearch([ELASTICSEARCH_URL])
         self.index = Index(TEST_INDEX)
         self.index.doc_type(EntryDoc)
-        if not self.index.exists():
-            self.index.create()
-        else:
-            self.index.flush()
+        if self.index.exists():
+            self.index.delete()
+        self.index.create()
 
     def tearDown(self):
         self.index.delete()
 
-    def test_create_doc(self):
-        self.client.index(TEST_INDEX, 'test_doc', {'name': 'Foo'})
-
     def test_index_writings_entries(self):
-        EntryDoc.init()
         entry_objects = EntryFactory.create_batch(30)
         mapper = EntryMapping()
         for obj in entry_objects:
             doc_obj = mapper.to_doc(obj)
             doc_obj.save()
 
+        self.index.refresh()
         s = Search()
 
         self.assertEqual(len(entry_objects), s.count())
