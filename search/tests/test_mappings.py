@@ -24,14 +24,21 @@ class MappingsTestCase(TestCase):
         self.assertEqual(obj.get_status_display(), doc.status)
 
     def test_entry_mapping(self):
-        obj = EntryFactory.create(title='Test title', categories=EntryCategoryFactory.create_batch(4))
+        obj = EntryFactory.create(
+            title='Test title',
+            categories=EntryCategoryFactory.create_batch(4),
+            published=True
+        )
         mapping = EntryMapping()
         doc = mapping.to_doc(obj)
 
         self.assertIsInstance(doc, EntryDoc)
         self.assertEqual(doc.title, 'Test title')
         self.assertEqual(len(doc.categories), 4)
-        self.assertIsNotNone(doc.author)
-        self.assertIsNotNone(doc.content)
-        self.assertIsNotNone(doc.description)
-        self.assertIsNotNone(doc.publication_date)
+
+        for category in doc.categories:
+            self.assertIn('name', category)
+        self.assertEqual(obj.author, doc.author)
+        self.assertEqual(obj.content, doc.content)
+        self.assertEqual(obj.description, doc.description)
+        self.assertEqual(obj.publication_date, doc.publication_date)

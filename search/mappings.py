@@ -4,6 +4,7 @@ from .documents import (
     InfrastructureTypeDoc,
     ProjectDoc,
     EntryDoc,
+    CategoryDoc,
 )
 
 
@@ -44,7 +45,16 @@ class ProjectMapping(ModelMapping):
         )
 
 
+class CategoryMapping(ModelMapping):
+
+    class Meta:
+        model = 'writings.Category'
+        doc_type = CategoryDoc
+        fields = ('name',)
+
+
 class EntryMapping(ModelMapping):
+    categories = RelatedMapping(CategoryMapping, many=True)
 
     class Meta:
         model = 'writings.Entry'
@@ -56,4 +66,5 @@ class EntryMapping(ModelMapping):
             'content',
             'description',
             'publication_date',
+            'categories',
         )

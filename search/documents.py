@@ -4,6 +4,10 @@ from elasticsearch_dsl import (
 )
 
 
+class CategoryDoc(InnerObjectWrapper):
+    name = String()
+
+
 class CountryDoc(InnerObjectWrapper):
     name = String()
 
@@ -27,3 +31,4 @@ class EntryDoc(DocType):
     content = String()
     description = String()
     publication_date = Date()
+    categories = Nested(doc_class=CategoryDoc, properties={'name': String()})
