@@ -53,4 +53,5 @@ class DocumentsTestCase(TestCase):
 
         self.assertEqual(1, s.count())
         self.assertEqual(entry.id, result.id)
+        self.assertEqual(entry.publication_date.isoformat(), result.publication_date)
         self.assertEqual(entry._meta.label, result._meta.label)
