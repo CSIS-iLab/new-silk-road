@@ -8,6 +8,8 @@ from writings.tests.factories import EntryFactory
 from .mappings import EntryMapping
 from .documents import EntryDoc
 
+import datetime
+
 ELASTICSEARCH_URL = getattr(settings, 'ELASTICSEARCH_URL', 'http://localhost:9200')
 TEST_INDEX = 'test_reconnectingasia'
 
@@ -39,3 +41,18 @@ class SearchTestCase(TestCase):
         s = Search()
 
         self.assertEqual(len(entry_objects), s.count())
+
+    def test_writings_entry(self):
+        entry = EntryFactory.create()
+        mapper = EntryMapping()
+        doc_obj = mapper.to_doc(entry)
+        doc_obj.save()
+
+        self.index.refresh()
+        s = Search()
+        response = s.execute()
+        result = response[0]
+
+        self.assertEqual(1, s.count())
+        self.assertEqual(entry.id, result.id)
+        self.assertEqual(entry._meta.label, result._meta.label)

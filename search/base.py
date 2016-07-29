@@ -45,7 +45,7 @@ class ModelMapping:
             raise TypeError('Instance must match model class')
 
         obj_dict = model_to_dict(instance, fields=self._simple_fields)
-        obj_dict['app_label'] = self.model_class._meta.label
+        obj_dict['_meta'] = {'label': self.model_class._meta.label}
 
         for f in self._relfields:
             rel_map = getattr(self, f)
