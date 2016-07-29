@@ -19,8 +19,8 @@ class SearchTestCase(TestCase):
         parsed_url = urlparse(ELASTICSEARCH_URL)
         connections.create_connection(hosts=[parsed_url.netloc], timeout=20)
         self.client = Elasticsearch([ELASTICSEARCH_URL])
-        # import ipdb; ipdb.set_trace()
         self.index = Index(TEST_INDEX)
+        self.index.doc_type(EntryDoc)
         if not self.index.exists():
             self.index.create()
         else:
@@ -33,12 +33,12 @@ class SearchTestCase(TestCase):
         self.client.index(TEST_INDEX, 'test_doc', {'name': 'Foo'})
 
     def test_index_writings_entries(self):
-        EntryDoc.init(index=TEST_INDEX)
+        EntryDoc.init()
         entry_objects = EntryFactory.create_batch(30)
         mapper = EntryMapping()
         for obj in entry_objects:
             doc_obj = mapper.to_doc(obj)
-            doc_obj.save(index=TEST_INDEX)
+            doc_obj.save()
 
         response = Search().query().execute()
 

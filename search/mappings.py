@@ -3,6 +3,7 @@ from .documents import (
     CountryDoc,
     InfrastructureTypeDoc,
     ProjectDoc,
+    EntryDoc,
 )
 
 
@@ -40,4 +41,19 @@ class ProjectMapping(ModelMapping):
             'start_day',
             'status',
             # 'initiatives',
+        )
+
+
+class EntryMapping(ModelMapping):
+
+    class Meta:
+        model = 'writings.Entry'
+        doc_type = EntryDoc
+        fields = (
+            'id',
+            'title',
+            'author',
+            'content',
+            'description',
+            'publication_date',
         )

@@ -1,5 +1,5 @@
 from elasticsearch_dsl import (
-    DocType, String, Date, Boolean,
+    DocType, String, Date,
     Nested, InnerObjectWrapper
 )
 
@@ -18,8 +18,12 @@ class ProjectDoc(DocType):
     alternate_name = String()
     description = String()
     countries = Nested(doc_class=CountryDoc, properties={'name': String()})
-    regions = String()
     infrastructure_type = Nested(doc_class=InfrastructureTypeDoc, properties={'name': String()})
 
-    class Meta:
-        index = 'blog'
+
+class EntryDoc(DocType):
+    title = String()
+    author = String()
+    content = String()
+    description = String()
+    publication_date = Date()
