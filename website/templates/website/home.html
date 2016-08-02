@@ -1,10 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load static %}
 
 {% block bodyclass %}home{% endblock %}
 
 {% block content-shell %}
 <section id='map' class='poster'>
-    <img src="" alt="" />
+    <div class="inner">
+        <a href="{% url 'website-map' %}">
+            <h2>Explore</h2>
+            <h3>The Map</h3>
+            <img src='{% static "img/white_arrow.svg" %}' alt="Arrow button" />
+        </a>
+    </div>
 </section>
 <section id='mission'>
     <div class="inner">
@@ -12,10 +18,20 @@
     </div>
 </section>
 <section id='analysis'>
-
+    <div class="inner">
+        {% comment %}
+            TODO: Replace with actual content
+        {% endcomment %}
+        <h2><a href="#">A Silk Road for the 21st Century?</a></h2>
+        <h5>July 2016</h5>
+        <h3>Analysis by Dr. Thomas Fingar</h3>
+        <button><a href="#">Additional analysis</a></button>
+    </div>
 </section>
 <section id='database' class='poster'>
-    <img src="" alt="" />
+    <div class="inner">
+        <a href="{% url 'database-home' %}"><h2>The Database</h2></a>
+    </div>
 </section>
 <section id='video' class='poster'>
 </section>

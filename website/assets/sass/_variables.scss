@@ -17,6 +17,8 @@ $max-content-width: 980px;
 // fonts
 $em-base: 18px;
 $base-font-size: $em-base;
+$overdoingit-hed-size: rem(59);
+$shouting-hed-size: rem(44);
 $major-hed-size: rem(40);
 $mid-hed-size: rem(22);
 $mid-text-size: rem($base-font-size);
@@ -33,6 +35,7 @@ $serif-font-family: Merriweather, $georgia;
 // Colors
 
 $pale-green: #d6e1d6;
+$bright-green: #abd58c;
 $medium-green: #75986a;
 $serious-green: #4e736c;
 $dark-night: #252d3a;
@@ -66,18 +69,26 @@ $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 
 // Project & other images
+$banner-img-url: $img-url-base + 'banners/';
+$competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';
+$historical-atlas-img: $banner-img-url + 'Historical_Atlas_graphic.jpg';
+$megamap-img: $banner-img-url + 'Megamap.jpg';
+
+$white-arrow-img: $img-url-base + 'white_arrow.svg';
+
+$database-icon-url: $img-url-base + 'database-icons/';
 $icons: (
-    'infrastructure': $img-url-base + 'Project.svg',
-    'rail': $img-url-base + 'Rail.svg',
-    'road': $img-url-base + 'Road.svg',
-    'seaport': $img-url-base + 'Seaport.svg',
-    'ict': $img-url-base + 'ICT.svg',
-    'energy': $img-url-base + 'Energy.svg',
-    'pipeline': $img-url-base + 'Pipeline.svg',
-    'organization': $img-url-base + 'Organization.svg',
-    'initiative': $img-url-base + 'Initiative.svg',
-    'event': $img-url-base + 'Event.svg',
-    'person': $img-url-base + 'Person.svg'
+    'infrastructure': $database-icon-url + 'Project.svg',
+    'rail': $database-icon-url + 'Rail.svg',
+    'road': $database-icon-url + 'Road.svg',
+    'seaport': $database-icon-url + 'Seaport.svg',
+    'ict': $database-icon-url + 'ICT.svg',
+    'energy': $database-icon-url + 'Energy.svg',
+    'pipeline': $database-icon-url + 'Pipeline.svg',
+    'organization': $database-icon-url + 'Organization.svg',
+    'initiative': $database-icon-url + 'Initiative.svg',
+    'event': $database-icon-url + 'Event.svg',
+    'person': $database-icon-url + 'Person.svg'
 );
 $decorated-bg-size: 50px;
 

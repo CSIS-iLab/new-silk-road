@@ -1,0 +1,209 @@
+@import "variables";
+@import "lib/bourbon/bourbon", "lib/neat/neat";
+
+
+.home {
+    a {
+        text-decoration: none;
+    }
+
+    section {
+        display: block;
+        position: relative;
+        min-height: 240px;
+
+        h2, h3 {
+            font-family: $sans-font-family;
+        }
+        h2 {
+            font-size: $shouting-hed-size;
+            line-height: normal;
+        }
+    }
+
+    .inner {
+        max-width: $max-content-width;
+        margin: 0 auto;
+        padding: 20px;
+        p:last-of-type {
+            margin: 0;
+        }
+    }
+
+    #map {
+        height: 350px;
+        background: url($megamap-img)/cover no-repeat;
+        text-align: right;
+        position: relative;
+
+        h2, h3 {
+
+            text-shadow: 0 0 4px rgb(76, 129, 126);
+            font-weight: 300;
+        }
+        h2 {
+            color: #FFF;
+            font-size: $overdoingit-hed-size;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+        h3 {
+            color: $bright-green;
+            font-size: $shouting-hed-size;
+            font-family: $serif-font-family;
+        }
+
+        .inner {
+            position: absolute;
+            margin: 0;
+            // padding: 0 44px 0 0;
+            right: $section-spacing;
+            bottom: $small-spacing;
+
+            a {
+                position: relative;
+                display: block;
+
+                h2, h3 {
+                    padding-right: 36px;
+                }
+                img {
+                    position: absolute;
+                    height: 115px;
+                    top: 15px;
+                    right: 0;
+                }
+            }
+        }
+    }
+
+    #mission {
+        position: relative;
+        padding: $section-spacing 0;
+        font-weight: 400;
+
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: block;
+            position: absolute;
+            z-index: -1;
+            background: repeat left/$banner-img-size url($banner-bg-img) transparent;
+            opacity: 0.6;
+        }
+        // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
+        &::-ms-backdrop, &::before {
+            background: repeat left/$banner-img-size url($banner-bg-img-ie11) transparent;
+        }
+
+        .inner {
+            background-color: #FFF;
+        }
+
+    }
+    #visions, #featured-analysis .row {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between)
+
+        > div {
+            margin-bottom: $small-spacing;
+            @include flex(1 1 100%);
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            > div {
+                margin-bottom: 0;
+                @include flex(1 1 50%);
+            }
+        }
+
+    }
+
+    #featured-analysis {
+        max-width: $max-content-width;
+        margin: $section-spacing auto;
+
+        .row {
+            > div {
+                 @include flex(0 1 45%);
+            }
+        }
+
+        h2 {
+            font-family: $serif-font-family;
+            font-size: $section-hed-size;
+            text-decoration: underline;
+        }
+
+        .analysis {
+            background-color: $creamer;
+            padding: $small-spacing;
+
+            h3 {
+                text-transform: uppercase;
+            }
+            h5 {
+                font-style: italic;
+            }
+        }
+    }
+
+    #analysis {
+        background-color: $dark-night;
+        color: $medium-green;
+        font-family: $serif-font-family;
+
+        .inner {
+            padding-top: $section-spacing;
+            padding-bottom: $section-spacing;
+        }
+
+        h2 {
+            font-size: $major-hed-size;
+            font-weight: 400;
+            font-style: italic;
+            line-height: normal;
+            margin-bottom: $small-spacing;
+        }
+    }
+
+    #visions {
+        .poster {
+            position: relative;
+            .label {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                max-width: 55%;
+                background-color: $pale-green;
+                color: $dark-night;
+                padding: $small-spacing $large-spacing $small-spacing $large-spacing;
+
+                h3 {
+                    font-size: $section-hed-size;
+                    text-transform: uppercase;
+                    margin-bottom: 0;
+                }
+
+                p {
+                    font-family: $serif-font-family;
+                    font-size: $compact-text-size;
+                    font-style: italic;
+                    line-height: 1.25em;
+                }
+            }
+
+            &:nth-of-type(even) {
+                .label {
+                    background-color: $dark-night;
+                    color: $pale-green;
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
+@import url("https://fonts.googleapis.com/css?family=Merriweather:400,400i|Lato:400,700,900&subset=latin-ext");
 @import "variables";
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 @import "normalize";
@@ -8,6 +8,7 @@
 @import "map";
 @import "searchview";
 @import "pages";
+@import "home";
 
 
 html {
@@ -35,14 +36,22 @@ h1 {
 
 h1,h2 {
     font-family: $serif-font-family;
+
+        a {
+            text-decoration: none;
+        }
 }
 
 h3,h4,h5,h6 {
     font-family: $sans-font-family;
+
+    a {
+        text-decoration: none;
+    }
 }
 
 h2,h3,h4,h5,h6 {
-    line-height: 1.25rem;
+    line-height: 1.25em;
     margin: 0 0 0.75em;
 }
 
@@ -55,6 +64,10 @@ p {
 
     @include media($medium-break) {
         margin-bottom: 1.5rem;
+    }
+
+    &:last-of-type {
+        margin: 0;
     }
 }
 
@@ -94,6 +107,9 @@ button {
     padding: 2px 8px;
     &[disabled] {
         cursor: default;
+    }
+    a {
+        text-decoration: none;
     }
 }
 
@@ -184,7 +200,7 @@ header[role=banner] {
     }
     nav {
         float: none;
-        margin: $small-spacing auto $small-spacing*1.5 auto;
+        margin: $small-spacing auto $small-spacing*1.5 $small-spacing;
         @include media($medium-break) {
             float: right;
             margin: 45px 0 0;
@@ -198,18 +214,15 @@ header[role=banner] {
                 font-size: $nav-text-size;
                 @include media($medium-break) {
                     display: inline-block;
-                    margin: 0 0 8px 1em;
+                    margin: 0 0 $tiny-spacing*2 1em;
                 }
                 a {
-                    padding: 3px 0 2px 0.5em;
+                    padding: 3px 0 2px 0;
                     font-weight: bold;
                     text-decoration: none;
                     color: $slate-grey;
-                    border-bottom: 1px solid $slate-grey;
+                    border-bottom: 2px solid $slate-grey;
 
-                    @include media($medium-break) {
-                        padding-left: 1em;
-                    }
                 }
             }
         }
