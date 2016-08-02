@@ -39355,7 +39355,7 @@ var Map = function () {
       var _this2 = this;
 
       if (this._geoURL) {
-        fetch(this._geoURL).then(function (response) {
+        fetch(this._geoURL, { credentials: 'same-origin' }).then(function (response) {
           return response.json();
         }).then(function (json) {
           _this2._geoLoaded = true;
