@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     'facts',
     'locations',
     'infrastructure',
-    'collector',
     'website',
     'api',
 
@@ -292,11 +291,11 @@ SUIT_CONFIG = {
         '-',
         'writings',
         '-',
-        {'label': 'Collections', 'models': (
-            'collector.Collection',
-            'collector.CollectionItem',
+        {'label': 'Website', 'models': (
+            'flatpages.FlatPage',
+            'website.Collection',
+            'website.CollectionItem',
         )},
-        'flatpages',
         'sites',
         '-',
         'auth',
