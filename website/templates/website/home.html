@@ -1,5 +1,46 @@
 {% extends 'base.html' %}
 
-{% block content %}
-{% lorem 3 p %}
-{% endblock content %}
+{% block bodyclass %}home{% endblock %}
+
+{% block content-shell %}
+<section id='map' class='poster'>
+    <img src="" alt="" />
+</section>
+<section id='mission'>
+    <div class="inner">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro perspiciatis minus, modi delectus laudantium, dolorum placeat molestiae, quis praesentium veniam aperiam minima at fugiat similique, odit nostrum tempora provident dicta.</p>
+    </div>
+</section>
+<section id='analysis'>
+
+</section>
+<section id='database' class='poster'>
+    <img src="" alt="" />
+</section>
+<section id='video' class='poster'>
+</section>
+<section id='featured-analysis'>
+    <h2>Featured</h2>
+    <div class="row">{% for entry in featured_analyses.entries.all %}
+        <div class="analysis teaser">
+            <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
+            <h5>{{entry.publication_date|date}}</h5>
+            {{entry.description_rendered|safe}}
+        </div>{% endfor %}
+    </div>
+</section>
+<section id='visions'>
+    <div class="poster">
+        <div class="label">
+            <h3>Competing Visions</h3>
+            <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
+        </div>
+    </div>
+    <div class="poster">
+        <div class="label">
+            <h3>Historical Atlas</h3>
+            <p>Explore the rise and fall of trade, technology, and civilizations.</p>
+        </div>
+    </div>
+</section>
+{% endblock content-shell %}
