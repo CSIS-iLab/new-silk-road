@@ -88,6 +88,13 @@ class EntryAdmin(admin.ModelAdmin):
 class OrderedEntryInline(SortableStackedInline):
     model = OrderedEntry
     sortable = 'order'
+    readonly_fields = ('entry_published',)
+    show_change_link = True
+
+    def entry_published(self, instance):
+        return instance.entry.published
+    entry_published.description = 'Published'
+    entry_published.boolean = True
 
 
 class EntryCollectionAdmin(admin.ModelAdmin):
