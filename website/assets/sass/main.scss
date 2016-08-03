@@ -331,19 +331,26 @@ body > footer {
 
 
         .branding {
-            @include flex(0 1 50%);
+            @include flex(1 0 100%);
+            min-height: 150px;
             padding-top: $medium-spacing;
         }
         nav {
             display: block;
-            @include flex(1 0 50%);
+            min-height: 150px;
+            @include flex(1 0 100%);
         }
 
         @include media($medium-break) {
             @include flex-direction(row);
 
+            nav {
+                @include flex(1 1 auto);
+            }
+
             .branding {
-                @include flex(1 0 auto);
+                @include flex(0 1 auto);
+                min-height: auto;
                 padding-top: 0;
             }
         }
