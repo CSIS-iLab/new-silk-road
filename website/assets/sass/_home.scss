@@ -1,10 +1,16 @@
 @import "variables";
+@import "mixins";
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 
 
 .home {
     a {
         text-decoration: none;
+    }
+
+    .date {
+        font-family: $serif-font-family;
+        font-style: italic;
     }
 
     h2, h3, h4, h5, h6 {
@@ -17,6 +23,21 @@
                 padding: 10px 20px;
                 display: inline-block;
             }
+        }
+    }
+
+    > section {
+        border-bottom: $thin-dark-border;
+
+        &:last-of-type {
+            border: none;
+        }
+
+        > a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
         }
     }
 
@@ -57,6 +78,8 @@
         height: 380px;
         position: relative;
 
+        @include widows-peak($main-arrow-img, $main-arrow-width, $top: 3px);
+
         h2, h3 {
             text-shadow: 0 0 4px rgb(76, 129, 126);
             font-weight: 300;
@@ -96,6 +119,9 @@
         position: relative;
         padding: $section-spacing 0;
         font-weight: 400;
+
+        border-bottom-color: $pale-green;
+        @include widows-peak($main-arrow-img, $main-arrow-width, $top: 3px);
 
         &::before {
             content: "";
@@ -180,6 +206,7 @@
     #featured-analysis {
         max-width: $max-content-width;
         margin: $section-spacing auto;
+        border: none;
 
         .row {
             > div {
@@ -227,9 +254,21 @@
         h2 {
             font-size: $major-hed-size;
             font-weight: 400;
-            font-style: italic;
             line-height: normal;
             margin-bottom: $small-spacing;
+        }
+
+        h2, h5 {
+            font-style: italic;
+        }
+
+        h5, h3, button a {
+            color: $pale-green;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: $medium-green;
         }
     }
 

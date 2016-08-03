@@ -24,7 +24,7 @@
             TODO: Replace with actual content
         {% endcomment %}
         <h2><a href="#">A Silk Road for the 21st Century?</a></h2>
-        <h5>July 2016</h5>
+        <h5 class='date'>July 2016</h5>
         <h3>Analysis by Dr. Thomas Fingar</h3>
         <button><a href="#">Additional analysis</a></button>
     </div>
@@ -60,12 +60,12 @@
     <div class="row">
         <div class="analysis teaser">
             <h3><a href="">This will be a featured analysis</a></h3>
-            <h5>July 29, 2016</h5>
+            <h5 class='date'>July 29, 2016</h5>
             {% lorem 30 w %}
         </div>
         <div class="analysis teaser">
             <h3><a href="">This will be a featured analysis</a></h3>
-            <h5>July 29, 2016</h5>
+            <h5 class='date'>July 29, 2016</h5>
             {% lorem 30 w %}
         </div>
     </div>
@@ -73,7 +73,7 @@
     <div class="row">{% for entry in featured_analyses.entries.published %}
         <div class="analysis teaser">
             <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
-            <h5>{{entry.publication_date|date}}</h5>
+            <h5 class='date'>{{entry.publication_date|date}}</h5>
             {{entry.description_rendered|safe}}
         </div>{% endfor %}
     </div>
