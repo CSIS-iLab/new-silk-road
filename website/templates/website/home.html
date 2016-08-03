@@ -4,13 +4,14 @@
 
 {% block content-shell %}
 <section id='map' class='poster'>
-    <div class="inner">
-        <a href="{% url 'website-map' %}">
-            <h2>Explore</h2>
-            <h3>The Map</h3>
-            <img src='{% static "img/white_arrow.svg" %}' alt="Arrow button" />
-        </a>
-    </div>
+    <a href="{% url 'website-map' %}">
+        <img src="{% static 'img/banners/Megamap.jpg' %}" alt="" />
+        <div class="inner">
+                <h2>Explore</h2>
+                <h3>The Map</h3>
+                <img src='{% static "img/white_arrow.svg" %}' alt="Arrow button" />
+        </div>
+    </a>
 </section>
 <section id='mission'>
     <div class="inner">
@@ -29,34 +30,73 @@
     </div>
 </section>
 <section id='database' class='poster'>
-    <div class="inner">
-        <a href="{% url 'database-home' %}"><h2>The Database</h2></a>
-    </div>
+    <a href="{% url 'database-home' %}">
+        <img src="{% static 'img/banners/Railroad_Track.jpg' %}" alt="Landscape image featuring railroad tracks" />
+        <div class="inner">
+            <h2 class="highlighter"><span>The</span><br><span>Database</span></h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        </div>
+    </a>
 </section>
 <section id='video' class='poster'>
+    <a href="#">
+        <img src="{% static 'img/banners/Video_placeholder.jpg' %}" alt="Landscape image featuring railroad tracks" />
+        <div class="inner">
+            <blockquote>
+                <h3 class="highlighter">
+                    <span>Eurasia is the chessboard on which the struggle for global</span><br>
+                    <span>primacy continues to be played.</span><br>
+                </h3>
+                <cite>
+                    <h4 class="highlighter"><span>Zbigniew Brzezinski</span></h4>
+                </cite>
+            </blockquote>
+        </div>
+    </a>
 </section>
 <section id='featured-analysis'>
     <h2>Featured</h2>
-    <div class="row">{% for entry in featured_analyses.entries.all %}
+    {# TODO: Replace with real stuff once there is real stuff #}
+    <div class="row">
+        <div class="analysis teaser">
+            <h3><a href="">This will be a featured analysis</a></h3>
+            <h5>July 29, 2016</h5>
+            {% lorem 30 w %}
+        </div>
+        <div class="analysis teaser">
+            <h3><a href="">This will be a featured analysis</a></h3>
+            <h5>July 29, 2016</h5>
+            {% lorem 30 w %}
+        </div>
+    </div>
+    {% comment %}
+    <div class="row">{% for entry in featured_analyses.entries.published %}
         <div class="analysis teaser">
             <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
             <h5>{{entry.publication_date|date}}</h5>
             {{entry.description_rendered|safe}}
         </div>{% endfor %}
     </div>
+    {% endcomment %}
 </section>
 <section id='visions'>
     <div class="poster">
-        <div class="label">
-            <h3>Competing Visions</h3>
-            <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
-        </div>
+        <a href="{% url 'competing-visions' %}">
+            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="" />
+            <div class="label">
+                <h3>Competing Visions</h3>
+                <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
+            </div>
+        </a>
     </div>
     <div class="poster">
-        <div class="label">
-            <h3>Historical Atlas</h3>
-            <p>Explore the rise and fall of trade, technology, and civilizations.</p>
-        </div>
+        <a href="{% url 'historical-atlas' %}">
+            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="" />
+            <div class="label">
+                <h3>Historical Atlas</h3>
+                <p>Explore the rise and fall of trade, technology, and civilizations.</p>
+            </div>
+        </a>
     </div>
 </section>
 {% endblock content-shell %}

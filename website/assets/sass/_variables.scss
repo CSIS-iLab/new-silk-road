@@ -27,7 +27,7 @@ $minor-text-size: rem(16);
 $minorer-text-size: rem(14);
 $compact-text-size: rem(12);
 $nav-text-size: $minor-text-size;
-$search-text-size: rem(14);
+$search-text-size: $minorer-text-size;
 $base-line-height: 1.45em;
 $sans-font-family: Lato, $helvetica;
 $serif-font-family: Merriweather, $georgia;
@@ -38,7 +38,9 @@ $pale-green: #d6e1d6;
 $bright-green: #abd58c;
 $medium-green: #75986a;
 $serious-green: #4e736c;
+$mintier-green: #488a8d;
 $dark-night: #252d3a;
+$not-so-dark-night: #144a6f;
 $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
@@ -73,8 +75,10 @@ $banner-img-url: $img-url-base + 'banners/';
 $competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';
 $historical-atlas-img: $banner-img-url + 'Historical_Atlas_graphic.jpg';
 $megamap-img: $banner-img-url + 'Megamap.jpg';
+$database-img: $banner-img-url + 'Railroad_Track.jpg';
 
 $white-arrow-img: $img-url-base + 'white_arrow.svg';
+$blue-arrow-circle-img: $img-url-base + 'Arrow_blue_circle.svg';
 
 $database-icon-url: $img-url-base + 'database-icons/';
 $icons: (
