@@ -1,0 +1,21 @@
+
+
+@mixin widows-peak($img, $width: auto, $height: 12px) {
+    &::after {
+        content: "";
+        position: absolute;
+        background-image: url($img);
+        background-color: transparent;
+        background-clip: border-box;
+        background-position: 50% -1px;
+        background-size: $width auto;
+        background-repeat: no-repeat;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: $width;
+        height: $height;
+        z-index: 1;
+    }
+}
