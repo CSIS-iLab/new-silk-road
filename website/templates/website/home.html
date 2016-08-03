@@ -5,7 +5,7 @@
 {% block content-shell %}
 <section id='map' class='poster'>
     <a href="{% url 'website-map' %}">
-        <img src="{% static 'img/banners/Megamap.jpg' %}" alt="" />
+        {# <img src="{% static 'img/banners/Megamap.jpg' %}" alt="" />#}
         <div class="inner">
                 <h2>Explore</h2>
                 <h3>The Map</h3>
@@ -31,7 +31,7 @@
 </section>
 <section id='database' class='poster'>
     <a href="{% url 'database-home' %}">
-        <img src="{% static 'img/banners/Railroad_Track.jpg' %}" alt="Landscape image featuring railroad tracks" />
+        {# <img src="{% static 'img/banners/Railroad_Track.jpg' %}" alt="Landscape image featuring railroad tracks" />#}
         <div class="inner">
             <h2 class="highlighter"><span>The</span><br><span>Database</span></h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
@@ -40,7 +40,7 @@
 </section>
 <section id='video' class='poster'>
     <a href="#">
-        <img src="{% static 'img/banners/Video_placeholder.jpg' %}" alt="Landscape image featuring railroad tracks" />
+        {# <img src="{% static 'img/banners/Video_placeholder.jpg' %}" alt="Landscape image featuring railroad tracks" />#}
         <div class="inner">
             <blockquote>
                 <h3 class="highlighter">
@@ -55,19 +55,21 @@
     </a>
 </section>
 <section id='featured-analysis'>
-    <h2>Featured</h2>
-    {# TODO: Replace with real stuff once there is real stuff #}
-    <div class="row">
-        <div class="analysis teaser">
-            <h3><a href="">This will be a featured analysis</a></h3>
-            <h5 class='date'>July 29, 2016</h5>
-            {% lorem 30 w %}
-        </div>
-        <div class="analysis teaser">
-            <h3><a href="">This will be a featured analysis</a></h3>
-            <h5 class='date'>July 29, 2016</h5>
-            {% lorem 30 w %}
-        </div>
+    <div class="inner">
+        <h2>Featured</h2>
+        {# TODO: Replace with real stuff once there is real stuff #}
+        <div class="row">
+            <div class="analysis teaser">
+                <h3><a href="">This will be a featured analysis</a></h3>
+                <h5 class='date'>July 29, 2016</h5>
+                <p>{% lorem 30 w %}</p>
+            </div>
+            <div class="analysis teaser">
+                <h3><a href="">This will be a featured analysis</a></h3>
+                <h5 class='date'>July 29, 2016</h5>
+                <p>{% lorem 30 w %}</p>
+            </div>
+    </div>
     </div>
     {% comment %}
     <div class="row">{% for entry in featured_analyses.entries.published %}

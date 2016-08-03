@@ -10,6 +10,7 @@
         background-size: $width $height;
         background-repeat: no-repeat;
         background-position: 0 $top;
+        bottom: -($height + $top);
         left: 0;
         right: 0;
         margin-left: auto;
@@ -18,4 +19,8 @@
         height: ($height + $top);
         z-index: 1;
     }
+}
+
+@mixin background-poster($img) {
+    background: no-repeat center/cover url($img);
 }

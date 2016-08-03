@@ -232,6 +232,7 @@ header[role=banner] {
 
 .widows-peak {
     display: block;
+    position: relative;
     @include widows-peak($main-arrow-img, $main-arrow-width);
 }
 
@@ -314,6 +315,7 @@ article > header.decorated {
 
 body > footer {
     @include position(relative);
+    display: block;
 
     border-top: $thin-dark-border;
     color: $dark-night;
@@ -327,11 +329,13 @@ body > footer {
         @include justify-content(space-between);
         @include align-items(stretch);
 
+
         .branding {
             @include flex(0 1 50%);
             padding-top: $medium-spacing;
         }
         nav {
+            display: block;
             @include flex(1 0 50%);
         }
 
@@ -339,6 +343,7 @@ body > footer {
             @include flex-direction(row);
 
             .branding {
+                @include flex(1 0 auto);
                 padding-top: 0;
             }
         }
