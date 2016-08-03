@@ -82,7 +82,7 @@ gulp.task('sass:build', function () {
 
 gulp.task('svg', function () {
     var svgDest = destBase + '/img'
-    return gulp.src(assetsBase + '/svg/*.svg')
+    return gulp.src(assetsBase + '/svg/**/*.svg')
         .pipe(svgmin({
             plugins: [{
                 removeTitle: true
