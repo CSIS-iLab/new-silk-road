@@ -5,7 +5,6 @@
 {% block content-shell %}
 <section id='map' class='poster'>
     <a href="{% url 'website-map' %}">
-        {# <img src="{% static 'img/banners/Megamap.jpg' %}" alt="" />#}
         <div class="inner">
                 <h2>Explore</h2>
                 <h3>The Map</h3>
@@ -15,7 +14,7 @@
 </section>
 <section id='mission'>
     <div class="inner">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro perspiciatis minus, modi delectus laudantium, dolorum placeat molestiae, quis praesentium veniam aperiam minima at fugiat similique, odit nostrum tempora provident dicta.</p>
+        <p><strong>Reconnecting Asia</strong> maps new linkages&ndash;roads, railways, and other hard infrastructure&ndash;that are reshaping economic and geopolitical realities across the continent. Through data curation and objective analysis, the project aims to fill Asia's infrastructure-information gap, squaring lofty ambitions with facts on the ground.</p>
     </div>
 </section>
 <section id='analysis'>
@@ -31,16 +30,14 @@
 </section>
 <section id='database' class='poster'>
     <a href="{% url 'database-home' %}">
-        {# <img src="{% static 'img/banners/Railroad_Track.jpg' %}" alt="Landscape image featuring railroad tracks" />#}
         <div class="inner">
             <h2 class="highlighter"><span>The</span><br><span>Database</span></h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+            <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
         </div>
     </a>
 </section>
 <section id='video' class='poster'>
     <a href="#">
-        {# <img src="{% static 'img/banners/Video_placeholder.jpg' %}" alt="Landscape image featuring railroad tracks" />#}
         <div class="inner">
             <blockquote>
                 <h3 class="highlighter">
@@ -60,16 +57,16 @@
         {# TODO: Replace with real stuff once there is real stuff #}
         <div class="row">
             <div class="analysis teaser">
-                <h3><a href="">This will be a featured analysis</a></h3>
-                <h5 class='date'>July 29, 2016</h5>
-                <p>{% lorem 30 w %}</p>
+                <h3><a href="">What Rio can learn from Russia</a></h3>
+                <h5 class='date'>27 June 2016</h5>
+                <p>As the 2016 Summer Games approach, this $1.4 billion road in Sochi highlights how embezzlement can plague Olympic preparations.</p>
             </div>
             <div class="analysis teaser">
-                <h3><a href="">This will be a featured analysis</a></h3>
-                <h5 class='date'>July 29, 2016</h5>
-                <p>{% lorem 30 w %}</p>
+                <h3><a href="">Vying for the next Dubai</a></h3>
+                <h5 class='date'>25 June 2016</h5>
+                <p>Touted as a "New Dubai" and a "game-changing development," this dry port and logis cs center on the Kazakhstan-China border could be a bellwether for other ambitious One Belt, One Road projects.</p>
             </div>
-    </div>
+        </div>
     </div>
     {% comment %}
     <div class="row">{% for entry in featured_analyses.entries.published %}

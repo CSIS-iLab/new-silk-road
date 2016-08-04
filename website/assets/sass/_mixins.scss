@@ -1,6 +1,7 @@
 
 
 @mixin widows-peak($img, $width: auto, $height: 12px, $top: 0px) {
+    $offset: $height + $top + 0.5;
     &::after {
         content: "";
         position: absolute;
@@ -10,13 +11,13 @@
         background-size: $width $height;
         background-repeat: no-repeat;
         background-position: 0 $top;
-        bottom: -($height + $top);
+        bottom: -$offset;
         left: 0;
         right: 0;
         margin-left: auto;
         margin-right: auto;
         width: $width;
-        height: ($height + $top);
+        height: $offset;
         z-index: 1;
     }
 }

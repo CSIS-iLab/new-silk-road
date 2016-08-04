@@ -20,7 +20,10 @@ body {
     font: 1rem $sans-font-family;
     line-height: $base-line-height;
     color: $gravel-grey;
-    @include font-feature-settings("liga", "kern");
+    font-variant-ligatures: common-ligatures;
+    -webkit-font-variant-ligatures: common-ligatures;
+    font-kerning: auto;
+    -webkit-font-kerning: auto;
 }
 
 a {

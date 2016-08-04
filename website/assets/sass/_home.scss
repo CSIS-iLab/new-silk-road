@@ -15,12 +15,13 @@
 
     h2, h3, h4, h5, h6 {
         font-family: $sans-font-family;
+        font-weight: 300;
 
         &.highlighter {
             display: block;
 
             span {
-                padding: 10px 20px;
+                padding: 10px;
                 display: inline-block;
             }
         }
@@ -89,7 +90,8 @@
 
         @include background-poster($megamap-img);
 
-        @include widows-peak($main-arrow-img, $main-arrow-width, $top: 3px);
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $dark-green-line;
 
         h2, h3 {
             text-shadow: 0 0 4px rgb(76, 129, 126);
@@ -137,8 +139,8 @@
         padding: $section-spacing 0;
         font-weight: 400;
 
-        border-bottom-color: $pale-green;
-        @include widows-peak($main-arrow-img, $main-arrow-width, $top: 3px);
+        @include widows-peak($light-green-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $light-green-line;
 
         &::before {
             content: "";
@@ -159,6 +161,21 @@
 
         .inner {
             background-color: #FFF;
+
+            padding: $medium-spacing;
+
+            @include media($medium-break) {
+                padding: 29px;
+            }
+        }
+
+        p {
+            font-size: rem(24);
+            font-weight: 100;
+            strong {
+                font-size: rem(31);
+                text-transform: uppercase;
+            }
         }
 
     }
@@ -169,13 +186,14 @@
 
         > div {
             display: block;
-            min-height: 300px;
+            min-height: 240px;
             @include flex(1 0 100%);
         }
 
         @include media($medium-break) {
             @include flex-direction(row);
             > div {
+                min-height: 200px;
                 margin-bottom: 0;
                 @include flex(1 1 50%);
             }
@@ -186,6 +204,9 @@
     #database {
         height: 400px;
         @include background-poster($database-img);
+
+        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $dark-blue-line;
 
         .inner {
             position: absolute;
@@ -268,6 +289,9 @@
         color: $medium-green;
         font-family: $serif-font-family;
 
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $dark-green-line;
+
         .inner {
             padding-top: $section-spacing;
             padding-bottom: $section-spacing;
@@ -289,18 +313,43 @@
         }
 
         button {
-            padding: 8px 12px;
             background-color: $medium-green;
+            position: relative;
+            height: 38px;
+            padding: 0 20px;
+            margin-top: 20px;
+
+            &::before {
+                position: absolute;
+                left: -8px;
+                top: 0;
+                content: url($button-left-endcap);
+                width: 8px;
+                height: 37px;
+            }
+            &::after {
+                position: absolute;
+                right: -8px;
+                top: 0;
+                content: url($button-right-endcap);
+                width: 8px;
+                height: 37px;
+            }
         }
     }
 
     #video {
-        height: 400px;
+        height: 500px;
         @include background-poster($video-img);
 
+        @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $medium-blue-line;
+
+
+
         .inner {
-            position: relative;;
-            margin-top: $section-spacing;
+            position: relative;
+            margin-top: $section-spacing * 1.5;
             text-align: center;
 
             cite {
@@ -312,10 +361,12 @@
                 span {
                     color: white;
                     background-color: $not-so-dark-night;
+                    padding: 7px 20px;
                 }
             }
 
             h3 {
+                font-size: $section-hedier-size;
 
                 span {
                     color: white;
@@ -357,8 +408,6 @@
                 top: 50%;
                 left: 0;
                 max-width: 90%;
-                background-color: $pale-green;
-                color: $dark-night;
                 padding: $small-spacing;
 
                 @include media($medium-break) {
@@ -378,7 +427,6 @@
                     }
 
                     &::after {
-                        content: url($blue-arrow-circle-img);
                         width: 26px;
                         height: 27px;
                         display: block;
@@ -402,10 +450,29 @@
 
             }
 
+            &:nth-of-type(odd) {
+                .label {
+                    background-color: $pale-green;
+                    color: $dark-night;
+
+                    h3 {
+                        &::after {
+                            content: url($blue-arrow-circle-img);
+                        }
+                    }
+                }
+            }
+
             &:nth-of-type(even) {
                 .label {
                     background-color: $dark-night;
                     color: $pale-green;
+
+                    h3 {
+                        &::after {
+                            content: url($green-arrow-circle-img);
+                        }
+                    }
                 }
             }
         }

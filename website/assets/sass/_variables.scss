@@ -23,6 +23,7 @@ $major-hed-size: rem(40);
 $mid-hed-size: rem(22);
 $mid-text-size: rem($base-font-size);
 $section-hed-size: rem(26);
+$section-hedier-size: rem(28);
 $minor-text-size: rem(16);
 $minorer-text-size: rem(14);
 $compact-text-size: rem(12);
@@ -47,6 +48,11 @@ $gravel-grey: #58585a;
 $creamer: #eee8e4;
 $searchheader-color: #323c49;
 $placeholder-color: #788da9;
+// All the colors used for lines on the homepage.
+$dark-green-line: #50736C;
+$light-green-line: #D7DFD4;
+$dark-blue-line: #252D3A;
+$medium-blue-line: #16496F;
 
 // Image URLs
 $img-url-base: '/static/img/';
@@ -55,6 +61,10 @@ $banner-bg-img: $img-url-base + 'topographic_texture.svg';
 $banner-bg-img-ie11: $img-url-base + 'topographic_texture.png';
 $banner-img-size: 300px;
 $main-arrow-img: $img-url-base + 'main-triangle.svg';
+$dark-green-arrow-img: $img-url-base + 'Arrow_1.svg';
+$light-green-arrow-img: $img-url-base + 'Arrow_2.svg';
+$dark-blue-arrow-img: $img-url-base + 'Arrow_4.svg';
+$medium-blue-arrow-img: $img-url-base + 'Arrow_5.svg';
 $main-arrow-width: 55px;
 $small-arrow-img: $img-url-base + 'small-triangle.svg';
 $small-arrow-width: 35px;
@@ -80,6 +90,11 @@ $video-img: $banner-img-url + 'Video_placeholder.jpg';
 
 $white-arrow-img: $img-url-base + 'white_arrow.svg';
 $blue-arrow-circle-img: $img-url-base + 'Arrow_blue_circle.svg';
+$green-arrow-circle-img: $img-url-base + 'Arrow_green_circle.svg';
+
+// button stuff
+$button-left-endcap: $img-url-base + 'Left_endcap.svg';
+$button-right-endcap: $img-url-base + 'Right_endcap.svg';
 
 $database-icon-url: $img-url-base + 'database-icons/';
 $icons: (
