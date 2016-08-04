@@ -34,22 +34,32 @@
     </section>
 {% endif %}
     <section class="details">
+        <h1>{{ object.name }}</h1>
+
         <div class="row">
             <section>
-                <h3>Countries</h3>
+                <h3>Locations</h3>
                 <ul class="clean">{% for country in object.countries.all %}
                     <li><a href="{% url 'infrastructure:country-project-list' country_slug=country.slug %}">{{ country.name }}</a></li>{% endfor %}
                 </ul>
             </section>
             <section>
-                <h3>Regions</h3>
-                <ul class="clean">{% for region in object.regions.all %}
-                    <li>{{ region.name }}</li>{% endfor %}
-                </ul>
-            </section>
-            <section>
                 <h3>Type</h3>
                 <p>{{ object.infrastructure_type.name }}</p>
+            </section>
+            <section>
+                <h3>Status</h3>
+                <p>{{ object.get_status_display|default:'&mdash;' }}</p>
+            </section>
+            <section>
+                <h3>Total Reported Cost</h3>
+                {% spaceless %}
+                {% if object.total_cost %}
+                <p>{{ object.total_cost|intword }} {{ object.total_cost_currency|default:"(Unspecified currency)" }}</p>
+                {% else %}
+                <p>&mdash;</p>
+                {% endif %}
+                {% endspaceless %}
             </section>
             <section>
                 <h3>Initiatives</h3>
@@ -64,20 +74,6 @@
         </div>
         <div class="row">
             <section>
-                <h3>Total Reported Cost</h3>
-                {% spaceless %}
-                {% if object.total_cost %}
-                <p>{{ object.total_cost|intword }} {{ object.total_cost_currency|default:"(Unspecified currency)" }}</p>
-                {% else %}
-                <p>&mdash;</p>
-                {% endif %}
-                {% endspaceless %}
-            </section>
-            <section>
-                <h3>Status</h3>
-                <p>{{ object.get_status_display|default:'&mdash;' }}</p>
-            </section>
-            <section>
                 <h3>Start Date</h3>
                 <p>{{object.fuzzy_start_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
@@ -90,9 +86,34 @@
                 <p>{{object.fuzzy_planned_completion_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
         </div>
+        <div class="row">
+            <section class="compressible">
+                <h3>Contractors</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.contractors.all %}
+            </section>
+            <section class="compressible">
+                <h3>Consultants</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.consultants.all %}
+            </section>
+        </div>
+        <div class="row">
+            <section class="compressible">
+                <h3>Implementers</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.implementers.all %}
+            </section>
+            <section class="compressible">
+                <h3>Operators</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.operators.all %}
+            </section>
+        </div>
+        <section>
+            <h3>Funders</h3>
+            {% include "infrastructure/_project_funding_list.html" with funding_list=object.funding.all %}
+        </section>
     </section>
     {% if object.description_rendered %}
-    <section class="notes">
+    <section class="description">
+        <h3>Description</h3>
     {{ object.description_rendered|safe }}
     </section>
     {% endif %}
@@ -131,33 +152,6 @@
 {% endfor %}
 {% endcomment %}
         </div>
-    </section>
-    <section>
-        <h2>Explore Related People &amp; Organizations</h2>
-        <div class="row">
-            <section class="col-6">
-                <h3>Contractors</h3>
-                {% include "infrastructure/_related_organization_list.html" with organization_list=object.contractors.all %}
-            </section>
-            <section class="col-6">
-                <h3>Consultants</h3>
-                {% include "infrastructure/_related_organization_list.html" with organization_list=object.consultants.all %}
-            </section>
-        </div>
-        <div class="row">
-            <section class="col-6">
-                <h3>Implementers</h3>
-                {% include "infrastructure/_related_organization_list.html" with organization_list=object.implementers.all %}
-            </section>
-            <section class="col-6">
-                <h3>Operators</h3>
-                {% include "infrastructure/_related_organization_list.html" with organization_list=object.operators.all %}
-            </section>
-        </div>
-        <section>
-            <h3>Funders</h3>
-            {% include "infrastructure/_project_funding_list.html" with funding_list=object.funding.all %}
-        </section>
     </section>
 </article>
 {% endblock %}

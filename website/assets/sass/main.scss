@@ -296,10 +296,10 @@ article > header.decorated {
         }
 
         background-image: url($img);
-        @include decorated-bg;
+        @include decorated-bg($decorated-bg-size);
 
         h1 {
-            padding: 12px 0 12px 80px;
+            padding: 12px 0 12px 100px;
         }
     }
 }

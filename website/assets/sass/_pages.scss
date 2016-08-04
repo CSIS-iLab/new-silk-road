@@ -1,4 +1,5 @@
 @import "variables";
+@import "mixins";
 @import "lib/neat/neat";
 article {
     section {
@@ -51,7 +52,7 @@ article {
             border-bottom: 2px solid $slate-grey;
         }
         @include media($medium-break) {
-            &:nth-child(odd) h3 {
+            &:first-of-type h3 {
                 color: $medium-green;
                 border-bottom: 2px solid $medium-green;
             }
@@ -60,29 +61,38 @@ article {
             @include flex(0 1 auto);
             margin-bottom: $small-spacing;
 
-            @include media($large-break) {
-                padding-left: $large-spacing * 1.5;
-            }
-
-            &:first-of-type {
-                padding-left: 0;
-            }
-
             &.multidimensional {
-                flex: 1 1 auto;
+                @include flex(0 1 auto);
 
                 table {
                     width: 100%;
                 }
             }
+
+            &.compressible {
+                @include flex(1 1 100%);
+            }
+
         }
         @include media($medium-break) {
             @include flex-direction(row);
             @include flex-wrap(wrap);
+            ul {
+                max-width: $max-content-width/4;
+            }
         }
         @include media($large-break) {
             @include flex-wrap(nowrap);
         }
+    }
+}
+
+.description {
+    h3 {
+        text-transform: none;
+    }
+    p {
+        font-size: $minor-text-size;
     }
 }
 
@@ -137,10 +147,4 @@ article {
             }
         }
     }
-}
-
-@mixin decorated-bg {
-    background-repeat: no-repeat;
-    background-size: $decorated-bg-size $decorated-bg-size; // IE 11 won't render properly unless both dimensions set
-    background-position: 0 center;
 }

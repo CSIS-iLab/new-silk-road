@@ -25,3 +25,9 @@
 @mixin background-poster($img) {
     background: no-repeat center/cover url($img);
 }
+
+@mixin decorated-bg($size) {
+    background-repeat: no-repeat;
+    background-size: $size $size; // IE 11 won't render properly unless both dimensions set
+    background-position: 0 center;
+}
