@@ -13,6 +13,7 @@ You'll need to create a .env file with values for `SECRET_KEY` and `DATABASE_URL
 
 If you want to test file handling, you'll need to set the various AWS settings for a test bucket.
 
+If you want to develop Sass/CSS or JavaScript, you should also (have node installed and then) run `npm i` so you get all of the build dependencies for running the Gulp build commands. See `gulpfile.js` and `package.json` for more info.
 
 ### Dependencies
 
