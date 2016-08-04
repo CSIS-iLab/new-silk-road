@@ -218,6 +218,7 @@
                 font-size: rem(49);
                 text-transform: uppercase;
                 margin-bottom: 0;
+                position: relative;
 
                 span {
                     color: #FFF;
@@ -233,7 +234,18 @@
                         padding-top: $tiny-spacing;
                         top: -10px;
                     }
+
+                    &:last-child {
+                        &::after {
+                            position: absolute;
+                            content: url($database-arrow-img);
+                            width: 16px;
+                            height: 30px;
+                            right: -24px;
+                        }
+                    }
                 }
+
             }
 
             p {
@@ -317,7 +329,7 @@
             position: relative;
             height: 38px;
             padding: 0 20px;
-            margin-top: 20px;
+            margin: 20px 8px 0;
 
             &::before {
                 position: absolute;
@@ -427,14 +439,15 @@
                     }
 
                     &::after {
-                        width: 26px;
+                        width: 27px;
                         height: 27px;
                         display: block;
                         position: absolute;
-                        top: 18px;
+                        top: 12px;
                         right: 8px;
 
                         @include media($medium-break) {
+                            top: 18px;
                             right: 18px;
                         }
 
