@@ -37,6 +37,9 @@ class EventAdmin(admin.ModelAdmin):
     actions = [make_published, make_not_published]
     fieldsets = (
         (None, {
+            'fields': ('published',)
+        }),
+        (None, {
             'fields': (
                 ('name', 'slug'),
                 ('start_year', 'start_month', 'start_day'),

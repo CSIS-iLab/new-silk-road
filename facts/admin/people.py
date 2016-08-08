@@ -42,6 +42,9 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonForm
     readonly_fields = ('identifier',)
     fieldsets = (
+        (None, {
+            'fields': ('published',)
+        }),
         ('Basic Details', {
             'fields': (
                 'identifier',
