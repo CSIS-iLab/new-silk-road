@@ -321,6 +321,8 @@ CONSTANCE_CONFIG = {
     ),
 }
 
+PUBLISH_FILTER_ENABLED = os.getenv('PUBLISH_FILTER_ENABLED', 'True') != 'False'
+
 # markymark
 MARKYMARK_EXTENSIONS = [
     'markymark.extensions.contrib.filer',
