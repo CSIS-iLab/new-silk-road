@@ -1,8 +1,7 @@
 from django.views.generic import TemplateView
 from constance import config
 from writings.models import EntryCollection
-
-FEATURED_ANALYSES_COLLECTION = getattr(config, 'FEATURED_ANALYSES_COLLECTION', None)
+from website.models import Collection
 
 
 class HomeView(TemplateView):
@@ -11,9 +10,10 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
         kwargs['featured_analyses'] = None
-        if FEATURED_ANALYSES_COLLECTION:
+        collection_slug = getattr(config, 'FEATURED_ANALYSES_COLLECTION', None)
+        if collection_slug:
             try:
-                kwargs['featured_analyses'] = EntryCollection.objects.get(slug=FEATURED_ANALYSES_COLLECTION)
+                kwargs['featured_analyses'] = EntryCollection.objects.get(slug=collection_slug)
             except EntryCollection.DoesNotExist:
                 pass
         return kwargs
@@ -21,3 +21,14 @@ class HomeView(TemplateView):
 
 class DatabaseView(TemplateView):
     template_name = "website/database.html"
+
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['featured_items'] = None
+        collection_slug = getattr(config, 'FEATURED_DATABASE_COLLECTION', None)
+        if collection_slug:
+            try:
+                kwargs['featured_items'] = Collection.objects.get(slug=collection_slug)
+            except Collection.DoesNotExist:
+                pass
+        return kwargs

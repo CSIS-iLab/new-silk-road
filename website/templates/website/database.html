@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block pagetitle %}
+The Database | {{ block.super }}
+{% endblock %}
+
+
 {% block bodyclass %}database-landing{% endblock %}
 
 {% block content %}
@@ -8,18 +13,28 @@
     </header>
     <section role="search" class="search">
         <form>
-            <select class="" name="">
-                <option value="option">option</option>
-            </select>
+            <ul class='dropdown'>
+                <li>Categories</li>
+            </ul>
             <div class="searchBar">
                 <input type="text" class="primary" name="name" value="">
                 <button type="button" name="search">Search</button>
             </div>
         </form>
     </section>
-    <section class="featured">
+    <section class="columnar">
         <h2>Featured Entries</h2>
-        {% lorem 2 p %}
+        <div class="wrap">
+            {% for item in featured_items.items.all %}{% with item.content_object as object %}
+            <div class="panel">
+                <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
+                {{object.description_rendered|safe|truncatewords_html:100}}
+                <p><a href="{{object.get_absolute_url}}">Read More</a></p>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+
     {% comment %}
         TODO: Featured item selector.
     {% endcomment %}
