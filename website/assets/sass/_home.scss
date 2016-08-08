@@ -260,7 +260,6 @@
 
     #featured-analysis {
         max-width: $max-content-width;
-        margin: $section-spacing auto;
         border: none;
 
         .row {
@@ -281,18 +280,6 @@
             font-family: $serif-font-family;
             font-size: $section-hed-size;
             text-decoration: underline;
-        }
-
-        .analysis {
-            background-color: $creamer;
-            padding: $small-spacing;
-
-            h3 {
-                text-transform: uppercase;
-            }
-            h5 {
-                font-style: italic;
-            }
         }
     }
 

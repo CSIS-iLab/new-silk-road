@@ -1,6 +1,50 @@
 @import "variables";
 @import "mixins";
 @import "lib/neat/neat";
+
+
+.panel {
+    background-color: $creamer;
+    padding: $medium-spacing;
+
+    h3 {
+        text-transform: uppercase;
+    }
+    h5 {
+        font-style: italic;
+    }
+}
+
+section.columnar {
+    margin: $section-spacing auto;
+
+    .wrap {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between)
+
+        > div {
+            display: block;
+            min-height: 240px;
+            @include flex(1 0 100%);
+            margin-bottom: $medium-spacing;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            > div {
+                min-height: 200px;
+                margin-bottom: 0;
+                @include flex(0 1 48%);
+            }
+        }
+    }
+}
+
 article {
     section {
         > img {
