@@ -26,11 +26,13 @@ The Database | {{ block.super }}
         <h2>Featured Entries</h2>
         <div class="wrap">
             {% for item in featured_items.items.all %}{% with item.content_object as object %}
-            <div class="panel">
+            <section class="panel">
                 <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
                 {{object.description_rendered|safe|truncatewords_html:100}}
-                <p><a href="{{object.get_absolute_url}}">Read More</a></p>
-            </div>
+                <footer>
+                    <p><a href="{{object.get_absolute_url}}">Read More</a></p>
+                </footer>
+            </section>
             {% endwith %}
             {% endfor %}
         </div>

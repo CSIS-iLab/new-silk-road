@@ -4,14 +4,20 @@
 
 
 .panel {
+    position: relative;
     background-color: $creamer;
-    padding: $medium-spacing;
+    padding: $medium-spacing $medium-spacing (3*$medium-spacing);
 
     h3 {
         text-transform: uppercase;
     }
     h5 {
         font-style: italic;
+    }
+
+    footer {
+        position: absolute;
+        bottom: $medium-spacing;
     }
 }
 
@@ -23,7 +29,7 @@ section.columnar {
         @include flex-direction(column);
         @include justify-content(space-between)
 
-        > div {
+        > div, > section {
             display: block;
             min-height: 240px;
             @include flex(1 0 100%);
@@ -36,7 +42,7 @@ section.columnar {
 
         @include media($medium-break) {
             @include flex-direction(row);
-            > div {
+            > div, > section {
                 min-height: 200px;
                 margin-bottom: 0;
                 @include flex(0 1 48%);
