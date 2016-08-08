@@ -68,11 +68,21 @@ export default class GeoStyles {
           'line-color': '#65bc46',
         }
       }),
+      dryport: objectMerge(pointStyle, {
+        layout: {
+          'icon-image': 'Dryport',
+        },
+      }),
+      multimodal: objectMerge(pointStyle, {
+        layout: {
+          'icon-image': 'Dryport',
+        },
+      }),
     };
 
     this._compatibilityTable = {
       'lines': new Set(['rail', 'road', 'pipeline', 'ict']),
-      'points': new Set(['seaport',]),
+      'points': new Set(['seaport', 'dryport']),
       'polygons': new Set([]),
     }
   }
