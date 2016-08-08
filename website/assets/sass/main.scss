@@ -239,7 +239,7 @@ header[role=banner] {
     @include widows-peak($main-arrow-img, $main-arrow-width);
 }
 
-article > header.decorated {
+header.decorated {
     position: relative;
 
     border-bottom: $thick-border-width solid $blue-steel;
@@ -285,7 +285,7 @@ article > header.decorated {
 
 @each $name, $img in $icons
 {
-    header.#{$name} {
+    header.#{$name}, section.#{$name} {
         min-height: 120px;
 
         &.decorated {
@@ -300,6 +300,20 @@ article > header.decorated {
 
         h1 {
             padding: 12px 0 12px 100px;
+        }
+    }
+
+    section.#{$name} {
+        @include decorated-bg($medium-decorated-bg-size);
+        background-position: 20px center;
+        padding-left: $medium-decorated-bg-size + 40px;
+        font-size: $minor-text-size;
+        line-height: 1.25em;
+
+        @include media($large-break) {
+            background-size: $large-decorated-bg-size $large-decorated-bg-size;
+
+            padding-left: 220px;
         }
     }
 }

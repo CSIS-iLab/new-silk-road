@@ -5,7 +5,7 @@ The Database | {{ block.super }}
 {% endblock %}
 
 
-{% block bodyclass %}database-landing{% endblock %}
+{% block bodyclass %}database{% endblock %}
 
 {% block content %}
     <header class="decorated">
@@ -13,11 +13,9 @@ The Database | {{ block.super }}
     </header>
     <section role="search" class="search">
         <form>
-            <ul class='dropdown'>
-                <li>Categories</li>
-            </ul>
+            <button type="button" class="dropdown" name="category">Categories</button>
             <div class="searchBar">
-                <input type="text" class="primary" name="name" value="">
+                <input type="text" class="primary" name="name" value="" placeholder="Search the database">
                 <button type="button" name="search">Search</button>
             </div>
         </form>
@@ -26,7 +24,7 @@ The Database | {{ block.super }}
         <h2>Featured Entries</h2>
         <div class="wrap">
             {% for item in featured_items.items.all %}{% with item.content_object as object %}
-            <section class="panel">
+            <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
                 <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
                 {{object.description_rendered|safe|truncatewords_html:100}}
                 <footer>

@@ -27,7 +27,7 @@ section.columnar {
     .wrap {
         @include display(flex);
         @include flex-direction(column);
-        @include justify-content(space-between)
+        @include justify-content(space-between);
 
         > div, > section {
             display: block;
@@ -42,10 +42,13 @@ section.columnar {
 
         @include media($medium-break) {
             @include flex-direction(row);
+            @include flex-wrap(wrap);
             > div, > section {
                 min-height: 200px;
-                margin-bottom: 0;
                 @include flex(0 1 48%);
+                &:last-of-type {
+                    margin-bottom: $medium-spacing;
+                }
             }
         }
     }
@@ -160,17 +163,76 @@ article {
 }
 
 
-.database-landing {
+.database {
     .content-wrap {
         header {
             h1 {
                 text-align: center;
             }
         }
-
         nav {
+            a {
 
+            }
         }
+    }
+
+    .search {
+        margin: $section-spacing 0;
+
+        form {
+            width: 55%;
+            margin: 0 auto;
+            @include justify-content(space-between);
+            @include align-items(center);
+        }
+        .searchBar {
+            border: 2px solid $pale-green;
+            background-color: #363d4e;
+
+            input {
+                background-color: #363d4e;
+                padding: $small-spacing;
+            }
+
+            button[name='search'] {
+                @include hide-text;
+                padding: 0;
+                margin-right: 8px;
+                background: url($search-btn-active-img) center no-repeat;
+                width: $search-btn-width;
+
+                &[disabled] {
+                    background: url($search-btn-inactive-img) center no-repeat;
+                }
+            }
+        }
+        button.dropdown {
+            font-family: $serif-font-family;
+            color: $pale-green;
+            background-color: $slate-grey;
+            background-image: url($expand-btn-img);
+            background-position: 94% center;
+            background-repeat: no-repeat;
+            background-size: $expand-collapse-btn-width auto;
+
+            height: 32px;
+            margin: 0;
+            padding: 3px 28px 3px 8px;
+
+            &::after {
+                content: "";
+                margin-left: 6px;
+                border-left: 2px solid rgba(0, 0, 0, 0.2);
+            }
+        }
+
+    }
+
+    a.button {
+        font-size: $section-hed-size;
+        color: $pale-green;
+        padding: $tiny-spacing $section-spacing;
     }
 }
 
@@ -183,6 +245,7 @@ article {
         @include media($medium-break) {
             @include flex-direction(row);
             @include justify-content(space-around);
+            margin: 0;
         }
 
         li {
@@ -190,6 +253,7 @@ article {
 
             @include media($medium-break) {
                 @include flex(0 1 auto);
+                margin: 0;
             }
 
             a.button {

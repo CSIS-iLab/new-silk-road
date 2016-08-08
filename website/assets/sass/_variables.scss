@@ -115,6 +115,8 @@ $icons: (
     'person': $database-icon-url + 'Person.svg'
 );
 $decorated-bg-size: 80px;
+$medium-decorated-bg-size: $decorated-bg-size * 1.3;
+$large-decorated-bg-size: 172px;
 
 // Reusables
 
