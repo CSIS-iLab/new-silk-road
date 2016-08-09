@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% load markymark %}
+
+{% block pagetitle %}{{ flatpage.title}} | {{ block.super }}{% endblock %}
+
+{% block content %}
+{{ flatpage.content|markdown }}
+{% endblock %}
