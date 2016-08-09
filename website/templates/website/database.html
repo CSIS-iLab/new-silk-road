@@ -20,6 +20,7 @@ The Database | {{ block.super }}
             </div>
         </form>
     </section>
+    {% if featured_items %}
     <section class="columnar">
         <h2>Featured Entries</h2>
         <div class="wrap">
@@ -34,13 +35,12 @@ The Database | {{ block.super }}
                 </div>
             </section>
             {% endwith %}
+            {% empty %}
+            <!-- No featured_items?!? -->
             {% endfor %}
         </div>
-
-    {% comment %}
-        TODO: Featured item selector.
-    {% endcomment %}
     </section>
+    {% endif %}
     <nav role="navigation">
         <ul>
             <li><a class="button" href="">Glossary</a></li>
