@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load markymark %}
+{% extends "base.html" %}
 
 {% block content %}
 <article>
@@ -8,7 +8,7 @@
         <li>{{ object.end_date }}</li>
     </ul>
     <section class='description'>
-{{ object.description|markdown }}
+{{ object.description_rendered }}
     </section>
 </article>
 {% endblock %}

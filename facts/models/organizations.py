@@ -40,6 +40,7 @@ class Organization(MPTTModel, Publishable):
     staff_size = models.PositiveIntegerField("Staff/Personnel count",
                                              blank=True, null=True)
     mission = MarkdownField("Mandate/Mission Statement", blank=True)
+    mission_rendered = models.TextField(blank=True, editable=False)
     related_organizations = models.ManyToManyField('self', blank=True)
 
     documents = models.ManyToManyField('sources.Document', blank=True)
@@ -59,6 +60,7 @@ class Organization(MPTTModel, Publishable):
 
     def save(self, *args, **kwargs):
         self.description_rendered = render_markdown(self.description)
+        self.mission_rendered = render_markdown(self.mission)
         if not self.slug or self.slug == '':
             self.slug = slugify(self.name, allow_unicode=True)
         super(Organization, self).save(*args, **kwargs)
