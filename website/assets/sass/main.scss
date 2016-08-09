@@ -246,6 +246,8 @@ header.decorated {
     margin-bottom: 25px;
     padding-bottom: 25px;
     display: block;
+    min-height: 120px;
+    height: 100px;
 
     @include display(flex);
     @include flex-direction(column);
