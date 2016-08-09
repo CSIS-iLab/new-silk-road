@@ -306,14 +306,20 @@ header.decorated {
     section.#{$name} {
         @include decorated-bg($medium-decorated-bg-size);
         background-position: 20px center;
-        padding-left: $medium-decorated-bg-size + 40px;
         font-size: $minor-text-size;
         line-height: 1.25em;
+        padding: 0;
+
+        .inner {
+            padding: $medium-spacing $medium-spacing (3*$medium-spacing) $medium-decorated-bg-size + 40px;
+        }
 
         @include media($large-break) {
             background-size: $large-decorated-bg-size $large-decorated-bg-size;
 
-            padding-left: 220px;
+            .inner {
+                padding-left: 220px;
+            }
         }
     }
 }

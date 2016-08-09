@@ -25,11 +25,13 @@ The Database | {{ block.super }}
         <div class="wrap">
             {% for item in featured_items.items.all %}{% with item.content_object as object %}
             <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
-                <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
-                {{object.description_rendered|safe|truncatewords_html:100}}
-                <footer>
-                    <p><a href="{{object.get_absolute_url}}">Read More</a></p>
-                </footer>
+                <div class="inner">
+                    <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
+                    {{object.description_rendered|safe|truncatewords_html:100}}
+                    <footer>
+                        <p><a href="{{object.get_absolute_url}}">Read More</a></p>
+                    </footer>
+                </div>
             </section>
             {% endwith %}
             {% endfor %}
