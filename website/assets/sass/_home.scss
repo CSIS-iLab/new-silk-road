@@ -234,17 +234,21 @@
                         padding-top: $tiny-spacing;
                         top: -10px;
                     }
-
-                    &:last-child {
-                        &::after {
-                            position: absolute;
-                            content: url($database-arrow-img);
-                            width: 16px;
-                            height: 30px;
-                            right: -24px;
-                        }
-                    }
                 }
+
+                &::after {
+                    content: " ";
+                    display: block;
+                    background: url($database-arrow-img);
+                    background-size: 16px 30px;
+                    background-repeat: no-repeat;
+                    width: 16px;
+                    height: 30px;
+                    position: absolute;
+                    right: 8px;
+                    bottom: 30px;
+                }
+
 
             }
 
@@ -311,28 +315,34 @@
             color: $pale-green;
         }
 
+        $endcap-width: 8px;
+        $button-height: 38px;
         button {
             background-color: $medium-green;
             position: relative;
-            height: 38px;
+            height: $button-height;
             padding: 0 20px;
             margin: 20px 8px 0;
 
             &::before {
                 position: absolute;
-                left: -8px;
+                left: -($endcap-width + 0.5);
                 top: 0;
-                content: url($button-left-endcap);
-                width: 8px;
-                height: 37px;
+                content: "";
+                background-image: url($button-left-endcap);
+                background-size: contain;
+                width: $endcap-width;
+                height: $button-height;
             }
             &::after {
                 position: absolute;
-                right: -8px;
+                right: -($endcap-width - 0.5);
                 top: 0;
-                content: url($button-right-endcap);
-                width: 8px;
-                height: 37px;
+                content: "";
+                background-image: url($button-right-endcap);
+                background-size: contain;
+                width: $endcap-width;
+                height: $button-height;
             }
         }
     }
@@ -457,7 +467,10 @@
 
                     h3 {
                         &::after {
-                            content: url($blue-arrow-circle-img);
+                            content: "";
+                            background-image: url($blue-arrow-circle-img);
+                            background-repeat: no-repeat;
+                            background-size: contain;
                         }
                     }
                 }
@@ -470,7 +483,10 @@
 
                     h3 {
                         &::after {
-                            content: url($green-arrow-circle-img);
+                            content: "";
+                            background-image: url($green-arrow-circle-img);
+                            background-repeat: no-repeat;
+                            background-size: contain;
                         }
                     }
                 }
