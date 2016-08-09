@@ -9,8 +9,8 @@
     <header>
         <h1>{{ object.full_display_name }}</h1>
     </header>
-    <section class=>
-        {% lorem 2 p %}
+    <section class="description">
+        {{ object.description_rendered }}
     </section>
     <section class="details">
         <div class="row">
