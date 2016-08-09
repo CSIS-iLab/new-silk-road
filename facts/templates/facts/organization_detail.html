@@ -12,7 +12,7 @@
     {% if object.mission %}
     <section>
         <h2>Mission</h2>
-        {{object.mission_rendered}}
+        {{object.mission_rendered|safe}}
     </section>
     {% endif %}
     {% if object.companydetails %}

@@ -8,7 +8,7 @@
         <li>{{ object.end_date }}</li>
     </ul>
     <section class='description'>
-{{ object.description_rendered }}
+        {{ object.description_rendered|safe }}
     </section>
 </article>
 {% endblock %}
