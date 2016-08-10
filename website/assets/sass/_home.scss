@@ -13,21 +13,21 @@
         font-style: italic;
     }
 
-    h2, h3, h4, h5, h6 {
-        font-family: $sans-font-family;
-        font-weight: 300;
+    > section {
+        h2, h3, h4, h5, h6 {
+            font-family: $sans-font-family;
+            font-weight: 300;
 
-        &.highlighter {
-            display: block;
+            &.highlighter {
+                display: block;
 
-            span {
-                padding: 10px;
-                display: inline-block;
+                span {
+                    padding: 10px;
+                    display: inline-block;
+                }
             }
         }
-    }
 
-    > section {
         border-bottom: $thin-dark-border;
         display: block;
         position: relative;
