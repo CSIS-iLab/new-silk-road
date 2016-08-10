@@ -102,6 +102,9 @@ gulp.task('default', ['sass:watch', 'megamap:watch', 'projectmap:watch']);
 
 gulp.task('build', ['sass:build', 'megamap:build', 'projectmap:build']);
 
+gulp.task('js:build', ['megamap:build', 'projectmap:build']);
+
+
 gulp.task('sass:watch', function() {
     gulp.watch(assetsBase + sassGlob, ['sass:build']);
     browserSync.init({
