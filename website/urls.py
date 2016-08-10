@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^database/', include('infrastructure.urls')),
     url(r'^database/', include('facts.urls')),
     url(r'^map/$', ProjectsMapView.as_view(), name='website-map'),
+    url(r'^map/help/$', views.flatpage, {'url': '/map/help/'}, name='map-help'),
 ]
