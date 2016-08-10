@@ -36,6 +36,12 @@
         <footer>
             <div class="wrap">
                 {% include "_navigation.html" with showhome=True %}
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'glossary' %}">Glossary</a></li>
+                        <li><a href="{% url 'methodology' %}">Methodology</a></li>
+                    </ul>
+                </nav>
                 <div class="branding">
                     <img class="logo" src="{% static 'img/csis_logo_gray.svg' %}" alt="Center for Strategic and International Studies">
                     <aside>

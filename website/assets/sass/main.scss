@@ -363,6 +363,7 @@ body > footer {
         nav {
             display: block;
             min-height: 150px;
+            font-size: $compact-text-size;
             @include flex(1 0 100%);
         }
 
@@ -390,7 +391,7 @@ body > footer {
     }
     nav {
         li {
-            margin-bottom: $large-spacing/2;
+            margin-bottom: $large-spacing/3;
         }
     }
     a {
