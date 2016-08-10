@@ -34,7 +34,7 @@ export default class GeoStyles {
         type: 'symbol',
         layout: {
           'icon-allow-overlap': true,
-          'icon-image': '{infrastructureType}',
+          'icon-image': '{icon-image}',
         },
         paint: {
           'icon-opacity': 1
@@ -78,17 +78,22 @@ export default class GeoStyles {
           'icon-image': 'Dryport',
         },
       }),
+      intermodal: objectMerge(pointStyle, {
+        layout: {
+          'icon-image': 'Dryport',
+        },
+      }),
     };
 
     this._compatibilityTable = {
       'lines': new Set(['rail', 'road', 'pipeline', 'ict']),
-      'points': new Set(['seaport', 'dryport']),
+      'points': new Set(['seaport', 'dryport', 'multimodal', 'intermodal']),
       'polygons': new Set([]),
     }
   }
 
   getStyleFor(geometryType, infrastructureType = null) {
-    const typeLookup = infrastructureType ? infrastructureType.toLowerCase() : null;
+    const typeLookup = infrastructureType ? infrastructureType.toLowerCase().replace(' ', '-') : null;
     const isGeometryCompatible = typeLookup ? this._compatibilityTable[geometryType].has(typeLookup) : false;
     if (this._styles.hasOwnProperty(typeLookup) && isGeometryCompatible) {
       return this._styles[typeLookup];
