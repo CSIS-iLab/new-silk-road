@@ -31,11 +31,11 @@ class EventListView(PublicationMixin, ListView):
 
 # Organization stuff
 class OrganizationDetailView(PublicationMixin, DetailView):
-    model = Organization
+    queryset = Organization.publishable_objects.all()
 
 
 class OrganizationListView(PublicationMixin, ListView):
-    model = Organization
+    queryset = Organization.publishable_objects.all()
     paginate_by = 50
     display_name_plural = None
 

@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from publish.models import Publishable
+from publish.models import PublishableQuerySet
 from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
 from mptt.models import MPTTModel, TreeForeignKey
@@ -44,6 +45,8 @@ class Organization(MPTTModel, Publishable):
     related_organizations = models.ManyToManyField('self', blank=True)
 
     documents = models.ManyToManyField('sources.Document', blank=True)
+
+    publishable_objects = PublishableQuerySet.as_manager()
 
     class MPTTMeta:
             order_insertion_by = ['name']
