@@ -49,10 +49,14 @@ class PersonAdmin(admin.ModelAdmin):
             'fields': (
                 'identifier',
                 ('given_name', 'family_name'),
+                'citizenships',
             )
         }),
-        (None, {
-            'fields': ('citizenships', 'notes')
+        ('Description/Image', {
+            'fields': ('description', 'image',)
+        }),
+        ('Notes', {
+            'fields': ('notes',)
         }),
         ('Additional personal details', {
             'classes': ('collapse',),
