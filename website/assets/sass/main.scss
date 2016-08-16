@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css?family=Merriweather|Lato:400,700,900");
+@import url("https://fonts.googleapis.com/css?family=Merriweather:400,400i|Lato:400,700,900&subset=latin-ext");
 @import "variables";
+@import "mixins";
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 @import "normalize";
 @import "layout";
@@ -8,6 +9,7 @@
 @import "map";
 @import "searchview";
 @import "pages";
+@import "home";
 
 
 html {
@@ -18,7 +20,10 @@ body {
     font: 1rem $sans-font-family;
     line-height: $base-line-height;
     color: $gravel-grey;
-    @include font-feature-settings("liga", "kern");
+    font-variant-ligatures: common-ligatures;
+    -webkit-font-variant-ligatures: common-ligatures;
+    font-kerning: auto;
+    -webkit-font-kerning: auto;
 }
 
 a {
@@ -35,14 +40,22 @@ h1 {
 
 h1,h2 {
     font-family: $serif-font-family;
+
+        a {
+            text-decoration: none;
+        }
 }
 
 h3,h4,h5,h6 {
     font-family: $sans-font-family;
+
+    a {
+        text-decoration: none;
+    }
 }
 
 h2,h3,h4,h5,h6 {
-    line-height: 1.25rem;
+    line-height: 1.25em;
     margin: 0 0 0.75em;
 }
 
@@ -55,6 +68,10 @@ p {
 
     @include media($medium-break) {
         margin-bottom: 1.5rem;
+    }
+
+    &:last-of-type {
+        margin: 0;
     }
 }
 
@@ -94,6 +111,9 @@ button {
     padding: 2px 8px;
     &[disabled] {
         cursor: default;
+    }
+    a {
+        text-decoration: none;
     }
 }
 
@@ -184,7 +204,7 @@ header[role=banner] {
     }
     nav {
         float: none;
-        margin: $small-spacing auto $small-spacing*1.5 auto;
+        margin: $small-spacing auto $small-spacing*1.5 $small-spacing;
         @include media($medium-break) {
             float: right;
             margin: 45px 0 0;
@@ -198,31 +218,36 @@ header[role=banner] {
                 font-size: $nav-text-size;
                 @include media($medium-break) {
                     display: inline-block;
-                    margin: 0 0 8px 1em;
+                    margin: 0 0 $tiny-spacing*2 1em;
                 }
                 a {
-                    padding: 3px 0 2px 0.5em;
+                    padding: 3px 0 2px 0;
                     font-weight: bold;
                     text-decoration: none;
                     color: $slate-grey;
-                    border-bottom: 1px solid $slate-grey;
+                    border-bottom: 2px solid $slate-grey;
 
-                    @include media($medium-break) {
-                        padding-left: 1em;
-                    }
                 }
             }
         }
     }
 }
 
-article > header.decorated {
+.widows-peak {
+    display: block;
+    position: relative;
+    @include widows-peak($main-arrow-img, $main-arrow-width);
+}
+
+header.decorated {
     position: relative;
 
     border-bottom: $thick-border-width solid $blue-steel;
     margin-bottom: 25px;
     padding-bottom: 25px;
     display: block;
+    min-height: 120px;
+    height: 100px;
 
     @include display(flex);
     @include flex-direction(column);
@@ -262,7 +287,7 @@ article > header.decorated {
 
 @each $name, $img in $icons
 {
-    header.#{$name} {
+    header.#{$name}, section.#{$name} {
         min-height: 120px;
 
         &.decorated {
@@ -273,30 +298,34 @@ article > header.decorated {
         }
 
         background-image: url($img);
-        @include decorated-bg;
+        @include decorated-bg($decorated-bg-size);
 
         h1 {
-            padding: 12px 0 12px 80px;
+            padding: 12px 0 12px 100px;
+        }
+    }
+
+    section.#{$name} {
+        @include decorated-bg($medium-decorated-bg-size);
+        background-position: 20px center;
+        font-size: $minor-text-size;
+        line-height: 1.25em;
+        padding: 0;
+
+        .inner {
+            padding: $medium-spacing $medium-spacing (3*$medium-spacing) $medium-decorated-bg-size + 40px;
+        }
+
+        @include media($large-break) {
+            background-size: $large-decorated-bg-size $large-decorated-bg-size;
+
+            .inner {
+                padding-left: 220px;
+            }
         }
     }
 }
 
-
-.widows-peak {
-    position: absolute;
-    background-image: url($main-arrow-img);
-    background-clip: border-box;
-    background-position: 50% -1px;
-    background-size: $main-arrow-width auto;
-    background-repeat: no-repeat;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: $main-arrow-width;
-    height: 12px;
-    z-index: 1;
-}
 
 .content-wrap {
     padding: $medium-spacing 0 0;
@@ -311,6 +340,7 @@ article > header.decorated {
 
 body > footer {
     @include position(relative);
+    display: block;
 
     border-top: $thin-dark-border;
     color: $dark-night;
@@ -324,18 +354,29 @@ body > footer {
         @include justify-content(space-between);
         @include align-items(stretch);
 
+
         .branding {
-            @include flex(0 1 50%);
+            @include flex(1 0 100%);
+            min-height: 150px;
             padding-top: $medium-spacing;
         }
         nav {
-            @include flex(1 0 50%);
+            display: block;
+            min-height: 150px;
+            font-size: $compact-text-size;
+            @include flex(1 0 100%);
         }
 
         @include media($medium-break) {
             @include flex-direction(row);
 
+            nav {
+                @include flex(1 1 auto);
+            }
+
             .branding {
+                @include flex(0 1 auto);
+                min-height: auto;
                 padding-top: 0;
             }
         }
@@ -350,7 +391,7 @@ body > footer {
     }
     nav {
         li {
-            margin-bottom: $large-spacing/2;
+            margin-bottom: $large-spacing/3;
         }
     }
     a {

@@ -1,4 +1,4 @@
-{% extends "base.html" %}{% load markymark %}
+{% extends "base.html" %}
 
 {% block pagetitle %}
 {{ object.name }} | {{ block.super }}
@@ -12,7 +12,7 @@
     {% if object.mission %}
     <section>
         <h2>Mission</h2>
-        {{object.mission|markdown}}
+        {{object.mission_rendered|safe}}
     </section>
     {% endif %}
     {% if object.companydetails %}

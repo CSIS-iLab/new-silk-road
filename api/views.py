@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.conf import settings
 from rest_framework import viewsets, generics, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -43,8 +44,10 @@ from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 from api.filters.facts import (OrganizationFilter)
 from publish.views import PublicationMixin
 
+PUBLISH_FILTER_ENABLED = getattr(settings, 'PUBLISH_FILTER_ENABLED', True)
 
-class OrganizationViewSet(viewsets.ReadOnlyModelViewSet):
+
+class OrganizationViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Organization.objects.all()
     lookup_field = 'identifier'
     serializer_class = OrganizationBasicSerializer
@@ -118,7 +121,7 @@ class GeometryStoreDetailView(generics.RetrieveAPIView):
             .annotate(num_projects=Count('projects'))\
             .filter(num_projects__gt=0)
 
-        if not self.request.user.is_authenticated():
+        if PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
             queryset = queryset.filter(projects__published=True).distinct()
 
         return queryset
@@ -138,7 +141,7 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             .annotate(num_projects=Count('projects'))\
             .filter(num_projects__gt=0)
 
-        if not self.request.user.is_authenticated():
+        if PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
             queryset = queryset.filter(projects__published=True).distinct()
 
         return queryset

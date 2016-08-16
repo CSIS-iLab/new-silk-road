@@ -1,5 +1,59 @@
 @import "variables";
+@import "mixins";
 @import "lib/neat/neat";
+
+
+.panel {
+    position: relative;
+    background-color: $creamer;
+    padding: $medium-spacing $medium-spacing (3*$medium-spacing);
+
+    h3 {
+        text-transform: uppercase;
+    }
+    h5 {
+        font-style: italic;
+    }
+
+    footer {
+        position: absolute;
+        bottom: $medium-spacing;
+    }
+}
+
+section.columnar {
+    margin: $section-spacing auto;
+
+    .wrap {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
+
+        > div, > section {
+            display: block;
+            min-height: 240px;
+            @include flex(1 0 100%);
+            margin-bottom: $medium-spacing;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            @include flex-wrap(wrap);
+            > div, > section {
+                min-height: 200px;
+                @include flex(0 1 48%);
+                &:last-of-type {
+                    margin-bottom: $medium-spacing;
+                }
+            }
+        }
+    }
+}
+
 article {
     section {
         > img {
@@ -51,7 +105,7 @@ article {
             border-bottom: 2px solid $slate-grey;
         }
         @include media($medium-break) {
-            &:nth-child(odd) h3 {
+            &:first-of-type h3 {
                 color: $medium-green;
                 border-bottom: 2px solid $medium-green;
             }
@@ -60,29 +114,38 @@ article {
             @include flex(0 1 auto);
             margin-bottom: $small-spacing;
 
-            @include media($large-break) {
-                padding-left: $large-spacing * 1.5;
-            }
-
-            &:first-of-type {
-                padding-left: 0;
-            }
-
             &.multidimensional {
-                flex: 1 1 auto;
+                @include flex(0 1 auto);
 
                 table {
                     width: 100%;
                 }
             }
+
+            &.compressible {
+                @include flex(1 1 100%);
+            }
+
         }
         @include media($medium-break) {
             @include flex-direction(row);
             @include flex-wrap(wrap);
+            ul {
+                max-width: $max-content-width/4;
+            }
         }
         @include media($large-break) {
             @include flex-wrap(nowrap);
         }
+    }
+}
+
+.description {
+    h3 {
+        text-transform: none;
+    }
+    p {
+        font-size: $minor-text-size;
     }
 }
 
@@ -100,17 +163,76 @@ article {
 }
 
 
-.database-landing {
+.database {
     .content-wrap {
         header {
             h1 {
                 text-align: center;
             }
         }
-
         nav {
+            a {
 
+            }
         }
+    }
+
+    .search {
+        margin: $section-spacing 0;
+
+        form {
+            width: 55%;
+            margin: 0 auto;
+            @include justify-content(space-between);
+            @include align-items(center);
+        }
+        .searchBar {
+            border: 2px solid $pale-green;
+            background-color: #363d4e;
+
+            input {
+                background-color: #363d4e;
+                padding: $small-spacing;
+            }
+
+            button[name='search'] {
+                @include hide-text;
+                padding: 0;
+                margin-right: 8px;
+                background: url($search-btn-active-img) center no-repeat;
+                width: $search-btn-width;
+
+                &[disabled] {
+                    background: url($search-btn-inactive-img) center no-repeat;
+                }
+            }
+        }
+        button.dropdown {
+            font-family: $serif-font-family;
+            color: $pale-green;
+            background-color: $slate-grey;
+            background-image: url($expand-btn-img);
+            background-position: 94% center;
+            background-repeat: no-repeat;
+            background-size: $expand-collapse-btn-width auto;
+
+            height: 32px;
+            margin: 0;
+            padding: 3px 28px 3px 8px;
+
+            &::after {
+                content: "";
+                margin-left: 6px;
+                border-left: 2px solid rgba(0, 0, 0, 0.2);
+            }
+        }
+
+    }
+
+    a.button {
+        font-size: $section-hed-size;
+        color: $pale-green;
+        padding: $tiny-spacing $section-spacing;
     }
 }
 
@@ -123,6 +245,7 @@ article {
         @include media($medium-break) {
             @include flex-direction(row);
             @include justify-content(space-around);
+            margin: 0;
         }
 
         li {
@@ -130,6 +253,7 @@ article {
 
             @include media($medium-break) {
                 @include flex(0 1 auto);
+                margin: 0;
             }
 
             a.button {
@@ -137,10 +261,4 @@ article {
             }
         }
     }
-}
-
-@mixin decorated-bg {
-    background-repeat: no-repeat;
-    background-size: $decorated-bg-size $decorated-bg-size; // IE 11 won't render properly unless both dimensions set
-    background-position: 0 center;
 }

@@ -17,15 +17,18 @@ $max-content-width: 980px;
 // fonts
 $em-base: 18px;
 $base-font-size: $em-base;
+$overdoingit-hed-size: rem(59);
+$shouting-hed-size: rem(44);
 $major-hed-size: rem(40);
 $mid-hed-size: rem(22);
 $mid-text-size: rem($base-font-size);
 $section-hed-size: rem(26);
+$section-hedier-size: rem(28);
 $minor-text-size: rem(16);
 $minorer-text-size: rem(14);
-$compact-text-size: rem(12);
+$compact-text-size: rem(13);
 $nav-text-size: $minor-text-size;
-$search-text-size: rem(14);
+$search-text-size: $minorer-text-size;
 $base-line-height: 1.45em;
 $sans-font-family: Lato, $helvetica;
 $serif-font-family: Merriweather, $georgia;
@@ -33,15 +36,23 @@ $serif-font-family: Merriweather, $georgia;
 // Colors
 
 $pale-green: #d6e1d6;
+$bright-green: #abd58c;
 $medium-green: #75986a;
 $serious-green: #4e736c;
+$mintier-green: #488a8d;
 $dark-night: #252d3a;
+$not-so-dark-night: #144a6f;
 $slate-grey: #556377;
 $blue-steel: #788ca8;
 $gravel-grey: #58585a;
 $creamer: #eee8e4;
 $searchheader-color: #323c49;
 $placeholder-color: #788da9;
+// All the colors used for lines on the homepage.
+$dark-green-line: #50736C;
+$light-green-line: #D7DFD4;
+$dark-blue-line: #252D3A;
+$medium-blue-line: #16496F;
 
 // Image URLs
 $img-url-base: '/static/img/';
@@ -50,6 +61,10 @@ $banner-bg-img: $img-url-base + 'topographic_texture.svg';
 $banner-bg-img-ie11: $img-url-base + 'topographic_texture.png';
 $banner-img-size: 300px;
 $main-arrow-img: $img-url-base + 'main-triangle.svg';
+$dark-green-arrow-img: $img-url-base + 'Arrow_1.svg';
+$light-green-arrow-img: $img-url-base + 'Arrow_2.svg';
+$dark-blue-arrow-img: $img-url-base + 'Arrow_4.svg';
+$medium-blue-arrow-img: $img-url-base + 'Arrow_5.svg';
 $main-arrow-width: 55px;
 $small-arrow-img: $img-url-base + 'small-triangle.svg';
 $small-arrow-width: 35px;
@@ -66,20 +81,42 @@ $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 
 // Project & other images
+$banner-img-url: $img-url-base + 'banners/';
+$competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';
+$historical-atlas-img: $banner-img-url + 'Historical_Atlas_graphic.jpg';
+$megamap-img: $banner-img-url + 'Megamap.jpg';
+$database-img: $banner-img-url + 'Railroad_Track.jpg';
+$video-img: $banner-img-url + 'Video_placeholder.jpg';
+
+$white-arrow-img: $img-url-base + 'white_arrow.svg';
+$blue-arrow-circle-img: $img-url-base + 'Arrow_blue_circle.svg';
+$green-arrow-circle-img: $img-url-base + 'Arrow_green_circle.svg';
+$database-arrow-img: $img-url-base + 'Green_arrow_database.svg';
+
+// button stuff
+$button-left-endcap: $img-url-base + 'Left_endcap.svg';
+$button-right-endcap: $img-url-base + 'Right_endcap.svg';
+
+$database-icon-url: $img-url-base + 'database-icons/';
 $icons: (
-    'infrastructure': $img-url-base + 'Project.svg',
-    'rail': $img-url-base + 'Rail.svg',
-    'road': $img-url-base + 'Road.svg',
-    'seaport': $img-url-base + 'Seaport.svg',
-    'ict': $img-url-base + 'ICT.svg',
-    'energy': $img-url-base + 'Energy.svg',
-    'pipeline': $img-url-base + 'Pipeline.svg',
-    'organization': $img-url-base + 'Organization.svg',
-    'initiative': $img-url-base + 'Initiative.svg',
-    'event': $img-url-base + 'Event.svg',
-    'person': $img-url-base + 'Person.svg'
+    'infrastructure': $database-icon-url + 'Project.svg',
+    'rail': $database-icon-url + 'Rail.svg',
+    'road': $database-icon-url + 'Road.svg',
+    'seaport': $database-icon-url + 'Seaport.svg',
+    'dryport': $database-icon-url + 'Dryport.svg',
+    'intermodal': $database-icon-url + 'Dryport.svg',
+    'multimodal': $database-icon-url + 'Dryport.svg',
+    'ict': $database-icon-url + 'ICT.svg',
+    'energy': $database-icon-url + 'Energy.svg',
+    'pipeline': $database-icon-url + 'Pipeline.svg',
+    'organization': $database-icon-url + 'Organization.svg',
+    'initiative': $database-icon-url + 'Initiative.svg',
+    'event': $database-icon-url + 'Event.svg',
+    'person': $database-icon-url + 'Person.svg'
 );
-$decorated-bg-size: 50px;
+$decorated-bg-size: 80px;
+$medium-decorated-bg-size: $decorated-bg-size * 1.3;
+$large-decorated-bg-size: 172px;
 
 // Reusables
 

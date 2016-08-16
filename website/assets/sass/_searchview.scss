@@ -43,7 +43,7 @@
         @include flex-direction(column);
         @include justify-content(space-between);
 
-        .searchWidget, .resultsView {
+        .resultsView {
             @include flex(1 1 auto);
         }
     }

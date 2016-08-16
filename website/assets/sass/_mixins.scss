@@ -1,0 +1,33 @@
+
+
+@mixin widows-peak($img, $width: auto, $height: 12px, $top: 0px) {
+    $offset: $height + $top + 0.5;
+    &::after {
+        content: "";
+        position: absolute;
+        background-image: url($img);
+        background-color: transparent;
+        background-clip: border-box;
+        background-size: $width $height;
+        background-repeat: no-repeat;
+        background-position: 0 $top;
+        bottom: -$offset;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: $width;
+        height: $offset;
+        z-index: 1;
+    }
+}
+
+@mixin background-poster($img) {
+    background: no-repeat center/cover url($img);
+}
+
+@mixin decorated-bg($size) {
+    background-repeat: no-repeat;
+    background-size: $size $size; // IE 11 won't render properly unless both dimensions set
+    background-position: 0 center;
+}

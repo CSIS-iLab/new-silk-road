@@ -4,6 +4,7 @@ from .views import (
     EntryDetailView,
     EntryListView,
     EntryCategoryListView,
+    HomeView,
 )
 
 app_name = 'writings'
@@ -12,4 +13,5 @@ urlpatterns = [
     url(r'^categories/$', CategoryListView.as_view(), name='category-list'),
     url(r'^entries/(?P<slug>\S+)/$', EntryDetailView.as_view(), name='entry-detail'),
     url(r'^entries/$', EntryListView.as_view(), name='entry-list'),
+    url(r'^$', HomeView.as_view(), name='home'),
 ]

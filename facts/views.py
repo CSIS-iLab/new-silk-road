@@ -1,5 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from publish.views import PublicationMixin
 
 from .models import (
     Person,
@@ -8,33 +9,33 @@ from .models import (
 )
 
 
-class PersonDetailView(DetailView):
+class PersonDetailView(PublicationMixin, DetailView):
     model = Person
     slug_field = 'identifier'
     slug_url_kwarg = 'identifier'
 
 
-class PersonListView(ListView):
+class PersonListView(PublicationMixin, ListView):
     model = Person
     paginate_by = 50
 
 
-class EventDetailView(DetailView):
+class EventDetailView(PublicationMixin, DetailView):
     model = Event
 
 
-class EventListView(ListView):
+class EventListView(PublicationMixin, ListView):
     model = Event
     paginate_by = 50
 
 
 # Organization stuff
-class OrganizationDetailView(DetailView):
-    model = Organization
+class OrganizationDetailView(PublicationMixin, DetailView):
+    queryset = Organization.publishable_objects.all()
 
 
-class OrganizationListView(ListView):
-    model = Organization
+class OrganizationListView(PublicationMixin, ListView):
+    queryset = Organization.publishable_objects.all()
     paginate_by = 50
     display_name_plural = None
 

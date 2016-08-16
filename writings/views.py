@@ -1,5 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from .models import (
     Category,
@@ -53,3 +54,18 @@ class EntryCategoryListView(EntryListView):
         context['category'] = self.category
 
         return context
+
+
+class HomeView(TemplateView):
+    template_name = "writings/home.html"
+
+    # def get_context_data(self, **kwargs):
+    #     kwargs = super().get_context_data(**kwargs)
+    #     kwargs['featured_items'] = None
+    #     collection_slug = getattr(config, 'FEATURED_DATABASE_COLLECTION', None)
+    #     if collection_slug:
+    #         try:
+    #             kwargs['featured_items'] = Collection.objects.get(slug=collection_slug)
+    #         except Collection.DoesNotExist:
+    #             pass
+    #     return kwargs

@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
     'maintenancemode',
     'cachalot',
+    'constance',
+    'constance.backends.database',
 
     'django_extensions',
     'storages',
@@ -229,6 +231,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_FORMAT = 'd N Y'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -291,12 +294,34 @@ SUIT_CONFIG = {
         '-',
         'writings',
         '-',
-        'flatpages',
+        {'label': 'Website', 'models': (
+            'flatpages.FlatPage',
+            'website.Collection',
+            'website.CollectionItem',
+        )},
+        'constance',
         'sites',
         '-',
         'auth',
     )
 }
+
+# Website (app) config
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+    'FEATURED_DATABASE_COLLECTION': (
+        'database-featured',
+        'Slug for the collection (of database entries) that are'
+        'featured on the db landing page (and possibly other places)', str
+    ),
+    'FEATURED_ANALYSES_COLLECTION': (
+        'analyses-featured',
+        'Slug for the collection of entries (writings.EntryCollection) that are'
+        'featured on the website', str
+    ),
+}
+
+PUBLISH_FILTER_ENABLED = os.getenv('PUBLISH_FILTER_ENABLED', 'True') != 'False'
 
 # markymark
 MARKYMARK_EXTENSIONS = [

@@ -42,14 +42,21 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonForm
     readonly_fields = ('identifier',)
     fieldsets = (
+        (None, {
+            'fields': ('published',)
+        }),
         ('Basic Details', {
             'fields': (
                 'identifier',
                 ('given_name', 'family_name'),
+                'citizenships',
             )
         }),
-        (None, {
-            'fields': ('citizenships', 'notes')
+        ('Description/Image', {
+            'fields': ('description', 'image',)
+        }),
+        ('Notes', {
+            'fields': ('notes',)
         }),
         ('Additional personal details', {
             'classes': ('collapse',),

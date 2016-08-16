@@ -12,6 +12,15 @@ from infrastructure.models import InfrastructureType
 from api.serializers.infrastructure import (ProjectNestableSerializer,)
 from api.fields import DynamicFieldsMixin
 
+ICON_MAP = {
+    "seaport": "Seaport",
+    "dryport": "Dryport",
+    "rail": "Rail",
+    "road": "Road",
+    "multimodal": "Dryport",
+    "intermodal": "Dryport"
+}
+
 
 class GeometryStoreRelatedSerializer(GeoFeatureModelSerializer):
     geostores = serializers.HyperlinkedIdentityField(
@@ -84,10 +93,13 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
 
     def get_properties(self, instance, fields):
         infra_type = InfrastructureType.objects.filter(project__geo=instance).only('name').first()
+        infra_name = infra_type.name if infra_type else None
+        icon_type = ICON_MAP.get(infra_name.lower(), 'dot') if infra_name else None
         return {
             'label': instance.label,
             'geostore': instance.identifier,
-            'infrastructureType': infra_type.name if infra_type else None,
+            'infrastructureType': infra_name,
+            'icon-image': icon_type
         }
 
 

@@ -1,5 +1,105 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load static %}
 
-{% block content %}
-{% lorem 3 p %}
-{% endblock content %}
+{% block bodyclass %}home{% endblock %}
+
+{% block content-shell %}
+<section id='map' class='poster'>
+    <a href="{% url 'website-map' %}">
+        <div class="inner">
+                <h2>Explore</h2>
+                <h3>The Map</h3>
+                <img src='{% static "img/white_arrow.svg" %}' alt="Arrow button" />
+        </div>
+    </a>
+</section>
+<section id='mission'>
+    <div class="inner">
+        <p><strong>Reconnecting Asia</strong> maps new linkages&mdash;roads, railways, and other hard infrastructure&mdash;that are reshaping economic and geopolitical realities across the continent. Through data curation and objective analysis, the project aims to fill Asia's infrastructure-information gap, squaring lofty ambitions with facts on the ground.</p>
+    </div>
+</section>
+<section id='analysis'>
+    <div class="inner">
+        {% comment %}
+            TODO: Replace with actual content
+        {% endcomment %}
+        <h2><a href="#">A Silk Road for the 21st Century?</a></h2>
+        <h5 class='date'>July 2016</h5>
+        <h3>Analysis by Dr. Thomas Fingar</h3>
+        <button><a href="#">Additional analysis</a></button>
+    </div>
+</section>
+<section id='database' class='poster'>
+    <a href="{% url 'database-home' %}">
+        <div class="inner">
+            <h2 class="highlighter"><span>The</span><br><span>Database</span></h2>
+            <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
+        </div>
+    </a>
+</section>
+<section id='video' class='poster'>
+    <a href="#">
+        <div class="inner">
+            <blockquote>
+                <h3 class="highlighter">
+                    <span>Eurasia is the chessboard on which the struggle for global</span><br>
+                    <span>primacy continues to be played.</span><br>
+                </h3>
+                <cite>
+                    <h4 class="highlighter"><span>Zbigniew Brzezinski</span></h4>
+                </cite>
+            </blockquote>
+        </div>
+    </a>
+</section>
+<section id='featured-analysis' class='columnar'>
+    <h2>Featured</h2>
+    {# TODO: Replace with real stuff once there is real stuff #}
+    <div class="wrap">
+        <div class="analysis panel">
+            <h3><a href="">What Rio can learn from Russia</a></h3>
+            <h5 class='date'>27 June 2016</h5>
+            <p>As the 2016 Summer Games approach, this $1.4 billion road in Sochi highlights how embezzlement can plague Olympic preparations.</p>
+            <footer>
+                <p><a href="">Read More</a></p>
+            </footer>
+        </div>
+        <div class="analysis panel">
+            <h3><a href="">Vying for the next Dubai</a></h3>
+            <h5 class='date'>25 June 2016</h5>
+            <p>Touted as a "New Dubai" and a "game-changing development," this dry port and logis cs center on the Kazakhstan-China border could be a bellwether for other ambitious One Belt, One Road projects.</p>
+            <footer>
+                <p><a href="">Read More</a></p>
+            </footer>
+        </div>
+    </div>
+    {% comment %}
+    <div class="row">{% for entry in featured_analyses.entries.published %}
+        <div class="analysis teaser">
+            <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
+            <h5 class='date'>{{entry.publication_date|date}}</h5>
+            {{entry.description_rendered|safe}}
+        </div>{% endfor %}
+    </div>
+    {% endcomment %}
+</section>
+<section id='visions'>
+    <div class="poster">
+        <a href="{% url 'competing-visions' %}">
+            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="" />
+            <div class="label">
+                <h3>Competing Visions</h3>
+                <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
+            </div>
+        </a>
+    </div>
+    <div class="poster">
+        <a href="{% url 'historical-atlas' %}">
+            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="" />
+            <div class="label">
+                <h3>Historical Atlas</h3>
+                <p>Explore the rise and fall of trade, technology, and civilizations.</p>
+            </div>
+        </a>
+    </div>
+</section>
+{% endblock content-shell %}

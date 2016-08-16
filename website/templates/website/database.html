@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
-{% block bodyclass %}database-landing{% endblock %}
+{% block pagetitle %}
+The Database | {{ block.super }}
+{% endblock %}
+
+
+{% block bodyclass %}database{% endblock %}
 
 {% block content %}
     <header class="decorated">
@@ -8,22 +13,34 @@
     </header>
     <section role="search" class="search">
         <form>
-            <select class="" name="">
-                <option value="option">option</option>
-            </select>
+            <button type="button" class="dropdown" name="category">Categories</button>
             <div class="searchBar">
-                <input type="text" class="primary" name="name" value="">
+                <input type="text" class="primary" name="name" value="" placeholder="Search the database">
                 <button type="button" name="search">Search</button>
             </div>
         </form>
     </section>
-    <section class="featured">
+    {% if featured_items %}
+    <section class="columnar">
         <h2>Featured Entries</h2>
-        {% lorem 2 p %}
-    {% comment %}
-        TODO: Featured item selector.
-    {% endcomment %}
+        <div class="wrap">
+            {% for item in featured_items.items.all %}{% with item.content_object as object %}
+            <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
+                <div class="inner">
+                    <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
+                    {{object.description_rendered|safe|truncatewords_html:100}}
+                    <footer>
+                        <p><a href="{{object.get_absolute_url}}">Read More</a></p>
+                    </footer>
+                </div>
+            </section>
+            {% endwith %}
+            {% empty %}
+            <!-- No featured_items?!? -->
+            {% endfor %}
+        </div>
     </section>
+    {% endif %}
     <nav role="navigation">
         <ul>
             <li><a class="button" href="">Glossary</a></li>

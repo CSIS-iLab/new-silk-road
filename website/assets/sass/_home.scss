@@ -1,0 +1,496 @@
+@import "variables";
+@import "mixins";
+@import "lib/bourbon/bourbon", "lib/neat/neat";
+
+
+.home {
+    a {
+        text-decoration: none;
+    }
+
+    .date {
+        font-family: $serif-font-family;
+        font-style: italic;
+    }
+
+    > section {
+        h2, h3, h4, h5, h6 {
+            font-family: $sans-font-family;
+            font-weight: 300;
+
+            &.highlighter {
+                display: block;
+
+                span {
+                    padding: 10px;
+                    display: inline-block;
+                }
+            }
+        }
+
+        border-bottom: $thin-dark-border;
+        display: block;
+        position: relative;
+        min-height: 240px;
+
+        .inner {
+            width: 96%;
+            margin: auto;
+
+            @include media($medium-break) {
+                width: auto;
+                height: auto;
+            }
+
+        }
+
+        &:last-of-type {
+            border: none;
+        }
+
+        h2 {
+            font-size: $shouting-hed-size;
+            line-height: normal;
+        }
+
+        > a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    }
+
+    .poster {
+        > img, a > img {
+            display: block;
+            clear: both;
+
+            width: 100%;
+        }
+    }
+
+    .inner {
+        max-width: $max-content-width;
+        margin: 0 auto;
+        p:last-of-type {
+            margin: 0;
+        }
+    }
+
+    #video, #analysis {
+        h2, h3 {
+            font-family: $serif-font-family;
+        }
+    }
+
+    #map {
+        height: 380px;
+        position: relative;
+
+        @include background-poster($megamap-img);
+
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $dark-green-line;
+
+        h2, h3 {
+            text-shadow: 0 0 4px rgb(76, 129, 126);
+            font-weight: 300;
+        }
+        h2 {
+            color: #FFF;
+            font-size: $overdoingit-hed-size;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+        h3 {
+            color: $bright-green;
+            font-size: $shouting-hed-size;
+            font-family: $serif-font-family;
+        }
+
+        .inner {
+            position: absolute;
+            margin: 0;
+            padding: 20px;
+            width: auto;
+            right: $small-spacing;
+            bottom: $small-spacing;
+
+            @include media($medium-break) {
+                right: $section-spacing;
+
+            };
+
+            h2, h3 {
+                padding-right: 13px;
+            }
+            img {
+                position: absolute;
+                height: 115px;
+                top: 34px;
+                right: 0;
+            }
+        }
+    }
+
+    #mission {
+        position: relative;
+        padding: $section-spacing 0;
+        font-weight: 400;
+
+        @include widows-peak($light-green-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $light-green-line;
+
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: block;
+            position: absolute;
+            z-index: -1;
+            background: repeat left/$banner-img-size url($banner-bg-img) transparent;
+            opacity: 0.6;
+        }
+        // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
+        &::-ms-backdrop, &::before {
+            background: repeat left/$banner-img-size url($banner-bg-img-ie11) transparent;
+        }
+
+        .inner {
+            background-color: #FFF;
+
+            padding: $medium-spacing;
+
+            @include media($medium-break) {
+                padding: 29px;
+            }
+        }
+
+        p {
+            font-size: rem(24);
+            font-weight: 100;
+            strong {
+                font-size: rem(31);
+                text-transform: uppercase;
+            }
+        }
+
+    }
+    #visions, #featured-analysis .row {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between)
+
+        > div {
+            display: block;
+            min-height: 240px;
+            @include flex(1 0 100%);
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            > div {
+                min-height: 200px;
+                margin-bottom: 0;
+                @include flex(1 1 50%);
+            }
+        }
+
+    }
+
+    #database {
+        height: 400px;
+        @include background-poster($database-img);
+
+        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $dark-blue-line;
+
+        .inner {
+            position: absolute;
+            left: $section-spacing;
+            bottom: $section-spacing;
+            max-width: 300px;
+
+            h2 {
+                font-size: rem(49);
+                text-transform: uppercase;
+                margin-bottom: 0;
+                position: relative;
+
+                span {
+                    color: #FFF;
+                    background-color: $medium-green;
+
+                    &:nth-of-type(0n + 1) {
+                        line-height: 1;
+                    }
+
+                    &:nth-of-type(1n + 2) {
+                        position: relative;
+                        margin-top: 0;
+                        padding-top: $tiny-spacing;
+                        top: -10px;
+                    }
+                }
+
+                &::after {
+                    content: " ";
+                    display: block;
+                    background: url($database-arrow-img);
+                    background-size: 16px 30px;
+                    background-repeat: no-repeat;
+                    width: 16px;
+                    height: 30px;
+                    position: absolute;
+                    right: 8px;
+                    bottom: 30px;
+                }
+
+
+            }
+
+            p {
+                color: $pale-green;
+                font-family: $serif-font-family;
+                font-size: $base-font-size;
+                font-style: italic;
+                padding: 0 $tiny-spacing;
+            }
+        }
+    }
+
+    #featured-analysis {
+        max-width: $max-content-width;
+        border: none;
+
+        .row {
+            > div {
+                 @include flex(0 1 45%);
+                 margin-bottom: $small-spacing;
+            }
+
+            @include media($medium-break) {
+                @include flex-direction(row);
+                > div {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        h2 {
+            font-family: $serif-font-family;
+            font-size: $section-hed-size;
+            text-decoration: underline;
+        }
+    }
+
+    #analysis {
+        background-color: $dark-night;
+        color: $medium-green;
+        font-family: $serif-font-family;
+
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $dark-green-line;
+
+        .inner {
+            padding-top: $section-spacing;
+            padding-bottom: $section-spacing;
+        }
+
+        h2 {
+            font-size: $major-hed-size;
+            font-weight: 400;
+            line-height: normal;
+            margin-bottom: $small-spacing;
+        }
+
+        h2, h5 {
+            font-style: italic;
+        }
+
+        h5, h3, button a {
+            color: $pale-green;
+        }
+
+        $endcap-width: 8px;
+        $button-height: 38px;
+        button {
+            background-color: $medium-green;
+            position: relative;
+            height: $button-height;
+            padding: 0 20px;
+            margin: 20px 8px 0;
+
+            &::before {
+                position: absolute;
+                left: -($endcap-width + 0.5);
+                top: 0;
+                content: "";
+                background-image: url($button-left-endcap);
+                background-size: contain;
+                width: $endcap-width;
+                height: $button-height;
+            }
+            &::after {
+                position: absolute;
+                right: -($endcap-width - 0.5);
+                top: 0;
+                content: "";
+                background-image: url($button-right-endcap);
+                background-size: contain;
+                width: $endcap-width;
+                height: $button-height;
+            }
+        }
+    }
+
+    #video {
+        height: 500px;
+        @include background-poster($video-img);
+
+        @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $top: 2px);
+        border-bottom: $thin-border-width solid $medium-blue-line;
+
+
+
+        .inner {
+            position: relative;
+            margin-top: $section-spacing * 1.5;
+            text-align: center;
+
+            cite {
+                font-style: normal;
+            }
+
+            h4 {
+                font-size: $section-hed-size;
+                span {
+                    color: white;
+                    background-color: $not-so-dark-night;
+                    padding: 7px 20px;
+                }
+            }
+
+            h3 {
+                font-size: $section-hedier-size;
+
+                span {
+                    color: white;
+                    background-color: $mintier-green;
+
+                    &:nth-of-type(1n + 2) {
+                        position: relative;
+                        margin-top: 0;
+                        padding-top: 0;
+                    }
+
+                    @for $i from 2 through 5 {
+                        &:nth-of-type(1n + #{$i}) {
+                            top: -10px * ($i - 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #visions {
+        min-height: 240px;
+
+        .poster {
+            position: relative;
+            min-height: inherit;
+            overflow: hidden;
+
+            > a {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            .label {
+                position: absolute;
+                bottom: auto;
+                top: 50%;
+                left: 0;
+                max-width: 90%;
+                padding: $small-spacing;
+
+                @include media($medium-break) {
+                    max-width: 55%;
+                    padding: $small-spacing $large-spacing $small-spacing $large-spacing;
+                    top: auto;
+                    bottom: 20px;
+                }
+
+                h3 {
+                    font-size: $base-font-size;
+                    text-transform: uppercase;
+                    margin-bottom: $tiny-spacing;
+
+                    @include media($medium-break) {
+                        font-size: $section-hed-size;
+                    }
+
+                    &::after {
+                        width: 27px;
+                        height: 27px;
+                        display: block;
+                        position: absolute;
+                        top: 12px;
+                        right: 8px;
+
+                        @include media($medium-break) {
+                            top: 18px;
+                            right: 18px;
+                        }
+
+                    }
+                }
+
+                p {
+                    font-family: $serif-font-family;
+                    font-size: $compact-text-size;
+                    font-style: italic;
+                    line-height: 1.25em;
+                }
+
+            }
+
+            &:nth-of-type(odd) {
+                .label {
+                    background-color: $pale-green;
+                    color: $dark-night;
+
+                    h3 {
+                        &::after {
+                            content: "";
+                            background-image: url($blue-arrow-circle-img);
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                        }
+                    }
+                }
+            }
+
+            &:nth-of-type(even) {
+                .label {
+                    background-color: $dark-night;
+                    color: $pale-green;
+
+                    h3 {
+                        &::after {
+                            content: "";
+                            background-image: url($green-arrow-circle-img);
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 from publish.models import Publishable
+from publish.models import PublishableQuerySet
 from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
 from mptt.models import MPTTModel, TreeForeignKey
@@ -40,9 +41,12 @@ class Organization(MPTTModel, Publishable):
     staff_size = models.PositiveIntegerField("Staff/Personnel count",
                                              blank=True, null=True)
     mission = MarkdownField("Mandate/Mission Statement", blank=True)
+    mission_rendered = models.TextField(blank=True, editable=False)
     related_organizations = models.ManyToManyField('self', blank=True)
 
     documents = models.ManyToManyField('sources.Document', blank=True)
+
+    publishable_objects = PublishableQuerySet.as_manager()
 
     class MPTTMeta:
             order_insertion_by = ['name']
@@ -59,6 +63,7 @@ class Organization(MPTTModel, Publishable):
 
     def save(self, *args, **kwargs):
         self.description_rendered = render_markdown(self.description)
+        self.mission_rendered = render_markdown(self.mission)
         if not self.slug or self.slug == '':
             self.slug = slugify(self.name, allow_unicode=True)
         super(Organization, self).save(*args, **kwargs)

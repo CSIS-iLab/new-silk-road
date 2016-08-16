@@ -216,7 +216,7 @@ class Project(Publishable):
         return reverse(
             'infrastructure:project-detail',
             kwargs={
-                'slug': self.alternate_slug or self.slug,
+                'slug': self.alternate_slug or self.slug or 'p',
                 'identifier': str(self.identifier)
             }
         )
@@ -290,7 +290,7 @@ class Initiative(MPTTModel, Publishable):
         return reverse(
             'infrastructure:initiative-detail',
             kwargs={
-                'slug': self.slug,
+                'slug': self.slug or 'i',
                 'identifier': str(self.identifier)
             }
         )

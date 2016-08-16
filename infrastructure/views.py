@@ -49,7 +49,7 @@ class ProjectsMapView(PublicationMixin, ListView):
         return context
 
 
-class ProjectListView(ListView):
+class ProjectListView(PublicationMixin, ListView):
     model = Project
     paginate_by = 50
 

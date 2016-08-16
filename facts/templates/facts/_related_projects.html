@@ -1,6 +1,6 @@
 <section class="{{organization_role|lower}}">
     <h3>Projects {{organization_role|title}}</h3>
     <ul>{% for project in projects_list  %}
-        <li><a href="{{ project.absolute_url }}">{{ project.name }}</a></li>{% endfor %}
+        <li><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></li>{% endfor %}
     </ul>
 </section>

@@ -34,7 +34,7 @@ class Map {
 
   _loadGeodata() {
     if (this._geoURL) {
-      fetch(this._geoURL)
+      fetch(this._geoURL, { credentials: 'same-origin',})
       .then((response) => {
         return response.json();
       })
