@@ -1,6 +1,6 @@
 from elasticsearch_dsl import (
     DocType, String, Date,
-    Nested, InnerObjectWrapper
+    Nested, InnerObjectWrapper,
 )
 
 __all__ = [

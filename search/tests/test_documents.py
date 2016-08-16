@@ -1,26 +1,30 @@
-from django.test import TestCase
-from django.conf import settings
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Index, Search
+from django.test import TestCase, override_settings
+import os
+from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
-from urllib.parse import urlparse
 from writings.tests.factories import EntryFactory
 from search.mappings import EntryMapping
 from search.documents import EntryDoc
+from search.utils import create_search_index
 
 
-ELASTICSEARCH_URL = getattr(settings, 'ELASTICSEARCH_URL', 'http://localhost:9200')
-TEST_INDEX = 'test_reconnectingasia'
+TEST_SEARCH = {
+    'default': {
+        'index': 'test_reconnectingasia',
+        'connections': {
+            'hosts': [os.getenv('ELASTICSEARCH_TEST_URL', 'http://localhost:9200')],
+            'timeout': 20,
+        }
+    }
+}
 
 
+@override_settings(SEARCH=TEST_SEARCH)
 class DocumentsTestCase(TestCase):
 
     def setUp(self):
-        parsed_url = urlparse(ELASTICSEARCH_URL)
-        connections.create_connection(hosts=[parsed_url.netloc], timeout=20)
-        self.client = Elasticsearch([ELASTICSEARCH_URL])
-        self.index = Index(TEST_INDEX)
-        self.index.doc_type(EntryDoc)
+        connections.create_connection('testing', **TEST_SEARCH['default']['connections'])
+        self.index = create_search_index(TEST_SEARCH['default']['index'], (EntryDoc,), connection='testing')
         if self.index.exists():
             self.index.delete()
         self.index.create()

@@ -360,6 +360,18 @@ REST_FRAMEWORK = {
     ),
 }
 
+# Search
+
+SEARCH = {
+    'default': {
+        'index': 'reconnectingasia',
+        'connections': {
+            'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
+            'timeout': 20,
+        }
+    }
+}
+
 # Silence cachealot check as it seems to work
 SILENCED_SYSTEM_CHECKS = [
     "cachalot.E001",
