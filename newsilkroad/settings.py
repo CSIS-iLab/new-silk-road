@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'infrastructure',
     'website',
     'api',
+    'search',
 
     'utilities',
 
@@ -141,13 +142,13 @@ LOGGING = {
             'tags': {'custom-tag': 'x'},
         },
         "console": {
-            "level": "INFO",
             "class": "logging.StreamHandler",
         },
     },
     "loggers": {
         'django': {
-            "handlers": ["console"],
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.db.backends': {
             'level': 'ERROR',
@@ -163,6 +164,10 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
+        },
+        'search': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     }
 }

@@ -3,6 +3,11 @@ from elasticsearch_dsl import (
     Nested, InnerObjectWrapper
 )
 
+__all__ = [
+    'ProjectDoc',
+    'EntryDoc',
+]
+
 
 class CategoryDoc(InnerObjectWrapper):
     name = String()
