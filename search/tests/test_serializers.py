@@ -11,7 +11,7 @@ from .factories import (
 
 class SerializersTestCase(TestCase):
 
-    def test_project_Serializer(self):
+    def test_project_serializer(self):
         obj = ProjectFactory.create(name='Test title', countries=CountryFactory.create_batch(4), status=5)
         serializer = ProjectSerializer()
         doc = serializer.create_document(obj)
@@ -23,7 +23,7 @@ class SerializersTestCase(TestCase):
         # doc should have string representation of choice
         self.assertEqual(obj.get_status_display(), doc.status)
 
-    def test_entry_Serializer(self):
+    def test_entry_serializer(self):
         obj = EntryFactory.create(
             title='Test title',
             categories=EntryCategoryFactory.create_batch(4),
