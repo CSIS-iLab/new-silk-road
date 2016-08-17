@@ -6,7 +6,7 @@ class SearchConfig(AppConfig):
     name = 'search'
 
     def ready(self):
-        from search.mappings import EntryMapping
+        from search.serializers import EntrySerializer
         connect_elasticsearch_signals({
-            'writings.Entry': EntryMapping,
+            'writings.Entry': EntrySerializer,
         })

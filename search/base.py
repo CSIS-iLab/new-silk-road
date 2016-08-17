@@ -3,7 +3,7 @@ from django.db import models
 from django.forms.models import model_to_dict
 
 
-class ModelMapping:
+class ModelSerializer:
     class Meta:
         model = None
         fields = None
@@ -60,23 +60,26 @@ class ModelMapping:
 
         return obj_dict
 
-    def to_doc(self, instance):
+    def create_document(self, instance):
         obj_dict = self.serialize(instance)
         return self.Meta.doc_type(**obj_dict)
 
+    def get_document(self, instance):
+        return self.Meta.doc_type.get(id=instance.id)
 
-class RelatedMapping:
+
+class RelatedSerializer:
 
     def __init__(self, mapping_class, many=False):
-        if not issubclass(mapping_class, ModelMapping):
-            raise TypeError('RelatedMapping requires a ModelMapping subclass as the first argument')
-        self.mapper = mapping_class()
+        if not issubclass(mapping_class, ModelSerializer):
+            raise TypeError('RelatedSerializer requires a ModelSerializer subclass as the first argument')
+        self.serializer = mapping_class()
         self.many = many
 
     def serialize(self, instance):
         if self.many:
             if isinstance(instance, models.Model):
                 instance = [instance]
-            return [self.mapper.serialize(item) for item in instance]
+            return [self.serializer.serialize(item) for item in instance]
         else:
-            return self.mapper.serialize(instance)
+            return self.serializer.serialize(instance)

@@ -1,4 +1,4 @@
-from .base import ModelMapping, RelatedMapping
+from .base import ModelSerializer, RelatedSerializer
 from .documents import (
     CountryDoc,
     InfrastructureTypeDoc,
@@ -8,7 +8,7 @@ from .documents import (
 )
 
 
-class CountryMapping(ModelMapping):
+class CountrySerializer(ModelSerializer):
 
     class Meta:
         model = 'locations.Country'
@@ -16,7 +16,7 @@ class CountryMapping(ModelMapping):
         fields = ('name', 'alpha_3')
 
 
-class InfrastructureTypeMapping(ModelMapping):
+class InfrastructureTypeSerializer(ModelSerializer):
 
     class Meta:
         model = 'infrastructure.InfrastructureType'
@@ -24,9 +24,9 @@ class InfrastructureTypeMapping(ModelMapping):
         fields = ('name',)
 
 
-class ProjectMapping(ModelMapping):
-    countries = RelatedMapping(CountryMapping, many=True)
-    infrastructure_type = RelatedMapping(InfrastructureTypeMapping)
+class ProjectSerializer(ModelSerializer):
+    countries = RelatedSerializer(CountrySerializer, many=True)
+    infrastructure_type = RelatedSerializer(InfrastructureTypeSerializer)
 
     class Meta:
         model = 'infrastructure.Project'
@@ -45,7 +45,7 @@ class ProjectMapping(ModelMapping):
         )
 
 
-class CategoryMapping(ModelMapping):
+class CategorySerializer(ModelSerializer):
 
     class Meta:
         model = 'writings.Category'
@@ -53,8 +53,8 @@ class CategoryMapping(ModelMapping):
         fields = ('name',)
 
 
-class EntryMapping(ModelMapping):
-    categories = RelatedMapping(CategoryMapping, many=True)
+class EntrySerializer(ModelSerializer):
+    categories = RelatedSerializer(CategorySerializer, many=True)
 
     class Meta:
         model = 'writings.Entry'

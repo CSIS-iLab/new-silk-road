@@ -3,7 +3,7 @@ import os
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from writings.tests.factories import EntryFactory
-from search.mappings import EntryMapping
+from search.serializers import EntrySerializer
 from search.documents import EntryDoc
 from search.utils import create_search_index
 
@@ -18,13 +18,17 @@ TEST_SEARCH = {
     }
 }
 
+INDEX_DOCS = (
+    EntryDoc,
+)
+
 
 @override_settings(SEARCH=TEST_SEARCH)
 class DocumentsTestCase(TestCase):
 
     def setUp(self):
         connections.create_connection('testing', **TEST_SEARCH['default']['connections'])
-        self.index = create_search_index(TEST_SEARCH['default']['index'], (EntryDoc,), connection='testing')
+        self.index = create_search_index(TEST_SEARCH['default']['index'], INDEX_DOCS, connection='testing')
         if self.index.exists():
             self.index.delete()
         self.index.create()
@@ -34,9 +38,9 @@ class DocumentsTestCase(TestCase):
 
     def test_index_writings_entries(self):
         entry_objects = EntryFactory.create_batch(30)
-        mapper = EntryMapping()
+        serializer = EntrySerializer()
         for obj in entry_objects:
-            doc_obj = mapper.to_doc(obj)
+            doc_obj = serializer.create_document(obj)
             doc_obj.save()
 
         self.index.refresh()
@@ -44,10 +48,10 @@ class DocumentsTestCase(TestCase):
 
         self.assertEqual(len(entry_objects), s.count())
 
-    def test_writings_entry(self):
+    def test_serialize_entry(self):
         entry = EntryFactory.create()
-        mapper = EntryMapping()
-        doc_obj = mapper.to_doc(entry)
+        serializer = EntrySerializer()
+        doc_obj = serializer.create_document(entry)
         doc_obj.save()
 
         self.index.refresh()

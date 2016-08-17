@@ -1,6 +1,6 @@
 from django.test import TestCase
 from search.documents import EntryDoc, ProjectDoc
-from search.mappings import ProjectMapping, EntryMapping
+from search.serializers import ProjectSerializer, EntrySerializer
 from .factories import (
     ProjectFactory,
     CountryFactory,
@@ -9,12 +9,12 @@ from .factories import (
 )
 
 
-class MappingsTestCase(TestCase):
+class SerializersTestCase(TestCase):
 
-    def test_project_mapping(self):
+    def test_project_Serializer(self):
         obj = ProjectFactory.create(name='Test title', countries=CountryFactory.create_batch(4), status=5)
-        mapping = ProjectMapping()
-        doc = mapping.to_doc(obj)
+        serializer = ProjectSerializer()
+        doc = serializer.create_document(obj)
 
         self.assertIsInstance(doc, ProjectDoc)
         self.assertEqual(doc.name, 'Test title')
@@ -23,14 +23,14 @@ class MappingsTestCase(TestCase):
         # doc should have string representation of choice
         self.assertEqual(obj.get_status_display(), doc.status)
 
-    def test_entry_mapping(self):
+    def test_entry_Serializer(self):
         obj = EntryFactory.create(
             title='Test title',
             categories=EntryCategoryFactory.create_batch(4),
             published=True
         )
-        mapping = EntryMapping()
-        doc = mapping.to_doc(obj)
+        serializer = EntrySerializer()
+        doc = serializer.create_document(obj)
 
         self.assertIsInstance(doc, EntryDoc)
         self.assertEqual(doc.title, 'Test title')
