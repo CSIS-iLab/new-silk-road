@@ -32,7 +32,6 @@ class ProjectSerializer(ModelSerializer):
         model = 'infrastructure.Project'
         doc_type = ProjectDoc
         fields = (
-            'id',
             'name',
             'description',
             'countries',
@@ -60,7 +59,6 @@ class EntrySerializer(ModelSerializer):
         model = 'writings.Entry'
         doc_type = EntryDoc
         fields = (
-            'id',
             'title',
             'author',
             'content',

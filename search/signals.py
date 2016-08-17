@@ -1,6 +1,7 @@
 from django.apps import apps
 from django.db.models.signals import post_save, post_delete
 from search.base import ModelSerializer
+from search.utils import doc_id_for_instance
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,9 +21,10 @@ def make_elasticsearch_delete_receiver(serializer_class, **kwargs):
 
     def inner_func(sender, instance, using, *args, **kwargs):
         serializer = serializer_class()
-        doc = serializer.get_document(id=instance.id)
+        doc_id = doc_id_for_instance(instance)
+        doc = serializer.get_document(id=doc_id)
         doc.delete()
-        logger.info('Deleted doc {} from Elasticsearch'.format(instance.id))
+        logger.info('Deleted doc {} from Elasticsearch'.format(doc_id))
     return inner_func
 
 

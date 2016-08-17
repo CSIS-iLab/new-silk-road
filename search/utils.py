@@ -8,3 +8,7 @@ def create_search_index(index_name, doc_types, connection='default'):
     if not index.exists():
         index.create()
     return index
+
+
+def doc_id_for_instance(instance):
+    return '-'.join((instance._meta.label, str(instance.id)))

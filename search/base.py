@@ -1,6 +1,7 @@
 from django.apps import apps
 from django.db import models
 from django.forms.models import model_to_dict
+from search.utils import doc_id_for_instance
 
 
 class ModelSerializer:
@@ -45,7 +46,8 @@ class ModelSerializer:
             raise TypeError('Instance must match model class')
 
         obj_dict = model_to_dict(instance, fields=self._simple_fields)
-        obj_dict['_meta'] = {'label': self.model_class._meta.label}
+        obj_dict['_app'] = {'label': instance._meta.label, 'id': instance.id}
+        obj_dict['_id'] = doc_id_for_instance(instance)
 
         for f in self._relfields:
             rel_map = getattr(self, f)
