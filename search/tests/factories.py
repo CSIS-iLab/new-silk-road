@@ -1,5 +1,6 @@
 import factory
 from django.utils.text import slugify
+import pytz
 
 
 class EntryCategoryFactory(factory.django.DjangoModelFactory):
@@ -16,6 +17,7 @@ class EntryCategoryFactory(factory.django.DjangoModelFactory):
 class EntryFactory(factory.django.DjangoModelFactory):
     title = factory.Faker('text', max_nb_chars=100)
     author = factory.Faker('text', max_nb_chars=100)
+    publication_date = factory.Faker('date_time_this_year', tzinfo=pytz.utc)
 
     @factory.lazy_attribute
     def content(self):
@@ -31,8 +33,9 @@ class EntryFactory(factory.django.DjangoModelFactory):
         if not create:
             return
 
-        for category in extracted:
-            self.categories.add(category)
+        if extracted:
+            for category in extracted:
+                self.categories.add(category)
 
     class Meta:
         model = 'writings.Entry'

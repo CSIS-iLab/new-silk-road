@@ -1,7 +1,7 @@
 from django.test import TestCase, override_settings
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
-from writings.tests.factories import EntryFactory
+from search.tests.factories import EntryFactory
 from search.serializers import EntrySerializer
 from search.utils import create_search_index
 from .settings import TEST_SEARCH
