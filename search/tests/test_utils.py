@@ -41,7 +41,7 @@ class CreateSearchIndexTestCase(TestCase):
         self.assertFalse(index.exists())
 
     def test_create_search_index_with_doctypes(self):
-        index = create_search_index('foo', doc_types=('search.ProjectDoc', 'search.EntryDoc'))
+        index = create_search_index('foo', doc_types=TEST_SEARCH['default']['doc_types'])
 
         self.assertIsNotNone(index)
 
