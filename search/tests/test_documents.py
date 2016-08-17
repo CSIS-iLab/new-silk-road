@@ -4,7 +4,6 @@ from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from writings.tests.factories import EntryFactory
 from search.serializers import EntrySerializer
-from search.documents import EntryDoc
 from search.utils import create_search_index
 
 
@@ -19,7 +18,7 @@ TEST_SEARCH = {
 }
 
 INDEX_DOCS = (
-    EntryDoc,
+    'search.EntryDoc',
 )
 
 
