@@ -60,12 +60,13 @@ class ModelSerializer:
 
         return obj_dict
 
+    @property
+    def doc_type(self):
+        return self.Meta.doc_type
+
     def create_document(self, instance):
         obj_dict = self.serialize(instance)
-        return self.Meta.doc_type(**obj_dict)
-
-    def get_document(self, instance):
-        return self.Meta.doc_type.get(id=instance.id)
+        return self.doc_type(**obj_dict)
 
 
 class RelatedSerializer:
