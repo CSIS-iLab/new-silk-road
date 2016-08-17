@@ -365,6 +365,7 @@ REST_FRAMEWORK = {
 SEARCH = {
     'default': {
         'index': 'reconnectingasia',
+        'doc_types': ('search.documents.EntryDoc', 'search.documents.ProjectDoc'),
         'connections': {
             'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
             'timeout': 20,
