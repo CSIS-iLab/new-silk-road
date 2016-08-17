@@ -1,21 +1,10 @@
 from django.test import TestCase, override_settings
-import os
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from writings.tests.factories import EntryFactory
 from search.serializers import EntrySerializer
 from search.utils import create_search_index
-
-
-TEST_SEARCH = {
-    'default': {
-        'index': 'test_reconnectingasia',
-        'connections': {
-            'hosts': [os.getenv('ELASTICSEARCH_TEST_URL', 'http://localhost:9200')],
-            'timeout': 20,
-        }
-    }
-}
+from .settings import TEST_SEARCH
 
 INDEX_DOCS = (
     'search.EntryDoc',
