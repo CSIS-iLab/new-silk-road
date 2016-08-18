@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'cachalot',
     'constance',
     'constance.backends.database',
+    'django_rq',
 
     'django_extensions',
     'storages',
@@ -360,12 +361,20 @@ REST_FRAMEWORK = {
     ),
 }
 
+# RQ
+
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),
+    },
+}
+
 # Search
 
 SEARCH = {
     'default': {
         'index': 'reconnectingasia',
-        'doc_types': ('search.documents.EntryDoc', 'search.documents.ProjectDoc'),
+        'doc_types': ('search.EntryDoc', 'search.ProjectDoc'),
         'connections': {
             'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
             'timeout': 20,
