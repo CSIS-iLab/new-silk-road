@@ -21,39 +21,6 @@
     }
 }
 
-section.columnar {
-    margin: $section-spacing auto;
-
-    .wrap {
-        @include display(flex);
-        @include flex-direction(column);
-        @include justify-content(space-between);
-
-        > div, > section {
-            display: block;
-            min-height: 240px;
-            @include flex(1 0 100%);
-            margin-bottom: $medium-spacing;
-
-            &:last-of-type {
-                margin-bottom: 0;
-            }
-        }
-
-        @include media($medium-break) {
-            @include flex-direction(row);
-            @include flex-wrap(wrap);
-            > div, > section {
-                min-height: 200px;
-                @include flex(0 1 48%);
-                &:last-of-type {
-                    margin-bottom: $medium-spacing;
-                }
-            }
-        }
-    }
-}
-
 article {
     section {
         > img {
@@ -67,7 +34,6 @@ article {
             @include media($medium-break) {
                 padding: $large-spacing;
             }
-
         }
 
         &.documents {
@@ -164,26 +130,101 @@ article {
 
 
 .database {
-    .content-wrap {
-        header {
-            h1 {
-                text-align: center;
+
+    > section {
+        position: relative;
+        display: block;
+
+        &.poster {
+            $poster-height: 205px;
+            height: $poster-height;
+            @include background-poster($database-img);
+            @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+            border-bottom: $thin-border-width solid $dark-green-line;
+
+            header {
+                position: absolute;
+                bottom: $small-spacing;
+                left: $small-spacing;
+                h1 {
+                    font-family: $sans-font-family;
+                    font-size: rem(30);
+                    font-weight: 300;
+                    text-transform: uppercase;
+                    color: #FFF;
+                    background-color: $dark-night;
+                    margin: 0;
+                    padding: 10px 20px;
+                }
+
+                @include media($medium-break) {
+                    bottom: $section-spacing;
+                    left: $section-spacing;
+                }
+            }
+
+            @include media($medium-break) {
+                height: $poster-height * 2;
             }
         }
-        nav {
-            a {
+    }
 
+    .featured {
+
+        header {
+            max-width: $max-content-width;
+            margin: 0 auto;
+            padding: $medium-spacing 0;
+            h2 {
+                font-family: $serif-font-family;
+                font-size: rem(24);
+                text-decoration: underline;
+                margin-bottom: 0;
             }
+        }
+
+        .panel {
+            background-color: #FFF;
+        }
+
+        &::before {
+            content: "";
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: block;
+            position: absolute;
+            z-index: -1;
+            background: repeat left/$banner-img-size url($banner-bg-img) transparent;
+            opacity: 0.6;
+        }
+        // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
+        &::-ms-backdrop, &::before {
+            background: repeat left/$banner-img-size url($banner-bg-img-ie11) transparent;
+        }
+
+        &::after {
+            content: "";
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: block;
+            position: absolute;
+            z-index: -2;
+            background-color: lighten($pale-green, 11.5%);
         }
     }
 
     .search {
         margin: $section-spacing 0;
+        border-bottom: none;
 
         form {
             width: 55%;
             margin: 0 auto;
-            @include justify-content(space-between);
+            @include justify-content(space-around);
             @include align-items(center);
         }
         .searchBar {
@@ -232,32 +273,44 @@ article {
     a.button {
         font-size: $section-hed-size;
         color: $pale-green;
-        padding: $tiny-spacing $section-spacing;
-    }
-}
-
-.content-wrap nav {
-    ul {
-        @include display(flex);
-        @include flex-direction(column);
-        @include justify-content(space-between);
+        padding: $tiny-spacing $medium-spacing;
 
         @include media($medium-break) {
-            @include flex-direction(row);
-            @include justify-content(space-around);
-            margin: 0;
+            padding: $tiny-spacing $large-spacing;
         }
+    }
 
-        li {
-            @include flex(1 1 auto);
+    > nav {
+        padding-top: 0;
+        margin: $section-spacing 0;
+
+        ul {
+            @include display(flex);
+            @include flex-direction(column);
+            @include justify-content(space-between);
+            width: 70%;
+            margin: 0 auto;
 
             @include media($medium-break) {
-                @include flex(0 1 auto);
-                margin: 0;
+                @include flex-direction(row);
+                @include justify-content(space-around);
+                width: 80%;
             }
 
-            a.button {
-                width: 100%;
+            li {
+                @include flex(1 1 auto);
+                margin-bottom: $medium-spacing;
+
+                @include media($medium-break) {
+                    @include flex(0 1 auto);
+                    margin: 0;
+                }
+
+                a.button {
+                    font-family: $sans-font-family;
+                    width: 100%;
+                    text-transform: uppercase;
+                }
             }
         }
     }

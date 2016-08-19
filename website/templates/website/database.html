@@ -7,44 +7,48 @@ The Database | {{ block.super }}
 
 {% block bodyclass %}database{% endblock %}
 
-{% block content %}
-    <header class="decorated">
+{% block content-shell %}
+<section class='poster'>
+    <header>
         <h1>The Database</h1>
     </header>
-    <section role="search" class="search">
-        <form>
-            <button type="button" class="dropdown" name="category">Categories</button>
-            <div class="searchBar">
-                <input type="text" class="primary" name="name" value="" placeholder="Search the database">
-                <button type="button" name="search">Search</button>
-            </div>
-        </form>
-    </section>
-    {% if featured_items %}
-    <section class="columnar">
-        <h2>Featured Entries</h2>
-        <div class="wrap">
-            {% for item in featured_items.items.all %}{% with item.content_object as object %}
-            <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
-                <div class="inner">
-                    <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
-                    {{object.description_rendered|safe|truncatewords_html:100}}
-                    <footer>
-                        <p><a href="{{object.get_absolute_url}}">Read More</a></p>
-                    </footer>
-                </div>
-            </section>
-            {% endwith %}
-            {% empty %}
-            <!-- No featured_items?!? -->
-            {% endfor %}
+</section>
+<section role="search" class="search">
+    <form>
+        <button type="button" class="dropdown" name="category">Categories</button>
+        <div class="searchBar">
+            <input type="text" class="primary" name="name" value="" placeholder="Search the database">
+            <button type="button" name="search">Search</button>
         </div>
-    </section>
-    {% endif %}
-    <nav role="navigation">
-        <ul>
-            <li><a class="button" href="">Glossary</a></li>
-            <li><a class="button" href="">Methodology</a></li>
-        </ul>
-    </nav>
+    </form>
+</section>
+{% if featured_items %}
+<section class="featured columnar">
+    <header>
+        <h2>Featured Entries</h2>
+    </header>
+    <div class="wrap content-wrap">
+        {% for item in featured_items.items.all %}{% with item.content_object as object %}
+        <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
+            <div class="inner">
+                <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
+                {{object.description_rendered|safe|truncatewords_html:30}}
+                <footer>
+                    <p><a href="{{object.get_absolute_url}}">Read More</a></p>
+                </footer>
+            </div>
+        </section>
+        {% endwith %}
+        {% empty %}
+        <!-- No featured_items?!? -->
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+<nav role="navigation">
+    <ul>
+        <li><a class="button gem" href="">Glossary</a></li>
+        <li><a class="button gem" href="">Methodology</a></li>
+    </ul>
+</nav>
 {% endblock %}

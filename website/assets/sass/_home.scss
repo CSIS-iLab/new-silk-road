@@ -13,54 +13,6 @@
         font-style: italic;
     }
 
-    > section {
-        h2, h3, h4, h5, h6 {
-            font-family: $sans-font-family;
-            font-weight: 300;
-
-            &.highlighter {
-                display: block;
-
-                span {
-                    padding: 10px;
-                    display: inline-block;
-                }
-            }
-        }
-
-        border-bottom: $thin-dark-border;
-        display: block;
-        position: relative;
-        min-height: 240px;
-
-        .inner {
-            width: 96%;
-            margin: auto;
-
-            @include media($medium-break) {
-                width: auto;
-                height: auto;
-            }
-
-        }
-
-        &:last-of-type {
-            border: none;
-        }
-
-        h2 {
-            font-size: $shouting-hed-size;
-            line-height: normal;
-        }
-
-        > a {
-            display: block;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-    }
-
     .poster {
         > img, a > img {
             display: block;
