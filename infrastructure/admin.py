@@ -121,6 +121,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
         'countries__name',
         'regions',
         HasGeoListFilter,
+        'published',
     )
     search_fields = (
         'name',
@@ -144,7 +145,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
         'regions',
     )
     actions = [make_published, make_not_published]
-    ordering = ['name', 'created_at']
+    ordering = ['name', 'created_at', 'published']
     readonly_fields = ('extra_data', 'identifier')
     inlines = [
         ProjectFundingInline
@@ -192,7 +193,7 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'parent',
         'published',
     )
-    list_filter = ('geographic_scope', 'initiative_type', 'member_countries')
+    list_filter = ('geographic_scope', 'initiative_type', 'member_countries', 'published',)
     search_fields = (
         'name',
         'id',
@@ -211,7 +212,7 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'geographic_scope',
     ]
     actions = [make_published, make_not_published]
-    ordering = ['name', 'created_at']
+    ordering = ['name', 'created_at', 'published']
     inlines = [
         ProjectsInitiativeInline,
     ]

@@ -90,6 +90,10 @@ class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
     )
     list_display = ('name', 'founding_year', 'dissolution_year', 'staff_size') + TEMPORAL_FIELDS + ('published',)
     actions = [make_published, make_not_published]
+    ordering = ['name', 'created_at', 'published']
+    list_filter = (
+        'published',
+    )
     prepopulated_fields = {"slug": ("name",)}
 
 
