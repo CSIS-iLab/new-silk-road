@@ -131,12 +131,22 @@ LOGGING = {
         'handlers': ['sentry'],
     },
     'formatters': {
+        'rq_console': {
+            'format': '%(asctime)s %(message)s',
+            'datefmt': '%H:%M:%S',
+        },
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s '
                       '%(process)d %(thread)d %(message)s'
         },
     },
     "handlers": {
+        'rq_console': {
+            'level': 'DEBUG',
+            'class': 'rq.utils.ColorizingStreamHandler',
+            'formatter': 'rq_console',
+            'exclude': ['%(asctime)s'],
+        },
         'sentry': {
             'level': 'ERROR',  # To capture more than ERROR, change to WARNING, INFO, etc.
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
@@ -165,6 +175,10 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
+        },
+        'rq.worker': {
+            'handlers': ['rq_console', 'sentry'],
+            'level': 'DEBUG'
         },
         'search': {
             'handlers': ['console'],
@@ -374,6 +388,7 @@ RQ_QUEUES = {
 SEARCH = {
     'default': {
         'index': 'reconnectingasia',
+        # TODO: Remove doc_types setting once we have a seralizer registry (DocTypes can be inspected for search index)
         'doc_types': ('search.EntryDoc', 'search.ProjectDoc'),
         'connections': {
             'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
