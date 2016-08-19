@@ -1,23 +1,28 @@
+from django.db import models
 from elasticsearch_dsl import (
     DocType,
 )
 
 
-class FakeDocType(DocType):
+class MockDocType(DocType):
 
     class Meta:
         index = 'testindex'
 
 
-class FakeSerializer:
+class MockModel(models.Model):
+    pass
+
+
+class MockSerializer:
     class Meta:
-        model = 'search.tests.Foo'
-        doc_type = 'search.tests.mocks.FakeDocType'
+        model = 'search.MockModel'
+        doc_type = 'search.tests.mocks.MockDocType'
         fields = None
 
 
-class FakeSerializerTwo:
+class MockSerializerTwo:
     class Meta:
-        model = 'search.tests.FooTwo'
-        doc_type = 'search.tests.mocks.FakeDocType'
+        model = 'search.MockModelTwo'
+        doc_type = 'search.tests.mocks.MockDocType'
         fields = None

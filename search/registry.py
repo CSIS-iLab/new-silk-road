@@ -47,5 +47,7 @@ class SearchRegistry:
     def get_doctypes_for_index(self, index_name):
         return self._doctypes[index_name]
 
-    def serializer_for_model(self, label):
-        pass
+    def get_serializer_for_model(self, model):
+        if isclass(model) and issubclass(model, models.Model):
+            model = model._meta.label
+        return self._model_serializers.get(model, None)
