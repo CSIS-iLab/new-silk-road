@@ -323,27 +323,6 @@
             height: $button-height;
             padding: 0 20px;
             margin: 20px 8px 0;
-
-            &::before {
-                position: absolute;
-                left: -($endcap-width + 0.5);
-                top: 0;
-                content: "";
-                background-image: url($button-left-endcap);
-                background-size: contain;
-                width: $endcap-width;
-                height: $button-height;
-            }
-            &::after {
-                position: absolute;
-                right: -($endcap-width - 0.5);
-                top: 0;
-                content: "";
-                background-image: url($button-right-endcap);
-                background-size: contain;
-                width: $endcap-width;
-                height: $button-height;
-            }
         }
     }
 

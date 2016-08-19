@@ -8,6 +8,7 @@ input {
     border: none;
     border-radius: 0;
     padding: 3px 8px;
+    position: relative;
     &:focus {
         outline: none;
     }
@@ -17,6 +18,37 @@ input {
     @include placeholder {
         color: $placeholder-color;
         font-style: italic;
+    }
+    &.gem {
+        $gem-width: 8px;
+        $gem-height: 42px;
+        $gem-vector: $gem-height/2;
+
+        height: $gem-height;
+        &::before {
+            display: block;
+            position: absolute;
+            left: -$gem-width;
+            top: 0;
+            content: " ";
+            width: $gem-width;
+            height: 100%;
+            border-top: $gem-vector solid transparent;
+            border-right: $gem-width solid $slate-grey;
+            border-bottom: $gem-vector solid transparent;
+        }
+        &::after {
+            display: block;
+            position: absolute;
+            right: -$gem-width;
+            top: 0;
+            content: " ";
+            width: $gem-width;
+            height: 100%;
+            border-top: $gem-vector solid transparent;
+            border-left: $gem-width solid $slate-grey;
+            border-bottom: $gem-vector solid transparent;
+        }
     }
 }
 input.primary {
