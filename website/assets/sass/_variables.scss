@@ -86,12 +86,13 @@ $competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';
 $historical-atlas-img: $banner-img-url + 'Historical_Atlas_graphic.jpg';
 $megamap-img: $banner-img-url + 'Megamap.jpg';
 $database-img: $banner-img-url + 'Railroad_Track.jpg';
-$video-img: $banner-img-url + 'Video_placeholder.jpg';
+$video-img: $banner-img-url + 'Video_image.png';
 
 $white-arrow-img: $img-url-base + 'white_arrow.svg';
 $blue-arrow-circle-img: $img-url-base + 'Arrow_blue_circle.svg';
 $green-arrow-circle-img: $img-url-base + 'Arrow_green_circle.svg';
 $database-arrow-img: $img-url-base + 'Green_arrow_database.svg';
+$play-button: $img-url-base + 'Play_button.svg';
 
 $database-icon-url: $img-url-base + 'database-icons/';
 $icons: (
@@ -113,6 +114,7 @@ $icons: (
 $decorated-bg-size: 80px;
 $medium-decorated-bg-size: $decorated-bg-size * 1.3;
 $large-decorated-bg-size: 172px;
+$play-button-size: 98px;
 
 // Reusables
 

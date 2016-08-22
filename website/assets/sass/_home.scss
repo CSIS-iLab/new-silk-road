@@ -30,8 +30,46 @@
         }
     }
 
+    h2.highlighter {
+        font-size: $major-hed-size;
+        text-transform: uppercase;
+        font-style: normal;
+        margin-bottom: 0;
+        position: relative;
+
+        span {
+            color: #FFF;
+            background-color: $dark-night;
+
+            &:nth-of-type(0n + 1) {
+                line-height: 1;
+            }
+
+            &:nth-of-type(1n + 2) {
+                position: relative;
+                margin-top: 0;
+                padding-top: $tiny-spacing;
+                top: -10px;
+            }
+        }
+
+        &::after {
+            content: " ";
+            display: block;
+            background: url($database-arrow-img);
+            background-size: 16px 30px;
+            background-repeat: no-repeat;
+            width: 16px;
+            height: 30px;
+            position: absolute;
+            right: 8px;
+            bottom: 30px;
+        }
+    }
+
     #video, #analysis {
-        h2, h3 {
+        h3 {
+            font-size: $major-hed-size;
             font-family: $serif-font-family;
         }
     }
@@ -164,50 +202,12 @@
             position: absolute;
             left: $section-spacing;
             bottom: $section-spacing;
-            max-width: 300px;
-
-            h2 {
-                font-size: rem(49);
-                text-transform: uppercase;
-                margin-bottom: 0;
-                position: relative;
-
-                span {
-                    color: #FFF;
-                    background-color: $medium-green;
-
-                    &:nth-of-type(0n + 1) {
-                        line-height: 1;
-                    }
-
-                    &:nth-of-type(1n + 2) {
-                        position: relative;
-                        margin-top: 0;
-                        padding-top: $tiny-spacing;
-                        top: -10px;
-                    }
-                }
-
-                &::after {
-                    content: " ";
-                    display: block;
-                    background: url($database-arrow-img);
-                    background-size: 16px 30px;
-                    background-repeat: no-repeat;
-                    width: 16px;
-                    height: 30px;
-                    position: absolute;
-                    right: 8px;
-                    bottom: 30px;
-                }
-
-
-            }
+            max-width: 255px;
 
             p {
                 color: $pale-green;
                 font-family: $serif-font-family;
-                font-size: $base-font-size;
+                font-size: $minor-text-size;
                 font-style: italic;
                 padding: 0 $tiny-spacing;
             }
@@ -250,47 +250,72 @@
         .inner {
             padding-top: $section-spacing;
             padding-bottom: $section-spacing;
+            @include display(flex);
+            @include flex-direction(row);
+
+            > div {
+                @include flex(1 1 auto);
+
+                &:last-of-type {
+                    max-width: 240px;
+                }
+            }
+
         }
 
-        h2 {
+        h2.highlighter {
+            span {
+                background-color: $medium-green;
+            }
+        }
+
+        h3 {
             font-size: $major-hed-size;
             font-weight: 400;
+            font-style: italic;
             line-height: normal;
             margin-bottom: $small-spacing;
         }
 
-        h2, h5 {
+        h4 {
+            font-size: $section-hed-size;
+        }
+
+        h5 {
             font-style: italic;
         }
 
-        h5, h3, button a {
+        h5, h4, button a {
             color: $pale-green;
-        }
-
-        $endcap-width: 8px;
-        $button-height: 38px;
-        button {
-            background-color: $medium-green;
-            position: relative;
-            height: $button-height;
-            padding: 0 20px;
-            margin: 20px 8px 0;
         }
     }
 
+    $text-height: 32px;
+    $video-area-height: 280px;
     #video {
-        height: 500px;
+        height: $video-area-height;
         @include background-poster($video-img);
 
         @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $top: 2px);
         border-bottom: $thin-border-width solid $medium-blue-line;
 
-
-
+        $inner-margin-vertical: ($video-area-height - $play-button-size - $text-height)/2;
         .inner {
             position: relative;
-            margin-top: $section-spacing * 1.5;
-            text-align: center;
+            top: $inner-margin-vertical;
+            margin: auto;
+            width: $play-button-size;
+
+            a.play.button {
+                font: $mid-hed-size $sans-font-family;
+                color: #FFF;
+                text-transform: uppercase;
+                background: url($play-button) no-repeat transparent;
+                background-position: 0px $text-height;
+                width: $play-button-size;
+                height: $play-button-size + $text-height;
+                padding: 0;
+            }
 
             cite {
                 font-style: normal;
