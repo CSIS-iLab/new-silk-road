@@ -67,7 +67,7 @@
         </div>
     </div>
     {% comment %}
-    <div class="row">{% for entry in featured_analyses.entries.published %}
+    <div class="wrap">{% for entry in featured_analyses.entries.published %}
         <div class="analysis teaser">
             <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
             <h5 class='date'>{{entry.publication_date|date}}</h5>
@@ -79,7 +79,7 @@
 <section id='visions'>
     <div class="poster">
         <a href="{% url 'competing-visions' %}">
-            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="" />
+            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="Competing Visions teaser image" />
             <div class="label">
                 <h3>Competing Visions</h3>
                 <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
@@ -88,7 +88,7 @@
     </div>
     <div class="poster">
         <a href="{% url 'historical-atlas' %}">
-            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="" />
+            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="Historical Atlas teaser image" />
             <div class="label">
                 <h3>Historical Atlas</h3>
                 <p>Explore the rise and fall of trade, technology, and civilizations.</p>
@@ -96,11 +96,26 @@
         </a>
     </div>
 </section>
-<section id="fantasy">
+<section id="fantasy" class='columnar'>
+    <h2>From the Field</h2>
     <div class="wrap">
-        <p class="callout">
-            <a class="button gem" href="">Submit Content</a>
-        </p>
+        <div class="poster">
+            <figure>
+                <img src="{% static 'img/homepage/Khorgos_photo.jpg' %}" alt="Photo of a dry port in Khorgos" />
+                <figcaption>Khorgos Dry Port by David Parker</figcaption>
+            </figure>
+        </div>
+        <div class="poster">
+            <figure>
+                <img src="{% static 'img/homepage/Gwadar_port.jpg' %}" alt="Photo of Gwadar Port" />
+                <figcaption>Gwadar Port by Umargondal</figcaption>
+            </figure>
+        </div>
+        <div class="callout">
+            <p>
+                <a class="button gem" href="">Submit Content</a>
+            </p>
+        </div>
     </div>
 </section>
 {% endblock content-shell %}

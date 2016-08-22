@@ -14,7 +14,11 @@
     }
 
     .poster {
-        > img, a > img {
+        figure {
+            display: block;
+        }
+
+        > img, a > img, figure > img {
             display: block;
             clear: both;
 
@@ -109,7 +113,6 @@
 
             @include media($medium-break) {
                 right: $section-spacing;
-
             };
 
             h2, h3 {
@@ -218,11 +221,18 @@
         max-width: $max-content-width;
         border: none;
 
-        .row {
+        .wrap {
             > div {
-                 @include flex(0 1 45%);
-                 margin-bottom: $small-spacing;
+                @include flex(0 1 45%);
+                min-height: 360px;
+                margin-bottom: $small-spacing;
             }
+
+            @include media($small-break) {
+                > div {
+                    min-height: 300px;
+                }
+            };
 
             @include media($medium-break) {
                 @include flex-direction(row);
@@ -230,12 +240,6 @@
                     margin-bottom: 0;
                 }
             }
-        }
-
-        h2 {
-            font-family: $serif-font-family;
-            font-size: $section-hed-size;
-            text-decoration: underline;
         }
     }
 
@@ -251,13 +255,21 @@
             padding-top: $section-spacing;
             padding-bottom: $section-spacing;
             @include display(flex);
-            @include flex-direction(row);
+            @include flex-direction(column);
 
             > div {
                 @include flex(1 1 auto);
+                margin-bottom: $medium-spacing;
 
                 &:last-of-type {
                     max-width: 240px;
+                }
+            }
+            @include media($medium-break) {
+                @include flex-direction(row);
+
+                > div {
+                    margin-bottom: inherit;
                 }
             }
 
@@ -452,12 +464,33 @@
     }
 
     #fantasy {
-        .wrap {
-            padding: $large-spacing 0;
-        }
+        max-width: $max-content-width;
 
-        p.callout {
-            text-align: center;
+        .wrap {
+            @include flex-wrap(wrap);
+
+            > div {
+                @include flex-basis(auto);
+            }
+            @include media($medium-break) {
+                > div {
+                    @include flex-basis(48%);
+                }
+            };
+
+            .callout {
+                @include flex(1 0 100%);
+                min-height: inherit;
+                text-align: center;
+            }
+        }
+    }
+
+    #featured-analysis, #fantasy {
+        h2 {
+            font-family: $serif-font-family;
+            font-size: $section-hed-size;
+            text-decoration: underline;
         }
     }
 }
