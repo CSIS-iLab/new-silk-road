@@ -355,6 +355,7 @@
 
     #visions {
         min-height: 240px;
+        border-bottom: none;
 
         .poster {
             position: relative;
@@ -447,6 +448,16 @@
                     }
                 }
             }
+        }
+    }
+
+    #fantasy {
+        .wrap {
+            padding: $large-spacing 0;
+        }
+
+        p.callout {
+            text-align: center;
         }
     }
 }

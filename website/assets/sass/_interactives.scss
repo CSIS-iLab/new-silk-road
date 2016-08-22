@@ -23,6 +23,8 @@ input {
         $gem-width: 8px;
         $gem-height: 42px;
         $gem-vector: $gem-height/2;
+        text-transform: uppercase;
+        font-family: $sans-font-family;
 
         height: $gem-height;
         &::before {
