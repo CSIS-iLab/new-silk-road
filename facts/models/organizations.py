@@ -157,7 +157,6 @@ class CompanySector(object):
 
     @classmethod
     def get_label_for_sector(cls, value):
-        print("Value", value)
         return dict(CompanySector.CHOICES).get(value, "")
 
 
@@ -212,6 +211,9 @@ class FinancingOrganizationDetails(OrganizationDetails):
     org_type = models.ForeignKey('facts.FinancingType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
+    members = models.ManyToManyField('Organization',
+                                     related_name='financingorganization_memberships'
+                                     )
 
     def get_credit_ratings_display(self):
         return (
