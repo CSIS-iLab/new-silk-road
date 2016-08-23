@@ -14,7 +14,12 @@
 </section>
 <section id='mission'>
     <div class="inner">
-        <p><strong>Reconnecting Asia</strong> maps new linkages&mdash;roads, railways, and other hard infrastructure&mdash;that are reshaping economic and geopolitical realities across the continent. Through data curation and objective analysis, the project aims to fill Asia's infrastructure-information gap, squaring lofty ambitions with facts on the ground.</p>
+        <p><strong>Reconnecting Asia</strong> maps new linkages&mdash;roads, railways, and other infrastructure&mdash;that are reshaping economic and geopolitical realities across the continent. Through data curation and objective analysis, the project aims to fill Asia's infrastructure-information gap, squaring lofty ambitions with facts on the ground.</p>
+    </div>
+</section>
+<section id='video' class='poster'>
+    <div class="inner">
+        <a class="play button" href="#">Play</a>
     </div>
 </section>
 <section id='analysis'>
@@ -22,10 +27,14 @@
         {% comment %}
             TODO: Replace with actual content
         {% endcomment %}
-        <h2><a href="#">A Silk Road for the 21st Century?</a></h2>
-        <h5 class='date'>July 2016</h5>
-        <h3>Analysis by Dr. Thomas Fingar</h3>
-        <button><a href="#">Additional analysis</a></button>
+        <div>
+            <h3><a href="#">A Silk Road for the 21st Century?</a></h3>
+            <h5 class='date'>July 2016</h5>
+            <h4>By Dr. Thomas Fingar</h4>
+        </div>
+        <div>
+            <h2 class="highlighter"><a href="#"><span>Expert</span><br><span>analysis</span></a></h2>
+        </div>
     </div>
 </section>
 <section id='database' class='poster'>
@@ -36,23 +45,8 @@
         </div>
     </a>
 </section>
-<section id='video' class='poster'>
-    <a href="#">
-        <div class="inner">
-            <blockquote>
-                <h3 class="highlighter">
-                    <span>Eurasia is the chessboard on which the struggle for global</span><br>
-                    <span>primacy continues to be played.</span><br>
-                </h3>
-                <cite>
-                    <h4 class="highlighter"><span>Zbigniew Brzezinski</span></h4>
-                </cite>
-            </blockquote>
-        </div>
-    </a>
-</section>
 <section id='featured-analysis' class='columnar'>
-    <h2>Featured</h2>
+    <h2>News and Features</h2>
     {# TODO: Replace with real stuff once there is real stuff #}
     <div class="wrap">
         <div class="analysis panel">
@@ -66,14 +60,14 @@
         <div class="analysis panel">
             <h3><a href="">Vying for the next Dubai</a></h3>
             <h5 class='date'>25 June 2016</h5>
-            <p>Touted as a "New Dubai" and a "game-changing development," this dry port and logis cs center on the Kazakhstan-China border could be a bellwether for other ambitious One Belt, One Road projects.</p>
+            <p>Touted as a "New Dubai" and a "game-changing development," this dry port and logistics center on the Kazakhstan-China border could be a bellwether for other ambitious One Belt, One Road projects.</p>
             <footer>
                 <p><a href="">Read More</a></p>
             </footer>
         </div>
     </div>
     {% comment %}
-    <div class="row">{% for entry in featured_analyses.entries.published %}
+    <div class="wrap">{% for entry in featured_analyses.entries.published %}
         <div class="analysis teaser">
             <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
             <h5 class='date'>{{entry.publication_date|date}}</h5>
@@ -85,7 +79,7 @@
 <section id='visions'>
     <div class="poster">
         <a href="{% url 'competing-visions' %}">
-            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="" />
+            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="Competing Visions teaser image" />
             <div class="label">
                 <h3>Competing Visions</h3>
                 <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
@@ -94,12 +88,34 @@
     </div>
     <div class="poster">
         <a href="{% url 'historical-atlas' %}">
-            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="" />
+            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="Historical Atlas teaser image" />
             <div class="label">
                 <h3>Historical Atlas</h3>
                 <p>Explore the rise and fall of trade, technology, and civilizations.</p>
             </div>
         </a>
+    </div>
+</section>
+<section id="fantasy" class='columnar'>
+    <h2>From the Field</h2>
+    <div class="wrap">
+        <div class="poster">
+            <figure>
+                <img src="{% static 'img/homepage/Khorgos_photo.jpg' %}" alt="Photo of a dry port in Khorgos" />
+                <figcaption>Khorgos Dry Port by David Parker</figcaption>
+            </figure>
+        </div>
+        <div class="poster">
+            <figure>
+                <img src="{% static 'img/homepage/Gwadar_port.jpg' %}" alt="Photo of Gwadar Port" />
+                <figcaption>Gwadar Port by Umargondal</figcaption>
+            </figure>
+        </div>
+        <div class="callout">
+            <p>
+                <a class="button gem" href="">Submit Content</a>
+            </p>
+        </div>
     </div>
 </section>
 {% endblock content-shell %}

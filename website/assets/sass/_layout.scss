@@ -2,15 +2,60 @@
 
 .content-wrap {
     margin-bottom: 4rem;
+    padding: $medium-spacing 0 0;
+    @include media($medium-break) {
+        padding-top: $section-spacing;
+    }
+}
+::-ms-backdrop, .content-wrap {
+    background-position: 50% (-($section-spacing + 22));
 }
 
-.content-wrap, footer .wrap {
+
+.content-wrap, footer .wrap, {
     @include outer-container($small-wrap);
     @include media($medium-break) {
         @include outer-container($medium * 0.9);
     }
     @include media($large-break) {
         max-width: $max-content-width;
+    }
+}
+
+section.columnar {
+    margin: $section-spacing auto;
+
+    .wrap {
+        &.content-wrap {
+            padding: 0;
+        }
+
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(space-between);
+
+        > div, > section {
+            display: block;
+            min-height: 240px;
+            @include flex(1 0 100%);
+            margin-bottom: $medium-spacing;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            @include flex-wrap(wrap);
+            > div, > section {
+                min-height: 200px;
+                @include flex(0 1 48%);
+                &:last-of-type {
+                    margin-bottom: $medium-spacing;
+                }
+            }
+        }
     }
 }
 

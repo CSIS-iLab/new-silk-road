@@ -24,11 +24,13 @@
         @include media($medium-break) {
              @include flex-direction(row);
         }
-        > button,
+        > button {
+            @include flex(0 1 auto);
+        }
         > div,
         > input,
         > select {
-            @include flex(0 1 auto);
+            @include flex(0.3 1 auto);
             margin: 0 0 6px;
             @include media($medium-break) {
                 margin: 0;

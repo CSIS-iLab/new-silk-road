@@ -13,56 +13,12 @@
         font-style: italic;
     }
 
-    > section {
-        h2, h3, h4, h5, h6 {
-            font-family: $sans-font-family;
-            font-weight: 300;
-
-            &.highlighter {
-                display: block;
-
-                span {
-                    padding: 10px;
-                    display: inline-block;
-                }
-            }
-        }
-
-        border-bottom: $thin-dark-border;
-        display: block;
-        position: relative;
-        min-height: 240px;
-
-        .inner {
-            width: 96%;
-            margin: auto;
-
-            @include media($medium-break) {
-                width: auto;
-                height: auto;
-            }
-
-        }
-
-        &:last-of-type {
-            border: none;
-        }
-
-        h2 {
-            font-size: $shouting-hed-size;
-            line-height: normal;
-        }
-
-        > a {
-            display: block;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-    }
-
     .poster {
-        > img, a > img {
+        figure {
+            display: block;
+        }
+
+        > img, a > img, figure > img {
             display: block;
             clear: both;
 
@@ -78,8 +34,46 @@
         }
     }
 
+    h2.highlighter {
+        font-size: $major-hed-size;
+        text-transform: uppercase;
+        font-style: normal;
+        margin-bottom: 0;
+        position: relative;
+
+        span {
+            color: #FFF;
+            background-color: $dark-night;
+
+            &:nth-of-type(0n + 1) {
+                line-height: 1;
+            }
+
+            &:nth-of-type(1n + 2) {
+                position: relative;
+                margin-top: 0;
+                padding-top: $tiny-spacing;
+                top: -10px;
+            }
+        }
+
+        &::after {
+            content: " ";
+            display: block;
+            background: url($database-arrow-img);
+            background-size: 16px 30px;
+            background-repeat: no-repeat;
+            width: 16px;
+            height: 30px;
+            position: absolute;
+            right: 8px;
+            bottom: 30px;
+        }
+    }
+
     #video, #analysis {
-        h2, h3 {
+        h3 {
+            font-size: $major-hed-size;
             font-family: $serif-font-family;
         }
     }
@@ -119,7 +113,6 @@
 
             @include media($medium-break) {
                 right: $section-spacing;
-
             };
 
             h2, h3 {
@@ -212,50 +205,12 @@
             position: absolute;
             left: $section-spacing;
             bottom: $section-spacing;
-            max-width: 300px;
-
-            h2 {
-                font-size: rem(49);
-                text-transform: uppercase;
-                margin-bottom: 0;
-                position: relative;
-
-                span {
-                    color: #FFF;
-                    background-color: $medium-green;
-
-                    &:nth-of-type(0n + 1) {
-                        line-height: 1;
-                    }
-
-                    &:nth-of-type(1n + 2) {
-                        position: relative;
-                        margin-top: 0;
-                        padding-top: $tiny-spacing;
-                        top: -10px;
-                    }
-                }
-
-                &::after {
-                    content: " ";
-                    display: block;
-                    background: url($database-arrow-img);
-                    background-size: 16px 30px;
-                    background-repeat: no-repeat;
-                    width: 16px;
-                    height: 30px;
-                    position: absolute;
-                    right: 8px;
-                    bottom: 30px;
-                }
-
-
-            }
+            max-width: 255px;
 
             p {
                 color: $pale-green;
                 font-family: $serif-font-family;
-                font-size: $base-font-size;
+                font-size: $minor-text-size;
                 font-style: italic;
                 padding: 0 $tiny-spacing;
             }
@@ -266,11 +221,18 @@
         max-width: $max-content-width;
         border: none;
 
-        .row {
+        .wrap {
             > div {
-                 @include flex(0 1 45%);
-                 margin-bottom: $small-spacing;
+                @include flex(0 1 45%);
+                min-height: 360px;
+                margin-bottom: $small-spacing;
             }
+
+            @include media($small-break) {
+                > div {
+                    min-height: 300px;
+                }
+            };
 
             @include media($medium-break) {
                 @include flex-direction(row);
@@ -278,12 +240,6 @@
                     margin-bottom: 0;
                 }
             }
-        }
-
-        h2 {
-            font-family: $serif-font-family;
-            font-size: $section-hed-size;
-            text-decoration: underline;
         }
     }
 
@@ -298,68 +254,80 @@
         .inner {
             padding-top: $section-spacing;
             padding-bottom: $section-spacing;
+            @include display(flex);
+            @include flex-direction(column);
+
+            > div {
+                @include flex(1 1 auto);
+                margin-bottom: $medium-spacing;
+
+                &:last-of-type {
+                    max-width: 240px;
+                }
+            }
+            @include media($medium-break) {
+                @include flex-direction(row);
+
+                > div {
+                    margin-bottom: inherit;
+                }
+            }
+
         }
 
-        h2 {
+        h2.highlighter {
+            span {
+                background-color: $medium-green;
+            }
+        }
+
+        h3 {
             font-size: $major-hed-size;
             font-weight: 400;
+            font-style: italic;
             line-height: normal;
             margin-bottom: $small-spacing;
         }
 
-        h2, h5 {
+        h4 {
+            font-size: $section-hed-size;
+        }
+
+        h5 {
             font-style: italic;
         }
 
-        h5, h3, button a {
+        h5, h4, button a {
             color: $pale-green;
-        }
-
-        $endcap-width: 8px;
-        $button-height: 38px;
-        button {
-            background-color: $medium-green;
-            position: relative;
-            height: $button-height;
-            padding: 0 20px;
-            margin: 20px 8px 0;
-
-            &::before {
-                position: absolute;
-                left: -($endcap-width + 0.5);
-                top: 0;
-                content: "";
-                background-image: url($button-left-endcap);
-                background-size: contain;
-                width: $endcap-width;
-                height: $button-height;
-            }
-            &::after {
-                position: absolute;
-                right: -($endcap-width - 0.5);
-                top: 0;
-                content: "";
-                background-image: url($button-right-endcap);
-                background-size: contain;
-                width: $endcap-width;
-                height: $button-height;
-            }
         }
     }
 
+    $text-height: 32px;
+    $video-area-height: 280px;
     #video {
-        height: 500px;
+        height: $video-area-height;
         @include background-poster($video-img);
 
         @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $top: 2px);
         border-bottom: $thin-border-width solid $medium-blue-line;
 
-
-
+        $inner-margin-vertical: ($video-area-height - $play-button-size - $text-height)/2;
         .inner {
             position: relative;
-            margin-top: $section-spacing * 1.5;
-            text-align: center;
+            top: $inner-margin-vertical;
+            margin: auto;
+            width: $play-button-size;
+
+            a.play.button {
+                font: $mid-hed-size $sans-font-family;
+                color: #FFF;
+                text-transform: uppercase;
+                background: url($play-button) no-repeat transparent;
+                background-position: 0px $text-height;
+                width: $play-button-size;
+                height: $play-button-size + $text-height;
+                padding: 0;
+            }
 
             cite {
                 font-style: normal;
@@ -399,6 +367,7 @@
 
     #visions {
         min-height: 240px;
+        border-bottom: none;
 
         .poster {
             position: relative;
@@ -491,6 +460,37 @@
                     }
                 }
             }
+        }
+    }
+
+    #fantasy {
+        max-width: $max-content-width;
+
+        .wrap {
+            @include flex-wrap(wrap);
+
+            > div {
+                @include flex-basis(auto);
+            }
+            @include media($medium-break) {
+                > div {
+                    @include flex-basis(48%);
+                }
+            };
+
+            .callout {
+                @include flex(1 0 100%);
+                min-height: inherit;
+                text-align: center;
+            }
+        }
+    }
+
+    #featured-analysis, #fantasy {
+        h2 {
+            font-family: $serif-font-family;
+            font-size: $section-hed-size;
+            text-decoration: underline;
         }
     }
 }

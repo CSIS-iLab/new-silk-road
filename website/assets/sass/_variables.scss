@@ -86,16 +86,13 @@ $competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';
 $historical-atlas-img: $banner-img-url + 'Historical_Atlas_graphic.jpg';
 $megamap-img: $banner-img-url + 'Megamap.jpg';
 $database-img: $banner-img-url + 'Railroad_Track.jpg';
-$video-img: $banner-img-url + 'Video_placeholder.jpg';
+$video-img: $banner-img-url + 'Video_image.png';
 
 $white-arrow-img: $img-url-base + 'white_arrow.svg';
 $blue-arrow-circle-img: $img-url-base + 'Arrow_blue_circle.svg';
 $green-arrow-circle-img: $img-url-base + 'Arrow_green_circle.svg';
 $database-arrow-img: $img-url-base + 'Green_arrow_database.svg';
-
-// button stuff
-$button-left-endcap: $img-url-base + 'Left_endcap.svg';
-$button-right-endcap: $img-url-base + 'Right_endcap.svg';
+$play-button: $img-url-base + 'Play_button.svg';
 
 $database-icon-url: $img-url-base + 'database-icons/';
 $icons: (
@@ -117,11 +114,12 @@ $icons: (
 $decorated-bg-size: 80px;
 $medium-decorated-bg-size: $decorated-bg-size * 1.3;
 $large-decorated-bg-size: 172px;
+$play-button-size: 98px;
 
 // Reusables
 
-$thick-border-width: 5px;
-$thin-border-width: 3px;
+$thick-border-width: 8px;
+$thin-border-width: 5px;
 $thick-dark-border: $thick-border-width solid $dark-night;
 $thin-dark-border: $thin-border-width solid $dark-night;
 $section-spacing: 50px;

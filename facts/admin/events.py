@@ -34,6 +34,10 @@ class EventAdmin(admin.ModelAdmin):
         InitiativeEventInline
     )
     list_display = ('name', 'start_year', 'end_year') + TEMPORAL_FIELDS + ('published',)
+    list_filter = (
+        'published',
+    )
+    ordering = ['name', 'created_at', 'published']
     actions = [make_published, make_not_published]
     fieldsets = (
         (None, {

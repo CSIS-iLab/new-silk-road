@@ -33,6 +33,10 @@ class PersonAdmin(admin.ModelAdmin):
         'citizenships__name',
     )
     actions = [make_published, make_not_published]
+    ordering = ['family_name', 'given_name', 'created_at', 'published']
+    list_filter = (
+        'published',
+    )
     inlines = (
         PositionInline,
         PersonEventInline,

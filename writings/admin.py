@@ -33,8 +33,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class EntryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
-    list_display = ('title', 'categories_display', 'published', 'publication_date', 'page_is_visble', 'page_link', 'updated_at')
+    list_display = ('title', 'categories_display', 'published', 'publication_date', 'page_is_visible', 'page_link', 'updated_at')
     list_filter = ('published', 'categories')
+    ordering = ['publication_date', 'title', 'published', 'created_at']
     filter_horizontal = ('categories', 'related_entries',)
     fieldsets = (
         (None, {
@@ -79,10 +80,10 @@ class EntryAdmin(admin.ModelAdmin):
         )
     page_link.description = "View on Site"
 
-    def page_is_visble(self, obj):
+    def page_is_visible(self, obj):
         return obj.published and obj.publication_date <= timezone.now()
-    page_is_visble.description = "Visible on Site?"
-    page_is_visble.boolean = True
+    page_is_visible.description = "Visible on Site?"
+    page_is_visible.boolean = True
 
 
 class OrderedEntryInline(SortableStackedInline):

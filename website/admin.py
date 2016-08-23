@@ -3,6 +3,8 @@ from django.db import models
 from django.forms import Textarea
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.admin import FlatPageAdmin
+from django.contrib.contenttypes.admin import GenericStackedInline
+from suit.admin import SortableStackedInline
 from reversion.admin import VersionAdmin
 from django.utils.html import format_html
 from .models import CollectionItem, Collection
@@ -37,6 +39,8 @@ class CollectionItemAdmin(admin.ModelAdmin):
     readonly_fields = ('item_representation',)
     list_display = (
         '__str__',
+        'collection_id',
+        'order',
         'item_admin_url',
     )
 
@@ -54,10 +58,15 @@ class CollectionItemAdmin(admin.ModelAdmin):
     item_admin_url.short_description = 'Admin URL'
 
 
+class CollectionItemInline(SortableStackedInline):
+    model = CollectionItem
+    sortable = 'order'
+
+
 class CollectionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    filter_horizontal = [
-        'items',
+    inlines = [
+        CollectionItemInline,
     ]
 
 admin.site.register(Collection, CollectionAdmin)

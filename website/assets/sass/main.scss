@@ -59,6 +59,14 @@ h2,h3,h4,h5,h6 {
     margin: 0 0 0.75em;
 }
 
+figure {
+    margin: 0;
+}
+
+figcaption {
+    color: $gravel-grey;
+}
+
 p {
     margin: 0 0 1rem;
 
@@ -242,7 +250,7 @@ header[role=banner] {
 header.decorated {
     position: relative;
 
-    border-bottom: $thick-border-width solid $blue-steel;
+    border-bottom: $thin-border-width solid $blue-steel;
     margin-bottom: 25px;
     padding-bottom: 25px;
     display: block;
@@ -267,19 +275,19 @@ header.decorated {
         width: 100%;
         height: 12px;
         display: block;
-        @include position(absolute, 100% 0 ($small-spacing - $thick-border-width - 2px) 0);
+        @include position(absolute, 100% 0 ($small-spacing - $thin-border-width - 2px) 0);
         background-image: url($small-arrow-img);
         background-position: 50% 100%;
         background-size: $small-arrow-width auto;
         background-repeat: no-repeat;
         @include media($medium-break) {
-            @include position(absolute, 100% 0 ($large-spacing - $thick-border-width - 2px) 0);
+            @include position(absolute, 100% 0 ($large-spacing - $thin-border-width - 2px) 0);
         }
     }
     &::-ms-backdrop, &::after {
-        @include position(absolute, 100% 0 ($small-spacing - $thick-border-width - 2px) 0);
+        @include position(absolute, 100% 0 ($small-spacing - $thin-border-width - 2px) 0);
         @include media($medium-break) {
-            @include position(absolute, 100% 0 ($large-spacing - $thick-border-width) 0);
+            @include position(absolute, 100% 0 ($large-spacing - $thin-border-width) 0);
         }
     }
 
@@ -326,17 +334,6 @@ header.decorated {
     }
 }
 
-
-.content-wrap {
-    padding: $medium-spacing 0 0;
-    @include media($medium-break) {
-        padding-top: $section-spacing;
-    }
-}
-
-::-ms-backdrop, .content-wrap {
-    background-position: 50% (-($section-spacing + 22));
-}
 
 body > footer {
     @include position(relative);
@@ -486,5 +483,54 @@ article {
 .row {
     h3 {
         color: $slate-grey;
+    }
+}
+
+body {
+    > section {
+        h2, h3, h4, h5, h6 {
+            font-family: $sans-font-family;
+            font-weight: 300;
+
+            &.highlighter {
+                display: block;
+
+                span {
+                    padding: 10px;
+                    display: inline-block;
+                }
+            }
+        }
+
+        border-bottom: $thin-dark-border;
+        display: block;
+        position: relative;
+
+        .inner {
+            width: 96%;
+            margin: auto;
+
+            @include media($medium-break) {
+                width: auto;
+                height: auto;
+            }
+
+        }
+
+        &:last-of-type {
+            border: none;
+        }
+
+        h2 {
+            font-size: $shouting-hed-size;
+            line-height: normal;
+        }
+
+        > a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
     }
 }

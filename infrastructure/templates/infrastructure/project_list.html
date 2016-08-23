@@ -7,7 +7,9 @@
 <ul>
 {% for object in object_list  %}
     <li>
-        <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+        <a href="{{ object.get_absolute_url }}">
+            {% if object.alternate_name %}{{ object.alternate_name }}{% else %}{{ object.name }}{% endif %}
+        </a>
     </li>
 {% endfor %}
 </ul>
