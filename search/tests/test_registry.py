@@ -1,12 +1,10 @@
-from django.test import SimpleTestCase, override_settings
 from unittest.mock import Mock, call
 from search.registry import SearchRegistry
-from search.tests.mocks import MockDocType, MockModel
-from .settings import TEST_SEARCH
+from .mocks import MockDocType, MockModel
+from .base import BaseSearchTestCase
 
 
-@override_settings(SEARCH=TEST_SEARCH)
-class SearchRegistryTestCase(SimpleTestCase):
+class SearchRegistryTestCase(BaseSearchTestCase):
 
     def test_has_serializer_module(self):
         registry = SearchRegistry('search.tests.mocks')

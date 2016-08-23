@@ -2,8 +2,8 @@ from django.test import TestCase, override_settings
 from elasticsearch_dsl.connections import connections
 from search.utils import get_document_class, create_search_index, doc_id_for_instance
 from search.documents import ProjectDoc
-from search.tests.settings import TEST_SEARCH
-from search.tests.factories import EntryFactory
+from .factories import EntryFactory
+from .settings import TEST_SEARCH
 
 
 class GetDocumentClassTestCase(TestCase):
@@ -27,7 +27,9 @@ class GetDocumentClassTestCase(TestCase):
 class CreateSearchIndexTestCase(TestCase):
 
     def setUp(self):
-        connections.create_connection('testing', **TEST_SEARCH['default']['connections'])
+        from django.conf import settings
+        self.settings = getattr(settings, 'SEARCH')
+        connections.create_connection('testing', **self.settings['default']['connections'])
 
     def test_create_search_index_only(self):
         index = create_search_index('test_create')
@@ -41,7 +43,7 @@ class CreateSearchIndexTestCase(TestCase):
         self.assertFalse(index.exists())
 
     def test_create_search_index_with_doctypes(self):
-        index = create_search_index('foo', doc_types=TEST_SEARCH['default']['doc_types'])
+        index = create_search_index('foo', doc_types=self.settings['default']['doc_types'])
 
         self.assertIsNotNone(index)
 

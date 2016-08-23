@@ -1,6 +1,6 @@
-from django.test import TestCase, override_settings
 from search.documents import EntryDoc, ProjectDoc
 from search.serializers import ProjectSerializer, EntrySerializer
+from .base import BaseSearchTestCase
 from .factories import (
     ProjectFactory,
     CountryFactory,
@@ -11,11 +11,9 @@ from .mocks import (
     MockSerializer,
     MockDocType
 )
-from .settings import TEST_SEARCH
 
 
-@override_settings(SEARCH=TEST_SEARCH)
-class SerializersTestCase(TestCase):
+class SerializersTestCase(BaseSearchTestCase):
 
     def test_serializer_loads_doctype_class(self):
         serializer = MockSerializer()

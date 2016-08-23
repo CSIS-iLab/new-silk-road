@@ -1,28 +1,10 @@
-from django.test import TestCase, override_settings
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.connections import connections
-from search.tests.factories import EntryFactory
 from search.serializers import EntrySerializer
-from search.utils import create_search_index
-from .settings import TEST_SEARCH
-
-INDEX_DOCS = (
-    'search.EntryDoc',
-)
+from .factories import EntryFactory
+from .base import BaseSearchTestCase
 
 
-@override_settings(SEARCH=TEST_SEARCH)
-class DocumentsTestCase(TestCase):
-
-    def setUp(self):
-        connections.create_connection('testing', **TEST_SEARCH['default']['connections'])
-        self.index = create_search_index(TEST_SEARCH['default']['index'], INDEX_DOCS, connection='testing')
-        if self.index.exists():
-            self.index.delete()
-        self.index.create()
-
-    def tearDown(self):
-        self.index.delete()
+class DocumentsTestCase(BaseSearchTestCase):
 
     def test_index_writings_entries(self):
         entry_objects = EntryFactory.create_batch(30)
