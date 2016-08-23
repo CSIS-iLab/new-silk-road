@@ -52,5 +52,9 @@ class SearchRegistry:
             model = model._meta.label
         return self._model_serializers.get(model, None)
 
+    def get_doctype_for_model(self, model):
+        serializer_class = self.get_serializer_for_model(model)
+        return serializer_class().doc_type
+
     def get_registered_models(self):
         return list(self._model_serializers.keys())

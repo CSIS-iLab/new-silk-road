@@ -93,3 +93,10 @@ class SearchRegistryTestCase(SimpleTestCase):
         self.assertIsNotNone(model_list)
         self.assertIsInstance(model_list, list)
         self.assertIn('search.MockModel', model_list)
+
+    def test_get_doctype_for_model_method(self):
+        registry = SearchRegistry('search.tests.mocks')
+        registry.register(('MockSerializerThree',))
+
+        DoctypeClass = registry.get_doctype_for_model('search.MockModel')
+        self.assertEqual(DoctypeClass, MockDocType)
