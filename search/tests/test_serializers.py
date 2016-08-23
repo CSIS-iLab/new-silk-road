@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from search.documents import EntryDoc, ProjectDoc
 from search.serializers import ProjectSerializer, EntrySerializer
 from .factories import (
@@ -7,9 +7,19 @@ from .factories import (
     EntryFactory,
     EntryCategoryFactory,
 )
+from .mocks import (
+    MockSerializer,
+    MockDocType
+)
+from .settings import TEST_SEARCH
 
 
+@override_settings(SEARCH=TEST_SEARCH)
 class SerializersTestCase(TestCase):
+
+    def test_serializer_loads_doctype_class(self):
+        serializer = MockSerializer()
+        self.assertEqual(serializer.doc_type, MockDocType)
 
     def test_project_serializer(self):
         obj = ProjectFactory.create(name='Test title', countries=CountryFactory.create_batch(4), status=5)

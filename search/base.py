@@ -2,6 +2,7 @@ from django.apps import apps
 from django.db import models
 from django.forms.models import model_to_dict
 from search.utils import doc_id_for_instance
+from importlib import import_module
 
 
 class ModelSerializer:
@@ -21,6 +22,13 @@ class ModelSerializer:
         self.model_class = apps.get_model(self.Meta.model) if isinstance(self.Meta.model, str) else self.Meta.model
         if not issubclass(self.model_class, models.Model):
             raise TypeError('model attribute must be a django Model subclass')
+
+        if isinstance(self.Meta.doc_type, str):
+            module_path, class_name = self.Meta.doc_type.rsplit('.', maxsplit=1)
+            doctype_module = import_module(module_path)
+            self._doc_type = getattr(doctype_module, class_name, None)
+        else:
+            self._doc_type = self.Meta.doc_type
 
         self._fields = set(self.Meta.fields)
         self._simple_fields = []
@@ -64,7 +72,7 @@ class ModelSerializer:
 
     @property
     def doc_type(self):
-        return self.Meta.doc_type
+        return self._doc_type
 
     def create_document(self, instance):
         obj_dict = self.serialize(instance)
