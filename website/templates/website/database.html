@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load html_text from html_utils %}
 
 {% block pagetitle %}
 The Database | {{ block.super }}
@@ -32,7 +32,11 @@ The Database | {{ block.super }}
         <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
             <div class="inner">
                 <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
-                {{object.description_rendered|safe|truncatewords_html:30}}
+                {% if item.description_rendered %}
+                {{item.description_rendered|html_text|truncatewords_html:30|safe}}
+                {% else %}
+                {{object.description_rendered|html_text|truncatewords_html:30|safe}}
+                {% endif %}
                 <footer>
                     <p><a href="{{object.get_absolute_url}}">Read More</a></p>
                 </footer>
