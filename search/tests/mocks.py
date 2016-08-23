@@ -26,3 +26,10 @@ class MockSerializerTwo:
         model = 'search.MockModelTwo'
         doc_type = 'search.tests.mocks.MockDocType'
         fields = None
+
+
+class MockSerializerThree:
+    class Meta:
+        model = MockModel
+        doc_type = 'search.tests.mocks.MockDocType'
+        fields = None

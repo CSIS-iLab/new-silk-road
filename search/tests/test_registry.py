@@ -76,3 +76,20 @@ class SearchRegistryTestCase(SimpleTestCase):
         MockSerializer = getattr(registry._serializer_module, 'MockSerializer', None)
         serializer = registry.get_serializer_for_model(MockModel)
         self.assertEqual(serializer, MockSerializer)
+
+    def test_get_registered_models_method(self):
+        registry = SearchRegistry('search.tests.mocks')
+        registry.register(('MockSerializer',))
+
+        model_list = registry.get_registered_models()
+        self.assertIsNotNone(model_list)
+        self.assertIn('search.MockModel', model_list)
+
+    def test_get_registered_models_method_with_concrete_model(self):
+        registry = SearchRegistry('search.tests.mocks')
+        registry.register(('MockSerializerThree',))
+
+        model_list = registry.get_registered_models()
+        self.assertIsNotNone(model_list)
+        self.assertIsInstance(model_list, list)
+        self.assertIn('search.MockModel', model_list)

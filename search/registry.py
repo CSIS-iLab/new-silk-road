@@ -51,3 +51,6 @@ class SearchRegistry:
         if isclass(model) and issubclass(model, models.Model):
             model = model._meta.label
         return self._model_serializers.get(model, None)
+
+    def get_registered_models(self):
+        return list(self._model_serializers.keys())
