@@ -21,7 +21,7 @@ class Command(BaseCommand):
                 for name, config in SEARCH.items():
                     index_name = config.get('index')
                     if index_name:
-                        self.stdout.write("Creating search index {}".format(index_name))
+                        self.stdout.write("Creating search index '{}'".format(index_name))
                         doc_types = config.get('doc_types', None)
                         create_search_index(index_name, doc_types=doc_types)
                     else:

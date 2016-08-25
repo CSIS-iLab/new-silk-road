@@ -1,9 +1,6 @@
 from django.apps import AppConfig
-from elasticsearch_dsl import Index
-import django_rq
-from search.utils import create_search_index
+from django.db.models.signals import post_save, post_delete
 from search.registry import SearchRegistry
-from search import DEFAULT_INDEX
 import logging
 
 logger = logging.getLogger(__package__)
@@ -13,21 +10,29 @@ class SearchConfig(AppConfig):
     name = 'search'
 
     def ready(self):
-        # TODO: Configure task to know what models have what doctypes have what serializers?
-        # NOTE: Seralizers have model and doc_type in Meta, so registering/configuring serializers
 
         self.registry = SearchRegistry()
         self.registry.register((
             'EntrySerializer',
             'ProjectSerializer'
         ))
+        # Configure DocTypes so they are associated with indexes specified in settings.py
+        self.registry.configure_doctypes()
 
-        # Ensure default search index exists
-        index = Index(DEFAULT_INDEX)
-        if not index.exists():
-            logger.debug("Default search index '{}' missing".format(DEFAULT_INDEX))
-            index_doc_types = self.registry.doctypes_for_index(DEFAULT_INDEX)
-            django_rq.enqueue(create_search_index, DEFAULT_INDEX, doc_types=index_doc_types)
-            # create_search_index(DEFAULT_INDEX, doc_types=index_doc_types)
+        from search.signals import run_post_save_search_tasks, run_post_delete_search_tasks  # noqa: F401
 
-        import search.signals  # noqa: F401
+        model_labels = self.registry.get_registered_models()
+
+        for label in model_labels:
+            logger.debug('Connecting post_save for {}'.format(label))
+            post_save.connect(
+                run_post_save_search_tasks,
+                sender=label,
+                dispatch_uid='run_post_save_search_tasks::{}'.format(label)
+            )
+            post_delete_uid = 'run_post_delete_search_tasks::{}'.format(label)
+            post_delete.connect(
+                run_post_delete_search_tasks,
+                sender=label,
+                dispatch_uid=post_delete_uid
+            )
