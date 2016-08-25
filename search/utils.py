@@ -1,6 +1,8 @@
 from elasticsearch_dsl import Index
 from importlib import import_module
 
+DOC_ID_SEPARATOR = '::'
+
 
 def get_document_class(doctype_path):
     module_path, class_name = doctype_path.rsplit('.', maxsplit=1)
@@ -22,5 +24,9 @@ def create_search_index(index_name, doc_types=None, connection='default'):
     return index
 
 
+def calculate_doc_id(label, pk):
+    return ''.join((label, DOC_ID_SEPARATOR, str(pk)))
+
+
 def doc_id_for_instance(instance):
-    return '-'.join((instance._meta.label, str(instance.id)))
+    return calculate_doc_id(instance._meta.label, str(instance.id))

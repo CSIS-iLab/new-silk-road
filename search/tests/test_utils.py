@@ -1,6 +1,12 @@
 from django.test import TestCase, override_settings
 from elasticsearch_dsl.connections import connections
-from search.utils import get_document_class, create_search_index, doc_id_for_instance
+from search.utils import (
+    get_document_class,
+    create_search_index,
+    doc_id_for_instance,
+    calculate_doc_id,
+    DOC_ID_SEPARATOR
+)
 from search.documents import ProjectDoc
 from .factories import EntryFactory
 from .settings import TEST_SEARCH
@@ -59,7 +65,7 @@ class CreateSearchIndexTestCase(TestCase):
         self.assertFalse(index.exists())
 
 
-class DocIdForInstanceTestCase(TestCase):
+class DocIdTestCase(TestCase):
 
     def test_doc_id_for_instance(self):
         instance = EntryFactory(id=411)
@@ -67,3 +73,10 @@ class DocIdForInstanceTestCase(TestCase):
 
         self.assertIn('411', es_id)
         self.assertIn('writings.Entry', es_id)
+
+    def test_calculate_doc_id(self):
+        doc_id = calculate_doc_id('writings.Entry', 411)
+
+        label, pk = doc_id.split(DOC_ID_SEPARATOR)
+        self.assertEqual(label, 'writings.Entry')
+        self.assertEqual(pk, '411')
