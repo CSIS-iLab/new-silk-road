@@ -388,7 +388,6 @@ RQ_QUEUES = {
 SEARCH = {
     'default': {
         'index': 'reconnectingasia',
-        # TODO: Remove doc_types setting once we have a seralizer registry (DocTypes can be inspected for search index)
         'doc_types': ('search.EntryDoc', 'search.ProjectDoc'),
         'connections': {
             'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
