@@ -9,7 +9,7 @@ from .factories import (
 )
 from .mocks import (
     MockSerializer,
-    MockDocType
+    MockDocOne
 )
 
 
@@ -17,7 +17,7 @@ class SerializersTestCase(BaseSearchTestCase):
 
     def test_serializer_loads_doctype_class(self):
         serializer = MockSerializer()
-        self.assertEqual(serializer.doc_type, MockDocType)
+        self.assertEqual(serializer.doc_type, MockDocOne)
 
     def test_project_serializer(self):
         obj = ProjectFactory.create(name='Test title', countries=CountryFactory.create_batch(4), status=5)

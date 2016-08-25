@@ -52,8 +52,8 @@ class CreateSearchIndexTestCase(TestCase):
 
         mappings = index_dict.get('mappings')
         self.assertEqual(len(mappings.keys()), 2)
-        self.assertIn('project_doc', mappings)
-        self.assertIn('entry_doc', mappings)
+        self.assertIn('mock_doc_one', mappings)
+        self.assertIn('mock_doc_two', mappings)
 
         index.delete()
         self.assertFalse(index.exists())
