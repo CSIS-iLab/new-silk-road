@@ -1,8 +1,10 @@
 import factory
 from django.utils.text import slugify
+from django.db.models import signals
 import pytz
 
 
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class EntryCategoryFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=40)
 
@@ -14,6 +16,7 @@ class EntryCategoryFactory(factory.django.DjangoModelFactory):
         model = 'writings.Category'
 
 
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class EntryFactory(factory.django.DjangoModelFactory):
     title = factory.Faker('text', max_nb_chars=100)
     author = factory.Faker('text', max_nb_chars=100)
@@ -41,6 +44,7 @@ class EntryFactory(factory.django.DjangoModelFactory):
         model = 'writings.Entry'
 
 
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class CountryFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('country')
     numeric = factory.Faker('numerify', text='###')
@@ -50,6 +54,7 @@ class CountryFactory(factory.django.DjangoModelFactory):
         model = 'locations.Country'
 
 
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class InfrastructureTypeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=100)
 
@@ -57,6 +62,7 @@ class InfrastructureTypeFactory(factory.django.DjangoModelFactory):
         model = 'infrastructure.InfrastructureType'
 
 
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class ProjectFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=300)
     alternate_name = factory.Faker('text', max_nb_chars=100)
