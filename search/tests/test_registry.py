@@ -1,6 +1,6 @@
 from unittest.mock import Mock, call
 from search.registry import SearchRegistry
-from .mocks import MockDocType, MockModel
+from .mocks import MockDocOne, MockDocTwo, MockModel
 from .base import BaseSearchTestCase
 
 
@@ -72,4 +72,36 @@ class SearchRegistryTestCase(BaseSearchTestCase):
         registry.register(('MockSerializerThree',))
 
         DoctypeClass = registry.get_doctype_for_model('search.MockModel')
-        self.assertEqual(DoctypeClass, MockDocType)
+        self.assertEqual(DoctypeClass, MockDocOne)
+
+    def test_has_default_settings(self):
+        registry = SearchRegistry()
+
+        self.assertIsInstance(registry._settings, dict)
+        self.assertIn('default', registry._settings)
+        self.assertIn('index', registry._settings['default'])
+        self.assertIn('connections', registry._settings['default'])
+        self.assertIsInstance(registry._settings['default']['connections'], dict)
+
+    def test__doctype_lookup(self):
+        registry = SearchRegistry()
+
+        from django.conf import settings
+        SEARCH = getattr(settings, 'SEARCH', {})
+        default_index = SEARCH['default']['index']
+        default_doctypes = SEARCH['default']['doc_types']
+
+        self.assertIn(default_index, registry._doctype_lookup)
+        self.assertEqual(registry._doctype_lookup[default_index], default_doctypes)
+
+    def test_setup_doctypes(self):
+        registry = SearchRegistry()
+        registry.configure_doctypes()
+
+        from django.conf import settings
+        SEARCH = getattr(settings, 'SEARCH', {})
+        default_index = SEARCH['default']['index']
+        # default_doctypes = SEARCH['default']['doc_types']
+
+        self.assertEqual(MockDocOne._doc_type.index, default_index)
+        self.assertEqual(MockDocTwo._doc_type.index, default_index)

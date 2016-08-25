@@ -1,7 +1,8 @@
 from django.db import models
+from django.conf import settings
+from elasticsearch_dsl import Index
 from importlib import import_module
 from inspect import isclass
-from collections import defaultdict
 import logging
 from search.utils import get_document_class
 
@@ -15,6 +16,9 @@ class SearchRegistry:
     def __init__(self, serializers_path=None):
         self._model_serializers = {}
         self._serializer_module = import_module(serializers_path or DEFAULT_SERIALIZER_PATH)
+        self._settings = getattr(settings, 'SEARCH', {})
+
+        self._doctype_lookup = {value['index']: value['doc_types'] for key, value in self._settings.items()}
 
     def _register_serializer_model(self, serializer_class):
         model_label = None
@@ -46,3 +50,17 @@ class SearchRegistry:
 
     def get_registered_models(self):
         return list(self._model_serializers.keys())
+
+    def configure_doctypes(self):
+        for name, doctypes in self._doctype_lookup.items():
+            index = Index(name)
+            if index.exists():
+                for value in doctypes:
+                    DocType = get_document_class(value)
+                    if DocType:
+                        index.doc_type(DocType)
+                    else:
+                        logger.error("DocType not found for '{}'".format(value))
+
+            else:
+                logger.warn("Index '{}' does not exist".format(name))
