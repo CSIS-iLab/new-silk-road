@@ -22,6 +22,10 @@ class MockModel(models.Model):
     name = models.CharField(blank=True, max_length=100)
 
 
+class MockUnserializedModel(models.Model):
+    name = models.CharField(blank=True, max_length=100)
+
+
 class MockSerializer(ModelSerializer):
     class Meta:
         model = 'search.MockModel'

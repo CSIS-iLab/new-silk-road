@@ -42,7 +42,11 @@ class SearchRegistry:
     def get_serializer_for_model(self, model):
         if isclass(model) and issubclass(model, models.Model):
             model = model._meta.label
-        return self._model_serializers.get(model, None)
+        SerializerClass = self._model_serializers.get(model, None)
+        if SerializerClass:
+            return SerializerClass
+        else:
+            raise LookupError("Serializer not found for model '{}'".format(model))
 
     def get_doctype_for_model(self, model):
         serializer_class = self.get_serializer_for_model(model)

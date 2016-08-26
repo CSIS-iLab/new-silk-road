@@ -50,6 +50,18 @@ class SearchRegistryTestCase(BaseSearchTestCase):
         serializer = registry.get_serializer_for_model(MockModel)
         self.assertEqual(serializer, MockSerializer)
 
+    def test_get_serializer_for_model_method_with_nonexistent_model(self):
+        registry = SearchRegistry('search.tests.mocks')
+        registry.register(('MockSerializer',))
+        with self.assertRaises(LookupError):
+            registry.get_serializer_for_model('search.ModelThatDoesNotExist')
+
+    def test_get_serializer_for_model_method_with_unrelated_model(self):
+        registry = SearchRegistry('search.tests.mocks')
+        registry.register(('MockSerializer',))
+        with self.assertRaises(LookupError):
+            registry.get_serializer_for_model('search.MockUnserializedModel')
+
     def test_get_registered_models_method(self):
         registry = SearchRegistry('search.tests.mocks')
         registry.register(('MockSerializer',))
