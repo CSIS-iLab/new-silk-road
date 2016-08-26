@@ -1,6 +1,8 @@
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django_rq import job
+from elasticsearch_dsl.connections import connections
+from elasticsearch.helpers import bulk as es_bulk
 from .utils import calculate_doc_id
 import logging
 
@@ -59,3 +61,35 @@ def remove_from_search_index(label, pk, raise_on_404=False):
 
     else:
         logger.error("Unable to find matching DocType for '{}'. Unable to remove from search index".format(label))
+
+
+@job
+def index_model(label):
+    logger.debug('index_model')
+    Model = None
+    SerializerClass = None
+    try:
+        Model = apps.get_model(label)
+    except LookupError as e:
+        logger.error(e)
+        raise e
+    try:
+        SerializerClass = search_config.registry.get_serializer_for_model(label)
+    except LookupError as e:
+        logger.error(e)
+        raise e
+
+    if Model and SerializerClass:
+        serializer = SerializerClass()
+        conn = connections.get_connection()  # Get default connection
+
+        queryset = Model.objects.all()
+        if hasattr(queryset, 'published'):
+            queryset = queryset.published()
+        if serializer.related_object_fields:
+            queryset = queryset.prefetch_related(*serializer.related_object_fields)
+
+        model_docs = (serializer.create_document(item) for item in queryset)
+        doc_dicts = (doc.to_dict(include_meta=True) for doc in model_docs)
+
+        return es_bulk(conn, doc_dicts)
