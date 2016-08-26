@@ -71,6 +71,10 @@ class ModelSerializer:
         return obj_dict
 
     @property
+    def related_object_fields(self):
+        return self._relfields
+
+    @property
     def doc_type(self):
         return self._doc_type
 
