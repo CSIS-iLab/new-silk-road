@@ -1,4 +1,3 @@
-from unittest.mock import patch
 from elasticsearch_dsl import Search
 from redis import Redis
 from rq import SimpleWorker, Queue
