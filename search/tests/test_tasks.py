@@ -12,6 +12,7 @@ from search.tasks import (
 from search.utils import calculate_doc_id
 from .factories import (
     EntryFactory,
+    ProjectFactory,
 )
 
 
@@ -89,3 +90,22 @@ class TasksTestCase(BaseSearchTestCase):
         with self.assertRaises(LookupError):
             job = self.queue.enqueue(index_model, 'auth.User')
             self.assertEqual(job.status, 'failed')
+
+    def test_index_model_multiple_models(self):
+        entry_objects = EntryFactory.create_batch(30, published=True)
+        project_objects = ProjectFactory.create_batch(20, published=True)
+
+        job = self.queue.enqueue(index_model, EntryFactory._meta.model._meta.label)
+
+        self.assertEqual(job.result, (30, []))
+        self.assertEqual(job.status, 'finished')
+
+        job = self.queue.enqueue(index_model, ProjectFactory._meta.model._meta.label)
+
+        self.assertEqual(job.result, (20, []))
+        self.assertEqual(job.status, 'finished')
+
+        self.index.refresh()
+        s = Search()
+
+        self.assertEqual(len(entry_objects) + len(project_objects), s.count())
