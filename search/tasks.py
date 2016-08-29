@@ -14,7 +14,7 @@ search_config = apps.get_app_config(__package__)
 @job
 def handle_model_post_save(label, pk):
     logger.debug('handle_model_post_save called with ({}, {})'.format(label, pk))
-    save_to_search_index.delay(label, pk)
+    return save_to_search_index(label, pk)
 
 
 @job
@@ -32,6 +32,7 @@ def save_to_search_index(label, pk):
                 doc = serializer.create_document(instance)
                 doc.save()
                 logger.info("save_model_to_search_index SAVE: '{}'".format(instance.id))
+                return doc._id
             else:
                 remove_from_search_index(label, pk)
         except ObjectDoesNotExist as e:
@@ -39,11 +40,13 @@ def save_to_search_index(label, pk):
     except LookupError as e:
         logger.error(e)
 
+    return None
+
 
 @job
 def handle_model_post_delete(label, pk):
     logger.debug('handle_model_post_save called with ({}, {})'.format(label, pk))
-    remove_from_search_index.delay(label, pk)
+    return remove_from_search_index(label, pk)
 
 
 @job
@@ -54,13 +57,15 @@ def remove_from_search_index(label, pk, raise_on_404=False):
         try:
             doc_obj = DocType.get(doc_id)
             doc_obj.delete()
+            return doc_id
         except Exception as e:
             logger.warn("Unable to find document with id='{}'. Unable to remove from search index".format(doc_id))
             if raise_on_404:
                 raise e
-
     else:
         logger.error("Unable to find matching DocType for '{}'. Unable to remove from search index".format(label))
+
+    return None
 
 
 @job
