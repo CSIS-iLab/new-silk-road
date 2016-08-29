@@ -2,7 +2,7 @@ from django.test import TestCase, override_settings
 from elasticsearch_dsl.connections import connections
 from elasticsearch_dsl import DocType
 import django_rq
-from search.utils import create_search_index
+from search.tasks import create_search_index
 from search import documents
 from .settings import TEST_SEARCH
 import inspect

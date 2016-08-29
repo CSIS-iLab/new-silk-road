@@ -1,15 +1,12 @@
-from django.test import TestCase, override_settings
-from elasticsearch_dsl.connections import connections
+from django.test import TestCase
 from search.utils import (
     get_document_class,
-    create_search_index,
     doc_id_for_instance,
     calculate_doc_id,
     DOC_ID_SEPARATOR
 )
 from search.documents import ProjectDoc
 from .factories import EntryFactory
-from .settings import TEST_SEARCH
 
 
 class GetDocumentClassTestCase(TestCase):
@@ -27,42 +24,6 @@ class GetDocumentClassTestCase(TestCase):
         klass = get_document_class('search.ProjectDoc')
         self.assertIsNotNone(klass)
         self.assertEqual(klass, ProjectDoc)
-
-
-@override_settings(SEARCH=TEST_SEARCH)
-class CreateSearchIndexTestCase(TestCase):
-
-    def setUp(self):
-        from django.conf import settings
-        self.settings = getattr(settings, 'SEARCH')
-        connections.create_connection('testing', **self.settings['default']['connections'])
-
-    def test_create_search_index_only(self):
-        index = create_search_index('test_create')
-
-        self.assertIsNotNone(index)
-
-        index_dict = index.to_dict()
-        self.assertNotIn('mappings', index_dict)
-
-        index.delete()
-        self.assertFalse(index.exists())
-
-    def test_create_search_index_with_doctypes(self):
-        index = create_search_index('foo', doc_types=self.settings['default']['doc_types'])
-
-        self.assertIsNotNone(index)
-
-        index_dict = index.to_dict()
-        self.assertIn('mappings', index_dict)
-
-        mappings = index_dict.get('mappings')
-        self.assertEqual(len(mappings.keys()), 2)
-        self.assertIn('mock_doc_one', mappings)
-        self.assertIn('mock_doc_two', mappings)
-
-        index.delete()
-        self.assertFalse(index.exists())
 
 
 class DocIdTestCase(TestCase):

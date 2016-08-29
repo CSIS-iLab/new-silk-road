@@ -1,9 +1,9 @@
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
-from django_rq import job
+from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from elasticsearch.helpers import bulk as es_bulk
-from .utils import calculate_doc_id
+from .utils import calculate_doc_id, get_document_class
 import logging
 
 logger = logging.getLogger(__package__)
@@ -11,13 +11,25 @@ logger = logging.getLogger(__package__)
 search_config = apps.get_app_config(__package__)
 
 
-@job
+def create_search_index(index_name, doc_types=None, connection='default', delete_if_exists=False):
+    index = Index(index_name, using=connection)
+    if delete_if_exists:
+        index.delete(ignore=404)
+    if doc_types:
+        for dt in doc_types:
+            if isinstance(dt, str):
+                dt = get_document_class(dt)
+            index.doc_type(dt)
+    if not index.exists():
+        index.create()
+    return index
+
+
 def handle_model_post_save(label, pk):
     logger.debug('handle_model_post_save called with ({}, {})'.format(label, pk))
     return save_to_search_index(label, pk)
 
 
-@job
 def save_to_search_index(label, pk):
     logger.debug('save_model_to_search_index called with ({}, {})'.format(label, pk))
     try:
@@ -43,13 +55,11 @@ def save_to_search_index(label, pk):
     return None
 
 
-@job
 def handle_model_post_delete(label, pk):
     logger.debug('handle_model_post_save called with ({}, {})'.format(label, pk))
     return remove_from_search_index(label, pk)
 
 
-@job
 def remove_from_search_index(label, pk, raise_on_404=False):
     DocType = search_config.registry.get_doctype_for_model(label)
     if DocType:
@@ -68,7 +78,6 @@ def remove_from_search_index(label, pk, raise_on_404=False):
     return None
 
 
-@job
 def index_model(label):
     logger.debug('index_model')
     Model = None
