@@ -211,9 +211,11 @@ class FinancingOrganizationDetails(OrganizationDetails):
     org_type = models.ForeignKey('facts.FinancingType',
                                  models.SET_NULL, blank=True, null=True,
                                  verbose_name='type')
-    members = models.ManyToManyField('Organization',
-                                     related_name='financingorganization_memberships'
-                                     )
+    members = models.ManyToManyField(
+        'Organization',
+        related_name='financingorganization_memberships',
+        blank=True,
+    )
 
     def get_credit_ratings_display(self):
         return (
