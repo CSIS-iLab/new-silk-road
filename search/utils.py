@@ -1,4 +1,3 @@
-from elasticsearch_dsl import Index
 from importlib import import_module
 
 DOC_ID_SEPARATOR = '::'
