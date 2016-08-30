@@ -11,3 +11,10 @@ TEST_SEARCH = {
         }
     }
 }
+
+TEST_RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),
+        'ASYNC': False,
+    },
+}

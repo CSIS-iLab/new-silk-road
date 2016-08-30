@@ -3,7 +3,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from elasticsearch.helpers import bulk as es_bulk
+import django_rq
 from .utils import calculate_doc_id, get_document_class
+from functools import partial
 import logging
 
 logger = logging.getLogger(__package__)
@@ -107,3 +109,21 @@ def index_model(label):
         doc_dicts = (doc.to_dict(include_meta=True) for doc in model_docs)
 
         return es_bulk(conn, doc_dicts)
+
+
+def rebuild_indices(indices_config, subtask_indexing=False):
+    for name, config in indices_config.items():
+        index_name = config.get('index')
+        if index_name:
+            doc_types = config.get('doc_types', None)
+            create_search_index(index_name, doc_types=doc_types, delete_if_exists=True)
+
+    model_list = search_config.registry.get_registered_models()
+
+    index_func = partial(django_rq.enqueue, index_model) if subtask_indexing else index_model
+
+    results = {}
+    for model_label in model_list:
+        results[model_label] = index_func(model_label)
+
+    return results

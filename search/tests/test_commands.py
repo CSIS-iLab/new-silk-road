@@ -55,3 +55,10 @@ class CreateIndexCommandTest(TestCase):
 
         with self.assertRaises(CommandError):
             call_command('create_index', stdout=out)
+
+
+@override_settings(SEARCH=TEST_SEARCH)
+class RebuildIndexCommandTest(TestCase):
+
+    def test_rebuild_index_no_args(self, arg):
+        self.fail('Unimplemented Stub')

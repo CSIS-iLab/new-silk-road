@@ -3,6 +3,7 @@ from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from redis import Redis
 from rq import SimpleWorker, Queue
+from django_rq import get_worker
 from .base import BaseSearchTestCase
 from search.tasks import (
     create_search_index,
@@ -11,13 +12,14 @@ from search.tasks import (
     handle_model_post_delete,
     remove_from_search_index,
     index_model,
+    rebuild_indices,
 )
 from search.utils import calculate_doc_id
 from .factories import (
     EntryFactory,
     ProjectFactory,
 )
-from .settings import TEST_SEARCH
+from .settings import TEST_SEARCH, TEST_RQ_QUEUES
 
 
 class TasksTestCase(BaseSearchTestCase):
@@ -78,17 +80,23 @@ class TasksTestCase(BaseSearchTestCase):
         self.assertEqual(job.return_value, doc_id)
 
     def test_index_model(self):
-        entry_objects = EntryFactory.create_batch(30, published=True)
+        EntryFactory.create_batch(30, published=True)
+        EntryFactory.create_batch(5, published=False)
+
+        from django.conf import settings
+        PUBLISH_FILTER_ENABLED = getattr(settings, 'PUBLISH_FILTER_ENABLED', True)
 
         job = self.queue.enqueue(index_model, 'writings.Entry')
 
-        self.assertEqual(job.result, (30, []))
+        expected_model_index_count = 30 if PUBLISH_FILTER_ENABLED else 35
+
+        self.assertEqual(job.result, (expected_model_index_count, []))
         self.assertEqual(job.status, 'finished')
 
         self.index.refresh()
         s = Search()
 
-        self.assertEqual(len(entry_objects), s.count())
+        self.assertEqual(expected_model_index_count, s.count())
 
     def test_index_model_fails_on_unregistered_model(self):
         with self.assertRaises(LookupError):
@@ -149,3 +157,49 @@ class CreateSearchIndexTestCase(TestCase):
 
         index.delete()
         self.assertFalse(index.exists())
+
+
+@override_settings(RQ_QUEUES=TEST_RQ_QUEUES)
+class RebuildIndexTestCase(BaseSearchTestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.published_entry_count = 102
+        self.published_project_count = 101
+        EntryFactory.create_batch(self.published_entry_count, published=True)
+        ProjectFactory.create_batch(self.published_project_count, published=True)
+        self.unpublished_entry_count = 14
+        self.unpublished_project_count = 6
+        EntryFactory.create_batch(self.unpublished_entry_count, published=False)
+        ProjectFactory.create_batch(self.unpublished_project_count, published=False)
+
+        from django.conf import settings
+        self.SEARCH = getattr(settings, 'SEARCH')
+        self.PUBLISH_FILTER_ENABLED = getattr(settings, 'PUBLISH_FILTER_ENABLED', True)
+
+    def test_rebuild_indices(self):
+        result = rebuild_indices(self.SEARCH)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict)
+
+        self.index.refresh()
+        s = Search()
+        expected_index_count = self.published_entry_count + self.published_project_count
+        if not self.PUBLISH_FILTER_ENABLED:
+            expected_index_count += self.unpublished_entry_count + self.unpublished_project_count
+        self.assertEqual(expected_index_count, s.count())
+
+    def test_rebuild_indices_using_subtasks(self):
+        result = rebuild_indices(self.SEARCH, subtask_indexing=True)
+        get_worker().work(burst=True)
+
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict)
+
+        self.index.refresh()
+        s = Search()
+        expected_index_count = self.published_entry_count + self.published_project_count
+        if not self.PUBLISH_FILTER_ENABLED:
+            expected_index_count += self.unpublished_entry_count + self.unpublished_project_count
+        self.assertEqual(expected_index_count, s.count())
