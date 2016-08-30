@@ -23,10 +23,10 @@ class Command(BaseCommand):
                 for name, config in SEARCH.items():
                     index_name = config.get('index')
                     if index_name:
-                        self.stdout.write("Creating search index '{}'".format(index_name))
                         doc_types = config.get('doc_types', None)
                         create_search_index(index_name, doc_types=doc_types, delete_if_exists=delete)
+                        self.stdout.write(self.style.SUCCESS("Created search index '{}'".format(index_name)))
                     else:
-                        self.stdout.write(self.style.WARNING("No index specified for '{}'".name))
+                        self.stdout.write(self.style.WARNING("No index specified for '{}'".format(name)))
             else:
                 raise CommandError('SEARCH not set in django settings')
