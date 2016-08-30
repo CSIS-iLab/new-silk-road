@@ -131,6 +131,7 @@ class FinancingOrganizationDetailsAdmin(OrganizationDetailsAdmin):
     inlines = [OrganizationShareholderInline, PersonShareholderInline]
     list_display = OrganizationDetailsAdmin.list_display + ['approved_capital', 'moodys_credit_rating']
     filter_horizontal = [
+        'members',
         'scope_of_operations',
     ]
 
