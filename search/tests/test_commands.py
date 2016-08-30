@@ -4,6 +4,11 @@ from django.core.management.base import CommandError
 import io
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
+from .factories import (
+    EntryFactory,
+    ProjectFactory,
+)
+from .base import BaseSearchTestCase
 from .settings import TEST_SEARCH
 
 
@@ -58,7 +63,14 @@ class CreateIndexCommandTest(TestCase):
 
 
 @override_settings(SEARCH=TEST_SEARCH)
-class RebuildIndexCommandTest(TestCase):
+class RebuildIndexCommandTest(BaseSearchTestCase):
 
-    def test_rebuild_index_no_args(self, arg):
-        self.fail('Unimplemented Stub')
+    def test_rebuild_index_no_args(self):
+        EntryFactory.create_batch(100, published=True)
+        ProjectFactory.create_batch(100, published=True)
+        out = io.StringIO()
+
+        call_command('rebuild_index', stdout=out)
+
+        self.assertIn("Reindexed {} '{}' documents".format(100, EntryFactory._meta.model._meta.label), out.getvalue())
+        self.assertIn("Reindexed {} '{}' documents".format(100, ProjectFactory._meta.model._meta.label), out.getvalue())

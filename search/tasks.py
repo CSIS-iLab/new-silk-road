@@ -124,6 +124,7 @@ def rebuild_indices(indices_config, subtask_indexing=False):
 
     results = {}
     for model_label in model_list:
+        # Stores es_bulk response or job
         results[model_label] = index_func(model_label)
 
     return results
