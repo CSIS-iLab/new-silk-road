@@ -1,6 +1,6 @@
 from django.test import TestCase, override_settings
 from elasticsearch_dsl.connections import connections
-from elasticsearch_dsl import DocType
+from elasticsearch_dsl import DocType, Search
 import django_rq
 from search.tasks import create_search_index
 from search import documents
@@ -18,8 +18,17 @@ class BaseSearchTestCase(TestCase):
         connections.create_connection('testing', **SEARCH['default']['connections'])
         self.index = create_search_index(SEARCH['default']['index'], SEARCH['default']['doc_types'], connection='testing')
 
+        self.search = Search(index=SEARCH['default']['index'])
+
         # This is needed for test_documents, but has side effects in all running tests
-        doctypes_list = (value for name, value in inspect.getmembers(documents) if not name.startswith('_') and issubclass(value, DocType) and name != DocType.__name__)
+        doctypes_list = (
+            value for name, value
+            in inspect.getmembers(documents)
+            if not name.startswith('_') and
+            inspect.isclass(value) and
+            issubclass(value, DocType) and
+            name != DocType.__name__
+        )
 
         for doctype in doctypes_list:
             # Remove assigned index

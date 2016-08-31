@@ -1,4 +1,3 @@
-from elasticsearch_dsl import Search
 from search.serializers import EntrySerializer
 from .factories import EntryFactory
 from .base import BaseSearchTestCase
@@ -14,9 +13,8 @@ class DocumentsTestCase(BaseSearchTestCase):
             doc_obj.save()
 
         self.index.refresh()
-        s = Search()
 
-        self.assertEqual(len(entry_objects), s.count())
+        self.assertEqual(len(entry_objects), self.search.count())
 
     def test_serialize_entry(self):
         entry = EntryFactory.create()
@@ -25,11 +23,10 @@ class DocumentsTestCase(BaseSearchTestCase):
         doc_obj.save()
 
         self.index.refresh()
-        s = Search()
-        response = s.execute()
+        response = self.search.execute()
         result = response[0]
 
-        self.assertEqual(1, s.count())
+        self.assertEqual(1, self.search.count())
         self.assertEqual(entry.id, result._app.id)
         self.assertEqual(entry.publication_date.isoformat(), result.publication_date)
         self.assertEqual(entry._meta.label, result._app.label)
@@ -47,7 +44,7 @@ class DocumentsTestCase(BaseSearchTestCase):
 
         self.index.refresh()
 
-        s = Search().query('match', title='Test title')
+        s = self.search.query('match', title='Test title')
         s.execute()
 
         self.assertEqual(0, s.count())
