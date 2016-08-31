@@ -13,8 +13,9 @@ class SearchConfig(AppConfig):
 
         self.registry = SearchRegistry()
         self.registry.register((
+            'PersonSerializer',
             'EntrySerializer',
-            'ProjectSerializer'
+            'ProjectSerializer',
         ))
         # Configure DocTypes so they are associated with indexes specified in settings.py
         self.registry.configure_doctypes()

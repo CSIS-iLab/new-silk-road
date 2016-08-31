@@ -91,7 +91,7 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
 class OrganizationFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker('text', max_nb_chars=100)
+    name = factory.Faker('company')
     countries = factory.SubFactory(CountryFactory)
     description = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
 
@@ -110,7 +110,7 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
 
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
 class PositionFactory(factory.django.DjangoModelFactory):
-    title = factory.Faker('text', max_nb_chars=80)
+    title = factory.Faker('job')
     organization = factory.SubFactory(OrganizationFactory)
     person = factory.SubFactory('search.tests.factories.PersonFactory')
 

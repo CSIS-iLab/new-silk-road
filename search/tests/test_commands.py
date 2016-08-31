@@ -7,6 +7,8 @@ from elasticsearch_dsl.connections import connections
 from .factories import (
     EntryFactory,
     ProjectFactory,
+    PersonFactory,
+    PositionFactory,
 )
 from .base import BaseSearchTestCase
 from .settings import TEST_SEARCH
@@ -68,9 +70,16 @@ class RebuildIndexCommandTest(BaseSearchTestCase):
     def test_rebuild_index_no_args(self):
         EntryFactory.create_batch(100, published=True)
         ProjectFactory.create_batch(100, published=True)
+        num_base_people = 100
+        num_employed_people = 120
+        total_num_people = num_base_people + num_employed_people
+        PersonFactory.create_batch(num_base_people, published=True)
+        PositionFactory.create_batch(num_employed_people)
+
         out = io.StringIO()
 
         call_command('rebuild_index', stdout=out)
 
         self.assertIn("Reindexed {} '{}' documents".format(100, EntryFactory._meta.model._meta.label), out.getvalue())
         self.assertIn("Reindexed {} '{}' documents".format(100, ProjectFactory._meta.model._meta.label), out.getvalue())
+        self.assertIn("Reindexed {} '{}' documents".format(total_num_people, PersonFactory._meta.model._meta.label), out.getvalue())
