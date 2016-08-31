@@ -1,11 +1,21 @@
-from search.documents import EntryDoc, ProjectDoc
-from search.serializers import ProjectSerializer, EntrySerializer
+from search.documents import (
+    EntryDoc,
+    ProjectDoc,
+    PersonDoc,
+)
+from search.serializers import (
+    ProjectSerializer,
+    EntrySerializer,
+    PersonSerializer,
+)
 from .base import BaseSearchTestCase
 from .factories import (
     ProjectFactory,
     CountryFactory,
     EntryFactory,
     EntryCategoryFactory,
+    PersonFactory,
+    PositionFactory,
 )
 from .mocks import (
     MockSerializer,
@@ -50,3 +60,12 @@ class SerializersTestCase(BaseSearchTestCase):
         self.assertEqual(obj.content, doc.content)
         self.assertEqual(obj.description, doc.description)
         self.assertEqual(obj.publication_date, doc.publication_date)
+
+    def test_person_serializer(self):
+        num_positions = 3
+        obj = PersonFactory.create(position_set=PositionFactory.build_batch(num_positions))
+        serializer = PersonSerializer()
+        doc = serializer.create_document(obj)
+
+        self.assertIsInstance(doc, PersonDoc)
+        self.assertEqual(len(doc.position_set), num_positions)

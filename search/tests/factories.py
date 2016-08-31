@@ -87,3 +87,56 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'infrastructure.Project'
+
+
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
+class OrganizationFactory(factory.django.DjangoModelFactory):
+    name = factory.Faker('text', max_nb_chars=100)
+    countries = factory.SubFactory(CountryFactory)
+    description = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
+
+    @factory.post_generation
+    def countries(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for country in extracted:
+                self.countries.add(country)
+
+    class Meta:
+        model = 'facts.Organization'
+
+
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
+class PositionFactory(factory.django.DjangoModelFactory):
+    title = factory.Faker('text', max_nb_chars=80)
+    organization = factory.SubFactory(OrganizationFactory)
+    person = factory.SubFactory('search.tests.factories.PersonFactory')
+
+    class Meta:
+        model = 'facts.Position'
+
+
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
+class PersonFactory(factory.django.DjangoModelFactory):
+    given_name = factory.Faker('first_name')
+    additional_name = factory.Faker('first_name')
+    family_name = factory.Faker('last_name')
+    description = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
+
+    @factory.post_generation
+    def position_set(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for position in extracted:
+                # Since this is a reverse relation, we gotta do the savy-wavy stuff here?
+                position.person = self
+                position.organization.save()
+                position.organization_id = position.organization.id
+                self.position_set.add(position, bulk=False)
+
+    class Meta:
+        model = 'facts.Person'
