@@ -16,8 +16,9 @@ class InfrastructureTypeDoc(field.InnerObjectWrapper):
 
 
 class OrganizationDoc(DocType):
-    identifier = field.String()
     name = field.String()
+    description = field.String()
+    mission = field.String()
     countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
 
 
@@ -32,6 +33,7 @@ class PositionDoc(field.InnerObjectWrapper):
 
 
 class PersonDoc(DocType):
+    identifier = field.String()
     given_name = field.String()
     additional_name = field.String()
     family_name = field.String()

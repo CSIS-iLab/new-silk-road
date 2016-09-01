@@ -90,11 +90,19 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
 
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
+class FinancingOrganizationDetailsFactory(factory.django.DjangoModelFactory):
+    approved_capital = factory.Faker('pydecimal', right_digits=2)
+
+    class Meta:
+        model = 'facts.FinancingOrganizationDetails'
+
+
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class OrganizationFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('company')
-    countries = factory.SubFactory(CountryFactory)
     description = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
     mission = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
+    financingorganizationdetails = factory.RelatedFactory(FinancingOrganizationDetailsFactory, 'organization')
 
     @factory.post_generation
     def countries(self, create, extracted, **kwargs):

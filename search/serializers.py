@@ -1,6 +1,9 @@
 from .base import ModelSerializer, RelatedSerializer
 
 
+# locations serializers
+
+
 class CountrySerializer(ModelSerializer):
 
     class Meta:
@@ -9,19 +12,32 @@ class CountrySerializer(ModelSerializer):
         fields = ('name', 'alpha_3')
 
 
-class InfrastructureTypeSerializer(ModelSerializer):
+# facts serializers
+
+
+class OrganizationSerializer(ModelSerializer):
+    countries = RelatedSerializer(CountrySerializer, many=True)
 
     class Meta:
-        model = 'infrastructure.InfrastructureType'
-        doc_type = 'search.documents.InfrastructureTypeDoc'
-        fields = ('name',)
+        model = 'facts.Organization'
+        doc_type = 'search.documents.OrganizationDoc'
+        fields = (
+            'name',
+            'countries',
+            'description',
+            'mission',
+            'organization_types',
+        )
+
+    def get_organization_types(self, instance):
+        return instance.get_organization_types()
 
 
 class OrganizationInnerSerializer(ModelSerializer):
 
     class Meta:
         model = 'facts.Organization'
-        doc_type = 'search.documents.PositionDoc'
+        doc_type = 'search.documents.OrganizationDoc'
         fields = (
             'name',
         )
@@ -47,13 +63,29 @@ class PersonSerializer(ModelSerializer):
         model = 'facts.Person'
         doc_type = 'search.documents.PersonDoc'
         fields = (
+            'identifier',
             'given_name',
             'additional_name',
             'family_name',
             'description',
             'citizenships',
             'position_set',
+            'url',
         )
+
+    def get_url(self, instance):
+        return instance.get_absolute_url()
+
+
+# infrastructure serializers
+
+
+class InfrastructureTypeSerializer(ModelSerializer):
+
+    class Meta:
+        model = 'infrastructure.InfrastructureType'
+        doc_type = 'search.documents.InfrastructureTypeDoc'
+        fields = ('name',)
 
 
 class ProjectSerializer(ModelSerializer):
