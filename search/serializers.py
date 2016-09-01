@@ -30,7 +30,7 @@ class OrganizationSerializer(ModelSerializer):
         )
 
     def get_organization_types(self, instance):
-        return instance.get_organization_types()
+        return list(instance.get_organization_types())
 
 
 class OrganizationInnerSerializer(ModelSerializer):
