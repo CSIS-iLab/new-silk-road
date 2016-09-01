@@ -11,8 +11,14 @@ class CountryDoc(field.InnerObjectWrapper):
     name = field.String()
 
 
-class InfrastructureTypeDoc(field.InnerObjectWrapper):
+class NamedTypeDoc(field.InnerObjectWrapper):
     name = field.String()
+
+
+class EventDoc(DocType):
+    name = field.String()
+    description = field.String()
+    event_type = field.Object(doc_class=NamedTypeDoc, properties={'name': field.String()})
 
 
 class OrganizationDoc(DocType):
@@ -48,13 +54,23 @@ class PersonDoc(DocType):
     )
 
 
+class InitiativeDoc(DocType):
+    identifier = field.String()
+    name = field.String()
+    principal_agent = field.Object(doc_class=OrganizationDoc, properties={'name': field.String()})
+    member_countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
+    geographic_scope = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
+    initiative_type = field.Object(doc_class=NamedTypeDoc, properties={'name': field.String()})
+
+
 class ProjectDoc(DocType):
     identifier = field.String()
     name = field.String()
     alternate_name = field.String()
     description = field.String()
     countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
-    infrastructure_type = field.Nested(doc_class=InfrastructureTypeDoc, properties={'name': field.String()})
+    infrastructure_type = field.Nested(doc_class=NamedTypeDoc, properties={'name': field.String()})
+    initiatives = field.Nested(doc_class=InitiativeDoc, properties={'name': field.String()})
 
 
 class EntryDoc(DocType):

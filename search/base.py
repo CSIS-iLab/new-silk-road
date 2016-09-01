@@ -60,7 +60,11 @@ class ModelSerializer:
                         self._rel_field_names.add(field_name)
                 else:
                     if field.is_relation:
-                        raise AttributeError('If you supply the name of a relational (fk, m2m) field, you must also provide an attribute to define the mapping')
+                        raise AttributeError(
+                            str(field.name)
+                            ': If you supply the name of a relational (fk, m2m) field '
+                            'you must also provide an attribute to define the mapping'
+                        )
                     if field.choices:
                         self._choice_field_names.add(field_name)
                     else:
@@ -115,6 +119,10 @@ class ModelSerializer:
 class RelatedSerializer:
 
     def __init__(self, mapping_class, many=False):
+        if isinstance(mapping_class, str):
+            module_path, class_name = self.Meta.doc_type.rsplit('.', maxsplit=1)
+            module = import_module(module_path)
+            mapping_class = getattr(module, class_name, None)
         if not issubclass(mapping_class, ModelSerializer):
             raise TypeError('RelatedSerializer requires a ModelSerializer subclass as the first argument')
         self.serializer = mapping_class()
