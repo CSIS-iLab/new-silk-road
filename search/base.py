@@ -60,11 +60,11 @@ class ModelSerializer:
                         self._rel_field_names.add(field_name)
                 else:
                     if field.is_relation:
-                        raise AttributeError(
-                            str(field.name)
-                            ': If you supply the name of a relational (fk, m2m) field '
+                        raise AttributeError((
+                            str(field.name) +
+                            ': If you supply the name of a relational (fk, m2m) field ' +
                             'you must also provide an attribute to define the mapping'
-                        )
+                        ))
                     if field.choices:
                         self._choice_field_names.add(field_name)
                     else:
