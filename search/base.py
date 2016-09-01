@@ -1,6 +1,6 @@
 from django.apps import apps
 from django.db import models
-from django.forms.models import model_to_dict
+from django.core.exceptions import FieldDoesNotExist
 from search.utils import doc_id_for_instance
 from importlib import import_module
 
@@ -32,40 +32,55 @@ class ModelSerializer:
 
         # TODO: Handle reverse_related fields that might be serialized
         self._field_names = set(self.Meta.fields)
-        self._simple_field_names = []
-        self._choice_field_names = []
-        self._rel_field_names = []
+        self._simple_field_names = set()
+        self._choice_field_names = set()
+        self._rel_field_names = set()
+        self._attribute_field_map = {}
 
         model_fields = self.model_class._meta.get_fields()
         self._reverse_rel_field_names = [x.get_accessor_name() for x in model_fields if hasattr(x, 'get_accessor_name')]
 
-        for field_name in set(self._field_names):
+        for field_name in self._field_names:
+            field_getter_name = 'get_{}'.format(field_name)
             if field_name in self._reverse_rel_field_names:
                 if hasattr(self, field_name):
-                    self._rel_field_names.append(field_name)
+                    self._rel_field_names.add(field_name)
                 else:
                     raise AttributeError('If you supply the name of a relational (fk, m2m) field, you must also provide an attribute to define the mapping')
+            elif hasattr(self, field_getter_name):
+                func = getattr(self, field_getter_name)
+                if not callable(func):
+                    raise AttributeError('Serializer attributes starting with get_ must be methods (callable)')
+                self._attribute_field_map[field_name] = field_getter_name
             else:
                 field = self.model_class._meta.get_field(field_name)
                 if hasattr(self, field_name):
                     # Use attribute definition to serialize
                     if field.is_relation:
-                        self._rel_field_names.append(field_name)
+                        self._rel_field_names.add(field_name)
                 else:
                     if field.is_relation:
                         raise AttributeError('If you supply the name of a relational (fk, m2m) field, you must also provide an attribute to define the mapping')
                     if field.choices:
-                        self._choice_field_names.append(field_name)
+                        self._choice_field_names.add(field_name)
                     else:
-                        self._simple_field_names.append(field_name)
+                        self._simple_field_names.add(field_name)
 
     def serialize(self, instance):
         if not isinstance(instance, self.model_class):
             raise TypeError('Instance must match model class')
 
-        obj_dict = model_to_dict(instance, fields=self._simple_field_names)
-        obj_dict['_app'] = {'label': instance._meta.label, 'id': instance.id}
-        obj_dict['_id'] = doc_id_for_instance(instance)
+        obj_dict = {
+            '_app': {'label': instance._meta.label, 'id': instance.id},
+            '_id': doc_id_for_instance(instance),
+        }
+
+        for f in self._simple_field_names:
+            try:
+                field = self.model_class._meta.get_field(f)
+                obj_dict[f] = field.value_from_object(instance)
+            except FieldDoesNotExist:
+                continue
 
         for f in self._rel_field_names:
             rel_map = getattr(self, f)
@@ -77,6 +92,10 @@ class ModelSerializer:
             get_display_value = getattr(instance, 'get_{}_display'.format(f), None)
             if get_display_value:
                 obj_dict[f] = get_display_value()
+
+        for field_name, field_func_name in self._attribute_field_map.items():
+            func = getattr(self, field_func_name)
+            obj_dict[field_name] = func(instance)
 
         return obj_dict
 

@@ -94,6 +94,7 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('company')
     countries = factory.SubFactory(CountryFactory)
     description = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
+    mission = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
 
     @factory.post_generation
     def countries(self, create, extracted, **kwargs):
@@ -120,6 +121,7 @@ class PositionFactory(factory.django.DjangoModelFactory):
 
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
 class PersonFactory(factory.django.DjangoModelFactory):
+    identifier = factory.Faker('uuid4')
     given_name = factory.Faker('first_name')
     additional_name = factory.Faker('first_name')
     family_name = factory.Faker('last_name')
