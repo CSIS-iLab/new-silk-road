@@ -89,6 +89,9 @@ class SearchConf:
         else:
             raise LookupError("Serializer not found for model '{}'".format(model))
 
+    def get_doctypes_for_index(self, index_name):
+        return tuple(self._doctype_lookup[index_name])
+
     def get_doctype_for_model(self, model):
         serializer_class = self.get_serializer_for_model(model)
         return serializer_class().doc_type
