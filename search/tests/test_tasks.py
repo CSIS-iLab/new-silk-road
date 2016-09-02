@@ -94,9 +94,8 @@ class TasksTestCase(BaseSearchTestCase):
         self.assertEqual(job.status, 'finished')
 
         self.index.refresh()
-        s = Search()
 
-        self.assertEqual(expected_model_index_count, s.count())
+        self.assertEqual(expected_model_index_count, self.search.count())
 
     def test_index_model_fails_on_unregistered_model(self):
         with self.assertRaises(LookupError):
@@ -118,9 +117,8 @@ class TasksTestCase(BaseSearchTestCase):
         self.assertEqual(job.status, 'finished')
 
         self.index.refresh()
-        s = Search()
 
-        self.assertEqual(len(entry_objects) + len(project_objects), s.count())
+        self.assertEqual(len(entry_objects) + len(project_objects), self.search.count())
 
 
 @override_settings(SEARCH=TEST_SEARCH)
@@ -143,7 +141,7 @@ class CreateSearchIndexTestCase(TestCase):
         self.assertFalse(index.exists())
 
     def test_create_search_index_with_doctypes(self):
-        index = create_search_index('foo', doc_types=self.settings['default']['doc_types'])
+        index = create_search_index('foo', doc_types=('search.tests.mocks.MockDocOne', 'search.tests.mocks.MockDocTwo'))
 
         self.assertIsNotNone(index)
 
@@ -184,11 +182,10 @@ class RebuildIndexTestCase(BaseSearchTestCase):
         self.assertIsInstance(result, dict)
 
         self.index.refresh()
-        s = Search()
         expected_index_count = self.published_entry_count + self.published_project_count
         if not self.PUBLISH_FILTER_ENABLED:
             expected_index_count += self.unpublished_entry_count + self.unpublished_project_count
-        self.assertEqual(expected_index_count, s.count())
+        self.assertEqual(expected_index_count, self.search.count())
 
     def test_rebuild_indices_using_subtasks(self):
         result = rebuild_indices(self.SEARCH, subtask_indexing=True)
@@ -198,8 +195,7 @@ class RebuildIndexTestCase(BaseSearchTestCase):
         self.assertIsInstance(result, dict)
 
         self.index.refresh()
-        s = Search()
         expected_index_count = self.published_entry_count + self.published_project_count
         if not self.PUBLISH_FILTER_ENABLED:
             expected_index_count += self.unpublished_entry_count + self.unpublished_project_count
-        self.assertEqual(expected_index_count, s.count())
+        self.assertEqual(expected_index_count, self.search.count())

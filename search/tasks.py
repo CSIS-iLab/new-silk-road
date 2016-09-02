@@ -5,12 +5,13 @@ from elasticsearch_dsl.connections import connections
 from elasticsearch.helpers import bulk as es_bulk
 import django_rq
 from .utils import calculate_doc_id, get_document_class
+from .conf import SearchConf
 from functools import partial
 import logging
 
 logger = logging.getLogger(__package__)
 
-search_config = apps.get_app_config(__package__)
+search_config = SearchConf(auto_setup=True)
 
 
 def create_search_index(index_name, doc_types=None, connection='default', delete_if_exists=False):
@@ -41,7 +42,7 @@ def save_to_search_index(label, pk):
             should_be_searchable = getattr(instance, 'published', True)
             logger.info('handle_model_post_save for model {}'.format(label))
             if should_be_searchable:
-                SerializerClass = search_config.registry.get_serializer_for_model(label)
+                SerializerClass = search_config.get_serializer_for_model(label)
                 serializer = SerializerClass()
                 doc = serializer.create_document(instance)
                 doc.save()
@@ -63,7 +64,7 @@ def handle_model_post_delete(label, pk):
 
 
 def remove_from_search_index(label, pk, raise_on_404=False):
-    DocType = search_config.registry.get_doctype_for_model(label)
+    DocType = search_config.get_doctype_for_model(label)
     if DocType:
         doc_id = calculate_doc_id(label, pk)
         try:
@@ -90,7 +91,7 @@ def index_model(label):
         logger.error(e)
         raise e
     try:
-        SerializerClass = search_config.registry.get_serializer_for_model(label)
+        SerializerClass = search_config.get_serializer_for_model(label)
     except LookupError as e:
         logger.error(e)
         raise e
@@ -115,10 +116,10 @@ def rebuild_indices(indices_config, subtask_indexing=False):
     for name, config in indices_config.items():
         index_name = config.get('index')
         if index_name:
-            doc_types = config.get('doc_types', None)
+            doc_types = search_config.get_doctypes_for_index(index_name)
             create_search_index(index_name, doc_types=doc_types, delete_if_exists=True)
 
-    model_list = search_config.registry.get_registered_models()
+    model_list = search_config.get_registered_models()
 
     index_func = partial(django_rq.enqueue, index_model) if subtask_indexing else index_model
 
