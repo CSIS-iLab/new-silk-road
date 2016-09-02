@@ -111,6 +111,14 @@ class PersonSerializer(ModelSerializer):
 # infrastructure serializers
 
 
+class InitiativeTypeSerializer(ModelSerializer):
+
+    class Meta:
+        model = 'infrastructure.InitiativeType'
+        doc_type = 'search.documents.NamedTypeDoc'
+        fields = ('name',)
+
+
 class InfrastructureTypeSerializer(ModelSerializer):
 
     class Meta:
@@ -120,7 +128,7 @@ class InfrastructureTypeSerializer(ModelSerializer):
 
 
 class InitiativeSerializer(ModelSerializer):
-    initiative_type = RelatedSerializer(InfrastructureTypeSerializer)
+    initiative_type = RelatedSerializer(InitiativeTypeSerializer)
     principal_agent = RelatedSerializer(OrganizationSerializer)
     member_countries = RelatedSerializer(CountrySerializer, many=True)
     geographic_scope = RelatedSerializer(CountrySerializer, many=True)
@@ -141,10 +149,22 @@ class InitiativeSerializer(ModelSerializer):
         return instance.get_absolute_url()
 
 
+class RelatedInitiativeSerializer(ModelSerializer):
+    # initiative_type = RelatedSerializer(InitiativeTypeSerializer)
+
+    class Meta:
+        model = 'infrastructure.Initiative'
+        doc_type = 'search.documents.InitiativeDoc'
+        fields = (
+            'name',
+            # 'initiative_type',
+        )
+
+
 class ProjectSerializer(ModelSerializer):
     countries = RelatedSerializer(CountrySerializer, many=True)
     infrastructure_type = RelatedSerializer(InfrastructureTypeSerializer)
-    initiatives = RelatedSerializer(InitiativeSerializer, many=True)
+    initiatives = RelatedSerializer(RelatedInitiativeSerializer, many=True)
 
     class Meta:
         model = 'infrastructure.Project'

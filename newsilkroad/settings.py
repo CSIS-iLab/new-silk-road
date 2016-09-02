@@ -388,7 +388,13 @@ RQ_QUEUES = {
 SEARCH = {
     'default': {
         'index': 'reconnectingasia',
-        'doc_types': ('search.EntryDoc', 'search.ProjectDoc'),
+        'serializers': (
+            'EntrySerializer',
+            'ProjectSerializer',
+            'PersonSerializer',
+            'EventSerializer',
+            'OrganizationSerializer',
+        ),
         'connections': {
             'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
             'timeout': 20,

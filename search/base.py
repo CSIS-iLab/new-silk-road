@@ -72,7 +72,7 @@ class ModelSerializer:
 
     def serialize(self, instance):
         if not isinstance(instance, self.model_class):
-            raise TypeError('Instance must match model class')
+            raise TypeError(str(self.__class__), 'Instance must match model class')
 
         obj_dict = {
             '_app': {'label': instance._meta.label, 'id': instance.id},
