@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from elasticsearch_dsl.connections import connections
 
-default_app_config = 'search.apps.SearchConfig'
+default_app_config = 'search.apps.SearchAppConfig'
 
 SEARCH_CONFIG = getattr(settings, 'SEARCH', None)
 if not SEARCH_CONFIG:

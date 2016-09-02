@@ -16,7 +16,7 @@ class BaseSearchTestCase(TestCase):
         SEARCH = getattr(settings, 'SEARCH')
 
         connections.create_connection('testing', **SEARCH['default']['connections'])
-        self.index = create_search_index(SEARCH['default']['index'], SEARCH['default']['doc_types'], connection='testing')
+        self.index = create_search_index(SEARCH['default']['index'], connection='testing')
 
         self.search = Search(index=SEARCH['default']['index'])
 

@@ -3,8 +3,17 @@ from importlib import import_module
 DOC_ID_SEPARATOR = '::'
 
 
+def split_class_path(class_path):
+    parts = class_path.rsplit('.', maxsplit=1)
+    if len(parts) == 1:
+        return (None, parts[0])
+    return tuple(parts)
+
+
 def get_document_class(doctype_path):
-    module_path, class_name = doctype_path.rsplit('.', maxsplit=1)
+    module_path, class_name = split_class_path(doctype_path)
+    if not module_path:
+        return None
     if len(module_path.split('.')) == 1:
         module_path = module_path + '.documents'
     module = import_module(module_path)

@@ -3,22 +3,25 @@ from elasticsearch_dsl import (
     DocType,
 )
 from search.base import ModelSerializer
-from .settings import TEST_SEARCH
 
 
 class MockDocOne(DocType):
-
-    class Meta:
-        index = TEST_SEARCH['default']['index']
+    pass
 
 
 class MockDocTwo(DocType):
+    pass
 
-    class Meta:
-        index = TEST_SEARCH['default']['index']
+
+class MockDocThree(DocType):
+    pass
 
 
 class MockModel(models.Model):
+    name = models.CharField(blank=True, max_length=100)
+
+
+class MockModelThree(models.Model):
     name = models.CharField(blank=True, max_length=100)
 
 
@@ -42,6 +45,6 @@ class MockSerializerTwo(ModelSerializer):
 
 class MockSerializerThree(ModelSerializer):
     class Meta:
-        model = MockModel
-        doc_type = 'search.tests.mocks.MockDocOne'
+        model = MockModelThree
+        doc_type = 'search.tests.mocks.MockDocThree'
         fields = ('name',)
