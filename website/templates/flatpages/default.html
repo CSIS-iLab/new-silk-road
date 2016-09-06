@@ -2,6 +2,8 @@
 
 {% block pagetitle %}{{ flatpage.title}} | {{ block.super }}{% endblock %}
 
+{% block bodyclass %}flatpage{% endblock %}
+
 {% block content %}
 {{ flatpage.content }}
 {% endblock %}
