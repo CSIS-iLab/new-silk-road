@@ -19,7 +19,7 @@
 </section>
 <section id='video' class='poster'>
     <div class="inner">
-        <a class="play button" href="#">Play</a>
+        <a class="play button" href="https://vimeo.com/177601766">Play</a>
     </div>
 </section>
 <section id='analysis'>
@@ -119,3 +119,30 @@
     </div>
 </section>
 {% endblock content-shell %}
+
+
+{% block extrahead %}
+<script src="{% static 'js/lib/zepto.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/lib/magnific-popup.css' %}">
+<script src="{% static 'js/lib/jquery.magnific-popup.min.js' %}"></script>
+{% endblock %}
+
+
+{% block postbodyjs %}
+<script type="text/javascript">
+    Zepto(function($){
+        $('#video a.play').magnificPopup({
+            type:'iframe',
+            iframe: {
+                patterns: {
+                    vimeo: {
+                        index: 'vimeo.com/',
+                        id: '/',
+                        src: '//player.vimeo.com/video/%id%?color=abd58c&autoplay=1'
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
