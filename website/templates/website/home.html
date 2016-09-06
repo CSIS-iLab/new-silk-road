@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% load static %}
+{% extends 'base.html' %}{% load static %}{% load html_text from html_utils %}
 
 {% block bodyclass %}home{% endblock %}
 
@@ -47,7 +47,18 @@
 </section>
 <section id='featured-analysis' class='columnar'>
     <h2>News and Features</h2>
-    {# TODO: Replace with real stuff once there is real stuff #}
+    {% if featured_analyses and featured_analyses.entries.published.count %}
+    <div class="wrap">{% for entry in featured_analyses.entries.published %}
+        <div class="analysis panel">
+            <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
+            <h5 class='date'><time datetime='{{entry.publication_date|date:"c"}}'>{{entry.publication_date|date}}</time></h5>
+            {{entry.description_rendered|html_text|truncatewords_html:120|safe}}
+            <footer>
+                <p><a href="{{entry.get_absolute_url}}">Read More</a></p>
+            </footer>
+        </div>{% endfor %}
+    </div>
+    {% else %}
     <div class="wrap">
         <div class="analysis panel">
             <h3><a href="">What Rio can learn from Russia</a></h3>
@@ -66,15 +77,7 @@
             </footer>
         </div>
     </div>
-    {% comment %}
-    <div class="wrap">{% for entry in featured_analyses.entries.published %}
-        <div class="analysis teaser">
-            <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
-            <h5 class='date'>{{entry.publication_date|date}}</h5>
-            {{entry.description_rendered|safe}}
-        </div>{% endfor %}
-    </div>
-    {% endcomment %}
+    {% endif %}
 </section>
 <section id='visions'>
     <div class="poster">
