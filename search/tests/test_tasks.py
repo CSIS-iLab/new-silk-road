@@ -1,5 +1,4 @@
 from django.test import TestCase, override_settings
-from elasticsearch_dsl import Search
 from elasticsearch_dsl.connections import connections
 from redis import Redis
 from rq import SimpleWorker, Queue

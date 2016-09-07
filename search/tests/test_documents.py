@@ -27,9 +27,9 @@ class DocumentsTestCase(BaseSearchTestCase):
         result = response[0]
 
         self.assertEqual(1, self.search.count())
-        self.assertEqual(entry.id, result._app.id)
+        self.assertEqual(entry.id, result._meta.id)
         self.assertEqual(entry.publication_date.isoformat(), result.publication_date)
-        self.assertEqual(entry._meta.label, result._app.label)
+        self.assertEqual(entry._meta.object_name, result._meta.model)
 
     def test_delete_entry(self):
         entry = EntryFactory.create(title='Test title')

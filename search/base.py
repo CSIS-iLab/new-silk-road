@@ -75,7 +75,11 @@ class ModelSerializer:
             raise TypeError(str(self.__class__), 'Instance must match model class')
 
         obj_dict = {
-            '_app': {'label': instance._meta.label, 'id': instance.id},
+            '_meta': {
+                'id': instance.id,
+                'model': instance._meta.object_name,
+                'app': instance._meta.app_label,
+            },
             '_id': doc_id_for_instance(instance),
         }
 
