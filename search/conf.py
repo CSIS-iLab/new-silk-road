@@ -42,6 +42,7 @@ class SearchConf:
         self._doctype_lookup = defaultdict(set)
         self._serializer_module = None
         self._settings = None
+        self._default_index = None
         if auto_setup:
             self.setup()
 
@@ -51,6 +52,7 @@ class SearchConf:
         if self._serializers_path:
             self._serializer_module = import_module(self._serializers_path)
         self._settings = getattr(settings, 'SEARCH', {})
+        self._default_index = self._settings['default']['index']
         for config in self._settings.values():
             self._configure(config.get('serializers', []), config.get('index'))
 
@@ -98,3 +100,7 @@ class SearchConf:
 
     def get_registered_models(self):
         return list(self._model_serializers.keys())
+
+    @property
+    def default_index(self):
+        return self._default_index
