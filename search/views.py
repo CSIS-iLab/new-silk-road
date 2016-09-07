@@ -13,6 +13,7 @@ class SiteSearch(FacetedSearch):
     doc_types = doc_type_classes
     fields = (
         '*name',
+        '*.name^0.5',  # Negative boost to nested names (country.name, etc.)
         '*_type?',
         'title',
         'description',
