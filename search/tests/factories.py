@@ -121,7 +121,7 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
 class PositionFactory(factory.django.DjangoModelFactory):
     title = factory.Faker('job')
     organization = factory.SubFactory(OrganizationFactory)
-    person = factory.SubFactory('search.tests.factories.PersonFactory')
+    person = factory.SubFactory('search.tests.factories.PersonFactory', published=True)
 
     class Meta:
         model = 'facts.Position'
