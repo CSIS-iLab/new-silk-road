@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Search</h2>
+    <nav>
+        <h4>Facets</h4>
+        {% for facet in search_response.facets  %}
+            {{ facet|title }}
+        {% endfor %}
+    </nav>
+    {% for result in search_response %}
+    <section>
+        <h2>{{ result.get_display_name }}</h2>
+        <h3>{{ result.get_model_meta.model }}</h3>
+        {% comment %}
+        {% for key,value_list in result.get_result_highlight.items  %}
+        {% for item in value_list  %}
+        <p>{{item|safe}}</p>
+        {% endfor %}
+        {% endfor %}
+        {% endcomment %}
+    </section>
+    {% endfor %}
+{% endblock %}

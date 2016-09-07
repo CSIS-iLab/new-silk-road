@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^', include('website.urls')),
     url(r'^filer/', include('filer.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^search/', include('search.urls')),
     url(r'^admin/django-rq/', include('django_rq.urls')),
     url(r'^admin/infrastructure/', include(adminpatterns, namespace='infrastructure-admin')),
     url(r'^admin/', admin.site.urls),

@@ -207,4 +207,8 @@ class EntrySerializer(ModelSerializer):
             'description',
             'publication_date',
             'categories',
+            'url',
         )
+
+    def get_url(self, instance):
+        return instance.get_absolute_url()
