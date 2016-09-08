@@ -1,22 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
     <h2>Search</h2>
+    <form action="{% url 'search:search' %}">
+        <input type="search" name="q" value="{{request.GET.q}}">
+        <input type="submit">
+    {% if search_facets %}
     <nav>
-        <h4>Facets</h4>
-        {% for facet in search_response.facets  %}
-            {{ facet|title }}
-        {% endfor %}
+        <h3>Filters</h3>
+        <ul>{% for name, info in search_facets.items  %}{% if info %}
+            <li>
+                <h4>{{ name|title }}</h4>
+                <ol>{% for label, count, selected in info  %}
+                    <li>{% spaceless %}
+                        <label>
+                            <input type="checkbox" name="facet" {% if selected %}checked{% endif %}
+                                value="{{name}}:{{label}}">{{label|title}} ({{count}})
+                        </label>{% endspaceless %}
+                    </li>{% endfor %}
+                </ol>
+            </li>{% endif %}{% endfor %}
+        </ul>
     </nav>
+    {% endif %}
+    </form>
     <ol>{% for result in search_response %}
         <li>
             <section>
                 <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
                 <h3>{{ result.get_model_meta.model }}</h3>
                 {% comment %}
-                {% for key,value_list in result.get_result_highlight.items  %}
+                {% for field,value_list in result.meta.highlight.to_dict.items  %}
+                <h4>{{field}}</h4>
                 {% for item in value_list  %}
-                <p>{{item|safe}}</p>
-                {% endfor %}
+                <p>{{item|safe}}</p>{% endfor %}
                 {% endfor %}
                 {% endcomment %}
             </section>

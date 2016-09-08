@@ -1,5 +1,6 @@
 from elasticsearch_dsl import FacetedSearch, TermsFacet
 from django.views.generic.base import TemplateView
+from collections import defaultdict
 
 from .conf import SearchConf
 from .utils import get_document_class
@@ -26,23 +27,39 @@ class SiteSearch(FacetedSearch):
     }
 
 
-class SearchResultsView(TemplateView):
+class SearchView(TemplateView):
 
     template_name = "search/results.html"
     http_method_names = ['get', 'head']
-    search_results = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.search_response = None
+        self.search_query = dict()
 
     def get(self, request, *args, **kwargs):
-        self.process_search_request(request, request.GET)
+        self.process_search_request(request)
         return super().get(request, *args, **kwargs)
 
-    def process_search_request(self, request, querydict):
-        q = querydict.get('q')
-        search = SiteSearch(q)
-        # FIXME: elasticsearch_dsl's AttrDicts aren't key, value iterable, so facet and highlight info is hard to use in templates
-        self.search_response = search.execute()
+    def process_search_request(self, request):
+        self.search_query['q'] = request.GET.get('q')
+        self.search_query['facet'] = request.GET.getlist('facet')
+
+        if self.search_query.get('q', None):
+            facets = defaultdict(list)
+            facets_raw = self.search_query['facet']
+            facets_split = (f.split(':') for f in facets_raw)
+            valid_facets = (f for f in facets_split if len(f) == 2)
+            for name, value in valid_facets:
+                facets[name].append(value)
+
+            search = SiteSearch(self.search_query['q'], facets)
+            self.search_response = search.execute()
 
     def get_context_data(self, **kwargs):
-        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        context = super(SearchView, self).get_context_data(**kwargs)
+        context['search_query'] = self.search_query
+        if hasattr(self.search_response, 'facets'):
+            context['search_facets'] = self.search_response.facets.to_dict()
         context['search_response'] = self.search_response
         return context
