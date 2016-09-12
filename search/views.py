@@ -1,6 +1,5 @@
 from django.views.generic.base import TemplateView
 from collections import defaultdict
-
 from .searches import SiteSearch
 
 
@@ -20,22 +19,23 @@ class SearchView(TemplateView):
 
     def process_search_request(self, request):
         self.search_query['q'] = request.GET.get('q')
-        self.search_query['aggregation'] = request.GET.getlist('facet')
+        self.search_query['facet'] = request.GET.getlist('facet')
 
         if self.search_query.get('q', None):
-            aggregations = defaultdict(list)
-            aggregations_raw = self.search_query['aggregation']
-            aggregations_split = (f.split(':') for f in aggregations_raw)
-            valid_aggregations = (f for f in aggregations_split if len(f) == 2)
-            for name, value in valid_aggregations:
-                aggregations[name].append(value)
+            facets = defaultdict(list)
+            facets_raw = self.search_query['facet']
+            facets_split = (f.split(':') for f in facets_raw)
+            valid_facets = (f for f in facets_split if len(f) == 2)
+            for name, value in valid_facets:
+                facets[name].append(value)
 
-            search = SiteSearch(self.search_query['q'], aggregations)
+            search = SiteSearch(self.search_query['q'], facets)
             self.search_response = search.execute()
 
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
         context['search_query'] = self.search_query
-        context['aggregations'] = dict(self.search_response.parse_aggregations())
+        if hasattr(self.search_response, 'facets'):
+            context['search_facets'] = self.search_response.facets.to_dict()
         context['search_response'] = self.search_response
         return context
