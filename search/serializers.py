@@ -129,7 +129,7 @@ class InfrastructureTypeSerializer(ModelSerializer):
 
 class InitiativeSerializer(ModelSerializer):
     initiative_type = RelatedSerializer(InitiativeTypeSerializer)
-    principal_agent = RelatedSerializer(OrganizationSerializer)
+    principal_agent = RelatedSerializer(OrganizationInnerSerializer)
     member_countries = RelatedSerializer(CountrySerializer, many=True)
     geographic_scope = RelatedSerializer(CountrySerializer, many=True)
 

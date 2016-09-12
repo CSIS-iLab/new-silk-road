@@ -71,9 +71,22 @@ class SiteSearch(FacetedSearch):
             path='countries',
             aggs={'name': A('terms', field='countries.name')}
         ),
+        'citizenships': NestedFacet(
+            path='citizenships',
+            aggs={'name': A('terms', field='citizenships.name')}
+        ),
         'infrastructure_type': NestedFacet(
             path='infrastructure_type',
             aggs={'name': A('terms', field='infrastructure_type.name')}
+        ),
+        # FIXME: Issue with `event_type` which is both a property of an Event and a collection under Person.events
+        # 'event_type': NestedFacet(
+        #     path='events',
+        #     aggs={'name': A('terms', field='events.event_type.name')}
+        # ),
+        'initiative_type': NestedFacet(
+            path='initiative_type',
+            aggs={'name': A('terms', field='initiative_type.name')}
         ),
     }
 

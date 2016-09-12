@@ -3,11 +3,12 @@
     <h2>Search</h2>
     <form action="{% url 'search:search' %}">
         <input type="search" name="q" value="{{request.GET.q}}">
-        <input type="submit">
+        <input type="submit"><input type="reset">
+
     {% if search_facets %}
     <nav>
         <h3>Filters</h3>
-        <ul>{% for name, info in search_facets.items  %}{% if info %}
+        <ul>{% for name, info in search_facets.items %}{% if info %}
             <li>
                 <h4>{{ name|title }}</h4>
                 <ol>{% for label, count, selected in info  %}
@@ -18,11 +19,15 @@
                         </label>{% endspaceless %}
                     </li>{% endfor %}
                 </ol>
-            </li>{% endif %}{% endfor %}
+            </li>{% endif %}
+            {% empty %}
+            <li>No filters available</li>
+            {% endfor %}
         </ul>
     </nav>
     {% endif %}
     </form>
+    <h4>{{search_response.hits.total}} Results</h4>
     <ol>{% for result in search_response %}
         <li>
             <section>
