@@ -1,30 +1,7 @@
-from elasticsearch_dsl import FacetedSearch, TermsFacet
 from django.views.generic.base import TemplateView
 from collections import defaultdict
 
-from .conf import SearchConf
-from .utils import get_document_class
-
-search_conf = SearchConf(auto_setup=True)
-doc_type_classes = [get_document_class(x) for x in search_conf.get_doctypes_for_index(search_conf.default_index)]
-
-
-class SiteSearch(FacetedSearch):
-    index = search_conf.default_index
-    doc_types = doc_type_classes
-    fields = (
-        '*name',
-        '*.name^0.5',  # Negative boost to nested names (country.name, etc.)
-        '*_type?',
-        'title',
-        'description',
-        'content',
-    )
-
-    facets = {
-        'kind': TermsFacet(field='_meta.model'),
-        'countries': TermsFacet(field='countries.name'),
-    }
+from .searches import SiteSearch
 
 
 class SearchView(TemplateView):
@@ -43,23 +20,22 @@ class SearchView(TemplateView):
 
     def process_search_request(self, request):
         self.search_query['q'] = request.GET.get('q')
-        self.search_query['facet'] = request.GET.getlist('facet')
+        self.search_query['aggregation'] = request.GET.getlist('facet')
 
         if self.search_query.get('q', None):
-            facets = defaultdict(list)
-            facets_raw = self.search_query['facet']
-            facets_split = (f.split(':') for f in facets_raw)
-            valid_facets = (f for f in facets_split if len(f) == 2)
-            for name, value in valid_facets:
-                facets[name].append(value)
+            aggregations = defaultdict(list)
+            aggregations_raw = self.search_query['aggregation']
+            aggregations_split = (f.split(':') for f in aggregations_raw)
+            valid_aggregations = (f for f in aggregations_split if len(f) == 2)
+            for name, value in valid_aggregations:
+                aggregations[name].append(value)
 
-            search = SiteSearch(self.search_query['q'], facets)
+            search = SiteSearch(self.search_query['q'], aggregations)
             self.search_response = search.execute()
 
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
         context['search_query'] = self.search_query
-        if hasattr(self.search_response, 'facets'):
-            context['search_facets'] = self.search_response.facets.to_dict()
+        context['aggregations'] = dict(self.search_response.parse_aggregations())
         context['search_response'] = self.search_response
         return context

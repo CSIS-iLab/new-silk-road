@@ -4,21 +4,22 @@
     <form action="{% url 'search:search' %}">
         <input type="search" name="q" value="{{request.GET.q}}">
         <input type="submit">
-    {% if search_facets %}
+    {% if aggregations %}
     <nav>
         <h3>Filters</h3>
-        <ul>{% for name, info in search_facets.items  %}{% if info %}
+        <ul>{% for name, agg_list in aggregations.items  %}
             <li>
                 <h4>{{ name|title }}</h4>
-                <ol>{% for label, count, selected in info  %}
+                <ol>{% for item in agg_list  %}
                     <li>{% spaceless %}
                         <label>
-                            <input type="checkbox" name="facet" {% if selected %}checked{% endif %}
-                                value="{{name}}:{{label}}">{{label|title}} ({{count}})
+                            {{item}}
+                            <input type="checkbox" name="facet" {% if item.selected %}checked{% endif %}
+                                value="{{name}}:{{item.key}}">{{item.key}} ({{item.doc_count}})
                         </label>{% endspaceless %}
                     </li>{% endfor %}
                 </ol>
-            </li>{% endif %}{% endfor %}
+            </li>{% endfor %}
         </ul>
     </nav>
     {% endif %}
