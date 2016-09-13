@@ -112,11 +112,13 @@ def index_model(label):
         return es_bulk(conn, doc_dicts)
 
 
-def rebuild_indices(indices_config, subtask_indexing=False):
+def rebuild_indices(indices_config, subtask_indexing=False, verbosity=0):
     for name, config in indices_config.items():
         index_name = config.get('index')
         if index_name:
             doc_types = search_config.get_doctypes_for_index(index_name)
+            if verbosity > 0:
+                logger.info("Creating search index: '{}'".format(index_name))
             create_search_index(index_name, doc_types=doc_types, delete_if_exists=True)
 
     model_list = search_config.get_registered_models()
@@ -125,6 +127,8 @@ def rebuild_indices(indices_config, subtask_indexing=False):
 
     results = {}
     for model_label in model_list:
+        if verbosity > 0:
+            logger.info("Indexing model: '{}'".format(model_label))
         # Stores es_bulk response or job
         results[model_label] = index_func(model_label)
 
