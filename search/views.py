@@ -13,7 +13,7 @@ class SearchView(TemplateView):
         self.search_response = None
         self.search_query = dict()
         self.offset = 0
-        self.size = 10
+        self.size = 20
         self.page_params = []
 
     def get(self, request, *args, **kwargs):
@@ -46,10 +46,23 @@ class SearchView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
 
+        page = {}
+        pnum = self.offset // self.size
+        pmax = self.search_response.hits.total // self.size
+        if pnum > 0:
+            qd = self.request.GET.copy()
+            qd['offset'] = (pnum - 1) * self.size
+            page['previous'] = qd.urlencode(safe=[':', '%'])
+        if pnum < pmax:
+            qd = self.request.GET.copy()
+            qd['offset'] = (pnum + 1) * self.size
+            page['next'] = qd.urlencode(safe=[':', '%'])
+
         context['search'] = {
             'query': self.search_query['q'],
             'offset': self.offset,
             'size': self.size,
+            'page': page,
             'total': self.search_response.hits.total,
             'response': self.search_response,
             'facets': self.search_response.facets.to_dict() if hasattr(self.search_response, 'facets') else None

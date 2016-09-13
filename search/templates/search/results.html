@@ -26,7 +26,17 @@
     </nav>
     {% endif %}
     </form>
-    <p>Results {{search.offset|add:'1'}}&ndash;{{search.offset|add:search.size}} of {{search.total}}</p>
+    <p>Results {{search.offset|add:'1'}}&ndash;
+        {% if search.page.next %}{{search.offset|add:search.size}} of{% endif %}
+        {{search.total}}</p>
+    <ul>
+        {% if search.page.previous %}
+        <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
+        {% endif %}
+        {% if search.page.next %}
+        <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
+        {% endif %}
+    </ul>
     <ol start="{{search.offset|add:'1'}}">{% for result in search.response %}
         <li>
             <section>
@@ -40,4 +50,15 @@
             </section>
         </li>{% endfor %}
     </ol>
+    <p>Results {{search.offset|add:'1'}}&ndash;
+        {% if search.page.next %}{{search.offset|add:search.size}} of{% endif %}
+        {{search.total}}</p>
+    <ul>
+        {% if search.page.previous %}
+        <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
+        {% endif %}
+        {% if search.page.next %}
+        <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
+        {% endif %}
+    </ul>
 {% endblock %}
