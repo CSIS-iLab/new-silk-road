@@ -65,6 +65,7 @@ class SiteSearch(FacetedSearch):
         'content',
     )
 
+    # Look at DocType fields to determine if field is a Nested or Object field. Object fields don't get NestedFacet
     facets = {
         'kind': TermsFacet(field='_meta.model'),
         'countries': NestedFacet(
@@ -75,19 +76,9 @@ class SiteSearch(FacetedSearch):
             path='citizenships',
             aggs={'name': A('terms', field='citizenships.name')}
         ),
-        'infrastructure_type': NestedFacet(
-            path='infrastructure_type',
-            aggs={'name': A('terms', field='infrastructure_type.name')}
-        ),
-        # FIXME: Issue with `event_type` which is both a property of an Event and a collection under Person.events
-        # 'event_type': NestedFacet(
-        #     path='events',
-        #     aggs={'name': A('terms', field='events.event_type.name')}
-        # ),
-        'initiative_type': NestedFacet(
-            path='initiative_type',
-            aggs={'name': A('terms', field='initiative_type.name')}
-        ),
+        'infrastructure_type': TermsFacet(field='infrastructure_type.name'),
+        'event_type': TermsFacet(field='event_type.name'),
+        'initiative_type': TermsFacet(field='initiative_type.name'),
     }
 
     def search(self):

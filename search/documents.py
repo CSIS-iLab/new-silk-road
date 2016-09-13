@@ -77,7 +77,7 @@ class PersonDoc(SerializedDoc):
 class InitiativeDoc(SerializedDoc):
     identifier = field.String()
     name = field.String()
-    principal_agent = field.Object(doc_class=OrganizationDoc, properties={'name': field.String()})
+    principal_agent = field.Object(properties={'name': field.String()})
     member_countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     geographic_scope = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     initiative_type = field.Object(properties={'name': field.String()})
@@ -92,7 +92,7 @@ class ProjectDoc(SerializedDoc):
     alternate_name = field.String()
     description = field.String()
     countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
-    infrastructure_type = field.Nested(properties={'name': field.String()})
+    infrastructure_type = field.Object(properties={'name': field.String()})
     # Providing a doc_class for initiatives produced errors, so keep it simple!
     initiatives = field.Nested(properties={'name': field.String()})
 

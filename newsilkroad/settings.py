@@ -393,7 +393,7 @@ SEARCH = {
             'ProjectSerializer',
             'PersonSerializer',
             'EventSerializer',
-            # 'InitiativeSerializer',
+            'InitiativeSerializer',
             'OrganizationSerializer',
         ),
         'connections': {
