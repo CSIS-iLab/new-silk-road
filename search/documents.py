@@ -69,6 +69,7 @@ class PersonDoc(SerializedDoc):
             'organization': field.Object(properties={'name': field.String()})
         }
     )
+    events = field.Nested(properties={'name': field.String()})
 
     def get_display_name(self):
         return " ".join((self.given_name, self.family_name))

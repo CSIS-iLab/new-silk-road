@@ -72,6 +72,16 @@ class OrganizationInnerSerializer(ModelSerializer):
         )
 
 
+class EventInnerSerializer(ModelSerializer):
+
+    class Meta:
+        model = 'facts.Event'
+        doc_type = 'search.documents.EventDoc'
+        fields = (
+            'name',
+        )
+
+
 class PositionSerializer(ModelSerializer):
     organization = RelatedSerializer(OrganizationInnerSerializer, many=False)
 
@@ -87,7 +97,7 @@ class PositionSerializer(ModelSerializer):
 class PersonSerializer(ModelSerializer):
     citizenships = RelatedSerializer(CountrySerializer, many=True)
     position_set = RelatedSerializer(PositionSerializer, many=True)
-    events = RelatedSerializer(EventSerializer, many=True)
+    events = RelatedSerializer(EventInnerSerializer, many=True)
 
     class Meta:
         model = 'facts.Person'
