@@ -87,3 +87,17 @@ class SiteSearch(FacetedSearch):
         """
         s = Search(doc_type=self.doc_types, index=self.index)
         return s.response_class(partial(ImprovedFacetedResponse, self))
+
+    def paginate(self, offset, size=10):
+        """
+        Accepts an offset and optional size and returns a search object that can fetch those results
+
+        :param offset: An integer to offset search results by
+        :type offset: int.
+        :param size: The number of results to return. (default= 10)
+        :type size: int.
+
+        :returns: a search object you can execute()
+        """
+        to = offset + size
+        return self._s[offset:to]

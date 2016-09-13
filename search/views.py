@@ -12,6 +12,9 @@ class SearchView(TemplateView):
         super().__init__(**kwargs)
         self.search_response = None
         self.search_query = dict()
+        self.offset = 0
+        self.size = 10
+        self.page_params = []
 
     def get(self, request, *args, **kwargs):
         self.process_search_request(request)
@@ -29,13 +32,26 @@ class SearchView(TemplateView):
             for name, value in valid_facets:
                 facets[name].append(value)
 
+            offset_raw = request.GET.get('offset', '')
+            if offset_raw.isdecimal():
+                self.offset = int(offset_raw)
+            size_raw = request.GET.get('size', '')
+            if size_raw.isdecimal():
+                self.size = int(size_raw)
+
             search = SiteSearch(self.search_query['q'], facets)
+            search = search.paginate(self.offset, size=self.size)
             self.search_response = search.execute()
 
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
-        context['search_query'] = self.search_query
-        if hasattr(self.search_response, 'facets'):
-            context['search_facets'] = self.search_response.facets.to_dict()
-        context['search_response'] = self.search_response
+
+        context['search'] = {
+            'query': self.search_query['q'],
+            'offset': self.offset,
+            'size': self.size,
+            'total': self.search_response.hits.total,
+            'response': self.search_response,
+            'facets': self.search_response.facets.to_dict() if hasattr(self.search_response, 'facets') else None
+        }
         return context

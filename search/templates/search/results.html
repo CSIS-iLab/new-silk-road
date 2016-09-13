@@ -2,13 +2,12 @@
 {% block content %}
     <h2>Search</h2>
     <form action="{% url 'search:search' %}">
-        <input type="search" name="q" value="{{request.GET.q}}">
+        <input type="search" name="q" value="{{search.query}}">
         <input type="submit"><input type="reset">
-
-    {% if search_facets %}
+    {% if search.facets and search.total > 1 %}
     <nav>
         <h3>Filters</h3>
-        <ul>{% for name, info in search_facets.items %}{% if info %}
+        <ul>{% for name, info in search.facets.items %}{% if info %}
             <li>
                 <h4>{{ name|title }}</h4>
                 <ol>{% for label, count, selected in info  %}
@@ -27,19 +26,17 @@
     </nav>
     {% endif %}
     </form>
-    <h4>{{search_response.hits.total}} Results</h4>
-    <ol>{% for result in search_response %}
+    <p>Results {{search.offset|add:'1'}}&ndash;{{search.offset|add:search.size}} of {{search.total}}</p>
+    <ol start="{{search.offset|add:'1'}}">{% for result in search.response %}
         <li>
             <section>
                 <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
                 <h3>{{ result.get_model_meta.model }}</h3>
-                {% comment %}
                 {% for field,value_list in result.meta.highlight.to_dict.items  %}
                 <h4>{{field}}</h4>
                 {% for item in value_list  %}
                 <p>{{item|safe}}</p>{% endfor %}
                 {% endfor %}
-                {% endcomment %}
             </section>
         </li>{% endfor %}
     </ol>
