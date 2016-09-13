@@ -77,7 +77,7 @@ class PersonDoc(SerializedDoc):
 class InitiativeDoc(SerializedDoc):
     identifier = field.String()
     name = field.String()
-    principal_agent = field.Object(properties={'name': field.String()})
+    principal_agent = field.Nested(multi=False, properties={'name': field.String()})
     member_countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     geographic_scope = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     initiative_type = field.Object(properties={'name': field.String()})
