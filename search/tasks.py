@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.timezone import get_default_timezone
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
 from elasticsearch.helpers import bulk as es_bulk
@@ -7,6 +8,8 @@ import django_rq
 from .utils import calculate_doc_id, get_document_class
 from .conf import SearchConf
 from functools import partial
+import datetime
+from pytz import utc
 import logging
 
 logger = logging.getLogger(__package__)
@@ -133,3 +136,31 @@ def rebuild_indices(indices_config, subtask_indexing=False, verbosity=0):
         results[model_label] = index_func(model_label)
 
     return results
+
+
+def schedule_periodic_index_rebuilds():
+    current_dt = datetime.datetime.now(tz=get_default_timezone())
+    replace_time = {
+        'hour': 1,
+        'minute': 15,
+        'second': 0,
+    }
+    if current_dt.hour > replace_time['hour']:
+        replace_time['day'] = current_dt.day + 1
+    after_midnight = current_dt.replace(**replace_time).astimezone(utc)
+
+    scheduler = django_rq.get_scheduler('default')
+    # Delete existing 'rebuild_indices' jobs
+    for job in scheduler.get_jobs():
+        if job.func_name == 'search.tasks.rebuild_indices':
+            job.delete()
+
+    scheduler.schedule(
+        scheduled_time=after_midnight,
+        func=rebuild_indices,
+        args=[search_config._settings],
+        kwargs={'verbosity': 1},
+        interval=86400,  # Reindex daily
+        repeat=None,
+        result_ttl=None
+    )

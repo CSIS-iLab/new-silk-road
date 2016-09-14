@@ -1,2 +1,3 @@
 web: waitress-serve --port=$PORT newsilkroad.wsgi:application
-worker: python manage.py rqworker default
+worker: python -u manage.py rqworker default
+scheduler: python -u manage.py rqscheduler

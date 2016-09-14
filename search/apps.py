@@ -28,3 +28,7 @@ class SearchAppConfig(AppConfig):
                 sender=label,
                 dispatch_uid=post_delete_uid
             )
+
+        from search.tasks import schedule_periodic_index_rebuilds
+        # This should tell our rq-scheduler to run rebuild_indices periodically
+        schedule_periodic_index_rebuilds()
