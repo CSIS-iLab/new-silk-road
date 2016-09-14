@@ -253,7 +253,7 @@ header.decorated {
     position: relative;
 
     border-bottom: $thin-border-width solid $blue-steel;
-    margin-bottom: 25px;
+    margin-bottom: 0;
     padding-bottom: 25px;
     display: block;
     min-height: 120px;
@@ -281,6 +281,7 @@ header.decorated {
         background-position: 50% 100%;
         background-size: $small-arrow-width auto;
         background-repeat: no-repeat;
+        z-index: 1;
         @include media($medium-break) {
             @include position(absolute, 100% 0 ($large-spacing - $thin-border-width - 2px) 0);
         }
@@ -290,6 +291,10 @@ header.decorated {
         @include media($medium-break) {
             @include position(absolute, 100% 0 ($large-spacing - $thin-border-width) 0);
         }
+    }
+
+    + :not(.featured) {
+        margin-top: 50px;
     }
 
 }

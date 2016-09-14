@@ -10,6 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from finance.credit import (MOODYS_LONG_TERM,
                             STANDARD_POORS_LONG_TERM,
                             FITCH_LONG_TERM)
+from utilities.date import fuzzydate
 import uuid
 
 DETAIL_MODEL_NAMES = {
@@ -43,9 +44,18 @@ class Organization(MPTTModel, Publishable):
     founding_year = models.PositiveSmallIntegerField(blank=True, null=True)
     founding_month = models.PositiveSmallIntegerField(blank=True, null=True)
     founding_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    @property
+    def fuzzy_founding_date(self):
+        return fuzzydate(self.founding_year, self.founding_month, self.founding_day)
+
     dissolution_year = models.PositiveSmallIntegerField(blank=True, null=True)
     dissolution_month = models.PositiveSmallIntegerField(blank=True, null=True)
     dissolution_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    @property
+    def fuzzy_dissolution_date(self):
+        return fuzzydate(self.dissolution_year, self.dissolution_month, self.dissolution_day)
 
     parent = TreeForeignKey('self', null=True, blank=True,
                             verbose_name='parent organization',

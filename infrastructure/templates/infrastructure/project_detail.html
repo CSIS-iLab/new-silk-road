@@ -19,8 +19,10 @@
 {% endif %} | {{ block.super }}
 {% endblock %}
 
+{% block bodyclass %}project{% endblock %}"
+
 {% block content %}
-<article class="project">
+<article>
     <header
     class='decorated infrastructure{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}'
     >

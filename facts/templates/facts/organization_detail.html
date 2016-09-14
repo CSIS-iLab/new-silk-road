@@ -1,63 +1,89 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% load humanize %}{% load date_extras %}
 
 {% block pagetitle %}
 {{ object.name }} | {{ block.super }}
 {% endblock %}
 
 {% block content %}
-<article class="">
+<article>
     <header class="decorated organization">
         <h1>{{ object.name }}</h1>
     </header>
-    {% if object.mission %}
-    <section>
-        <h2>Mission</h2>
-        {{object.mission_rendered|safe}}
+    {% if object.description %}
+    <section class="featured">
+        {{object.description_rendered|safe}}
     </section>
     {% endif %}
-    {% if object.companydetails %}
-    <section class="details company">
-        <h2>Company Details</h2>
-        <dl>
-            <dt>Sector</dt>
-            <dd>{{ object.companydetails.get_sector_display|default:"Unspecified" }}</dd>
-            <dt>Company Type</dt>
-            <dd>{{ object.companydetails.org_type|default:"Unspecified" }}</dd>
-            <dt>Company Structure</dt>
-            <dd>{{ object.companydetails.structure|default:"Unspecified" }}</dd>
-        </dl>
-    </section>
-    {% endif %}
-
-
-    {% if object.governmentdetails %}
-    <section class="details government">
-        <h2>Government Details</h2>
-        {{ object.governmentdetails.country }}
-    </section>
-    {% endif %}
-
-    <section class="projects">{% spaceless %}
-        {% if object.projects_consulted.exists %}
-        {% include "facts/_related_projects.html" with projects_list=object.projects_consulted.all organization_role="consultancies" %}
-        {% endif %}
-
-        {% if object.projects_contracted.exists %}
-        {% include "facts/_related_projects.html" with projects_list=object.projects_contracted.all organization_role="contracts" %}
-        {% endif %}
-
-        {% if object.projectfunding_set.exists %}
-        {% include "facts/_related_funded_projects.html" with funding_list=object.projectfunding_set.all slice_size=":10" %}
-        {% endif %}
-
-        {% if object.projects_implemented.exists %}
-        {% include "facts/_related_projects.html" with projects_list=object.projects_implemented.all organization_role="implemented" %}
-        {% endif %}
-
-        {% if object.projects_operated.exists %}
-        {% include "facts/_related_projects.html" with projects_list=object.projects_operated.all organization_role="operated" %}
-        {% endif %}
-        {% endspaceless %}
+    <section class="details">
+        <div class="row">
+            <section>
+                <h3>Headquarters</h3>
+                {% if object.headquarters %}
+                <p>{{object.headquarters.city}}, {{object.headquarters.country}}</p>
+                {% endif %}
+            </section>
+            <section>
+                <h3>Parent Organization</h3>
+                <p>
+                {% if object.parent %}
+                <a href="{{object.parent.get_absolute_url}}">{{object.parent.name}}</a>
+                {% else %}
+                &mdash;
+                {% endif %}
+                </p>
+            </section>
+            <section>
+                <h3>Leader</h3>
+                <ul class="clean">{% for leader in object.leaders.all %}
+                    <li>{{leader.full_display_name}}</li>
+                    {% empty %}
+                    <li>&mdash;</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+        <div class="row">
+            <section>
+                <h3>Staff/Personnel Count</h3>
+                <p>{{ object.staff_size|default:'&mdash;'|intcomma }}</p>
+            </section>
+            <section>
+                <h3>Founding Date</h3>
+                <p>{{object.fuzzy_founding_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
+            </section>
+            <section>
+                <h3>Sector</h3>
+                <p>{{ object.companydetails.get_sector_list_display|default:"&mdash;" }}</p>
+            </section>
+            <section>
+                <h3>Type</h3>
+                <p>{{object.companydetails.org_type|default:"&mdash"}}</p>
+            </section>
+        </div>
+        <div class="row">
+            <section>
+                <h3>Related Organizations</h3>
+                {% include "infrastructure/_related_organization_list.html" with organization_list=object.related_organizations.all %}
+            </section>
+            <section>
+                <h3>Related Initiatives</h3>
+                <ul class="clean">{% for org in object.initiatives.all %}
+                    <li><a href="{{org.get_absolute_url}}">{{ org.name }}</a></li>
+                    {% empty %}
+                    <li>&mdash;</li>
+                    {% endfor %}
+                </ul>
+            </section>
+            <section>
+                <h3>Related Events</h3>
+                <ul class="clean">{% for event in object.related_events.all %}
+                    <li><a href="{{event.get_absolute_url}}">{{ event.name }}</a></li>
+                    {% empty %}
+                    <li>&mdash;</li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
     </section>
 </article>
 {% endblock %}
