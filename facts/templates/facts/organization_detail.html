@@ -35,7 +35,7 @@
             <section>
                 <h3>Leader</h3>
                 <ul class="clean">{% for leader in object.leaders.all %}
-                    <li>{{leader.full_display_name}}</li>
+                    <li><a href="{{leader.get_absolute_url}}">{{leader.full_display_name}}</a></li>
                     {% empty %}
                     <li>&mdash;</li>
                     {% endfor %}
@@ -80,10 +80,12 @@
                 </table>
             </section>
         </div>
+        {% endif %}
+        {% if object.ngodetails  %}
         <div class="row">
             <section>
                 <h3>Members</h3>
-                <ul class="clean multicolumn">{% for org in object.financingorganizationdetails.members.all  %}
+                <ul class="clean multicolumn">{% for org in object.ngodetails.members.all  %}
                     <li><a href="{{org.get_absolute_url}}">{{org.name}}</a></li>
                 {% empty %}
                     <li>&mdash;</li>
@@ -93,8 +95,8 @@
         </div>
         <div class="row">
             <section class="elastic">
-                <h3>Scope of operations</h3>
-                <ul class="clean multicolumn">{% for location in object.financingorganizationdetails.scope_of_operations.all  %}
+                <h3>Geographic Scope</h3>
+                <ul class="clean multicolumn">{% for location in object.ngodetails.scope_of_operations.all  %}
                     <li>{{location.country}}</li>
                 {% empty %}
                     <li>&mdash;</li>
