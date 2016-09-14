@@ -111,6 +111,16 @@ ul {
                 margin-bottom: 3px;
             }
     }
+
+    &.multicolumn {
+        column-fill: balance;
+        width: 100%;
+
+        @include media($medium-break) {
+            column-gap: 10em;
+            column-count: 3;
+        }
+    }
 }
 
 button {

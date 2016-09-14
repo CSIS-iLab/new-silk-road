@@ -91,21 +91,21 @@
             </section>
         </div>
         <div class="row">
-            <section class="compressible">
+            <section class="elastic">
                 <h3>Contractors</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.contractors.all %}
             </section>
-            <section class="compressible">
+            <section class="elastic">
                 <h3>Consultants</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.consultants.all %}
             </section>
         </div>
         <div class="row">
-            <section class="compressible">
+            <section class="elastic">
                 <h3>Implementers</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.implementers.all %}
             </section>
-            <section class="compressible">
+            <section class="elastic">
                 <h3>Operators</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.operators.all %}
             </section>

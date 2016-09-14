@@ -88,7 +88,7 @@ article {
                 }
             }
 
-            &.compressible {
+            &.elastic {
                 @include flex(1 1 100%);
             }
 
@@ -96,7 +96,7 @@ article {
         @include media($medium-break) {
             @include flex-direction(row);
             @include flex-wrap(wrap);
-            ul {
+            ul:not(.multicolumn) {
                 max-width: $max-content-width/4;
             }
         }

@@ -43,23 +43,66 @@
             </section>
         </div>
         <div class="row">
-            <section>
+            <section class="elastic">
                 <h3>Staff/Personnel Count</h3>
                 <p>{{ object.staff_size|default:'&mdash;'|intcomma }}</p>
             </section>
-            <section>
+            <section class="elastic">
                 <h3>Founding Date</h3>
                 <p>{{object.fuzzy_founding_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
-            <section>
+        </div>
+        {% if object.companydetails %}
+        <div class="row">
+            <section class="elastic">
                 <h3>Sector</h3>
                 <p>{{ object.companydetails.get_sector_list_display|default:"&mdash;" }}</p>
             </section>
-            <section>
+            <section class="elastic">
                 <h3>Type</h3>
-                <p>{{object.companydetails.org_type|default:"&mdash"}}</p>
+                <p>{{object.companydetails.org_type|default:"&mdash;"}}</p>
             </section>
         </div>
+        {% endif %}
+        {% if object.financingorganizationdetails %}
+        <div class="row">
+            <section>
+                <h3>Shareholders</h3>
+                <table>
+                    <tbody>{% for share in object.financingorganizationdetails.organizationshareholder_set.all  %}
+                        <tr>
+                            <td>
+                                <a href="{{ share.shareholder.get_absolute_url }}">{{ share.shareholder.name }}</a>
+                            </td>
+                            <td><data value="{{share.value}}">{{share.value|default:"&mdash;"}}%</data></td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        <div class="row">
+            <section>
+                <h3>Members</h3>
+                <ul class="clean multicolumn">{% for org in object.financingorganizationdetails.members.all  %}
+                    <li><a href="{{org.get_absolute_url}}">{{org.name}}</a></li>
+                {% empty %}
+                    <li>&mdash;</li>
+                {% endfor %}
+                </ul>
+            </section>
+        </div>
+        <div class="row">
+            <section class="elastic">
+                <h3>Scope of operations</h3>
+                <ul class="clean multicolumn">{% for location in object.financingorganizationdetails.scope_of_operations.all  %}
+                    <li>{{location.country}}</li>
+                {% empty %}
+                    <li>&mdash;</li>
+                {% endfor %}
+                </ul>
+            </section>
+        </div>
+        {% endif %}
         <div class="row">
             <section>
                 <h3>Related Organizations</h3>
@@ -74,6 +117,8 @@
                     {% endfor %}
                 </ul>
             </section>
+        </div>
+        <div class="row">
             <section>
                 <h3>Related Events</h3>
                 <ul class="clean">{% for event in object.related_events.all %}
@@ -84,6 +129,25 @@
                 </ul>
             </section>
         </div>
+    </section>
+    <section class="documents featured">
+        <h2>Documentation</h2>
+        <div class="wrap">{% if object.documents.count %}
+        {% regroup object.documents.all by get_document_type_display as docs_list %}
+        {% for doc_type in docs_list %}
+        <div class="document-list">
+            <h3>{{doc_type.grouper}}</h3>
+            <ul class="clean">{% for doc in doc_type.list  %}
+                <li>
+                    <a rel="external nofollow" target="_blank" href="{{ doc.source_url }}">{{ doc.get_source_url_tail }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>&mdash;</p>
+        {% endif %}
     </section>
 </article>
 {% endblock %}
