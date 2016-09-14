@@ -32,6 +32,8 @@ class EventListView(PublicationMixin, ListView):
 # Organization stuff
 class OrganizationDetailView(PublicationMixin, DetailView):
     queryset = Organization.publishable_objects.all()
+    slug_field = 'identifier'
+    slug_url_kwarg = 'identifier'
 
 
 class OrganizationListView(PublicationMixin, ListView):

@@ -10,6 +10,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from finance.credit import (MOODYS_LONG_TERM,
                             STANDARD_POORS_LONG_TERM,
                             FITCH_LONG_TERM)
+import uuid
 
 DETAIL_MODEL_NAMES = {
     'companydetails': 'Company',
@@ -25,6 +26,7 @@ DETAIL_MODEL_NAMES = {
 class Organization(MPTTModel, Publishable):
     """Abstract base model for organizations"""
 
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=110, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
@@ -69,7 +71,10 @@ class Organization(MPTTModel, Publishable):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('facts:organization-detail', args=[self.slug])
+        return reverse('facts:organization-detail', kwargs={
+            'slug': self.slug,
+            'identifier': str(self.identifier)
+        })
 
     def get_detail_types(self):
         return frozenset([
