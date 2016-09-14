@@ -146,6 +146,9 @@ class Place(models.Model):
     location = models.ForeignKey('PointGeometry', blank=True, null=True,
                                  verbose_name="geographic location")
 
+    class Meta:
+        ordering = ('country__name', 'city')
+
     def __str__(self):
         return self.label
 
