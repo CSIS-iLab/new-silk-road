@@ -181,6 +181,7 @@ class ProjectSerializer(ModelSerializer):
         doc_type = 'search.documents.ProjectDoc'
         fields = (
             'name',
+            'alternate_name',
             'description',
             'countries',
             'infrastructure_type',
