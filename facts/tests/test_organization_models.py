@@ -44,8 +44,8 @@ class CompanyDetailsTestCase(TestCase):
         obj = CompanyDetailsFactory()
 
         self.assertIsNotNone(obj.organization)
-        self.assertTrue(hasattr(obj.organization, 'has_companydetails'))
-        self.assertTrue(obj.organization.has_companydetails())
+        self.assertIn('companydetails', obj.organization.get_detail_types())
+        self.assertIn('Company', obj.organization.get_organization_types())
 
 
 class FinancingOrganizationTestCase(TestCase):
@@ -59,8 +59,8 @@ class FinancingOrganizationTestCase(TestCase):
         obj = FinancingOrganizationDetailsFactory()
 
         self.assertIsNotNone(obj.organization)
-        self.assertTrue(hasattr(obj.organization, 'has_financingorganizationdetails'))
-        self.assertTrue(obj.organization.has_financingorganizationdetails())
+        self.assertIn('financingorganizationdetails', obj.organization.get_detail_types())
+        self.assertIn('Financing Organization', obj.organization.get_organization_types())
 
 
 class GovernmentTestCase(TestCase):
@@ -69,8 +69,8 @@ class GovernmentTestCase(TestCase):
         obj = GovernmentDetailsFactory()
 
         self.assertIsNotNone(obj.organization)
-        self.assertTrue(hasattr(obj.organization, 'has_governmentdetails'))
-        self.assertTrue(obj.organization.has_governmentdetails())
+        self.assertIn('governmentdetails', obj.organization.get_detail_types())
+        self.assertIn('Government', obj.organization.get_organization_types())
 
 
 class MilitaryDetailsTestCase(TestCase):
@@ -79,8 +79,8 @@ class MilitaryDetailsTestCase(TestCase):
         obj = MilitaryDetailsFactory()
 
         self.assertIsNotNone(obj.organization)
-        self.assertTrue(hasattr(obj.organization, 'has_militarydetails'))
-        self.assertTrue(obj.organization.has_militarydetails())
+        self.assertIn('militarydetails', obj.organization.get_detail_types())
+        self.assertIn('Military', obj.organization.get_organization_types())
 
 
 class NGODetailsTestCase(TestCase):
@@ -89,8 +89,8 @@ class NGODetailsTestCase(TestCase):
         obj = NGODetailsFactory()
 
         self.assertIsNotNone(obj.organization)
-        self.assertTrue(hasattr(obj.organization, 'has_ngodetails'))
-        self.assertTrue(obj.organization.has_ngodetails())
+        self.assertIn('ngodetails', obj.organization.get_detail_types())
+        self.assertIn('NGO', obj.organization.get_organization_types())
 
 
 class PoliticalDetailsTestCase(TestCase):
@@ -99,5 +99,5 @@ class PoliticalDetailsTestCase(TestCase):
         obj = PoliticalDetailsFactory()
 
         self.assertIsNotNone(obj.organization)
-        self.assertTrue(hasattr(obj.organization, 'has_politicaldetails'))
-        self.assertTrue(obj.organization.has_politicaldetails())
+        self.assertIn('politicaldetails', obj.organization.get_detail_types())
+        self.assertIn('Political Entity', obj.organization.get_organization_types())

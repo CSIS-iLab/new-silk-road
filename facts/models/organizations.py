@@ -11,6 +11,16 @@ from finance.credit import (MOODYS_LONG_TERM,
                             STANDARD_POORS_LONG_TERM,
                             FITCH_LONG_TERM)
 
+DETAIL_MODEL_NAMES = {
+    'companydetails': 'Company',
+    'financingorganizationdetails': 'Financing Organization',
+    'governmentdetails': 'Government',
+    'militarydetails': 'Military',
+    'multilateraldetails': 'Multilateral',
+    'ngodetails': 'NGO',
+    'politicaldetails': 'Political Entity',
+}
+
 
 class Organization(MPTTModel, Publishable):
     """Abstract base model for organizations"""
@@ -60,6 +70,20 @@ class Organization(MPTTModel, Publishable):
 
     def get_absolute_url(self):
         return reverse('facts:organization-detail', args=[self.slug])
+
+    def get_detail_types(self):
+        return frozenset([
+            model_name
+            for model_name, label in DETAIL_MODEL_NAMES.items()
+            if hasattr(self, model_name)
+        ])
+
+    def get_organization_types(self):
+        return frozenset([
+            label
+            for model_name, label in DETAIL_MODEL_NAMES.items()
+            if hasattr(self, model_name)
+        ])
 
     def save(self, *args, **kwargs):
         self.description_rendered = render_markdown(self.description)
@@ -323,25 +347,3 @@ class PersonShareholder(ShareholderBase):
 
     def __str__(self):
         return "{}: {}%".format(self.shareholder, self.value)
-
-
-# Adds has_details method to Organization for each of the OrganizationDetails subclasses
-def patch_organization_details_checks():
-    detail_models = (c._meta.model_name for c in (
-        CompanyDetails, FinancingOrganizationDetails,
-        GovernmentDetails, MilitaryDetails,
-        MultilateralDetails, NGODetails, PoliticalDetails
-    ))
-
-    def create_detail_check_method(modelname):
-        def related_detail_exists(self):
-            return hasattr(self, modelname)
-        return related_detail_exists
-
-    for modelname in detail_models:
-        method = create_detail_check_method(modelname)
-        method_name = "has_{}".format(modelname)
-        method.__name__ = method_name
-        setattr(Organization, method_name, method)
-
-patch_organization_details_checks()

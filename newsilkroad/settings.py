@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'cachalot',
     'constance',
     'constance.backends.database',
+    'django_rq',
 
     'django_extensions',
     'storages',
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'infrastructure',
     'website',
     'api',
+    'search',
 
     'utilities',
 
@@ -129,25 +131,35 @@ LOGGING = {
         'handlers': ['sentry'],
     },
     'formatters': {
+        'rq_console': {
+            'format': '%(asctime)s %(message)s',
+            'datefmt': '%H:%M:%S',
+        },
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s '
                       '%(process)d %(thread)d %(message)s'
         },
     },
     "handlers": {
+        'rq_console': {
+            'level': 'DEBUG',
+            'class': 'rq.utils.ColorizingStreamHandler',
+            'formatter': 'rq_console',
+            'exclude': ['%(asctime)s'],
+        },
         'sentry': {
             'level': 'ERROR',  # To capture more than ERROR, change to WARNING, INFO, etc.
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
             'tags': {'custom-tag': 'x'},
         },
         "console": {
-            "level": "INFO",
             "class": "logging.StreamHandler",
         },
     },
     "loggers": {
         'django': {
-            "handlers": ["console"],
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'django.db.backends': {
             'level': 'ERROR',
@@ -163,6 +175,14 @@ LOGGING = {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,
+        },
+        'rq.worker': {
+            'handlers': ['rq_console', 'sentry'],
+            'level': 'DEBUG'
+        },
+        'search': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
     }
 }
@@ -353,6 +373,34 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
+}
+
+# RQ
+
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),
+    },
+}
+
+# Search
+
+SEARCH = {
+    'default': {
+        'index': 'reconnectingasia',
+        'serializers': (
+            'EntrySerializer',
+            'ProjectSerializer',
+            'PersonSerializer',
+            'EventSerializer',
+            'InitiativeSerializer',
+            'OrganizationSerializer',
+        ),
+        'connections': {
+            'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
+            'timeout': 20,
+        }
+    }
 }
 
 # Silence cachealot check as it seems to work
