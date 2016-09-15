@@ -35,7 +35,7 @@
             <section>
                 <h3>Headquarters</h3>
                 {% if object.headquarters %}
-                <p>{{object.headquarters.city}}, {{object.headquarters.country}}</p>
+                <p>{{object.headquarters.get_location_display}}</p>
                 {% else %}
                 <p>&mdash;</p>
                 {% endif %}

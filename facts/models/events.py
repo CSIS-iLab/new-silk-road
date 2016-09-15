@@ -5,6 +5,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from publish.models import Publishable
 from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
+from utilities.date import fuzzydate
 
 
 class EventType(MPTTModel):
@@ -37,9 +38,19 @@ class Event(Publishable):
     start_year = models.PositiveSmallIntegerField(blank=True, null=True)
     start_month = models.PositiveSmallIntegerField(blank=True, null=True)
     start_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    @property
+    def fuzzy_start_date(self):
+        return fuzzydate(self.start_year, self.start_month, self.start_day)
+
     end_year = models.PositiveSmallIntegerField(blank=True, null=True)
     end_month = models.PositiveSmallIntegerField(blank=True, null=True)
     end_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    @property
+    def fuzzy_end_date(self):
+        return fuzzydate(self.end_year, self.end_month, self.end_day)
+
     places = models.ManyToManyField('locations.Place', blank=True)
     documents = models.ManyToManyField('sources.Document', blank=True)
     notes = MarkdownField(blank=True)

@@ -152,6 +152,9 @@ class Place(models.Model):
     def __str__(self):
         return self.label
 
+    def get_location_display(self):
+        return ', '.join((item for item in (self.city, self.country.name if self.country else None) if item))
+
 
 class Country(models.Model):
     name = models.CharField('Display name', max_length=200)

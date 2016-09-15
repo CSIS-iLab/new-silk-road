@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load date_extras %}
 
 {% block content %}
 <div>
@@ -15,12 +15,58 @@
     </ul>
 </div>
 <article>
-    <h1>{{ object.name }}</h1>
-    <ul>
-        <li>{{ object.start_date }}</li>
-        <li>{{ object.end_date }}</li>
-    </ul>
-    <section class='description'>
+    <header class="decorated event">
+        <h1>{{ object.name }}</h1>
+    </header>
+    <section class="featured details">
+        <div class="row triple">
+            <section>
+                <h3>Location</h3>
+                <ul class="clean">{% for place in object.places.all %}
+                    <li>{{place.get_location_display}}</li>
+                {% empty %}
+                    <li>&mdash;</li>{% endfor %}
+                </ul>
+            </section>
+            <section>
+                <h3>Date</h3>
+                <p>
+                    {{object.fuzzy_start_date|fuzzydate:'N d Y'|default:'&mdash;'}}
+                    {% if object.fuzzy_end_date and object.fuzzy_start_date != object.fuzzy_end_date %}
+                    &ndash; {{object.fuzzy_end_date|fuzzydate:'N d Y'}}
+                    {% endif %}
+                </p>
+            </section>
+        </div>
+        <div class="row triple">
+            <section>
+                <h3>Related People</h3>
+                <ul class="clean">{% for item in object.person_set.all %}
+                    <li><a href="{{item.get_absolute_url}}">{{item.full_display_name}}</a></li>
+                {% empty %}
+                    <li>&mdash;</li>{% endfor %}
+                </ul>
+            </section>
+            <section>
+                <h3>Related Organizations</h3>
+                <ul class="clean">{% for item in object.organization_set.all %}
+                    <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+                {% empty %}
+                    <li>&mdash;</li>{% endfor %}
+                </ul>
+            </section>
+            <section>
+                <h3>Related Initatives</h3>
+                <ul class="clean">{% for item in object.initiative_set.all %}
+                    <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+                {% empty %}
+                    <li>&mdash;</li>{% endfor %}
+                </ul>
+            </section>
+        </div>
+    </section>
+    <section class='details'>
+        <h3>Description</h3>
         {{ object.description_rendered|safe }}
     </section>
 </article>
