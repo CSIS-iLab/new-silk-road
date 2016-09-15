@@ -83,7 +83,7 @@
             </section>
         </div>
         <div class="row">
-            <section>
+            <section class="maximized">
                 <h3>Members</h3>
                 <ul class="clean multicolumn">{% for org in object.financingorganizationdetails.members.all  %}
                     <li><a href="{{org.get_absolute_url}}">{{org.name}}</a></li>
@@ -94,8 +94,8 @@
             </section>
         </div>
         <div class="row">
-            <section>
-                <h3>Geographic Scope</h3>
+            <section class="maximized">
+                <h3>Scope of Operations</h3>
                 <ul class="clean multicolumn">{% for location in object.financingorganizationdetails.scope_of_operations.all  %}
                     <li>{{location.country}}</li>
                 {% empty %}
@@ -107,7 +107,7 @@
         {% endif %}
         {% if object.ngodetails  %}
         <div class="row">
-            <section>
+            <section class="maximized">
                 <h3>Members</h3>
                 <ul class="clean multicolumn">{% for org in object.ngodetails.members.all  %}
                     <li><a href="{{org.get_absolute_url}}">{{org.name}}</a></li>
@@ -118,7 +118,7 @@
             </section>
         </div>
         <div class="row">
-            <section>
+            <section class="maximized">
                 <h3>Geographic Scope</h3>
                 <ul class="clean multicolumn">{% for location in object.ngodetails.scope_of_operations.all  %}
                     <li>{{location.country}}</li>

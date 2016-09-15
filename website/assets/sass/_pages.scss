@@ -113,6 +113,10 @@ article {
                     width: 100%;
                 }
             }
+
+            &.maximized {
+                width: 100%;
+            }
         }
         @include media($medium-break) {
             @include flex-direction(row);
