@@ -503,6 +503,14 @@ article {
     h3 {
         color: $slate-grey;
     }
+
+    section {
+        table {
+            @include media($medium-break) {
+                width: 100%;
+            }
+        }
+    }
 }
 
 body {

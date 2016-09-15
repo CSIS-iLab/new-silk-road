@@ -106,12 +106,8 @@ article {
             margin-bottom: $small-spacing;
             margin-right: 0;
 
-            &.multidimensional {
-                @include flex(0 1 auto);
-
-                table {
-                    width: 100%;
-                }
+            &.detailed {
+                min-width: 50%;
             }
 
             &.maximized {

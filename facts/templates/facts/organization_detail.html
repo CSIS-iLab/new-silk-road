@@ -67,9 +67,10 @@
         </div>
         {% endif %}
         {% if object.financingorganizationdetails %}
-        <div class="row">
+        <div class="row double">
             <section>
                 <h3>Shareholders</h3>
+                {% if object.financingorganizationdetails.organizationshareholder_set.all %}
                 <table>
                     <tbody>{% for share in object.financingorganizationdetails.organizationshareholder_set.all  %}
                         <tr>
@@ -80,6 +81,9 @@
                         </tr>{% endfor %}
                     </tbody>
                 </table>
+                {% else %}
+                <p>&mdash;</p>
+                {% endif %}
             </section>
         </div>
         <div class="row">
