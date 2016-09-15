@@ -265,6 +265,10 @@ class Initiative(MPTTModel, Publishable):
     founding_month = models.PositiveSmallIntegerField('Founding/Signing Month', blank=True, null=True)
     founding_day = models.PositiveSmallIntegerField('Founding/Signing Day', blank=True, null=True)
 
+    @property
+    def fuzzy_founding_date(self):
+        return fuzzydate(self.founding_year, self.founding_month, self.founding_day)
+
     affiliated_organizations = models.ManyToManyField('facts.Organization', blank=True)
     affiliated_events = models.ManyToManyField('facts.Event', blank=True)
     affiliated_people = models.ManyToManyField('facts.Person', blank=True)
@@ -278,6 +282,10 @@ class Initiative(MPTTModel, Publishable):
     appeared_year = models.PositiveSmallIntegerField('First Apperance Year', blank=True, null=True)
     appeared_month = models.PositiveSmallIntegerField('First Apperance Month', blank=True, null=True)
     appeared_day = models.PositiveSmallIntegerField('First Apperance Day', blank=True, null=True)
+
+    @property
+    def fuzzy_appeared_date(self):
+        return fuzzydate(self.appeared_year, self.appeared_month, self.appeared_day)
 
     class Meta:
         ordering = ['name']

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load date_extras %}
 
 {% block pagetitle %}{{ object.name }} | {{ block.super }}{% endblock %}
 
@@ -18,26 +18,113 @@
         </li>
     </ul>
 </div>
-<article class="initiative">
+<article class="initiative details">
     <header class="decorated initiative">
         <h1>{{ object.name }}</h1>
     </header>
-    <h3>Type: {{ object.initiative_type.name|default:"Not specified" }}</h3>
-    {% if object.founding_date %}
-    <dl>
-        <dt>Founded</dt>
-        <dd>{{ object.founding_date }}</dd>
-    </dl>
-    {% endif %}
-    <section class="projects">
-        <h2>Projects ({{ object.project_set.count }})</h2>
-        <ul>{% for related_object in object.project_set.all %}
-            <li>
-                <a href="{{ related_object.get_absolute_url }}">{{ related_object.name }}</a>
-            </li>
-            {% endfor %}
-        </ul>
+    {% if object.description_rendered %}
+    <section class="featured">
+        {{object.description_rendered}}
     </section>
-
+    {% endif %}
+    <div class="row triple">
+        <section>
+            <h3>Principal Agent</h3>
+            <ul class="clean">
+                <li>{{object.principal_agent.name|default:"&mdash;"}}</li>
+            </ul>
+        </section>
+        <section>
+            <h3>Parent Initiative</h3>
+            <p>{{object.parent.name|default:"&mdash;"}}</p>
+        </section>
+        <section>
+            <h3>Type</h3>
+            <p>{{ object.initiative_type.name|default:"&mdash;" }}</p>
+        </section>
+    </div>
+    <div class="row">
+        <section>
+            <h3>First Announced</h3>
+            <p>{{object.fuzzy_appeared_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Members</h3>
+            <ul class="clean multicolumn">{% for item in object.member_countries.all  %}
+                <li>{{item.name}}</li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Geographic Scope</h3>
+            <ul class="clean multicolumn">{% for item in object.geographic_scope.all  %}
+                <li>{{item.name}}</li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Related Organizations</h3>
+            <ul class="clean multicolumn">{% for item in object.affiliated_organizations.all  %}
+                <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Related Organizations</h3>
+            <ul class="clean">{% for item in object.related_initiatives.all  %}
+                <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Related Projects</h3>
+            <ul class="clean">{% for item in object.project_set.all  %}
+                <li><a href="{{item.get_absolute_url}}">{{item.alternate_name|default:item.name}}</a></li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Related Events</h3>
+            <ul class="clean">{% for item in object.affiliated_events.all  %}
+                <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
+    <div class="row">
+        <section class="maximized">
+            <h3>Related People</h3>
+            <ul class="clean">{% for item in object.affiliated_events.all  %}
+                <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+            {% empty %}
+                <li>&mdash;</li>
+            {% endfor %}
+            </ul>
+        </section>
+    </div>
 </article>
 {% endblock %}
