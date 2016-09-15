@@ -1,5 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic.base import RedirectView
 from publish.views import PublicationMixin
 
 from .models import (
@@ -46,6 +47,17 @@ class OrganizationListView(PublicationMixin, ListView):
         if hasattr(self, 'display_name_plural'):
             context['display_name_plural'] = self.display_name_plural
         return context
+
+
+class OrganizationListRedirectView(RedirectView):
+    permanent = True
+    pattern_name = None
+
+    def get_redirect_url(self, *args, **kwargs):
+        org_type = kwargs.pop('org_type', None)
+        if org_type:
+            self.pattern_name = 'facts:{}-list'.format(org_type.lower())
+        return super().get_redirect_url(*args, **kwargs)
 
 
 class CompanyListView(OrganizationListView):

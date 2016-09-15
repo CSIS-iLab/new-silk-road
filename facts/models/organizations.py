@@ -87,11 +87,11 @@ class Organization(MPTTModel, Publishable):
         })
 
     def get_detail_types(self):
-        return frozenset([
-            model_name
+        return {
+            model_name: label
             for model_name, label in DETAIL_MODEL_NAMES.items()
             if hasattr(self, model_name)
-        ])
+        }
 
     def get_organization_types(self):
         return frozenset([
