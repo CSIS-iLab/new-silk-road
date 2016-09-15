@@ -95,12 +95,6 @@ article {
         h3 {
             border-bottom: 2px solid $slate-grey;
         }
-        @include media($medium-break) {
-            &:first-of-type h3 {
-                color: $medium-green;
-                border-bottom: 2px solid $medium-green;
-            }
-        }
         section {
             @include flex(0 1 auto);
             margin-bottom: $small-spacing;

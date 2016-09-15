@@ -149,6 +149,19 @@ nav {
     }
 }
 
+ul.breadcrumbs {
+    li {
+        font-size: $compact-text-size;
+        display: inline-block;
+
+        &:not(:last-of-type) {
+            &::after {
+                content: " > ";
+            }
+        }
+    }
+}
+
 body > header, body > footer {
     &::before, &::after {
         content: "";
