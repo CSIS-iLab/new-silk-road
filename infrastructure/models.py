@@ -17,6 +17,9 @@ class InfrastructureType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=110, allow_unicode=True)
 
+    class Meta:
+        ordering = ['name', ]
+
     def __str__(self):
         return self.name
 
@@ -226,6 +229,9 @@ class InitiativeType(models.Model):
     """Defines a type of initiative"""
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=110, allow_unicode=True)
+
+    class Meta:
+        ordering = ['name', ]
 
     def __str__(self):
         return self.name
