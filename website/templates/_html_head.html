@@ -1,0 +1,15 @@
+{% spaceless %}
+<meta property="og:url" content="{{request.build_absolute_uri}}">
+<meta property="og:type" content="{{type|default:'website'}}">
+<meta property="og:title" content="{{title}}">
+<meta name="twitter:title" content="{{title|truncatechars:70}}">
+{% if description %}
+<meta name="description" content="{{description|striptags}}">
+<meta property="og:description" content="{{description|striptags}}">
+<meta name="twitter:description" content="{{description|striptags|truncatechars:200}}">
+{% endif %}
+{% if featured_image %}
+<meta property="og:image" content="{{featured_image.url}}">
+<meta name="twitter:image" content="{{featured_image.url}}">
+{% endif %}
+{% endspaceless %}

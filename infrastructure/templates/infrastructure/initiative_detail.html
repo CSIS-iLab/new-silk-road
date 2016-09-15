@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 
-{% block pagetitle %}
-{{ object.name }} | {{ block.super }}
-{% endblock %}
+{% block pagetitle %}{{ object.name }} | {{ block.super }}{% endblock %}
 
+{% block extrahead %}{% include "_html_head.html" with title=object.full_display_name description=object.description_rendered %}{% endblock %}
 
 {% block content %}
 <div>

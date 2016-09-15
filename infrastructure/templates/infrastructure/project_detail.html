@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% load staticfiles %}{% load humanize %}{% load date_extras %}
 
 {% block extrahead %}
+{% include "_html_head.html" with title=object.alternate_name description=object.description_rendered %}
 <style>
     #map {
         width:  100%;
@@ -11,13 +12,7 @@
 <script src='{% static "js/projectmap.js" %}'></script>
 {% endblock %}
 
-{% block pagetitle %}
-{% if object.alternate_name %}
-{{ object.alternate_name }}
-{% else %}
-{{ object.name }}
-{% endif %} | {{ block.super }}
-{% endblock %}
+{% block pagetitle %}{% if object.alternate_name %}{{ object.alternate_name }}{% else %}{{ object.name }}{% endif %} | {{ block.super }}{% endblock %}
 
 {% block bodyclass %}project{% endblock %}"
 

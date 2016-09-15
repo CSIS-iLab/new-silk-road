@@ -1,5 +1,9 @@
 {% extends "base.html" %}{% load date_extras %}
 
+{% block pagetitle %}{{ object.name }} | {{ block.super }}{% endblock %}
+
+{% block extrahead %}{% include "_html_head.html" with title=object.name description=object.description_rendered %}{% endblock %}
+
 {% block content %}
 <div>
     <ul class="breadcrumbs">
