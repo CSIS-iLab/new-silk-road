@@ -82,6 +82,28 @@
                 </table>
             </section>
         </div>
+        <div class="row">
+            <section>
+                <h3>Members</h3>
+                <ul class="clean multicolumn">{% for org in object.financingorganizationdetails.members.all  %}
+                    <li><a href="{{org.get_absolute_url}}">{{org.name}}</a></li>
+                {% empty %}
+                    <li>&mdash;</li>
+                {% endfor %}
+                </ul>
+            </section>
+        </div>
+        <div class="row">
+            <section>
+                <h3>Geographic Scope</h3>
+                <ul class="clean multicolumn">{% for location in object.financingorganizationdetails.scope_of_operations.all  %}
+                    <li>{{location.country}}</li>
+                {% empty %}
+                    <li>&mdash;</li>
+                {% endfor %}
+                </ul>
+            </section>
+        </div>
         {% endif %}
         {% if object.ngodetails  %}
         <div class="row">
