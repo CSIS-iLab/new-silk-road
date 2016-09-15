@@ -126,5 +126,21 @@
             </ul>
         </section>
     </div>
+    <section class="documents featured">
+        <h2>Documentation</h2>
+        <div class="wrap">
+            <ul class="clean">{% for doc in object.documents.all %}
+                <li>
+                    <a href="{{ doc.source_file.canonical_url }}">{{ doc.source_file.original_filename }}</a>
+                    {% if doc.url %}
+                    &nbsp;<a rel="external nofollow" target="_blank" href="{{doc.url}}">[Source]</a>
+                    {% endif %}
+                </li>
+                {% empty %}
+                <li>&mdash;</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
 </article>
 {% endblock %}
