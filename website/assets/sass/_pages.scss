@@ -67,6 +67,31 @@ article {
         &::after {
             content: normal;
         }
+
+        &.double {
+            @include justify-content(flex-start);
+            @include flex-wrap(wrap);
+
+            section {
+                @include flex(0 1 40%);
+                &:not(:last-of-type) {
+                    margin-right: 20%;
+                }
+            }
+        }
+
+        &.triple {
+            @include justify-content(flex-start);
+            @include flex-wrap(wrap);
+
+            section {
+                @include flex(0 1 25%);
+                &:not(:last-of-type) {
+                    margin-right: 12.5%;
+                }
+            }
+        }
+
         h3 {
             border-bottom: 2px solid $slate-grey;
         }
@@ -79,6 +104,7 @@ article {
         section {
             @include flex(0 1 auto);
             margin-bottom: $small-spacing;
+            margin-right: 0;
 
             &.multidimensional {
                 @include flex(0 1 auto);
@@ -87,11 +113,6 @@ article {
                     width: 100%;
                 }
             }
-
-            &.elastic {
-                @include flex(1 1 100%);
-            }
-
         }
         @include media($medium-break) {
             @include flex-direction(row);

@@ -15,11 +15,13 @@
     </section>
     {% endif %}
     <section class="details">
-        <div class="row">
+        <div class="row triple">
             <section>
                 <h3>Headquarters</h3>
                 {% if object.headquarters %}
                 <p>{{object.headquarters.city}}, {{object.headquarters.country}}</p>
+                {% else %}
+                <p>&mdash;</p>
                 {% endif %}
             </section>
             <section>
@@ -42,23 +44,23 @@
                 </ul>
             </section>
         </div>
-        <div class="row">
-            <section class="elastic">
+        <div class="row triple">
+            <section>
                 <h3>Staff/Personnel Count</h3>
                 <p>{{ object.staff_size|default:'&mdash;'|intcomma }}</p>
             </section>
-            <section class="elastic">
+            <section>
                 <h3>Founding Date</h3>
                 <p>{{object.fuzzy_founding_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
         </div>
         {% if object.companydetails %}
-        <div class="row">
-            <section class="elastic">
+        <div class="row triple">
+            <section>
                 <h3>Sector</h3>
                 <p>{{ object.companydetails.get_sector_list_display|default:"&mdash;" }}</p>
             </section>
-            <section class="elastic">
+            <section>
                 <h3>Type</h3>
                 <p>{{object.companydetails.org_type|default:"&mdash;"}}</p>
             </section>
@@ -94,7 +96,7 @@
             </section>
         </div>
         <div class="row">
-            <section class="elastic">
+            <section>
                 <h3>Geographic Scope</h3>
                 <ul class="clean multicolumn">{% for location in object.ngodetails.scope_of_operations.all  %}
                     <li>{{location.country}}</li>
@@ -105,7 +107,7 @@
             </section>
         </div>
         {% endif %}
-        <div class="row">
+        <div class="row double">
             <section>
                 <h3>Related Organizations</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.related_organizations.all %}
@@ -120,7 +122,7 @@
                 </ul>
             </section>
         </div>
-        <div class="row">
+        <div class="row double">
             <section>
                 <h3>Related Events</h3>
                 <ul class="clean">{% for event in object.related_events.all %}

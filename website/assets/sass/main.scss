@@ -67,6 +67,10 @@ figcaption {
     color: $gravel-grey;
 }
 
+iframe {
+    max-width: 100%;
+}
+
 p {
     margin: 0 0 1rem;
 
@@ -117,7 +121,6 @@ ul {
         width: 100%;
 
         @include media($medium-break) {
-            column-gap: 10em;
             column-count: 3;
         }
     }
