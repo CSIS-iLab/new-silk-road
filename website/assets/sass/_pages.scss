@@ -271,4 +271,25 @@ article {
             }
         }
     }
+
+    .browse {
+        h3 {
+            a {
+                position: relative;
+            }
+            a::after {
+                content: " ";
+                display: block;
+                background: url($database-arrow-img);
+                background-size: 8px 15px;
+                background-repeat: no-repeat;
+                width: 8px;
+                height: 15px;
+                position: absolute;
+                right: -16px;
+                bottom: 2px;
+            }
+
+        }
+    }
 }
