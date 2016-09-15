@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div>
+    <ul class="breadcrumbs">
+        <li>
+            <a href="{% url 'database-home' %}">Database</a>
+        </li>
+        <li>
+            <a href="{% url 'facts:event-list' %}">Events</a>
+        </li>
+        <li>
+            {{object.name}}
+        </li>
+    </ul>
+</div>
 <article>
     <h1>{{ object.name }}</h1>
     <ul>

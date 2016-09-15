@@ -22,6 +22,19 @@
 {% block bodyclass %}project{% endblock %}"
 
 {% block content %}
+<div>
+    <ul class="breadcrumbs">
+        <li>
+            <a href="{% url 'database-home' %}">Database</a>
+        </li>
+        <li>
+            <a href="{% url 'infrastructure:project-list' %}">Projects</a>
+        </li>
+        <li>
+            {% if object.alternate_name %}{{ object.alternate_name }}{% else %}{{ object.name }}{% endif %}
+        </li>
+    </ul>
+</div>
 <article>
     <header
     class='decorated infrastructure{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}'

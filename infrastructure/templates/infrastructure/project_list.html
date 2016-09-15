@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
+{% block pagetitle %}Projects | {{ block.super }}{% endblock %}
+
 {% block content %}
+<div>
+    <ul class="breadcrumbs">
+        <li>
+            <a href="{% url 'database-home' %}">Database</a>
+        </li>
+        <li>
+            Projects
+        </li>
+    </ul>
+</div>
 <h2>Projects</h2>
 {% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
 

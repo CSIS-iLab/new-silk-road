@@ -150,6 +150,8 @@ nav {
 }
 
 ul.breadcrumbs {
+    padding: 0;
+
     li {
         font-size: $compact-text-size;
         display: inline-block;

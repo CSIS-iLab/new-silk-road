@@ -6,6 +6,19 @@
 
 
 {% block content %}
+<div>
+    <ul class="breadcrumbs">
+        <li>
+            <a href="{% url 'database-home' %}">Database</a>
+        </li>
+        <li>
+            <a href="{% url 'infrastructure:initiative-list' %}">Initiatives</a>
+        </li>
+        <li>
+            {% if object.alternate_name %}{{ object.alternate_name }}{% else %}{{ object.name }}{% endif %}
+        </li>
+    </ul>
+</div>
 <article class="initiative">
     <header class="decorated initiative">
         <h1>{{ object.name }}</h1>
