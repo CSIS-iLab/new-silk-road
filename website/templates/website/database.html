@@ -55,4 +55,32 @@ The Database | {{ block.super }}
         <li><a class="button gem" href="">Methodology</a></li>
     </ul>
 </nav>
+<section class="wrap content-wrap">
+    <h2>Browse the Database</h2>
+    <div class="row">
+        <section>
+            <h3><a href="{% url 'infrastructure:project-list' %}">Projects</a></h3>
+            <ul class="clean details">
+                {% for infra_type in infrastructure_types %}
+                <li>{{infra_type.name}}</li>{% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h3><a href="{% url 'infrastructure:initiative-list' %}">Initiatives</a></h3>
+        </section>
+        <section>
+            <h3><a href="{% url 'facts:organization-list' %}">Organizations</a></h3>
+            <ul class="clean details">
+                {% for modelname, label in organization_types %}
+                <li><a href="{% url 'facts:organization-list-redirect' org_type=modelname %}">{{label}}</a></li>{% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h3><a href="{% url 'facts:event-list' %}">Events</a></h3>
+        </section>
+        <section>
+            <h3><a href="{% url 'facts:person-list' %}">People</a></h3>
+        </section>
+    </div>
+</section>
 {% endblock %}

@@ -2,6 +2,8 @@ from django.views.generic import TemplateView
 from constance import config
 from writings.models import EntryCollection
 from website.models import Collection
+from facts.models.organizations import DETAIL_MODEL_NAMES
+from infrastructure.models import InfrastructureType
 
 
 class HomeView(TemplateView):
@@ -25,6 +27,8 @@ class DatabaseView(TemplateView):
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
         kwargs['featured_items'] = None
+        kwargs['organization_types'] = sorted(DETAIL_MODEL_NAMES.items())
+        kwargs['infrastructure_types'] = InfrastructureType.objects.all()
         collection_slug = getattr(config, 'FEATURED_DATABASE_COLLECTION', None)
         if collection_slug:
             try:

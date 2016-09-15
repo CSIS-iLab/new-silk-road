@@ -72,42 +72,62 @@ header {
     }
 }
 
+
 .row {
-    @include row();
-    margin-bottom: 0;
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+    @include align-items(stretch);
+    margin-bottom: $large-spacing;
+    &::after {
+        content: normal;
+    }
 
+    &.double {
+        @include justify-content(flex-start);
+        @include flex-wrap(wrap);
+
+        section {
+            @include flex(0 1 40%);
+            &:not(:last-of-type) {
+                margin-right: 20%;
+            }
+        }
+    }
+
+    &.triple {
+        @include justify-content(flex-start);
+        @include flex-wrap(wrap);
+
+        section {
+            @include flex(0 1 25%);
+            &:not(:last-of-type) {
+                margin-right: 12.5%;
+            }
+        }
+    }
+
+    section {
+        @include flex(0 1 auto);
+        margin-bottom: $small-spacing;
+        margin-right: 0;
+
+        &.detailed {
+            min-width: 50%;
+        }
+
+        &.maximized {
+            width: 100%;
+        }
+    }
+    @include media($medium-break) {
+        @include flex-direction(row);
+        @include flex-wrap(wrap);
+        ul:not(.multicolumn) {
+            max-width: $max-content-width/4;
+        }
+    }
     @include media($large-break) {
-        margin-bottom: $large-spacing;
-        &:last-of-type {
-            margin-bottom: 0;
-        }
-    }
-
-}
-
-@for $i from 1 through $grid-columns {
-    .col-#{$i} {
-        @include span-columns(1 of 1);
-        margin-bottom: $large-spacing;
-    }
-}
-
-@include media($medium-break) {
-    @for $i from 1 through $grid-columns {
-        .col-#{$i} {
-            @include span-columns($i/(12/$grid-columns));
-            margin-bottom: $medium-spacing;
-        }
-    }
-}
-
-@include media($large-break) {
-    @for $i from 1 through $grid-columns {
-        .col-#{$i} {
-            @include span-columns($i);
-        }
-        .col-shift-#{$i} {
-            @include shift($i of $grid-columns);
-        }
+        @include flex-wrap(nowrap);
     }
 }

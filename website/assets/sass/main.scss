@@ -116,6 +116,10 @@ ul {
             }
     }
 
+    &.details {
+        font-size: $minorer-text-size;
+    }
+
     &.multicolumn {
         column-fill: balance;
         width: 100%;
