@@ -1,5 +1,6 @@
 from datetime import date
 
+
 class fuzzydate:
     def __new__(cls, year=None, month=None, day=None):
         self = object.__new__(cls)
@@ -8,6 +9,11 @@ class fuzzydate:
         self._day = day
 
         return self
+
+    def __eq__(self, other):
+        if (self._year == other._year) and (self._month == other._month) and (self._day == other._day):
+            return True
+        return False
 
     @property
     def year(self):
