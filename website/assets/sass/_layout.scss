@@ -125,7 +125,13 @@ header {
         margin-right: 0;
 
         &.detailed {
-            min-width: 50%;
+            min-width: 70%;
+            table {
+                tbody {
+                    font-size: $minorer-text-size;
+                }
+                width: 80%;
+            }
         }
 
         &.maximized {

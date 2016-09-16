@@ -63,7 +63,7 @@
                     <tbody>{% for position in object.position_set.all %}
                         <tr>
                             <td>{{ position.title }}</td>
-                            <td><a href="{{ position.organization.get_absolute_url }}">{{ position.organization.name }}</a></td>
+                            <td><a href="{{ position.organization.get_absolute_url }}">{{ position.organization.name|truncatewords:9 }}</a></td>
                             <td>{% if position.start_year or position.end_year %}
                                 {{ position.start_year|default:"" }} &mdash; {{ position.end_year|default:"" }}
                                 {% else %}
@@ -77,7 +77,7 @@
                 </table>
             </section>
         </div>
-        <div class="row">
+        <div class="row double">
             <section>
                 <h3>Events</h3>
                 <ul class="clean">{% for event in object.events.all %}
