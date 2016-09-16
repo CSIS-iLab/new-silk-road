@@ -44,7 +44,7 @@
     </section>
 {% endif %}
     <section class="details">
-        {% if object.alternate_name and object.geo %}
+        {% if object.alternate_name != object.name and object.geo %}
         <h1>{{ object.name }}</h1>
         {% endif %}
 
