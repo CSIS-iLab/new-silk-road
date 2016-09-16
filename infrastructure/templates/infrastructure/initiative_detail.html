@@ -84,7 +84,7 @@
     </div>
     <div class="row">
         <section class="maximized">
-            <h3>Related Organizations</h3>
+            <h3>Related Initiatives</h3>
             <ul class="clean">{% for item in object.related_initiatives.all  %}
                 <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
             {% empty %}
@@ -118,8 +118,8 @@
     <div class="row">
         <section class="maximized">
             <h3>Related People</h3>
-            <ul class="clean">{% for item in object.affiliated_events.all  %}
-                <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
+            <ul class="clean">{% for item in object.affiliated_people.all  %}
+                <li><a href="{{item.get_absolute_url}}">{{item.full_display_name}}</a></li>
             {% empty %}
                 <li>&mdash;</li>
             {% endfor %}

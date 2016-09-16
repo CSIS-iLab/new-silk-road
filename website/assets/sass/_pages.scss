@@ -70,6 +70,13 @@ article {
     p {
         font-size: $minor-text-size;
     }
+    figure {
+        float: left;
+        img {
+            max-width: 150px;
+            border: 6px solid $slate-grey;
+        }
+    }
 }
 
 .document-list {
