@@ -488,20 +488,6 @@ article {
                 width: 80%;
             }
 
-            tbody {
-                tr {
-                    color: $medium-green;
-                    a {
-                        color: $medium-green;
-                    }
-                }
-                tr:nth-of-type(even) {
-                    color: $slate-grey;
-                    a {
-                        color: $slate-grey;
-                    }
-                }
-            }
             th, td {
                 padding: 2px 5px;
                 text-align: left;
