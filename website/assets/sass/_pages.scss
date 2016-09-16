@@ -21,19 +21,22 @@
     }
 }
 
+section, div {
+    &.featured {
+        padding: $small-spacing;
+        background-color: $creamer;
+
+        @include media($medium-break) {
+            padding: $large-spacing;
+        }
+    }
+}
+
 article {
     section {
         > img {
             width: 100%;
             margin-bottom: $small-spacing;
-        }
-        &.featured {
-            padding: $small-spacing;
-            background-color: $creamer;
-
-            @include media($medium-break) {
-                padding: $large-spacing;
-            }
         }
 
         &.documents {

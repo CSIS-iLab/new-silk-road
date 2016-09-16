@@ -168,6 +168,20 @@ ul.breadcrumbs {
     }
 }
 
+dl {
+    dt {
+        display: inline-block;
+        text-transform: uppercase;
+        color: $slate-grey;
+        border-bottom: 2px solid $slate-grey;
+        margin-bottom: $small-spacing;
+    }
+    dd {
+        margin-left: 0;
+        margin-bottom: $medium-spacing;
+    }
+}
+
 body > header, body > footer {
     &::before, &::after {
         content: "";
