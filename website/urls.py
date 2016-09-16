@@ -14,8 +14,8 @@ from .feeds import LatestEntriesFeed
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='website-home'),
     url(r'^about/$', views.flatpage, {'url': '/about/'}, name='about'),
-    url(r'^glossary/$', views.flatpage, {'url': '/glossary'}, name='glossary'),
-    url(r'^methodology/$', views.flatpage, {'url': '/methodology'}, name='methodology'),
+    url(r'^glossary/$', views.flatpage, {'url': '/glossary/'}, name='glossary'),
+    url(r'^methodology/$', views.flatpage, {'url': '/methodology/'}, name='methodology'),
     url(r'^analysis/historical-atlas/$', views.flatpage, {'url': '/analysis/historical-atlas/'}, name='historical-atlas'),
     url(r'^analysis/competing-visions/$', views.flatpage, {'url': '/analysis/competing-visions/'}, name='competing-visions'),
     url(r'^analysis/historical-atlas/$', views.flatpage, {'url': '/analysis/historical-atlas/'}, name='historical-atlas'),
