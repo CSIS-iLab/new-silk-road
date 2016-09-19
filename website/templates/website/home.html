@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% load static %}{% load html_text from html_utils %}
+{% extends 'base.html' %}{% load static %}
 
 {% block bodyclass %}home{% endblock %}
 
@@ -45,18 +45,11 @@
         </div>
     </a>
 </section>
-<section id='featured-analysis' class='columnar'>
+<section id='featured-analysis' class='feature columnar'>
     <h2>News and Features</h2>
     {% if featured_analyses and featured_analyses.entries.published.count %}
-    <div class="wrap">{% for entry in featured_analyses.entries.published %}
-        <div class="analysis panel">
-            <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
-            <h5 class='date'><time datetime='{{entry.publication_date|date:"c"}}'>{{entry.publication_date|date}}</time></h5>
-            {{entry.description_rendered|html_text|truncatewords_html:120|safe}}
-            <footer>
-                <p><a href="{{entry.get_absolute_url}}">Read More</a></p>
-            </footer>
-        </div>{% endfor %}
+    <div class="wrap">
+    {% include "writings/_analyses_panels.html" with analysis_list=featured_analyses %}
     </div>
     {% else %}
     <div class="wrap">
@@ -99,7 +92,7 @@
         </a>
     </div>
 </section>
-<section id="fantasy" class='columnar'>
+<section id="fantasy" class='feature columnar'>
     <h2>From the Field</h2>
     <div class="wrap">
         <div class="poster">

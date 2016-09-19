@@ -1,12 +1,29 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
+from django.views.generic.base import ContextMixin
 from django.shortcuts import get_object_or_404
 from .models import (
     Category,
     Entry,
+    EntryCollection,
 )
 from django.utils import timezone
+from constance import config
+
+
+class FeaturedAnalysesMixin(ContextMixin):
+
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['featured_analyses'] = None
+        collection_slug = getattr(config, 'FEATURED_ANALYSES_COLLECTION', None)
+        if collection_slug:
+            try:
+                kwargs['featured_analyses'] = EntryCollection.objects.get(slug=collection_slug)
+            except EntryCollection.DoesNotExist:
+                pass
+        return kwargs
 
 
 class CategoryListView(ListView):
@@ -56,7 +73,7 @@ class EntryCategoryListView(EntryListView):
         return context
 
 
-class HomeView(TemplateView):
+class HomeView(FeaturedAnalysesMixin, TemplateView):
     template_name = "writings/home.html"
 
     # def get_context_data(self, **kwargs):
