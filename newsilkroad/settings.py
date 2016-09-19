@@ -403,7 +403,7 @@ SEARCH = {
             'OrganizationSerializer',
         ),
         'connections': {
-            'hosts': [os.getenv('ELASTICSEARCH_URL', 'http://localhost:9200')],
+            'hosts': [os.getenv('ELASTICSEARCH_URL', os.getenv('BONSAI_URL', 'http://localhost:9200'))],
             'timeout': 20,
         }
     }
