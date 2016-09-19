@@ -13,19 +13,6 @@
         font-style: italic;
     }
 
-    .poster {
-        figure {
-            display: block;
-        }
-
-        > img, a > img, figure > img {
-            display: block;
-            clear: both;
-
-            width: 100%;
-        }
-    }
-
     .inner {
         max-width: $max-content-width;
         margin: 0 auto;
@@ -84,7 +71,7 @@
 
         @include background-poster($megamap-img);
 
-        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 2px);
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
         border-bottom: $thin-border-width solid $dark-green-line;
 
         h2, h3 {
@@ -132,7 +119,7 @@
         padding: $section-spacing 0;
         font-weight: 400;
 
-        @include widows-peak($light-green-arrow-img, $main-arrow-width, $adjust: 2px);
+        @include widows-peak($light-green-arrow-img, $main-arrow-width, $adjust: 4px);
         border-bottom: $thin-border-width solid $light-green-line;
 
         &::before {
@@ -172,7 +159,7 @@
         }
 
     }
-    #visions, #featured-analysis .row {
+    #featured-analysis .row {
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(space-between)
@@ -198,7 +185,7 @@
         height: 400px;
         @include background-poster($database-img);
 
-        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $adjust: 2px);
+        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $adjust: 4px);
         border-bottom: $thin-border-width solid $dark-blue-line;
 
         .inner {
@@ -217,38 +204,12 @@
         }
     }
 
-    #featured-analysis {
-        max-width: $max-content-width;
-        border: none;
-
-        .wrap {
-            > div {
-                @include flex(0 1 45%);
-                min-height: 360px;
-                margin-bottom: $small-spacing;
-            }
-
-            @include media($small-break) {
-                > div {
-                    min-height: 300px;
-                }
-            };
-
-            @include media($medium-break) {
-                @include flex-direction(row);
-                > div {
-                    margin-bottom: 0;
-                }
-            }
-        }
-    }
-
     #analysis {
         background-color: $dark-night;
         color: $medium-green;
         font-family: $serif-font-family;
 
-        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 2px);
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
         border-bottom: $thin-border-width solid $dark-green-line;
 
         .inner {
@@ -308,7 +269,7 @@
         height: $video-area-height;
         @include background-poster($video-img);
 
-        @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $adjust: 2px);
+        @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $adjust: 4px);
         border-bottom: $thin-border-width solid $medium-blue-line;
 
         $inner-margin-vertical: ($video-area-height - $play-button-size - $text-height)/2;
@@ -365,104 +326,6 @@
         }
     }
 
-    #visions {
-        min-height: 240px;
-        border-bottom: none;
-
-        .poster {
-            position: relative;
-            min-height: inherit;
-            overflow: hidden;
-
-            > a {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
-
-            .label {
-                position: absolute;
-                bottom: auto;
-                top: 50%;
-                left: 0;
-                max-width: 90%;
-                padding: $small-spacing;
-
-                @include media($medium-break) {
-                    max-width: 55%;
-                    padding: $small-spacing $large-spacing $small-spacing $large-spacing;
-                    top: auto;
-                    bottom: 20px;
-                }
-
-                h3 {
-                    font-size: $base-font-size;
-                    text-transform: uppercase;
-                    margin-bottom: $tiny-spacing;
-
-                    @include media($medium-break) {
-                        font-size: $section-hed-size;
-                    }
-
-                    &::after {
-                        width: 27px;
-                        height: 27px;
-                        display: block;
-                        position: absolute;
-                        top: 12px;
-                        right: 8px;
-
-                        @include media($medium-break) {
-                            top: 18px;
-                            right: 18px;
-                        }
-
-                    }
-                }
-
-                p {
-                    font-family: $serif-font-family;
-                    font-size: $compact-text-size;
-                    font-style: italic;
-                    line-height: 1.25em;
-                }
-
-            }
-
-            &:nth-of-type(odd) {
-                .label {
-                    background-color: $pale-green;
-                    color: $dark-night;
-
-                    h3 {
-                        &::after {
-                            content: "";
-                            background-image: url($blue-arrow-circle-img);
-                            background-repeat: no-repeat;
-                            background-size: contain;
-                        }
-                    }
-                }
-            }
-
-            &:nth-of-type(even) {
-                .label {
-                    background-color: $dark-night;
-                    color: $pale-green;
-
-                    h3 {
-                        &::after {
-                            content: "";
-                            background-image: url($green-arrow-circle-img);
-                            background-repeat: no-repeat;
-                            background-size: contain;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     #fantasy {
         max-width: $max-content-width;
 
@@ -483,14 +346,6 @@
                 min-height: inherit;
                 text-align: center;
             }
-        }
-    }
-
-    #featured-analysis, #fantasy {
-        h2 {
-            font-family: $serif-font-family;
-            font-size: $section-hed-size;
-            text-decoration: underline;
         }
     }
 }

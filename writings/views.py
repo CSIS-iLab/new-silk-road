@@ -20,7 +20,12 @@ class FeaturedAnalysesMixin(ContextMixin):
         collection_slug = getattr(config, 'FEATURED_ANALYSES_COLLECTION', None)
         if collection_slug:
             try:
-                kwargs['featured_analyses'] = EntryCollection.objects.get(slug=collection_slug)
+                collection = EntryCollection.objects.get(slug=collection_slug)
+                collection = collection.orderedentry_set.filter(
+                    entry__published=True,
+                    entry__publication_date__lte=timezone.now()
+                )
+                kwargs['featured_analyses'] = (instance.entry for instance in collection)
             except EntryCollection.DoesNotExist:
                 pass
         return kwargs
@@ -76,13 +81,20 @@ class EntryCategoryListView(EntryListView):
 class HomeView(FeaturedAnalysesMixin, TemplateView):
     template_name = "writings/home.html"
 
-    # def get_context_data(self, **kwargs):
-    #     kwargs = super().get_context_data(**kwargs)
-    #     kwargs['featured_items'] = None
-    #     collection_slug = getattr(config, 'FEATURED_DATABASE_COLLECTION', None)
-    #     if collection_slug:
-    #         try:
-    #             kwargs['featured_items'] = Collection.objects.get(slug=collection_slug)
-    #         except Collection.DoesNotExist:
-    #             pass
-    #     return kwargs
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        featured_category_slug = getattr(config, 'FEATURED_WRITINGS_CATEGORY', None)
+        category = None
+        recent_entries = Entry.objects.published().filter(publication_date__lte=timezone.now())
+        try:
+            category = Category.objects.get(slug=featured_category_slug)
+            kwargs['highlighted_entry'] = category.entries.published().filter(publication_date__lte=timezone.now()).first()
+            kwargs['highlighted_category'] = category
+            # Also limit recent_entries by excluding this category
+            recent_entries = recent_entries.exclude(categories=category)
+        except Category.DoesNotExist:
+            pass
+
+        kwargs['recent_entries'] = recent_entries[:2]
+
+        return kwargs

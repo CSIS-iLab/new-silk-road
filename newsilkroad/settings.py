@@ -345,6 +345,10 @@ CONSTANCE_CONFIG = {
         'Slug for the collection of entries (writings.EntryCollection) that are'
         'featured on the website', str
     ),
+    'FEATURED_WRITINGS_CATEGORY': (
+        'news',
+        'Slug for the Category that the featured writings call under', str
+    )
 }
 
 PUBLISH_FILTER_ENABLED = os.getenv('PUBLISH_FILTER_ENABLED', 'True') != 'False'

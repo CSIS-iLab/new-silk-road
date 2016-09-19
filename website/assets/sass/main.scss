@@ -56,7 +56,12 @@ h3,h4,h5,h6 {
 
 h2,h3,h4,h5,h6 {
     line-height: 1.25em;
-    margin: 0 0 0.75em;
+    margin: 0 0 0.75rem;
+}
+
+h3 {
+    font-size: $mid-hed-size;
+    margin: 0 0 0.5rem;
 }
 
 figure {

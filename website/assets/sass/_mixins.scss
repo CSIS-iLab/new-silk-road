@@ -1,7 +1,7 @@
 
 
 @mixin widows-peak($img, $width: auto, $height: 12px, $adjust: 0px, $order: after) {
-    $arrow-adjust: $adjust + 0.5;
+    $arrow-adjust: if($order==after, $adjust + 0.5, $adjust);
     $height-adjust: $height + $arrow-adjust;
     &::#{$order} {
         content: "";
@@ -11,7 +11,7 @@
         background-clip: border-box;
         background-size: $width $height;
         background-repeat: no-repeat;
-        background-position: 0 $adjust;
+        background-position: 0 ($adjust - 1);
         left: 0;
         right: 0;
         margin-left: auto;

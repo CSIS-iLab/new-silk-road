@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load html_text from html_utils %}
 
 {% block pagetitle %}Analysis | {{ block.super }}{% endblock %}
 
@@ -14,4 +14,34 @@
     <p class="quotation">It would be a huge mistake to ignore the significance of the reconnecting of Eurasia. It would be equally dangerous to cast it as a geopolitical threat to the United States. We have a limited role in shaping this mega-development, but we certainly could alienate ourselves from the central actors involved in it. We have time to assess this objectively. It should be on any agenda for the next presidency.</p>
     <p class='attribution'>Dr. John J. Hamre</p>
 </blockquote>
+<section class="feature columnar">
+    <h2>Featured</h2>
+    <div class="wrap">
+        {% include "writings/_analyses_panels.html" with entry_list=featured_analyses max_words=120 %}
+    </div>
+</section>
+<section class="feature mini columnar">
+    <h2>Recent</h2>
+    <div class="wrap">
+        <div class="analysis panel">
+            <h4 class="highlighter"><span>{{highlighted_category.name}}</span></h4>
+            <h3><a href="{{highlighted_entry.get_absolute_url}}">{{highlighted_entry.title}}</a></h3>
+            <h5 class='date'><time datetime='{{highlighted_entry.publication_date|date:"c"}}'>{{highlighted_entry.publication_date|date}}</time></h5>
+            {% if highlighted_entry.description_rendered %}
+            {{highlighted_entry.description_rendered|html_text|truncatewords_html:30|safe}}
+            {% elif highlighted_entry.content_rendered %}
+            {{highlighted_entry.content_rendered|html_text|truncatewords_html:30|safe}}
+            {% else %}
+            <p>&mdash;</p>
+            {% endif %}
+            <footer>
+                <p><a href="{{highlighted_entry.get_absolute_url}}">Read More</a></p>
+            </footer>
+        </div>
+    {% include "writings/_analyses_panels.html" with entry_list=recent_entries max_words=30 %}
+    </div>
+</section>
+<section id='visions' class="buzz">
+{% include "writings/_special_analyses.html" %}
+</section>
 {% endblock %}

@@ -21,6 +21,151 @@
     }
 }
 
+.feature {
+    h2 {
+        font-family: $serif-font-family;
+        font-size: $section-hed-size;
+        text-decoration: underline;
+    }
+
+    &.mini {
+        .panel {
+            background-color: $pale-green;
+        }
+    }
+
+}
+
+.poster {
+    figure {
+        display: block;
+    }
+
+    > img, a > img, figure > img {
+        display: block;
+        clear: both;
+
+        width: 100%;
+    }
+}
+
+section.buzz {
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between)
+
+    > div {
+        display: block;
+        min-height: 240px;
+        @include flex(1 0 100%);
+    }
+
+    @include media($medium-break) {
+        @include flex-direction(row);
+        > div {
+            min-height: 200px;
+            margin-bottom: 0;
+            @include flex(1 1 50%);
+        }
+    }
+
+    min-height: 240px;
+    border-bottom: none;
+
+    .poster {
+        position: relative;
+        min-height: inherit;
+        overflow: hidden;
+
+        > a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .label {
+            position: absolute;
+            bottom: auto;
+            top: 50%;
+            left: 0;
+            max-width: 90%;
+            padding: $small-spacing;
+
+            @include media($medium-break) {
+                max-width: 55%;
+                padding: $small-spacing $large-spacing $small-spacing $large-spacing;
+                top: auto;
+                bottom: 20px;
+            }
+
+            h3 {
+                font-size: $base-font-size;
+                text-transform: uppercase;
+                margin-bottom: $tiny-spacing;
+
+                @include media($medium-break) {
+                    font-size: $section-hed-size;
+                }
+
+                &::after {
+                    width: 27px;
+                    height: 27px;
+                    display: block;
+                    position: absolute;
+                    top: 12px;
+                    right: 8px;
+
+                    @include media($medium-break) {
+                        top: 18px;
+                        right: 18px;
+                    }
+
+                }
+            }
+
+            p {
+                font-family: $serif-font-family;
+                font-size: $compact-text-size;
+                font-style: italic;
+                line-height: 1.25em;
+            }
+
+        }
+
+        &:nth-of-type(odd) {
+            .label {
+                background-color: $pale-green;
+                color: $dark-night;
+
+                h3 {
+                    &::after {
+                        content: "";
+                        background-image: url($blue-arrow-circle-img);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                    }
+                }
+            }
+        }
+
+        &:nth-of-type(even) {
+            .label {
+                background-color: $dark-night;
+                color: $pale-green;
+
+                h3 {
+                    &::after {
+                        content: "";
+                        background-image: url($green-arrow-circle-img);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                    }
+                }
+            }
+        }
+    }
+}
+
 section, div {
     &.featured {
         padding: $small-spacing;
@@ -106,7 +251,7 @@ article {
             $poster-height: 205px;
             height: $poster-height;
             @include background-poster($database-img);
-            @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 2px);
+            @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
             border-bottom: $thin-border-width solid $dark-green-line;
 
             header {
@@ -305,6 +450,18 @@ article {
 }
 
 .analysis {
+
+    .highlighter {
+        text-transform: uppercase;
+        position: relative;
+        left: -$medium-spacing;
+
+        span {
+            color: $pale-green;
+            background-color: $dark-night;
+        }
+    }
+
     section {
         &.poster {
             $poster-height: 205px;
@@ -314,8 +471,12 @@ article {
             header {
                 position: absolute;
                 bottom: 7rem;
-                left: 10%;
+                width: $max-content-width;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
                 h1 {
+                    display: inline-block;
                     font-family: $sans-font-family;
                     font-size: rem(30);
                     font-weight: 300;
@@ -330,14 +491,18 @@ article {
                 height: $poster-height * 2;
             }
         }
+
+        &.columnar {
+            max-width: $max-content-width;
+        }
     }
 
     blockquote {
         display: block;
         position: relative;
-        width: 80%;
+        max-width: $max-content-width;
         top: -6rem;
-        margin: 0 auto;
+        margin: 0 auto -6rem;
 
         padding: $large-spacing $large-spacing;
         color: $pale-green;
@@ -385,7 +550,7 @@ article {
         }
         @include widows-peak($light-blue-arrow-img, $main-arrow-width, $order: before, $adjust: 5px);
         border-top: $thin-border-width solid $blue-steel;
-        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 2px);
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
         border-bottom: $thin-border-width solid $dark-green-line;
 
 

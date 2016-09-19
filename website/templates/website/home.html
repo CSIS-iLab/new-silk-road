@@ -28,12 +28,12 @@
             TODO: Replace with actual content
         {% endcomment %}
         <div>
-            <h3><a href="#">A Silk Road for the 21st Century?</a></h3>
+            <h3><a href="">A Silk Road for the 21st Century?</a></h3>
             <h5 class='date'>July 2016</h5>
             <h4>By Dr. Thomas Fingar</h4>
         </div>
         <div>
-            <h2 class="highlighter"><a href="#"><span>Expert</span><br><span>analysis</span></a></h2>
+            <h2 class="highlighter"><a href="{% url 'writings:home' %}"><span>Expert</span><br><span>analysis</span></a></h2>
         </div>
     </div>
 </section>
@@ -47,9 +47,9 @@
 </section>
 <section id='featured-analysis' class='feature columnar'>
     <h2>News and Features</h2>
-    {% if featured_analyses and featured_analyses.entries.published.count %}
+    {% if featured_analyses %}
     <div class="wrap">
-    {% include "writings/_analyses_panels.html" with analysis_list=featured_analyses %}
+    {% include "writings/_analyses_panels.html" with entry_list=featured_analyses max_words=120 %}
     </div>
     {% else %}
     <div class="wrap">
@@ -72,25 +72,8 @@
     </div>
     {% endif %}
 </section>
-<section id='visions'>
-    <div class="poster">
-        <a href="{% url 'competing-visions' %}">
-            <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="Competing Visions teaser image" />
-            <div class="label">
-                <h3>Competing Visions</h3>
-                <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
-            </div>
-        </a>
-    </div>
-    <div class="poster">
-        <a href="{% url 'historical-atlas' %}">
-            <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="Historical Atlas teaser image" />
-            <div class="label">
-                <h3>Historical Atlas</h3>
-                <p>Explore the rise and fall of trade, technology, and civilizations.</p>
-            </div>
-        </a>
-    </div>
+<section id='visions' class="buzz">
+{% include "writings/_special_analyses.html" %}
 </section>
 <section id="fantasy" class='feature columnar'>
     <h2>From the Field</h2>
