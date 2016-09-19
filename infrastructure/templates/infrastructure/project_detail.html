@@ -130,7 +130,7 @@
     </section>
     {% endif %}
     <section class="documents featured">
-        <h2>Documentation</h2>
+        <h2>Documentation &amp; References</h2>
         <div class="wrap">{% if object.documents.count %}
         {% regroup object.documents.all by get_document_type_display as docs_list %}
         {% for doc_type in docs_list %}
