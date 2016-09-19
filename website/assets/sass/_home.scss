@@ -84,7 +84,7 @@
 
         @include background-poster($megamap-img);
 
-        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 2px);
         border-bottom: $thin-border-width solid $dark-green-line;
 
         h2, h3 {
@@ -132,7 +132,7 @@
         padding: $section-spacing 0;
         font-weight: 400;
 
-        @include widows-peak($light-green-arrow-img, $main-arrow-width, $top: 2px);
+        @include widows-peak($light-green-arrow-img, $main-arrow-width, $adjust: 2px);
         border-bottom: $thin-border-width solid $light-green-line;
 
         &::before {
@@ -198,7 +198,7 @@
         height: 400px;
         @include background-poster($database-img);
 
-        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $top: 2px);
+        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $adjust: 2px);
         border-bottom: $thin-border-width solid $dark-blue-line;
 
         .inner {
@@ -248,7 +248,7 @@
         color: $medium-green;
         font-family: $serif-font-family;
 
-        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $top: 2px);
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 2px);
         border-bottom: $thin-border-width solid $dark-green-line;
 
         .inner {
@@ -308,7 +308,7 @@
         height: $video-area-height;
         @include background-poster($video-img);
 
-        @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $top: 2px);
+        @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $adjust: 2px);
         border-bottom: $thin-border-width solid $medium-blue-line;
 
         $inner-margin-vertical: ($video-area-height - $play-button-size - $text-height)/2;

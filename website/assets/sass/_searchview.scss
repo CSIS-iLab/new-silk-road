@@ -63,7 +63,7 @@
             h4 {
                 display: inline-block;
                 @include flex(1 0 auto);
-                color: $searchheader-color;
+                color: $callout-color;
                 font-size: $search-text-size;
                 font-weight: normal;
                 margin: 0;

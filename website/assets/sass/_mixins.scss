@@ -1,8 +1,9 @@
 
 
-@mixin widows-peak($img, $width: auto, $height: 12px, $top: 0px) {
-    $offset: $height + $top + 0.5;
-    &::after {
+@mixin widows-peak($img, $width: auto, $height: 12px, $adjust: 0px, $order: after) {
+    $arrow-adjust: $adjust + 0.5;
+    $height-adjust: $height + $arrow-adjust;
+    &::#{$order} {
         content: "";
         position: absolute;
         background-image: url($img);
@@ -10,14 +11,19 @@
         background-clip: border-box;
         background-size: $width $height;
         background-repeat: no-repeat;
-        background-position: 0 $top;
-        bottom: -$offset;
+        background-position: 0 $adjust;
         left: 0;
         right: 0;
         margin-left: auto;
         margin-right: auto;
         width: $width;
-        height: $offset;
+        @if $order == after {
+            bottom: -$height-adjust;
+            height: $height-adjust;
+        } @else {
+            top: -$arrow-adjust;
+            height: $height-adjust;
+        }
         z-index: 1;
     }
 }
