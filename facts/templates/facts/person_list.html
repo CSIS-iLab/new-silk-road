@@ -2,6 +2,8 @@
 
 {% block pagetitle %}People | {{ block.super }}{% endblock %}
 
+{% block bodyclass %}list{% endblock %}
+
 {% block content %}
 <div>
     <ul class="breadcrumbs">
@@ -13,7 +15,9 @@
         </li>
     </ul>
 </div>
-<h2>People</h2>
+<header>
+    <h2>People</h2>
+</header>
 {% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
 
 <ul>

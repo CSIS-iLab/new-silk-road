@@ -28,6 +28,10 @@ body {
 
 a {
     color: $medium-green;
+    &:hover {
+        color: lighten($medium-green, 15%);
+        transition: color 0.4s;
+    }
 }
 
 h1 {

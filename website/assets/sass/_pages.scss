@@ -49,10 +49,43 @@
     }
 }
 
+.list {
+    .content, .content-wrap {
+        header {
+            margin-bottom: $medium-spacing;
+            h2 {
+                text-align: center;
+            }
+        }
+    }
+}
+
+.pagination {
+    margin-bottom: $medium-spacing;
+    span, a {
+        display: inline-block;
+    }
+
+    a {
+        text-decoration: none;
+
+        &:not([href]) {
+            color: lighten($gravel-grey, 25%);
+        }
+    }
+    .step-links {
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        max-width: 80%;
+        margin: 0 auto;
+    }
+}
+
 section.buzz {
     @include display(flex);
     @include flex-direction(column);
-    @include justify-content(space-between)
+    @include justify-content(space-between);
 
     > div {
         display: block;
