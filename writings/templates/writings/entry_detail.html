@@ -1,7 +1,9 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load static %}
 
 {% block extrahead %}
 {% include "_html_head.html" with title=object.title description=object.description_rendered featured_image=object.featured_image %}
+<link rel="stylesheet" href="{% static 'js/lib/social-share-kit/css/social-share-kit.css' %}">
+<script src="{% static 'js/lib/social-share-kit/js/social-share-kit.min.js' %}"></script>
 {% endblock %}
 
 {% block pagetitle %}{{object.title}} | {{ block.super }}{% endblock %}
@@ -23,16 +25,16 @@
     </header>
     <section class="details">
         <span>
+            {% if object.author %}
             <span class="author">
-                {% if object.author %}
                 By {{object.author}}
-                {% endif %}
             </span>
+            {% endif %}
             <span class="publication_date"><time datetime="{{object.publication_date|date:'c'}}">{{object.publication_date|date}}</time></span>
         </span>
-        <span class="social">
-            <a href="">Facebook</a>
-            <a href="">Twitter</a>
+        <span class="social-icons ssk-group">
+            <a class="ssk ssk-icon ssk-facebook" href=""></a>
+            <a class="ssk ssk-icon ssk-twitter"  href="https://twitter.com/share"></a>
         </span>
     </section>
     {% if object.featured_image %}
@@ -48,10 +50,38 @@
 </section>
 <footer>
     <ul class="links clean">
-        <li>Previous</li>
-        <li>Next</li>
+        <li>
+            {% with object.get_previous_published_entry as entry %}{% if entry %}
+            <a href="{{entry.get_absolute_url}}">
+                <span class='action'>Previous</span>
+                <span class='title'>{{ entry.title|truncatechars:30 }}</span>
+                {% if entry.author %}
+                <span class='author'>{{entry.author|truncatechars:30}}</span>
+                {% endif %}
+            </a>
+            {% endif %}{% endwith %}
+        </li>
+        <li>
+            {% with object.get_next_published_entry as entry %}{% if entry %}
+            <a href="{{entry.get_absolute_url}}">
+                <span class='action'>Next</span>
+                <span class='title'>{{ entry.title|truncatechars:30 }}</span>
+                {% if entry.author %}
+                <span class='author'>{{entry.author|truncatechars:30}}</span>
+                {% endif %}
+            </a>
+            {% endif %}{% endwith %}
+        </li>
     </ul>
 </footer>
 </article>
+{% endblock %}
 
+
+{% block postbodyjs %}
+<script type="text/javascript">
+    Zepto(function($){
+        SocialShareKit.init();
+    });
+</script>
 {% endblock %}

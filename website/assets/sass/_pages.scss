@@ -616,8 +616,8 @@ article {
         margin: 0 auto;
 
         .body {
-            width: 92%;
-            margin: 0px auto $large-spacing;
+            width: 95%;
+            margin: 0 auto $large-spacing;
         }
     }
     aside {
@@ -643,10 +643,13 @@ article {
         }
     }
 
+    section.details, .author {
+        font-size: $minorer-text-size;
+    }
+
     section.details {
         margin: $small-spacing auto $large-spacing;
         width: 95%;
-        font-size: $minorer-text-size;
 
         @include display(flex);
         @include flex-direction(row);
@@ -657,12 +660,13 @@ article {
             @include display(flex);
             @include flex-direction(row);
             @include justify-content(flex-start);
+            @include align-items(center);
 
             &:last-of-type {
                 @include justify-content(flex-end);
             }
 
-            > span, > a {
+            > span, > a:not(.ssk) {
                 @include flex(0 1 auto);
 
                 &:not(:last-of-type) {
@@ -677,5 +681,88 @@ article {
             }
         }
 
+    }
+
+    article > footer {
+        width: 80%;
+        margin: 0 auto;
+
+        .title {
+            text-transform: uppercase;
+        }
+
+        .links {
+            $arrow-height: 80px;
+            $arrow-width: 20px;
+            $arrow-vector: $arrow-height/2;
+
+            @include display(flex);
+            @include flex-direction(column);
+            @include justify-content(space-between);
+
+            li {
+                @include flex(1 1 50%);
+
+                margin-bottom: $medium-spacing;
+
+                a {
+                    position: relative;
+                    display: inline-block;
+                    text-decoration: none;
+                    color: $medium-green;
+                    height: $arrow-height;
+                    @include display(flex);
+                    @include flex-direction(column);
+                    @include justify-content(flex-start);
+
+                    span:first-of-type {
+                        margin-bottom: $small-spacing;
+                        text-transform: uppercase;
+                    }
+
+                    span:not(:first-of-type) {
+                        color: $callout-color;
+                    }
+                }
+
+                &:first-of-type a::before, &:last-of-type a::after {
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    content: " ";
+                    width: $arrow-width;
+                    height: 100%;
+                }
+                &:first-of-type {
+                    text-align: left;
+                    a::before {
+                        left: -$arrow-width * 1.5;
+                        border-top: $arrow-vector solid transparent;
+                        border-right: $arrow-width solid $medium-green;
+                        border-bottom: $arrow-vector solid transparent;
+                    }
+                }
+                &:last-of-type {
+                    text-align: right;
+                    a::after {
+                        right: -$arrow-width * 1.5;
+                        border-top: $arrow-vector solid transparent;
+                        border-left: $arrow-width solid $medium-green;
+                        border-bottom: $arrow-vector solid transparent;
+                    }
+                }
+            }
+        }
+
+        @include media($medium-break) {
+            width: 95%;
+
+            .links {
+                @include flex-direction(row);
+                li {
+                    margin-bottom: 0;
+                }
+            }
+        }
     }
 }

@@ -596,3 +596,11 @@ body {
         }
     }
 }
+
+.ssk {
+    @each $soc in twitter, facebook, google-plus, pinterest, tumbler, vk, linkedin, email {
+        &.ssk-#{$soc}.ssk-icon {
+            color: #58595b;
+        }
+    }
+}
