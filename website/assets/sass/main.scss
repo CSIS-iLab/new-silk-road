@@ -298,6 +298,13 @@ header[role=banner] {
     }
 }
 
+aside {
+    h2 {
+        font-size: $mid-hed-size;
+        font-weight: 300;
+    }
+}
+
 .widows-peak {
     display: block;
     position: relative;
@@ -348,7 +355,7 @@ header.decorated {
         }
     }
 
-    + :not(.featured) {
+    + :not(.featured, .details) {
         margin-top: 50px;
     }
 

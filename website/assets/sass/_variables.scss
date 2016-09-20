@@ -13,6 +13,7 @@ $small-break: new-breakpoint(min-width $small 2);
 
 $small-wrap: 96%;
 $max-content-width: 980px;
+$max-article-width: 833px;
 
 // fonts
 $em-base: 16px;
@@ -20,7 +21,7 @@ $base-font-size: $em-base;
 $overdoingit-hed-size: rem(59);
 $shouting-hed-size: rem(44);
 $major-hed-size: rem(40);
-$mid-hed-size: rem(22);
+$mid-hed-size: rem(20);
 $mid-text-size: rem($base-font-size);
 $section-hed-size: rem(26);
 $section-hedier-size: rem(28);

@@ -6,22 +6,52 @@
 
 {% block pagetitle %}{{object.title}} | {{ block.super }}{% endblock %}
 
+{% block bodyclass %}entry{% endblock %}
+
 {% block content %}
 {% if not entry_visible  %}
 <div class="message banner">
     <p>This entry is currently not visible to the public. <a href="{% url 'admin:writings_entry_change' object.id %}">Look the admin</a> for details.</p>
 </div>
 {% endif %}
-<article class="">
-    <header>
-        <h2>{{object.title}}</h2>
+<article>
+    <aside>
+        <h2>Analysis {% if entry.categories.count != 0 %}| {{entry.categories.first.name }}{% endif %}</h2>
+    </aside>
+    <header class="decorated featured">
+        <h1>{{object.title|title}}</h1>
     </header>
-    {% if object.author %}
-    <div class="byline">
-        <p>{{object.author}}</p>
-    </div>
+    <section class="details">
+        <span>
+            <span class="author">
+                {% if object.author %}
+                By {{object.author}}
+                {% endif %}
+            </span>
+            <span class="publication_date"><time datetime="{{object.publication_date|date:'c'}}">{{object.publication_date|date}}</time></span>
+        </span>
+        <span class="social">
+            <a href="">Facebook</a>
+            <a href="">Twitter</a>
+        </span>
+    </section>
+    {% if object.featured_image %}
+    <section class="featured_image">
+        <figure>
+            <img src="{{object.featured_image.url}}" alt="{{object.featured_image.default_alt_text}}" />
+            <figcaption>{{object.featured_image.default_caption|default:""}}</figcaption>
+        </figure>
+    </section>
     {% endif %}
+    <section class="body">
     {{object.content_rendered|safe}}
+</section>
+<footer>
+    <ul class="links clean">
+        <li>Previous</li>
+        <li>Next</li>
+    </ul>
+</footer>
 </article>
 
 {% endblock %}

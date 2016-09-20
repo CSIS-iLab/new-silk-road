@@ -22,9 +22,16 @@ def make_not_published_reset_date(modeladmin, request, queryset):
 make_not_published_reset_date.short_description = "Mark items as not published"
 
 
+class EntryInline(admin.StackedInline):
+    model = Entry.categories.through
+
+
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     list_display = ('name', 'entry_count')
+    inlines = [
+        EntryInline,
+    ]
 
     def entry_count(self, obj):
         return obj.entries.count()

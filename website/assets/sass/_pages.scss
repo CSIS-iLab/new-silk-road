@@ -199,7 +199,7 @@ section.buzz {
     }
 }
 
-section, div {
+header, section, div {
     &.featured {
         padding: $small-spacing;
         background-color: $creamer;
@@ -607,4 +607,75 @@ article {
 
     }
 
+}
+
+
+.entry {
+    article {
+        max-width: $max-article-width;
+        margin: 0 auto;
+
+        .body {
+            width: 92%;
+            margin: 0px auto $large-spacing;
+        }
+    }
+    aside {
+        color: $callout-color;
+    }
+    .decorated {
+        border-bottom: none;
+        border-top: $thin-border-width solid $blue-steel;
+
+        text-align: left;
+
+        @include widows-peak($light-blue-arrow-img, $main-arrow-width, $order: before, $adjust: 10px);
+        &::before {
+            background-position: 0px 6px;
+        }
+        &::after {
+            content: none;
+        }
+        h1 {
+            font-size: $major-hed-size;
+            color: $callout-color;
+            text-align: left;
+        }
+    }
+
+    section.details {
+        margin: $small-spacing auto $large-spacing;
+        width: 95%;
+        font-size: $minorer-text-size;
+
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+
+        > span {
+            @include flex(1 1 auto);
+            @include display(flex);
+            @include flex-direction(row);
+            @include justify-content(flex-start);
+
+            &:last-of-type {
+                @include justify-content(flex-end);
+            }
+
+            > span, > a {
+                @include flex(0 1 auto);
+
+                &:not(:last-of-type) {
+                    padding-right: $small-spacing;
+                }
+
+                @include media($medium-break) {
+                    &:not(:last-of-type) {
+                        padding-right: $large-spacing;
+                    }
+                }
+            }
+        }
+
+    }
 }
