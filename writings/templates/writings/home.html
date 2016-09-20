@@ -23,6 +23,7 @@
 <section class="feature mini columnar">
     <h2>Recent</h2>
     <div class="wrap">
+        {% if highlighted_entry %}
         <div class="analysis panel">
             <h4 class="highlighter"><span>{{highlighted_category.name}}</span></h4>
             <h3><a href="{{highlighted_entry.get_absolute_url}}">{{highlighted_entry.title}}</a></h3>
@@ -38,6 +39,7 @@
                 <p><a href="{{highlighted_entry.get_absolute_url}}">Read More</a></p>
             </footer>
         </div>
+        {% endif %}
     {% include "writings/_analyses_panels.html" with entry_list=recent_entries max_words=30 %}
     </div>
 </section>
