@@ -63,7 +63,7 @@ section.columnar {
         > div, > section {
             display: block;
             min-height: 240px;
-            @include flex(1 0 100%);
+            @include flex(1 0 auto);
             margin-bottom: $medium-spacing;
 
             &:last-of-type {

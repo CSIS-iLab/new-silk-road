@@ -51,8 +51,8 @@ The Database | {{ block.super }}
 {% endif %}
 <nav role="navigation">
     <ul>
-        <li><a class="button gem" href="">Glossary</a></li>
-        <li><a class="button gem" href="">Methodology</a></li>
+        <li><a class="button gem" href="{% url 'glossary' %}">Glossary</a></li>
+        <li><a class="button gem" href="{% url 'methodology' %}">Methodology</a></li>
     </ul>
 </nav>
 <section class="wrap content-wrap browse">
