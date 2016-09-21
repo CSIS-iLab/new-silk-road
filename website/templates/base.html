@@ -58,6 +58,12 @@
                 </div>
             </div>
         </footer>
+        <script type="text/javascript">
+            Zepto(function($) {
+                var iframes = $('iframe, a[data-flickr-embed]');
+                iframes.parent().addClass('iframe-container');
+            });
+        </script>
 {% block postbodyjs %}{% endblock %}
     </body>
 </html>

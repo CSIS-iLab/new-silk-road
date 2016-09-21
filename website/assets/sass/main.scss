@@ -11,6 +11,9 @@
 @import "pages";
 @import "home";
 
+html, body {
+    height: 100%;
+}
 
 html {
     font-size: $base-font-size;
@@ -76,15 +79,21 @@ figcaption {
     color: $gravel-grey;
 }
 
+.iframe-container {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+}
+
 iframe {
-    max-width: 100%;
+    max-width: 100% !important;
 }
 
 p {
     margin: 0 0 1rem;
 
     @include media($small-break) {
-        margin: 0;
+        margin: 0 0 $small-spacing;
     }
 
     @include media($medium-break) {
