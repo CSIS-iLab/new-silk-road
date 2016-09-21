@@ -13,9 +13,11 @@
         <li>
             <a href="{% url 'facts:organization-list' %}">Organization</a>
         </li>
+        {% if object.get_detail_types.items %}
         <li>{% for modelname, label in object.get_detail_types.items  %}
             <a href="{% url 'facts:organization-list-redirect' org_type=modelname %}">{{label}}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
         </li>
+        {% endif %}
         <li>
             {{object.name}}
         </li>
