@@ -1,4 +1,4 @@
-{% load static from staticfiles %}
+{% load static from staticfiles %}{% load raven %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,6 +10,9 @@
         <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
         <link rel="stylesheet" href="{% static 'css/site.min.css' %}" media="screen">
         <script src="{% static 'js/lib/zepto.min.js' %}"></script>
+        {% if sentry_public_dsn %}
+        <script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
+        <script>Raven.config('{% sentry_public_dsn %}').install()</script>{% endif %}
 {% block extrahead %}{% endblock %}
 {% comment %}
     // TODO: Set up Analytics tracker code
