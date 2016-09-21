@@ -88,6 +88,8 @@ class Entry(Publishable):
         )
 
     def get_next_published_entry(self):
+        if not self.publication_date:
+            return None  # If no publication date
         query = Q(publication_date__gt=self.publication_date)
         query |= Q(publication_date=self.publication_date, pk__gt=self.pk)
         qs = self.__class__.objects.published().filter(query).order_by('publication_date', 'pk')
@@ -97,6 +99,8 @@ class Entry(Publishable):
             return None
 
     def get_previous_published_entry(self):
+        if not self.publication_date:
+            return None  # If no publication date
         query = Q(publication_date__lt=self.publication_date)
         query |= Q(publication_date=self.publication_date, pk__lt=self.pk)
         qs = self.__class__.objects.published().filter(query).order_by('-publication_date', '-pk')
