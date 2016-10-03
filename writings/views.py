@@ -25,7 +25,8 @@ class FeaturedAnalysesMixin(ContextMixin):
                     entry__published=True,
                     entry__publication_date__lte=timezone.now()
                 )
-                kwargs['featured_analyses'] = (instance.entry for instance in collection)
+                if collection:
+                    kwargs['featured_analyses'] = (instance.entry for instance in collection)
             except EntryCollection.DoesNotExist:
                 pass
         return kwargs
