@@ -82,6 +82,16 @@ $creamer-str: str-slice("#{$creamer}", 2);
             padding: 8px;
         }
     }
+
+    .searchView {
+        display: none;
+    }
+
+    @include media($medium-break) {
+        .searchView {
+            display: initial;
+        }
+    }
 }
 
 .popup-content-inner {
