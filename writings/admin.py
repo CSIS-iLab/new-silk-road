@@ -45,7 +45,7 @@ class EntryForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'content': MarkdownTextarea(attrs={'rows': 40}),
-            'description': MarkdownTextarea(attrs={'rows': 6, 'maxlength': 400}),
+            'description': MarkdownTextarea(attrs={'rows': 6, 'maxlength': 425}),
         }
 
 
