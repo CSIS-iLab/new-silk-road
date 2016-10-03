@@ -16,8 +16,9 @@
 </blockquote>
 <section class="feature columnar">
     <h2>Featured</h2>
-    <div class="wrap">
+    <div class="wrap">{% if featured_analyses %}
         {% include "writings/_analyses_panels.html" with entry_list=featured_analyses max_words=120 %}
+        {% else %}{% include "writings/_fake_analyses_panels.html" %}{% endif %}
     </div>
 </section>
 <section class="feature mini columnar">

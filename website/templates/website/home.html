@@ -47,30 +47,10 @@
 </section>
 <section id='featured-analysis' class='feature columnar'>
     <h2>News and Features</h2>
-    {% if featured_analyses %}
-    <div class="wrap">
+    <div class="wrap">{% if featured_analyses %}
     {% include "writings/_analyses_panels.html" with entry_list=featured_analyses max_words=120 %}
+    {% else %}{% include "writings/_fake_analyses_panels.html" %}{% endif %}
     </div>
-    {% else %}
-    <div class="wrap">
-        <div class="analysis panel">
-            <h3><a href="">What Rio can learn from Russia</a></h3>
-            <h5 class='date'>27 June 2016</h5>
-            <p>As the 2016 Summer Games approach, this $1.4 billion road in Sochi highlights how embezzlement can plague Olympic preparations.</p>
-            <footer>
-                <p><a href="">Read More</a></p>
-            </footer>
-        </div>
-        <div class="analysis panel">
-            <h3><a href="">Vying for the next Dubai</a></h3>
-            <h5 class='date'>25 June 2016</h5>
-            <p>Touted as a "New Dubai" and a "game-changing development," this dry port and logistics center on the Kazakhstan-China border could be a bellwether for other ambitious One Belt, One Road projects.</p>
-            <footer>
-                <p><a href="">Read More</a></p>
-            </footer>
-        </div>
-    </div>
-    {% endif %}
 </section>
 <section id='visions' class="buzz">
 {% include "writings/_special_analyses.html" %}
