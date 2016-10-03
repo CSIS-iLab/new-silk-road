@@ -139,15 +139,15 @@ def rebuild_indices(indices_config, subtask_indexing=False, verbosity=0):
 
 
 def schedule_periodic_index_rebuilds():
-    current_dt = datetime.datetime.now(tz=get_default_timezone())
+    base_dt = datetime.datetime.now(tz=get_default_timezone())
     replace_time = {
         'hour': 1,
         'minute': 15,
         'second': 0,
     }
-    if current_dt.hour > replace_time['hour']:
-        replace_time['day'] = current_dt.day + 1
-    after_midnight = current_dt.replace(**replace_time).astimezone(utc)
+    if base_dt.hour > replace_time['hour']:
+        base_dt = base_dt + datetime.datetime.timedelta(days=1)
+    after_midnight = base_dt.replace(**replace_time).astimezone(utc)
 
     scheduler = django_rq.get_scheduler('default')
     # Delete existing 'rebuild_indices' jobs
