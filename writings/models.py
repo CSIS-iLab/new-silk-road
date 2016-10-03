@@ -39,8 +39,9 @@ class Entry(Publishable):
     content = MarkdownField(blank=True)
     content_rendered = models.TextField(blank=True, editable=False)
     description = MarkdownField(
+        'Summary/Description',
         blank=True,
-        help_text='Short text to be used where post might be promoted/referenced'
+        help_text='Short text to be used where post might be promoted/referenced. Limited to 400 characters.'
     )
     description_rendered = models.TextField(blank=True, editable=False)
     share_text = models.CharField(blank=True, max_length=140)

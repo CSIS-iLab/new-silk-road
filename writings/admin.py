@@ -1,7 +1,7 @@
 from django.contrib import admin
+from django import forms
 from django.utils.html import format_html, format_html_join
 from suit.admin import SortableStackedInline
-from markymark.fields import MarkdownField
 from markymark.widgets import MarkdownTextarea
 from .models import (
     Category,
@@ -38,6 +38,17 @@ class CategoryAdmin(admin.ModelAdmin):
     entry_count.short_description = 'No. of entries'
 
 
+class EntryForm(forms.ModelForm):
+
+    class Meta:
+        model = Entry
+        fields = '__all__'
+        widgets = {
+            'content': MarkdownTextarea(attrs={'rows': 40}),
+            'description': MarkdownTextarea(attrs={'rows': 6, 'maxlength': 400}),
+        }
+
+
 class EntryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     list_display = ('title', 'categories_display', 'published', 'publication_date', 'page_is_visible', 'page_link', 'updated_at')
@@ -59,9 +70,7 @@ class EntryAdmin(admin.ModelAdmin):
             'fields': ('categories', 'tags', 'related_entries',)
         })
     )
-    formfield_overrides = {
-        MarkdownField: {'widget': MarkdownTextarea(attrs={'rows': 30})},
-    }
+    form = EntryForm
     actions = [
         make_published_with_date,
         make_not_published_reset_date,
