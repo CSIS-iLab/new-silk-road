@@ -49,6 +49,15 @@
     {{object.content_rendered|safe}}
 </section>
 <footer>
+    <h3>Related Entries</h3>
+    <ul class="clean">{% for entry in object.related_entries.all %}
+        <li>
+            <a href="{{entry.get_absolute_url}}"><span>{{ entry.title|truncatechars:30 }}</span></a>
+            {% if entry.author %}
+            | By <span class='author'>{{entry.author|truncatechars:30}}</span>
+            {% endif %}
+        </li>{% endfor %}
+    </ul>
     <ul class="links clean">
         <li>
             {% with object.get_previous_published_entry as entry %}{% if entry %}
