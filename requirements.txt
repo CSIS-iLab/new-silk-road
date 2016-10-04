@@ -8,7 +8,7 @@ django-extensions>=1.6,<2.0
 django-heroku-memcacheify==1.0.0
 django-leaflet==0.18.1
 django-filer>=1.2.0,<1.3.0
-git+https://github.com/CSIS-iLab/django-markymark.git@b200956#egg=django_markymark[filer]
+git+https://github.com/CSIS-iLab/django-markymark.git@f11439f#egg=django_markymark[filer]
 django-maintenancemode==0.11.2
 django-mptt==0.8.4
 django-filter==0.13.0
