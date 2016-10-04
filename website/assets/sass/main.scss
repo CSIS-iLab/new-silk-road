@@ -106,7 +106,7 @@ p {
 }
 
 section p {
-    &:last-of-type {
+    &:last-child {
         margin: 0;
     }
 }
