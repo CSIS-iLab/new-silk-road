@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^admin/django-rq/', include('django_rq.urls')),
     url(r'^admin/infrastructure/', include(adminpatterns, namespace='infrastructure-admin')),
     url(r'^admin/', admin.site.urls),
+    url(r'^taggit_autosuggest/', include('taggit_autosuggest.urls')),
     url(r'^admin-select2/', include('django_select2.urls')),
 ]
 

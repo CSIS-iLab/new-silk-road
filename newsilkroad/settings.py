@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'utilities',
 
     'taggit',
+    'taggit_autosuggest',
     'writings',
 
     'reversion',
@@ -302,30 +303,55 @@ SUIT_CONFIG = {
         {'label': 'Events', 'models': ('facts.event', 'facts.eventtype')},
         {'label': 'People', 'models': ('facts.person', 'facts.position')},
         '-',
-        {'label': 'Locations', 'models': (
-            'locations.country',
-            'locations.region',
-            'locations.place'
-        )},
-        {'label': 'Geodata', 'models': (
-            'locations.geometrystore',
-            'locations.linestringgeometry',
-            'locations.pointgeometry',
-            'locations.polygongeometry',
-        )},
-        {'label': 'Upload Geodata', 'url': 'infrastructure-admin:project-geo-upload', },
+        {
+            'label': 'Locations',
+            'icon': ' icon-flag',
+            'models': (
+                'locations.country',
+                'locations.region',
+                'locations.place'
+            )
+        },
+        {
+            'label': 'Geodata',
+            'icon': 'icon-map-marker',
+            'models': (
+                'locations.geometrystore',
+                'locations.linestringgeometry',
+                'locations.pointgeometry',
+                'locations.polygongeometry',
+            ),
+        },
+        {
+            'label': 'Upload Geodata',
+            'icon': 'icon-upload',
+            'url': 'infrastructure-admin:project-geo-upload',
+        },
         '-',
-        'filer',
-        'sources',
+        {
+            'app': 'filer',
+            'icon': 'icon-folder-open',
+        },
+        {
+            'app': 'sources',
+            'icon': 'icon-file',
+        },
         '-',
-        'writings',
+        {
+            'app': 'writings',
+            'icon': 'icon-pencil',
+        },
+        {
+            'icon': 'icon-tags',
+            'app': 'taggit',
+        },
         '-',
         {'label': 'Website', 'models': (
             'flatpages.FlatPage',
             'website.Collection',
             'website.CollectionItem',
         )},
-        'constance',
+        {'app': 'constance', 'icon': 'icon-cog'},
         'sites',
         '-',
         'auth',

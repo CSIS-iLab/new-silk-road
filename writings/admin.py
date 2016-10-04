@@ -3,6 +3,7 @@ from django import forms
 from django.utils.html import format_html, format_html_join
 from suit.admin import SortableStackedInline
 from markymark.widgets import MarkdownTextarea
+from taggit_helpers.admin import TaggitListFilter, TaggitCounter
 from .models import (
     Category,
     Entry,
@@ -49,10 +50,10 @@ class EntryForm(forms.ModelForm):
         }
 
 
-class EntryAdmin(admin.ModelAdmin):
+class EntryAdmin(TaggitCounter, admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
-    list_display = ('title', 'categories_display', 'published', 'publication_date', 'page_is_visible', 'page_link', 'updated_at')
-    list_filter = ('published', 'categories')
+    list_display = ('title', 'categories_display', 'taggit_counter', 'published', 'publication_date', 'page_is_visible', 'page_link', 'updated_at')
+    list_filter = ('published', 'categories', TaggitListFilter)
     ordering = ['publication_date', 'title', 'published', 'created_at']
     filter_horizontal = ('categories', 'related_entries',)
     fieldsets = (

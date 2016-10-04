@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from publish.models import Publishable, Temporal
 from markymark.fields import MarkdownField
 from markymark.utils import render_markdown
-from taggit.managers import TaggableManager
+from taggit_autosuggest.managers import TaggableManager
 from filer.fields.image import FilerImageField
 
 
