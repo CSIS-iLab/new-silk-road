@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load markymark %}{% load html_text from html_utils %}
 {% block content %}
     <h2>Search</h2>
     <form action="{% url 'search:search' %}">
@@ -7,10 +7,10 @@
     {% if search.facets and search.total > 1 %}
     <nav>
         <h3>Filters</h3>
-        <ul>{% for name, info in search.facets.items %}{% if info %}
+        <ul>{% for item in search.facets|dictsort:'name' %}{% if item.info %}
             <li>
-                <h4>{{ name|title }}</h4>
-                <ol>{% for label, count, selected in info  %}
+                <h4>{{ item.name|title }}</h4>
+                <ol>{% for label, count, selected in item.info  %}
                     <li>{% spaceless %}
                         <label>
                             <input type="checkbox" name="facet" {% if selected %}checked{% endif %}
@@ -43,11 +43,17 @@
                 <section>
                     <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
                     <h3>{{ result.get_model_meta.model }}</h3>
-                    {% for field,value_list in result.meta.highlight.to_dict.items  %}
+                    {{ result.description|markdown|html_text|safe }}
+                    {% comment %}
+                    {% for field,value_list in result.meta.highlight.to_dict.items|slice:":1"  %}
+                    {% if field != 'name' %}
                     <h4>{{field|title}}</h4>
                     {% for item in value_list  %}
                     <p>{{item|safe}}</p>{% endfor %}
+                    {% endif %}
                     {% endfor %}
+
+                    {% endcomment %}
                 </section>
             </li>{% endfor %}
         </ol>

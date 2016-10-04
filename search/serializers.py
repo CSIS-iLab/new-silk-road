@@ -33,6 +33,7 @@ class EventSerializer(ModelSerializer):
             'name',
             'event_type',
             'description',
+            'start_year',
             'url',
         )
 
@@ -53,6 +54,7 @@ class OrganizationSerializer(ModelSerializer):
             'mission',
             'organization_types',
             'url',
+            'start_year',  # Actually founding_year, but renaming for search consistency
         )
 
     def get_organization_types(self, instance):
@@ -60,6 +62,9 @@ class OrganizationSerializer(ModelSerializer):
 
     def get_url(self, instance):
         return instance.get_absolute_url()
+
+    def get_start_year(self, instance):
+        return instance.founding_year
 
 
 class OrganizationInnerSerializer(ModelSerializer):
@@ -153,10 +158,14 @@ class InitiativeSerializer(ModelSerializer):
             'member_countries',
             'geographic_scope',
             'url',
+            'start_year',  # Actually founding_year, but renaming for search consistency
         )
 
     def get_url(self, instance):
         return instance.get_absolute_url()
+
+    def get_start_year(self, instance):
+        return instance.founding_year
 
 
 class RelatedInitiativeSerializer(ModelSerializer):
@@ -171,10 +180,22 @@ class RelatedInitiativeSerializer(ModelSerializer):
         )
 
 
+class ProjectFundingSerializer(ModelSerializer):
+    sources = RelatedSerializer(OrganizationInnerSerializer, many=True)
+
+    class Meta:
+        model = 'infrastructure.ProjectFunding'
+        doc_type = 'search.documents.ProjectFundingDoc'
+        fields = (
+            'sources',
+        )
+
+
 class ProjectSerializer(ModelSerializer):
     countries = RelatedSerializer(CountrySerializer, many=True)
     infrastructure_type = RelatedSerializer(InfrastructureTypeSerializer)
     initiatives = RelatedSerializer(RelatedInitiativeSerializer, many=True)
+    funding = RelatedSerializer(ProjectFundingSerializer, many=True)
 
     class Meta:
         model = 'infrastructure.Project'
@@ -191,6 +212,7 @@ class ProjectSerializer(ModelSerializer):
             'status',
             'initiatives',
             'url',
+            'funding',
         )
 
     def get_url(self, instance):

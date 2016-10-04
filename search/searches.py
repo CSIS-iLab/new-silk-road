@@ -67,16 +67,19 @@ class SiteSearch(FacetedSearch):
 
     # Look at DocType fields to determine if field is a Nested or Object field. Object fields don't get NestedFacet
     facets = {
-        'kind': TermsFacet(field='_meta.model'),
-        'countries': NestedFacet(
-            path='countries',
-            aggs={'name': A('terms', field='countries.name')}
-        ),
-        'citizenships': NestedFacet(
-            path='citizenships',
-            aggs={'name': A('terms', field='citizenships.name')}
-        ),
+        'category': TermsFacet(field='_meta.model'),
+        # 'countries': NestedFacet(
+        #     path='countries',
+        #     aggs={'name': A('terms', field='countries.name')}
+        # ),
+        'project_status': TermsFacet(field='status'),
+        'project_funder': TermsFacet(field='funding.sources.name'),
         'infrastructure_type': TermsFacet(field='infrastructure_type.name'),
+        'start_year': TermsFacet(field='start_year'),
+        # 'citizenships': NestedFacet(
+        #     path='citizenships',
+        #     aggs={'name': A('terms', field='citizenships.name')}
+        # ),
         'event_type': TermsFacet(field='event_type.name'),
         'initiative_type': TermsFacet(field='initiative_type.name'),
     }

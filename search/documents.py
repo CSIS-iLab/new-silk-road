@@ -30,6 +30,7 @@ class EventDoc(SerializedDoc):
     name = field.String()
     description = field.String()
     event_type = field.Object(properties={'name': field.String()})
+    start_year = field.Integer()
 
     def get_display_name(self):
         return self.name
@@ -40,6 +41,7 @@ class OrganizationDoc(SerializedDoc):
     description = field.String()
     mission = field.String()
     countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
+    start_year = field.Integer()
 
     def get_display_name(self):
         return self.name
@@ -82,9 +84,14 @@ class InitiativeDoc(SerializedDoc):
     member_countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     geographic_scope = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     initiative_type = field.Object(properties={'name': field.String()})
+    start_year = field.Integer()
 
     def get_display_name(self):
         return self.name
+
+
+class ProjectFundingDoc(field.InnerObjectWrapper):
+    funders = field.Nested(properties={'name': field.String()})
 
 
 class ProjectDoc(SerializedDoc):
@@ -92,6 +99,8 @@ class ProjectDoc(SerializedDoc):
     name = field.String()
     alternate_name = field.String()
     description = field.String()
+    status = field.String()
+    start_year = field.Integer()
     countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
     infrastructure_type = field.Object(properties={'name': field.String()})
     # Providing a doc_class for initiatives produced errors, so keep it simple!

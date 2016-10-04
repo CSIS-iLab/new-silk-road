@@ -68,6 +68,13 @@ class SearchView(TemplateView):
             'page': page,
             'total': self.count,
             'response': self.search_response,
-            'facets': self.search_response.facets.to_dict() if hasattr(self.search_response, 'facets') else None
+            'facets': None,
         }
+        facets = getattr(self.search_response, 'facets', None)
+        if facets:
+            facets_dict = facets.to_dict()
+            context['search']['facets'] = [
+                {'name': key, 'info': value} for key, value in facets_dict.items()
+            ]
+
         return context
