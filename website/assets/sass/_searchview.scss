@@ -7,11 +7,15 @@
     max-height: 572px;
     background-color: transparent;
     position: absolute;
-    @include display(flex);
-    @include flex-direction(column);
+    display: none;
     font-size: $search-text-size;
     top: 5px;
     right: 10px;
+
+    @include media($medium-break) {
+        @include display(flex);
+        @include flex-direction(column);
+    }
 
     h2 {
         font: $minor-text-size $sans-font-family;
@@ -39,6 +43,8 @@
         width: 260px;
         background-color: $pale-green;
         padding: $tiny-spacing;
+        overflow-y: auto;
+        max-height: 550px;
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(space-between);
