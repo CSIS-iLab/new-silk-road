@@ -5,11 +5,12 @@
 $large: 1200px;
 $medium: 768px;
 $small: 400px; // for larger smartphones. $small is a bad label
-
+$mega-map-min-width: 548px; // Totally eyeballed it
 
 $large-break: new-breakpoint(min-width $large);
 $medium-break: new-breakpoint(min-width $medium 4);
 $small-break: new-breakpoint(min-width $small 2);
+$megamap-break: new-breakpoint(min-width $mega-map-min-width);
 
 $small-wrap: 96%;
 $max-content-width: 980px;
