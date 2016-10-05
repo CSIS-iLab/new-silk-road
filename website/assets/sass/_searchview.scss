@@ -209,8 +209,8 @@
 
 .buttonBar > button {
     font-size: $compact-text-size;
-    padding: 6px 8px;
-    @include flex(0 1 auto);
+    padding: 6px 3px;
+    @include flex(0 1 49%);
     @include order(0);
 }
 
@@ -248,7 +248,7 @@
         button {
             display: block;
             min-width: 80px;
-            @include flex(0.2 1 auto);
+            @include flex(0 1 40%);
         }
     }
     ul.searchResults {
