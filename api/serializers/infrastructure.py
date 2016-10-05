@@ -112,7 +112,8 @@ class InitiativeSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     class Meta:
         model = Initiative
         fields = (
-            'name', 'initiative_type', 'founding_date',
+            'name', 'initiative_type',
+            'founding_year', 'founding_month', 'founding_day',
             'geographic_scope', 'project_set'
         )
 

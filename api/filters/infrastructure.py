@@ -34,7 +34,9 @@ class InitiativeFilter(filters.FilterSet):
     class Meta:
         model = Initiative
         fields = {
-            'founding_date': filters.ALL_LOOKUPS
+            'founding_year': filters.ALL_LOOKUPS,
+            'founding_month': filters.ALL_LOOKUPS,
+            'founding_day': filters.ALL_LOOKUPS,
         }
 
 

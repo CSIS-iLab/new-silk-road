@@ -48,7 +48,7 @@ PUBLISH_FILTER_ENABLED = getattr(settings, 'PUBLISH_FILTER_ENABLED', True)
 
 
 class OrganizationViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
-    queryset = Organization.objects.all()
+    queryset = Organization.objects.distinct().all()
     lookup_field = 'identifier'
     serializer_class = OrganizationBasicSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -56,7 +56,7 @@ class OrganizationViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class ProjectViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
-    queryset = Project.objects.select_related(
+    queryset = Project.objects.distinct().select_related(
         'infrastructure_type',
     ).all()
     lookup_field = 'identifier'
@@ -66,7 +66,7 @@ class ProjectViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
-    queryset = Initiative.objects.all()
+    queryset = Initiative.objects.distinct().all()
     lookup_field = 'identifier'
     serializer_class = InitiativeSerializer
     filter_backends = (filters.DjangoFilterBackend,)
@@ -74,7 +74,7 @@ class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class InfrastructureTypeListView(generics.ListAPIView):
-    queryset = InfrastructureType.objects.all()
+    queryset = InfrastructureType.objects.distinct().all()
     serializer_class = InfrastructureTypeSerializer
     pagination_class = None
 
@@ -87,7 +87,7 @@ class ProjectStatusListView(APIView):
 
 # locations
 class LineStringGeometryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = LineStringGeometry.objects.all()
+    queryset = LineStringGeometry.objects.distinct().all()
     serializer_class = LineStringGeometrySerializer
     bbox_filter_field = 'geom'
     filter_backends = (InBBoxFilter, filters.DjangoFilterBackend)
@@ -95,7 +95,7 @@ class LineStringGeometryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PointGeometryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = PointGeometry.objects.all()
+    queryset = PointGeometry.objects.distinct().all()
     serializer_class = PointGeometrySerializer
     bbox_filter_field = 'geom'
     filter_backends = (InBBoxFilter, filters.DjangoFilterBackend)
@@ -103,7 +103,7 @@ class PointGeometryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PolygonGeometryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = PolygonGeometry.objects.all()
+    queryset = PolygonGeometry.objects.distinct().all()
     serializer_class = PolygonGeometrySerializer
     bbox_filter_field = 'geom'
     filter_backends = (InBBoxFilter, filters.DjangoFilterBackend)
@@ -148,12 +148,12 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RegionListView(generics.ListAPIView):
-    queryset = Region.objects.all()
+    queryset = Region.objects.distinct().all()
     serializer_class = RegionBasicSerializer
     pagination_class = None
 
 
 class CountryListView(generics.ListAPIView):
-    queryset = Country.objects.all()
+    queryset = Country.objects.distinct().all()
     serializer_class = CountryBasicSerializer
     pagination_class = None
