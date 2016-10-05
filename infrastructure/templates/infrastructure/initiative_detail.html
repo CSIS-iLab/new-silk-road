@@ -85,7 +85,7 @@
     <div class="row">
         <section class="maximized">
             <h3>Related Initiatives</h3>
-            <ul class="clean">{% for item in object.related_initiatives.all  %}
+            <ul class="clean multicolumn">{% for item in object.related_initiatives.all  %}
                 <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
             {% empty %}
                 <li>&mdash;</li>
@@ -96,7 +96,7 @@
     <div class="row">
         <section class="maximized">
             <h3>Related Projects</h3>
-            <ul class="clean">{% for item in object.project_set.all  %}
+            <ul class="clean multicolumn">{% for item in object.project_set.all  %}
                 <li><a href="{{item.get_absolute_url}}">{{item.alternate_name|default:item.name}}</a></li>
             {% empty %}
                 <li>&mdash;</li>
@@ -107,7 +107,7 @@
     <div class="row">
         <section class="maximized">
             <h3>Related Events</h3>
-            <ul class="clean">{% for item in object.affiliated_events.all  %}
+            <ul class="clean multicolumn">{% for item in object.affiliated_events.all  %}
                 <li><a href="{{item.get_absolute_url}}">{{item.name}}</a></li>
             {% empty %}
                 <li>&mdash;</li>
@@ -118,7 +118,7 @@
     <div class="row">
         <section class="maximized">
             <h3>Related People</h3>
-            <ul class="clean">{% for item in object.affiliated_people.all  %}
+            <ul class="clean multicolumn">{% for item in object.affiliated_people.all  %}
                 <li><a href="{{item.get_absolute_url}}">{{item.full_display_name}}</a></li>
             {% empty %}
                 <li>&mdash;</li>

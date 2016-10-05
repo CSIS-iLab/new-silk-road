@@ -149,6 +149,10 @@ ul {
         @include media($medium-break) {
             column-count: 3;
         }
+
+        li {
+            display: inline-block;
+        }
     }
 }
 
