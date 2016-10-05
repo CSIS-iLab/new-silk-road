@@ -111,8 +111,6 @@ class ProjectFilter(filters.FilterSet):
     initiatives__count__lt = filters.MethodFilter()
     initiatives__count__lte = filters.MethodFilter()
 
-    principal_agents = filters.MethodFilter()
-
     infrastructure_type = filters.ModelMultipleChoiceFilter(queryset=InfrastructureType.objects.all())
 
     funding = filters.RelatedFilter(ProjectFundingFilter, name='funding', distinct=True)
@@ -159,11 +157,43 @@ class ProjectFilter(filters.FilterSet):
     def filter_initiatives__count__lte(self, name, queryset, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__lte')
 
-    def filter_principal_agents(self, name, queryset, value):
-        if value:
-            import ipdb; ipdb.set_trace()
+    total_cost_amount = filters.MethodFilter()
+    total_cost_amount__gt = filters.MethodFilter()
+    total_cost_amount__gte = filters.MethodFilter()
+    total_cost_amount__lt = filters.MethodFilter()
+    total_cost_amount__lte = filters.MethodFilter()
 
-        return queryset
+    def __filter__total_cost_amount(self, name, queryset, value, modifier=None):
+        currency_field = 'currency'
+        amount_field = name.replace('total_cost_amount', 'total_cost')
+        currency_field = name.replace('total_cost_amount', 'total_cost_currency__iexact')
+        if modifier:
+            currency_field = currency_field.replace(modifier, '').rstrip('_')
+
+        value = value.strip()
+        value_list = value.split(' ')
+        if len(value_list) == 2:
+            lookup = {
+                amount_field: value_list[0],
+                currency_field: value_list[1]
+            }
+            return queryset.filter(**lookup)
+        return queryset.none()
+
+    def filter_total_cost_amount(self, name, queryset, value):
+        return self.__filter__total_cost_amount(name, queryset, value)
+
+    def filter_total_cost_amount__gt(self, name, queryset, value):
+        return self.__filter__total_cost_amount(name, queryset, value, modifier='gt')
+
+    def filter_total_cost_amount__gte(self, name, queryset, value):
+        return self.__filter__total_cost_amount(name, queryset, value, modifier='gte')
+
+    def filter_total_cost_amount__lt(self, name, queryset, value):
+        return self.__filter__total_cost_amount(name, queryset, value, modifier='lt')
+
+    def filter_total_cost_amount__lte(self, name, queryset, value):
+        return self.__filter__total_cost_amount(name, queryset, value, modifier='lte')
 
     class Meta:
         model = Project

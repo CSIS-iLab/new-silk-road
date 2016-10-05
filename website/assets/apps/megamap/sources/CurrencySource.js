@@ -1,5 +1,5 @@
 function createQueryForRange(range) {
-  const currencyKey = 'funding__currency_amount';
+  const currencyKey = 'total_cost_amount';
   const currencyCode = 'USD';
   let q = {};
   for (var key in range) {
