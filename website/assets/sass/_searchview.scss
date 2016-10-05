@@ -43,7 +43,6 @@
         width: 260px;
         background-color: $pale-green;
         padding: $tiny-spacing;
-        overflow-y: auto;
         max-height: 550px;
         @include display(flex);
         @include flex-direction(column);
