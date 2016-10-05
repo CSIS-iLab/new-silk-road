@@ -8,7 +8,7 @@ from locations.models import (
     Region,
     Country
 )
-from infrastructure.models import InfrastructureType
+from infrastructure.models import Project
 from api.serializers.infrastructure import (ProjectNestableSerializer,)
 from api.fields import DynamicFieldsMixin
 
@@ -92,11 +92,12 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         id_field = 'identifier'
 
     def get_properties(self, instance, fields):
-        infra_type = InfrastructureType.objects.filter(project__geo=instance).only('name').first()
-        infra_name = infra_type.name if infra_type else None
+        project = Project.objects.filter(geo=instance).only('name', 'alternate_name', 'infrastructure_type__name').first()
+        infra_name = project.infrastructure_type.name if project else None
+        proj_name = project.alternate_name or project.name if project else None
         icon_type = ICON_MAP.get(infra_name.lower(), 'dot') if infra_name else None
         return {
-            'label': instance.label,
+            'label': proj_name,
             'geostore': instance.identifier,
             'infrastructureType': infra_name,
             'icon-image': icon_type
