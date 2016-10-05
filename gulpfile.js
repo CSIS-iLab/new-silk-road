@@ -111,6 +111,7 @@ gulp.task('sass:watch', function() {
         proxy: "localhost:8000",
         serveStatic: [destBase],
         files: [destBase + '/css/*.css'],
+        ghostMode: false,
         open: false
     });
 })
