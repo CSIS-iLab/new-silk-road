@@ -12,6 +12,25 @@ class CountrySerializer(ModelSerializer):
         fields = ('name', 'alpha_3')
 
 
+class PlaceSerializer(ModelSerializer):
+    country = RelatedSerializer(CountrySerializer, many=False)
+
+    class Meta:
+        model = 'locations.Place'
+        doc_type = 'search.documents.PlaceDoc'
+        fields = ('city', 'country', 'label', 'location_display')
+
+    def get_location_display(self, instance):
+        return instance.get_location_display()
+
+
+class RegionSerializer(ModelSerializer):
+
+    class Meta:
+        model = 'locations.Region'
+        doc_type = 'search.documents.RegionDoc'
+        fields = ('name',)
+
 # facts serializers
 
 
@@ -25,6 +44,7 @@ class EventTypeSerializer(ModelSerializer):
 
 class EventSerializer(ModelSerializer):
     event_type = RelatedSerializer(EventTypeSerializer)
+    places = RelatedSerializer(PlaceSerializer, many=True)
 
     class Meta:
         model = 'facts.Event'
@@ -34,6 +54,7 @@ class EventSerializer(ModelSerializer):
             'event_type',
             'description',
             'start_year',
+            'places',
             'url',
         )
 
@@ -52,10 +73,18 @@ class OrganizationSerializer(ModelSerializer):
             'countries',
             'description',
             'mission',
+            'headquarters_location',
+            'scope_of_operations',
             'organization_types',
             'url',
             'start_year',  # Actually founding_year, but renaming for search consistency
         )
+
+    def get_headquarters_location(self, instance):
+        return instance.headquarters.get_location_display() if instance.headquarters else None
+
+    def get_scope_of_operations(self, instance):
+        return [place.get_location_display() for place in instance.financingorganizationdetails.scope_of_operations.all()] if hasattr(instance, 'financingorganizationdetails') else None
 
     def get_organization_types(self, instance):
         return list(instance.get_organization_types())
@@ -196,6 +225,7 @@ class ProjectSerializer(ModelSerializer):
     infrastructure_type = RelatedSerializer(InfrastructureTypeSerializer)
     initiatives = RelatedSerializer(RelatedInitiativeSerializer, many=True)
     funding = RelatedSerializer(ProjectFundingSerializer, many=True)
+    regions = RelatedSerializer(RegionSerializer, many=True)
 
     class Meta:
         model = 'infrastructure.Project'
@@ -206,6 +236,7 @@ class ProjectSerializer(ModelSerializer):
             'description',
             'countries',
             'infrastructure_type',
+            'regions',
             'start_year',
             'start_month',
             'start_day',

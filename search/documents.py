@@ -11,7 +11,21 @@ class CountryDoc(field.InnerObjectWrapper):
     name = field.String()
 
 
+class PlaceDoc(field.InnerObjectWrapper):
+    city = field.String(fields={'raw': field.String(index='not_analyzed')})
+    country = field.Object(doc_class=CountryDoc)
+    label = field.String(fields={'raw': field.String(index='not_analyzed')})
+    location_display = field.String(fields={'raw': field.String(index='not_analyzed')})
+
+
+class RegionDoc(field.InnerObjectWrapper):
+    name = field.String(fields={'raw': field.String(index='not_analyzed')})
+
+
 class SerializedDoc(DocType):
+    _meta = field.Object(
+        properties={'model': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
 
     def get_model_meta(self):
         return getattr(self, '_meta', None)
@@ -31,6 +45,10 @@ class EventDoc(SerializedDoc):
     description = field.String()
     event_type = field.Object(properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})})
     start_year = field.Integer()
+    places = field.Nested(
+        doc_class=PlaceDoc,
+        properties={'location_display': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
 
     def get_display_name(self):
         return self.name
@@ -40,8 +58,11 @@ class OrganizationDoc(SerializedDoc):
     name = field.String()
     description = field.String()
     mission = field.String()
-    countries = field.Nested(
-        doc_class=CountryDoc, properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    countries = field.Nested(doc_class=CountryDoc)
+    headquarters_location = field.String(fields={'raw': field.String(index='not_analyzed')})
+    scope_of_operations = field.String(
+        multi=True,
+        fields={'raw': field.String(index='not_analyzed')}
     )
     start_year = field.Integer()
 
@@ -65,7 +86,7 @@ class PersonDoc(SerializedDoc):
     additional_name = field.String()
     family_name = field.String()
     description = field.String()
-    citizenships = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
+    citizenships = field.Nested(doc_class=CountryDoc)
     position_set = field.Nested(
         doc_class=PositionDoc,
         properties={
@@ -83,11 +104,12 @@ class InitiativeDoc(SerializedDoc):
     identifier = field.String()
     name = field.String()
     principal_agent = field.Nested(multi=False, properties={'name': field.String()})
-    member_countries = field.Nested(
-        doc_class=CountryDoc, properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
-    )
+    member_countries = field.Nested(doc_class=CountryDoc)
     geographic_scope = field.Nested(
-        doc_class=CountryDoc, properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+        doc_class=CountryDoc,
+        properties={
+            'name': field.String(fields={'raw': field.String(index='not_analyzed')})
+        }
     )
     initiative_type = field.Object(properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})})
     start_year = field.Integer()
@@ -104,8 +126,10 @@ class ProjectDoc(SerializedDoc):
     status = field.String(fields={'raw': field.String(index='not_analyzed')})
     start_year = field.Integer()
     countries = field.Nested(
-        doc_class=CountryDoc,
-        properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+        doc_class=CountryDoc,  # project_location aggregation/facet uses the raw multifield
+        properties={
+            'name': field.String(fields={'raw': field.String(index='not_analyzed')})
+        }
     )
     infrastructure_type = field.Object(
         properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
@@ -121,6 +145,12 @@ class ProjectDoc(SerializedDoc):
                     'name': field.String(fields={'raw': field.String(index='not_analyzed')}),
                 }
             )
+        }
+    )
+    regions = field.Nested(
+        doc_class=RegionDoc,
+        properties={
+            'name': field.String(fields={'raw': field.String(index='not_analyzed')})
         }
     )
 

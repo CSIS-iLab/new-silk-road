@@ -67,21 +67,38 @@ class SiteSearch(FacetedSearch):
 
     # Look at DocType fields to determine if field is a Nested or Object field. Object fields don't get NestedFacet
     facets = {
-        'category': TermsFacet(field='_meta.model'),
-        # 'countries': NestedFacet(
-        #     path='countries',
-        #     aggs={'name': A('terms', field='countries.name')}
-        # ),
+        # underscore ensures this will be first facet in sorted dict
+        '_category': TermsFacet(field='_meta.model.raw'),
+        'headquarters': TermsFacet(field='headquarters_location.raw'),
+        # Note that the facet below only acts ProjectDoc, which
+        # specifies a 'raw' multifield while other Docs do not
+        'project_location': NestedFacet(
+            path='countries',
+            aggs={'name': A('terms', field='countries.name.raw')}
+        ),
+        'project_region': NestedFacet(
+            path='regions',
+            aggs={'name': A('terms', field='regions.name.raw')}
+        ),
         'project_status': TermsFacet(field='status.raw'),
         'project_funder': TermsFacet(field='funding.sources.name.raw'),
+        'initiative_scope': NestedFacet(
+            path='geographic_scope',
+            aggs={'name': A('terms', field='geographic_scope.name.raw')}
+        ),
+        'area_of_operations': TermsFacet(field='scope_of_operations.raw'),
         'infrastructure_type': TermsFacet(field='infrastructure_type.name.raw'),
         'start_year': TermsFacet(field='start_year'),
-        # 'citizenships': NestedFacet(
-        #     path='citizenships',
-        #     aggs={'name': A('terms', field='citizenships.name')}
-        # ),
+        'event_location': NestedFacet(
+            path='places',
+            aggs={'name': A('terms', field='places.location_display.raw')}
+        ),
         'event_type': TermsFacet(field='event_type.name.raw'),
         'initiative_type': TermsFacet(field='initiative_type.name.raw'),
+        'analysis': NestedFacet(
+            path='categories',
+            aggs={'name': A('terms', field='categories.name.raw')}
+        ),
     }
 
     def search(self):

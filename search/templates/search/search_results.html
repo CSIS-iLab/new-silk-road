@@ -4,7 +4,7 @@
     <form action="{% url 'search:search' %}">
         <input type="search" name="q" value="{{search.query}}">
         <input type="submit"><input type="reset">
-    {% if search.facets and search.total > 1 %}
+    {% if search.facets %}
     <nav>
         <h3>Filters</h3>
         <ul>{% for item in search.facets|dictsort:'name' %}{% if item.info %}
