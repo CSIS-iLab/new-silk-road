@@ -14,7 +14,7 @@
                     <li>{% spaceless %}
                         <label>
                             <input type="checkbox" name="facet" {% if selected %}checked{% endif %}
-                                value="{{name}}:{{label}}">{{label|title}} ({{count}})
+                                value="{{item.name}}:{{label}}">{{label}} ({{count}})
                         </label>{% endspaceless %}
                     </li>{% endfor %}
                 </ol>

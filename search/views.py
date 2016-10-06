@@ -5,7 +5,7 @@ from .searches import SiteSearch
 
 class SearchView(TemplateView):
 
-    template_name = "search/results.html"
+    template_name = "search/search_results.html"
     http_method_names = ['get', 'head']
 
     def __init__(self, **kwargs):
