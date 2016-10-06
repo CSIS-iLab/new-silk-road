@@ -72,16 +72,16 @@ class SiteSearch(FacetedSearch):
         #     path='countries',
         #     aggs={'name': A('terms', field='countries.name')}
         # ),
-        'project_status': TermsFacet(field='status'),
-        'project_funder': TermsFacet(field='funding.sources.name'),
-        'infrastructure_type': TermsFacet(field='infrastructure_type.name'),
+        'project_status': TermsFacet(field='status.raw'),
+        'project_funder': TermsFacet(field='funding.sources.name.raw'),
+        'infrastructure_type': TermsFacet(field='infrastructure_type.name.raw'),
         'start_year': TermsFacet(field='start_year'),
         # 'citizenships': NestedFacet(
         #     path='citizenships',
         #     aggs={'name': A('terms', field='citizenships.name')}
         # ),
-        'event_type': TermsFacet(field='event_type.name'),
-        'initiative_type': TermsFacet(field='initiative_type.name'),
+        'event_type': TermsFacet(field='event_type.name.raw'),
+        'initiative_type': TermsFacet(field='initiative_type.name.raw'),
     }
 
     def search(self):

@@ -29,7 +29,7 @@ class SerializedDoc(DocType):
 class EventDoc(SerializedDoc):
     name = field.String()
     description = field.String()
-    event_type = field.Object(properties={'name': field.String()})
+    event_type = field.Object(properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})})
     start_year = field.Integer()
 
     def get_display_name(self):
@@ -40,7 +40,9 @@ class OrganizationDoc(SerializedDoc):
     name = field.String()
     description = field.String()
     mission = field.String()
-    countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
+    countries = field.Nested(
+        doc_class=CountryDoc, properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
     start_year = field.Integer()
 
     def get_display_name(self):
@@ -81,17 +83,17 @@ class InitiativeDoc(SerializedDoc):
     identifier = field.String()
     name = field.String()
     principal_agent = field.Nested(multi=False, properties={'name': field.String()})
-    member_countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
-    geographic_scope = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
-    initiative_type = field.Object(properties={'name': field.String()})
+    member_countries = field.Nested(
+        doc_class=CountryDoc, properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
+    geographic_scope = field.Nested(
+        doc_class=CountryDoc, properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
+    initiative_type = field.Object(properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})})
     start_year = field.Integer()
 
     def get_display_name(self):
         return self.name
-
-
-class ProjectFundingDoc(field.InnerObjectWrapper):
-    funders = field.Nested(properties={'name': field.String()})
 
 
 class ProjectDoc(SerializedDoc):
@@ -99,12 +101,28 @@ class ProjectDoc(SerializedDoc):
     name = field.String()
     alternate_name = field.String()
     description = field.String()
-    status = field.String()
+    status = field.String(fields={'raw': field.String(index='not_analyzed')})
     start_year = field.Integer()
-    countries = field.Nested(doc_class=CountryDoc, properties={'name': field.String()})
-    infrastructure_type = field.Object(properties={'name': field.String()})
+    countries = field.Nested(
+        doc_class=CountryDoc,
+        properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
+    infrastructure_type = field.Object(
+        properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
     # Providing a doc_class for initiatives produced errors, so keep it simple!
     initiatives = field.Nested(properties={'name': field.String()})
+    funding = field.Object(
+        multi=True,
+        properties={
+            'sources': field.Object(
+                multi=True,
+                properties={
+                    'name': field.String(fields={'raw': field.String(index='not_analyzed')}),
+                }
+            )
+        }
+    )
 
     def get_display_name(self):
         return self.name
@@ -116,7 +134,10 @@ class EntryDoc(SerializedDoc):
     content = field.String()
     description = field.String()
     publication_date = field.Date()
-    categories = field.Nested(doc_class=CategoryDoc, properties={'name': field.String()})
+    categories = field.Nested(
+        doc_class=CategoryDoc,
+        properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})}
+    )
 
     def get_display_name(self):
         return self.title
