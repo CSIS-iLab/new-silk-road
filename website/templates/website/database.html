@@ -14,10 +14,20 @@ The Database | {{ block.super }}
     </header>
 </section>
 <section role="search" class="search">
-    <form>
-        <button type="button" class="dropdown" name="category">Categories</button>
+    <form action="{% url 'search:search' %}">
+        <span class="custom-dropdown">
+            <select name="facet">
+                {# FIXME: Generate menu dynamically using info from search facet #}
+                <option disabled selected>Categories</option>
+                <option value="_category:Project">Projects</option>
+                <option value="_category:Organizations">Organizations</option>
+                <option value="_category:Initiatives">Initiatives</option>
+                <option value="_category:Events">Events</option>
+                <option value="_category:People">People</option>
+            </select>
+        </span>
         <div class="searchBar">
-            <input type="text" class="primary" name="name" value="" placeholder="Search the database">
+            <input type="text" class="primary" name="q" value="" placeholder="Search the database">
             <button type="button" name="search">Search</button>
         </div>
     </form>

@@ -1,4 +1,5 @@
 @import "variables";
+
 .button,
 button,
 input {
@@ -9,9 +10,11 @@ input {
     border-radius: 0;
     padding: 3px 8px;
     position: relative;
+
     &:focus {
         outline: none;
     }
+
     &:disabled {
         color: $placeholder-color;
     }
@@ -19,14 +22,15 @@ input {
         color: $placeholder-color;
         font-style: italic;
     }
+
     &.gem {
         $gem-width: 8px;
         $gem-height: 42px;
         $gem-vector: $gem-height/2;
         text-transform: uppercase;
         font-family: $sans-font-family;
-
         height: $gem-height;
+
         &::before {
             display: block;
             position: absolute;
@@ -39,6 +43,7 @@ input {
             border-right: $gem-width solid $slate-grey;
             border-bottom: $gem-vector solid transparent;
         }
+
         &::after {
             display: block;
             position: absolute;
@@ -53,18 +58,101 @@ input {
         }
     }
 }
+
 input.primary {
     background-color: $dark-night;
     padding: 8px 4px 8px 8px;
 }
+
 a.button {
     display: inline-block;
     text-decoration: none;
     text-align: center;
     padding: 8px;
 }
+
 fieldset {
     border: none;
     padding: 0;
     margin: 0;
+}
+
+select {
+    line-height: normal;
+}
+
+
+// Custom dropdown
+// Adapted from http://red-team-design.com/making-html-dropdowns-not-suck/
+
+.custom-dropdown {
+    font-family: $serif-font-family;
+    color: $pale-green;
+    background-color: $slate-grey;
+    margin: 0;
+    line-height: normal;
+}
+
+@supports (pointer-events: none) and ((-webkit-appearance: none) or (-moz-appearance: none) or (appearance: none)) {
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+
+        &::before, &::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+        }
+
+        &::before {
+            /*  Custom dropdown arrow cover */
+            width: 2em;
+            right: 0;
+            top: 3px;
+            bottom: 3px;
+            background-color: $slate-grey;
+            border-left: 2px solid rgba(0, 0, 0, 0.15);
+        }
+
+        &::after {
+            /*  Custom dropdown arrow */
+            background-image: url($expand-btn-img);
+            background-repeat: no-repeat;
+            background-size: $expand-collapse-btn-width auto;
+            width: $expand-collapse-btn-width;
+            height: 1em;
+            right: 0.5em;
+            top: 50%;
+            margin-top: -.5em;
+            color: rgba(0,0,0,.9);
+        }
+
+        > select {
+            display: inline-block;
+            color: $pale-green;
+            background-color: $slate-grey;
+            padding: 0.45em;
+            padding-right: 28px;
+            margin: 0;
+            /* accommodate with the pseudo elements for the dropdown arrow */
+            border: 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+
+            &[disabled] {
+                color: desaturate($pale-green, 30%);
+            }
+        }
+    }
+
+    /* FF only temporary & ugly fixes */
+    /* the "appearance: none" applied on select still shows a dropdown arrow on Firefox */
+    /* https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
+    @-moz-document url-prefix() {
+        .custom-dropdown > select {
+            padding-right: 0.9em;
+        }
+    }
 }
