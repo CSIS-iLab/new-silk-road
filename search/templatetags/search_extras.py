@@ -1,6 +1,8 @@
 from django import template
+from django.template.defaultfilters import stringfilter
 from django.http import QueryDict
 from urllib.parse import urlsplit, urlunsplit
+from search.utils import FACET_NAME_TRANSLATOR
 
 register = template.Library()
 
@@ -24,3 +26,25 @@ def modify_urlquery(in_url, **kwargs):
                 q_dict.appendlist(k, v)
 
     return urlunsplit((scheme, netloc, path, q_dict.urlencode(safe=safe), fragment))
+
+
+@register.filter
+@stringfilter
+def facettitle(value):
+    value = value.translate(FACET_NAME_TRANSLATOR).strip()
+    if value.endswith('name'):
+        left = value.rsplit('name')[0].strip()
+        if left.endswith('s'):
+            value = left
+    return value.title()
+
+
+@register.filter
+@stringfilter
+def cleanhighlight(value):
+    value = value.strip(',.;:\'\"')
+    if value.startswith(' '):
+        value = "&hellip;{}".format(value.lstrip())
+    if ' ' in value and not value.endswith('.'):
+        value = "{}&hellip;".format(value.rstrip())
+    return value

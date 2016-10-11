@@ -1,12 +1,7 @@
 from django.views.generic.base import TemplateView
 from collections import defaultdict
 from .searches import SiteSearch
-
-
-FACET_NAME_TRANSLATOR = str.maketrans({
-    '_': ' ',
-    ':': ': '
-})
+from .utils import FACET_NAME_TRANSLATOR
 
 
 def process_raw_facets(facet_name, facets_list, query_dict=None):
@@ -79,6 +74,8 @@ class SearchView(TemplateView):
         if self.search_response:
             pnum = self.offset // self.size
             pmax = self.count // self.size
+            page['number'] = pnum + 1
+            page['num_pages'] = pmax + 1
             qd = self.query_dict.copy()
             if pnum > 0:
                 qd['offset'] = (pnum - 1) * self.size

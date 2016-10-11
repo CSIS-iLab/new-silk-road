@@ -38,52 +38,48 @@ Search | {{ block.super }}
             </ul>
         </nav>
         {% endif %}
-        <section>
-            <p>Results {{search.offset|add:'1'}}&ndash;
-                {% if search.page.next %}{{search.offset|add:search.size}} of{% endif %}
-                {{search.total}}</p>
-                <ul>
-                    {% if search.page.previous %}
-                    <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
-                    {% endif %}
-                    {% if search.page.next %}
-                    <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
-                    {% endif %}
-                </ul>
-                <ol start="{{search.offset|add:'1'}}">{% for result in search.results %}
-                    <li>
-                        <section>
-                            <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
-                            <h3>{{ result.get_model_meta.model }}</h3>
-                            {{ result.description|markdown|html_text|safe }}
-                            {% comment %}
-                            {% for field,value_list in result.meta.highlight.to_dict.items|slice:":1"  %}
-                            {% if field != 'name' %}
-                            <h4>{{field|title}}</h4>
-                            {% for item in value_list  %}
-                            <p>{{item|safe}}</p>{% endfor %}
-                            {% endif %}
-                            {% endfor %}
-
-                            {% endcomment %}
-                        </section>
-                    </li>{% endfor %}
-                </ol>
-                <p>Results {{search.offset|add:'1'}}&ndash;
-                    {% if search.page.next %}{{search.offset|add:search.size}} of{% endif %}
-                    {{search.total}}</p>
-                    <ul>
-                        {% if search.page.previous %}
-                        <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
-                        {% endif %}
-                        {% if search.page.next %}
-                        <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
-                        {% endif %}
-                    </ul>
-                    {% else %}
-                    <p>No results found!</p>
-                    {% endif %}
-                </section>
+        <section class="results-list">
+            <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
+            <ul>
+                {% if search.page.previous %}
+                <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
+                {% endif %}
+                {% if search.page.next %}
+                <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
+                {% endif %}
+            </ul>
+            <ol start="{{search.offset|add:'1'}}">{% for result in search.results %}
+                <li>{% spaceless %}<section>
+                    <header>
+                        <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
+                        <h3>{{ result.get_model_meta.model }}</h3>
+                    </header>
+                    <div class="description">
+                    {{ result.description|markdown|html_text|truncatewords_html:80|safe }}
+                    </div>
+                    <div class="highlights">{% for field,value_list in result.meta.highlight.to_dict.items|slice:":1"  %}
+                    {% if field|lower != 'name' %}
+                    <h4>{{field|facettitle}}</h4>
+                    {% for item in value_list  %}
+                    <p>{{item|cleanhighlight|safe}}</p>{% endfor %}
+                    {% endif %}{% endfor %}
+                    </div>
+                </section>{% endspaceless %}
+                </li>{% endfor %}
+            </ol>
+            <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
+            <ul>
+                {% if search.page.previous %}
+                <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
+                {% endif %}
+                {% if search.page.next %}
+                <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
+                {% endif %}
+            </ul>
+            {% else %}
+            <p>No results found!</p>
+            {% endif %}
+        </section>
     </div>
 {% endblock %}
 

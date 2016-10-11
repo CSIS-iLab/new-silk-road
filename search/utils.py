@@ -2,6 +2,12 @@ from importlib import import_module
 
 DOC_ID_SEPARATOR = '::'
 
+FACET_NAME_TRANSLATOR = str.maketrans({
+    '_': ' ',
+    ':': ': ',
+    '.': ' ',
+})
+
 
 def split_class_path(class_path):
     parts = class_path.rsplit('.', maxsplit=1)
