@@ -18,17 +18,19 @@ The Database | {{ block.super }}
         <span class="custom-dropdown">
             <select name="facet">
                 {# FIXME: Generate menu dynamically using info from search facet #}
-                <option disabled selected>Categories</option>
+                <option selected disabled>Categories</option>
+                <option disabled>----------</option>
                 <option value="_category:Project">Projects</option>
-                <option value="_category:Organizations">Organizations</option>
-                <option value="_category:Initiatives">Initiatives</option>
-                <option value="_category:Events">Events</option>
-                <option value="_category:People">People</option>
+                <option value="_category:Organization">Organizations</option>
+                <option value="_category:Initiative">Initiatives</option>
+                <option value="_category:Event">Events</option>
+                <option value="_category:Person">People</option>
             </select>
         </span>
         <div class="searchBar">
             <input type="text" class="primary" name="q" value="" placeholder="Search the database">
-            <button type="button" name="search">Search</button>
+            <button type="submit">Search</button>
+            <button type="reset">Clear</button>
         </div>
     </form>
 </section>
