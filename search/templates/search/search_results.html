@@ -5,25 +5,30 @@ Search | {{ block.super }}
 {% endblock %}
 
 {% block content %}
-    <h2>Search</h2>
-    <form action="{% url 'search:search' %}">
-        <input type="search" name="q" value="{{search.query.q}}">
-        <input type="submit" value="Search"><input type="reset">
-    </form>
-    <div class="selected-facets">
-        <h3>Selected Filters</h3>
-        <ul class="clean">{% for f in search.selected_facets %}
-            <li>
-                {% modify_urlquery request.get_full_path facet=f.raw delete=True as new_url %}
-                {{f.name|title}}&nbsp;<a href="{{new_url}}" class="remove">Remove</a>
-            </li>{% endfor %}
-        </ul>
+    <div class="search-bar-wrap">
+        <div class="search-bar">
+            <form action="{% url 'search:search' %}">
+                <input type="search" name="q" value="{{search.query.q}}" placeholder="Search the database">
+                <input type="submit" value="Search">
+            </form>
+        </div>
     </div>
-    {% if search.results %}
-    <div class="search-results">{% if search.facets %}
+    {% if search.selected_facets %}
+    <div class="selected-facets">
+        <p>
+            Selected Filters:&nbsp;{% for f in search.selected_facets %}
+            <span>{% modify_urlquery request.get_full_path facet=f.raw delete=True as new_url %}
+                {{f.name|title}}&nbsp;<a href="{{new_url}}" class="remove">&times;</a>{% if not forloop.last %} | {% endif %}
+            </span>{% endfor %}
+            | <span><a href="{{request.path}}?q={{search.query.q}}">Clear filters</a></span>
+        </p>
+    </div>
+    {% endif %}
+    <div class="search-results">
+        {% if search.results and search.facets %}
         <nav>
             <h3>Filter By</h3>
-            <ul class='menu'>{% for facet in search.facets|dictsort:'name' %}{% if facet.info %}
+            <ul class='menu'>{% for facet in search.facets|dictsort:'raw' %}{% if facet.info %}
                 <li>
                     <h4>{{ facet.name|title }}</h4>
                     <ol class='submenu'>{% for f in facet.info  %}
@@ -38,7 +43,10 @@ Search | {{ block.super }}
             </ul>
         </nav>
         {% endif %}
+        {% if search.query.q %}
         <section class="results-list">
+            <h3>Results</h3>
+            {% if search.total > 0 %}
             <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
             <ul>
                 {% if search.page.previous %}
@@ -49,22 +57,23 @@ Search | {{ block.super }}
                 {% endif %}
             </ul>
             <ol start="{{search.offset|add:'1'}}">{% for result in search.results %}
-                <li>{% spaceless %}<section>
-                    <header>
-                        <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
-                        <h3>{{ result.get_model_meta.model }}</h3>
-                    </header>
-                    <div class="description">
-                    {{ result.description|markdown|html_text|truncatewords_html:80|safe }}
-                    </div>
-                    <div class="highlights">{% for field,value_list in result.meta.highlight.to_dict.items|slice:":1"  %}
-                    {% if field|lower != 'name' %}
-                    <h4>{{field|facettitle}}</h4>
-                    {% for item in value_list  %}
-                    <p>{{item|cleanhighlight|safe}}</p>{% endfor %}
-                    {% endif %}{% endfor %}
-                    </div>
-                </section>{% endspaceless %}
+                <li>{% spaceless %}
+                    <section>
+                        <header>
+                            <h2><a href="{{ result.url }}">{{ result.get_display_name }}</a></h2>
+                            <h3>{{ result.get_model_meta.model }}</h3>
+                        </header>
+                        <div class="description">
+                            {{ result.description|markdown|html_text|truncatewords_html:80|safe }}
+                        </div>
+                        <div class="highlights">{% for field,value_list in result.meta.highlight.to_dict.items|slice:":1"  %}
+                            {% if field|lower != 'name' %}
+                            <h4>{{field|facettitle}}</h4>
+                            {% for item in value_list  %}
+                            <p>{{item|cleanhighlight|safe}}</p>{% endfor %}
+                            {% endif %}{% endfor %}
+                        </div>
+                    </section>{% endspaceless %}
                 </li>{% endfor %}
             </ol>
             <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
@@ -76,10 +85,11 @@ Search | {{ block.super }}
                 <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
                 {% endif %}
             </ul>
-            {% else %}
+            {% elif search.query.total == 0 and search.query.q %}
             <p>No results found!</p>
             {% endif %}
         </section>
+        {% endif %}
     </div>
 {% endblock %}
 
