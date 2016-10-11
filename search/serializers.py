@@ -58,6 +58,9 @@ class EventSerializer(ModelSerializer):
             'url',
         )
 
+    def get_description(self, instance):
+        return instance.description_rendered
+
     def get_url(self, instance):
         return instance.get_absolute_url()
 
@@ -79,6 +82,9 @@ class OrganizationSerializer(ModelSerializer):
             'url',
             'start_year',  # Actually founding_year, but renaming for search consistency
         )
+
+    def get_description(self, instance):
+        return instance.description_rendered
 
     def get_headquarters_location(self, instance):
         return instance.headquarters.get_location_display() if instance.headquarters else None
@@ -147,6 +153,9 @@ class PersonSerializer(ModelSerializer):
             'events',
             'url',
         )
+
+    def get_description(self, instance):
+        return instance.description_rendered
 
     def get_url(self, instance):
         return instance.get_absolute_url()
@@ -246,6 +255,9 @@ class ProjectSerializer(ModelSerializer):
             'funding',
         )
 
+    def get_description(self, instance):
+        return instance.description_rendered
+
     def get_url(self, instance):
         return instance.get_absolute_url()
 
@@ -273,6 +285,9 @@ class EntrySerializer(ModelSerializer):
             'categories',
             'url',
         )
+
+    def get_description(self, instance):
+        return instance.description_rendered
 
     def get_url(self, instance):
         return instance.get_absolute_url()
