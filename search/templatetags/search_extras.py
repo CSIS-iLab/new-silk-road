@@ -1,16 +1,8 @@
 from django import template
-from django.template.defaultfilters import stringfilter
 from django.http import QueryDict
 from urllib.parse import urlsplit, urlunsplit
 
 register = template.Library()
-
-
-@register.filter(name='to_whitespace')
-@stringfilter
-def to_whitespace(value, arg):
-    trans_tbl = value.maketrans({x: ' ' for x in str(arg)})
-    return value.translate(trans_tbl).strip()
 
 
 @register.simple_tag
@@ -32,8 +24,3 @@ def modify_urlquery(in_url, **kwargs):
                 q_dict.appendlist(k, v)
 
     return urlunsplit((scheme, netloc, path, q_dict.urlencode(safe=safe), fragment))
-
-
-@register.simple_tag
-def join_parts(*args, sep=':'):
-    return sep.join((str(x) for x in args))

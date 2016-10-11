@@ -12,10 +12,10 @@ Search | {{ block.super }}
     </form>
     <div class="selected-facets">
         <h3>Active Filters</h3>
-        <ul>{% for facet_value in search.query.selected_facets %}
+        <ul>{% for f in search.selected_facets %}
             <li>
-                {% modify_urlquery request.get_full_path facet=facet_value delete=True as new_url %}
-                {{facet_value|to_whitespace:"_"|title}}&nbsp;<a href="{{new_url}}" class="remove">Remove</a>
+                {% modify_urlquery request.get_full_path facet=f.raw delete=True as new_url %}
+                {{f.name|title}}&nbsp;<a href="{{new_url}}" class="remove">Remove</a>
             </li>{% endfor %}
         </ul>
     </div>
@@ -23,14 +23,12 @@ Search | {{ block.super }}
     <div class="search-results">{% if search.facets %}
         <nav>
             <h3>Filters</h3>
-            <ul>{% for item in search.facets|dictsort:'name' %}{% if item.info %}
+            <ul>{% for facet in search.facets|dictsort:'name' %}{% if facet.info %}
                 <li>
-                    <h4>{{ item.name|to_whitespace:"_"|title }}</h4>
-                    <ol>{% for label, count, selected in item.info  %}
+                    <h4>{{ facet.name|title }}</h4>
+                    <ol>{% for f in facet.info  %}
                         <li>{% spaceless %}
-                            {% join_parts item.name label as facet_value %}
-                            {% modify_urlquery request.get_full_path facet=facet_value safe=":" as new_url %}
-                            <a href="{{new_url}}"> {{label}} ({{count}})</a>{% endspaceless %}
+                            <a href="{% url 'search:search' %}?{{f.querystring}}">{{f.label}} ({{f.count}})</a>{% endspaceless %}
                         </li>{% endfor %}
                     </ol>
                 </li>{% endif %}

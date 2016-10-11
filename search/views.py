@@ -3,6 +3,33 @@ from collections import defaultdict
 from .searches import SiteSearch
 
 
+FACET_NAME_TRANSLATOR = str.maketrans({
+    '_': ' ',
+    ':': ': '
+})
+
+
+def process_raw_facets(facet_name, facets_list, query_dict=None):
+    for label, count, selected in facets_list:
+        qd = query_dict.copy() if query_dict else None
+        if qd:
+            qd.appendlist('facet', ':'.join((facet_name, str(label))))
+        yield {
+            'label': label,
+            'count': count,
+            'selected': selected,
+            'querystring': qd.urlencode(safe=':') if qd else None
+        }
+
+
+def process_selected_facets(facet_query_list):
+    for item in facet_query_list:
+        yield {
+            'name': item.translate(FACET_NAME_TRANSLATOR).title(),
+            'raw': item,
+        }
+
+
 class SearchView(TemplateView):
 
     template_name = "search/search_results.html"
@@ -63,7 +90,6 @@ class SearchView(TemplateView):
         context['search'] = {
             'query': {
                 'q': self.query_dict.get('q'),
-                'selected_facets': self.query_dict.getlist('facet'),
             },
             'offset': self.offset,
             'size': self.size,
@@ -71,12 +97,18 @@ class SearchView(TemplateView):
             'total': self.count,
             'results': self.search_response,
             'facets': None,
+            'selected_facets': list(process_selected_facets(self.query_dict.getlist('facet'))),
         }
         facets = getattr(self.search_response, 'facets', None)
         if facets:
             facets_dict = facets.to_dict()
-            context['search']['facets'] = [
-                {'name': key, 'info': value} for key, value in facets_dict.items()
-            ]
+            facets_info = []
+            for name, facet_list in facets_dict.items():
+                facets_info.append({
+                    'name': name.translate(FACET_NAME_TRANSLATOR),
+                    'info': list(process_raw_facets(name, facet_list, self.query_dict.copy())),
+                })
+
+            context['search']['facets'] = facets_info
 
         return context
