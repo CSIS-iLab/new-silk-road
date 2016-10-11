@@ -11,8 +11,8 @@ Search | {{ block.super }}
         <input type="submit" value="Search"><input type="reset">
     </form>
     <div class="selected-facets">
-        <h3>Active Filters</h3>
-        <ul>{% for f in search.selected_facets %}
+        <h3>Selected Filters</h3>
+        <ul class="clean">{% for f in search.selected_facets %}
             <li>
                 {% modify_urlquery request.get_full_path facet=f.raw delete=True as new_url %}
                 {{f.name|title}}&nbsp;<a href="{{new_url}}" class="remove">Remove</a>
@@ -22,11 +22,11 @@ Search | {{ block.super }}
     {% if search.results %}
     <div class="search-results">{% if search.facets %}
         <nav>
-            <h3>Filters</h3>
-            <ul>{% for facet in search.facets|dictsort:'name' %}{% if facet.info %}
+            <h3>Filter By</h3>
+            <ul class='menu'>{% for facet in search.facets|dictsort:'name' %}{% if facet.info %}
                 <li>
                     <h4>{{ facet.name|title }}</h4>
-                    <ol>{% for f in facet.info  %}
+                    <ol class='submenu'>{% for f in facet.info  %}
                         <li>{% spaceless %}
                             <a href="{% url 'search:search' %}?{{f.querystring}}">{{f.label}} ({{f.count}})</a>{% endspaceless %}
                         </li>{% endfor %}
@@ -85,4 +85,16 @@ Search | {{ block.super }}
                     {% endif %}
                 </section>
     </div>
+{% endblock %}
+
+{% block postbodyjs %}
+<script type="text/javascript">
+    Zepto(function($){
+        $('.submenu').hide();
+        $('.menu h4').on('click', function (event) {
+            $(event.target).siblings('.submenu').toggle();
+            $(event.target).toggleClass('selected')
+        });
+    });
+</script>
 {% endblock %}

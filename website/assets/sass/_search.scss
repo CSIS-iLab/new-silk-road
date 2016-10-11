@@ -38,3 +38,92 @@
         }
     }
 }
+
+
+.search-results {
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+
+    > section {
+        max-width: 80%;
+        @include flex(1 1 auto);
+    }
+
+    > nav {
+        max-width: 180px;
+        @include flex(1 1 auto);
+
+        > ul {
+            background-color: $light-green;
+
+            > li:not(:last-child) {
+                    border-bottom: 1px solid $blue-steel;
+            }
+
+            li {
+                display: block;
+                margin: 0;
+
+                h4 {
+                    position: relative;
+                    padding: $small-spacing;
+                    padding-right: 2 * $expand-collapse-btn-width;
+                    cursor: pointer;
+                    margin: 0;
+
+                    &:hover {
+                        color: lighten($gravel-grey, 10%);
+                        transition: color 0.3s;
+                    }
+
+                    &::after {
+                        content: "";
+                        background-image: url($expand-btn-img);
+                        background-position: 94% center;
+                        background-repeat: no-repeat;
+                        background-size: $expand-collapse-btn-width auto;
+                        width: $expand-collapse-btn-width;
+                        height: 100%;
+                        position: absolute;
+                        right: $expand-collapse-btn-width/2;
+                        bottom: 0;
+                    }
+
+                    &.selected::after {
+                        background-image: url($collapse-btn-img);
+                    }
+                }
+
+                ol {
+                    display: block;
+                    margin: 0;
+                    padding: $small-spacing 0;
+
+                    background-color: $creamer;
+
+                    > li {
+                        font-size: rem(12);
+                        display: block;
+
+                        a {
+                            color: $gravel-grey;
+                            display: block;
+                            padding: $tiny-spacing $small-spacing;
+
+                            &:hover {
+                                color: $medium-green;
+                                transition: color 0.5s;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    @include media($medium-break) {
+        @include flex-direction(row);
+    }
+}

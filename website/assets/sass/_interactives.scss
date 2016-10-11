@@ -137,9 +137,7 @@ select {
             margin: 0;
             /* accommodate with the pseudo elements for the dropdown arrow */
             border: 0;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            @include appearance(none);
 
             &[disabled] {
                 color: desaturate($pale-green, 30%);

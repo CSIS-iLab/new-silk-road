@@ -120,7 +120,7 @@
         font-weight: 400;
 
         @include widows-peak($light-green-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $light-green-line;
+        border-bottom: $thin-border-width solid $light-green;
 
         &::before {
             content: "";

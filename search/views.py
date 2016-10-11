@@ -25,7 +25,7 @@ def process_raw_facets(facet_name, facets_list, query_dict=None):
 def process_selected_facets(facet_query_list):
     for item in facet_query_list:
         yield {
-            'name': item.translate(FACET_NAME_TRANSLATOR).title(),
+            'name': item.translate(FACET_NAME_TRANSLATOR).strip().title(),
             'raw': item,
         }
 
@@ -105,7 +105,7 @@ class SearchView(TemplateView):
             facets_info = []
             for name, facet_list in facets_dict.items():
                 facets_info.append({
-                    'name': name.translate(FACET_NAME_TRANSLATOR),
+                    'name': name.translate(FACET_NAME_TRANSLATOR).strip(),
                     'info': list(process_raw_facets(name, facet_list, self.query_dict.copy())),
                 })
 
