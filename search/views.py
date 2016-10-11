@@ -8,7 +8,9 @@ def process_raw_facets(facet_name, facets_list, query_dict=None):
     for label, count, selected in facets_list:
         qd = query_dict.copy() if query_dict else None
         if qd:
-            qd.appendlist('facet', ':'.join((facet_name, str(label))))
+            facet_value = ':'.join((facet_name, str(label)))
+            if facet_value not in qd.getlist('facet'):
+                qd.appendlist('facet', facet_value)
         yield {
             'label': label,
             'count': count,
@@ -86,7 +88,7 @@ class SearchView(TemplateView):
 
         context['search'] = {
             'query': {
-                'q': self.query_dict.get('q'),
+                'q': self.query_dict.get('q', ''),
             },
             'offset': self.offset,
             'size': self.size,
@@ -102,6 +104,7 @@ class SearchView(TemplateView):
             facets_info = []
             for name, facet_list in facets_dict.items():
                 facets_info.append({
+                    'raw': name,
                     'name': name.translate(FACET_NAME_TRANSLATOR).strip(),
                     'info': list(process_raw_facets(name, facet_list, self.query_dict.copy())),
                 })
