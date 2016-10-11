@@ -10,6 +10,15 @@ Search | {{ block.super }}
         <input type="search" name="q" value="{{search.query.q}}">
         <input type="submit" value="Search"><input type="reset">
     </form>
+    <div class="selected-facets">
+        <h3>Active Filters</h3>
+        <ul>{% for facet_value in search.query.selected_facets %}
+            <li>
+                {% modify_urlquery request.get_full_path facet=facet_value delete=True as new_url %}
+                {{facet_value|to_whitespace:"_"|title}}&nbsp;<a href="{{new_url}}" class="remove">Remove</a>
+            </li>{% endfor %}
+        </ul>
+    </div>
     {% if search.results %}
     <div class="search-results">{% if search.facets %}
         <nav>
@@ -20,7 +29,7 @@ Search | {{ block.super }}
                     <ol>{% for label, count, selected in item.info  %}
                         <li>{% spaceless %}
                             {% join_parts item.name label as facet_value %}
-                            {% query_url request.get_full_path facet=facet_value safe=":" as new_url %}
+                            {% modify_urlquery request.get_full_path facet=facet_value safe=":" as new_url %}
                             <a href="{{new_url}}"> {{label}} ({{count}})</a>{% endspaceless %}
                         </li>{% endfor %}
                     </ol>

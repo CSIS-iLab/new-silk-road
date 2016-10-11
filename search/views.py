@@ -61,7 +61,10 @@ class SearchView(TemplateView):
                 page['next'] = qd.urlencode(safe=[':', '%'])
 
         context['search'] = {
-            'query': self.query_dict,
+            'query': {
+                'q': self.query_dict.get('q'),
+                'selected_facets': self.query_dict.getlist('facet'),
+            },
             'offset': self.offset,
             'size': self.size,
             'page': page,
