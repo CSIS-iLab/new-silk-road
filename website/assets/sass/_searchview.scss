@@ -75,7 +75,23 @@
             }
         }
     }
+
     .searchBar {
+        background-color: $dark-night;
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+
+        button {
+            @include flex(0 1 auto);
+        }
+
+        input,
+        label {
+            @include flex(1 1 auto);
+        }
+
+
         > button[type='submit'] {
             @include hide-text;
             padding: 0;
