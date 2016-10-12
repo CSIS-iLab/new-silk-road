@@ -33,6 +33,7 @@ class Category(Temporal):
 class Entry(Publishable):
     """An entry in a 'blog' or whatever you want to call it."""
     title = models.CharField(max_length=100)
+    subtitle = models.CharField(max_length=100, blank=True)
     slug = models.SlugField(max_length=110, allow_unicode=True, unique=True)
     author = models.CharField('Author(s)', blank=True, max_length=100)
 

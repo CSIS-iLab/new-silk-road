@@ -5,3 +5,9 @@
 .filerFile .related-lookup {
     text-indent: 0%;
 }
+
+.input-wide .vTextField {
+    min-width: 60%;
+    padding-left: 0;
+    padding-right: 0;
+}

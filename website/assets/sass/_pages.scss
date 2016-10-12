@@ -632,6 +632,12 @@ article {
             color: $callout-color;
             text-align: left;
         }
+        h2 {
+            font-family: $sans-font-family;
+            font-size: $minor-text-size;
+            text-transform: uppercase;
+            color: $slate-grey;
+        }
     }
 
     section.details, .author {

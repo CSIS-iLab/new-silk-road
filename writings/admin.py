@@ -61,11 +61,13 @@ class EntryAdmin(TaggitCounter, admin.ModelAdmin):
             'fields': ('published', 'publication_date')
         }),
         (None, {
-            'fields': ('title', 'slug', 'author', 'content')
+            'fields': ('title', 'slug', 'subtitle', 'author', 'content'),
+            'classes': ('input-wide',)
         }),
         (None, {
             'description': 'Elements that can be used to tease/share post',
-            'fields': ('share_text', 'featured_image', 'description')
+            'fields': ('share_text', 'featured_image', 'description'),
+            'classes': ('input-wide',)
         }),
         (None, {
             'fields': ('categories', 'tags', 'related_entries',)
