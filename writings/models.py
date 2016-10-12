@@ -138,5 +138,6 @@ class OrderedEntry(models.Model):
 
     class Meta:
         unique_together = ("entry", "collection")
+        ordering = ['collection', 'order']
         verbose_name = "ordered entry"
         verbose_name_plural = "ordered entries"
