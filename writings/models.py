@@ -134,9 +134,9 @@ class EntryCollection(Temporal):
 class OrderedEntry(models.Model):
     entry = models.ForeignKey(Entry, models.CASCADE)
     collection = models.ForeignKey(EntryCollection, models.CASCADE)
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        unique_together = ("collection", "order")
+        unique_together = ("entry", "collection")
         verbose_name = "ordered entry"
         verbose_name_plural = "ordered entries"

@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django import forms
 from django.utils.html import format_html, format_html_join
-from suit.admin import SortableStackedInline
 from markymark.widgets import MarkdownTextarea
 from taggit_helpers.admin import TaggitListFilter, TaggitCounter
 from .models import (
@@ -105,11 +104,19 @@ class EntryAdmin(TaggitCounter, admin.ModelAdmin):
     page_is_visible.boolean = True
 
 
-class OrderedEntryInline(SortableStackedInline):
+class OrderedEntryInline(admin.StackedInline):
     model = OrderedEntry
     sortable = 'order'
     readonly_fields = ('entry_published',)
     show_change_link = True
+    fieldsets = (
+        (None, {
+            'fields': (('entry', 'order'),)
+        }),
+        (None, {
+            'fields': ('entry_published',)
+        }),
+    )
 
     def entry_published(self, instance):
         return instance.entry.published
