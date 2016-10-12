@@ -1,7 +1,18 @@
 <form action="{% url 'search:search' %}">
-    <select class="" name="facet">
-        
-    </select>
-    <input type="search" name="q" value="{{search.query}}">
-    <input type="submit"><input type="reset">
+    <span class="custom-dropdown">
+        <select name="facet">
+            {# FIXME: Generate menu dynamically using info from search facet #}
+            <option selected disabled>Categories</option>
+            <option disabled>----------</option>
+            <option value="_category:Project">Projects</option>
+            <option value="_category:Organization">Organizations</option>
+            <option value="_category:Initiative">Initiatives</option>
+            <option value="_category:Event">Events</option>
+            <option value="_category:Person">People</option>
+        </select>
+    </span>
+    <div class="search-bar">
+        <input type="text" class="primary" name="q" value="" placeholder="Search the database">
+        <button type="submit">Search</button>
+    </div>
 </form>

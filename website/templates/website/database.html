@@ -14,25 +14,7 @@ The Database | {{ block.super }}
     </header>
 </section>
 <section role="search" class="search">
-    <form action="{% url 'search:search' %}">
-        <span class="custom-dropdown">
-            <select name="facet">
-                {# FIXME: Generate menu dynamically using info from search facet #}
-                <option selected disabled>Categories</option>
-                <option disabled>----------</option>
-                <option value="_category:Project">Projects</option>
-                <option value="_category:Organization">Organizations</option>
-                <option value="_category:Initiative">Initiatives</option>
-                <option value="_category:Event">Events</option>
-                <option value="_category:Person">People</option>
-            </select>
-        </span>
-        <div class="search-bar">
-            <input type="text" class="primary" name="q" value="" placeholder="Search the database">
-            <button type="submit">Search</button>
-            <button type="reset">Clear</button>
-        </div>
-    </form>
+    {% include "search/_search_form.html" %}
 </section>
 {% if featured_items %}
 <section class="featured columnar">
@@ -61,31 +43,31 @@ The Database | {{ block.super }}
     </div>
 </section>
 {% endif %}
-<nav role="navigation">
-    <ul>
-        <li><a class="button gem" href="{% url 'glossary' %}">Glossary</a></li>
-        <li><a class="button gem" href="{% url 'methodology' %}">Methodology</a></li>
-    </ul>
-</nav>
 <section class="wrap content-wrap browse">
-    <h2>Browse the Database</h2>
+    <header>
+        <h2>Browse the Database</h2>
+    </header>
     <div class="row">
         <section>
             <h3><a href="{% url 'infrastructure:project-list' %}">Projects</a></h3>
+            {% comment %}
             <ul class="clean details">
                 {% for infra_type in infrastructure_types %}
                 <li>{{infra_type.name}}</li>{% endfor %}
             </ul>
+            {% endcomment %}
         </section>
         <section>
             <h3><a href="{% url 'infrastructure:initiative-list' %}">Initiatives</a></h3>
         </section>
         <section>
             <h3><a href="{% url 'facts:organization-list' %}">Organizations</a></h3>
+            {% comment %}
             <ul class="clean details">
                 {% for modelname, label in organization_types %}
                 <li><a href="{% url 'facts:organization-list-redirect' org_type=modelname %}">{{label}}</a></li>{% endfor %}
             </ul>
+            {% endcomment %}
         </section>
         <section>
             <h3><a href="{% url 'facts:event-list' %}">Events</a></h3>
@@ -95,4 +77,10 @@ The Database | {{ block.super }}
         </section>
     </div>
 </section>
+<nav role="navigation">
+    <ul>
+        <li><a class="button gem" href="{% url 'glossary' %}">Glossary</a></li>
+        <li><a class="button gem" href="{% url 'methodology' %}">Methodology</a></li>
+    </ul>
+</nav>
 {% endblock %}
