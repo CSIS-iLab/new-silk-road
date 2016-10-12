@@ -13,24 +13,84 @@ from django.utils import timezone
 from constance import config
 
 
-class FeaturedAnalysesMixin(ContextMixin):
+def filter_collection_to_published(collection):
+    if isinstance(collection, EntryCollection):
+        return collection.orderedentry_set.filter(
+            entry__published=True,
+            entry__publication_date__lte=timezone.now()
+        )
+    else:
+        return None
+
+
+class ConfiguredCollectionMixin(ContextMixin):
+    context_label = None
+    slug = None
+    config_key = None
+
+    def get_config_key(self):
+        if not self.config_key:
+            raise AttributeError('ConfiguredCollectionMixin must define config_key property or override get_config_key method')
+        return self.config_key
+
+    def get_slug(self):
+        config_key = self.get_config_key()
+        return getattr(config, config_key, None)
+
+    def get_context_label(self):
+        if not self.context_label:
+            raise AttributeError('ConfiguredCollectionMixin must define context_label property or override get_context_label method')
+        return self.context_label
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['featured_analyses'] = None
-        collection_slug = getattr(config, 'FEATURED_ANALYSES_COLLECTION', None)
-        if collection_slug:
+        slug = self.get_slug()
+        context_label = self.get_context_label()
+        if slug and context_label:
+            kwargs[context_label] = None
+            if slug:
+                try:
+                    collection = filter_collection_to_published(EntryCollection.objects.get(slug=slug))
+                    if collection:
+                        kwargs[context_label] = [instance.entry for instance in collection]
+                except EntryCollection.DoesNotExist:
+                    pass
+        return kwargs
+
+
+class FeaturedEntryMixin(object):
+    featured_config_key = None
+
+    def get_feature_config_key(self):
+        if not self.feature_config_key:
+            raise AttributeError('CollectionFeaturedEntryMixin must define feature_config_key property or override get_feature_config_key method')
+        return self.feature_config_key
+
+    def get_slug(self):
+        config_key = self.get_config_key()
+        return getattr(config, config_key, None)
+
+    def get_featured_entry(self):
+        slug = self.get_slug()
+        if slug:
             try:
-                collection = EntryCollection.objects.get(slug=collection_slug)
-                collection = collection.orderedentry_set.filter(
-                    entry__published=True,
-                    entry__publication_date__lte=timezone.now()
-                )
+                collection = filter_collection_to_published(EntryCollection.objects.get(slug=slug))
                 if collection:
-                    kwargs['featured_analyses'] = (instance.entry for instance in collection)
+                    ordered_entry = collection.order_by('order').first()
+                    return ordered_entry.entry
             except EntryCollection.DoesNotExist:
                 pass
+        return None
+
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['featured_entry'] = self.get_featured_entry()
         return kwargs
+
+
+class FeaturedAnalysesMixin(ConfiguredCollectionMixin):
+    context_label = 'featured_analyses'
+    config_key = 'FEATURED_ANALYSES_COLLECTION'
 
 
 class CategoryListView(ListView):
@@ -96,8 +156,9 @@ class EntryCategoryListView(EntryListView):
         return context
 
 
-class HomeView(FeaturedAnalysesMixin, TemplateView):
+class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
     template_name = "writings/home.html"
+    featured_config_key = 'ANALYSISPAGE_FEATURED_ANALYSIS_COLLECTION'
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)

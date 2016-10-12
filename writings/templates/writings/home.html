@@ -10,10 +10,20 @@
         <h1>Analysis</h1>
     </header>
 </section>
-<blockquote>
-    <p class="quotation">It would be a huge mistake to ignore the significance of the reconnecting of Eurasia. It would be equally dangerous to cast it as a geopolitical threat to the United States. We have a limited role in shaping this mega-development, but we certainly could alienate ourselves from the central actors involved in it. We have time to assess this objectively. It should be on any agenda for the next presidency.</p>
-    <p class='attribution'>Dr. John J. Hamre</p>
-</blockquote>
+<section class="quote-wrap">
+    <blockquote>
+        {% if featured_entry %}
+        <div class="quotation">{{featured_entry.description_rendered|html_text|truncatewords_html:400|safe}}</div>
+        <p class="attribution">{{featured_entry.author}}</p>
+        <span class="call-to-action"><a href="{{featured_entry.get_absolute_url}}">Read More</a></span>
+        {% else %}
+        <div class="quotation">
+            <p>It would be a huge mistake to ignore the significance of the reconnecting of Eurasia. It would be equally dangerous to cast it as a geopolitical threat to the United States. We have a limited role in shaping this mega-development, but we certainly could alienate ourselves from the central actors involved in it. We have time to assess this objectively. It should be on any agenda for the next presidency.</p>
+        </div>
+        <p class="attribution">Dr. John J. Hamre</p>
+        {% endif %}
+    </blockquote>
+</section>
 <section class="feature columnar">
     <h2>Featured</h2>
     <div class="wrap">{% if featured_analyses %}
