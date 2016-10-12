@@ -18,6 +18,9 @@
 <header>
     <h2>Initiatives</h2>
 </header>
+<div class="search-bar-wrap">
+{% include "search/_search_form.html" with selected_category='Initiatives' %}
+</div>
 {% if page_obj %}{% include "website/_pagination_controls.html" %}{% endif %}
 
 <ul>

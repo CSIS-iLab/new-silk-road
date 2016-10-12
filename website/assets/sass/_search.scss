@@ -1,5 +1,11 @@
 @import "variables";
 
+.search, .search-bar-wrap {
+    .custom-dropdown > select {
+        padding-right: 60px;
+    }
+}
+
 .search-bar-wrap {
     width: 60%;
     margin: 0 auto $large-spacing;
@@ -8,7 +14,12 @@
         width: 100%;
         @include display(flex);
         @include flex-direction(row);
+        @include justify-content(space-between);
+        @include align-items(center);
 
+        > div, .search-bar {
+            @include flex(0 1 auto);
+        }
         input {
             @include flex(0 1 auto);
         }
@@ -30,6 +41,10 @@
     input {
         background-color: #363d4e;
         padding: $small-spacing;
+    }
+
+    input.primary {
+        min-width: 320px;
     }
 
     input[type='submit'], button[type='submit'] {

@@ -4,11 +4,11 @@
             {# FIXME: Generate menu dynamically using info from search facet #}
             <option selected disabled>Categories</option>
             <option disabled>----------</option>
-            <option value="_category:Project">Projects</option>
-            <option value="_category:Organization">Organizations</option>
-            <option value="_category:Initiative">Initiatives</option>
-            <option value="_category:Event">Events</option>
-            <option value="_category:Person">People</option>
+            <option {% if selected_category|lower in 'projects' %}selected{% endif %} value="_category:Project">Projects</option>
+            <option {% if selected_category|lower in 'organizations' %}selected{% endif %} value="_category:Organization">Organizations</option>
+            <option {% if selected_category|lower in 'initiatives' %}selected{% endif %} value="_category:Initiative">Initiatives</option>
+            <option {% if selected_category|lower in 'events' %}selected{% endif %} value="_category:Event">Events</option>
+            <option {% if selected_category|lower in 'persons' %}selected{% endif %} value="_category:Person">People</option>
         </select>
     </span>
     <div class="search-bar">
