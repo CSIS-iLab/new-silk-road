@@ -37,3 +37,36 @@
     background-size: $size $size; // IE 11 won't render properly unless both dimensions set
     background-position: 0 center;
 }
+
+@mixin gemify($color, $width: 8px, $height: 42px) {
+    $vector: $height/2;
+    height: $height;
+    background-color: $color;
+    position: relative;
+
+    &::before {
+        display: block;
+        position: absolute;
+        left: -$width;
+        top: 0;
+        content: " ";
+        width: $width;
+        height: 100%;
+        border-top: $vector solid transparent;
+        border-right: $width solid $color;
+        border-bottom: $vector solid transparent;
+    }
+
+    &::after {
+        display: block;
+        position: absolute;
+        right: -$width;
+        top: 0;
+        content: " ";
+        width: $width;
+        height: 100%;
+        border-top: $vector solid transparent;
+        border-left: $width solid $color;
+        border-bottom: $vector solid transparent;
+    }
+}

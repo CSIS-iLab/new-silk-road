@@ -50,15 +50,27 @@
     {{object.content_rendered|safe}}
 </section>
 <footer>
-    <h3>Related Entries</h3>
-    <ul class="clean">{% for entry in object.related_entries.all %}
-        <li>
-            <a href="{{entry.get_absolute_url}}"><span>{{ entry.title|truncatechars:30 }}</span></a>
-            {% if entry.author %}
-            | By <span class='author'>{{entry.author|truncatechars:30}}</span>
-            {% endif %}
-        </li>{% endfor %}
-    </ul>
+    <section class="tags">
+        <h4>Tags</h4>
+        <ul class="clean">{% for tag in object.tags.all %}
+            <li><a href="{% url 'writings:entry-tag-list' slug=tag.slug %}">{{tag}}</a></li>
+        {% endfor %}
+
+        </ul>
+    </section>
+    {% if object.related_entries.count > 0 %}
+    <section class="related">
+        <h3>Related Entries</h3>
+        <ul class="clean">{% for entry in object.related_entries.all %}
+            <li>
+                <a href="{{entry.get_absolute_url}}"><span>{{ entry.title|truncatechars:30 }}</span></a>
+                {% if entry.author %}
+                | By <span class='author'>{{entry.author|truncatechars:30}}</span>
+                {% endif %}
+            </li>{% endfor %}
+        </ul>
+    </section>
+    {% endif %}
     <ul class="links clean">
         <li>
             {% with object.get_previous_published_entry as entry %}{% if entry %}

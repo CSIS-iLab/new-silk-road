@@ -8,6 +8,7 @@ from .models import (
     Entry,
     EntryCollection,
 )
+from taggit.models import Tag
 from django.utils import timezone
 from constance import config
 
@@ -61,6 +62,22 @@ class EntryListView(ListView):
         if not self.request.user.is_authenticated():
             queryset = queryset.filter(published=True, publication_date__lte=timezone.now())
         return queryset
+
+
+class EntryTagListView(EntryListView):
+    template_name = 'writings/entry_tag_list.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        slug = self.kwargs.get('slug', None)
+        self.tag = get_object_or_404(Tag, slug=slug)
+        return queryset.filter(tags__slug=self.tag.slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
+
+        return context
 
 
 class EntryCategoryListView(EntryListView):

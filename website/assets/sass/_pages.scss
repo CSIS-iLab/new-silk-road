@@ -614,6 +614,32 @@ article {
     aside {
         color: $callout-color;
     }
+    .tags {
+        margin-bottom: $large-spacing;
+
+        ul {
+            li {
+                display: inline-block;
+                margin-bottom: 0;
+
+                &:not(:last-of-type) {
+                    margin-right: $small-spacing;
+                }
+
+                a {
+                    display: block;
+                    padding: 4px;
+                    text-decoration: none;
+                    color: $creamer;
+                    @include gemify($blue-steel, 6px, 30px);
+
+                    &:hover {
+                        color: lighten($creamer, 10%);
+                    }
+                }
+            }
+        }
+    }
     .decorated {
         border-bottom: none;
         border-top: $thin-border-width solid $blue-steel;
@@ -759,6 +785,16 @@ article {
                 li {
                     margin-bottom: 0;
                 }
+            }
+        }
+    }
+}
+
+.entries-list {
+    section {
+        ul, ol {
+            li {
+                margin-bottom: $large-spacing;
             }
         }
     }
