@@ -371,6 +371,16 @@ CONSTANCE_CONFIG = {
         'Slug for the collection of entries (writings.EntryCollection) that are'
         'featured on the website', str
     ),
+    'HOMEPAGE_FEATURED_ANALYSIS_COLLECTION': (
+        'home-page-featured-analysis',
+        'Slug for the collection (writings.EntryCollection) containing the Entry to be'
+        'featured on the home page', str
+    ),
+    'ANALYSISPAGE_FEATURED_ANALYSIS_COLLECTION': (
+        'analysis-page-featured-analysis',
+        'Slug for the collection (writings.EntryCollection) containing the Entry to be'
+        'featured on the analysis landing page', str
+    ),
     'FEATURED_WRITINGS_CATEGORY': (
         'news',
         'Slug for the Category that the featured writings call under', str
