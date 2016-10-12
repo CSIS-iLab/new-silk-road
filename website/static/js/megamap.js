@@ -145,7 +145,7 @@ function makeAction(alt, namespace, name, implementation, obj) {
   return action;
 }
 module.exports = exports['default'];
-},{"../functions":3,"../utils/AltUtils":8,"is-promise":395}],3:[function(require,module,exports){
+},{"../functions":3,"../utils/AltUtils":8,"is-promise":396}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -712,7 +712,7 @@ var AltStore = function () {
 
 exports.default = AltStore;
 module.exports = exports['default'];
-},{"../functions":3,"transmitter":732}],6:[function(require,module,exports){
+},{"../functions":3,"transmitter":742}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -949,7 +949,7 @@ var StoreMixin = {
 
 exports.default = StoreMixin;
 module.exports = exports['default'];
-},{"../functions":3,"transmitter":732}],7:[function(require,module,exports){
+},{"../functions":3,"transmitter":742}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1388,7 +1388,7 @@ define(String.prototype, "padRight", "".padEnd);
 });
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"core-js/fn/regexp/escape":14,"core-js/shim":308,"regenerator-runtime/runtime":728}],11:[function(require,module,exports){
+},{"core-js/fn/regexp/escape":14,"core-js/shim":308,"regenerator-runtime/runtime":738}],11:[function(require,module,exports){
 /*!
  * Bowser - a browser detector
  * https://github.com/ded/bowser
@@ -8033,6 +8033,7 @@ var kCSSColorTable = {
   "peachpuff": [255,218,185,1], "peru": [205,133,63,1],
   "pink": [255,192,203,1], "plum": [221,160,221,1],
   "powderblue": [176,224,230,1], "purple": [128,0,128,1],
+  "rebeccapurple": [102,51,153,1],
   "red": [255,0,0,1], "rosybrown": [188,143,143,1],
   "royalblue": [65,105,225,1], "saddlebrown": [139,69,19,1],
   "salmon": [250,128,114,1], "sandybrown": [244,164,96,1],
@@ -8925,7 +8926,7 @@ var EventListener = {
 module.exports = EventListener;
 }).call(this,require('_process'))
 
-},{"./emptyFunction":319,"_process":545}],313:[function(require,module,exports){
+},{"./emptyFunction":319,"_process":555}],313:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -9203,7 +9204,7 @@ function createArrayFromMixed(obj) {
 module.exports = createArrayFromMixed;
 }).call(this,require('_process'))
 
-},{"./invariant":327,"_process":545}],318:[function(require,module,exports){
+},{"./invariant":327,"_process":555}],318:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -9290,7 +9291,7 @@ function createNodesFromMarkup(markup, handleScript) {
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
 
-},{"./ExecutionEnvironment":313,"./createArrayFromMixed":317,"./getMarkupWrap":323,"./invariant":327,"_process":545}],319:[function(require,module,exports){
+},{"./ExecutionEnvironment":313,"./createArrayFromMixed":317,"./getMarkupWrap":323,"./invariant":327,"_process":555}],319:[function(require,module,exports){
 "use strict";
 
 /**
@@ -9352,7 +9353,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = emptyObject;
 }).call(this,require('_process'))
 
-},{"_process":545}],321:[function(require,module,exports){
+},{"_process":555}],321:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -9512,7 +9513,7 @@ function getMarkupWrap(nodeName) {
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
 
-},{"./ExecutionEnvironment":313,"./invariant":327,"_process":545}],324:[function(require,module,exports){
+},{"./ExecutionEnvironment":313,"./invariant":327,"_process":555}],324:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -9676,7 +9677,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 }).call(this,require('_process'))
 
-},{"_process":545}],328:[function(require,module,exports){
+},{"_process":555}],328:[function(require,module,exports){
 'use strict';
 
 /**
@@ -9775,7 +9776,7 @@ var keyMirror = function keyMirror(obj) {
 module.exports = keyMirror;
 }).call(this,require('_process'))
 
-},{"./invariant":327,"_process":545}],331:[function(require,module,exports){
+},{"./invariant":327,"_process":555}],331:[function(require,module,exports){
 "use strict";
 
 /**
@@ -10075,7 +10076,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = warning;
 }).call(this,require('_process'))
 
-},{"./emptyFunction":319,"_process":545}],338:[function(require,module,exports){
+},{"./emptyFunction":319,"_process":555}],338:[function(require,module,exports){
 'use strict';
 
 module.exports = createFilter;
@@ -10117,7 +10118,9 @@ function compile(filter) {
 }
 
 function compilePropertyReference(property) {
-    return property === '$type' ? 'f.type' : 'p[' + JSON.stringify(property) + ']';
+    return property === '$type' ? 'f.type' :
+        property === '$id' ? 'f.id' :
+        'p[' + JSON.stringify(property) + ']';
 }
 
 function compileComparisonOp(property, value, op, checkType) {
@@ -10404,7 +10407,7 @@ var Dispatcher = (function () {
 module.exports = Dispatcher;
 }).call(this,require('_process'))
 
-},{"_process":545,"fbjs/lib/invariant":341}],341:[function(require,module,exports){
+},{"_process":555,"fbjs/lib/invariant":341}],341:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -10457,7 +10460,7 @@ var invariant = function (condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 }).call(this,require('_process'))
 
-},{"_process":545}],342:[function(require,module,exports){
+},{"_process":555}],342:[function(require,module,exports){
 var wgs84 = require('wgs84');
 
 module.exports.geometry = geometry;
@@ -10523,7 +10526,7 @@ function rad(_) {
     return _ * Math.PI / 180;
 }
 
-},{"wgs84":746}],343:[function(require,module,exports){
+},{"wgs84":756}],343:[function(require,module,exports){
 var geojsonArea = require('geojson-area');
 
 module.exports = rewind;
@@ -10579,6 +10582,8 @@ function cw(_) {
 
 module.exports = clip;
 
+var createFeature = require('./feature');
+
 /* clip features between two axis-parallel lines:
  *     |        |
  *  ___|___     |     /
@@ -10618,13 +10623,7 @@ function clip(features, scale, k1, k2, axis, intersect, minAll, maxAll) {
         if (slices.length) {
             // if a feature got clipped, it will likely get clipped on the next zoom level as well,
             // so there's no need to recalculate bboxes
-            clipped.push({
-                geometry: slices,
-                type: type,
-                tags: features[i].tags || null,
-                min: feature.min,
-                max: feature.max
-            });
+            clipped.push(createFeature(feature.tags, type, slices, feature.id));
         }
     }
 
@@ -10729,12 +10728,13 @@ function newSlice(slices, slice, area, dist, outer) {
     return [];
 }
 
-},{}],345:[function(require,module,exports){
+},{"./feature":346}],345:[function(require,module,exports){
 'use strict';
 
 module.exports = convert;
 
 var simplify = require('./simplify');
+var createFeature = require('./feature');
 
 // converts GeoJSON feature into an intermediate projected JSON vector format with simplification data
 
@@ -10765,16 +10765,17 @@ function convertFeature(features, feature, tolerance) {
         type = geom.type,
         coords = geom.coordinates,
         tags = feature.properties,
+        id = feature.id,
         i, j, rings, projectedRing;
 
     if (type === 'Point') {
-        features.push(create(tags, 1, [projectPoint(coords)]));
+        features.push(createFeature(tags, 1, [projectPoint(coords)], id));
 
     } else if (type === 'MultiPoint') {
-        features.push(create(tags, 1, project(coords)));
+        features.push(createFeature(tags, 1, project(coords), id));
 
     } else if (type === 'LineString') {
-        features.push(create(tags, 2, [project(coords, tolerance)]));
+        features.push(createFeature(tags, 2, [project(coords, tolerance)], id));
 
     } else if (type === 'MultiLineString' || type === 'Polygon') {
         rings = [];
@@ -10783,7 +10784,7 @@ function convertFeature(features, feature, tolerance) {
             if (type === 'Polygon') projectedRing.outer = (i === 0);
             rings.push(projectedRing);
         }
-        features.push(create(tags, type === 'Polygon' ? 3 : 2, rings));
+        features.push(createFeature(tags, type === 'Polygon' ? 3 : 2, rings, id));
 
     } else if (type === 'MultiPolygon') {
         rings = [];
@@ -10794,7 +10795,7 @@ function convertFeature(features, feature, tolerance) {
                 rings.push(projectedRing);
             }
         }
-        features.push(create(tags, 3, rings));
+        features.push(createFeature(tags, 3, rings, id));
 
     } else if (type === 'GeometryCollection') {
         for (i = 0; i < geom.geometries.length; i++) {
@@ -10807,18 +10808,6 @@ function convertFeature(features, feature, tolerance) {
     } else {
         throw new Error('Input data is not a valid GeoJSON object.');
     }
-}
-
-function create(tags, type, geometry) {
-    var feature = {
-        geometry: geometry,
-        type: type,
-        tags: tags || null,
-        min: [2, 1], // initial bbox values;
-        max: [-1, 0]  // note that coords are usually in [0..1] range
-    };
-    calcBBox(feature);
-    return feature;
 }
 
 function project(lonlats, tolerance) {
@@ -10862,14 +10851,37 @@ function calcSize(points) {
     points.dist = dist;
 }
 
+},{"./feature":346,"./simplify":348}],346:[function(require,module,exports){
+'use strict';
+
+module.exports = createFeature;
+
+function createFeature(tags, type, geom, id) {
+    var feature = {
+        id: id || null,
+        type: type,
+        geometry: geom,
+        tags: tags || null,
+        min: [Infinity, Infinity], // initial bbox values
+        max: [-Infinity, -Infinity]
+    };
+    calcBBox(feature);
+    return feature;
+}
+
 // calculate the feature bounding box for faster clipping later
 function calcBBox(feature) {
     var geometry = feature.geometry,
         min = feature.min,
         max = feature.max;
 
-    if (feature.type === 1) calcRingBBox(min, max, geometry);
-    else for (var i = 0; i < geometry.length; i++) calcRingBBox(min, max, geometry[i]);
+    if (feature.type === 1) {
+        calcRingBBox(min, max, geometry);
+    } else {
+        for (var i = 0; i < geometry.length; i++) {
+            calcRingBBox(min, max, geometry[i]);
+        }
+    }
 
     return feature;
 }
@@ -10884,7 +10896,7 @@ function calcRingBBox(min, max, points) {
     }
 }
 
-},{"./simplify":347}],346:[function(require,module,exports){
+},{}],347:[function(require,module,exports){
 'use strict';
 
 module.exports = geojsonvt;
@@ -11034,10 +11046,12 @@ GeoJSONVT.prototype.splitTile = function (features, z, x, y, cz, cx, cy) {
 
         if (debug > 1) console.timeEnd('clipping');
 
-        if (tl) stack.push(tl, z + 1, x * 2,     y * 2);
-        if (bl) stack.push(bl, z + 1, x * 2,     y * 2 + 1);
-        if (tr) stack.push(tr, z + 1, x * 2 + 1, y * 2);
-        if (br) stack.push(br, z + 1, x * 2 + 1, y * 2 + 1);
+        if (features.length) {
+            stack.push(tl || [], z + 1, x * 2,     y * 2);
+            stack.push(bl || [], z + 1, x * 2,     y * 2 + 1);
+            stack.push(tr || [], z + 1, x * 2 + 1, y * 2);
+            stack.push(br || [], z + 1, x * 2 + 1, y * 2 + 1);
+        }
     }
 
     return solid;
@@ -11126,7 +11140,7 @@ function isClippedSquare(tile, extent, buffer) {
     return true;
 }
 
-},{"./clip":344,"./convert":345,"./tile":348,"./transform":349,"./wrap":350}],347:[function(require,module,exports){
+},{"./clip":344,"./convert":345,"./tile":349,"./transform":350,"./wrap":351}],348:[function(require,module,exports){
 'use strict';
 
 module.exports = simplify;
@@ -11202,7 +11216,7 @@ function getSqSegDist(p, a, b) {
     return dx * dx + dy * dy;
 }
 
-},{}],348:[function(require,module,exports){
+},{}],349:[function(require,module,exports){
 'use strict';
 
 module.exports = createTile;
@@ -11283,11 +11297,15 @@ function addFeature(tile, feature, tolerance, noSimplify) {
     }
 
     if (simplified.length) {
-        tile.features.push({
+        var tileFeature = {
             geometry: simplified,
             type: type,
             tags: feature.tags || null
-        });
+        };
+        if (feature.id !== null) {
+            tileFeature.id = feature.id;
+        }
+        tile.features.push(tileFeature);
     }
 }
 
@@ -11306,7 +11324,7 @@ function signedArea(ring) {
     return sum;
 }
 
-},{}],349:[function(require,module,exports){
+},{}],350:[function(require,module,exports){
 'use strict';
 
 exports.tile = transformTile;
@@ -11349,10 +11367,11 @@ function transformPoint(p, extent, z2, tx, ty) {
     return [x, y];
 }
 
-},{}],350:[function(require,module,exports){
+},{}],351:[function(require,module,exports){
 'use strict';
 
 var clip = require('./clip');
+var createFeature = require('./feature');
 
 module.exports = wrap;
 
@@ -11362,7 +11381,7 @@ function wrap(features, buffer, intersectX) {
         right = clip(features, 1,  1 - buffer, 2 + buffer, 0, intersectX, -1, 2); // right world copy
 
     if (left || right) {
-        merged = clip(features, 1, -buffer, 1 + buffer, 0, intersectX, -1, 2); // center world copy
+        merged = clip(features, 1, -buffer, 1 + buffer, 0, intersectX, -1, 2) || []; // center world copy
 
         if (left) merged = shiftFeatureCoords(left, 1).concat(merged); // merge left into center
         if (right) merged = merged.concat(shiftFeatureCoords(right, -1)); // merge right into center
@@ -11389,13 +11408,7 @@ function shiftFeatureCoords(features, offset) {
             }
         }
 
-        newFeatures.push({
-            geometry: newGeometry,
-            type: type,
-            tags: feature.tags,
-            min: [feature.min[0] + offset, feature.min[1]],
-            max: [feature.max[0] + offset, feature.max[1]]
-        });
+        newFeatures.push(createFeature(feature.tags, type, newGeometry, feature.id));
     }
 
     return newFeatures;
@@ -11412,7 +11425,7 @@ function shiftCoords(points, offset) {
     return newPoints;
 }
 
-},{"./clip":344}],351:[function(require,module,exports){
+},{"./clip":344,"./feature":346}],352:[function(require,module,exports){
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
@@ -11450,7 +11463,7 @@ exports.quat = require("./gl-matrix/quat.js");
 exports.vec2 = require("./gl-matrix/vec2.js");
 exports.vec3 = require("./gl-matrix/vec3.js");
 exports.vec4 = require("./gl-matrix/vec4.js");
-},{"./gl-matrix/common.js":352,"./gl-matrix/mat2.js":353,"./gl-matrix/mat2d.js":354,"./gl-matrix/mat3.js":355,"./gl-matrix/mat4.js":356,"./gl-matrix/quat.js":357,"./gl-matrix/vec2.js":358,"./gl-matrix/vec3.js":359,"./gl-matrix/vec4.js":360}],352:[function(require,module,exports){
+},{"./gl-matrix/common.js":353,"./gl-matrix/mat2.js":354,"./gl-matrix/mat2d.js":355,"./gl-matrix/mat3.js":356,"./gl-matrix/mat4.js":357,"./gl-matrix/quat.js":358,"./gl-matrix/vec2.js":359,"./gl-matrix/vec3.js":360,"./gl-matrix/vec4.js":361}],353:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -11522,7 +11535,7 @@ glMatrix.equals = function(a, b) {
 
 module.exports = glMatrix;
 
-},{}],353:[function(require,module,exports){
+},{}],354:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -11960,7 +11973,7 @@ mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
 
 module.exports = mat2;
 
-},{"./common.js":352}],354:[function(require,module,exports){
+},{"./common.js":353}],355:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -12431,7 +12444,7 @@ mat2d.equals = function (a, b) {
 
 module.exports = mat2d;
 
-},{"./common.js":352}],355:[function(require,module,exports){
+},{"./common.js":353}],356:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -13179,7 +13192,7 @@ mat3.equals = function (a, b) {
 
 module.exports = mat3;
 
-},{"./common.js":352}],356:[function(require,module,exports){
+},{"./common.js":353}],357:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -15317,7 +15330,7 @@ mat4.equals = function (a, b) {
 
 module.exports = mat4;
 
-},{"./common.js":352}],357:[function(require,module,exports){
+},{"./common.js":353}],358:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -15919,7 +15932,7 @@ quat.equals = vec4.equals;
 
 module.exports = quat;
 
-},{"./common.js":352,"./mat3.js":355,"./vec3.js":359,"./vec4.js":360}],358:[function(require,module,exports){
+},{"./common.js":353,"./mat3.js":356,"./vec3.js":360,"./vec4.js":361}],359:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -16508,7 +16521,7 @@ vec2.equals = function (a, b) {
 
 module.exports = vec2;
 
-},{"./common.js":352}],359:[function(require,module,exports){
+},{"./common.js":353}],360:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17287,7 +17300,7 @@ vec3.equals = function (a, b) {
 
 module.exports = vec3;
 
-},{"./common.js":352}],360:[function(require,module,exports){
+},{"./common.js":353}],361:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17898,7 +17911,7 @@ vec4.equals = function (a, b) {
 
 module.exports = vec4;
 
-},{"./common.js":352}],361:[function(require,module,exports){
+},{"./common.js":353}],362:[function(require,module,exports){
 'use strict';
 
 module.exports = GridIndex;
@@ -18060,7 +18073,7 @@ GridIndex.prototype.toArrayBuffer = function() {
     return array.buffer;
 };
 
-},{}],362:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -18146,7 +18159,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],363:[function(require,module,exports){
+},{}],364:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -18171,7 +18184,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],364:[function(require,module,exports){
+},{}],365:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18200,7 +18213,7 @@ function calc(property, value) {
 }
 
 module.exports = exports['default'];
-},{"../utils/isPrefixedValue":377,"../utils/joinPrefixedRules":378}],365:[function(require,module,exports){
+},{"../utils/isPrefixedValue":378,"../utils/joinPrefixedRules":379}],366:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18228,7 +18241,7 @@ function cursor(property, value) {
 }
 
 module.exports = exports['default'];
-},{"../utils/joinPrefixedRules":378}],366:[function(require,module,exports){
+},{"../utils/joinPrefixedRules":379}],367:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18253,7 +18266,7 @@ function flex(property, value) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":375}],367:[function(require,module,exports){
+},{"../utils/camelToDashCase":376}],368:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18287,7 +18300,7 @@ function flexboxIE(property, value) {
 }
 
 module.exports = exports['default'];
-},{}],368:[function(require,module,exports){
+},{}],369:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18331,7 +18344,7 @@ function flexboxOld(property, value) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":375}],369:[function(require,module,exports){
+},{"../utils/camelToDashCase":376}],370:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18360,7 +18373,7 @@ function gradient(property, value) {
 }
 
 module.exports = exports['default'];
-},{"../utils/isPrefixedValue":377,"../utils/joinPrefixedRules":378}],370:[function(require,module,exports){
+},{"../utils/isPrefixedValue":378,"../utils/joinPrefixedRules":379}],371:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18398,7 +18411,7 @@ function sizing(property, value) {
 }
 
 module.exports = exports['default'];
-},{"../utils/joinPrefixedRules":378}],371:[function(require,module,exports){
+},{"../utils/joinPrefixedRules":379}],372:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18481,7 +18494,7 @@ function prefixValue(value) {
   return multipleValues.join(',');
 }
 module.exports = exports['default'];
-},{"../prefixProps":373,"../utils/camelToDashCase":375,"../utils/capitalizeString":376,"../utils/isPrefixedValue":377}],372:[function(require,module,exports){
+},{"../prefixProps":374,"../utils/camelToDashCase":376,"../utils/capitalizeString":377,"../utils/isPrefixedValue":378}],373:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18571,7 +18584,7 @@ function prefixAll(styles) {
 }
 
 module.exports = exports['default'];
-},{"./plugins/calc":364,"./plugins/cursor":365,"./plugins/flex":366,"./plugins/flexboxIE":367,"./plugins/flexboxOld":368,"./plugins/gradient":369,"./plugins/sizing":370,"./plugins/transition":371,"./prefixProps":373,"./utils/assign":374,"./utils/capitalizeString":376}],373:[function(require,module,exports){
+},{"./plugins/calc":365,"./plugins/cursor":366,"./plugins/flex":367,"./plugins/flexboxIE":368,"./plugins/flexboxOld":369,"./plugins/gradient":370,"./plugins/sizing":371,"./plugins/transition":372,"./prefixProps":374,"./utils/assign":375,"./utils/capitalizeString":377}],374:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18579,7 +18592,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = { "Webkit": { "transform": true, "transformOrigin": true, "transformOriginX": true, "transformOriginY": true, "backfaceVisibility": true, "perspective": true, "perspectiveOrigin": true, "transformStyle": true, "transformOriginZ": true, "animation": true, "animationDelay": true, "animationDirection": true, "animationFillMode": true, "animationDuration": true, "animationIterationCount": true, "animationName": true, "animationPlayState": true, "animationTimingFunction": true, "appearance": true, "userSelect": true, "fontKerning": true, "textEmphasisPosition": true, "textEmphasis": true, "textEmphasisStyle": true, "textEmphasisColor": true, "boxDecorationBreak": true, "clipPath": true, "maskImage": true, "maskMode": true, "maskRepeat": true, "maskPosition": true, "maskClip": true, "maskOrigin": true, "maskSize": true, "maskComposite": true, "mask": true, "maskBorderSource": true, "maskBorderMode": true, "maskBorderSlice": true, "maskBorderWidth": true, "maskBorderOutset": true, "maskBorderRepeat": true, "maskBorder": true, "maskType": true, "textDecorationStyle": true, "textDecorationSkip": true, "textDecorationLine": true, "textDecorationColor": true, "filter": true, "fontFeatureSettings": true, "breakAfter": true, "breakBefore": true, "breakInside": true, "columnCount": true, "columnFill": true, "columnGap": true, "columnRule": true, "columnRuleColor": true, "columnRuleStyle": true, "columnRuleWidth": true, "columns": true, "columnSpan": true, "columnWidth": true, "flex": true, "flexBasis": true, "flexDirection": true, "flexGrow": true, "flexFlow": true, "flexShrink": true, "flexWrap": true, "alignContent": true, "alignItems": true, "alignSelf": true, "justifyContent": true, "order": true, "transition": true, "transitionDelay": true, "transitionDuration": true, "transitionProperty": true, "transitionTimingFunction": true, "backdropFilter": true, "scrollSnapType": true, "scrollSnapPointsX": true, "scrollSnapPointsY": true, "scrollSnapDestination": true, "scrollSnapCoordinate": true, "shapeImageThreshold": true, "shapeImageMargin": true, "shapeImageOutside": true, "hyphens": true, "flowInto": true, "flowFrom": true, "regionFragment": true, "textSizeAdjust": true, "borderImage": true, "borderImageOutset": true, "borderImageRepeat": true, "borderImageSlice": true, "borderImageSource": true, "borderImageWidth": true, "tabSize": true, "objectFit": true, "objectPosition": true }, "Moz": { "appearance": true, "userSelect": true, "boxSizing": true, "textAlignLast": true, "textDecorationStyle": true, "textDecorationSkip": true, "textDecorationLine": true, "textDecorationColor": true, "tabSize": true, "hyphens": true, "fontFeatureSettings": true, "breakAfter": true, "breakBefore": true, "breakInside": true, "columnCount": true, "columnFill": true, "columnGap": true, "columnRule": true, "columnRuleColor": true, "columnRuleStyle": true, "columnRuleWidth": true, "columns": true, "columnSpan": true, "columnWidth": true }, "ms": { "flex": true, "flexBasis": false, "flexDirection": true, "flexGrow": false, "flexFlow": true, "flexShrink": false, "flexWrap": true, "alignContent": false, "alignItems": false, "alignSelf": false, "justifyContent": false, "order": false, "transform": true, "transformOrigin": true, "transformOriginX": true, "transformOriginY": true, "userSelect": true, "wrapFlow": true, "wrapThrough": true, "wrapMargin": true, "scrollSnapType": true, "scrollSnapPointsX": true, "scrollSnapPointsY": true, "scrollSnapDestination": true, "scrollSnapCoordinate": true, "touchAction": true, "hyphens": true, "flowInto": true, "flowFrom": true, "breakBefore": true, "breakAfter": true, "breakInside": true, "regionFragment": true, "gridTemplateColumns": true, "gridTemplateRows": true, "gridTemplateAreas": true, "gridTemplate": true, "gridAutoColumns": true, "gridAutoRows": true, "gridAutoFlow": true, "grid": true, "gridRowStart": true, "gridColumnStart": true, "gridRowEnd": true, "gridRow": true, "gridColumn": true, "gridColumnEnd": true, "gridColumnGap": true, "gridRowGap": true, "gridArea": true, "gridGap": true, "textSizeAdjust": true } };
 module.exports = exports["default"];
-},{}],374:[function(require,module,exports){
+},{}],375:[function(require,module,exports){
 // leight polyfill for Object.assign
 "use strict";
 
@@ -18596,7 +18609,7 @@ exports["default"] = function (base) {
 };
 
 module.exports = exports["default"];
-},{}],375:[function(require,module,exports){
+},{}],376:[function(require,module,exports){
 /**
  * Converts a camel-case string to a dash-case string
  * @param {string} str - str that gets converted to dash-case
@@ -18614,7 +18627,7 @@ exports['default'] = function (str) {
 };
 
 module.exports = exports['default'];
-},{}],376:[function(require,module,exports){
+},{}],377:[function(require,module,exports){
 // helper to capitalize strings
 "use strict";
 
@@ -18627,7 +18640,7 @@ exports["default"] = function (str) {
 };
 
 module.exports = exports["default"];
-},{}],377:[function(require,module,exports){
+},{}],378:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18641,7 +18654,7 @@ exports['default'] = function (value) {
 };
 
 module.exports = exports['default'];
-},{}],378:[function(require,module,exports){
+},{}],379:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18670,7 +18683,7 @@ exports['default'] = function (property, value) {
 };
 
 module.exports = exports['default'];
-},{"./camelToDashCase":375}],379:[function(require,module,exports){
+},{"./camelToDashCase":376}],380:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18869,7 +18882,7 @@ var Prefixer = (function () {
 
 exports['default'] = Prefixer;
 module.exports = exports['default'];
-},{"./plugins/calc":380,"./plugins/cursor":381,"./plugins/flex":382,"./plugins/flexboxIE":383,"./plugins/flexboxOld":384,"./plugins/gradient":385,"./plugins/sizing":386,"./plugins/transition":387,"./prefixProps":388,"./utils/assign":389,"./utils/capitalizeString":391,"./utils/getBrowserInformation":392,"./utils/getPrefixedKeyframes":393,"inline-style-prefix-all":372}],380:[function(require,module,exports){
+},{"./plugins/calc":381,"./plugins/cursor":382,"./plugins/flex":383,"./plugins/flexboxIE":384,"./plugins/flexboxOld":385,"./plugins/gradient":386,"./plugins/sizing":387,"./plugins/transition":388,"./prefixProps":389,"./utils/assign":390,"./utils/capitalizeString":392,"./utils/getBrowserInformation":393,"./utils/getPrefixedKeyframes":394,"inline-style-prefix-all":373}],381:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18900,7 +18913,7 @@ function calc(_ref2) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],381:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],382:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18938,7 +18951,7 @@ function cursor(_ref) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],382:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],383:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18974,7 +18987,7 @@ function flex(_ref) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],383:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],384:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19040,7 +19053,7 @@ function flexboxIE(_ref2) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],384:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],385:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19112,7 +19125,7 @@ function flexboxOld(_ref2) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],385:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],386:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19145,7 +19158,7 @@ function gradient(_ref2) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],386:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],387:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19192,7 +19205,7 @@ function sizing(_ref2) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390}],387:[function(require,module,exports){
+},{"../utils/camelToDashCase":391}],388:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19254,7 +19267,7 @@ function transition(_ref2) {
 }
 
 module.exports = exports['default'];
-},{"../utils/camelToDashCase":390,"../utils/capitalizeString":391,"../utils/unprefixProperty":394}],388:[function(require,module,exports){
+},{"../utils/camelToDashCase":391,"../utils/capitalizeString":392,"../utils/unprefixProperty":395}],389:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19262,7 +19275,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = { "chrome": { "transform": 35, "transformOrigin": 35, "transformOriginX": 35, "transformOriginY": 35, "backfaceVisibility": 35, "perspective": 35, "perspectiveOrigin": 35, "transformStyle": 35, "transformOriginZ": 35, "animation": 42, "animationDelay": 42, "animationDirection": 42, "animationFillMode": 42, "animationDuration": 42, "animationIterationCount": 42, "animationName": 42, "animationPlayState": 42, "animationTimingFunction": 42, "appearance": 52, "userSelect": 52, "fontKerning": 32, "textEmphasisPosition": 52, "textEmphasis": 52, "textEmphasisStyle": 52, "textEmphasisColor": 52, "boxDecorationBreak": 52, "clipPath": 52, "maskImage": 52, "maskMode": 52, "maskRepeat": 52, "maskPosition": 52, "maskClip": 52, "maskOrigin": 52, "maskSize": 52, "maskComposite": 52, "mask": 52, "maskBorderSource": 52, "maskBorderMode": 52, "maskBorderSlice": 52, "maskBorderWidth": 52, "maskBorderOutset": 52, "maskBorderRepeat": 52, "maskBorder": 52, "maskType": 52, "textDecorationStyle": 52, "textDecorationSkip": 52, "textDecorationLine": 52, "textDecorationColor": 52, "filter": 52, "fontFeatureSettings": 47, "breakAfter": 52, "breakBefore": 52, "breakInside": 52, "columnCount": 52, "columnFill": 52, "columnGap": 52, "columnRule": 52, "columnRuleColor": 52, "columnRuleStyle": 52, "columnRuleWidth": 52, "columns": 52, "columnSpan": 52, "columnWidth": 52 }, "safari": { "flex": 8, "flexBasis": 8, "flexDirection": 8, "flexGrow": 8, "flexFlow": 8, "flexShrink": 8, "flexWrap": 8, "alignContent": 8, "alignItems": 8, "alignSelf": 8, "justifyContent": 8, "order": 8, "transition": 6, "transitionDelay": 6, "transitionDuration": 6, "transitionProperty": 6, "transitionTimingFunction": 6, "transform": 8, "transformOrigin": 8, "transformOriginX": 8, "transformOriginY": 8, "backfaceVisibility": 8, "perspective": 8, "perspectiveOrigin": 8, "transformStyle": 8, "transformOriginZ": 8, "animation": 8, "animationDelay": 8, "animationDirection": 8, "animationFillMode": 8, "animationDuration": 8, "animationIterationCount": 8, "animationName": 8, "animationPlayState": 8, "animationTimingFunction": 8, "appearance": 9.1, "userSelect": 9.1, "backdropFilter": 9.1, "fontKerning": 9.1, "scrollSnapType": 9.1, "scrollSnapPointsX": 9.1, "scrollSnapPointsY": 9.1, "scrollSnapDestination": 9.1, "scrollSnapCoordinate": 9.1, "textEmphasisPosition": 7, "textEmphasis": 7, "textEmphasisStyle": 7, "textEmphasisColor": 7, "boxDecorationBreak": 9.1, "clipPath": 9.1, "maskImage": 9.1, "maskMode": 9.1, "maskRepeat": 9.1, "maskPosition": 9.1, "maskClip": 9.1, "maskOrigin": 9.1, "maskSize": 9.1, "maskComposite": 9.1, "mask": 9.1, "maskBorderSource": 9.1, "maskBorderMode": 9.1, "maskBorderSlice": 9.1, "maskBorderWidth": 9.1, "maskBorderOutset": 9.1, "maskBorderRepeat": 9.1, "maskBorder": 9.1, "maskType": 9.1, "textDecorationStyle": 9.1, "textDecorationSkip": 9.1, "textDecorationLine": 9.1, "textDecorationColor": 9.1, "shapeImageThreshold": 9.1, "shapeImageMargin": 9.1, "shapeImageOutside": 9.1, "filter": 9, "hyphens": 9.1, "flowInto": 9.1, "flowFrom": 9.1, "breakBefore": 8, "breakAfter": 8, "breakInside": 8, "regionFragment": 9.1, "columnCount": 8, "columnFill": 8, "columnGap": 8, "columnRule": 8, "columnRuleColor": 8, "columnRuleStyle": 8, "columnRuleWidth": 8, "columns": 8, "columnSpan": 8, "columnWidth": 8 }, "firefox": { "appearance": 47, "userSelect": 47, "boxSizing": 28, "textAlignLast": 47, "textDecorationStyle": 35, "textDecorationSkip": 35, "textDecorationLine": 35, "textDecorationColor": 35, "tabSize": 47, "hyphens": 42, "fontFeatureSettings": 33, "breakAfter": 47, "breakBefore": 47, "breakInside": 47, "columnCount": 47, "columnFill": 47, "columnGap": 47, "columnRule": 47, "columnRuleColor": 47, "columnRuleStyle": 47, "columnRuleWidth": 47, "columns": 47, "columnSpan": 47, "columnWidth": 47 }, "opera": { "flex": 16, "flexBasis": 16, "flexDirection": 16, "flexGrow": 16, "flexFlow": 16, "flexShrink": 16, "flexWrap": 16, "alignContent": 16, "alignItems": 16, "alignSelf": 16, "justifyContent": 16, "order": 16, "transform": 22, "transformOrigin": 22, "transformOriginX": 22, "transformOriginY": 22, "backfaceVisibility": 22, "perspective": 22, "perspectiveOrigin": 22, "transformStyle": 22, "transformOriginZ": 22, "animation": 29, "animationDelay": 29, "animationDirection": 29, "animationFillMode": 29, "animationDuration": 29, "animationIterationCount": 29, "animationName": 29, "animationPlayState": 29, "animationTimingFunction": 29, "appearance": 37, "userSelect": 37, "fontKerning": 19, "textEmphasisPosition": 37, "textEmphasis": 37, "textEmphasisStyle": 37, "textEmphasisColor": 37, "boxDecorationBreak": 37, "clipPath": 37, "maskImage": 37, "maskMode": 37, "maskRepeat": 37, "maskPosition": 37, "maskClip": 37, "maskOrigin": 37, "maskSize": 37, "maskComposite": 37, "mask": 37, "maskBorderSource": 37, "maskBorderMode": 37, "maskBorderSlice": 37, "maskBorderWidth": 37, "maskBorderOutset": 37, "maskBorderRepeat": 37, "maskBorder": 37, "maskType": 37, "filter": 37, "fontFeatureSettings": 37, "breakAfter": 37, "breakBefore": 37, "breakInside": 37, "columnCount": 37, "columnFill": 37, "columnGap": 37, "columnRule": 37, "columnRuleColor": 37, "columnRuleStyle": 37, "columnRuleWidth": 37, "columns": 37, "columnSpan": 37, "columnWidth": 37 }, "ie": { "gridTemplateRows": 11, "breakInside": 11, "transformOriginY": 9, "gridRowStart": 11, "gridColumn": 11, "regionFragment": 11, "breakBefore": 11, "userSelect": 11, "gridColumnEnd": 11, "gridRowEnd": 11, "gridTemplateColumns": 11, "gridColumnStart": 11, "gridArea": 11, "flexDirection": 10, "gridRowGap": 11, "gridTemplateAreas": 11, "gridAutoRows": 11, "gridRow": 11, "scrollSnapDestination": 11, "scrollSnapPointsY": 11, "touchAction": 10, "gridGap": 11, "gridColumnGap": 11, "wrapFlow": 11, "scrollSnapPointsX": 11, "flowFrom": 11, "transform": 9, "breakAfter": 11, "wrapMargin": 11, "scrollSnapCoordinate": 11, "flexWrap": 10, "scrollSnapType": 11, "flex": 10, "wrapThrough": 11, "gridAutoColumns": 11, "flexFlow": 10, "gridTemplate": 11, "hyphens": 11, "grid": 11, "transformOriginX": 9, "flowInto": 11, "transformOrigin": 9, "gridAutoFlow": 11, "textSizeAdjust": 11 }, "edge": { "userSelect": 14, "wrapFlow": 14, "wrapThrough": 14, "wrapMargin": 14, "scrollSnapType": 14, "scrollSnapPointsX": 14, "scrollSnapPointsY": 14, "scrollSnapDestination": 14, "scrollSnapCoordinate": 14, "hyphens": 14, "flowInto": 14, "flowFrom": 14, "breakBefore": 14, "breakAfter": 14, "breakInside": 14, "regionFragment": 14, "gridTemplateColumns": 14, "gridTemplateRows": 14, "gridTemplateAreas": 14, "gridTemplate": 14, "gridAutoColumns": 14, "gridAutoRows": 14, "gridAutoFlow": 14, "grid": 14, "gridRowStart": 14, "gridColumnStart": 14, "gridRowEnd": 14, "gridRow": 14, "gridColumn": 14, "gridColumnEnd": 14, "gridColumnGap": 14, "gridRowGap": 14, "gridArea": 14, "gridGap": 14 }, "ios_saf": { "flex": 8.1, "flexBasis": 8.1, "flexDirection": 8.1, "flexGrow": 8.1, "flexFlow": 8.1, "flexShrink": 8.1, "flexWrap": 8.1, "alignContent": 8.1, "alignItems": 8.1, "alignSelf": 8.1, "justifyContent": 8.1, "order": 8.1, "transition": 6, "transitionDelay": 6, "transitionDuration": 6, "transitionProperty": 6, "transitionTimingFunction": 6, "transform": 8.1, "transformOrigin": 8.1, "transformOriginX": 8.1, "transformOriginY": 8.1, "backfaceVisibility": 8.1, "perspective": 8.1, "perspectiveOrigin": 8.1, "transformStyle": 8.1, "transformOriginZ": 8.1, "animation": 8.1, "animationDelay": 8.1, "animationDirection": 8.1, "animationFillMode": 8.1, "animationDuration": 8.1, "animationIterationCount": 8.1, "animationName": 8.1, "animationPlayState": 8.1, "animationTimingFunction": 8.1, "appearance": 9.3, "userSelect": 9.3, "backdropFilter": 9.3, "fontKerning": 9.3, "scrollSnapType": 9.3, "scrollSnapPointsX": 9.3, "scrollSnapPointsY": 9.3, "scrollSnapDestination": 9.3, "scrollSnapCoordinate": 9.3, "boxDecorationBreak": 9.3, "clipPath": 9.3, "maskImage": 9.3, "maskMode": 9.3, "maskRepeat": 9.3, "maskPosition": 9.3, "maskClip": 9.3, "maskOrigin": 9.3, "maskSize": 9.3, "maskComposite": 9.3, "mask": 9.3, "maskBorderSource": 9.3, "maskBorderMode": 9.3, "maskBorderSlice": 9.3, "maskBorderWidth": 9.3, "maskBorderOutset": 9.3, "maskBorderRepeat": 9.3, "maskBorder": 9.3, "maskType": 9.3, "textSizeAdjust": 9.3, "textDecorationStyle": 9.3, "textDecorationSkip": 9.3, "textDecorationLine": 9.3, "textDecorationColor": 9.3, "shapeImageThreshold": 9.3, "shapeImageMargin": 9.3, "shapeImageOutside": 9.3, "filter": 9, "hyphens": 9.3, "flowInto": 9.3, "flowFrom": 9.3, "breakBefore": 8.1, "breakAfter": 8.1, "breakInside": 8.1, "regionFragment": 9.3, "columnCount": 8.1, "columnFill": 8.1, "columnGap": 8.1, "columnRule": 8.1, "columnRuleColor": 8.1, "columnRuleStyle": 8.1, "columnRuleWidth": 8.1, "columns": 8.1, "columnSpan": 8.1, "columnWidth": 8.1 }, "android": { "borderImage": 4.2, "borderImageOutset": 4.2, "borderImageRepeat": 4.2, "borderImageSlice": 4.2, "borderImageSource": 4.2, "borderImageWidth": 4.2, "flex": 4.2, "flexBasis": 4.2, "flexDirection": 4.2, "flexGrow": 4.2, "flexFlow": 4.2, "flexShrink": 4.2, "flexWrap": 4.2, "alignContent": 4.2, "alignItems": 4.2, "alignSelf": 4.2, "justifyContent": 4.2, "order": 4.2, "transition": 4.2, "transitionDelay": 4.2, "transitionDuration": 4.2, "transitionProperty": 4.2, "transitionTimingFunction": 4.2, "transform": 4.4, "transformOrigin": 4.4, "transformOriginX": 4.4, "transformOriginY": 4.4, "backfaceVisibility": 4.4, "perspective": 4.4, "perspectiveOrigin": 4.4, "transformStyle": 4.4, "transformOriginZ": 4.4, "animation": 4.4, "animationDelay": 4.4, "animationDirection": 4.4, "animationFillMode": 4.4, "animationDuration": 4.4, "animationIterationCount": 4.4, "animationName": 4.4, "animationPlayState": 4.4, "animationTimingFunction": 4.4, "appearance": 47, "userSelect": 47, "fontKerning": 4.4, "textEmphasisPosition": 47, "textEmphasis": 47, "textEmphasisStyle": 47, "textEmphasisColor": 47, "boxDecorationBreak": 47, "clipPath": 47, "maskImage": 47, "maskMode": 47, "maskRepeat": 47, "maskPosition": 47, "maskClip": 47, "maskOrigin": 47, "maskSize": 47, "maskComposite": 47, "mask": 47, "maskBorderSource": 47, "maskBorderMode": 47, "maskBorderSlice": 47, "maskBorderWidth": 47, "maskBorderOutset": 47, "maskBorderRepeat": 47, "maskBorder": 47, "maskType": 47, "filter": 47, "fontFeatureSettings": 47, "breakAfter": 47, "breakBefore": 47, "breakInside": 47, "columnCount": 47, "columnFill": 47, "columnGap": 47, "columnRule": 47, "columnRuleColor": 47, "columnRuleStyle": 47, "columnRuleWidth": 47, "columns": 47, "columnSpan": 47, "columnWidth": 47 }, "and_chr": { "appearance": 47, "userSelect": 47, "textEmphasisPosition": 47, "textEmphasis": 47, "textEmphasisStyle": 47, "textEmphasisColor": 47, "boxDecorationBreak": 47, "clipPath": 47, "maskImage": 47, "maskMode": 47, "maskRepeat": 47, "maskPosition": 47, "maskClip": 47, "maskOrigin": 47, "maskSize": 47, "maskComposite": 47, "mask": 47, "maskBorderSource": 47, "maskBorderMode": 47, "maskBorderSlice": 47, "maskBorderWidth": 47, "maskBorderOutset": 47, "maskBorderRepeat": 47, "maskBorder": 47, "maskType": 47, "textDecorationStyle": 47, "textDecorationSkip": 47, "textDecorationLine": 47, "textDecorationColor": 47, "filter": 47, "fontFeatureSettings": 47, "breakAfter": 47, "breakBefore": 47, "breakInside": 47, "columnCount": 47, "columnFill": 47, "columnGap": 47, "columnRule": 47, "columnRuleColor": 47, "columnRuleStyle": 47, "columnRuleWidth": 47, "columns": 47, "columnSpan": 47, "columnWidth": 47 }, "and_uc": { "flex": 9.9, "flexBasis": 9.9, "flexDirection": 9.9, "flexGrow": 9.9, "flexFlow": 9.9, "flexShrink": 9.9, "flexWrap": 9.9, "alignContent": 9.9, "alignItems": 9.9, "alignSelf": 9.9, "justifyContent": 9.9, "order": 9.9, "transition": 9.9, "transitionDelay": 9.9, "transitionDuration": 9.9, "transitionProperty": 9.9, "transitionTimingFunction": 9.9, "transform": 9.9, "transformOrigin": 9.9, "transformOriginX": 9.9, "transformOriginY": 9.9, "backfaceVisibility": 9.9, "perspective": 9.9, "perspectiveOrigin": 9.9, "transformStyle": 9.9, "transformOriginZ": 9.9, "animation": 9.9, "animationDelay": 9.9, "animationDirection": 9.9, "animationFillMode": 9.9, "animationDuration": 9.9, "animationIterationCount": 9.9, "animationName": 9.9, "animationPlayState": 9.9, "animationTimingFunction": 9.9, "appearance": 9.9, "userSelect": 9.9, "fontKerning": 9.9, "textEmphasisPosition": 9.9, "textEmphasis": 9.9, "textEmphasisStyle": 9.9, "textEmphasisColor": 9.9, "maskImage": 9.9, "maskMode": 9.9, "maskRepeat": 9.9, "maskPosition": 9.9, "maskClip": 9.9, "maskOrigin": 9.9, "maskSize": 9.9, "maskComposite": 9.9, "mask": 9.9, "maskBorderSource": 9.9, "maskBorderMode": 9.9, "maskBorderSlice": 9.9, "maskBorderWidth": 9.9, "maskBorderOutset": 9.9, "maskBorderRepeat": 9.9, "maskBorder": 9.9, "maskType": 9.9, "textSizeAdjust": 9.9, "filter": 9.9, "hyphens": 9.9, "flowInto": 9.9, "flowFrom": 9.9, "breakBefore": 9.9, "breakAfter": 9.9, "breakInside": 9.9, "regionFragment": 9.9, "fontFeatureSettings": 9.9, "columnCount": 9.9, "columnFill": 9.9, "columnGap": 9.9, "columnRule": 9.9, "columnRuleColor": 9.9, "columnRuleStyle": 9.9, "columnRuleWidth": 9.9, "columns": 9.9, "columnSpan": 9.9, "columnWidth": 9.9 }, "op_mini": { "borderImage": 5, "borderImageOutset": 5, "borderImageRepeat": 5, "borderImageSlice": 5, "borderImageSource": 5, "borderImageWidth": 5, "tabSize": 5, "objectFit": 5, "objectPosition": 5 } };
 module.exports = exports["default"];
-},{}],389:[function(require,module,exports){
+},{}],390:[function(require,module,exports){
 // leight polyfill for Object.assign
 "use strict";
 
@@ -19280,11 +19293,11 @@ exports["default"] = function (base) {
 };
 
 module.exports = exports["default"];
-},{}],390:[function(require,module,exports){
-arguments[4][375][0].apply(exports,arguments)
-},{"dup":375}],391:[function(require,module,exports){
+},{}],391:[function(require,module,exports){
 arguments[4][376][0].apply(exports,arguments)
 },{"dup":376}],392:[function(require,module,exports){
+arguments[4][377][0].apply(exports,arguments)
+},{"dup":377}],393:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19378,7 +19391,7 @@ exports['default'] = function (userAgent) {
 };
 
 module.exports = exports['default'];
-},{"bowser":11}],393:[function(require,module,exports){
+},{"bowser":11}],394:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19399,7 +19412,7 @@ exports['default'] = function (_ref) {
 };
 
 module.exports = exports['default'];
-},{}],394:[function(require,module,exports){
+},{}],395:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19412,14 +19425,14 @@ exports['default'] = function (property) {
 };
 
 module.exports = exports['default'];
-},{}],395:[function(require,module,exports){
+},{}],396:[function(require,module,exports){
 module.exports = isPromise;
 
 function isPromise(obj) {
   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
 }
 
-},{}],396:[function(require,module,exports){
+},{}],397:[function(require,module,exports){
 'use strict';
 
 var sort = require('./sort');
@@ -19465,7 +19478,7 @@ KDBush.prototype = {
 function defaultGetX(p) { return p[0]; }
 function defaultGetY(p) { return p[1]; }
 
-},{"./range":397,"./sort":398,"./within":399}],397:[function(require,module,exports){
+},{"./range":398,"./sort":399,"./within":400}],398:[function(require,module,exports){
 'use strict';
 
 module.exports = range;
@@ -19513,7 +19526,7 @@ function range(ids, coords, minX, minY, maxX, maxY, nodeSize) {
     return result;
 }
 
-},{}],398:[function(require,module,exports){
+},{}],399:[function(require,module,exports){
 'use strict';
 
 module.exports = sortKD;
@@ -19581,7 +19594,7 @@ function swap(arr, i, j) {
     arr[j] = tmp;
 }
 
-},{}],399:[function(require,module,exports){
+},{}],400:[function(require,module,exports){
 'use strict';
 
 module.exports = within;
@@ -19633,7 +19646,7 @@ function sqDist(ax, ay, bx, by) {
     return dx * dx + dy * dy;
 }
 
-},{}],400:[function(require,module,exports){
+},{}],401:[function(require,module,exports){
 'use strict';
 
 function createFunction(parameters, defaultType) {
@@ -19645,7 +19658,7 @@ function createFunction(parameters, defaultType) {
         fun.isZoomConstant = true;
 
     } else {
-        var zoomAndFeatureDependent = typeof parameters.stops[0][0] === 'object';
+        var zoomAndFeatureDependent = parameters.stops && typeof parameters.stops[0][0] === 'object';
         var featureDependent = zoomAndFeatureDependent || parameters.property !== undefined;
         var zoomDependent = zoomAndFeatureDependent || !featureDependent;
         var type = parameters.type || defaultType || 'exponential';
@@ -19657,6 +19670,8 @@ function createFunction(parameters, defaultType) {
             innerFun = evaluateIntervalFunction;
         } else if (type === 'categorical') {
             innerFun = evaluateCategoricalFunction;
+        } else if (type === 'identity') {
+            innerFun = evaluateIdentityFunction;
         } else {
             throw new Error('Unknown function type "' + type + '"');
         }
@@ -19748,6 +19763,10 @@ function evaluateExponentialFunction(parameters, input) {
     }
 }
 
+function evaluateIdentityFunction(parameters, input) {
+    return input;
+}
+
 
 function interpolate(input, base, inputLower, inputUpper, outputLower, outputUpper) {
     if (typeof outputLower === 'function') {
@@ -19786,7 +19805,7 @@ function interpolateArray(input, base, inputLower, inputUpper, outputLower, outp
 }
 
 function isFunctionDefinition(value) {
-    return typeof value === 'object' && value.stops;
+    return typeof value === 'object' && (value.stops || value.type === 'identity');
 }
 
 
@@ -19800,7 +19819,7 @@ module.exports['piecewise-constant'] = function(parameters) {
     return createFunction(parameters, 'interval');
 };
 
-},{}],401:[function(require,module,exports){
+},{}],402:[function(require,module,exports){
 
 var path = require('path');
 
@@ -19819,16 +19838,16 @@ module.exports = {
     vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform mat4 u_matrix;\nuniform bool u_scale_with_map;\nuniform vec2 u_extrude_scale;\nuniform float u_devicepixelratio;\n\nattribute vec2 a_pos;\n\n#pragma mapbox: define lowp vec4 color\n#pragma mapbox: define mediump float radius\n#pragma mapbox: define lowp float blur\n#pragma mapbox: define lowp float opacity\n\nvarying vec2 v_extrude;\nvarying lowp float v_antialiasblur;\n\nvoid main(void) {\n    #pragma mapbox: initialize lowp vec4 color\n    #pragma mapbox: initialize mediump float radius\n    #pragma mapbox: initialize lowp float blur\n    #pragma mapbox: initialize lowp float opacity\n\n    // unencode the extrusion vector that we snuck into the a_pos vector\n    v_extrude = vec2(mod(a_pos, 2.0) * 2.0 - 1.0);\n\n    vec2 extrude = v_extrude * radius * u_extrude_scale;\n    // multiply a_pos by 0.5, since we had it * 2 in order to sneak\n    // in extrusion data\n    gl_Position = u_matrix * vec4(floor(a_pos * 0.5), 0, 1);\n\n    if (u_scale_with_map) {\n        gl_Position.xy += extrude;\n    } else {\n        gl_Position.xy += extrude * gl_Position.w;\n    }\n\n    // This is a minimum blur distance that serves as a faux-antialiasing for\n    // the circle. since blur is a ratio of the circle's size and the intent is\n    // to keep the blur at roughly 1px, the two are inversely related.\n    v_antialiasblur = 1.0 / u_devicepixelratio / radius;\n}\n"
   },
   line: {
-    fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform lowp vec4 u_color;\nuniform lowp float u_opacity;\nuniform float u_blur;\n\nvarying vec2 v_linewidth;\nvarying vec2 v_normal;\nvarying float v_gamma_scale;\n\nvoid main() {\n    // Calculate the distance of the pixel from the line in pixels.\n    float dist = length(v_normal) * v_linewidth.s;\n\n    // Calculate the antialiasing fade factor. This is either when fading in\n    // the line in case of an offset line (v_linewidth.t) or when fading out\n    // (v_linewidth.s)\n    float blur = u_blur * v_gamma_scale;\n    float alpha = clamp(min(dist - (v_linewidth.t - blur), v_linewidth.s - dist) / blur, 0.0, 1.0);\n\n    gl_FragColor = u_color * (alpha * u_opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
-    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\n// floor(127 / 2) == 63.0\n// the maximum allowed miter limit is 2.0 at the moment. the extrude normal is\n// stored in a byte (-128..127). we scale regular normals up to length 63, but\n// there are also \"special\" normals that have a bigger length (of up to 126 in\n// this case).\n// #define scale 63.0\n#define scale 0.015873016\n\nattribute vec2 a_pos;\nattribute vec4 a_data;\n\nuniform mat4 u_matrix;\nuniform mediump float u_ratio;\nuniform mediump float u_linewidth;\nuniform mediump float u_gapwidth;\nuniform mediump float u_antialiasing;\nuniform mediump float u_extra;\nuniform mat2 u_antialiasingmatrix;\nuniform mediump float u_offset;\nuniform mediump float u_blur;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_extrude = a_data.xy - 128.0;\n    float a_direction = mod(a_data.z, 4.0) - 1.0;\n\n    // We store the texture normals in the most insignificant bit\n    // transform y so that 0 => -1 and 1 => 1\n    // In the texture normal, x is 0 if the normal points straight up/down and 1 if it's a round cap\n    // y is 1 if the normal points up, and -1 if it points down\n    mediump vec2 normal = mod(a_pos, 2.0);\n    normal.y = sign(normal.y - 0.5);\n    v_normal = normal;\n\n    float inset = u_gapwidth + (u_gapwidth > 0.0 ? u_antialiasing : 0.0);\n    float outset = u_gapwidth + u_linewidth * (u_gapwidth > 0.0 ? 2.0 : 1.0) + u_antialiasing;\n\n    // Scale the extrusion vector down to a normal and then up by the line width\n    // of this vertex.\n    mediump vec2 dist = outset * a_extrude * scale;\n\n    // Calculate the offset when drawing a line that is to the side of the actual line.\n    // We do this by creating a vector that points towards the extrude, but rotate\n    // it when we're drawing round end points (a_direction = -1 or 1) since their\n    // extrude vector points in another direction.\n    mediump float u = 0.5 * a_direction;\n    mediump float t = 1.0 - abs(u);\n    mediump vec2 offset = u_offset * a_extrude * scale * normal.y * mat2(t, -u, u, t);\n\n    // Remove the texture normal bit of the position before scaling it with the\n    // model/view matrix.\n    gl_Position = u_matrix * vec4(floor(a_pos * 0.5) + (offset + dist) / u_ratio, 0.0, 1.0);\n\n    // position of y on the screen\n    float y = gl_Position.y / gl_Position.w;\n\n    // how much features are squished in the y direction by the tilt\n    float squish_scale = length(a_extrude) / length(u_antialiasingmatrix * a_extrude);\n\n    // how much features are squished in all directions by the perspectiveness\n    float perspective_scale = 1.0 / (1.0 - min(y * u_extra, 0.9));\n\n    v_linewidth = vec2(outset, inset);\n    v_gamma_scale = perspective_scale * squish_scale;\n}\n"
+    fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform lowp float u_opacity;\nuniform float u_blur;\n\n#pragma mapbox: define lowp vec4 color\n\nvarying vec2 v_linewidth;\nvarying vec2 v_normal;\nvarying float v_gamma_scale;\n\nvoid main() {\n    #pragma mapbox: initialize lowp vec4 color\n\n    // Calculate the distance of the pixel from the line in pixels.\n    float dist = length(v_normal) * v_linewidth.s;\n\n    // Calculate the antialiasing fade factor. This is either when fading in\n    // the line in case of an offset line (v_linewidth.t) or when fading out\n    // (v_linewidth.s)\n    float blur = u_blur * v_gamma_scale;\n    float alpha = clamp(min(dist - (v_linewidth.t - blur), v_linewidth.s - dist) / blur, 0.0, 1.0);\n\n    gl_FragColor = color * (alpha * u_opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
+    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\n// floor(127 / 2) == 63.0\n// the maximum allowed miter limit is 2.0 at the moment. the extrude normal is\n// stored in a byte (-128..127). we scale regular normals up to length 63, but\n// there are also \"special\" normals that have a bigger length (of up to 126 in\n// this case).\n// #define scale 63.0\n#define scale 0.015873016\n\nattribute vec2 a_pos;\nattribute vec4 a_data;\n\nuniform mat4 u_matrix;\nuniform mediump float u_ratio;\nuniform mediump float u_linewidth;\nuniform mediump float u_gapwidth;\nuniform mediump float u_antialiasing;\nuniform mediump float u_extra;\nuniform mat2 u_antialiasingmatrix;\nuniform mediump float u_offset;\nuniform mediump float u_blur;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying float v_gamma_scale;\n\n#pragma mapbox: define lowp vec4 color\n\nvoid main() {\n    #pragma mapbox: initialize lowp vec4 color\n\n    vec2 a_extrude = a_data.xy - 128.0;\n    float a_direction = mod(a_data.z, 4.0) - 1.0;\n\n    // We store the texture normals in the most insignificant bit\n    // transform y so that 0 => -1 and 1 => 1\n    // In the texture normal, x is 0 if the normal points straight up/down and 1 if it's a round cap\n    // y is 1 if the normal points up, and -1 if it points down\n    mediump vec2 normal = mod(a_pos, 2.0);\n    normal.y = sign(normal.y - 0.5);\n    v_normal = normal;\n\n    float inset = u_gapwidth + (u_gapwidth > 0.0 ? u_antialiasing : 0.0);\n    float outset = u_gapwidth + u_linewidth * (u_gapwidth > 0.0 ? 2.0 : 1.0) + u_antialiasing;\n\n    // Scale the extrusion vector down to a normal and then up by the line width\n    // of this vertex.\n    mediump vec2 dist = outset * a_extrude * scale;\n\n    // Calculate the offset when drawing a line that is to the side of the actual line.\n    // We do this by creating a vector that points towards the extrude, but rotate\n    // it when we're drawing round end points (a_direction = -1 or 1) since their\n    // extrude vector points in another direction.\n    mediump float u = 0.5 * a_direction;\n    mediump float t = 1.0 - abs(u);\n    mediump vec2 offset = u_offset * a_extrude * scale * normal.y * mat2(t, -u, u, t);\n\n    // Remove the texture normal bit of the position before scaling it with the\n    // model/view matrix.\n    gl_Position = u_matrix * vec4(floor(a_pos * 0.5) + (offset + dist) / u_ratio, 0.0, 1.0);\n\n    // position of y on the screen\n    float y = gl_Position.y / gl_Position.w;\n\n    // how much features are squished in the y direction by the tilt\n    float squish_scale = length(a_extrude) / length(u_antialiasingmatrix * a_extrude);\n\n    // how much features are squished in all directions by the perspectiveness\n    float perspective_scale = 1.0 / (1.0 - min(y * u_extra, 0.9));\n\n    v_linewidth = vec2(outset, inset);\n    v_gamma_scale = perspective_scale * squish_scale;\n}\n"
   },
   linepattern: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform float u_blur;\n\nuniform vec2 u_pattern_size_a;\nuniform vec2 u_pattern_size_b;\nuniform vec2 u_pattern_tl_a;\nuniform vec2 u_pattern_br_a;\nuniform vec2 u_pattern_tl_b;\nuniform vec2 u_pattern_br_b;\nuniform float u_fade;\nuniform float u_opacity;\n\nuniform sampler2D u_image;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying float v_linesofar;\nvarying float v_gamma_scale;\n\nvoid main() {\n    // Calculate the distance of the pixel from the line in pixels.\n    float dist = length(v_normal) * v_linewidth.s;\n\n    // Calculate the antialiasing fade factor. This is either when fading in\n    // the line in case of an offset line (v_linewidth.t) or when fading out\n    // (v_linewidth.s)\n    float blur = u_blur * v_gamma_scale;\n    float alpha = clamp(min(dist - (v_linewidth.t - blur), v_linewidth.s - dist) / blur, 0.0, 1.0);\n\n    float x_a = mod(v_linesofar / u_pattern_size_a.x, 1.0);\n    float x_b = mod(v_linesofar / u_pattern_size_b.x, 1.0);\n    float y_a = 0.5 + (v_normal.y * v_linewidth.s / u_pattern_size_a.y);\n    float y_b = 0.5 + (v_normal.y * v_linewidth.s / u_pattern_size_b.y);\n    vec2 pos_a = mix(u_pattern_tl_a, u_pattern_br_a, vec2(x_a, y_a));\n    vec2 pos_b = mix(u_pattern_tl_b, u_pattern_br_b, vec2(x_b, y_b));\n\n    vec4 color = mix(texture2D(u_image, pos_a), texture2D(u_image, pos_b), u_fade);\n\n    alpha *= u_opacity;\n\n    gl_FragColor = color * alpha;\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
     vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\n// floor(127 / 2) == 63.0\n// the maximum allowed miter limit is 2.0 at the moment. the extrude normal is\n// stored in a byte (-128..127). we scale regular normals up to length 63, but\n// there are also \"special\" normals that have a bigger length (of up to 126 in\n// this case).\n// #define scale 63.0\n#define scale 0.015873016\n\n// We scale the distance before adding it to the buffers so that we can store\n// long distances for long segments. Use this value to unscale the distance.\n#define LINE_DISTANCE_SCALE 2.0\n\nattribute vec2 a_pos;\nattribute vec4 a_data;\n\nuniform mat4 u_matrix;\nuniform mediump float u_ratio;\nuniform mediump float u_linewidth;\nuniform mediump float u_gapwidth;\nuniform mediump float u_antialiasing;\nuniform mediump float u_extra;\nuniform mat2 u_antialiasingmatrix;\nuniform mediump float u_offset;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying float v_linesofar;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_extrude = a_data.xy - 128.0;\n    float a_direction = mod(a_data.z, 4.0) - 1.0;\n    float a_linesofar = (floor(a_data.z / 4.0) + a_data.w * 64.0) * LINE_DISTANCE_SCALE;\n\n    // We store the texture normals in the most insignificant bit\n    // transform y so that 0 => -1 and 1 => 1\n    // In the texture normal, x is 0 if the normal points straight up/down and 1 if it's a round cap\n    // y is 1 if the normal points up, and -1 if it points down\n    mediump vec2 normal = mod(a_pos, 2.0);\n    normal.y = sign(normal.y - 0.5);\n    v_normal = normal;\n\n    float inset = u_gapwidth + (u_gapwidth > 0.0 ? u_antialiasing : 0.0);\n    float outset = u_gapwidth + u_linewidth * (u_gapwidth > 0.0 ? 2.0 : 1.0) + u_antialiasing;\n\n    // Scale the extrusion vector down to a normal and then up by the line width\n    // of this vertex.\n    mediump vec2 dist = outset * a_extrude * scale;\n\n    // Calculate the offset when drawing a line that is to the side of the actual line.\n    // We do this by creating a vector that points towards the extrude, but rotate\n    // it when we're drawing round end points (a_direction = -1 or 1) since their\n    // extrude vector points in another direction.\n    mediump float u = 0.5 * a_direction;\n    mediump float t = 1.0 - abs(u);\n    mediump vec2 offset = u_offset * a_extrude * scale * normal.y * mat2(t, -u, u, t);\n\n    // Remove the texture normal bit of the position before scaling it with the\n    // model/view matrix.\n    gl_Position = u_matrix * vec4(floor(a_pos * 0.5) + (offset + dist) / u_ratio, 0.0, 1.0);\n    v_linesofar = a_linesofar;\n\n    // position of y on the screen\n    float y = gl_Position.y / gl_Position.w;\n\n    // how much features are squished in the y direction by the tilt\n    float squish_scale = length(a_extrude) / length(u_antialiasingmatrix * a_extrude);\n\n    // how much features are squished in all directions by the perspectiveness\n    float perspective_scale = 1.0 / (1.0 - min(y * u_extra, 0.9));\n\n    v_linewidth = vec2(outset, inset);\n    v_gamma_scale = perspective_scale * squish_scale;\n}\n"
   },
   linesdfpattern: {
-    fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform lowp vec4 u_color;\nuniform lowp float u_opacity;\n\nuniform float u_blur;\nuniform sampler2D u_image;\nuniform float u_sdfgamma;\nuniform float u_mix;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying vec2 v_tex_a;\nvarying vec2 v_tex_b;\nvarying float v_gamma_scale;\n\nvoid main() {\n    // Calculate the distance of the pixel from the line in pixels.\n    float dist = length(v_normal) * v_linewidth.s;\n\n    // Calculate the antialiasing fade factor. This is either when fading in\n    // the line in case of an offset line (v_linewidth.t) or when fading out\n    // (v_linewidth.s)\n    float blur = u_blur * v_gamma_scale;\n    float alpha = clamp(min(dist - (v_linewidth.t - blur), v_linewidth.s - dist) / blur, 0.0, 1.0);\n\n    float sdfdist_a = texture2D(u_image, v_tex_a).a;\n    float sdfdist_b = texture2D(u_image, v_tex_b).a;\n    float sdfdist = mix(sdfdist_a, sdfdist_b, u_mix);\n    alpha *= smoothstep(0.5 - u_sdfgamma, 0.5 + u_sdfgamma, sdfdist);\n\n    gl_FragColor = u_color * (alpha * u_opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
-    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\n// floor(127 / 2) == 63.0\n// the maximum allowed miter limit is 2.0 at the moment. the extrude normal is\n// stored in a byte (-128..127). we scale regular normals up to length 63, but\n// there are also \"special\" normals that have a bigger length (of up to 126 in\n// this case).\n// #define scale 63.0\n#define scale 0.015873016\n\n// We scale the distance before adding it to the buffers so that we can store\n// long distances for long segments. Use this value to unscale the distance.\n#define LINE_DISTANCE_SCALE 2.0\n\nattribute vec2 a_pos;\nattribute vec4 a_data;\n\nuniform mat4 u_matrix;\nuniform mediump float u_ratio;\nuniform mediump float u_linewidth;\nuniform mediump float u_gapwidth;\nuniform mediump float u_antialiasing;\nuniform vec2 u_patternscale_a;\nuniform float u_tex_y_a;\nuniform vec2 u_patternscale_b;\nuniform float u_tex_y_b;\nuniform float u_extra;\nuniform mat2 u_antialiasingmatrix;\nuniform mediump float u_offset;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying vec2 v_tex_a;\nvarying vec2 v_tex_b;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_extrude = a_data.xy - 128.0;\n    float a_direction = mod(a_data.z, 4.0) - 1.0;\n    float a_linesofar = (floor(a_data.z / 4.0) + a_data.w * 64.0) * LINE_DISTANCE_SCALE;\n\n    // We store the texture normals in the most insignificant bit\n    // transform y so that 0 => -1 and 1 => 1\n    // In the texture normal, x is 0 if the normal points straight up/down and 1 if it's a round cap\n    // y is 1 if the normal points up, and -1 if it points down\n    mediump vec2 normal = mod(a_pos, 2.0);\n    normal.y = sign(normal.y - 0.5);\n    v_normal = normal;\n\n    float inset = u_gapwidth + (u_gapwidth > 0.0 ? u_antialiasing : 0.0);\n    float outset = u_gapwidth + u_linewidth * (u_gapwidth > 0.0 ? 2.0 : 1.0) + u_antialiasing;\n\n    // Scale the extrusion vector down to a normal and then up by the line width\n    // of this vertex.\n    mediump vec2 dist = outset * a_extrude * scale;\n\n    // Calculate the offset when drawing a line that is to the side of the actual line.\n    // We do this by creating a vector that points towards the extrude, but rotate\n    // it when we're drawing round end points (a_direction = -1 or 1) since their\n    // extrude vector points in another direction.\n    mediump float u = 0.5 * a_direction;\n    mediump float t = 1.0 - abs(u);\n    mediump vec2 offset = u_offset * a_extrude * scale * normal.y * mat2(t, -u, u, t);\n\n    // Remove the texture normal bit of the position before scaling it with the\n    // model/view matrix.\n    gl_Position = u_matrix * vec4(floor(a_pos * 0.5) + (offset + dist) / u_ratio, 0.0, 1.0);\n\n    v_tex_a = vec2(a_linesofar * u_patternscale_a.x, normal.y * u_patternscale_a.y + u_tex_y_a);\n    v_tex_b = vec2(a_linesofar * u_patternscale_b.x, normal.y * u_patternscale_b.y + u_tex_y_b);\n\n    // position of y on the screen\n    float y = gl_Position.y / gl_Position.w;\n\n    // how much features are squished in the y direction by the tilt\n    float squish_scale = length(a_extrude) / length(u_antialiasingmatrix * a_extrude);\n\n    // how much features are squished in all directions by the perspectiveness\n    float perspective_scale = 1.0 / (1.0 - min(y * u_extra, 0.9));\n\n    v_linewidth = vec2(outset, inset);\n    v_gamma_scale = perspective_scale * squish_scale;\n}\n"
+    fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform lowp float u_opacity;\n\nuniform float u_blur;\nuniform sampler2D u_image;\nuniform float u_sdfgamma;\nuniform float u_mix;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying vec2 v_tex_a;\nvarying vec2 v_tex_b;\nvarying float v_gamma_scale;\n\n#pragma mapbox: define lowp vec4 color\n\nvoid main() {\n    #pragma mapbox: initialize lowp vec4 color\n\n    // Calculate the distance of the pixel from the line in pixels.\n    float dist = length(v_normal) * v_linewidth.s;\n\n    // Calculate the antialiasing fade factor. This is either when fading in\n    // the line in case of an offset line (v_linewidth.t) or when fading out\n    // (v_linewidth.s)\n    float blur = u_blur * v_gamma_scale;\n    float alpha = clamp(min(dist - (v_linewidth.t - blur), v_linewidth.s - dist) / blur, 0.0, 1.0);\n\n    float sdfdist_a = texture2D(u_image, v_tex_a).a;\n    float sdfdist_b = texture2D(u_image, v_tex_b).a;\n    float sdfdist = mix(sdfdist_a, sdfdist_b, u_mix);\n    alpha *= smoothstep(0.5 - u_sdfgamma, 0.5 + u_sdfgamma, sdfdist);\n\n    gl_FragColor = color * (alpha * u_opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
+    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\n// floor(127 / 2) == 63.0\n// the maximum allowed miter limit is 2.0 at the moment. the extrude normal is\n// stored in a byte (-128..127). we scale regular normals up to length 63, but\n// there are also \"special\" normals that have a bigger length (of up to 126 in\n// this case).\n// #define scale 63.0\n#define scale 0.015873016\n\n// We scale the distance before adding it to the buffers so that we can store\n// long distances for long segments. Use this value to unscale the distance.\n#define LINE_DISTANCE_SCALE 2.0\n\nattribute vec2 a_pos;\nattribute vec4 a_data;\n\nuniform mat4 u_matrix;\nuniform mediump float u_ratio;\nuniform mediump float u_linewidth;\nuniform mediump float u_gapwidth;\nuniform mediump float u_antialiasing;\nuniform vec2 u_patternscale_a;\nuniform float u_tex_y_a;\nuniform vec2 u_patternscale_b;\nuniform float u_tex_y_b;\nuniform float u_extra;\nuniform mat2 u_antialiasingmatrix;\nuniform mediump float u_offset;\n\nvarying vec2 v_normal;\nvarying vec2 v_linewidth;\nvarying vec2 v_tex_a;\nvarying vec2 v_tex_b;\nvarying float v_gamma_scale;\n\n#pragma mapbox: define lowp vec4 color\n\nvoid main() {\n    #pragma mapbox: initialize lowp vec4 color\n\n    vec2 a_extrude = a_data.xy - 128.0;\n    float a_direction = mod(a_data.z, 4.0) - 1.0;\n    float a_linesofar = (floor(a_data.z / 4.0) + a_data.w * 64.0) * LINE_DISTANCE_SCALE;\n\n    // We store the texture normals in the most insignificant bit\n    // transform y so that 0 => -1 and 1 => 1\n    // In the texture normal, x is 0 if the normal points straight up/down and 1 if it's a round cap\n    // y is 1 if the normal points up, and -1 if it points down\n    mediump vec2 normal = mod(a_pos, 2.0);\n    normal.y = sign(normal.y - 0.5);\n    v_normal = normal;\n\n    float inset = u_gapwidth + (u_gapwidth > 0.0 ? u_antialiasing : 0.0);\n    float outset = u_gapwidth + u_linewidth * (u_gapwidth > 0.0 ? 2.0 : 1.0) + u_antialiasing;\n\n    // Scale the extrusion vector down to a normal and then up by the line width\n    // of this vertex.\n    mediump vec2 dist = outset * a_extrude * scale;\n\n    // Calculate the offset when drawing a line that is to the side of the actual line.\n    // We do this by creating a vector that points towards the extrude, but rotate\n    // it when we're drawing round end points (a_direction = -1 or 1) since their\n    // extrude vector points in another direction.\n    mediump float u = 0.5 * a_direction;\n    mediump float t = 1.0 - abs(u);\n    mediump vec2 offset = u_offset * a_extrude * scale * normal.y * mat2(t, -u, u, t);\n\n    // Remove the texture normal bit of the position before scaling it with the\n    // model/view matrix.\n    gl_Position = u_matrix * vec4(floor(a_pos * 0.5) + (offset + dist) / u_ratio, 0.0, 1.0);\n\n    v_tex_a = vec2(a_linesofar * u_patternscale_a.x, normal.y * u_patternscale_a.y + u_tex_y_a);\n    v_tex_b = vec2(a_linesofar * u_patternscale_b.x, normal.y * u_patternscale_b.y + u_tex_y_b);\n\n    // position of y on the screen\n    float y = gl_Position.y / gl_Position.w;\n\n    // how much features are squished in the y direction by the tilt\n    float squish_scale = length(a_extrude) / length(u_antialiasingmatrix * a_extrude);\n\n    // how much features are squished in all directions by the perspectiveness\n    float perspective_scale = 1.0 / (1.0 - min(y * u_extra, 0.9));\n\n    v_linewidth = vec2(outset, inset);\n    v_gamma_scale = perspective_scale * squish_scale;\n}\n"
   },
   outline: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\n#pragma mapbox: define lowp vec4 outline_color\n#pragma mapbox: define lowp float opacity\n\nvarying vec2 v_pos;\n\nvoid main() {\n    #pragma mapbox: initialize lowp vec4 outline_color\n    #pragma mapbox: initialize lowp float opacity\n\n    float dist = length(v_pos - gl_FragCoord.xy);\n    float alpha = smoothstep(1.0, 0.0, dist);\n    gl_FragColor = outline_color * (alpha * opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
@@ -19848,11 +19867,11 @@ module.exports = {
   },
   icon: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform sampler2D u_texture;\nuniform sampler2D u_fadetexture;\nuniform lowp float u_opacity;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\n\nvoid main() {\n    lowp float alpha = texture2D(u_fadetexture, v_fade_tex).a * u_opacity;\n    gl_FragColor = texture2D(u_texture, v_tex) * alpha;\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
-    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec4 a_data1;\nattribute vec4 a_data2;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\n\nvoid main() {\n    vec2 a_tex = a_data1.xy;\n    mediump float a_labelminzoom = a_data1[2];\n    mediump vec2 a_zoom = a_data2.st;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n    if (u_rotate_with_map) {\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    } else {\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
+    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec2 a_texture_pos;\nattribute vec4 a_data;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\n\nvoid main() {\n    vec2 a_tex = a_texture_pos.xy;\n    mediump float a_labelminzoom = a_data[0];\n    mediump vec2 a_zoom = a_data.pq;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n    if (u_rotate_with_map) {\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    } else {\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
   },
   sdf: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform sampler2D u_texture;\nuniform sampler2D u_fadetexture;\nuniform lowp vec4 u_color;\nuniform lowp float u_opacity;\nuniform lowp float u_buffer;\nuniform lowp float u_gamma;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\nvarying float v_gamma_scale;\n\nvoid main() {\n    lowp float dist = texture2D(u_texture, v_tex).a;\n    lowp float fade_alpha = texture2D(u_fadetexture, v_fade_tex).a;\n    lowp float gamma = u_gamma * v_gamma_scale;\n    lowp float alpha = smoothstep(u_buffer - gamma, u_buffer + gamma, dist) * fade_alpha;\n\n    gl_FragColor = u_color * (alpha * u_opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
-    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nconst float PI = 3.141592653589793;\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec4 a_data1;\nattribute vec4 a_data2;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform bool u_pitch_with_map;\nuniform mediump float u_pitch;\nuniform mediump float u_bearing;\nuniform mediump float u_aspect_ratio;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_tex = a_data1.xy;\n    mediump float a_labelminzoom = a_data1[2];\n    mediump vec2 a_zoom = a_data2.st;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    // pitch-alignment: map\n    // rotation-alignment: map | viewport\n    if (u_pitch_with_map) {\n        lowp float angle = u_rotate_with_map ? (a_data1[3] / 256.0 * 2.0 * PI) : u_bearing;\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, asin, -1.0 * asin, acos);\n        vec2 offset = RotationMatrix * a_offset;\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: map\n    } else if (u_rotate_with_map) {\n        // foreshortening factor to apply on pitched maps\n        // as a label goes from horizontal <=> vertical in angle\n        // it goes from 0% foreshortening to up to around 70% foreshortening\n        lowp float pitchfactor = 1.0 - cos(u_pitch * sin(u_pitch * 0.75));\n\n        lowp float lineangle = a_data1[3] / 256.0 * 2.0 * PI;\n\n        // use the lineangle to position points a,b along the line\n        // project the points and calculate the label angle in projected space\n        // this calculation allows labels to be rendered unskewed on pitched maps\n        vec4 a = u_matrix * vec4(a_pos, 0, 1);\n        vec4 b = u_matrix * vec4(a_pos + vec2(cos(lineangle),sin(lineangle)), 0, 1);\n        lowp float angle = atan((b[1]/b[3] - a[1]/a[3])/u_aspect_ratio, b[0]/b[3] - a[0]/a[3]);\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, -1.0 * asin, asin, acos);\n\n        vec2 offset = RotationMatrix * (vec2((1.0-pitchfactor)+(pitchfactor*cos(angle*2.0)), 1.0) * a_offset);\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: viewport\n    } else {\n        vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_gamma_scale = (gl_Position.w - 0.5);\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
+    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nconst float PI = 3.141592653589793;\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec2 a_texture_pos;\nattribute vec4 a_data;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform bool u_pitch_with_map;\nuniform mediump float u_pitch;\nuniform mediump float u_bearing;\nuniform mediump float u_aspect_ratio;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_tex = a_texture_pos.xy;\n    mediump float a_labelminzoom = a_data[0];\n    mediump vec2 a_zoom = a_data.pq;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    // pitch-alignment: map\n    // rotation-alignment: map | viewport\n    if (u_pitch_with_map) {\n        lowp float angle = u_rotate_with_map ? (a_data[1] / 256.0 * 2.0 * PI) : u_bearing;\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, asin, -1.0 * asin, acos);\n        vec2 offset = RotationMatrix * a_offset;\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: map\n    } else if (u_rotate_with_map) {\n        // foreshortening factor to apply on pitched maps\n        // as a label goes from horizontal <=> vertical in angle\n        // it goes from 0% foreshortening to up to around 70% foreshortening\n        lowp float pitchfactor = 1.0 - cos(u_pitch * sin(u_pitch * 0.75));\n\n        lowp float lineangle = a_data[1] / 256.0 * 2.0 * PI;\n\n        // use the lineangle to position points a,b along the line\n        // project the points and calculate the label angle in projected space\n        // this calculation allows labels to be rendered unskewed on pitched maps\n        vec4 a = u_matrix * vec4(a_pos, 0, 1);\n        vec4 b = u_matrix * vec4(a_pos + vec2(cos(lineangle),sin(lineangle)), 0, 1);\n        lowp float angle = atan((b[1]/b[3] - a[1]/a[3])/u_aspect_ratio, b[0]/b[3] - a[0]/a[3]);\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, -1.0 * asin, asin, acos);\n\n        vec2 offset = RotationMatrix * (vec2((1.0-pitchfactor)+(pitchfactor*cos(angle*2.0)), 1.0) * a_offset);\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: viewport\n    } else {\n        vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_gamma_scale = (gl_Position.w - 0.5);\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
   },
   collisionbox: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform float u_zoom;\nuniform float u_maxzoom;\n\nvarying float v_max_zoom;\nvarying float v_placement_zoom;\n\nvoid main() {\n\n    float alpha = 0.5;\n\n    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0) * alpha;\n\n    if (v_placement_zoom > u_zoom) {\n        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0) * alpha;\n    }\n\n    if (u_zoom >= v_max_zoom) {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0) * alpha * 0.25;\n    }\n\n    if (v_placement_zoom >= u_maxzoom) {\n        gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0) * alpha * 0.2;\n    }\n}\n",
@@ -19862,7 +19881,7 @@ module.exports = {
 
 module.exports.util = "float evaluate_zoom_function_1(const vec4 values, const float t) {\n    if (t < 1.0) {\n        return mix(values[0], values[1], t);\n    } else if (t < 2.0) {\n        return mix(values[1], values[2], t - 1.0);\n    } else {\n        return mix(values[2], values[3], t - 2.0);\n    }\n}\nvec4 evaluate_zoom_function_4(const vec4 value0, const vec4 value1, const vec4 value2, const vec4 value3, const float t) {\n    if (t < 1.0) {\n        return mix(value0, value1, t);\n    } else if (t < 2.0) {\n        return mix(value1, value2, t - 1.0);\n    } else {\n        return mix(value2, value3, t - 2.0);\n    }\n}\n";
 
-},{"path":541}],402:[function(require,module,exports){
+},{"path":551}],403:[function(require,module,exports){
 'use strict';
 
 var format = require('util').format;
@@ -19880,7 +19899,7 @@ function ValidationError(key, value /*, message, ...*/) {
 
 module.exports = ValidationError;
 
-},{"util":737}],403:[function(require,module,exports){
+},{"util":747}],404:[function(require,module,exports){
 'use strict';
 
 module.exports = function (output) {
@@ -19893,7 +19912,7 @@ module.exports = function (output) {
     return output;
 };
 
-},{}],404:[function(require,module,exports){
+},{}],405:[function(require,module,exports){
 'use strict';
 
 module.exports = function getType(val) {
@@ -19912,7 +19931,7 @@ module.exports = function getType(val) {
     }
 };
 
-},{}],405:[function(require,module,exports){
+},{}],406:[function(require,module,exports){
 'use strict';
 
 // Turn jsonlint-lines-primitives objects into primitive objects
@@ -19924,7 +19943,7 @@ module.exports = function unbundle(value) {
     }
 };
 
-},{}],406:[function(require,module,exports){
+},{}],407:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -19991,7 +20010,7 @@ module.exports = function validate(options) {
     }
 };
 
-},{"../error/validation_error":402,"../util/extend":403,"../util/get_type":404,"./validate_array":407,"./validate_boolean":408,"./validate_color":409,"./validate_constants":410,"./validate_enum":411,"./validate_filter":412,"./validate_function":413,"./validate_layer":415,"./validate_number":417,"./validate_object":418,"./validate_source":420,"./validate_string":421}],407:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/extend":404,"../util/get_type":405,"./validate_array":408,"./validate_boolean":409,"./validate_color":410,"./validate_constants":411,"./validate_enum":412,"./validate_filter":413,"./validate_function":414,"./validate_layer":416,"./validate_number":418,"./validate_object":419,"./validate_source":421,"./validate_string":422}],408:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -20045,7 +20064,7 @@ module.exports = function validateArray(options) {
     return errors;
 };
 
-},{"../error/validation_error":402,"../util/get_type":404,"./validate":406}],408:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405,"./validate":407}],409:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -20063,7 +20082,7 @@ module.exports = function validateBoolean(options) {
     return [];
 };
 
-},{"../error/validation_error":402,"../util/get_type":404}],409:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405}],410:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20086,7 +20105,7 @@ module.exports = function validateColor(options) {
     return [];
 };
 
-},{"../error/validation_error":402,"../util/get_type":404,"csscolorparser":309}],410:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405,"csscolorparser":309}],411:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20120,7 +20139,7 @@ module.exports = function validateConstants(options) {
 
 };
 
-},{"../error/validation_error":402,"../util/get_type":404}],411:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405}],412:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20138,7 +20157,7 @@ module.exports = function validateEnum(options) {
     return errors;
 };
 
-},{"../error/validation_error":402,"../util/unbundle_jsonlint":405}],412:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/unbundle_jsonlint":406}],413:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20243,7 +20262,7 @@ module.exports = function validateFilter(options) {
     return errors;
 };
 
-},{"../error/validation_error":402,"../util/get_type":404,"../util/unbundle_jsonlint":405,"./validate_enum":411}],413:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405,"../util/unbundle_jsonlint":406,"./validate_enum":412}],414:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20377,7 +20396,7 @@ module.exports = function validateFunction(options) {
 
 };
 
-},{"../error/validation_error":402,"../util/get_type":404,"./validate":406,"./validate_array":407,"./validate_number":417,"./validate_object":418}],414:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405,"./validate":407,"./validate_array":408,"./validate_number":418,"./validate_object":419}],415:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20401,7 +20420,7 @@ module.exports = function(options) {
     return errors;
 };
 
-},{"../error/validation_error":402,"./validate_string":421}],415:[function(require,module,exports){
+},{"../error/validation_error":403,"./validate_string":422}],416:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20514,7 +20533,7 @@ module.exports = function validateLayer(options) {
     return errors;
 };
 
-},{"../error/validation_error":402,"../util/extend":403,"../util/unbundle_jsonlint":405,"./validate_filter":412,"./validate_layout_property":416,"./validate_object":418,"./validate_paint_property":419}],416:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/extend":404,"../util/unbundle_jsonlint":406,"./validate_filter":413,"./validate_layout_property":417,"./validate_object":419,"./validate_paint_property":420}],417:[function(require,module,exports){
 'use strict';
 
 var validate = require('./validate');
@@ -20527,6 +20546,8 @@ module.exports = function validateLayoutProperty(options) {
     var value = options.value;
     var propertyKey = options.objectKey;
     var layerSpec = styleSpec['layout_' + options.layerType];
+
+    if (!layerSpec) return [];
 
     if (options.valueSpec || layerSpec[propertyKey]) {
         var errors = [];
@@ -20553,7 +20574,7 @@ module.exports = function validateLayoutProperty(options) {
 
 };
 
-},{"../error/validation_error":402,"./validate":406}],417:[function(require,module,exports){
+},{"../error/validation_error":403,"./validate":407}],418:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -20580,7 +20601,7 @@ module.exports = function validateNumber(options) {
     return [];
 };
 
-},{"../error/validation_error":402,"../util/get_type":404}],418:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405}],419:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20633,7 +20654,7 @@ module.exports = function validateObject(options) {
     return errors;
 };
 
-},{"../error/validation_error":402,"../util/get_type":404,"./validate":406}],419:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405,"./validate":407}],420:[function(require,module,exports){
 'use strict';
 
 var validate = require('./validate');
@@ -20646,6 +20667,8 @@ module.exports = function validatePaintProperty(options) {
     var value = options.value;
     var propertyKey = options.objectKey;
     var layerSpec = styleSpec['paint_' + options.layerType];
+
+    if (!layerSpec) return [];
 
     var transitionMatch = propertyKey.match(/^(.*)-transition$/);
 
@@ -20673,7 +20696,7 @@ module.exports = function validatePaintProperty(options) {
 
 };
 
-},{"../error/validation_error":402,"./validate":406}],420:[function(require,module,exports){
+},{"../error/validation_error":403,"./validate":407}],421:[function(require,module,exports){
 'use strict';
 
 var ValidationError = require('../error/validation_error');
@@ -20750,7 +20773,7 @@ module.exports = function validateSource(options) {
     }
 };
 
-},{"../error/validation_error":402,"../util/unbundle_jsonlint":405,"./validate_enum":411,"./validate_object":418}],421:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/unbundle_jsonlint":406,"./validate_enum":412,"./validate_object":419}],422:[function(require,module,exports){
 'use strict';
 
 var getType = require('../util/get_type');
@@ -20768,7 +20791,7 @@ module.exports = function validateString(options) {
     return [];
 };
 
-},{"../error/validation_error":402,"../util/get_type":404}],422:[function(require,module,exports){
+},{"../error/validation_error":403,"../util/get_type":405}],423:[function(require,module,exports){
 'use strict';
 
 var validateConstants = require('./validate/validate_constants');
@@ -20838,2289 +20861,12 @@ function wrapCleanErrors(inner) {
 
 module.exports = validateStyleMin;
 
-},{"../reference/latest.min":424,"./validate/validate":406,"./validate/validate_constants":410,"./validate/validate_filter":412,"./validate/validate_glyphs_url":414,"./validate/validate_layer":415,"./validate/validate_layout_property":416,"./validate/validate_paint_property":419,"./validate/validate_source":420}],423:[function(require,module,exports){
-module.exports = require('./v8.json');
-
-},{"./v8.json":425}],424:[function(require,module,exports){
+},{"../reference/latest.min":424,"./validate/validate":407,"./validate/validate_constants":411,"./validate/validate_filter":413,"./validate/validate_glyphs_url":415,"./validate/validate_layer":416,"./validate/validate_layout_property":417,"./validate/validate_paint_property":420,"./validate/validate_source":421}],424:[function(require,module,exports){
 module.exports = require('./v8.min.json');
 
-},{"./v8.min.json":426}],425:[function(require,module,exports){
-module.exports={
-  "$version": 8,
-  "$root": {
-    "version": {
-      "required": true,
-      "type": "enum",
-      "values": [8],
-      "doc": "Style specification version number. Must be 8.",
-      "example": 8
-    },
-    "name": {
-      "type": "string",
-      "doc": "A human-readable name for the style.",
-      "example": "Bright"
-    },
-    "metadata": {
-      "type": "*",
-      "doc": "Arbitrary properties useful to track with the stylesheet, but do not influence rendering. Properties should be prefixed to avoid collisions, like 'mapbox:'."
-    },
-    "center": {
-      "type": "array",
-      "value": "number",
-      "doc": "Default map center in longitude and latitude.  The style center will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": [-73.9749, 40.7736]
-    },
-    "zoom": {
-      "type": "number",
-      "doc": "Default zoom level.  The style zoom will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": 12.5
-    },
-    "bearing": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "units": "degrees",
-      "doc": "Default bearing, in degrees.  The style bearing will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": 29
-    },
-    "pitch": {
-      "type": "number",
-      "default": 0,
-      "units": "degrees",
-      "doc": "Default pitch, in degrees. Zero is perpendicular to the surface.  The style pitch will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": 50
-    },
-    "sources": {
-      "required": true,
-      "type": "sources",
-      "doc": "Data source specifications.",
-      "example": {
-        "mapbox-streets": {
-          "type": "vector",
-          "url": "mapbox://mapbox.mapbox-streets-v6"
-        }
-      }
-    },
-    "sprite": {
-      "type": "string",
-      "doc": "A base URL for retrieving the sprite image and metadata. The extensions `.png`, `.json` and scale factor `@2x.png` will be automatically appended. This property is required if any layer uses the 'sprite-image' layout property.",
-      "example": "mapbox://sprites/mapbox/bright-v8"
-    },
-    "glyphs": {
-      "type": "string",
-      "doc": "A URL template for loading signed-distance-field glyph sets in PBF format. The URL must include `{fontstack}` and `{range}` tokens. This property is required if any layer uses the 'text-field' layout property.",
-      "example": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf"
-    },
-    "transition": {
-      "type": "transition",
-      "doc": "A global transition definition to use as a default across properties.",
-      "example": {
-        "duration": 300,
-        "delay": 0
-      }
-    },
-    "layers": {
-      "required": true,
-      "type": "array",
-      "value": "layer",
-      "doc": "Layers will be drawn in the order of this array.",
-      "example": [
-        {
-          "id": "water",
-          "source": "mapbox-streets",
-          "source-layer": "water",
-          "type": "fill",
-          "paint": {
-            "fill-color": "#00ffff"
-          }
-        }
-      ]
-    }
-  },
-  "sources": {
-    "*": {
-      "type": "source",
-      "doc": "Specification of a data source. For vector and raster sources, either TileJSON or a URL to a TileJSON must be provided. For GeoJSON and video sources, a URL must be provided."
-    }
-  },
-  "source": [
-    "source_tile",
-    "source_geojson",
-    "source_video",
-    "source_image"
-  ],
-  "source_tile": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "vector",
-        "raster"
-      ],
-      "doc": "The data type of the tile source."
-    },
-    "url": {
-      "type": "string",
-      "doc": "A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<mapid>`."
-    },
-    "tiles": {
-      "type": "array",
-      "value": "string",
-      "doc": "An array of one or more tile source URLs, as in the TileJSON spec."
-    },
-    "minzoom": {
-      "type": "number",
-      "default": 0,
-      "doc": "Minimum zoom level for which tiles are available, as in the TileJSON spec."
-    },
-    "maxzoom": {
-      "type": "number",
-      "default": 22,
-      "doc": "Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels."
-    },
-    "tileSize": {
-      "type": "number",
-      "default": 512,
-      "units": "pixels",
-      "doc": "The minimum visual size to display tiles for this layer. Only configurable for raster layers."
-    },
-    "*": {
-      "type": "*",
-      "doc": "Other keys to configure the data source."
-    }
-  },
-  "source_geojson": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "geojson"
-      ],
-      "doc": "The data type of the GeoJSON source."
-    },
-    "data": {
-      "type": "*",
-      "doc": "A URL to a GeoJSON file, or inline GeoJSON."
-    },
-    "maxzoom": {
-      "type": "number",
-      "default": 14,
-      "doc": "Maximum zoom level at which to create vector tiles (higher means greater detail at high zoom levels)."
-    },
-    "buffer": {
-      "type": "number",
-      "default": 64,
-      "doc": "Tile buffer size on each side (higher means fewer rendering artifacts near tile edges but slower performance)."
-    },
-    "tolerance": {
-      "type": "number",
-      "default": 3,
-      "doc": "Douglas-Peucker simplification tolerance (higher means simpler geometries and faster performance)."
-    },
-    "cluster": {
-      "type": "boolean",
-      "default": false,
-      "doc": "If the data is a collection of point features, setting this to true clusters the points by radius into groups."
-    },
-    "clusterRadius": {
-      "type": "number",
-      "default": 400,
-      "doc": "Radius of each cluster when clustering points, relative to 4096 tile."
-    },
-    "clusterMaxZoom": {
-      "type": "number",
-      "doc": "Max zoom to cluster points on. Defaults to one zoom less than maxzoom (so that last zoom features are not clustered)."
-    }
-  },
-  "source_video": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "video"
-      ],
-      "doc": "The data type of the video source."
-    },
-    "urls": {
-      "required": true,
-      "type": "array",
-      "value": "string",
-      "doc": "URLs to video content in order of preferred format."
-    },
-    "coordinates": {
-      "required": true,
-      "doc": "Corners of video specified in longitude, latitude pairs.",
-      "type": "array",
-      "length": 4,
-      "value": {
-        "type": "array",
-        "length": 2,
-        "value": "number",
-        "doc": "A single longitude, latitude pair."
-      }
-    }
-  },
-  "source_image": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "image"
-      ],
-      "doc": "The data type of the image source."
-    },
-    "url": {
-      "required": true,
-      "type": "string",
-      "doc": "URL that points to an image"
-    },
-    "coordinates": {
-      "required": true,
-      "doc": "Corners of image specified in longitude, latitude pairs.",
-      "type": "array",
-      "length": 4,
-      "value": {
-        "type": "array",
-        "length": 2,
-        "value": "number",
-        "doc": "A single longitude, latitude pair."
-      }
-    }
-  },
-  "layer": {
-    "id": {
-      "type": "string",
-      "doc": "Unique layer name.",
-      "required": true
-    },
-    "type": {
-      "type": "enum",
-      "values": [
-        "fill",
-        "line",
-        "symbol",
-        "circle",
-        "raster",
-        "background"
-      ],
-      "doc": "Rendering type of this layer."
-    },
-    "metadata": {
-      "type": "*",
-      "doc": "Arbitrary properties useful to track with the layer, but do not influence rendering. Properties should be prefixed to avoid collisions, like 'mapbox:'."
-    },
-    "ref": {
-      "type": "string",
-      "doc": "References another layer to copy `type`, `source`, `source-layer`, `minzoom`, `maxzoom`, `filter`, and `layout` properties from. This allows the layers to share processing and be more efficient."
-    },
-    "source": {
-      "type": "string",
-      "doc": "Name of a source description to be used for this layer."
-    },
-    "source-layer": {
-      "type": "string",
-      "doc": "Layer to use from a vector tile source. Required if the source supports multiple layers."
-    },
-    "minzoom": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 22,
-      "doc": "The minimum zoom level on which the layer gets parsed and appears on."
-    },
-    "maxzoom": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 22,
-      "doc": "The maximum zoom level on which the layer gets parsed and appears on."
-    },
-    "interactive": {
-      "type": "boolean",
-      "doc": "Enable querying of feature data from this layer for interactivity.",
-      "default": false
-    },
-    "filter": {
-      "type": "filter",
-      "doc": "A expression specifying conditions on source features. Only features that match the filter are displayed."
-    },
-    "layout": {
-      "type": "layout",
-      "doc": "Layout properties for the layer."
-    },
-    "paint": {
-      "type": "paint",
-      "doc": "Default paint properties for this layer."
-    },
-    "paint.*": {
-      "type": "paint",
-      "doc": "Class-specific paint properties for this layer. The class name is the part after the first dot."
-    }
-  },
-  "layout": [
-    "layout_fill",
-    "layout_line",
-    "layout_circle",
-    "layout_symbol",
-    "layout_raster",
-    "layout_background"
-  ],
-  "layout_background": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_fill": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_circle": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_line": {
-    "line-cap": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "butt",
-        "round",
-        "square"
-      ],
-      "default": "butt",
-      "doc": "The display of line endings.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-join": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "bevel",
-        "round",
-        "miter"
-      ],
-      "default": "miter",
-      "doc": "The display of lines when joining.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-miter-limit": {
-      "type": "number",
-      "default": 2,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Used to automatically convert miter joins to bevel joins for sharp angles.",
-      "requires": [
-        {
-          "line-join": "miter"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-round-limit": {
-      "type": "number",
-      "default": 1.05,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Used to automatically convert round joins to miter joins for shallow angles.",
-      "requires": [
-        {
-          "line-join": "round"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_symbol": {
-    "symbol-placement": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-          "point",
-          "line"
-      ],
-      "default": "point",
-      "doc": "Label placement relative to its geometry. `line` can only be used on LineStrings and Polygons.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "symbol-spacing": {
-      "type": "number",
-      "default": 250,
-      "minimum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "units": "pixels",
-      "doc": "Distance between two symbol anchors.",
-      "requires": [
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "symbol-avoid-edges": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-allow-overlap": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the icon will be visible even if it collides with other previously drawn symbols.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-ignore-placement": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, other symbols can be visible even if they collide with the icon.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-optional": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.",
-      "requires": [
-        "icon-image",
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-rotation-alignment": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "default": "viewport",
-      "doc": "Orientation of icon when map is rotated.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-size": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Scale factor for icon. 1 is original size, 3 triples the size.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-text-fit": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": false,
-      "values": [
-        "none",
-        "both",
-        "width",
-        "height"
-      ],
-      "default": "none",
-      "doc": "Position and scale an icon by the its corresponding text.",
-      "requires": [
-        "icon-image",
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    },
-    "icon-text-fit-padding": {
-      "type": "array",
-      "value": "number",
-      "length": 4,
-      "default": [
-        0,
-        0,
-        0,
-        0
-      ],
-      "units": "pixels",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Size of padding area around the text-fit size in clockwise order: top, right, bottom, left.",
-      "requires": [
-        "icon-image",
-        "icon-text-fit",
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    },
-    "icon-image": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "A string with {tokens} replaced, referencing the data property to pull from.",
-      "tokens": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-rotate": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "units": "degrees",
-      "doc": "Rotates the icon clockwise.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-padding": {
-      "type": "number",
-      "default": 2,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "units": "pixels",
-      "doc": "Size of the additional area around the icon bounding box used for detecting symbol collisions.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-keep-upright": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the icon may be flipped to prevent it from being rendered upside-down.",
-      "requires": [
-        "icon-image",
-        {
-          "icon-rotation-alignment": "map"
-        },
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-offset": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-pitch-alignment": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Aligns text to the plane of the `viewport` or the `map` when the map is pitched. Matches `text-rotation-alignment` if unspecified.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    },
-    "text-rotation-alignment": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "default": "viewport",
-      "doc": "Orientation of text when map is rotated.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-field": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": "",
-      "tokens": true,
-      "doc": "Value to use for a text label. Feature properties are specified using tokens like {field_name}.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-font": {
-      "type": "array",
-      "value": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": ["Open Sans Regular", "Arial Unicode MS Regular"],
-      "doc": "Font stack to use for displaying text.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-size": {
-      "type": "number",
-      "default": 16,
-      "minimum": 0,
-      "units": "pixels",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Font size.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-max-width": {
-      "type": "number",
-      "default": 10,
-      "minimum": 0,
-      "units": "em",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "The maximum line width for text wrapping.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-line-height": {
-      "type": "number",
-      "default": 1.2,
-      "units": "em",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Text leading value for multi-line text.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-letter-spacing": {
-      "type": "number",
-      "default": 0,
-      "units": "em",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Text tracking amount.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-justify": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "left",
-        "center",
-        "right"
-      ],
-      "default": "center",
-      "doc": "Text justification options.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "center",
-        "left",
-        "right",
-        "top",
-        "bottom",
-        "top-left",
-        "top-right",
-        "bottom-left",
-        "bottom-right"
-      ],
-      "default": "center",
-      "doc": "Part of the text placed closest to the anchor.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-max-angle": {
-      "type": "number",
-      "default": 45,
-      "units": "degrees",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Maximum angle change between adjacent characters.",
-      "requires": [
-        "text-field",
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-rotate": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "units": "degrees",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Rotates the text clockwise.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-padding": {
-      "type": "number",
-      "default": 2,
-      "minimum": 0,
-      "units": "pixels",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Size of the additional area around the text bounding box used for detecting symbol collisions.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-keep-upright": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": true,
-      "doc": "If true, the text may be flipped vertically to prevent it from being rendered upside-down.",
-      "requires": [
-        "text-field",
-        {
-          "text-rotation-alignment": "map"
-        },
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-transform": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "none",
-        "uppercase",
-        "lowercase"
-      ],
-      "default": "none",
-      "doc": "Specifies how to capitalize text, similar to the CSS `text-transform` property.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-offset": {
-      "type": "array",
-      "doc": "Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up.",
-      "value": "number",
-      "units": "ems",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-allow-overlap": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the text will be visible even if it collides with other previously drawn symbols.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-ignore-placement": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, other symbols can be visible even if they collide with the text.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-optional": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.",
-      "requires": [
-        "text-field",
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_raster": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "filter": {
-    "type": "array",
-    "value": "*",
-    "doc": "A filter selects specific features from a layer."
-  },
-  "filter_operator": {
-    "type": "enum",
-    "values": [
-      "==",
-      "!=",
-      ">",
-      ">=",
-      "<",
-      "<=",
-      "in",
-      "!in",
-      "all",
-      "any",
-      "none",
-      "has",
-      "!has"
-    ],
-    "doc": "The filter operator."
-  },
-  "geometry_type": {
-    "type": "enum",
-    "values": [
-      "Point",
-      "LineString",
-      "Polygon"
-    ],
-    "doc": "The geometry type for the filter to select."
-  },
-  "color_operation": {
-    "type": "enum",
-    "values": [
-      "lighten",
-      "saturate",
-      "spin",
-      "fade",
-      "mix"
-    ],
-    "doc": "A color operation to apply."
-  },
-  "function": {
-    "stops": {
-      "type": "array",
-      "required": true,
-      "doc": "An array of stops.",
-      "value": "function_stop"
-    },
-    "base": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "doc": "The exponential base of the interpolation curve. It controls the rate at which the result increases. Higher values make the result increase more towards the high end of the range. With `1` the stops are interpolated linearly."
-    },
-    "property": {
-      "type": "string",
-      "doc": "The name of a global property or feature property to use as the function input.",
-      "default": "$zoom"
-    },
-    "type": {
-      "type": "enum",
-      "values": [
-          "exponential",
-          "interval",
-          "categorical"
-      ],
-      "doc": "The interpolation strategy to use in function evaluation.",
-      "default": "exponential"
-    }
-  },
-  "function_stop": {
-    "type": "array",
-    "minimum": 0,
-    "maximum": 22,
-    "value": [
-      "number",
-      "color"
-    ],
-    "length": 2,
-    "doc": "Zoom level and value pair."
-  },
-  "paint": [
-    "paint_fill",
-    "paint_line",
-    "paint_circle",
-    "paint_symbol",
-    "paint_raster",
-    "paint_background"
-  ],
-  "paint_fill": {
-    "fill-antialias": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": true,
-      "doc": "Whether or not the fill should be antialiased.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-opacity": {
-      "type": "number",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "doc": "The opacity of the entire fill layer. In contrast to the fill-color, this value will also affect the 1px stroke around the fill, if the stroke is used.",
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-color": {
-      "type": "color",
-      "default": "#000000",
-      "doc": "The color of the filled part of this layer. This color can be specified as rgba with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "fill-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.19.0"
-        }
-      }
-    },
-    "fill-outline-color": {
-      "type": "color",
-      "doc": "The outline color of the fill. Matches the value of `fill-color` if unspecified.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "fill-pattern"
-        },
-        {
-          "fill-antialias": true
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.19.0"
-        }
-      }
-    },
-    "fill-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen)",
-      "default": "map",
-      "requires": [
-        "fill-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-pattern": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512).",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_line": {
-    "line-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the line will be drawn.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-color": {
-      "type": "color",
-      "doc": "The color with which the line will be drawn.",
-      "default": "#000000",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "line-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen)",
-      "default": "map",
-      "requires": [
-        "line-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-width": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Stroke thickness.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-gap-width": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "doc": "Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-offset": {
-      "type": "number",
-      "default": 0,
-      "doc": "The line's offset perpendicular to its direction. Values may be positive or negative, where positive indicates \"rightwards\" (if you were moving in the direction of the line) and negative indicates \"leftwards.\"",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "sdk-support": {
-        "basic": {
-          "js": "0.12.1",
-          "ios": "3.1.0",
-          "android": "3.0.0"
-        }
-      }
-    },
-    "line-blur": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Blur applied to the line, in pixels.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-dasharray": {
-      "type": "array",
-      "value": "number",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width.",
-      "minimum": 0,
-      "transition": true,
-      "units": "line widths",
-      "requires": [
-        {
-          "!": "line-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-pattern": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512).",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_circle": {
-    "circle-radius": {
-      "type": "number",
-      "default": 5,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Circle radius.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.18.0"
-        }
-      }
-    },
-    "circle-color": {
-      "type": "color",
-      "default": "#000000",
-      "doc": "The color of the circle.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.18.0"
-        }
-      }
-    },
-    "circle-blur": {
-      "type": "number",
-      "default": 0,
-      "doc": "Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.20.0"
-        }
-      }
-    },
-    "circle-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the circle will be drawn.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.20.0"
-        }
-      }
-    },
-    "circle-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [0, 0],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "circle-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen)",
-      "default": "map",
-      "requires": [
-        "circle-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "circle-pitch-scale": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "default": "map",
-      "doc": "Controls the scaling behavior of the circle when the map is pitched. The value `map` scales circles according to their apparent distance to the camera. The value `viewport` results in no pitch-related scaling.",
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    }
-  },
-  "paint_symbol": {
-    "icon-opacity": {
-      "doc": "The opacity at which the icon will be drawn.",
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-color": {
-      "type": "color",
-      "default": "#000000",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "The color of the icon. This can only be used with sdf icons.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-halo-color": {
-      "type": "color",
-      "default": "rgba(0, 0, 0, 0)",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "The color of the icon's halo. Icon halos can only be used with sdf icons.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-halo-width": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance of halo to the icon outline.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-halo-blur": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Fade out the halo towards the outside.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen).",
-      "default": "map",
-      "requires": [
-        "icon-image",
-        "icon-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the text will be drawn.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-color": {
-      "type": "color",
-      "doc": "The color with which the text will be drawn.",
-      "default": "#000000",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-halo-color": {
-      "type": "color",
-      "default": "rgba(0, 0, 0, 0)",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "The color of the text's halo, which helps it stand out from backgrounds.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-halo-width": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-halo-blur": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The halo's fadeout distance towards the outside.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen).",
-      "default": "map",
-      "requires": [
-        "text-field",
-        "text-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_raster": {
-    "raster-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the image will be drawn.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-hue-rotate": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "units": "degrees",
-      "doc": "Rotates hues around the color wheel.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-brightness-min": {
-      "type": "number",
-      "function": "interpolated",
-      "zoom-function": true,
-      "doc": "Increase or reduce the brightness of the image. The value is the minimum brightness.",
-      "default": 0,
-      "minimum": 0,
-      "maximum": 1,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-brightness-max": {
-      "type": "number",
-      "function": "interpolated",
-      "zoom-function": true,
-      "doc": "Increase or reduce the brightness of the image. The value is the maximum brightness.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-saturation": {
-      "type": "number",
-      "doc": "Increase or reduce the saturation of the image.",
-      "default": 0,
-      "minimum": -1,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-contrast": {
-      "type": "number",
-      "doc": "Increase or reduce the contrast of the image.",
-      "default": 0,
-      "minimum": -1,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-fade-duration": {
-      "type": "number",
-      "default": 300,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "units": "milliseconds",
-      "doc": "Fade duration when a new tile is added.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_background": {
-    "background-color": {
-      "type": "color",
-      "default": "#000000",
-      "doc": "The color with which the background will be drawn.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "background-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "background-pattern": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "transition": true,
-      "doc": "Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512).",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "background-opacity": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "doc": "The opacity at which the background will be drawn.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "transition": {
-    "duration": {
-      "type": "number",
-      "default": 300,
-      "minimum": 0,
-      "units": "milliseconds",
-      "doc": "Time allotted for transitions to complete."
-    },
-    "delay": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "units": "milliseconds",
-      "doc": "Length of time before a transition begins."
-    }
-  }
-}
-
+},{"./v8.min.json":425}],425:[function(require,module,exports){
+module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","values":[8]},"name":{"type":"string"},"metadata":{"type":"*"},"center":{"type":"array","value":"number"},"zoom":{"type":"number"},"bearing":{"type":"number","default":0,"period":360,"units":"degrees"},"pitch":{"type":"number","default":0,"units":"degrees"},"sources":{"required":true,"type":"sources"},"sprite":{"type":"string"},"glyphs":{"type":"string"},"transition":{"type":"transition"},"layers":{"required":true,"type":"array","value":"layer"}},"sources":{"*":{"type":"source"}},"source":["source_tile","source_geojson","source_video","source_image"],"source_tile":{"type":{"required":true,"type":"enum","values":["vector","raster"]},"url":{"type":"string"},"tiles":{"type":"array","value":"string"},"minzoom":{"type":"number","default":0},"maxzoom":{"type":"number","default":22},"tileSize":{"type":"number","default":512,"units":"pixels"},"*":{"type":"*"}},"source_geojson":{"type":{"required":true,"type":"enum","values":["geojson"]},"data":{"type":"*"},"maxzoom":{"type":"number","default":18},"buffer":{"type":"number","default":128},"tolerance":{"type":"number","default":0.375},"cluster":{"type":"boolean","default":false},"clusterRadius":{"type":"number","default":50},"clusterMaxZoom":{"type":"number"}},"source_video":{"type":{"required":true,"type":"enum","values":["video"]},"urls":{"required":true,"type":"array","value":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"source_image":{"type":{"required":true,"type":"enum","values":["image"]},"url":{"required":true,"type":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"layer":{"id":{"type":"string","required":true},"type":{"type":"enum","values":["fill","line","symbol","circle","raster","background"]},"metadata":{"type":"*"},"ref":{"type":"string"},"source":{"type":"string"},"source-layer":{"type":"string"},"minzoom":{"type":"number","minimum":0,"maximum":22},"maxzoom":{"type":"number","minimum":0,"maximum":22},"interactive":{"type":"boolean","default":false},"filter":{"type":"filter"},"layout":{"type":"layout"},"paint":{"type":"paint"},"paint.*":{"type":"paint"}},"layout":["layout_fill","layout_line","layout_circle","layout_symbol","layout_raster","layout_background"],"layout_background":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_fill":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_circle":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_line":{"line-cap":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["butt","round","square"],"default":"butt"},"line-join":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["bevel","round","miter"],"default":"miter"},"line-miter-limit":{"type":"number","default":2,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"miter"}]},"line-round-limit":{"type":"number","default":1.05,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"round"}]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_symbol":{"symbol-placement":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["point","line"],"default":"point"},"symbol-spacing":{"type":"number","default":250,"minimum":1,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":[{"symbol-placement":"line"}]},"symbol-avoid-edges":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false},"icon-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image","text-field"]},"icon-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport","auto"],"default":"auto","requires":["icon-image"]},"icon-size":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"icon-text-fit":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":false,"values":["none","both","width","height"],"default":"none","requires":["icon-image","text-field"]},"icon-text-fit-padding":{"type":"array","value":"number","length":4,"default":[0,0,0,0],"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image","icon-text-fit","text-field"]},"icon-image":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"tokens":true},"icon-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"property-function":true,"units":"degrees","requires":["icon-image"]},"icon-padding":{"type":"number","default":2,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":["icon-image"]},"icon-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image",{"icon-rotation-alignment":"map"},{"symbol-placement":"line"}]},"icon-offset":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"text-pitch-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport","auto"],"default":"auto","requires":["text-field"]},"text-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport","auto"],"default":"auto","requires":["text-field"]},"text-field":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":"","tokens":true},"text-font":{"type":"array","value":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":["Open Sans Regular","Arial Unicode MS Regular"],"requires":["text-field"]},"text-size":{"type":"number","default":16,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-max-width":{"type":"number","default":10,"minimum":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-line-height":{"type":"number","default":1.2,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-letter-spacing":{"type":"number","default":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-justify":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["left","center","right"],"default":"center","requires":["text-field"]},"text-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["center","left","right","top","bottom","top-left","top-right","bottom-left","bottom-right"],"default":"center","requires":["text-field"]},"text-max-angle":{"type":"number","default":45,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field",{"symbol-placement":"line"}]},"text-rotate":{"type":"number","default":0,"period":360,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-padding":{"type":"number","default":2,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true,"requires":["text-field",{"text-rotation-alignment":"map"},{"symbol-placement":"line"}]},"text-transform":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["none","uppercase","lowercase"],"default":"none","requires":["text-field"]},"text-offset":{"type":"array","value":"number","units":"ems","function":"interpolated","zoom-function":true,"property-function":true,"length":2,"default":[0,0],"requires":["text-field"]},"text-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field","icon-image"]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_raster":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"filter":{"type":"array","value":"*"},"filter_operator":{"type":"enum","values":["==","!=",">",">=","<","<=","in","!in","all","any","none","has","!has"]},"geometry_type":{"type":"enum","values":["Point","LineString","Polygon"]},"color_operation":{"type":"enum","values":["lighten","saturate","spin","fade","mix"]},"function":{"stops":{"type":"array","required":true,"value":"function_stop"},"base":{"type":"number","default":1,"minimum":0},"property":{"type":"string","default":"$zoom"},"type":{"type":"enum","values":["exponential","interval","categorical"],"default":"exponential"}},"function_stop":{"type":"array","minimum":0,"maximum":22,"value":["number","color"],"length":2},"paint":["paint_fill","paint_line","paint_circle","paint_symbol","paint_raster","paint_background"],"paint_fill":{"fill-antialias":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true},"fill-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"fill-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"}]},"fill-outline-color":{"type":"color","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"},{"fill-antialias":true}]},"fill-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"fill-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["fill-translate"]},"fill-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_line":{"line-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"line-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"line-pattern"}]},"line-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["line-translate"]},"line-width":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-gap-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-offset":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-dasharray":{"type":"array","value":"number","function":"piecewise-constant","zoom-function":true,"property-function":true,"minimum":0,"transition":true,"units":"line widths","requires":[{"!":"line-pattern"}]},"line-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_circle":{"circle-radius":{"type":"number","default":5,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-blur":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["circle-translate"]},"circle-pitch-scale":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map"}},"paint_symbol":{"icon-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["icon-image","icon-translate"]},"text-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["text-field","text-translate"]}},"paint_raster":{"raster-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-hue-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"transition":true,"units":"degrees"},"raster-brightness-min":{"type":"number","function":"interpolated","zoom-function":true,"default":0,"minimum":0,"maximum":1,"transition":true},"raster-brightness-max":{"type":"number","function":"interpolated","zoom-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"raster-saturation":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-contrast":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-fade-duration":{"type":"number","default":300,"minimum":0,"function":"interpolated","zoom-function":true,"transition":true,"units":"milliseconds"}},"paint_background":{"background-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"transition":true,"requires":[{"!":"background-pattern"}]},"background-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"transition":true},"background-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true}},"transition":{"duration":{"type":"number","default":300,"minimum":0,"units":"milliseconds"},"delay":{"type":"number","default":0,"minimum":0,"units":"milliseconds"}}}
 },{}],426:[function(require,module,exports){
-module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","values":[8]},"name":{"type":"string"},"metadata":{"type":"*"},"center":{"type":"array","value":"number"},"zoom":{"type":"number"},"bearing":{"type":"number","default":0,"period":360,"units":"degrees"},"pitch":{"type":"number","default":0,"units":"degrees"},"sources":{"required":true,"type":"sources"},"sprite":{"type":"string"},"glyphs":{"type":"string"},"transition":{"type":"transition"},"layers":{"required":true,"type":"array","value":"layer"}},"sources":{"*":{"type":"source"}},"source":["source_tile","source_geojson","source_video","source_image"],"source_tile":{"type":{"required":true,"type":"enum","values":["vector","raster"]},"url":{"type":"string"},"tiles":{"type":"array","value":"string"},"minzoom":{"type":"number","default":0},"maxzoom":{"type":"number","default":22},"tileSize":{"type":"number","default":512,"units":"pixels"},"*":{"type":"*"}},"source_geojson":{"type":{"required":true,"type":"enum","values":["geojson"]},"data":{"type":"*"},"maxzoom":{"type":"number","default":14},"buffer":{"type":"number","default":64},"tolerance":{"type":"number","default":3},"cluster":{"type":"boolean","default":false},"clusterRadius":{"type":"number","default":400},"clusterMaxZoom":{"type":"number"}},"source_video":{"type":{"required":true,"type":"enum","values":["video"]},"urls":{"required":true,"type":"array","value":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"source_image":{"type":{"required":true,"type":"enum","values":["image"]},"url":{"required":true,"type":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"layer":{"id":{"type":"string","required":true},"type":{"type":"enum","values":["fill","line","symbol","circle","raster","background"]},"metadata":{"type":"*"},"ref":{"type":"string"},"source":{"type":"string"},"source-layer":{"type":"string"},"minzoom":{"type":"number","minimum":0,"maximum":22},"maxzoom":{"type":"number","minimum":0,"maximum":22},"interactive":{"type":"boolean","default":false},"filter":{"type":"filter"},"layout":{"type":"layout"},"paint":{"type":"paint"},"paint.*":{"type":"paint"}},"layout":["layout_fill","layout_line","layout_circle","layout_symbol","layout_raster","layout_background"],"layout_background":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_fill":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_circle":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_line":{"line-cap":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["butt","round","square"],"default":"butt"},"line-join":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["bevel","round","miter"],"default":"miter"},"line-miter-limit":{"type":"number","default":2,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"miter"}]},"line-round-limit":{"type":"number","default":1.05,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"round"}]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_symbol":{"symbol-placement":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["point","line"],"default":"point"},"symbol-spacing":{"type":"number","default":250,"minimum":1,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":[{"symbol-placement":"line"}]},"symbol-avoid-edges":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false},"icon-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image","text-field"]},"icon-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["icon-image"]},"icon-size":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"icon-text-fit":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":false,"values":["none","both","width","height"],"default":"none","requires":["icon-image","text-field"]},"icon-text-fit-padding":{"type":"array","value":"number","length":4,"default":[0,0,0,0],"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image","icon-text-fit","text-field"]},"icon-image":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"tokens":true},"icon-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"property-function":true,"units":"degrees","requires":["icon-image"]},"icon-padding":{"type":"number","default":2,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":["icon-image"]},"icon-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image",{"icon-rotation-alignment":"map"},{"symbol-placement":"line"}]},"icon-offset":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"text-pitch-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"requires":["text-field"]},"text-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["text-field"]},"text-field":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":"","tokens":true},"text-font":{"type":"array","value":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":["Open Sans Regular","Arial Unicode MS Regular"],"requires":["text-field"]},"text-size":{"type":"number","default":16,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-max-width":{"type":"number","default":10,"minimum":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-line-height":{"type":"number","default":1.2,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-letter-spacing":{"type":"number","default":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-justify":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["left","center","right"],"default":"center","requires":["text-field"]},"text-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["center","left","right","top","bottom","top-left","top-right","bottom-left","bottom-right"],"default":"center","requires":["text-field"]},"text-max-angle":{"type":"number","default":45,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field",{"symbol-placement":"line"}]},"text-rotate":{"type":"number","default":0,"period":360,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-padding":{"type":"number","default":2,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true,"requires":["text-field",{"text-rotation-alignment":"map"},{"symbol-placement":"line"}]},"text-transform":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["none","uppercase","lowercase"],"default":"none","requires":["text-field"]},"text-offset":{"type":"array","value":"number","units":"ems","function":"interpolated","zoom-function":true,"property-function":true,"length":2,"default":[0,0],"requires":["text-field"]},"text-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field","icon-image"]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_raster":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"filter":{"type":"array","value":"*"},"filter_operator":{"type":"enum","values":["==","!=",">",">=","<","<=","in","!in","all","any","none","has","!has"]},"geometry_type":{"type":"enum","values":["Point","LineString","Polygon"]},"color_operation":{"type":"enum","values":["lighten","saturate","spin","fade","mix"]},"function":{"stops":{"type":"array","required":true,"value":"function_stop"},"base":{"type":"number","default":1,"minimum":0},"property":{"type":"string","default":"$zoom"},"type":{"type":"enum","values":["exponential","interval","categorical"],"default":"exponential"}},"function_stop":{"type":"array","minimum":0,"maximum":22,"value":["number","color"],"length":2},"paint":["paint_fill","paint_line","paint_circle","paint_symbol","paint_raster","paint_background"],"paint_fill":{"fill-antialias":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true},"fill-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"fill-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"}]},"fill-outline-color":{"type":"color","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"},{"fill-antialias":true}]},"fill-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"fill-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["fill-translate"]},"fill-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_line":{"line-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"line-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"line-pattern"}]},"line-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["line-translate"]},"line-width":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-gap-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-offset":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-dasharray":{"type":"array","value":"number","function":"piecewise-constant","zoom-function":true,"property-function":true,"minimum":0,"transition":true,"units":"line widths","requires":[{"!":"line-pattern"}]},"line-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_circle":{"circle-radius":{"type":"number","default":5,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-blur":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["circle-translate"]},"circle-pitch-scale":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map"}},"paint_symbol":{"icon-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["icon-image","icon-translate"]},"text-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["text-field","text-translate"]}},"paint_raster":{"raster-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-hue-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"transition":true,"units":"degrees"},"raster-brightness-min":{"type":"number","function":"interpolated","zoom-function":true,"default":0,"minimum":0,"maximum":1,"transition":true},"raster-brightness-max":{"type":"number","function":"interpolated","zoom-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"raster-saturation":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-contrast":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-fade-duration":{"type":"number","default":300,"minimum":0,"function":"interpolated","zoom-function":true,"transition":true,"units":"milliseconds"}},"paint_background":{"background-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"transition":true,"requires":[{"!":"background-pattern"}]},"background-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"transition":true},"background-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true}},"transition":{"duration":{"type":"number","default":300,"minimum":0,"units":"milliseconds"},"delay":{"type":"number","default":0,"minimum":0,"units":"milliseconds"}}}
-},{}],427:[function(require,module,exports){
 'use strict';
 
 if (typeof module !== 'undefined' && module.exports) {
@@ -23251,13 +20997,70 @@ function isWebGLSupported(failIfMajorPerformanceCaveat) {
     }
 }
 
-},{}],428:[function(require,module,exports){
+},{}],427:[function(require,module,exports){
 'use strict';
-var featureFilter = require('feature-filter');
-var Buffer = require('./buffer');
+var util = require('../util/util');
+module.exports = ArrayGroup;
+function ArrayGroup(arrayTypes) {
+    var LayoutVertexArrayType = arrayTypes.layoutVertexArrayType;
+    this.layoutVertexArray = new LayoutVertexArrayType();
+    var ElementArrayType = arrayTypes.elementArrayType;
+    if (ElementArrayType)
+        this.elementArray = new ElementArrayType();
+    var ElementArrayType2 = arrayTypes.elementArrayType2;
+    if (ElementArrayType2)
+        this.elementArray2 = new ElementArrayType2();
+    this.paintVertexArrays = util.mapObject(arrayTypes.paintVertexArrayTypes, function (PaintVertexArrayType) {
+        return new PaintVertexArrayType();
+    });
+}
+ArrayGroup.MAX_VERTEX_ARRAY_LENGTH = Math.pow(2, 16) - 1;
+ArrayGroup.prototype.hasCapacityFor = function (numVertices) {
+    return this.layoutVertexArray.length + numVertices <= ArrayGroup.MAX_VERTEX_ARRAY_LENGTH;
+};
+ArrayGroup.prototype.isEmpty = function () {
+    return this.layoutVertexArray.length === 0;
+};
+ArrayGroup.prototype.trim = function () {
+    this.layoutVertexArray.trim();
+    if (this.elementArray) {
+        this.elementArray.trim();
+    }
+    if (this.elementArray2) {
+        this.elementArray2.trim();
+    }
+    for (var layerName in this.paintVertexArrays) {
+        this.paintVertexArrays[layerName].trim();
+    }
+};
+ArrayGroup.prototype.serialize = function () {
+    return {
+        layoutVertexArray: this.layoutVertexArray.serialize(),
+        elementArray: this.elementArray && this.elementArray.serialize(),
+        elementArray2: this.elementArray2 && this.elementArray2.serialize(),
+        paintVertexArrays: util.mapObject(this.paintVertexArrays, function (array) {
+            return array.serialize();
+        })
+    };
+};
+ArrayGroup.prototype.getTransferables = function (transferables) {
+    transferables.push(this.layoutVertexArray.arrayBuffer);
+    if (this.elementArray) {
+        transferables.push(this.elementArray.arrayBuffer);
+    }
+    if (this.elementArray2) {
+        transferables.push(this.elementArray2.arrayBuffer);
+    }
+    for (var layerName in this.paintVertexArrays) {
+        transferables.push(this.paintVertexArrays[layerName].arrayBuffer);
+    }
+};
+},{"../util/util":544}],428:[function(require,module,exports){
+'use strict';
+var ArrayGroup = require('./array_group');
+var BufferGroup = require('./buffer_group');
 var util = require('../util/util');
 var StructArrayType = require('../util/struct_array');
-var VertexArrayObject = require('../render/vertex_array_object');
 module.exports = Bucket;
 Bucket.create = function (options) {
     var Classes = {
@@ -23269,7 +21072,6 @@ Bucket.create = function (options) {
     return new Classes[options.layer.type](options);
 };
 Bucket.EXTENT = 8192;
-Bucket.MAX_VERTEX_ARRAY_LENGTH = Math.pow(2, 16) - 1;
 function Bucket(options) {
     this.zoom = options.zoom;
     this.overscaling = options.overscaling;
@@ -23285,31 +21087,22 @@ function Bucket(options) {
     this.maxZoom = this.layer.maxzoom;
     this.paintAttributes = createPaintAttributes(this);
     if (options.arrays) {
-        var childLayers = this.childLayers;
+        var programInterfaces = this.programInterfaces;
         this.bufferGroups = util.mapObject(options.arrays, function (programArrayGroups, programName) {
-            return programArrayGroups.map(function (programArrayGroup) {
-                var group = util.mapObject(programArrayGroup, function (arrays, layoutOrPaint) {
-                    return util.mapObject(arrays, function (array, name) {
-                        var arrayType = options.arrayTypes[programName][layoutOrPaint][name];
-                        var type = arrayType.members.length && arrayType.members[0].name === 'vertices' ? Buffer.BufferType.ELEMENT : Buffer.BufferType.VERTEX;
-                        return new Buffer(array, arrayType, type);
-                    });
+            var programInterface = programInterfaces[programName];
+            var paintVertexArrayTypes = options.paintVertexArrayTypes[programName];
+            return programArrayGroups.map(function (arrayGroup) {
+                return new BufferGroup(arrayGroup, {
+                    layoutVertexArrayType: programInterface.layoutVertexArrayType.serialize(),
+                    elementArrayType: programInterface.elementArrayType && programInterface.elementArrayType.serialize(),
+                    elementArrayType2: programInterface.elementArrayType2 && programInterface.elementArrayType2.serialize(),
+                    paintVertexArrayTypes: paintVertexArrayTypes
                 });
-                group.vaos = {};
-                if (group.layout.element2)
-                    group.secondVaos = {};
-                for (var l = 0; l < childLayers.length; l++) {
-                    var layerName = childLayers[l].id;
-                    group.vaos[layerName] = new VertexArrayObject();
-                    if (group.layout.element2)
-                        group.secondVaos[layerName] = new VertexArrayObject();
-                }
-                return group;
             });
         });
     }
 }
-Bucket.prototype.populateBuffers = function () {
+Bucket.prototype.populateArrays = function () {
     this.createArrays();
     this.recalculateStyleLayers();
     for (var i = 0; i < this.features.length; i++) {
@@ -23320,62 +21113,27 @@ Bucket.prototype.populateBuffers = function () {
 Bucket.prototype.prepareArrayGroup = function (programName, numVertices) {
     var groups = this.arrayGroups[programName];
     var currentGroup = groups.length && groups[groups.length - 1];
-    if (!currentGroup || currentGroup.layout.vertex.length + numVertices > Bucket.MAX_VERTEX_ARRAY_LENGTH) {
-        var arrayTypes = this.arrayTypes[programName];
-        var VertexArrayType = arrayTypes.layout.vertex;
-        var ElementArrayType = arrayTypes.layout.element;
-        var ElementArrayType2 = arrayTypes.layout.element2;
-        currentGroup = {
-            index: groups.length,
-            layout: {},
-            paint: {}
-        };
-        currentGroup.layout.vertex = new VertexArrayType();
-        if (ElementArrayType)
-            currentGroup.layout.element = new ElementArrayType();
-        if (ElementArrayType2)
-            currentGroup.layout.element2 = new ElementArrayType2();
-        for (var i = 0; i < this.childLayers.length; i++) {
-            var layerName = this.childLayers[i].id;
-            var PaintVertexArrayType = arrayTypes.paint[layerName];
-            currentGroup.paint[layerName] = new PaintVertexArrayType();
-        }
+    if (!currentGroup || !currentGroup.hasCapacityFor(numVertices)) {
+        currentGroup = new ArrayGroup({
+            layoutVertexArrayType: this.programInterfaces[programName].layoutVertexArrayType,
+            elementArrayType: this.programInterfaces[programName].elementArrayType,
+            elementArrayType2: this.programInterfaces[programName].elementArrayType2,
+            paintVertexArrayTypes: this.paintVertexArrayTypes[programName]
+        });
+        currentGroup.index = groups.length;
         groups.push(currentGroup);
     }
     return currentGroup;
 };
 Bucket.prototype.createArrays = function () {
     this.arrayGroups = {};
-    this.arrayTypes = {};
+    this.paintVertexArrayTypes = {};
     for (var programName in this.programInterfaces) {
-        var programInterface = this.programInterfaces[programName];
-        var programArrayTypes = this.arrayTypes[programName] = {
-            layout: {},
-            paint: {}
-        };
         this.arrayGroups[programName] = [];
-        if (programInterface.vertexBuffer) {
-            var VertexArrayType = new StructArrayType({
-                members: this.programInterfaces[programName].layoutAttributes,
-                alignment: Buffer.VERTEX_ATTRIBUTE_ALIGNMENT
-            });
-            programArrayTypes.layout.vertex = VertexArrayType;
-            var layerPaintAttributes = this.paintAttributes[programName];
-            for (var layerName in layerPaintAttributes) {
-                var PaintVertexArrayType = new StructArrayType({
-                    members: layerPaintAttributes[layerName].attributes,
-                    alignment: Buffer.VERTEX_ATTRIBUTE_ALIGNMENT
-                });
-                programArrayTypes.paint[layerName] = PaintVertexArrayType;
-            }
-        }
-        if (programInterface.elementBuffer) {
-            var ElementArrayType = createElementBufferType(programInterface.elementBufferComponents);
-            programArrayTypes.layout.element = ElementArrayType;
-        }
-        if (programInterface.elementBuffer2) {
-            var ElementArrayType2 = createElementBufferType(programInterface.elementBuffer2Components);
-            programArrayTypes.layout.element2 = ElementArrayType2;
+        var paintVertexArrayTypes = this.paintVertexArrayTypes[programName] = {};
+        var layerPaintAttributes = this.paintAttributes[programName];
+        for (var layerName in layerPaintAttributes) {
+            paintVertexArrayTypes[layerName] = new Bucket.VertexArrayType(layerPaintAttributes[layerName].attributes);
         }
     }
 };
@@ -23383,30 +21141,34 @@ Bucket.prototype.destroy = function (gl) {
     for (var programName in this.bufferGroups) {
         var programBufferGroups = this.bufferGroups[programName];
         for (var i = 0; i < programBufferGroups.length; i++) {
-            var programBuffers = programBufferGroups[i];
-            for (var paintBuffer in programBuffers.paint) {
-                programBuffers.paint[paintBuffer].destroy(gl);
-            }
-            for (var layoutBuffer in programBuffers.layout) {
-                programBuffers.layout[layoutBuffer].destroy(gl);
-            }
-            for (var j in programBuffers.vaos) {
-                programBuffers.vaos[j].destroy(gl);
-            }
-            for (var k in programBuffers.secondVaos) {
-                programBuffers.secondVaos[k].destroy(gl);
-            }
+            programBufferGroups[i].destroy(gl);
         }
     }
 };
 Bucket.prototype.trimArrays = function () {
     for (var programName in this.arrayGroups) {
-        var programArrays = this.arrayGroups[programName];
-        for (var paintArray in programArrays.paint) {
-            programArrays.paint[paintArray].trim();
+        var arrayGroups = this.arrayGroups[programName];
+        for (var i = 0; i < arrayGroups.length; i++) {
+            arrayGroups[i].trim();
         }
-        for (var layoutArray in programArrays.layout) {
-            programArrays.layout[layoutArray].trim();
+    }
+};
+Bucket.prototype.isEmpty = function () {
+    for (var programName in this.arrayGroups) {
+        var arrayGroups = this.arrayGroups[programName];
+        for (var i = 0; i < arrayGroups.length; i++) {
+            if (!arrayGroups[i].isEmpty()) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+Bucket.prototype.getTransferables = function (transferables) {
+    for (var programName in this.arrayGroups) {
+        var arrayGroups = this.arrayGroups[programName];
+        for (var i = 0; i < arrayGroups.length; i++) {
+            arrayGroups[i].getTransferables(transferables);
         }
     }
 };
@@ -23424,29 +21186,18 @@ Bucket.prototype.serialize = function () {
         zoom: this.zoom,
         arrays: util.mapObject(this.arrayGroups, function (programArrayGroups) {
             return programArrayGroups.map(function (arrayGroup) {
-                return util.mapObject(arrayGroup, function (arrays) {
-                    return util.mapObject(arrays, function (array) {
-                        return array.serialize();
-                    });
-                });
+                return arrayGroup.serialize();
             });
         }),
-        arrayTypes: util.mapObject(this.arrayTypes, function (programArrayTypes) {
-            return util.mapObject(programArrayTypes, function (arrayTypes) {
-                return util.mapObject(arrayTypes, function (arrayType) {
-                    return arrayType.serialize();
-                });
+        paintVertexArrayTypes: util.mapObject(this.paintVertexArrayTypes, function (arrayTypes) {
+            return util.mapObject(arrayTypes, function (arrayType) {
+                return arrayType.serialize();
             });
         }),
         childLayerIds: this.childLayers.map(function (layer) {
             return layer.id;
         })
     };
-};
-Bucket.prototype.createFilter = function () {
-    if (!this.filter) {
-        this.filter = featureFilter(this.layer.filter);
-    }
 };
 var FAKE_ZOOM_HISTORY = {
     lastIntegerZoom: Infinity,
@@ -23464,9 +21215,9 @@ Bucket.prototype.populatePaintArrays = function (interfaceName, globalProperties
         var groups = this.arrayGroups[interfaceName];
         for (var g = startGroup.index; g < groups.length; g++) {
             var group = groups[g];
-            var length = group.layout.vertex.length;
-            var vertexArray = group.paint[layer.id];
-            vertexArray.resize(length);
+            var length = group.layoutVertexArray.length;
+            var paintArray = group.paintVertexArrays[layer.id];
+            paintArray.resize(length);
             var attributes = this.paintAttributes[interfaceName][layer.id].attributes;
             for (var m = 0; m < attributes.length; m++) {
                 var attribute = attributes[m];
@@ -23475,7 +21226,7 @@ Bucket.prototype.populatePaintArrays = function (interfaceName, globalProperties
                 var components = attribute.components || 1;
                 var start = g === startGroup.index ? startIndex : 0;
                 for (var i = start; i < length; i++) {
-                    var vertex = vertexArray.get(i);
+                    var vertex = paintArray.get(i);
                     for (var c = 0; c < components; c++) {
                         var memberName = components > 1 ? attribute.name + c : attribute.name;
                         vertex[memberName] = value[c] * multiplier;
@@ -23485,15 +21236,21 @@ Bucket.prototype.populatePaintArrays = function (interfaceName, globalProperties
         }
     }
 };
-function createElementBufferType(components) {
+Bucket.VertexArrayType = function (members) {
+    return new StructArrayType({
+        members: members,
+        alignment: 4
+    });
+};
+Bucket.ElementArrayType = function (components) {
     return new StructArrayType({
         members: [{
-                type: Buffer.ELEMENT_ATTRIBUTE_TYPE,
+                type: 'Uint16',
                 name: 'vertices',
                 components: components || 3
             }]
     });
-}
+};
 function createPaintAttributes(bucket) {
     var attributes = {};
     for (var interfaceName in bucket.programInterfaces) {
@@ -23667,7 +21424,7 @@ function createGetUniform(attribute, stopOffset) {
         return [Math.max(0, Math.min(4, stopInterp - stopOffset))];
     };
 }
-},{"../render/vertex_array_object":455,"../util/struct_array":533,"../util/util":535,"./bucket/circle_bucket":429,"./bucket/fill_bucket":430,"./bucket/line_bucket":431,"./bucket/symbol_bucket":432,"./buffer":433,"feature-filter":338}],429:[function(require,module,exports){
+},{"../util/struct_array":542,"../util/util":544,"./array_group":427,"./bucket/circle_bucket":429,"./bucket/fill_bucket":430,"./bucket/line_bucket":431,"./bucket/symbol_bucket":432,"./buffer_group":434}],429:[function(require,module,exports){
 'use strict';
 var Bucket = require('../bucket');
 var util = require('../../util/util');
@@ -23678,18 +21435,17 @@ function CircleBucket() {
     Bucket.apply(this, arguments);
 }
 CircleBucket.prototype = util.inherit(Bucket, {});
-CircleBucket.prototype.addCircleVertex = function (vertexArray, x, y, extrudeX, extrudeY) {
-    return vertexArray.emplaceBack(x * 2 + (extrudeX + 1) / 2, y * 2 + (extrudeY + 1) / 2);
+CircleBucket.prototype.addCircleVertex = function (layoutVertexArray, x, y, extrudeX, extrudeY) {
+    return layoutVertexArray.emplaceBack(x * 2 + (extrudeX + 1) / 2, y * 2 + (extrudeY + 1) / 2);
 };
 CircleBucket.prototype.programInterfaces = {
     circle: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: [{
+        layoutVertexArrayType: new Bucket.VertexArrayType([{
                 name: 'a_pos',
                 components: 2,
                 type: 'Int16'
-            }],
+            }]),
+        elementArrayType: new Bucket.ElementArrayType(),
         paintAttributes: [
             {
                 name: 'a_color',
@@ -23741,7 +21497,7 @@ CircleBucket.prototype.addFeature = function (feature) {
     var globalProperties = { zoom: this.zoom };
     var geometries = loadGeometry(feature);
     var startGroup = this.prepareArrayGroup('circle', 0);
-    var startIndex = startGroup.layout.vertex.length;
+    var startIndex = startGroup.layoutVertexArray.length;
     for (var j = 0; j < geometries.length; j++) {
         for (var k = 0; k < geometries[j].length; k++) {
             var x = geometries[j][k].x;
@@ -23749,18 +21505,18 @@ CircleBucket.prototype.addFeature = function (feature) {
             if (x < 0 || x >= EXTENT || y < 0 || y >= EXTENT)
                 continue;
             var group = this.prepareArrayGroup('circle', 4);
-            var vertexArray = group.layout.vertex;
-            var index = this.addCircleVertex(vertexArray, x, y, -1, -1);
-            this.addCircleVertex(vertexArray, x, y, 1, -1);
-            this.addCircleVertex(vertexArray, x, y, 1, 1);
-            this.addCircleVertex(vertexArray, x, y, -1, 1);
-            group.layout.element.emplaceBack(index, index + 1, index + 2);
-            group.layout.element.emplaceBack(index, index + 3, index + 2);
+            var layoutVertexArray = group.layoutVertexArray;
+            var index = this.addCircleVertex(layoutVertexArray, x, y, -1, -1);
+            this.addCircleVertex(layoutVertexArray, x, y, 1, -1);
+            this.addCircleVertex(layoutVertexArray, x, y, 1, 1);
+            this.addCircleVertex(layoutVertexArray, x, y, -1, 1);
+            group.elementArray.emplaceBack(index, index + 1, index + 2);
+            group.elementArray.emplaceBack(index, index + 3, index + 2);
         }
     }
     this.populatePaintArrays('circle', globalProperties, feature.properties, startGroup, startIndex);
 };
-},{"../../util/util":535,"../bucket":428,"../load_geometry":435}],430:[function(require,module,exports){
+},{"../../util/util":544,"../bucket":428,"../load_geometry":436}],430:[function(require,module,exports){
 'use strict';
 var Bucket = require('../bucket');
 var util = require('../../util/util');
@@ -23775,16 +21531,13 @@ function FillBucket() {
 FillBucket.prototype = util.inherit(Bucket, {});
 FillBucket.prototype.programInterfaces = {
     fill: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        elementBufferComponents: 1,
-        elementBuffer2: true,
-        elementBuffer2Components: 2,
-        layoutAttributes: [{
+        layoutVertexArrayType: new Bucket.VertexArrayType([{
                 name: 'a_pos',
                 components: 2,
                 type: 'Int16'
-            }],
+            }]),
+        elementArrayType: new Bucket.ElementArrayType(1),
+        elementArrayType2: new Bucket.ElementArrayType(2),
         paintAttributes: [
             {
                 name: 'a_color',
@@ -23823,7 +21576,7 @@ FillBucket.prototype.addFeature = function (feature) {
     var lines = loadGeometry(feature);
     var polygons = classifyRings(lines, EARCUT_MAX_RINGS);
     var startGroup = this.prepareArrayGroup('fill', 0);
-    var startIndex = startGroup.layout.vertex.length;
+    var startIndex = startGroup.layoutVertexArray.length;
     for (var i = 0; i < polygons.length; i++) {
         this.addPolygon(polygons[i]);
     }
@@ -23837,16 +21590,16 @@ FillBucket.prototype.addPolygon = function (polygon) {
     var group = this.prepareArrayGroup('fill', numVertices);
     var flattened = [];
     var holeIndices = [];
-    var startIndex = group.layout.vertex.length;
+    var startIndex = group.layoutVertexArray.length;
     for (var r = 0; r < polygon.length; r++) {
         var ring = polygon[r];
         if (r > 0)
             holeIndices.push(flattened.length / 2);
         for (var v = 0; v < ring.length; v++) {
             var vertex = ring[v];
-            var index = group.layout.vertex.emplaceBack(vertex.x, vertex.y);
+            var index = group.layoutVertexArray.emplaceBack(vertex.x, vertex.y);
             if (v >= 1) {
-                group.layout.element2.emplaceBack(index - 1, index);
+                group.elementArray2.emplaceBack(index - 1, index);
             }
             flattened.push(vertex.x);
             flattened.push(vertex.y);
@@ -23854,10 +21607,10 @@ FillBucket.prototype.addPolygon = function (polygon) {
     }
     var triangleIndices = earcut(flattened, holeIndices);
     for (var i = 0; i < triangleIndices.length; i++) {
-        group.layout.element.emplaceBack(triangleIndices[i] + startIndex);
+        group.elementArray.emplaceBack(triangleIndices[i] + startIndex);
     }
 };
-},{"../../util/classify_rings":524,"../../util/util":535,"../bucket":428,"../load_geometry":435,"earcut":310}],431:[function(require,module,exports){
+},{"../../util/classify_rings":530,"../../util/util":544,"../bucket":428,"../load_geometry":436,"earcut":310}],431:[function(require,module,exports){
 'use strict';
 var Bucket = require('../bucket');
 var util = require('../../util/util');
@@ -23874,14 +21627,12 @@ function LineBucket() {
     Bucket.apply(this, arguments);
 }
 LineBucket.prototype = util.inherit(Bucket, {});
-LineBucket.prototype.addLineVertex = function (vertexBuffer, point, extrude, tx, ty, dir, linesofar) {
-    return vertexBuffer.emplaceBack(point.x << 1 | tx, point.y << 1 | ty, Math.round(EXTRUDE_SCALE * extrude.x) + 128, Math.round(EXTRUDE_SCALE * extrude.y) + 128, (dir === 0 ? 0 : dir < 0 ? -1 : 1) + 1 | (linesofar * LINE_DISTANCE_SCALE & 63) << 2, linesofar * LINE_DISTANCE_SCALE >> 6);
+LineBucket.prototype.addLineVertex = function (layoutVertexBuffer, point, extrude, tx, ty, dir, linesofar) {
+    return layoutVertexBuffer.emplaceBack(point.x << 1 | tx, point.y << 1 | ty, Math.round(EXTRUDE_SCALE * extrude.x) + 128, Math.round(EXTRUDE_SCALE * extrude.y) + 128, (dir === 0 ? 0 : dir < 0 ? -1 : 1) + 1 | (linesofar * LINE_DISTANCE_SCALE & 63) << 2, linesofar * LINE_DISTANCE_SCALE >> 6);
 };
 LineBucket.prototype.programInterfaces = {
     line: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: [
+        layoutVertexArrayType: new Bucket.VertexArrayType([
             {
                 name: 'a_pos',
                 components: 2,
@@ -23892,16 +21643,27 @@ LineBucket.prototype.programInterfaces = {
                 components: 4,
                 type: 'Uint8'
             }
-        ]
+        ]),
+        paintAttributes: [{
+                name: 'a_color',
+                components: 4,
+                type: 'Uint8',
+                getValue: function (layer, globalProperties, featureProperties) {
+                    return layer.getPaintValue('line-color', globalProperties, featureProperties);
+                },
+                multiplier: 255,
+                paintProperty: 'line-color'
+            }],
+        elementArrayType: new Bucket.ElementArrayType()
     }
 };
 LineBucket.prototype.addFeature = function (feature) {
     var lines = loadGeometry(feature, LINE_DISTANCE_BUFFER_BITS);
     for (var i = 0; i < lines.length; i++) {
-        this.addLine(lines[i], this.layer.layout['line-join'], this.layer.layout['line-cap'], this.layer.layout['line-miter-limit'], this.layer.layout['line-round-limit']);
+        this.addLine(lines[i], feature.properties, this.layer.layout['line-join'], this.layer.layout['line-cap'], this.layer.layout['line-miter-limit'], this.layer.layout['line-round-limit']);
     }
 };
-LineBucket.prototype.addLine = function (vertices, join, cap, miterLimit, roundLimit) {
+LineBucket.prototype.addLine = function (vertices, featureProperties, join, cap, miterLimit, roundLimit) {
     var len = vertices.length;
     while (len > 2 && vertices[len - 1].equals(vertices[len - 2])) {
         len--;
@@ -23912,7 +21674,8 @@ LineBucket.prototype.addLine = function (vertices, join, cap, miterLimit, roundL
         miterLimit = 1.05;
     var sharpCornerOffset = SHARP_CORNER_OFFSET * (EXTENT / (512 * this.overscaling));
     var firstVertex = vertices[0], lastVertex = vertices[len - 1], closed = firstVertex.equals(lastVertex);
-    this.prepareArrayGroup('line', len * 10);
+    var group = this.prepareArrayGroup('line', len * 10);
+    var startIndex = group.layoutVertexArray.length;
     if (len === 2 && closed)
         return;
     this.distance = 0;
@@ -24045,17 +21808,18 @@ LineBucket.prototype.addLine = function (vertices, join, cap, miterLimit, roundL
         }
         startOfLine = false;
     }
+    this.populatePaintArrays('line', { zoom: this.zoom }, featureProperties, group, startIndex);
 };
 LineBucket.prototype.addCurrentVertex = function (currentVertex, distance, normal, endLeft, endRight, round) {
     var tx = round ? 1 : 0;
     var extrude;
-    var layoutArrays = this.arrayGroups.line[this.arrayGroups.line.length - 1].layout;
-    var vertexArray = layoutArrays.vertex;
-    var elementArray = layoutArrays.element;
+    var arrayGroup = this.arrayGroups.line[this.arrayGroups.line.length - 1];
+    var layoutVertexArray = arrayGroup.layoutVertexArray;
+    var elementArray = arrayGroup.elementArray;
     extrude = normal.clone();
     if (endLeft)
         extrude._sub(normal.perp()._mult(endLeft));
-    this.e3 = this.addLineVertex(vertexArray, currentVertex, extrude, tx, 0, endLeft, distance);
+    this.e3 = this.addLineVertex(layoutVertexArray, currentVertex, extrude, tx, 0, endLeft, distance);
     if (this.e1 >= 0 && this.e2 >= 0) {
         elementArray.emplaceBack(this.e1, this.e2, this.e3);
     }
@@ -24064,7 +21828,7 @@ LineBucket.prototype.addCurrentVertex = function (currentVertex, distance, norma
     extrude = normal.mult(-1);
     if (endRight)
         extrude._sub(normal.perp()._mult(endRight));
-    this.e3 = this.addLineVertex(vertexArray, currentVertex, extrude, tx, 1, -endRight, distance);
+    this.e3 = this.addLineVertex(layoutVertexArray, currentVertex, extrude, tx, 1, -endRight, distance);
     if (this.e1 >= 0 && this.e2 >= 0) {
         elementArray.emplaceBack(this.e1, this.e2, this.e3);
     }
@@ -24078,10 +21842,10 @@ LineBucket.prototype.addCurrentVertex = function (currentVertex, distance, norma
 LineBucket.prototype.addPieSliceVertex = function (currentVertex, distance, extrude, lineTurnsLeft) {
     var ty = lineTurnsLeft ? 1 : 0;
     extrude = extrude.mult(lineTurnsLeft ? -1 : 1);
-    var layoutArrays = this.arrayGroups.line[this.arrayGroups.line.length - 1].layout;
-    var vertexArray = layoutArrays.vertex;
-    var elementArray = layoutArrays.element;
-    this.e3 = this.addLineVertex(vertexArray, currentVertex, extrude, 0, ty, 0, distance);
+    var arrayGroup = this.arrayGroups.line[this.arrayGroups.line.length - 1];
+    var layoutVertexArray = arrayGroup.layoutVertexArray;
+    var elementArray = arrayGroup.elementArray;
+    this.e3 = this.addLineVertex(layoutVertexArray, currentVertex, extrude, 0, ty, 0, distance);
     if (this.e1 >= 0 && this.e2 >= 0) {
         elementArray.emplaceBack(this.e1, this.e2, this.e3);
     }
@@ -24091,7 +21855,7 @@ LineBucket.prototype.addPieSliceVertex = function (currentVertex, distance, extr
         this.e1 = this.e3;
     }
 };
-},{"../../util/util":535,"../bucket":428,"../load_geometry":435}],432:[function(require,module,exports){
+},{"../../util/util":544,"../bucket":428,"../load_geometry":436}],432:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var Bucket = require('../bucket');
@@ -24106,6 +21870,8 @@ var clipLine = require('../../symbol/clip_line');
 var util = require('../../util/util');
 var loadGeometry = require('../load_geometry');
 var CollisionFeature = require('../../symbol/collision_feature');
+var findPoleOfInaccessibility = require('../../util/find_pole_of_inaccessibility');
+var classifyRings = require('../../util/classify_rings');
 var shapeText = Shaping.shapeText;
 var shapeIcon = Shaping.shapeIcon;
 var getGlyphQuads = Quads.getGlyphQuads;
@@ -24125,6 +21891,7 @@ function SymbolBucket(options) {
     this.adjustedIconSize = options.adjustedIconSize;
     this.fontstack = options.fontstack;
 }
+SymbolBucket.MAX_QUADS = 65535;
 SymbolBucket.prototype = util.inherit(Bucket, {});
 SymbolBucket.prototype.serialize = function () {
     var serialized = Bucket.prototype.serialize.apply(this);
@@ -24135,7 +21902,7 @@ SymbolBucket.prototype.serialize = function () {
     serialized.fontstack = this.fontstack;
     return serialized;
 };
-var programAttributes = [
+var layoutVertexArrayType = new Bucket.VertexArrayType([
     {
         name: 'a_pos',
         components: 2,
@@ -24147,36 +21914,34 @@ var programAttributes = [
         type: 'Int16'
     },
     {
-        name: 'a_data1',
-        components: 4,
-        type: 'Uint8'
+        name: 'a_texture_pos',
+        components: 2,
+        type: 'Uint16'
     },
     {
-        name: 'a_data2',
-        components: 2,
+        name: 'a_data',
+        components: 4,
         type: 'Uint8'
     }
-];
+]);
+var elementArrayType = new Bucket.ElementArrayType();
 function addVertex(array, x, y, ox, oy, tx, ty, minzoom, maxzoom, labelminzoom, labelangle) {
     return array.emplaceBack(x, y, Math.round(ox * 64), Math.round(oy * 64), tx / 4, ty / 4, (labelminzoom || 0) * 10, labelangle, (minzoom || 0) * 10, Math.min(maxzoom || 25, 25) * 10);
 }
-SymbolBucket.prototype.addCollisionBoxVertex = function (vertexArray, point, extrude, maxZoom, placementZoom) {
-    return vertexArray.emplaceBack(point.x, point.y, Math.round(extrude.x), Math.round(extrude.y), maxZoom * 10, placementZoom * 10);
+SymbolBucket.prototype.addCollisionBoxVertex = function (layoutVertexArray, point, extrude, maxZoom, placementZoom) {
+    return layoutVertexArray.emplaceBack(point.x, point.y, Math.round(extrude.x), Math.round(extrude.y), maxZoom * 10, placementZoom * 10);
 };
 SymbolBucket.prototype.programInterfaces = {
     glyph: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: programAttributes
+        layoutVertexArrayType: layoutVertexArrayType,
+        elementArrayType: elementArrayType
     },
     icon: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: programAttributes
+        layoutVertexArrayType: layoutVertexArrayType,
+        elementArrayType: elementArrayType
     },
     collisionBox: {
-        vertexBuffer: true,
-        layoutAttributes: [
+        layoutVertexArrayType: new Bucket.VertexArrayType([
             {
                 name: 'a_pos',
                 components: 2,
@@ -24192,10 +21957,10 @@ SymbolBucket.prototype.programInterfaces = {
                 components: 2,
                 type: 'Uint8'
             }
-        ]
+        ])
     }
 };
-SymbolBucket.prototype.populateBuffers = function (collisionTile, stacks, icons) {
+SymbolBucket.prototype.populateArrays = function (collisionTile, stacks, icons) {
     var zoomHistory = {
         lastIntegerZoom: Infinity,
         lastIntegerZoomTime: 0,
@@ -24309,17 +22074,23 @@ SymbolBucket.prototype.populateBuffers = function (collisionTile, stacks, icons)
 SymbolBucket.prototype.addFeature = function (lines, shapedText, shapedIcon, feature) {
     var layout = this.layer.layout;
     var glyphSize = 24;
-    var fontScale = this.adjustedTextSize / glyphSize, textMaxSize = this.adjustedTextMaxSize !== undefined ? this.adjustedTextMaxSize : this.adjustedTextSize, textBoxScale = this.tilePixelRatio * fontScale, textMaxBoxScale = this.tilePixelRatio * textMaxSize / glyphSize, iconBoxScale = this.tilePixelRatio * this.adjustedIconSize, symbolMinDistance = this.tilePixelRatio * layout['symbol-spacing'], avoidEdges = layout['symbol-avoid-edges'], textPadding = layout['text-padding'] * this.tilePixelRatio, iconPadding = layout['icon-padding'] * this.tilePixelRatio, textMaxAngle = layout['text-max-angle'] / 180 * Math.PI, textAlongLine = layout['text-rotation-alignment'] === 'map' && layout['symbol-placement'] === 'line', iconAlongLine = layout['icon-rotation-alignment'] === 'map' && layout['symbol-placement'] === 'line', mayOverlap = layout['text-allow-overlap'] || layout['icon-allow-overlap'] || layout['text-ignore-placement'] || layout['icon-ignore-placement'], isLine = layout['symbol-placement'] === 'line', textRepeatDistance = symbolMinDistance / 2;
+    var fontScale = this.adjustedTextSize / glyphSize, textMaxSize = this.adjustedTextMaxSize !== undefined ? this.adjustedTextMaxSize : this.adjustedTextSize, textBoxScale = this.tilePixelRatio * fontScale, textMaxBoxScale = this.tilePixelRatio * textMaxSize / glyphSize, iconBoxScale = this.tilePixelRatio * this.adjustedIconSize, symbolMinDistance = this.tilePixelRatio * layout['symbol-spacing'], avoidEdges = layout['symbol-avoid-edges'], textPadding = layout['text-padding'] * this.tilePixelRatio, iconPadding = layout['icon-padding'] * this.tilePixelRatio, textMaxAngle = layout['text-max-angle'] / 180 * Math.PI, textAlongLine = layout['text-rotation-alignment'] === 'map' && layout['symbol-placement'] === 'line', iconAlongLine = layout['icon-rotation-alignment'] === 'map' && layout['symbol-placement'] === 'line', mayOverlap = layout['text-allow-overlap'] || layout['icon-allow-overlap'] || layout['text-ignore-placement'] || layout['icon-ignore-placement'], symbolPlacement = layout['symbol-placement'], isLine = symbolPlacement === 'line', textRepeatDistance = symbolMinDistance / 2;
+    var list = null;
     if (isLine) {
-        lines = clipLine(lines, 0, 0, EXTENT, EXTENT);
+        list = clipLine(lines, 0, 0, EXTENT, EXTENT);
+    } else {
+        list = classifyRings(lines, 0);
     }
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
-        var anchors;
+    for (var i = 0; i < list.length; i++) {
+        var anchors = null;
+        var pointsOrRings = list[i];
+        var line = null;
         if (isLine) {
+            line = pointsOrRings;
             anchors = getAnchors(line, symbolMinDistance, textMaxAngle, shapedText, shapedIcon, glyphSize, textMaxBoxScale, this.overscaling, EXTENT);
         } else {
-            anchors = [new Anchor(line[0].x, line[0].y, 0)];
+            line = pointsOrRings[0];
+            anchors = this.findPolygonAnchors(pointsOrRings);
         }
         for (var j = 0, len = anchors.length; j < len; j++) {
             var anchor = anchors[j];
@@ -24335,6 +22106,18 @@ SymbolBucket.prototype.addFeature = function (lines, shapedText, shapedIcon, fea
             this.addSymbolInstance(anchor, line, shapedText, shapedIcon, this.layer, addToBuffers, this.symbolInstancesArray.length, this.collisionBoxArray, feature.index, this.sourceLayerIndex, this.index, textBoxScale, textPadding, textAlongLine, iconBoxScale, iconPadding, iconAlongLine, { zoom: this.zoom }, feature.properties);
         }
     }
+};
+SymbolBucket.prototype.findPolygonAnchors = function (polygonRings) {
+    var outerRing = polygonRings[0];
+    if (outerRing.length === 0) {
+        return [];
+    } else if (outerRing.length < 3 || !util.isClosedPolygon(outerRing)) {
+        return [new Anchor(outerRing[0].x, outerRing[0].y, 0)];
+    }
+    var anchors = null;
+    var poi = findPoleOfInaccessibility(polygonRings, 16);
+    anchors = [new Anchor(poi.x, poi.y, 0)];
+    return anchors;
 };
 SymbolBucket.prototype.anchorIsTooClose = function (text, repeatDistance, anchor) {
     var compareText = this.compareText;
@@ -24409,8 +22192,8 @@ SymbolBucket.prototype.placeFeatures = function (collisionTile, showCollisionBox
 };
 SymbolBucket.prototype.addSymbols = function (programName, quadsStart, quadsEnd, scale, keepUpright, alongLine, placementAngle) {
     var group = this.prepareArrayGroup(programName, 4 * (quadsEnd - quadsStart));
-    var elementArray = group.layout.element;
-    var vertexArray = group.layout.vertex;
+    var elementArray = group.elementArray;
+    var layoutVertexArray = group.layoutVertexArray;
     var zoom = this.zoom;
     var placementZoom = Math.max(Math.log(scale) / Math.LN2 + zoom, 0);
     for (var k = quadsStart; k < quadsEnd; k++) {
@@ -24424,10 +22207,10 @@ SymbolBucket.prototype.addSymbols = function (programName, quadsStart, quadsEnd,
         if (minZoom === placementZoom)
             minZoom = 0;
         var glyphAngle = Math.round(symbol.glyphAngle / (Math.PI * 2) * 256);
-        var index = addVertex(vertexArray, anchorPoint.x, anchorPoint.y, tl.x, tl.y, tex.x, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
-        addVertex(vertexArray, anchorPoint.x, anchorPoint.y, tr.x, tr.y, tex.x + tex.w, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
-        addVertex(vertexArray, anchorPoint.x, anchorPoint.y, bl.x, bl.y, tex.x, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
-        addVertex(vertexArray, anchorPoint.x, anchorPoint.y, br.x, br.y, tex.x + tex.w, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
+        var index = addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, tl.x, tl.y, tex.x, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
+        addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, tr.x, tr.y, tex.x + tex.w, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
+        addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, bl.x, bl.y, tex.x, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
+        addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, br.x, br.y, tex.x + tex.w, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
         elementArray.emplaceBack(index, index + 1, index + 2);
         elementArray.emplaceBack(index + 1, index + 2, index + 3);
     }
@@ -24450,7 +22233,7 @@ SymbolBucket.prototype.updateFont = function (stacks) {
 };
 SymbolBucket.prototype.addToDebugBuffers = function (collisionTile) {
     var group = this.prepareArrayGroup('collisionBox', 0);
-    var vertexArray = group.layout.vertex;
+    var layoutVertexArray = group.layoutVertexArray;
     var angle = -collisionTile.angle;
     var yStretch = collisionTile.yStretch;
     for (var j = this.symbolInstancesStartIndex; j < this.symbolInstancesEndIndex; j++) {
@@ -24476,14 +22259,14 @@ SymbolBucket.prototype.addToDebugBuffers = function (collisionTile) {
                 var br = new Point(box.x2, box.y2 * yStretch)._rotate(angle);
                 var maxZoom = Math.max(0, Math.min(25, this.zoom + Math.log(box.maxScale) / Math.LN2));
                 var placementZoom = Math.max(0, Math.min(25, this.zoom + Math.log(box.placementScale) / Math.LN2));
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tl, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tr, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tr, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, br, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, br, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, bl, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, bl, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tr, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tr, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, br, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, br, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, bl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, bl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tl, maxZoom, placementZoom);
             }
         }
     }
@@ -24514,12 +22297,16 @@ SymbolBucket.prototype.addSymbolInstance = function (anchor, line, shapedText, s
     iconQuadEndIndex = this.symbolQuadsArray.length;
     var iconBoxStartIndex = iconCollisionFeature ? iconCollisionFeature.boxStartIndex : this.collisionBoxArray.length;
     var iconBoxEndIndex = iconCollisionFeature ? iconCollisionFeature.boxEndIndex : this.collisionBoxArray.length;
+    if (iconQuadEndIndex > SymbolBucket.MAX_QUADS)
+        util.warnOnce('Too many symbols being rendered in a tile. See https://github.com/mapbox/mapbox-gl-js/issues/2907');
+    if (glyphQuadEndIndex > SymbolBucket.MAX_QUADS)
+        util.warnOnce('Too many glyphs being rendered in a tile. See https://github.com/mapbox/mapbox-gl-js/issues/2907');
     return this.symbolInstancesArray.emplaceBack(textBoxStartIndex, textBoxEndIndex, iconBoxStartIndex, iconBoxEndIndex, glyphQuadStartIndex, glyphQuadEndIndex, iconQuadStartIndex, iconQuadEndIndex, anchor.x, anchor.y, index);
 };
 SymbolBucket.prototype.addSymbolQuad = function (symbolQuad) {
     return this.symbolQuadsArray.emplaceBack(symbolQuad.anchorPoint.x, symbolQuad.anchorPoint.y, symbolQuad.tl.x, symbolQuad.tl.y, symbolQuad.tr.x, symbolQuad.tr.y, symbolQuad.bl.x, symbolQuad.bl.y, symbolQuad.br.x, symbolQuad.br.y, symbolQuad.tex.h, symbolQuad.tex.w, symbolQuad.tex.x, symbolQuad.tex.y, symbolQuad.anchorAngle, symbolQuad.glyphAngle, symbolQuad.maxScale, symbolQuad.minScale);
 };
-},{"../../symbol/anchor":485,"../../symbol/clip_line":487,"../../symbol/collision_feature":489,"../../symbol/get_anchors":491,"../../symbol/mergelines":494,"../../symbol/quads":495,"../../symbol/resolve_text":496,"../../symbol/shaping":497,"../../util/token":534,"../../util/util":535,"../bucket":428,"../load_geometry":435,"point-geometry":544}],433:[function(require,module,exports){
+},{"../../symbol/anchor":491,"../../symbol/clip_line":493,"../../symbol/collision_feature":495,"../../symbol/get_anchors":497,"../../symbol/mergelines":500,"../../symbol/quads":501,"../../symbol/resolve_text":502,"../../symbol/shaping":503,"../../util/classify_rings":530,"../../util/find_pole_of_inaccessibility":536,"../../util/token":543,"../../util/util":544,"../bucket":428,"../load_geometry":436,"point-geometry":554}],433:[function(require,module,exports){
 'use strict';
 module.exports = Buffer;
 function Buffer(array, arrayType, type) {
@@ -24565,9 +22352,50 @@ Buffer.BufferType = {
     VERTEX: 'ARRAY_BUFFER',
     ELEMENT: 'ELEMENT_ARRAY_BUFFER'
 };
-Buffer.ELEMENT_ATTRIBUTE_TYPE = 'Uint16';
-Buffer.VERTEX_ATTRIBUTE_ALIGNMENT = 4;
 },{}],434:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var Buffer = require('./buffer');
+var VertexArrayObject = require('../render/vertex_array_object');
+module.exports = BufferGroup;
+function BufferGroup(arrayGroup, arrayTypes) {
+    this.layoutVertexBuffer = new Buffer(arrayGroup.layoutVertexArray, arrayTypes.layoutVertexArrayType, Buffer.BufferType.VERTEX);
+    if (arrayGroup.elementArray) {
+        this.elementBuffer = new Buffer(arrayGroup.elementArray, arrayTypes.elementArrayType, Buffer.BufferType.ELEMENT);
+    }
+    var vaos = this.vaos = {};
+    var secondVaos;
+    if (arrayGroup.elementArray2) {
+        this.elementBuffer2 = new Buffer(arrayGroup.elementArray2, arrayTypes.elementArrayType2, Buffer.BufferType.ELEMENT);
+        secondVaos = this.secondVaos = {};
+    }
+    this.paintVertexBuffers = util.mapObject(arrayGroup.paintVertexArrays, function (array, name) {
+        vaos[name] = new VertexArrayObject();
+        if (arrayGroup.elementArray2) {
+            secondVaos[name] = new VertexArrayObject();
+        }
+        return new Buffer(array, arrayTypes.paintVertexArrayTypes[name], Buffer.BufferType.VERTEX);
+    });
+}
+BufferGroup.prototype.destroy = function (gl) {
+    this.layoutVertexBuffer.destroy(gl);
+    if (this.elementBuffer) {
+        this.elementBuffer.destroy(gl);
+    }
+    if (this.elementBuffer2) {
+        this.elementBuffer2.destroy(gl);
+    }
+    for (var n in this.paintVertexBuffers) {
+        this.paintVertexBuffers[n].destroy(gl);
+    }
+    for (var j in this.vaos) {
+        this.vaos[j].destroy(gl);
+    }
+    for (var k in this.secondVaos) {
+        this.secondVaos[k].destroy(gl);
+    }
+};
+},{"../render/vertex_array_object":457,"../util/util":544,"./buffer":433}],435:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var loadGeometry = require('./load_geometry');
@@ -24668,7 +22496,7 @@ function translateDistance(translate) {
 }
 FeatureIndex.prototype.query = function (args, styleLayers) {
     if (!this.vtLayers) {
-        this.vtLayers = new vt.VectorTile(new Protobuf(new Uint8Array(this.rawTileData))).layers;
+        this.vtLayers = new vt.VectorTile(new Protobuf(this.rawTileData)).layers;
         this.sourceLayerCoder = new DictionaryCoder(this.vtLayers ? Object.keys(this.vtLayers).sort() : ['_geojsonTileLayer']);
     }
     var result = {};
@@ -24823,7 +22651,7 @@ function offsetLine(rings, offset) {
     }
     return newRings;
 }
-},{"../util/dictionary_coder":526,"../util/intersection_tests":530,"../util/struct_array":533,"../util/util":535,"../util/vectortile_to_geojson":536,"./bucket":428,"./load_geometry":435,"feature-filter":338,"grid-index":361,"pbf":543,"point-geometry":544,"vector-tile":738}],435:[function(require,module,exports){
+},{"../util/dictionary_coder":532,"../util/intersection_tests":539,"../util/struct_array":542,"../util/util":544,"../util/vectortile_to_geojson":545,"./bucket":428,"./load_geometry":436,"feature-filter":338,"grid-index":362,"pbf":553,"point-geometry":554,"vector-tile":748}],436:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var EXTENT = require('./bucket').EXTENT;
@@ -24854,7 +22682,7 @@ module.exports = function loadGeometry(feature, bits) {
     }
     return geometry;
 };
-},{"../util/util":535,"./bucket":428}],436:[function(require,module,exports){
+},{"../util/util":544,"./bucket":428}],437:[function(require,module,exports){
 'use strict';
 module.exports = Coordinate;
 function Coordinate(column, row, zoom) {
@@ -24886,7 +22714,7 @@ Coordinate.prototype = {
         return this;
     }
 };
-},{}],437:[function(require,module,exports){
+},{}],438:[function(require,module,exports){
 'use strict';
 module.exports = LngLat;
 var wrap = require('../util/util').wrap;
@@ -24915,13 +22743,15 @@ LngLat.prototype.toString = function () {
 LngLat.convert = function (input) {
     if (input instanceof LngLat) {
         return input;
-    }
-    if (Array.isArray(input)) {
+    } else if (input && input.hasOwnProperty('lng') && input.hasOwnProperty('lat')) {
+        return new LngLat(input.lng, input.lat);
+    } else if (Array.isArray(input) && input.length === 2) {
         return new LngLat(input[0], input[1]);
+    } else {
+        throw new Error('`LngLatLike` argument must be specified as a LngLat instance, an object {lng: <lng>, lat: <lat>}, or an array of [<lng>, <lat>]');
     }
-    return input;
 };
-},{"../util/util":535}],438:[function(require,module,exports){
+},{"../util/util":544}],439:[function(require,module,exports){
 'use strict';
 module.exports = LngLatBounds;
 var LngLat = require('./lng_lat');
@@ -24929,20 +22759,28 @@ function LngLatBounds(sw, ne) {
     if (!sw) {
         return;
     } else if (ne) {
-        this.extend(sw).extend(ne);
+        this.setSouthWest(sw).setNorthEast(ne);
     } else if (sw.length === 4) {
-        this.extend([
+        this.setSouthWest([
             sw[0],
             sw[1]
-        ]).extend([
+        ]).setNorthEast([
             sw[2],
             sw[3]
         ]);
     } else {
-        this.extend(sw[0]).extend(sw[1]);
+        this.setSouthWest(sw[0]).setNorthEast(sw[1]);
     }
 }
 LngLatBounds.prototype = {
+    setNorthEast: function (ne) {
+        this._ne = LngLat.convert(ne);
+        return this;
+    },
+    setSouthWest: function (sw) {
+        this._sw = LngLat.convert(sw);
+        return this;
+    },
     extend: function (obj) {
         var sw = this._sw, ne = this._ne, sw2, ne2;
         if (obj instanceof LngLat) {
@@ -24954,7 +22792,14 @@ LngLatBounds.prototype = {
             if (!sw2 || !ne2)
                 return this;
         } else {
-            return obj ? this.extend(LngLat.convert(obj) || LngLatBounds.convert(obj)) : this;
+            if (Array.isArray(obj)) {
+                if (obj.every(Array.isArray)) {
+                    return this.extend(LngLatBounds.convert(obj));
+                } else {
+                    return this.extend(LngLat.convert(obj));
+                }
+            }
+            return this;
         }
         if (!sw && !ne) {
             this._sw = new LngLat(sw2.lng, sw2.lat);
@@ -25009,9 +22854,9 @@ LngLatBounds.convert = function (input) {
         return input;
     return new LngLatBounds(input);
 };
-},{"./lng_lat":437}],439:[function(require,module,exports){
+},{"./lng_lat":438}],440:[function(require,module,exports){
 'use strict';
-var LngLat = require('./lng_lat'), Point = require('point-geometry'), Coordinate = require('./coordinate'), wrap = require('../util/util').wrap, interp = require('../util/interpolate'), TileCoord = require('../source/tile_coord'), EXTENT = require('../data/bucket').EXTENT, glmatrix = require('gl-matrix');
+var LngLat = require('./lng_lat'), Point = require('point-geometry'), Coordinate = require('./coordinate'), util = require('../util/util'), interp = require('../util/interpolate'), TileCoord = require('../source/tile_coord'), EXTENT = require('../data/bucket').EXTENT, glmatrix = require('gl-matrix');
 var vec4 = glmatrix.vec4, mat4 = glmatrix.mat4, mat2 = glmatrix.mat2;
 module.exports = Transform;
 function Transform(minZoom, maxZoom) {
@@ -25063,7 +22908,7 @@ Transform.prototype = {
         return -this.angle / Math.PI * 180;
     },
     set bearing(bearing) {
-        var b = -wrap(bearing, -180, 180) * Math.PI / 180;
+        var b = -util.wrap(bearing, -180, 180) * Math.PI / 180;
         if (this.angle === b)
             return;
         this._unmodified = false;
@@ -25076,7 +22921,7 @@ Transform.prototype = {
         return this._pitch / Math.PI * 180;
     },
     set pitch(pitch) {
-        var p = Math.min(60, pitch) / 180 * Math.PI;
+        var p = util.clamp(pitch, 0, 60) / 180 * Math.PI;
         if (this._pitch === p)
             return;
         this._unmodified = false;
@@ -25119,6 +22964,26 @@ Transform.prototype = {
         this._center = center;
         this._calcMatrices();
         this._constrain();
+    },
+    coveringZoomLevel: function (options) {
+        return (options.roundZoom ? Math.round : Math.floor)(this.zoom + this.scaleZoom(this.tileSize / options.tileSize));
+    },
+    coveringTiles: function (options) {
+        var z = this.coveringZoomLevel(options);
+        var actualZ = z;
+        if (z < options.minzoom)
+            return [];
+        if (z > options.maxzoom)
+            z = options.maxzoom;
+        var tr = this, tileCenter = tr.locationCoordinate(tr.center)._zoomTo(z), centerPoint = new Point(tileCenter.column - 0.5, tileCenter.row - 0.5);
+        return TileCoord.cover(z, [
+            tr.pointCoordinate(new Point(0, 0))._zoomTo(z),
+            tr.pointCoordinate(new Point(tr.width, 0))._zoomTo(z),
+            tr.pointCoordinate(new Point(tr.width, tr.height))._zoomTo(z),
+            tr.pointCoordinate(new Point(0, tr.height))._zoomTo(z)
+        ], options.reparseOverscaled ? actualZ : z).sort(function (a, b) {
+            return centerPoint.dist(a) - centerPoint.dist(b);
+        });
     },
     resize: function (width, height) {
         this.width = width;
@@ -25342,7 +23207,17 @@ Transform.prototype = {
         this.pixelMatrixInverse = m;
     }
 };
-},{"../data/bucket":428,"../source/tile_coord":463,"../util/interpolate":529,"../util/util":535,"./coordinate":436,"./lng_lat":437,"gl-matrix":351,"point-geometry":544}],440:[function(require,module,exports){
+},{"../data/bucket":428,"../source/tile_coord":469,"../util/interpolate":538,"../util/util":544,"./coordinate":437,"./lng_lat":438,"gl-matrix":352,"point-geometry":554}],441:[function(require,module,exports){
+'use strict';
+var WorkerPool = require('./util/worker_pool');
+var globalWorkerPool;
+module.exports = function getGlobalWorkerPool() {
+    if (!globalWorkerPool) {
+        globalWorkerPool = new WorkerPool();
+    }
+    return globalWorkerPool;
+};
+},{"./util/worker_pool":546}],442:[function(require,module,exports){
 'use strict';
 var simplexFont = {
     ' ': [
@@ -28235,20 +26110,20 @@ module.exports = function textVertices(text, left, baseline, scale) {
     }
     return strokes;
 };
-},{}],441:[function(require,module,exports){
+},{}],443:[function(require,module,exports){
 'use strict';
+var browser = require('./util/browser');
 var mapboxgl = module.exports = {};
 mapboxgl.version = require('../package.json').version;
+mapboxgl.workerCount = Math.max(browser.hardwareConcurrency - 1, 1);
 mapboxgl.Map = require('./ui/map');
 mapboxgl.Control = require('./ui/control/control');
 mapboxgl.Navigation = require('./ui/control/navigation');
 mapboxgl.Geolocate = require('./ui/control/geolocate');
 mapboxgl.Attribution = require('./ui/control/attribution');
+mapboxgl.Scale = require('./ui/control/scale');
 mapboxgl.Popup = require('./ui/popup');
 mapboxgl.Marker = require('./ui/marker');
-mapboxgl.GeoJSONSource = require('./source/geojson_source');
-mapboxgl.VideoSource = require('./source/video_source');
-mapboxgl.ImageSource = require('./source/image_source');
 mapboxgl.Style = require('./style/style');
 mapboxgl.LngLat = require('./geo/lng_lat');
 mapboxgl.LngLatBounds = require('./geo/lng_lat_bounds');
@@ -28269,7 +26144,7 @@ Object.defineProperty(mapboxgl, 'accessToken', {
         config.ACCESS_TOKEN = token;
     }
 });
-},{"../package.json":537,"./geo/lng_lat":437,"./geo/lng_lat_bounds":438,"./source/geojson_source":456,"./source/image_source":458,"./source/video_source":466,"./style/style":472,"./ui/control/attribution":503,"./ui/control/control":504,"./ui/control/geolocate":505,"./ui/control/navigation":506,"./ui/map":515,"./ui/marker":516,"./ui/popup":517,"./util/ajax":519,"./util/browser":520,"./util/config":525,"./util/evented":527,"./util/util":535,"point-geometry":544}],442:[function(require,module,exports){
+},{"../package.json":547,"./geo/lng_lat":438,"./geo/lng_lat_bounds":439,"./style/style":478,"./ui/control/attribution":509,"./ui/control/control":510,"./ui/control/geolocate":511,"./ui/control/navigation":512,"./ui/control/scale":513,"./ui/map":522,"./ui/marker":523,"./ui/popup":524,"./util/ajax":526,"./util/browser":527,"./util/config":531,"./util/evented":535,"./util/util":544,"point-geometry":554}],444:[function(require,module,exports){
 'use strict';
 module.exports = function (uniforms) {
     var pragmas = {
@@ -28284,14 +26159,13 @@ module.exports = function (uniforms) {
     }
     return pragmas;
 };
-},{}],443:[function(require,module,exports){
+},{}],445:[function(require,module,exports){
 'use strict';
-var TilePyramid = require('../source/tile_pyramid');
-var pyramid = new TilePyramid({ tileSize: 512 });
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 var createUniformPragmas = require('./create_uniform_pragmas');
+var tileSize = 512;
 module.exports = drawBackground;
-function drawBackground(painter, source, layer) {
+function drawBackground(painter, sourceCache, layer) {
     var gl = painter.gl;
     var transform = painter.transform;
     var color = layer.paint['background-color'];
@@ -28338,10 +26212,9 @@ function drawBackground(painter, source, layer) {
         painter.tileExtentVAO.bind(gl, program, painter.tileExtentBuffer);
     }
     gl.disable(gl.STENCIL_TEST);
-    var coords = pyramid.coveringTiles(transform);
+    var coords = transform.coveringTiles({ tileSize: tileSize });
     for (var c = 0; c < coords.length; c++) {
         var coord = coords[c];
-        var tileSize = 512;
         if (imagePosA && imagePosB) {
             var tile = {
                 coord: coord,
@@ -28360,11 +26233,11 @@ function drawBackground(painter, source, layer) {
     gl.stencilMask(0);
     gl.stencilFunc(gl.EQUAL, 128, 128);
 }
-},{"../source/pixels_to_tile_units":459,"../source/tile_pyramid":464,"./create_uniform_pragmas":442}],444:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":463,"./create_uniform_pragmas":444}],446:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 module.exports = drawCircles;
-function drawCircles(painter, source, layer, coords) {
+function drawCircles(painter, sourceCache, layer, coords) {
     if (painter.isOpaquePass)
         return;
     var gl = painter.gl;
@@ -28373,7 +26246,7 @@ function drawCircles(painter, source, layer, coords) {
     gl.disable(gl.STENCIL_TEST);
     for (var i = 0; i < coords.length; i++) {
         var coord = coords[i];
-        var tile = source.getTile(coord);
+        var tile = sourceCache.getTile(coord);
         var bucket = tile.getBucket(layer);
         if (!bucket)
             continue;
@@ -28394,21 +26267,21 @@ function drawCircles(painter, source, layer, coords) {
         bucket.setUniforms(gl, 'circle', program, layer, { zoom: painter.transform.zoom });
         for (var k = 0; k < bufferGroups.length; k++) {
             var group = bufferGroups[k];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element, group.paint[layer.id]);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer, group.paintVertexBuffers[layer.id]);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
-},{"../util/browser":520}],445:[function(require,module,exports){
+},{"../util/browser":527}],447:[function(require,module,exports){
 'use strict';
 module.exports = drawCollisionDebug;
-function drawCollisionDebug(painter, source, layer, coords) {
+function drawCollisionDebug(painter, sourceCache, layer, coords) {
     var gl = painter.gl;
     gl.enable(gl.STENCIL_TEST);
     var program = painter.useProgram('collisionbox');
     for (var i = 0; i < coords.length; i++) {
         var coord = coords[i];
-        var tile = source.getTile(coord);
+        var tile = sourceCache.getTile(coord);
         var bucket = tile.getBucket(layer);
         if (!bucket)
             continue;
@@ -28416,7 +26289,7 @@ function drawCollisionDebug(painter, source, layer, coords) {
         if (!bufferGroups || !bufferGroups.length)
             continue;
         var group = bufferGroups[0];
-        if (group.layout.vertex.length === 0)
+        if (group.layoutVertexBuffer.length === 0)
             continue;
         gl.uniformMatrix4fv(program.u_matrix, false, coord.posMatrix);
         painter.enableTileClippingMask(coord);
@@ -28424,11 +26297,11 @@ function drawCollisionDebug(painter, source, layer, coords) {
         gl.uniform1f(program.u_scale, Math.pow(2, painter.transform.zoom - tile.coord.z));
         gl.uniform1f(program.u_zoom, painter.transform.zoom * 10);
         gl.uniform1f(program.u_maxzoom, (tile.coord.z + 1) * 10);
-        group.vaos[layer.id].bind(gl, program, group.layout.vertex);
-        gl.drawArrays(gl.LINES, 0, group.layout.vertex.length);
+        group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer);
+        gl.drawArrays(gl.LINES, 0, group.layoutVertexBuffer.length);
     }
 }
-},{}],446:[function(require,module,exports){
+},{}],448:[function(require,module,exports){
 'use strict';
 var textVertices = require('../lib/debugtext');
 var browser = require('../util/browser');
@@ -28437,16 +26310,16 @@ var EXTENT = require('../data/bucket').EXTENT;
 var Buffer = require('../data/buffer');
 var VertexArrayObject = require('./vertex_array_object');
 module.exports = drawDebug;
-function drawDebug(painter, source, coords) {
+function drawDebug(painter, sourceCache, coords) {
     if (painter.isOpaquePass)
         return;
     if (!painter.options.debug)
         return;
     for (var i = 0; i < coords.length; i++) {
-        drawDebugTile(painter, source, coords[i]);
+        drawDebugTile(painter, sourceCache, coords[i]);
     }
 }
-function drawDebugTile(painter, source, coord) {
+function drawDebugTile(painter, sourceCache, coord) {
     var gl = painter.gl;
     gl.disable(gl.STENCIL_TEST);
     painter.lineWidth(1 * browser.devicePixelRatio);
@@ -28465,7 +26338,7 @@ function drawDebugTile(painter, source, coord) {
     var debugTextVAO = new VertexArrayObject();
     debugTextVAO.bind(gl, program, debugTextBuffer);
     gl.uniform4f(program.u_color, 1, 1, 1, 1);
-    var tileSize = source.getTile(coord).tileSize;
+    var tileSize = sourceCache.getTile(coord).tileSize;
     var onePixel = EXTENT / (Math.pow(2, painter.transform.zoom - coord.z) * tileSize);
     var translations = [
         [
@@ -28498,26 +26371,29 @@ function drawDebugTile(painter, source, coord) {
     gl.uniformMatrix4fv(program.u_matrix, false, posMatrix);
     gl.drawArrays(gl.LINES, 0, debugTextBuffer.length);
 }
-},{"../data/bucket":428,"../data/buffer":433,"../lib/debugtext":440,"../util/browser":520,"./vertex_array_object":455,"gl-matrix":351}],447:[function(require,module,exports){
+},{"../data/bucket":428,"../data/buffer":433,"../lib/debugtext":442,"../util/browser":527,"./vertex_array_object":457,"gl-matrix":352}],449:[function(require,module,exports){
 'use strict';
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 module.exports = draw;
-function draw(painter, source, layer, coords) {
+function draw(painter, sourceCache, layer, coords) {
     var gl = painter.gl;
     gl.enable(gl.STENCIL_TEST);
-    var color = layer.paint['fill-color'];
-    var image = layer.paint['fill-pattern'];
-    var opacity = layer.paint['fill-opacity'];
-    var isOutlineColorDefined = layer.getPaintProperty('fill-outline-color');
-    if (image ? !painter.isOpaquePass : painter.isOpaquePass === (color[3] === 1 && opacity === 1)) {
+    var isOpaque;
+    if (layer.paint['fill-pattern']) {
+        isOpaque = false;
+    } else {
+        isOpaque = layer.isPaintValueFeatureConstant('fill-color') && layer.isPaintValueFeatureConstant('fill-opacity') && layer.paint['fill-color'][3] === 1 && layer.paint['fill-opacity'] === 1;
+    }
+    if (painter.isOpaquePass === isOpaque) {
         painter.setDepthSublayer(1);
         for (var i = 0; i < coords.length; i++) {
-            drawFill(painter, source, layer, coords[i]);
+            drawFill(painter, sourceCache, layer, coords[i]);
         }
     }
     if (!painter.isOpaquePass && layer.paint['fill-antialias']) {
         painter.lineWidth(2);
         painter.depthMask(false);
+        var isOutlineColorDefined = layer.getPaintProperty('fill-outline-color');
         if (isOutlineColorDefined || !layer.paint['fill-pattern']) {
             if (isOutlineColorDefined) {
                 painter.setDepthSublayer(2);
@@ -28528,12 +26404,12 @@ function draw(painter, source, layer, coords) {
             painter.setDepthSublayer(0);
         }
         for (var j = 0; j < coords.length; j++) {
-            drawStroke(painter, source, layer, coords[j]);
+            drawStroke(painter, sourceCache, layer, coords[j]);
         }
     }
 }
-function drawFill(painter, source, layer, coord) {
-    var tile = source.getTile(coord);
+function drawFill(painter, sourceCache, layer, coord) {
+    var tile = sourceCache.getTile(coord);
     var bucket = tile.getBucket(layer);
     if (!bucket)
         return;
@@ -28557,12 +26433,12 @@ function drawFill(painter, source, layer, coord) {
     painter.enableTileClippingMask(coord);
     for (var i = 0; i < bufferGroups.length; i++) {
         var group = bufferGroups[i];
-        group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element, group.paint[layer.id]);
-        gl.drawElements(gl.TRIANGLES, group.layout.element.length, gl.UNSIGNED_SHORT, 0);
+        group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer, group.paintVertexBuffers[layer.id]);
+        gl.drawElements(gl.TRIANGLES, group.elementBuffer.length, gl.UNSIGNED_SHORT, 0);
     }
 }
-function drawStroke(painter, source, layer, coord) {
-    var tile = source.getTile(coord);
+function drawStroke(painter, sourceCache, layer, coord) {
+    var tile = sourceCache.getTile(coord);
     var bucket = tile.getBucket(layer);
     if (!bucket)
         return;
@@ -28589,8 +26465,8 @@ function drawStroke(painter, source, layer, coord) {
     painter.enableTileClippingMask(coord);
     for (var k = 0; k < bufferGroups.length; k++) {
         var group = bufferGroups[k];
-        group.secondVaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element2, group.paint[layer.id]);
-        gl.drawElements(gl.LINES, group.layout.element2.length * 2, gl.UNSIGNED_SHORT, 0);
+        group.secondVaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer2, group.paintVertexBuffers[layer.id]);
+        gl.drawElements(gl.LINES, group.elementBuffer2.length * 2, gl.UNSIGNED_SHORT, 0);
     }
 }
 function setPattern(image, opacity, tile, coord, painter, program) {
@@ -28619,12 +26495,12 @@ function setPattern(image, opacity, tile, coord, painter, program) {
     gl.activeTexture(gl.TEXTURE0);
     painter.spriteAtlas.bind(gl, true);
 }
-},{"../source/pixels_to_tile_units":459}],448:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":463}],450:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 var mat2 = require('gl-matrix').mat2;
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
-module.exports = function drawLine(painter, source, layer, coords) {
+module.exports = function drawLine(painter, sourceCache, layer, coords) {
     if (painter.isOpaquePass)
         return;
     painter.setDepthSublayer(0);
@@ -28633,6 +26509,20 @@ module.exports = function drawLine(painter, source, layer, coords) {
     gl.enable(gl.STENCIL_TEST);
     if (layer.paint['line-width'] <= 0)
         return;
+    for (var k = 0; k < coords.length; k++) {
+        drawLineTile(painter, sourceCache, layer, coords[k]);
+    }
+};
+function drawLineTile(painter, sourceCache, layer, coord) {
+    var tile = sourceCache.getTile(coord);
+    var bucket = tile.getBucket(layer);
+    if (!bucket)
+        return;
+    var bufferGroups = bucket.bufferGroups.line;
+    if (!bufferGroups)
+        return;
+    var gl = painter.gl;
+    var programOptions = bucket.paintAttributes.line[layer.id];
     var antialiasing = 1 / browser.devicePixelRatio;
     var blur = layer.paint['line-blur'] + antialiasing;
     var color = layer.paint['line-color'];
@@ -28650,7 +26540,7 @@ module.exports = function drawLine(painter, source, layer, coords) {
     var image = layer.paint['line-pattern'];
     var program, posA, posB, imagePosA, imagePosB;
     if (dasharray) {
-        program = painter.useProgram('linesdfpattern');
+        program = painter.useProgram('linesdfpattern', programOptions.defines, programOptions.vertexPragmas, programOptions.fragmentPragmas);
         gl.uniform1f(program.u_linewidth, layer.paint['line-width'] / 2);
         gl.uniform1f(program.u_gapwidth, layer.paint['line-gap-width'] / 2);
         gl.uniform1f(program.u_antialiasing, antialiasing / 2);
@@ -28673,7 +26563,7 @@ module.exports = function drawLine(painter, source, layer, coords) {
         imagePosB = painter.spriteAtlas.getPosition(image.to, true);
         if (!imagePosA || !imagePosB)
             return;
-        program = painter.useProgram('linepattern');
+        program = painter.useProgram('linepattern', programOptions.defines, programOptions.vertexPragmas, programOptions.fragmentPragmas);
         gl.uniform1i(program.u_image, 0);
         gl.activeTexture(gl.TEXTURE0);
         painter.spriteAtlas.bind(gl, true);
@@ -28691,7 +26581,7 @@ module.exports = function drawLine(painter, source, layer, coords) {
         gl.uniform1f(program.u_offset, -layer.paint['line-offset']);
         gl.uniformMatrix2fv(program.u_antialiasingmatrix, false, antialiasingMatrix);
     } else {
-        program = painter.useProgram('line');
+        program = painter.useProgram('line', programOptions.defines, programOptions.vertexPragmas, programOptions.fragmentPragmas);
         gl.uniform1f(program.u_linewidth, layer.paint['line-width'] / 2);
         gl.uniform1f(program.u_gapwidth, layer.paint['line-gap-width'] / 2);
         gl.uniform1f(program.u_antialiasing, antialiasing / 2);
@@ -28702,61 +26592,52 @@ module.exports = function drawLine(painter, source, layer, coords) {
         gl.uniform4fv(program.u_color, color);
         gl.uniform1f(program.u_opacity, layer.paint['line-opacity']);
     }
-    for (var k = 0; k < coords.length; k++) {
-        var coord = coords[k];
-        var tile = source.getTile(coord);
-        var bucket = tile.getBucket(layer);
-        if (!bucket)
-            continue;
-        var bufferGroups = bucket.bufferGroups.line;
-        if (!bufferGroups)
-            continue;
-        painter.enableTileClippingMask(coord);
-        var posMatrix = painter.translatePosMatrix(coord.posMatrix, tile, layer.paint['line-translate'], layer.paint['line-translate-anchor']);
-        gl.uniformMatrix4fv(program.u_matrix, false, posMatrix);
-        var ratio = 1 / pixelsToTileUnits(tile, 1, painter.transform.zoom);
-        if (dasharray) {
-            var widthA = posA.width * dasharray.fromScale;
-            var widthB = posB.width * dasharray.toScale;
-            var scaleA = [
-                1 / pixelsToTileUnits(tile, widthA, painter.transform.tileZoom),
-                -posA.height / 2
-            ];
-            var scaleB = [
-                1 / pixelsToTileUnits(tile, widthB, painter.transform.tileZoom),
-                -posB.height / 2
-            ];
-            var gamma = painter.lineAtlas.width / (Math.min(widthA, widthB) * 256 * browser.devicePixelRatio) / 2;
-            gl.uniform1f(program.u_ratio, ratio);
-            gl.uniform2fv(program.u_patternscale_a, scaleA);
-            gl.uniform2fv(program.u_patternscale_b, scaleB);
-            gl.uniform1f(program.u_sdfgamma, gamma);
-        } else if (image) {
-            gl.uniform1f(program.u_ratio, ratio);
-            gl.uniform2fv(program.u_pattern_size_a, [
-                pixelsToTileUnits(tile, imagePosA.size[0] * image.fromScale, painter.transform.tileZoom),
-                imagePosB.size[1]
-            ]);
-            gl.uniform2fv(program.u_pattern_size_b, [
-                pixelsToTileUnits(tile, imagePosB.size[0] * image.toScale, painter.transform.tileZoom),
-                imagePosB.size[1]
-            ]);
-        } else {
-            gl.uniform1f(program.u_ratio, ratio);
-        }
-        for (var i = 0; i < bufferGroups.length; i++) {
-            var group = bufferGroups[i];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
-        }
+    painter.enableTileClippingMask(coord);
+    var posMatrix = painter.translatePosMatrix(coord.posMatrix, tile, layer.paint['line-translate'], layer.paint['line-translate-anchor']);
+    gl.uniformMatrix4fv(program.u_matrix, false, posMatrix);
+    var ratio = 1 / pixelsToTileUnits(tile, 1, painter.transform.zoom);
+    if (dasharray) {
+        var widthA = posA.width * dasharray.fromScale;
+        var widthB = posB.width * dasharray.toScale;
+        var scaleA = [
+            1 / pixelsToTileUnits(tile, widthA, painter.transform.tileZoom),
+            -posA.height / 2
+        ];
+        var scaleB = [
+            1 / pixelsToTileUnits(tile, widthB, painter.transform.tileZoom),
+            -posB.height / 2
+        ];
+        var gamma = painter.lineAtlas.width / (Math.min(widthA, widthB) * 256 * browser.devicePixelRatio) / 2;
+        gl.uniform1f(program.u_ratio, ratio);
+        gl.uniform2fv(program.u_patternscale_a, scaleA);
+        gl.uniform2fv(program.u_patternscale_b, scaleB);
+        gl.uniform1f(program.u_sdfgamma, gamma);
+    } else if (image) {
+        gl.uniform1f(program.u_ratio, ratio);
+        gl.uniform2fv(program.u_pattern_size_a, [
+            pixelsToTileUnits(tile, imagePosA.size[0] * image.fromScale, painter.transform.tileZoom),
+            imagePosB.size[1]
+        ]);
+        gl.uniform2fv(program.u_pattern_size_b, [
+            pixelsToTileUnits(tile, imagePosB.size[0] * image.toScale, painter.transform.tileZoom),
+            imagePosB.size[1]
+        ]);
+    } else {
+        gl.uniform1f(program.u_ratio, ratio);
     }
-};
-},{"../source/pixels_to_tile_units":459,"../util/browser":520,"gl-matrix":351}],449:[function(require,module,exports){
+    bucket.setUniforms(gl, 'line', program, layer, { zoom: painter.transform.zoom });
+    for (var i = 0; i < bufferGroups.length; i++) {
+        var group = bufferGroups[i];
+        group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer, group.paintVertexBuffers[layer.id]);
+        gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
+    }
+}
+},{"../source/pixels_to_tile_units":463,"../util/browser":527,"gl-matrix":352}],451:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var StructArrayType = require('../util/struct_array');
 module.exports = drawRaster;
-function drawRaster(painter, source, layer, coords) {
+function drawRaster(painter, sourceCache, layer, coords) {
     if (painter.isOpaquePass)
         return;
     var gl = painter.gl;
@@ -28767,7 +26648,7 @@ function drawRaster(painter, source, layer, coords) {
     for (var i = 0; i < coords.length; i++) {
         var coord = coords[i];
         painter.setDepthSublayer(coord.z - minTileZ);
-        drawRasterTile(painter, source, layer, coord);
+        drawRasterTile(painter, sourceCache, layer, coord);
     }
     gl.depthFunc(gl.LEQUAL);
 }
@@ -28785,11 +26666,11 @@ drawRaster.RasterBoundsArray = new StructArrayType({
         }
     ]
 });
-function drawRasterTile(painter, source, layer, coord) {
+function drawRasterTile(painter, sourceCache, layer, coord) {
     var gl = painter.gl;
     gl.disable(gl.STENCIL_TEST);
-    var tile = source.getTile(coord);
-    var posMatrix = painter.transform.calculatePosMatrix(coord, source.maxzoom);
+    var tile = sourceCache.getTile(coord);
+    var posMatrix = painter.transform.calculatePosMatrix(coord, sourceCache.getSource().maxzoom);
     var program = painter.useProgram('raster');
     gl.uniformMatrix4fv(program.u_matrix, false, posMatrix);
     gl.uniform1f(program.u_brightness_low, layer.paint['raster-brightness-min']);
@@ -28797,7 +26678,7 @@ function drawRasterTile(painter, source, layer, coord) {
     gl.uniform1f(program.u_saturation_factor, saturationFactor(layer.paint['raster-saturation']));
     gl.uniform1f(program.u_contrast_factor, contrastFactor(layer.paint['raster-contrast']));
     gl.uniform3fv(program.u_spin_weights, spinWeights(layer.paint['raster-hue-rotate']));
-    var parentTile = tile.source && tile.source._pyramid.findLoadedParent(coord, 0, {}), opacities = getOpacities(tile, parentTile, layer, painter.transform);
+    var parentTile = tile.sourceCache && tile.sourceCache.findLoadedParent(coord, 0, {}), opacities = getOpacities(tile, parentTile, layer, painter.transform);
     var parentScaleBy, parentTL;
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tile.texture);
@@ -28850,11 +26731,14 @@ function getOpacities(tile, parentTile, layer, transform) {
         0
     ];
     var fadeDuration = layer.paint['raster-fade-duration'];
-    if (tile.source && fadeDuration > 0) {
+    if (tile.sourceCache && fadeDuration > 0) {
         var now = new Date().getTime();
         var sinceTile = (now - tile.timeAdded) / fadeDuration;
         var sinceParent = parentTile ? (now - parentTile.timeAdded) / fadeDuration : -1;
-        var idealZ = tile.source._pyramid.coveringZoomLevel(transform);
+        var idealZ = transform.coveringZoomLevel({
+            tileSize: tile.sourceCache.getSource().tileSize,
+            roundZoom: tile.sourceCache.getSource().roundZoom
+        });
         var parentFurther = parentTile ? Math.abs(parentTile.coord.z - idealZ) > Math.abs(tile.coord.z - idealZ) : false;
         if (!parentTile || parentFurther) {
             opacity[0] = util.clamp(sinceTile, 0, 1);
@@ -28869,13 +26753,13 @@ function getOpacities(tile, parentTile, layer, transform) {
     opacity[1] *= op;
     return opacity;
 }
-},{"../util/struct_array":533,"../util/util":535}],450:[function(require,module,exports){
+},{"../util/struct_array":542,"../util/util":544}],452:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 var drawCollisionDebug = require('./draw_collision_debug');
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 module.exports = drawSymbols;
-function drawSymbols(painter, source, layer, coords) {
+function drawSymbols(painter, sourceCache, layer, coords) {
     if (painter.isOpaquePass)
         return;
     var drawAcrossEdges = !(layer.layout['text-allow-overlap'] || layer.layout['icon-allow-overlap'] || layer.layout['text-ignore-placement'] || layer.layout['icon-ignore-placement']);
@@ -28888,14 +26772,16 @@ function drawSymbols(painter, source, layer, coords) {
     painter.setDepthSublayer(0);
     painter.depthMask(false);
     gl.disable(gl.DEPTH_TEST);
-    drawLayerSymbols(painter, source, layer, coords, false, layer.paint['icon-translate'], layer.paint['icon-translate-anchor'], layer.layout['icon-rotation-alignment'], layer.layout['icon-rotation-alignment'], layer.layout['icon-size'], layer.paint['icon-halo-width'], layer.paint['icon-halo-color'], layer.paint['icon-halo-blur'], layer.paint['icon-opacity'], layer.paint['icon-color']);
-    drawLayerSymbols(painter, source, layer, coords, true, layer.paint['text-translate'], layer.paint['text-translate-anchor'], layer.layout['text-rotation-alignment'], layer.layout['text-pitch-alignment'], layer.layout['text-size'], layer.paint['text-halo-width'], layer.paint['text-halo-color'], layer.paint['text-halo-blur'], layer.paint['text-opacity'], layer.paint['text-color']);
+    drawLayerSymbols(painter, sourceCache, layer, coords, false, layer.paint['icon-translate'], layer.paint['icon-translate-anchor'], layer.layout['icon-rotation-alignment'], layer.layout['icon-rotation-alignment'], layer.layout['icon-size'], layer.paint['icon-halo-width'], layer.paint['icon-halo-color'], layer.paint['icon-halo-blur'], layer.paint['icon-opacity'], layer.paint['icon-color']);
+    drawLayerSymbols(painter, sourceCache, layer, coords, true, layer.paint['text-translate'], layer.paint['text-translate-anchor'], layer.layout['text-rotation-alignment'], layer.layout['text-pitch-alignment'], layer.layout['text-size'], layer.paint['text-halo-width'], layer.paint['text-halo-color'], layer.paint['text-halo-blur'], layer.paint['text-opacity'], layer.paint['text-color']);
     gl.enable(gl.DEPTH_TEST);
-    drawCollisionDebug(painter, source, layer, coords);
+    if (sourceCache.map.showCollisionBoxes) {
+        drawCollisionDebug(painter, sourceCache, layer, coords);
+    }
 }
-function drawLayerSymbols(painter, source, layer, coords, isText, translate, translateAnchor, rotationAlignment, pitchAlignment, size, haloWidth, haloColor, haloBlur, opacity, color) {
+function drawLayerSymbols(painter, sourceCache, layer, coords, isText, translate, translateAnchor, rotationAlignment, pitchAlignment, size, haloWidth, haloColor, haloBlur, opacity, color) {
     for (var j = 0; j < coords.length; j++) {
-        var tile = source.getTile(coords[j]);
+        var tile = sourceCache.getTile(coords[j]);
         var bucket = tile.getBucket(layer);
         if (!bucket)
             continue;
@@ -28970,8 +26856,8 @@ function drawSymbol(painter, layer, posMatrix, tile, bucket, bufferGroups, isTex
             gl.uniform1f(program.u_buffer, (haloOffset - haloWidth / fontScale) / sdfPx);
             for (var j = 0; j < bufferGroups.length; j++) {
                 group = bufferGroups[j];
-                group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-                gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+                group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+                gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
             }
         }
         gl.uniform1f(program.u_gamma, gamma * gammaScale);
@@ -28983,19 +26869,19 @@ function drawSymbol(painter, layer, posMatrix, tile, bucket, bufferGroups, isTex
         gl.uniform1f(program.u_aspect_ratio, tr.width / tr.height);
         for (var i = 0; i < bufferGroups.length; i++) {
             group = bufferGroups[i];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     } else {
         gl.uniform1f(program.u_opacity, opacity);
         for (var k = 0; k < bufferGroups.length; k++) {
             group = bufferGroups[k];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
-},{"../source/pixels_to_tile_units":459,"../util/browser":520,"./draw_collision_debug":445}],451:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":463,"../util/browser":527,"./draw_collision_debug":447}],453:[function(require,module,exports){
 'use strict';
 module.exports = FrameHistory;
 function FrameHistory() {
@@ -29055,7 +26941,7 @@ FrameHistory.prototype.bind = function (gl) {
         }
     }
 };
-},{}],452:[function(require,module,exports){
+},{}],454:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 module.exports = LineAtlas;
@@ -29152,12 +27038,12 @@ LineAtlas.prototype.bind = function (gl) {
         }
     }
 };
-},{"../util/util":535}],453:[function(require,module,exports){
+},{"../util/util":544}],455:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 var mat4 = require('gl-matrix').mat4;
 var FrameHistory = require('./frame_history');
-var TilePyramid = require('../source/tile_pyramid');
+var SourceCache = require('../source/source_cache');
 var EXTENT = require('../data/bucket').EXTENT;
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 var util = require('../util/util');
@@ -29174,7 +27060,7 @@ function Painter(gl, transform) {
     this.preFbos = {};
     this.frameHistory = new FrameHistory();
     this.setup();
-    this.numSublayers = TilePyramid.maxUnderzooming + TilePyramid.maxOverzooming + 1;
+    this.numSublayers = SourceCache.maxUnderzooming + SourceCache.maxOverzooming + 1;
     this.depthEpsilon = 1 / Math.pow(2, 16);
     this.lineWidthRange = gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE);
 }
@@ -29318,18 +27204,18 @@ Painter.prototype.renderPass = function (options) {
     this.currentLayer = isOpaquePass ? this.style._order.length : -1;
     for (var i = 0; i < groups.length; i++) {
         var group = groups[isOpaquePass ? groups.length - 1 - i : i];
-        var source = this.style.sources[group.source];
+        var sourceCache = this.style.sourceCaches[group.source];
         var j;
         var coords = [];
-        if (source) {
-            coords = source.getVisibleCoordinates();
+        if (sourceCache) {
+            coords = sourceCache.getVisibleCoordinates();
             for (j = 0; j < coords.length; j++) {
-                coords[j].posMatrix = this.transform.calculatePosMatrix(coords[j], source.maxzoom);
+                coords[j].posMatrix = this.transform.calculatePosMatrix(coords[j], sourceCache.getSource().maxzoom);
             }
             this.clearStencil();
-            if (source.prepare)
-                source.prepare();
-            if (source.isTileClipped) {
+            if (sourceCache.prepare)
+                sourceCache.prepare();
+            if (sourceCache.getSource().isTileClipped) {
                 this._renderTileClippingMasks(coords);
             }
         }
@@ -29346,10 +27232,10 @@ Painter.prototype.renderPass = function (options) {
         for (j = 0; j < group.length; j++) {
             var layer = group[isOpaquePass ? group.length - 1 - j : j];
             this.currentLayer += isOpaquePass ? -1 : 1;
-            this.renderLayer(this, source, layer, coords);
+            this.renderLayer(this, sourceCache, layer, coords);
         }
-        if (source) {
-            draw.debug(this, source, coords);
+        if (sourceCache) {
+            draw.debug(this, sourceCache, coords);
         }
     }
 };
@@ -29359,13 +27245,13 @@ Painter.prototype.depthMask = function (mask) {
         this.gl.depthMask(mask);
     }
 };
-Painter.prototype.renderLayer = function (painter, source, layer, coords) {
+Painter.prototype.renderLayer = function (painter, sourceCache, layer, coords) {
     if (layer.isHidden(this.transform.zoom))
         return;
     if (layer.type !== 'background' && !coords.length)
         return;
     this.id = layer.id;
-    draw[layer.type](painter, source, layer, coords);
+    draw[layer.type](painter, sourceCache, layer, coords);
 };
 Painter.prototype.setDepthSublayer = function (n) {
     var farDepth = 1 - ((1 + this.currentLayer) * this.numSublayers + n) * this.depthEpsilon;
@@ -29423,7 +27309,7 @@ Painter.prototype.showOverdrawInspector = function (enabled) {
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     }
 };
-},{"../data/bucket":428,"../data/buffer":433,"../source/pixels_to_tile_units":459,"../source/tile_pyramid":464,"../util/browser":520,"../util/struct_array":533,"../util/util":535,"./create_uniform_pragmas":442,"./draw_background":443,"./draw_circle":444,"./draw_debug":446,"./draw_fill":447,"./draw_line":448,"./draw_raster":449,"./draw_symbol":450,"./frame_history":451,"./painter/use_program":454,"./vertex_array_object":455,"gl-matrix":351}],454:[function(require,module,exports){
+},{"../data/bucket":428,"../data/buffer":433,"../source/pixels_to_tile_units":463,"../source/source_cache":467,"../util/browser":527,"../util/struct_array":542,"../util/util":544,"./create_uniform_pragmas":444,"./draw_background":445,"./draw_circle":446,"./draw_debug":448,"./draw_fill":449,"./draw_line":450,"./draw_raster":451,"./draw_symbol":452,"./frame_history":453,"./painter/use_program":456,"./vertex_array_object":457,"gl-matrix":352}],456:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var shaders = require('mapbox-gl-shaders');
@@ -29496,7 +27382,7 @@ function applyPragmas(source, pragmas) {
         return pragmas[operation][name].replace(/{type}/g, type).replace(/{precision}/g, precision);
     });
 }
-},{"../../util/util":535,"mapbox-gl-shaders":401}],455:[function(require,module,exports){
+},{"../../util/util":544,"mapbox-gl-shaders":402}],457:[function(require,module,exports){
 'use strict';
 module.exports = VertexArrayObject;
 function VertexArrayObject() {
@@ -29506,18 +27392,18 @@ function VertexArrayObject() {
     this.boundElementBuffer = null;
     this.vao = null;
 }
-VertexArrayObject.prototype.bind = function (gl, program, vertexBuffer, elementBuffer, vertexBuffer2) {
+VertexArrayObject.prototype.bind = function (gl, program, layoutVertexBuffer, elementBuffer, vertexBuffer2) {
     if (gl.extVertexArrayObject === undefined) {
         gl.extVertexArrayObject = gl.getExtension('OES_vertex_array_object');
     }
-    var isFreshBindRequired = !this.vao || this.boundProgram !== program || this.boundVertexBuffer !== vertexBuffer || this.boundVertexBuffer2 !== vertexBuffer2 || this.boundElementBuffer !== elementBuffer;
+    var isFreshBindRequired = !this.vao || this.boundProgram !== program || this.boundVertexBuffer !== layoutVertexBuffer || this.boundVertexBuffer2 !== vertexBuffer2 || this.boundElementBuffer !== elementBuffer;
     if (!gl.extVertexArrayObject || isFreshBindRequired) {
-        this.freshBind(gl, program, vertexBuffer, elementBuffer, vertexBuffer2);
+        this.freshBind(gl, program, layoutVertexBuffer, elementBuffer, vertexBuffer2);
     } else {
         gl.extVertexArrayObject.bindVertexArrayOES(this.vao);
     }
 };
-VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, elementBuffer, vertexBuffer2) {
+VertexArrayObject.prototype.freshBind = function (gl, program, layoutVertexBuffer, elementBuffer, vertexBuffer2) {
     var numPrevAttributes;
     var numNextAttributes = program.numAttributes;
     if (gl.extVertexArrayObject) {
@@ -29527,7 +27413,7 @@ VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, ele
         gl.extVertexArrayObject.bindVertexArrayOES(this.vao);
         numPrevAttributes = 0;
         this.boundProgram = program;
-        this.boundVertexBuffer = vertexBuffer;
+        this.boundVertexBuffer = layoutVertexBuffer;
         this.boundVertexBuffer2 = vertexBuffer2;
         this.boundElementBuffer = elementBuffer;
     } else {
@@ -29539,8 +27425,8 @@ VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, ele
     for (var j = numPrevAttributes; j < numNextAttributes; j++) {
         gl.enableVertexAttribArray(j);
     }
-    vertexBuffer.bind(gl);
-    vertexBuffer.setVertexAttribPointers(gl, program);
+    layoutVertexBuffer.bind(gl);
+    layoutVertexBuffer.setVertexAttribPointers(gl, program);
     if (vertexBuffer2) {
         vertexBuffer2.bind(gl);
         vertexBuffer2.setVertexAttribPointers(gl, program);
@@ -29550,12 +27436,6 @@ VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, ele
     }
     gl.currentNumAttributes = numNextAttributes;
 };
-VertexArrayObject.prototype.unbind = function (gl) {
-    var ext = gl.extVertexArrayObject;
-    if (ext) {
-        ext.bindVertexArrayOES(null);
-    }
-};
 VertexArrayObject.prototype.destroy = function (gl) {
     var ext = gl.extVertexArrayObject;
     if (ext && this.vao) {
@@ -29563,118 +27443,85 @@ VertexArrayObject.prototype.destroy = function (gl) {
         this.vao = null;
     }
 };
-},{}],456:[function(require,module,exports){
+},{}],458:[function(require,module,exports){
 'use strict';
-var util = require('../util/util');
 var Evented = require('../util/evented');
-var TilePyramid = require('./tile_pyramid');
-var Source = require('./source');
-var urlResolve = require('resolve-url');
+var util = require('../util/util');
+var window = require('../util/window');
 var EXTENT = require('../data/bucket').EXTENT;
 module.exports = GeoJSONSource;
-function GeoJSONSource(options) {
+function GeoJSONSource(id, options, dispatcher) {
     options = options || {};
+    this.id = id;
+    this.dispatcher = dispatcher;
     this._data = options.data;
     if (options.maxzoom !== undefined)
         this.maxzoom = options.maxzoom;
+    if (options.type)
+        this.type = options.type;
     var scale = EXTENT / this.tileSize;
-    this.geojsonVtOptions = {
-        buffer: (options.buffer !== undefined ? options.buffer : 128) * scale,
-        tolerance: (options.tolerance !== undefined ? options.tolerance : 0.375) * scale,
-        extent: EXTENT,
-        maxZoom: this.maxzoom
-    };
-    this.cluster = options.cluster || false;
-    this.superclusterOptions = {
-        maxZoom: Math.min(options.clusterMaxZoom, this.maxzoom - 1) || this.maxzoom - 1,
-        extent: EXTENT,
-        radius: (options.clusterRadius || 50) * scale,
-        log: false
-    };
-    this._pyramid = new TilePyramid({
-        tileSize: this.tileSize,
-        minzoom: this.minzoom,
-        maxzoom: this.maxzoom,
-        reparseOverscaled: true,
-        load: this._loadTile.bind(this),
-        abort: this._abortTile.bind(this),
-        unload: this._unloadTile.bind(this),
-        add: this._addTile.bind(this),
-        remove: this._removeTile.bind(this),
-        redoPlacement: this._redoTilePlacement.bind(this)
-    });
+    this.workerOptions = util.extend({
+        source: this.id,
+        cluster: options.cluster || false,
+        geojsonVtOptions: {
+            buffer: (options.buffer !== undefined ? options.buffer : 128) * scale,
+            tolerance: (options.tolerance !== undefined ? options.tolerance : 0.375) * scale,
+            extent: EXTENT,
+            maxZoom: this.maxzoom
+        },
+        superclusterOptions: {
+            maxZoom: Math.min(options.clusterMaxZoom, this.maxzoom - 1) || this.maxzoom - 1,
+            extent: EXTENT,
+            radius: (options.clusterRadius || 50) * scale,
+            log: false
+        }
+    }, options.workerOptions);
+    this._updateWorkerData(function done(err) {
+        if (err) {
+            this.fire('error', { error: err });
+            return;
+        }
+        this.fire('data', { dataType: 'source' });
+        this.fire('source.load');
+    }.bind(this));
 }
 GeoJSONSource.prototype = util.inherit(Evented, {
+    type: 'geojson',
     minzoom: 0,
     maxzoom: 18,
     tileSize: 512,
-    _dirty: true,
     isTileClipped: true,
-    setData: function (data) {
-        this._data = data;
-        this._dirty = true;
-        this.fire('change');
-        if (this.map)
-            this.update(this.map.transform);
-        return this;
-    },
+    reparseOverscaled: true,
     onAdd: function (map) {
         this.map = map;
     },
-    loaded: function () {
-        return this._loaded && this._pyramid.loaded();
+    setData: function (data) {
+        this._data = data;
+        this._updateWorkerData(function (err) {
+            if (err) {
+                return this.fire('error', { error: err });
+            }
+            this.fire('data', { dataType: 'source' });
+        }.bind(this));
+        return this;
     },
-    update: function (transform) {
-        if (this._dirty) {
-            this._updateData();
-        }
-        if (this._loaded) {
-            this._pyramid.update(this.used, transform);
-        }
-    },
-    reload: function () {
-        if (this._loaded) {
-            this._pyramid.reload();
-        }
-    },
-    serialize: function () {
-        return {
-            type: 'geojson',
-            data: this._data
-        };
-    },
-    getVisibleCoordinates: Source._getVisibleCoordinates,
-    getTile: Source._getTile,
-    queryRenderedFeatures: Source._queryRenderedVectorFeatures,
-    querySourceFeatures: Source._querySourceFeatures,
-    _updateData: function () {
-        this._dirty = false;
-        var options = {
-            tileSize: this.tileSize,
-            source: this.id,
-            geojsonVtOptions: this.geojsonVtOptions,
-            cluster: this.cluster,
-            superclusterOptions: this.superclusterOptions
-        };
+    _updateWorkerData: function (callback) {
+        var options = util.extend({}, this.workerOptions);
         var data = this._data;
         if (typeof data === 'string') {
-            options.url = typeof window != 'undefined' ? urlResolve(window.location.href, data) : data;
+            options.url = resolveURL(data);
         } else {
             options.data = JSON.stringify(data);
         }
-        this.workerID = this.dispatcher.send('parse geojson', options, function (err) {
+        this.workerID = this.dispatcher.send(this.type + '.loadData', options, function (err) {
             this._loaded = true;
-            if (err) {
-                this.fire('error', { error: err });
-            } else {
-                this._pyramid.reload();
-                this.fire('change');
-            }
+            callback(err);
         }.bind(this));
     },
-    _loadTile: function (tile) {
+    loadTile: function (tile, callback) {
         var overscaling = tile.coord.z > this.maxzoom ? Math.pow(2, tile.coord.z - this.maxzoom) : 1;
         var params = {
+            type: this.type,
             uid: tile.uid,
             coord: tile.coord,
             zoom: tile.coord.z,
@@ -29686,32 +27533,25 @@ GeoJSONSource.prototype = util.inherit(Evented, {
             pitch: this.map.transform.pitch,
             showCollisionBoxes: this.map.showCollisionBoxes
         };
-        tile.workerID = this.dispatcher.send('load geojson tile', params, function (err, data) {
+        tile.workerID = this.dispatcher.send('load tile', params, function (err, data) {
             tile.unloadVectorData(this.map.painter);
             if (tile.aborted)
                 return;
             if (err) {
-                this.fire('tile.error', { tile: tile });
-                return;
+                return callback(err);
             }
-            tile.loadVectorData(data, this.map.style);
+            tile.loadVectorData(data, this.map.painter);
             if (tile.redoWhenDone) {
                 tile.redoWhenDone = false;
                 tile.redoPlacement(this);
             }
-            this.fire('tile.load', { tile: tile });
+            return callback(null);
         }.bind(this), this.workerID);
     },
-    _abortTile: function (tile) {
+    abortTile: function (tile) {
         tile.aborted = true;
     },
-    _addTile: function (tile) {
-        this.fire('tile.add', { tile: tile });
-    },
-    _removeTile: function (tile) {
-        this.fire('tile.remove', { tile: tile });
-    },
-    _unloadTile: function (tile) {
+    unloadTile: function (tile) {
         tile.unloadVectorData(this.map.painter);
         this.dispatcher.send('remove tile', {
             uid: tile.uid,
@@ -29719,12 +27559,99 @@ GeoJSONSource.prototype = util.inherit(Evented, {
         }, function () {
         }, tile.workerID);
     },
-    redoPlacement: Source.redoPlacement,
-    _redoTilePlacement: function (tile) {
-        tile.redoPlacement(this);
+    serialize: function () {
+        return {
+            type: this.type,
+            data: this._data
+        };
     }
 });
-},{"../data/bucket":428,"../util/evented":527,"../util/util":535,"./source":461,"./tile_pyramid":464,"resolve-url":729}],457:[function(require,module,exports){
+function resolveURL(url) {
+    var a = window.document.createElement('a');
+    a.href = url;
+    return a.href;
+}
+},{"../data/bucket":428,"../util/evented":535,"../util/util":544,"../util/window":529}],459:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var ajax = require('../util/ajax');
+var rewind = require('geojson-rewind');
+var GeoJSONWrapper = require('./geojson_wrapper');
+var vtpbf = require('vt-pbf');
+var supercluster = require('supercluster');
+var geojsonvt = require('geojson-vt');
+var VectorTileWorkerSource = require('./vector_tile_worker_source');
+module.exports = GeoJSONWorkerSource;
+function GeoJSONWorkerSource(actor, styleLayers, loadGeoJSON) {
+    if (loadGeoJSON) {
+        this.loadGeoJSON = loadGeoJSON;
+    }
+    VectorTileWorkerSource.call(this, actor, styleLayers);
+}
+GeoJSONWorkerSource.prototype = util.inherit(VectorTileWorkerSource, {
+    _geoJSONIndexes: {},
+    loadVectorData: function (params, callback) {
+        var source = params.source, coord = params.coord;
+        if (!this._geoJSONIndexes[source]) {
+            return callback(null, null);
+        }
+        var geoJSONTile = this._geoJSONIndexes[source].getTile(Math.min(coord.z, params.maxZoom), coord.x, coord.y);
+        if (!geoJSONTile) {
+            return callback(null, null);
+        }
+        var geojsonWrapper = new GeoJSONWrapper(geoJSONTile.features);
+        geojsonWrapper.name = '_geojsonTileLayer';
+        var pbf = vtpbf({ layers: { '_geojsonTileLayer': geojsonWrapper } });
+        if (pbf.byteOffset !== 0 || pbf.byteLength !== pbf.buffer.byteLength) {
+            pbf = new Uint8Array(pbf);
+        }
+        geojsonWrapper.rawData = pbf.buffer;
+        callback(null, geojsonWrapper);
+    },
+    loadData: function (params, callback) {
+        var handleData = function (err, data) {
+            if (err)
+                return callback(err);
+            if (typeof data != 'object') {
+                return callback(new Error('Input data is not a valid GeoJSON object.'));
+            }
+            rewind(data, true);
+            this._indexData(data, params, function (err, indexed) {
+                if (err) {
+                    return callback(err);
+                }
+                this._geoJSONIndexes[params.source] = indexed;
+                callback(null);
+            }.bind(this));
+        }.bind(this);
+        this.loadGeoJSON(params, handleData);
+    },
+    loadGeoJSON: function (params, callback) {
+        if (params.url) {
+            ajax.getJSON(params.url, callback);
+        } else if (typeof params.data === 'string') {
+            try {
+                return callback(null, JSON.parse(params.data));
+            } catch (e) {
+                return callback(new Error('Input data is not a valid GeoJSON object.'));
+            }
+        } else {
+            return callback(new Error('Input data is not a valid GeoJSON object.'));
+        }
+    },
+    _indexData: function (data, params, callback) {
+        try {
+            if (params.cluster) {
+                callback(null, supercluster(params.superclusterOptions).load(data.features));
+            } else {
+                callback(null, geojsonvt(data, params.geojsonVtOptions));
+            }
+        } catch (err) {
+            return callback(err);
+        }
+    }
+});
+},{"../util/ajax":526,"../util/util":544,"./geojson_wrapper":460,"./vector_tile_worker_source":471,"geojson-rewind":343,"geojson-vt":347,"supercluster":740,"vt-pbf":752}],460:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var VectorTileFeature = require('vector-tile').VectorTileFeature;
@@ -29785,10 +27712,9 @@ FeatureWrapper.prototype.bbox = function () {
     ];
 };
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON;
-},{"../data/bucket":428,"point-geometry":544,"vector-tile":738}],458:[function(require,module,exports){
+},{"../data/bucket":428,"point-geometry":554,"vector-tile":748}],461:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
-var Tile = require('./tile');
 var TileCoord = require('./tile_coord');
 var LngLat = require('../geo/lng_lat');
 var Point = require('point-geometry');
@@ -29799,23 +27725,27 @@ var RasterBoundsArray = require('../render/draw_raster').RasterBoundsArray;
 var Buffer = require('../data/buffer');
 var VertexArrayObject = require('../render/vertex_array_object');
 module.exports = ImageSource;
-function ImageSource(options) {
+function ImageSource(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
     this.url = options.url;
     this.coordinates = options.coordinates;
     ajax.getImage(options.url, function (err, image) {
         if (err)
-            return;
+            return this.fire('error', { error: err });
         this.image = image;
-        this.image.addEventListener('load', function () {
-            this.map._rerender();
-        }.bind(this));
         this._loaded = true;
+        this.fire('data', { dataType: 'source' });
+        this.fire('source.load');
         if (this.map) {
             this.setCoordinates(options.coordinates);
         }
     }.bind(this));
 }
 ImageSource.prototype = util.inherit(Evented, {
+    minzoom: 0,
+    maxzoom: 22,
+    tileSize: 512,
     onAdd: function (map) {
         this.map = map;
         if (this.image) {
@@ -29831,36 +27761,37 @@ ImageSource.prototype = util.inherit(Evented, {
         var centerCoord = this.centerCoord = util.getCoordinatesCenter(cornerZ0Coords);
         centerCoord.column = Math.round(centerCoord.column);
         centerCoord.row = Math.round(centerCoord.row);
-        var tileCoords = cornerZ0Coords.map(function (coord) {
+        this.minzoom = this.maxzoom = centerCoord.zoom;
+        this.coord = new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row);
+        this._tileCoords = cornerZ0Coords.map(function (coord) {
             var zoomedCoord = coord.zoomTo(centerCoord.zoom);
             return new Point(Math.round((zoomedCoord.column - centerCoord.column) * EXTENT), Math.round((zoomedCoord.row - centerCoord.row) * EXTENT));
         });
+        this.fire('data', { dataType: 'source' });
+        return this;
+    },
+    _setTile: function (tile) {
+        this._prepared = false;
+        this.tile = tile;
         var maxInt16 = 32767;
         var array = new RasterBoundsArray();
-        array.emplaceBack(tileCoords[0].x, tileCoords[0].y, 0, 0);
-        array.emplaceBack(tileCoords[1].x, tileCoords[1].y, maxInt16, 0);
-        array.emplaceBack(tileCoords[3].x, tileCoords[3].y, 0, maxInt16);
-        array.emplaceBack(tileCoords[2].x, tileCoords[2].y, maxInt16, maxInt16);
-        this.tile = new Tile(new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row));
+        array.emplaceBack(this._tileCoords[0].x, this._tileCoords[0].y, 0, 0);
+        array.emplaceBack(this._tileCoords[1].x, this._tileCoords[1].y, maxInt16, 0);
+        array.emplaceBack(this._tileCoords[3].x, this._tileCoords[3].y, 0, maxInt16);
+        array.emplaceBack(this._tileCoords[2].x, this._tileCoords[2].y, maxInt16, maxInt16);
         this.tile.buckets = {};
         this.tile.boundsBuffer = new Buffer(array.serialize(), RasterBoundsArray.serialize(), Buffer.BufferType.VERTEX);
         this.tile.boundsVAO = new VertexArrayObject();
-        this.fire('change');
-        return this;
-    },
-    loaded: function () {
-        return this.image && this.image.complete;
-    },
-    update: function () {
-    },
-    reload: function () {
+        this.tile.state = 'loaded';
     },
     prepare: function () {
-        if (!this._loaded || !this.loaded())
+        if (!this._loaded || !this.image || !this.image.complete)
+            return;
+        if (!this.tile)
             return;
         var painter = this.map.painter;
         var gl = painter.gl;
-        if (!this.tile.texture) {
+        if (!this._prepared) {
             this.tile.texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, this.tile.texture);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -29873,14 +27804,14 @@ ImageSource.prototype = util.inherit(Evented, {
             gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
         }
     },
-    getVisibleCoordinates: function () {
-        if (this.tile)
-            return [this.tile.coord];
-        else
-            return [];
-    },
-    getTile: function () {
-        return this.tile;
+    loadTile: function (tile, callback) {
+        if (this.coord && this.coord.toString() === tile.coord.toString()) {
+            this._setTile(tile);
+            callback(null);
+        } else {
+            tile.state = 'errored';
+            callback(null);
+        }
     },
     serialize: function () {
         return {
@@ -29890,179 +27821,79 @@ ImageSource.prototype = util.inherit(Evented, {
         };
     }
 });
-},{"../data/bucket":428,"../data/buffer":433,"../geo/lng_lat":437,"../render/draw_raster":449,"../render/vertex_array_object":455,"../util/ajax":519,"../util/evented":527,"../util/util":535,"./tile":462,"./tile_coord":463,"point-geometry":544}],459:[function(require,module,exports){
+},{"../data/bucket":428,"../data/buffer":433,"../geo/lng_lat":438,"../render/draw_raster":451,"../render/vertex_array_object":457,"../util/ajax":526,"../util/evented":535,"../util/util":544,"./tile_coord":469,"point-geometry":554}],462:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var ajax = require('../util/ajax');
+var browser = require('../util/browser');
+var normalizeURL = require('../util/mapbox').normalizeSourceURL;
+module.exports = function (options, callback) {
+    var loaded = function (err, tileJSON) {
+        if (err) {
+            return callback(err);
+        }
+        var result = util.pick(tileJSON, [
+            'tiles',
+            'minzoom',
+            'maxzoom',
+            'attribution'
+        ]);
+        if (tileJSON.vector_layers) {
+            result.vectorLayers = tileJSON.vector_layers;
+            result.vectorLayerIds = result.vectorLayers.map(function (layer) {
+                return layer.id;
+            });
+        }
+        callback(null, result);
+    };
+    if (options.url) {
+        ajax.getJSON(normalizeURL(options.url), loaded);
+    } else {
+        browser.frame(loaded.bind(null, null, options));
+    }
+};
+},{"../util/ajax":526,"../util/browser":527,"../util/mapbox":541,"../util/util":544}],463:[function(require,module,exports){
 'use strict';
 var Bucket = require('../data/bucket');
 module.exports = function (tile, pixelValue, z) {
     return pixelValue * (Bucket.EXTENT / (tile.tileSize * Math.pow(2, z - tile.coord.z)));
 };
-},{"../data/bucket":428}],460:[function(require,module,exports){
+},{"../data/bucket":428}],464:[function(require,module,exports){
 'use strict';
-var util = require('../util/util');
-var ajax = require('../util/ajax');
-var Evented = require('../util/evented');
-var Source = require('./source');
-var normalizeURL = require('../util/mapbox').normalizeTileURL;
-module.exports = RasterTileSource;
-function RasterTileSource(options) {
-    util.extend(this, util.pick(options, [
-        'url',
-        'scheme',
-        'tileSize'
-    ]));
-    Source._loadTileJSON.call(this, options);
-}
-RasterTileSource.prototype = util.inherit(Evented, {
-    minzoom: 0,
-    maxzoom: 22,
-    roundZoom: true,
-    scheme: 'xyz',
-    tileSize: 512,
-    _loaded: false,
-    onAdd: function (map) {
-        this.map = map;
-    },
-    loaded: function () {
-        return this._pyramid && this._pyramid.loaded();
-    },
-    update: function (transform) {
-        if (this._pyramid) {
-            this._pyramid.update(this.used, transform, this.map.style.rasterFadeDuration);
-        }
-    },
-    reload: function () {
-    },
-    serialize: function () {
-        return {
-            type: 'raster',
-            url: this.url,
-            tileSize: this.tileSize
-        };
-    },
-    getVisibleCoordinates: Source._getVisibleCoordinates,
-    getTile: Source._getTile,
-    _loadTile: function (tile) {
-        var url = normalizeURL(tile.coord.url(this.tiles, null, this.scheme), this.url, this.tileSize);
-        tile.request = ajax.getImage(url, done.bind(this));
-        function done(err, img) {
-            delete tile.request;
-            if (tile.aborted)
-                return;
-            if (err) {
-                tile.state = 'errored';
-                this.fire('tile.error', {
-                    tile: tile,
-                    error: err
-                });
-                return;
-            }
-            var gl = this.map.painter.gl;
-            tile.texture = this.map.painter.getTexture(img.width);
-            if (tile.texture) {
-                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, img);
-            } else {
-                tile.texture = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-                tile.texture.size = img.width;
-            }
-            gl.generateMipmap(gl.TEXTURE_2D);
-            tile.timeAdded = new Date().getTime();
-            this.map.animationLoop.set(this.style.rasterFadeDuration);
-            tile.source = this;
-            tile.state = 'loaded';
-            this.fire('tile.load', { tile: tile });
-        }
-    },
-    _abortTile: function (tile) {
-        tile.aborted = true;
-        if (tile.request) {
-            tile.request.abort();
-            delete tile.request;
-        }
-    },
-    _addTile: function (tile) {
-        this.fire('tile.add', { tile: tile });
-    },
-    _removeTile: function (tile) {
-        this.fire('tile.remove', { tile: tile });
-    },
-    _unloadTile: function (tile) {
-        if (tile.texture)
-            this.map.painter.saveTexture(tile.texture);
-    }
-});
-},{"../util/ajax":519,"../util/evented":527,"../util/mapbox":532,"../util/util":535,"./source":461}],461:[function(require,module,exports){
-'use strict';
-var util = require('../util/util');
-var ajax = require('../util/ajax');
-var browser = require('../util/browser');
-var TilePyramid = require('./tile_pyramid');
-var normalizeURL = require('../util/mapbox').normalizeSourceURL;
 var TileCoord = require('./tile_coord');
-exports._loadTileJSON = function (options) {
-    var loaded = function (err, tileJSON) {
-        if (err) {
-            this.fire('error', { error: err });
-            return;
+exports.rendered = function (sourceCache, styleLayers, queryGeometry, params, zoom, bearing) {
+    var tilesIn = sourceCache.tilesIn(queryGeometry);
+    tilesIn.sort(sortTilesIn);
+    var renderedFeatureLayers = [];
+    for (var r = 0; r < tilesIn.length; r++) {
+        var tileIn = tilesIn[r];
+        if (!tileIn.tile.featureIndex)
+            continue;
+        renderedFeatureLayers.push(tileIn.tile.featureIndex.query({
+            queryGeometry: tileIn.queryGeometry,
+            scale: tileIn.scale,
+            tileSize: tileIn.tile.tileSize,
+            bearing: bearing,
+            params: params
+        }, styleLayers));
+    }
+    return mergeRenderedFeatureLayers(renderedFeatureLayers);
+};
+exports.source = function (sourceCache, params) {
+    var tiles = sourceCache.getRenderableIds().map(function (id) {
+        return sourceCache.getTileByID(id);
+    });
+    var result = [];
+    var dataTiles = {};
+    for (var i = 0; i < tiles.length; i++) {
+        var tile = tiles[i];
+        var dataID = new TileCoord(Math.min(tile.sourceMaxZoom, tile.coord.z), tile.coord.x, tile.coord.y, 0).id;
+        if (!dataTiles[dataID]) {
+            dataTiles[dataID] = true;
+            tile.querySourceFeatures(result, params);
         }
-        util.extend(this, util.pick(tileJSON, [
-            'tiles',
-            'minzoom',
-            'maxzoom',
-            'attribution'
-        ]));
-        if (tileJSON.vector_layers) {
-            this.vectorLayers = tileJSON.vector_layers;
-            this.vectorLayerIds = this.vectorLayers.map(function (layer) {
-                return layer.id;
-            });
-        }
-        this._pyramid = new TilePyramid({
-            tileSize: this.tileSize,
-            minzoom: this.minzoom,
-            maxzoom: this.maxzoom,
-            roundZoom: this.roundZoom,
-            reparseOverscaled: this.reparseOverscaled,
-            load: this._loadTile.bind(this),
-            abort: this._abortTile.bind(this),
-            unload: this._unloadTile.bind(this),
-            add: this._addTile.bind(this),
-            remove: this._removeTile.bind(this),
-            redoPlacement: this._redoTilePlacement ? this._redoTilePlacement.bind(this) : undefined
-        });
-        this.fire('load');
-    }.bind(this);
-    if (options.url) {
-        ajax.getJSON(normalizeURL(options.url), loaded);
-    } else {
-        browser.frame(loaded.bind(this, null, options));
     }
-};
-exports.redoPlacement = function () {
-    if (!this._pyramid) {
-        return;
-    }
-    var ids = this._pyramid.getIds();
-    for (var i = 0; i < ids.length; i++) {
-        var tile = this._pyramid.getTile(ids[i]);
-        this._redoTilePlacement(tile);
-    }
-};
-exports._getTile = function (coord) {
-    return this._pyramid.getTile(coord.id);
-};
-exports._getVisibleCoordinates = function () {
-    if (!this._pyramid)
-        return [];
-    else
-        return this._pyramid.getRenderableIds().map(TileCoord.fromID);
+    return result;
 };
 function sortTilesIn(a, b) {
     var coordA = a.coord;
@@ -30087,73 +27918,474 @@ function mergeRenderedFeatureLayers(tiles) {
     }
     return result;
 }
-exports._queryRenderedVectorFeatures = function (queryGeometry, params, zoom, bearing) {
-    if (!this._pyramid || !this.map)
-        return [];
-    var tilesIn = this._pyramid.tilesIn(queryGeometry);
-    tilesIn.sort(sortTilesIn);
-    var styleLayers = this.map.style._layers;
-    var renderedFeatureLayers = [];
-    for (var r = 0; r < tilesIn.length; r++) {
-        var tileIn = tilesIn[r];
-        if (!tileIn.tile.featureIndex)
-            continue;
-        renderedFeatureLayers.push(tileIn.tile.featureIndex.query({
-            queryGeometry: tileIn.queryGeometry,
-            scale: tileIn.scale,
-            tileSize: tileIn.tile.tileSize,
-            bearing: bearing,
-            params: params
-        }, styleLayers));
-    }
-    return mergeRenderedFeatureLayers(renderedFeatureLayers);
-};
-exports._querySourceFeatures = function (params) {
-    if (!this._pyramid) {
-        return [];
-    }
-    var pyramid = this._pyramid;
-    var tiles = pyramid.getRenderableIds().map(function (id) {
-        return pyramid.getTile(id);
-    });
-    var result = [];
-    var dataTiles = {};
-    for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
-        var dataID = new TileCoord(Math.min(tile.sourceMaxZoom, tile.coord.z), tile.coord.x, tile.coord.y, 0).id;
-        if (!dataTiles[dataID]) {
-            dataTiles[dataID] = true;
-            tile.querySourceFeatures(result, params);
+},{"./tile_coord":469}],465:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var ajax = require('../util/ajax');
+var Evented = require('../util/evented');
+var loadTileJSON = require('./load_tilejson');
+var normalizeURL = require('../util/mapbox').normalizeTileURL;
+module.exports = RasterTileSource;
+function RasterTileSource(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
+    util.extend(this, util.pick(options, [
+        'url',
+        'scheme',
+        'tileSize'
+    ]));
+    loadTileJSON(options, function (err, tileJSON) {
+        if (err) {
+            return this.fire('error', err);
         }
+        util.extend(this, tileJSON);
+        this.fire('data', { dataType: 'source' });
+        this.fire('source.load');
+    }.bind(this));
+}
+RasterTileSource.prototype = util.inherit(Evented, {
+    minzoom: 0,
+    maxzoom: 22,
+    roundZoom: true,
+    scheme: 'xyz',
+    tileSize: 512,
+    _loaded: false,
+    onAdd: function (map) {
+        this.map = map;
+    },
+    serialize: function () {
+        return {
+            type: 'raster',
+            url: this.url,
+            tileSize: this.tileSize,
+            tiles: this.tiles
+        };
+    },
+    loadTile: function (tile, callback) {
+        var url = normalizeURL(tile.coord.url(this.tiles, null, this.scheme), this.url, this.tileSize);
+        tile.request = ajax.getImage(url, done.bind(this));
+        function done(err, img) {
+            delete tile.request;
+            if (tile.aborted)
+                return;
+            if (err) {
+                return callback(err);
+            }
+            var gl = this.map.painter.gl;
+            tile.texture = this.map.painter.getTexture(img.width);
+            if (tile.texture) {
+                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, img);
+            } else {
+                tile.texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+                tile.texture.size = img.width;
+            }
+            gl.generateMipmap(gl.TEXTURE_2D);
+            this.map.animationLoop.set(this.map.style.rasterFadeDuration);
+            tile.state = 'loaded';
+            callback(null);
+        }
+    },
+    abortTile: function (tile) {
+        if (tile.request) {
+            tile.request.abort();
+            delete tile.request;
+        }
+    },
+    unloadTile: function (tile) {
+        if (tile.texture)
+            this.map.painter.saveTexture(tile.texture);
     }
-    return result;
+});
+},{"../util/ajax":526,"../util/evented":535,"../util/mapbox":541,"../util/util":544,"./load_tilejson":462}],466:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var sourceTypes = {
+    'vector': require('../source/vector_tile_source'),
+    'raster': require('../source/raster_tile_source'),
+    'geojson': require('../source/geojson_source'),
+    'video': require('../source/video_source'),
+    'image': require('../source/image_source')
 };
-exports.create = function (source) {
-    var sources = {
-        vector: require('./vector_tile_source'),
-        raster: require('./raster_tile_source'),
-        geojson: require('./geojson_source'),
-        video: require('./video_source'),
-        image: require('./image_source')
-    };
-    return exports.is(source) ? source : new sources[source.type](source);
+exports.create = function (id, source, dispatcher) {
+    source = new sourceTypes[source.type](id, source, dispatcher);
+    if (source.id !== id) {
+        throw new Error('Expected Source id to be ' + id + ' instead of ' + source.id);
+    }
+    util.bindAll([
+        'load',
+        'abort',
+        'unload',
+        'serialize',
+        'prepare'
+    ], source);
+    return source;
 };
-exports.is = function (source) {
-    var sources = {
-        vector: require('./vector_tile_source'),
-        raster: require('./raster_tile_source'),
-        geojson: require('./geojson_source'),
-        video: require('./video_source'),
-        image: require('./image_source')
-    };
-    for (var type in sources) {
-        if (source instanceof sources[type]) {
+exports.getType = function (name) {
+    return sourceTypes[name];
+};
+exports.setType = function (name, type) {
+    sourceTypes[name] = type;
+};
+},{"../source/geojson_source":458,"../source/image_source":461,"../source/raster_tile_source":465,"../source/vector_tile_source":470,"../source/video_source":472,"../util/util":544}],467:[function(require,module,exports){
+'use strict';
+var Source = require('./source');
+var Tile = require('./tile');
+var Evented = require('../util/evented');
+var TileCoord = require('./tile_coord');
+var Cache = require('../util/lru_cache');
+var Coordinate = require('../geo/coordinate');
+var util = require('../util/util');
+var EXTENT = require('../data/bucket').EXTENT;
+module.exports = SourceCache;
+function SourceCache(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
+    var source = this._source = Source.create(id, options, dispatcher);
+    source.setEventedParent(this);
+    this.on('source.load', function () {
+        if (this.map && this._source.onAdd) {
+            this._source.onAdd(this.map);
+        }
+        this._sourceLoaded = true;
+    });
+    this.on('error', function () {
+        this._sourceErrored = true;
+    });
+    this.on('data', function (event) {
+        if (this._sourceLoaded && event.dataType === 'source') {
+            this.reload();
+            if (this.transform) {
+                this.update(this.transform, this.map && this.map.style.rasterFadeDuration);
+            }
+        }
+    });
+    this._tiles = {};
+    this._cache = new Cache(0, this.unloadTile.bind(this));
+    this._isIdRenderable = this._isIdRenderable.bind(this);
+}
+SourceCache.maxOverzooming = 10;
+SourceCache.maxUnderzooming = 3;
+SourceCache.prototype = util.inherit(Evented, {
+    onAdd: function (map) {
+        this.map = map;
+        if (this._source && this._source.onAdd) {
+            this._source.onAdd(map);
+        }
+    },
+    loaded: function () {
+        if (this._sourceErrored) {
             return true;
         }
+        if (!this._sourceLoaded) {
+            return false;
+        }
+        for (var t in this._tiles) {
+            var tile = this._tiles[t];
+            if (tile.state !== 'loaded' && tile.state !== 'errored')
+                return false;
+        }
+        return true;
+    },
+    getSource: function () {
+        return this._source;
+    },
+    loadTile: function (tile, callback) {
+        return this._source.loadTile(tile, callback);
+    },
+    unloadTile: function (tile) {
+        if (this._source.unloadTile)
+            return this._source.unloadTile(tile);
+    },
+    abortTile: function (tile) {
+        if (this._source.abortTile)
+            return this._source.abortTile(tile);
+    },
+    serialize: function () {
+        return this._source.serialize();
+    },
+    prepare: function () {
+        if (this._sourceLoaded && this._source.prepare)
+            return this._source.prepare();
+    },
+    getIds: function () {
+        return Object.keys(this._tiles).map(Number).sort(compareKeyZoom);
+    },
+    getRenderableIds: function () {
+        return this.getIds().filter(this._isIdRenderable);
+    },
+    _isIdRenderable: function (id) {
+        return this._tiles[id].hasData() && !this._coveredTiles[id];
+    },
+    reload: function () {
+        this._cache.reset();
+        for (var i in this._tiles) {
+            var tile = this._tiles[i];
+            if (tile.state !== 'loading') {
+                tile.state = 'reloading';
+            }
+            this.loadTile(this._tiles[i], this._tileLoaded.bind(this, this._tiles[i]));
+        }
+    },
+    _tileLoaded: function (tile, err) {
+        if (err) {
+            tile.state = 'errored';
+            this._source.fire('error', {
+                tile: tile,
+                error: err
+            });
+            return;
+        }
+        tile.sourceCache = this;
+        tile.timeAdded = new Date().getTime();
+        this._source.fire('data', {
+            tile: tile,
+            dataType: 'tile'
+        });
+        if (this.map)
+            this.map.painter.tileExtentVAO.vao = null;
+    },
+    getTile: function (coord) {
+        return this.getTileByID(coord.id);
+    },
+    getTileByID: function (id) {
+        return this._tiles[id];
+    },
+    getZoom: function (transform) {
+        return transform.zoom + transform.scaleZoom(transform.tileSize / this._source.tileSize);
+    },
+    findLoadedChildren: function (coord, maxCoveringZoom, retain) {
+        var found = false;
+        for (var id in this._tiles) {
+            var tile = this._tiles[id];
+            if (retain[id] || !tile.hasData() || tile.coord.z <= coord.z || tile.coord.z > maxCoveringZoom)
+                continue;
+            var z2 = Math.pow(2, Math.min(tile.coord.z, this._source.maxzoom) - Math.min(coord.z, this._source.maxzoom));
+            if (Math.floor(tile.coord.x / z2) !== coord.x || Math.floor(tile.coord.y / z2) !== coord.y)
+                continue;
+            retain[id] = true;
+            found = true;
+            while (tile && tile.coord.z - 1 > coord.z) {
+                var parentId = tile.coord.parent(this._source.maxzoom).id;
+                tile = this._tiles[parentId];
+                if (tile && tile.hasData()) {
+                    delete retain[id];
+                    retain[parentId] = true;
+                }
+            }
+        }
+        return found;
+    },
+    findLoadedParent: function (coord, minCoveringZoom, retain) {
+        for (var z = coord.z - 1; z >= minCoveringZoom; z--) {
+            coord = coord.parent(this._source.maxzoom);
+            var tile = this._tiles[coord.id];
+            if (tile && tile.hasData()) {
+                retain[coord.id] = true;
+                return tile;
+            }
+            if (this._cache.has(coord.id)) {
+                this.addTile(coord);
+                retain[coord.id] = true;
+                return this._tiles[coord.id];
+            }
+        }
+    },
+    updateCacheSize: function (transform) {
+        var widthInTiles = Math.ceil(transform.width / transform.tileSize) + 1;
+        var heightInTiles = Math.ceil(transform.height / transform.tileSize) + 1;
+        var approxTilesInView = widthInTiles * heightInTiles;
+        var commonZoomRange = 5;
+        this._cache.setMaxSize(Math.floor(approxTilesInView * commonZoomRange));
+    },
+    update: function (transform, fadeDuration) {
+        if (!this._sourceLoaded) {
+            return;
+        }
+        var i;
+        var coord;
+        var tile;
+        this.updateCacheSize(transform);
+        var zoom = (this._source.roundZoom ? Math.round : Math.floor)(this.getZoom(transform));
+        var minCoveringZoom = Math.max(zoom - SourceCache.maxOverzooming, this._source.minzoom);
+        var maxCoveringZoom = Math.max(zoom + SourceCache.maxUnderzooming, this._source.minzoom);
+        var retain = {};
+        var now = new Date().getTime();
+        this._coveredTiles = {};
+        var visibleCoords;
+        if (!this.used) {
+            visibleCoords = [];
+        } else if (this._source.coord) {
+            visibleCoords = [this._source.coord];
+        } else {
+            visibleCoords = transform.coveringTiles({
+                tileSize: this._source.tileSize,
+                minzoom: this._source.minzoom,
+                maxzoom: this._source.maxzoom,
+                roundZoom: this._source.roundZoom,
+                reparseOverscaled: this._source.reparseOverscaled
+            });
+        }
+        for (i = 0; i < visibleCoords.length; i++) {
+            coord = visibleCoords[i];
+            tile = this.addTile(coord);
+            retain[coord.id] = true;
+            if (tile.hasData())
+                continue;
+            if (!this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
+                this.findLoadedParent(coord, minCoveringZoom, retain);
+            }
+        }
+        var parentsForFading = {};
+        var ids = Object.keys(retain);
+        for (var k = 0; k < ids.length; k++) {
+            var id = ids[k];
+            coord = TileCoord.fromID(id);
+            tile = this._tiles[id];
+            if (tile && tile.timeAdded > now - (fadeDuration || 0)) {
+                if (this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
+                    retain[id] = true;
+                }
+                this.findLoadedParent(coord, minCoveringZoom, parentsForFading);
+            }
+        }
+        var fadedParent;
+        for (fadedParent in parentsForFading) {
+            if (!retain[fadedParent]) {
+                this._coveredTiles[fadedParent] = true;
+            }
+        }
+        for (fadedParent in parentsForFading) {
+            retain[fadedParent] = true;
+        }
+        var remove = util.keysDifference(this._tiles, retain);
+        for (i = 0; i < remove.length; i++) {
+            this.removeTile(+remove[i]);
+        }
+        this.transform = transform;
+    },
+    addTile: function (coord) {
+        var tile = this._tiles[coord.id];
+        if (tile)
+            return tile;
+        var wrapped = coord.wrapped();
+        tile = this._tiles[wrapped.id];
+        if (!tile) {
+            tile = this._cache.get(wrapped.id);
+            if (tile && this._redoPlacement) {
+                this._redoPlacement(tile);
+            }
+        }
+        if (!tile) {
+            var zoom = coord.z;
+            var overscaling = zoom > this._source.maxzoom ? Math.pow(2, zoom - this._source.maxzoom) : 1;
+            tile = new Tile(wrapped, this._source.tileSize * overscaling, this._source.maxzoom);
+            this.loadTile(tile, this._tileLoaded.bind(this, tile));
+        }
+        tile.uses++;
+        this._tiles[coord.id] = tile;
+        this._source.fire('dataloading', {
+            tile: tile,
+            dataType: 'tile'
+        });
+        return tile;
+    },
+    removeTile: function (id) {
+        var tile = this._tiles[id];
+        if (!tile)
+            return;
+        tile.uses--;
+        delete this._tiles[id];
+        this._source.fire('data', { dataType: 'tile' });
+        if (tile.uses > 0)
+            return;
+        if (tile.hasData()) {
+            this._cache.add(tile.coord.wrapped().id, tile);
+        } else {
+            tile.aborted = true;
+            this.abortTile(tile);
+            this.unloadTile(tile);
+        }
+    },
+    clearTiles: function () {
+        for (var id in this._tiles)
+            this.removeTile(id);
+        this._cache.reset();
+    },
+    tilesIn: function (queryGeometry) {
+        var tileResults = {};
+        var ids = this.getIds();
+        var minX = Infinity;
+        var minY = Infinity;
+        var maxX = -Infinity;
+        var maxY = -Infinity;
+        var z = queryGeometry[0].zoom;
+        for (var k = 0; k < queryGeometry.length; k++) {
+            var p = queryGeometry[k];
+            minX = Math.min(minX, p.column);
+            minY = Math.min(minY, p.row);
+            maxX = Math.max(maxX, p.column);
+            maxY = Math.max(maxY, p.row);
+        }
+        for (var i = 0; i < ids.length; i++) {
+            var tile = this._tiles[ids[i]];
+            var coord = TileCoord.fromID(ids[i]);
+            var tileSpaceBounds = [
+                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(minX, minY, z)),
+                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(maxX, maxY, z))
+            ];
+            if (tileSpaceBounds[0].x < EXTENT && tileSpaceBounds[0].y < EXTENT && tileSpaceBounds[1].x >= 0 && tileSpaceBounds[1].y >= 0) {
+                var tileSpaceQueryGeometry = [];
+                for (var j = 0; j < queryGeometry.length; j++) {
+                    tileSpaceQueryGeometry.push(coordinateToTilePoint(coord, tile.sourceMaxZoom, queryGeometry[j]));
+                }
+                var tileResult = tileResults[tile.coord.id];
+                if (tileResult === undefined) {
+                    tileResult = tileResults[tile.coord.id] = {
+                        tile: tile,
+                        coord: coord,
+                        queryGeometry: [],
+                        scale: Math.pow(2, this.transform.zoom - tile.coord.z)
+                    };
+                }
+                tileResult.queryGeometry.push(tileSpaceQueryGeometry);
+            }
+        }
+        var results = [];
+        for (var t in tileResults) {
+            results.push(tileResults[t]);
+        }
+        return results;
+    },
+    redoPlacement: function () {
+        var ids = this.getIds();
+        for (var i = 0; i < ids.length; i++) {
+            var tile = this.getTileByID(ids[i]);
+            tile.redoPlacement(this);
+        }
+    },
+    getVisibleCoordinates: function () {
+        return this.getRenderableIds().map(TileCoord.fromID);
     }
-    return false;
-};
-},{"../util/ajax":519,"../util/browser":520,"../util/mapbox":532,"../util/util":535,"./geojson_source":456,"./image_source":458,"./raster_tile_source":460,"./tile_coord":463,"./tile_pyramid":464,"./vector_tile_source":465,"./video_source":466}],462:[function(require,module,exports){
+});
+function coordinateToTilePoint(tileCoord, sourceMaxZoom, coord) {
+    var zoomedCoord = coord.zoomTo(Math.min(tileCoord.z, sourceMaxZoom));
+    return {
+        x: (zoomedCoord.column - (tileCoord.x + tileCoord.w * Math.pow(2, tileCoord.z))) * EXTENT,
+        y: (zoomedCoord.row - tileCoord.y) * EXTENT
+    };
+}
+function compareKeyZoom(a, b) {
+    return a % 32 - b % 32;
+}
+},{"../data/bucket":428,"../geo/coordinate":437,"../util/evented":535,"../util/lru_cache":540,"../util/util":544,"./source":466,"./tile":468,"./tile_coord":469}],468:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var Bucket = require('../data/bucket');
@@ -30177,17 +28409,22 @@ function Tile(coord, size, sourceMaxZoom) {
     this.state = 'loading';
 }
 Tile.prototype = {
-    loadVectorData: function (data, style) {
+    loadVectorData: function (data, painter) {
+        if (this.hasData()) {
+            this.unloadVectorData(painter);
+        }
         this.state = 'loaded';
         if (!data)
             return;
+        if (data.rawTileData) {
+            this.rawTileData = data.rawTileData;
+        }
         this.collisionBoxArray = new CollisionBoxArray(data.collisionBoxArray);
         this.collisionTile = new CollisionTile(data.collisionTile, this.collisionBoxArray);
         this.symbolInstancesArray = new SymbolInstancesArray(data.symbolInstancesArray);
         this.symbolQuadsArray = new SymbolQuadsArray(data.symbolQuadsArray);
-        this.featureIndex = new FeatureIndex(data.featureIndex, data.rawTileData, this.collisionTile);
-        this.rawTileData = data.rawTileData;
-        this.buckets = unserializeBuckets(data.buckets, style);
+        this.featureIndex = new FeatureIndex(data.featureIndex, this.rawTileData, this.collisionTile);
+        this.buckets = unserializeBuckets(data.buckets, painter.style);
     },
     reloadSymbolData: function (data, painter, style) {
         if (this.state === 'unloaded')
@@ -30213,7 +28450,6 @@ Tile.prototype = {
         this.symbolInstancesArray = null;
         this.collisionTile = null;
         this.featureIndex = null;
-        this.rawTileData = null;
         this.buckets = null;
         this.state = 'unloaded';
     },
@@ -30232,7 +28468,12 @@ Tile.prototype = {
         }, done.bind(this), this.workerID);
         function done(_, data) {
             this.reloadSymbolData(data, source.map.painter, source.map.style);
-            source.fire('tile.load', { tile: this });
+            source.fire('data', {
+                tile: this,
+                dataType: 'tile'
+            });
+            if (source.map)
+                source.map.painter.tileExtentVAO.vao = null;
             this.state = 'loaded';
             if (this.redoWhenDone) {
                 this.redoPlacement(source);
@@ -30247,7 +28488,7 @@ Tile.prototype = {
         if (!this.rawTileData)
             return;
         if (!this.vtLayers) {
-            this.vtLayers = new vt.VectorTile(new Protobuf(new Uint8Array(this.rawTileData))).layers;
+            this.vtLayers = new vt.VectorTile(new Protobuf(this.rawTileData)).layers;
         }
         var layer = this.vtLayers._geojsonTileLayer || this.vtLayers[params.sourceLayer];
         if (!layer)
@@ -30267,7 +28508,7 @@ Tile.prototype = {
             }
         }
     },
-    isRenderable: function () {
+    hasData: function () {
         return this.state === 'loaded' || this.state === 'reloading';
     }
 };
@@ -30289,7 +28530,7 @@ function unserializeBuckets(input, style) {
     }
     return output;
 }
-},{"../data/bucket":428,"../data/feature_index":434,"../symbol/collision_box":488,"../symbol/collision_tile":490,"../symbol/symbol_instances":499,"../symbol/symbol_quads":500,"../util/util":535,"../util/vectortile_to_geojson":536,"feature-filter":338,"pbf":543,"vector-tile":738}],463:[function(require,module,exports){
+},{"../data/bucket":428,"../data/feature_index":435,"../symbol/collision_box":494,"../symbol/collision_tile":496,"../symbol/symbol_instances":505,"../symbol/symbol_quads":506,"../util/util":544,"../util/vectortile_to_geojson":545,"feature-filter":338,"pbf":553,"vector-tile":748}],469:[function(require,module,exports){
 'use strict';
 var WhooTS = require('whoots-js');
 var Coordinate = require('../geo/coordinate');
@@ -30441,292 +28682,16 @@ TileCoord.cover = function (z, bounds, actualZ) {
         return t[id];
     });
 };
-},{"../geo/coordinate":436,"whoots-js":748}],464:[function(require,module,exports){
+},{"../geo/coordinate":437,"whoots-js":758}],470:[function(require,module,exports){
 'use strict';
-var Tile = require('./tile');
-var TileCoord = require('./tile_coord');
-var Point = require('point-geometry');
-var Cache = require('../util/lru_cache');
-var Coordinate = require('../geo/coordinate');
-var util = require('../util/util');
-var EXTENT = require('../data/bucket').EXTENT;
-module.exports = TilePyramid;
-function TilePyramid(options) {
-    this.tileSize = options.tileSize;
-    this.minzoom = options.minzoom;
-    this.maxzoom = options.maxzoom;
-    this.roundZoom = options.roundZoom;
-    this.reparseOverscaled = options.reparseOverscaled;
-    this._load = options.load;
-    this._abort = options.abort;
-    this._unload = options.unload;
-    this._add = options.add;
-    this._remove = options.remove;
-    this._redoPlacement = options.redoPlacement;
-    this._tiles = {};
-    this._cache = new Cache(0, function (tile) {
-        return this._unload(tile);
-    }.bind(this));
-    this._isIdRenderable = this._isIdRenderable.bind(this);
-}
-TilePyramid.maxOverzooming = 10;
-TilePyramid.maxUnderzooming = 3;
-TilePyramid.prototype = {
-    loaded: function () {
-        for (var t in this._tiles) {
-            var tile = this._tiles[t];
-            if (tile.state !== 'loaded' && tile.state !== 'errored')
-                return false;
-        }
-        return true;
-    },
-    getIds: function () {
-        return Object.keys(this._tiles).map(Number).sort(compareKeyZoom);
-    },
-    getRenderableIds: function () {
-        return this.getIds().filter(this._isIdRenderable);
-    },
-    _isIdRenderable: function (id) {
-        return this._tiles[id].isRenderable() && !this._coveredTiles[id];
-    },
-    reload: function () {
-        this._cache.reset();
-        for (var i in this._tiles) {
-            var tile = this._tiles[i];
-            if (tile.state !== 'loading') {
-                tile.state = 'reloading';
-            }
-            this._load(tile);
-        }
-    },
-    getTile: function (id) {
-        return this._tiles[id];
-    },
-    getZoom: function (transform) {
-        return transform.zoom + Math.log(transform.tileSize / this.tileSize) / Math.LN2;
-    },
-    coveringZoomLevel: function (transform) {
-        return (this.roundZoom ? Math.round : Math.floor)(this.getZoom(transform));
-    },
-    coveringTiles: function (transform) {
-        var z = this.coveringZoomLevel(transform);
-        var actualZ = z;
-        if (z < this.minzoom)
-            return [];
-        if (z > this.maxzoom)
-            z = this.maxzoom;
-        var tr = transform, tileCenter = tr.locationCoordinate(tr.center)._zoomTo(z), centerPoint = new Point(tileCenter.column - 0.5, tileCenter.row - 0.5);
-        return TileCoord.cover(z, [
-            tr.pointCoordinate(new Point(0, 0))._zoomTo(z),
-            tr.pointCoordinate(new Point(tr.width, 0))._zoomTo(z),
-            tr.pointCoordinate(new Point(tr.width, tr.height))._zoomTo(z),
-            tr.pointCoordinate(new Point(0, tr.height))._zoomTo(z)
-        ], this.reparseOverscaled ? actualZ : z).sort(function (a, b) {
-            return centerPoint.dist(a) - centerPoint.dist(b);
-        });
-    },
-    findLoadedChildren: function (coord, maxCoveringZoom, retain) {
-        var found = false;
-        for (var id in this._tiles) {
-            var tile = this._tiles[id];
-            if (retain[id] || !tile.isRenderable() || tile.coord.z <= coord.z || tile.coord.z > maxCoveringZoom)
-                continue;
-            var z2 = Math.pow(2, Math.min(tile.coord.z, this.maxzoom) - Math.min(coord.z, this.maxzoom));
-            if (Math.floor(tile.coord.x / z2) !== coord.x || Math.floor(tile.coord.y / z2) !== coord.y)
-                continue;
-            retain[id] = true;
-            found = true;
-            while (tile && tile.coord.z - 1 > coord.z) {
-                var parentId = tile.coord.parent(this.maxzoom).id;
-                tile = this._tiles[parentId];
-                if (tile && tile.isRenderable()) {
-                    delete retain[id];
-                    retain[parentId] = true;
-                }
-            }
-        }
-        return found;
-    },
-    findLoadedParent: function (coord, minCoveringZoom, retain) {
-        for (var z = coord.z - 1; z >= minCoveringZoom; z--) {
-            coord = coord.parent(this.maxzoom);
-            var tile = this._tiles[coord.id];
-            if (tile && tile.isRenderable()) {
-                retain[coord.id] = true;
-                return tile;
-            }
-            if (this._cache.has(coord.id)) {
-                this.addTile(coord);
-                retain[coord.id] = true;
-                return this._tiles[coord.id];
-            }
-        }
-    },
-    updateCacheSize: function (transform) {
-        var widthInTiles = Math.ceil(transform.width / transform.tileSize) + 1;
-        var heightInTiles = Math.ceil(transform.height / transform.tileSize) + 1;
-        var approxTilesInView = widthInTiles * heightInTiles;
-        var commonZoomRange = 5;
-        this._cache.setMaxSize(Math.floor(approxTilesInView * commonZoomRange));
-    },
-    update: function (used, transform, fadeDuration) {
-        var i;
-        var coord;
-        var tile;
-        this.updateCacheSize(transform);
-        var zoom = (this.roundZoom ? Math.round : Math.floor)(this.getZoom(transform));
-        var minCoveringZoom = Math.max(zoom - TilePyramid.maxOverzooming, this.minzoom);
-        var maxCoveringZoom = Math.max(zoom + TilePyramid.maxUnderzooming, this.minzoom);
-        var retain = {};
-        var now = new Date().getTime();
-        this._coveredTiles = {};
-        var required = used ? this.coveringTiles(transform) : [];
-        for (i = 0; i < required.length; i++) {
-            coord = required[i];
-            tile = this.addTile(coord);
-            retain[coord.id] = true;
-            if (tile.isRenderable())
-                continue;
-            if (!this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
-                this.findLoadedParent(coord, minCoveringZoom, retain);
-            }
-        }
-        var parentsForFading = {};
-        var ids = Object.keys(retain);
-        for (var k = 0; k < ids.length; k++) {
-            var id = ids[k];
-            coord = TileCoord.fromID(id);
-            tile = this._tiles[id];
-            if (tile && tile.timeAdded > now - (fadeDuration || 0)) {
-                if (this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
-                    retain[id] = true;
-                }
-                this.findLoadedParent(coord, minCoveringZoom, parentsForFading);
-            }
-        }
-        var fadedParent;
-        for (fadedParent in parentsForFading) {
-            if (!retain[fadedParent]) {
-                this._coveredTiles[fadedParent] = true;
-            }
-        }
-        for (fadedParent in parentsForFading) {
-            retain[fadedParent] = true;
-        }
-        var remove = util.keysDifference(this._tiles, retain);
-        for (i = 0; i < remove.length; i++) {
-            this.removeTile(+remove[i]);
-        }
-        this.transform = transform;
-    },
-    addTile: function (coord) {
-        var tile = this._tiles[coord.id];
-        if (tile)
-            return tile;
-        var wrapped = coord.wrapped();
-        tile = this._tiles[wrapped.id];
-        if (!tile) {
-            tile = this._cache.get(wrapped.id);
-            if (tile && this._redoPlacement) {
-                this._redoPlacement(tile);
-            }
-        }
-        if (!tile) {
-            var zoom = coord.z;
-            var overscaling = zoom > this.maxzoom ? Math.pow(2, zoom - this.maxzoom) : 1;
-            tile = new Tile(wrapped, this.tileSize * overscaling, this.maxzoom);
-            this._load(tile);
-        }
-        tile.uses++;
-        this._tiles[coord.id] = tile;
-        this._add(tile, coord);
-        return tile;
-    },
-    removeTile: function (id) {
-        var tile = this._tiles[id];
-        if (!tile)
-            return;
-        tile.uses--;
-        delete this._tiles[id];
-        this._remove(tile);
-        if (tile.uses > 0)
-            return;
-        if (tile.isRenderable()) {
-            this._cache.add(tile.coord.wrapped().id, tile);
-        } else {
-            this._abort(tile);
-            this._unload(tile);
-        }
-    },
-    clearTiles: function () {
-        for (var id in this._tiles)
-            this.removeTile(id);
-        this._cache.reset();
-    },
-    tilesIn: function (queryGeometry) {
-        var tileResults = {};
-        var ids = this.getIds();
-        var minX = Infinity;
-        var minY = Infinity;
-        var maxX = -Infinity;
-        var maxY = -Infinity;
-        var z = queryGeometry[0].zoom;
-        for (var k = 0; k < queryGeometry.length; k++) {
-            var p = queryGeometry[k];
-            minX = Math.min(minX, p.column);
-            minY = Math.min(minY, p.row);
-            maxX = Math.max(maxX, p.column);
-            maxY = Math.max(maxY, p.row);
-        }
-        for (var i = 0; i < ids.length; i++) {
-            var tile = this._tiles[ids[i]];
-            var coord = TileCoord.fromID(ids[i]);
-            var tileSpaceBounds = [
-                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(minX, minY, z)),
-                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(maxX, maxY, z))
-            ];
-            if (tileSpaceBounds[0].x < EXTENT && tileSpaceBounds[0].y < EXTENT && tileSpaceBounds[1].x >= 0 && tileSpaceBounds[1].y >= 0) {
-                var tileSpaceQueryGeometry = [];
-                for (var j = 0; j < queryGeometry.length; j++) {
-                    tileSpaceQueryGeometry.push(coordinateToTilePoint(coord, tile.sourceMaxZoom, queryGeometry[j]));
-                }
-                var tileResult = tileResults[tile.coord.id];
-                if (tileResult === undefined) {
-                    tileResult = tileResults[tile.coord.id] = {
-                        tile: tile,
-                        coord: coord,
-                        queryGeometry: [],
-                        scale: Math.pow(2, this.transform.zoom - tile.coord.z)
-                    };
-                }
-                tileResult.queryGeometry.push(tileSpaceQueryGeometry);
-            }
-        }
-        var results = [];
-        for (var t in tileResults) {
-            results.push(tileResults[t]);
-        }
-        return results;
-    }
-};
-function coordinateToTilePoint(tileCoord, sourceMaxZoom, coord) {
-    var zoomedCoord = coord.zoomTo(Math.min(tileCoord.z, sourceMaxZoom));
-    return {
-        x: (zoomedCoord.column - (tileCoord.x + tileCoord.w * Math.pow(2, tileCoord.z))) * EXTENT,
-        y: (zoomedCoord.row - tileCoord.y) * EXTENT
-    };
-}
-function compareKeyZoom(a, b) {
-    return a % 32 - b % 32;
-}
-},{"../data/bucket":428,"../geo/coordinate":436,"../util/lru_cache":531,"../util/util":535,"./tile":462,"./tile_coord":463,"point-geometry":544}],465:[function(require,module,exports){
-'use strict';
-var util = require('../util/util');
 var Evented = require('../util/evented');
-var Source = require('./source');
+var util = require('../util/util');
+var loadTileJSON = require('./load_tilejson');
 var normalizeURL = require('../util/mapbox').normalizeTileURL;
 module.exports = VectorTileSource;
-function VectorTileSource(options) {
+function VectorTileSource(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
     util.extend(this, util.pick(options, [
         'url',
         'scheme',
@@ -30736,7 +28701,15 @@ function VectorTileSource(options) {
     if (this.tileSize !== 512) {
         throw new Error('vector tile sources must have a tileSize of 512');
     }
-    Source._loadTileJSON.call(this, options);
+    loadTileJSON(options, function (err, tileJSON) {
+        if (err) {
+            this.fire('error', err);
+            return;
+        }
+        util.extend(this, tileJSON);
+        this.fire('data', { dataType: 'source' });
+        this.fire('source.load');
+    }.bind(this));
 }
 VectorTileSource.prototype = util.inherit(Evented, {
     minzoom: 0,
@@ -30744,32 +28717,14 @@ VectorTileSource.prototype = util.inherit(Evented, {
     scheme: 'xyz',
     tileSize: 512,
     reparseOverscaled: true,
-    _loaded: false,
     isTileClipped: true,
     onAdd: function (map) {
         this.map = map;
     },
-    loaded: function () {
-        return this._pyramid && this._pyramid.loaded();
-    },
-    update: function (transform) {
-        if (this._pyramid) {
-            this._pyramid.update(this.used, transform);
-        }
-    },
-    reload: function () {
-        if (this._pyramid) {
-            this._pyramid.reload();
-        }
-    },
     serialize: function () {
         return util.extend({}, this._options);
     },
-    getVisibleCoordinates: Source._getVisibleCoordinates,
-    getTile: Source._getTile,
-    queryRenderedFeatures: Source._queryRenderedVectorFeatures,
-    querySourceFeatures: Source._querySourceFeatures,
-    _loadTile: function (tile) {
+    loadTile: function (tile, callback) {
         var overscaling = tile.coord.z > this.maxzoom ? Math.pow(2, tile.coord.z - this.maxzoom) : 1;
         var params = {
             url: normalizeURL(tile.coord.url(this.tiles, this.maxzoom, this.scheme), this.url),
@@ -30783,61 +28738,135 @@ VectorTileSource.prototype = util.inherit(Evented, {
             pitch: this.map.transform.pitch,
             showCollisionBoxes: this.map.showCollisionBoxes
         };
-        if (tile.workerID) {
-            params.rawTileData = tile.rawTileData;
-            this.dispatcher.send('reload tile', params, this._tileLoaded.bind(this, tile), tile.workerID);
+        if (!tile.workerID) {
+            tile.workerID = this.dispatcher.send('load tile', params, done.bind(this));
+        } else if (tile.state === 'loading') {
+            tile.reloadCallback = callback;
         } else {
-            tile.workerID = this.dispatcher.send('load tile', params, this._tileLoaded.bind(this, tile));
+            this.dispatcher.send('reload tile', params, done.bind(this), tile.workerID);
+        }
+        function done(err, data) {
+            if (tile.aborted)
+                return;
+            if (err) {
+                return callback(err);
+            }
+            tile.loadVectorData(data, this.map.painter);
+            if (tile.redoWhenDone) {
+                tile.redoWhenDone = false;
+                tile.redoPlacement(this);
+            }
+            callback(null);
+            if (tile.reloadCallback) {
+                this.loadTile(tile, tile.reloadCallback);
+                tile.reloadCallback = null;
+            }
         }
     },
-    _tileLoaded: function (tile, err, data) {
-        if (tile.aborted)
-            return;
-        if (err) {
-            tile.state = 'errored';
-            this.fire('tile.error', {
-                tile: tile,
-                error: err
-            });
-            return;
-        }
-        tile.loadVectorData(data, this.map.style);
-        if (tile.redoWhenDone) {
-            tile.redoWhenDone = false;
-            tile.redoPlacement(this);
-        }
-        this.fire('tile.load', { tile: tile });
-        this.fire('tile.stats', data.bucketStats);
-    },
-    _abortTile: function (tile) {
-        tile.aborted = true;
+    abortTile: function (tile) {
         this.dispatcher.send('abort tile', {
             uid: tile.uid,
             source: this.id
         }, null, tile.workerID);
     },
-    _addTile: function (tile) {
-        this.fire('tile.add', { tile: tile });
-    },
-    _removeTile: function (tile) {
-        this.fire('tile.remove', { tile: tile });
-    },
-    _unloadTile: function (tile) {
+    unloadTile: function (tile) {
         tile.unloadVectorData(this.map.painter);
         this.dispatcher.send('remove tile', {
             uid: tile.uid,
             source: this.id
         }, null, tile.workerID);
-    },
-    redoPlacement: Source.redoPlacement,
-    _redoTilePlacement: function (tile) {
-        tile.redoPlacement(this);
     }
 });
-},{"../util/evented":527,"../util/mapbox":532,"../util/util":535,"./source":461}],466:[function(require,module,exports){
+},{"../util/evented":535,"../util/mapbox":541,"../util/util":544,"./load_tilejson":462}],471:[function(require,module,exports){
+'use strict';
+var ajax = require('../util/ajax');
+var vt = require('vector-tile');
+var Protobuf = require('pbf');
+var WorkerTile = require('./worker_tile');
+var util = require('../util/util');
+module.exports = VectorTileWorkerSource;
+function VectorTileWorkerSource(actor, styleLayers, loadVectorData) {
+    this.actor = actor;
+    this.styleLayers = styleLayers;
+    if (loadVectorData) {
+        this.loadVectorData = loadVectorData;
+    }
+    this.loading = {};
+    this.loaded = {};
+}
+VectorTileWorkerSource.prototype = {
+    loadTile: function (params, callback) {
+        var source = params.source, uid = params.uid;
+        if (!this.loading[source])
+            this.loading[source] = {};
+        var workerTile = this.loading[source][uid] = new WorkerTile(params);
+        workerTile.abort = this.loadVectorData(params, done.bind(this));
+        function done(err, vectorTile) {
+            delete this.loading[source][uid];
+            if (err)
+                return callback(err);
+            if (!vectorTile)
+                return callback(null, null);
+            workerTile.vectorTile = vectorTile;
+            workerTile.parse(vectorTile, this.styleLayers.getLayerFamilies(), this.actor, function (err, result, transferrables) {
+                if (err)
+                    return callback(err);
+                callback(null, util.extend({ rawTileData: vectorTile.rawData }, result), transferrables);
+            });
+            this.loaded[source] = this.loaded[source] || {};
+            this.loaded[source][uid] = workerTile;
+        }
+    },
+    reloadTile: function (params, callback) {
+        var loaded = this.loaded[params.source], uid = params.uid;
+        if (loaded && loaded[uid]) {
+            var workerTile = loaded[uid];
+            workerTile.parse(workerTile.vectorTile, this.styleLayers.getLayerFamilies(), this.actor, callback);
+        }
+    },
+    abortTile: function (params) {
+        var loading = this.loading[params.source], uid = params.uid;
+        if (loading && loading[uid] && loading[uid].abort) {
+            loading[uid].abort();
+            delete loading[uid];
+        }
+    },
+    removeTile: function (params) {
+        var loaded = this.loaded[params.source], uid = params.uid;
+        if (loaded && loaded[uid]) {
+            delete loaded[uid];
+        }
+    },
+    loadVectorData: function (params, callback) {
+        var xhr = ajax.getArrayBuffer(params.url, done.bind(this));
+        return function abort() {
+            xhr.abort();
+        };
+        function done(err, arrayBuffer) {
+            if (err) {
+                return callback(err);
+            }
+            var vectorTile = new vt.VectorTile(new Protobuf(arrayBuffer));
+            vectorTile.rawData = arrayBuffer;
+            callback(err, vectorTile);
+        }
+    },
+    redoPlacement: function (params, callback) {
+        var loaded = this.loaded[params.source], loading = this.loading[params.source], uid = params.uid;
+        if (loaded && loaded[uid]) {
+            var workerTile = loaded[uid];
+            var result = workerTile.redoPlacement(params.angle, params.pitch, params.showCollisionBoxes);
+            if (result.result) {
+                callback(null, result.result, result.transferables);
+            }
+        } else if (loading && loading[uid]) {
+            loading[uid].angle = params.angle;
+        }
+    }
+};
+},{"../util/ajax":526,"../util/util":544,"./worker_tile":474,"pbf":553,"vector-tile":748}],472:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
-var Tile = require('./tile');
 var TileCoord = require('./tile_coord');
 var LngLat = require('../geo/lng_lat');
 var Point = require('point-geometry');
@@ -30848,12 +28877,13 @@ var RasterBoundsArray = require('../render/draw_raster').RasterBoundsArray;
 var Buffer = require('../data/buffer');
 var VertexArrayObject = require('../render/vertex_array_object');
 module.exports = VideoSource;
-function VideoSource(options) {
+function VideoSource(id, options) {
+    this.id = id;
     this.urls = options.urls;
     this.coordinates = options.coordinates;
     ajax.getVideo(options.urls, function (err, video) {
         if (err)
-            return;
+            return this.fire('error', { error: err });
         this.video = video;
         this.video.loop = true;
         var loopID;
@@ -30864,19 +28894,25 @@ function VideoSource(options) {
         this.video.addEventListener('pause', function () {
             this.map.style.animationLoop.cancel(loopID);
         }.bind(this));
-        this._loaded = true;
         if (this.map) {
             this.video.play();
             this.setCoordinates(options.coordinates);
         }
+        this.fire('data', { dataType: 'source' });
+        this.fire('source.load');
     }.bind(this));
 }
 VideoSource.prototype = util.inherit(Evented, {
+    minzoom: 0,
+    maxzoom: 22,
+    tileSize: 512,
     roundZoom: true,
     getVideo: function () {
         return this.video;
     },
     onAdd: function (map) {
+        if (this.map)
+            return;
         this.map = map;
         if (this.video) {
             this.video.play();
@@ -30892,37 +28928,37 @@ VideoSource.prototype = util.inherit(Evented, {
         var centerCoord = this.centerCoord = util.getCoordinatesCenter(cornerZ0Coords);
         centerCoord.column = Math.round(centerCoord.column);
         centerCoord.row = Math.round(centerCoord.row);
-        var tileCoords = cornerZ0Coords.map(function (coord) {
+        this.minzoom = this.maxzoom = centerCoord.zoom;
+        this.coord = new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row);
+        this._tileCoords = cornerZ0Coords.map(function (coord) {
             var zoomedCoord = coord.zoomTo(centerCoord.zoom);
             return new Point(Math.round((zoomedCoord.column - centerCoord.column) * EXTENT), Math.round((zoomedCoord.row - centerCoord.row) * EXTENT));
         });
+        this.fire('data', { dataType: 'source' });
+        return this;
+    },
+    _setTile: function (tile) {
+        this._prepared = false;
+        this.tile = tile;
         var maxInt16 = 32767;
         var array = new RasterBoundsArray();
-        array.emplaceBack(tileCoords[0].x, tileCoords[0].y, 0, 0);
-        array.emplaceBack(tileCoords[1].x, tileCoords[1].y, maxInt16, 0);
-        array.emplaceBack(tileCoords[3].x, tileCoords[3].y, 0, maxInt16);
-        array.emplaceBack(tileCoords[2].x, tileCoords[2].y, maxInt16, maxInt16);
-        this.tile = new Tile(new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row));
+        array.emplaceBack(this._tileCoords[0].x, this._tileCoords[0].y, 0, 0);
+        array.emplaceBack(this._tileCoords[1].x, this._tileCoords[1].y, maxInt16, 0);
+        array.emplaceBack(this._tileCoords[3].x, this._tileCoords[3].y, 0, maxInt16);
+        array.emplaceBack(this._tileCoords[2].x, this._tileCoords[2].y, maxInt16, maxInt16);
         this.tile.buckets = {};
         this.tile.boundsBuffer = new Buffer(array.serialize(), RasterBoundsArray.serialize(), Buffer.BufferType.VERTEX);
         this.tile.boundsVAO = new VertexArrayObject();
-        this.fire('change');
-        return this;
-    },
-    loaded: function () {
-        return this.video && this.video.readyState >= 2;
-    },
-    update: function () {
-    },
-    reload: function () {
+        this.tile.state = 'loaded';
     },
     prepare: function () {
-        if (!this._loaded)
-            return;
         if (this.video.readyState < 2)
             return;
+        if (!this.tile)
+            return;
         var gl = this.map.painter.gl;
-        if (!this.tile.texture) {
+        if (!this._prepared) {
+            this._prepared = true;
             this.tile.texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, this.tile.texture);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -30936,14 +28972,14 @@ VideoSource.prototype = util.inherit(Evented, {
         }
         this._currentTime = this.video.currentTime;
     },
-    getVisibleCoordinates: function () {
-        if (this.tile)
-            return [this.tile.coord];
-        else
-            return [];
-    },
-    getTile: function () {
-        return this.tile;
+    loadTile: function (tile, callback) {
+        if (this.coord && this.coord.toString() === tile.coord.toString()) {
+            this._setTile(tile);
+            callback(null);
+        } else {
+            tile.state = 'errored';
+            callback(null);
+        }
     },
     serialize: function () {
         return {
@@ -30953,37 +28989,40 @@ VideoSource.prototype = util.inherit(Evented, {
         };
     }
 });
-},{"../data/bucket":428,"../data/buffer":433,"../geo/lng_lat":437,"../render/draw_raster":449,"../render/vertex_array_object":455,"../util/ajax":519,"../util/evented":527,"../util/util":535,"./tile":462,"./tile_coord":463,"point-geometry":544}],467:[function(require,module,exports){
+},{"../data/bucket":428,"../data/buffer":433,"../geo/lng_lat":438,"../render/draw_raster":451,"../render/vertex_array_object":457,"../util/ajax":526,"../util/evented":535,"../util/util":544,"./tile_coord":469,"point-geometry":554}],473:[function(require,module,exports){
 'use strict';
 var Actor = require('../util/actor');
-var WorkerTile = require('./worker_tile');
 var StyleLayer = require('../style/style_layer');
 var util = require('../util/util');
-var ajax = require('../util/ajax');
-var vt = require('vector-tile');
-var Protobuf = require('pbf');
-var supercluster = require('supercluster');
-var geojsonvt = require('geojson-vt');
-var rewind = require('geojson-rewind');
-var GeoJSONWrapper = require('./geojson_wrapper');
-var vtpbf = require('vt-pbf');
-module.exports = function (self) {
+var VectorTileWorkerSource = require('./vector_tile_worker_source');
+var GeoJSONWorkerSource = require('./geojson_worker_source');
+var featureFilter = require('feature-filter');
+module.exports = function createWorker(self) {
     return new Worker(self);
 };
 function Worker(self) {
     this.self = self;
     this.actor = new Actor(self, this);
-    this.loading = {};
-    this.loaded = {};
-    this.geoJSONIndexes = {};
+    this.layers = {};
+    this.layerFamilies = {};
+    this.workerSourceTypes = {
+        vector: VectorTileWorkerSource,
+        geojson: GeoJSONWorkerSource
+    };
+    this.workerSources = {};
+    this.self.registerWorkerSource = function (name, WorkerSource) {
+        if (this.workerSourceTypes[name]) {
+            throw new Error('Worker source with name "' + name + '" already registered.');
+        }
+        this.workerSourceTypes[name] = WorkerSource;
+    }.bind(this);
 }
 util.extend(Worker.prototype, {
-    'set layers': function (layers) {
-        this.layers = {};
-        var that = this;
+    'set layers': function (mapId, layerDefinitions) {
+        var layers = this.layers[mapId] = {};
         var childLayerIndicies = [];
-        for (var i = 0; i < layers.length; i++) {
-            var layer = layers[i];
+        for (var i = 0; i < layerDefinitions.length; i++) {
+            var layer = layerDefinitions[i];
             if (layer.type === 'fill' || layer.type === 'line' || layer.type === 'circle' || layer.type === 'symbol') {
                 if (layer.ref) {
                     childLayerIndicies.push(i);
@@ -30993,130 +29032,91 @@ util.extend(Worker.prototype, {
             }
         }
         for (var j = 0; j < childLayerIndicies.length; j++) {
-            setLayer(layers[childLayerIndicies[j]]);
+            setLayer(layerDefinitions[childLayerIndicies[j]]);
         }
         function setLayer(serializedLayer) {
-            var styleLayer = StyleLayer.create(serializedLayer, serializedLayer.ref && that.layers[serializedLayer.ref]);
+            var styleLayer = StyleLayer.create(serializedLayer, serializedLayer.ref && layers[serializedLayer.ref]);
             styleLayer.updatePaintTransitions({}, { transition: false });
-            that.layers[styleLayer.id] = styleLayer;
+            styleLayer.filter = featureFilter(styleLayer.filter);
+            layers[styleLayer.id] = styleLayer;
         }
-        this.layerFamilies = createLayerFamilies(this.layers);
+        this.layerFamilies[mapId] = createLayerFamilies(this.layers[mapId]);
     },
-    'update layers': function (layers) {
-        var that = this;
+    'update layers': function (mapId, layerDefinitions) {
         var id;
         var layer;
-        for (id in layers) {
-            layer = layers[id];
+        var layers = this.layers[mapId];
+        for (id in layerDefinitions) {
+            layer = layerDefinitions[id];
             if (layer.ref)
                 updateLayer(layer);
         }
-        for (id in layers) {
-            layer = layers[id];
+        for (id in layerDefinitions) {
+            layer = layerDefinitions[id];
             if (!layer.ref)
                 updateLayer(layer);
         }
         function updateLayer(layer) {
-            var refLayer = that.layers[layer.ref];
-            if (that.layers[layer.id]) {
-                that.layers[layer.id].set(layer, refLayer);
+            var refLayer = layers[layer.ref];
+            var styleLayer = layers[layer.id];
+            if (styleLayer) {
+                styleLayer.set(layer, refLayer);
             } else {
-                that.layers[layer.id] = StyleLayer.create(layer, refLayer);
+                styleLayer = layers[layer.id] = StyleLayer.create(layer, refLayer);
             }
-            that.layers[layer.id].updatePaintTransitions({}, { transition: false });
+            styleLayer.updatePaintTransitions({}, { transition: false });
+            styleLayer.filter = featureFilter(styleLayer.filter);
         }
-        this.layerFamilies = createLayerFamilies(this.layers);
+        this.layerFamilies[mapId] = createLayerFamilies(this.layers[mapId]);
     },
-    'load tile': function (params, callback) {
-        var source = params.source, uid = params.uid;
-        if (!this.loading[source])
-            this.loading[source] = {};
-        var tile = this.loading[source][uid] = new WorkerTile(params);
-        tile.xhr = ajax.getArrayBuffer(params.url, done.bind(this));
-        function done(err, data) {
-            delete this.loading[source][uid];
-            if (err)
-                return callback(err);
-            tile.data = new vt.VectorTile(new Protobuf(new Uint8Array(data)));
-            tile.parse(tile.data, this.layerFamilies, this.actor, data, callback);
-            this.loaded[source] = this.loaded[source] || {};
-            this.loaded[source][uid] = tile;
-        }
+    'load tile': function (mapId, params, callback) {
+        var type = params.type || 'vector';
+        this.getWorkerSource(mapId, type).loadTile(params, callback);
     },
-    'reload tile': function (params, callback) {
-        var loaded = this.loaded[params.source], uid = params.uid;
-        if (loaded && loaded[uid]) {
-            var tile = loaded[uid];
-            tile.parse(tile.data, this.layerFamilies, this.actor, params.rawTileData, callback);
-        }
+    'reload tile': function (mapId, params, callback) {
+        var type = params.type || 'vector';
+        this.getWorkerSource(mapId, type).reloadTile(params, callback);
     },
-    'abort tile': function (params) {
-        var loading = this.loading[params.source], uid = params.uid;
-        if (loading && loading[uid]) {
-            loading[uid].xhr.abort();
-            delete loading[uid];
-        }
+    'abort tile': function (mapId, params) {
+        var type = params.type || 'vector';
+        this.getWorkerSource(mapId, type).abortTile(params);
     },
-    'remove tile': function (params) {
-        var loaded = this.loaded[params.source], uid = params.uid;
-        if (loaded && loaded[uid]) {
-            delete loaded[uid];
+    'remove tile': function (mapId, params) {
+        var type = params.type || 'vector';
+        this.getWorkerSource(mapId, type).removeTile(params);
+    },
+    'redo placement': function (mapId, params, callback) {
+        var type = params.type || 'vector';
+        this.getWorkerSource(mapId, type).redoPlacement(params, callback);
+    },
+    'load worker source': function (map, params, callback) {
+        try {
+            this.self.importScripts(params.url);
+            callback();
+        } catch (e) {
+            callback(e);
         }
     },
-    'redo placement': function (params, callback) {
-        var loaded = this.loaded[params.source], loading = this.loading[params.source], uid = params.uid;
-        if (loaded && loaded[uid]) {
-            var tile = loaded[uid];
-            var result = tile.redoPlacement(params.angle, params.pitch, params.showCollisionBoxes);
-            if (result.result) {
-                callback(null, result.result, result.transferables);
-            }
-        } else if (loading && loading[uid]) {
-            loading[uid].angle = params.angle;
+    getWorkerSource: function (mapId, type) {
+        if (!this.workerSources[mapId])
+            this.workerSources[mapId] = {};
+        if (!this.workerSources[mapId][type]) {
+            var layers = {
+                getLayers: function () {
+                    return this.layers[mapId];
+                }.bind(this),
+                getLayerFamilies: function () {
+                    return this.layerFamilies[mapId];
+                }.bind(this)
+            };
+            var actor = {
+                send: function (type, data, callback, buffers) {
+                    this.actor.send(type, data, callback, buffers, mapId);
+                }.bind(this)
+            };
+            this.workerSources[mapId][type] = new this.workerSourceTypes[type](actor, layers);
         }
-    },
-    'parse geojson': function (params, callback) {
-        var indexData = function (err, data) {
-            rewind(data, true);
-            if (err)
-                return callback(err);
-            if (typeof data != 'object') {
-                return callback(new Error('Input data is not a valid GeoJSON object.'));
-            }
-            try {
-                this.geoJSONIndexes[params.source] = params.cluster ? supercluster(params.superclusterOptions).load(data.features) : geojsonvt(data, params.geojsonVtOptions);
-            } catch (err) {
-                return callback(err);
-            }
-            callback(null);
-        }.bind(this);
-        if (params.url) {
-            ajax.getJSON(params.url, indexData);
-        } else if (typeof params.data === 'string') {
-            indexData(null, JSON.parse(params.data));
-        } else {
-            return callback(new Error('Input data is not a valid GeoJSON object.'));
-        }
-    },
-    'load geojson tile': function (params, callback) {
-        var source = params.source, coord = params.coord;
-        if (!this.geoJSONIndexes[source])
-            return callback(null, null);
-        var geoJSONTile = this.geoJSONIndexes[source].getTile(Math.min(coord.z, params.maxZoom), coord.x, coord.y);
-        var tile = geoJSONTile ? new WorkerTile(params) : undefined;
-        this.loaded[source] = this.loaded[source] || {};
-        this.loaded[source][params.uid] = tile;
-        if (geoJSONTile) {
-            var geojsonWrapper = new GeoJSONWrapper(geoJSONTile.features);
-            geojsonWrapper.name = '_geojsonTileLayer';
-            var pbf = vtpbf({ layers: { '_geojsonTileLayer': geojsonWrapper } });
-            if (pbf.byteOffset !== 0 || pbf.byteLength !== pbf.buffer.byteLength) {
-                pbf = new Uint8Array(pbf);
-            }
-            tile.parse(geojsonWrapper, this.layerFamilies, this.actor, pbf.buffer, callback);
-        } else {
-            return callback(null, null);
-        }
+        return this.workerSources[mapId][type];
     }
 });
 function createLayerFamilies(layers) {
@@ -31136,7 +29136,7 @@ function createLayerFamilies(layers) {
     }
     return families;
 }
-},{"../style/style_layer":475,"../util/actor":518,"../util/ajax":519,"../util/util":535,"./geojson_wrapper":457,"./worker_tile":468,"geojson-rewind":343,"geojson-vt":346,"pbf":543,"supercluster":731,"vector-tile":738,"vt-pbf":742}],468:[function(require,module,exports){
+},{"../style/style_layer":481,"../util/actor":525,"../util/util":544,"./geojson_worker_source":459,"./vector_tile_worker_source":471,"feature-filter":338}],474:[function(require,module,exports){
 'use strict';
 var FeatureIndex = require('../data/feature_index');
 var CollisionTile = require('../symbol/collision_tile');
@@ -31158,7 +29158,7 @@ function WorkerTile(params) {
     this.pitch = params.pitch;
     this.showCollisionBoxes = params.showCollisionBoxes;
 }
-WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, callback) {
+WorkerTile.prototype.parse = function (data, layerFamilies, actor, callback) {
     this.status = 'parsing';
     this.data = data;
     this.collisionBoxArray = new CollisionBoxArray();
@@ -31167,7 +29167,6 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
     var collisionTile = new CollisionTile(this.angle, this.pitch, this.collisionBoxArray);
     var featureIndex = new FeatureIndex(this.coord, this.overscaling, collisionTile, data.layers);
     var sourceLayerCoder = new DictionaryCoder(data.layers ? Object.keys(data.layers).sort() : ['_geojsonTileLayer']);
-    var stats = { _total: 0 };
     var tile = this;
     var bucketsById = {};
     var bucketsBySourceLayer = {};
@@ -31202,7 +29201,6 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
             symbolInstancesArray: this.symbolInstancesArray,
             sourceLayerIndex: sourceLayerCoder.encode(layer.sourceLayer || '_geojsonTileLayer')
         });
-        bucket.createFilter();
         bucketsById[layer.id] = bucket;
         if (data.layers) {
             sourceLayerId = layer.sourceLayer;
@@ -31228,7 +29226,7 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
             var feature = layer.feature(i);
             feature.index = i;
             for (var id in buckets) {
-                if (buckets[id].filter(feature))
+                if (buckets[id].layer.filter(feature))
                     buckets[id].features.push(feature);
             }
         }
@@ -31291,9 +29289,7 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
         }
     }
     function parseBucket(tile, bucket) {
-        var now = Date.now();
-        bucket.populateBuffers(collisionTile, stacks, icons);
-        var time = Date.now() - now;
+        bucket.populateArrays(collisionTile, stacks, icons);
         if (bucket.type !== 'symbol') {
             for (var i = 0; i < bucket.features.length; i++) {
                 var feature = bucket.features[i];
@@ -31301,8 +29297,6 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
             }
         }
         bucket.features = null;
-        stats._total += time;
-        stats[bucket.id] = (stats[bucket.id] || 0) + time;
     }
     function done() {
         tile.status = 'done';
@@ -31315,18 +29309,15 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
         var collisionBoxArray = tile.collisionBoxArray.serialize();
         var symbolInstancesArray = tile.symbolInstancesArray.serialize();
         var symbolQuadsArray = tile.symbolQuadsArray.serialize();
-        var transferables = [rawTileData].concat(featureIndex_.transferables).concat(collisionTile_.transferables);
-        var nonEmptyBuckets = buckets.filter(isBucketEmpty);
+        var nonEmptyBuckets = buckets.filter(isBucketNonEmpty);
         callback(null, {
             buckets: nonEmptyBuckets.map(serializeBucket),
-            bucketStats: stats,
             featureIndex: featureIndex_.data,
             collisionTile: collisionTile_.data,
             collisionBoxArray: collisionBoxArray,
             symbolInstancesArray: symbolInstancesArray,
-            symbolQuadsArray: symbolQuadsArray,
-            rawTileData: rawTileData
-        }, getTransferables(nonEmptyBuckets).concat(transferables));
+            symbolQuadsArray: symbolQuadsArray
+        }, getTransferables(nonEmptyBuckets).concat(featureIndex_.transferables).concat(collisionTile_.transferables));
     }
 };
 WorkerTile.prototype.redoPlacement = function (angle, pitch, showCollisionBoxes) {
@@ -31341,7 +29332,7 @@ WorkerTile.prototype.redoPlacement = function (angle, pitch, showCollisionBoxes)
         buckets[i].placeFeatures(collisionTile, showCollisionBoxes);
     }
     var collisionTile_ = collisionTile.serialize();
-    var nonEmptyBuckets = buckets.filter(isBucketEmpty);
+    var nonEmptyBuckets = buckets.filter(isBucketNonEmpty);
     return {
         result: {
             buckets: nonEmptyBuckets.map(serializeBucket),
@@ -31350,21 +29341,8 @@ WorkerTile.prototype.redoPlacement = function (angle, pitch, showCollisionBoxes)
         transferables: getTransferables(nonEmptyBuckets).concat(collisionTile_.transferables)
     };
 };
-function isBucketEmpty(bucket) {
-    for (var programName in bucket.arrayGroups) {
-        var programArrayGroups = bucket.arrayGroups[programName];
-        for (var k = 0; k < programArrayGroups.length; k++) {
-            var programArrayGroup = programArrayGroups[k];
-            for (var layoutOrPaint in programArrayGroup) {
-                var arrays = programArrayGroup[layoutOrPaint];
-                for (var bufferName in arrays) {
-                    if (arrays[bufferName].length > 0)
-                        return true;
-                }
-            }
-        }
-    }
-    return false;
+function isBucketNonEmpty(bucket) {
+    return !bucket.isEmpty();
 }
 function serializeBucket(bucket) {
     return bucket.serialize();
@@ -31372,26 +29350,14 @@ function serializeBucket(bucket) {
 function getTransferables(buckets) {
     var transferables = [];
     for (var i in buckets) {
-        var bucket = buckets[i];
-        for (var programName in bucket.arrayGroups) {
-            var programArrayGroups = bucket.arrayGroups[programName];
-            for (var k = 0; k < programArrayGroups.length; k++) {
-                var programArrayGroup = programArrayGroups[k];
-                for (var layoutOrPaint in programArrayGroup) {
-                    var arrays = programArrayGroup[layoutOrPaint];
-                    for (var bufferName in arrays) {
-                        transferables.push(arrays[bufferName].arrayBuffer);
-                    }
-                }
-            }
-        }
+        buckets[i].getTransferables(transferables);
     }
     return transferables;
 }
 function getLayerId(layer) {
     return layer.id;
 }
-},{"../data/bucket":428,"../data/feature_index":434,"../symbol/collision_box":488,"../symbol/collision_tile":490,"../symbol/symbol_instances":499,"../symbol/symbol_quads":500,"../util/dictionary_coder":526,"../util/util":535}],469:[function(require,module,exports){
+},{"../data/bucket":428,"../data/feature_index":435,"../symbol/collision_box":494,"../symbol/collision_tile":496,"../symbol/symbol_instances":505,"../symbol/symbol_quads":506,"../util/dictionary_coder":532,"../util/util":544}],475:[function(require,module,exports){
 'use strict';
 module.exports = AnimationLoop;
 function AnimationLoop() {
@@ -31416,7 +29382,7 @@ AnimationLoop.prototype.cancel = function (n) {
         return t.id !== n;
     });
 };
-},{}],470:[function(require,module,exports){
+},{}],476:[function(require,module,exports){
 'use strict';
 var Evented = require('../util/evented');
 var ajax = require('../util/ajax');
@@ -31434,7 +29400,7 @@ function ImageSprite(base) {
         }
         this.data = data;
         if (this.img)
-            this.fire('load');
+            this.fire('data', { dataType: 'style' });
     }.bind(this));
     ajax.getImage(normalizeURL(base, format, '.png'), function (err, img) {
         if (err) {
@@ -31452,7 +29418,7 @@ function ImageSprite(base) {
         }
         this.img = img;
         if (this.data)
-            this.fire('load');
+            this.fire('data', { dataType: 'style' });
     }.bind(this));
 }
 ImageSprite.prototype = Object.create(Evented);
@@ -31465,7 +29431,7 @@ ImageSprite.prototype.loaded = function () {
 ImageSprite.prototype.resize = function () {
     if (browser.devicePixelRatio > 1 !== this.retina) {
         var newSprite = new ImageSprite(this.base);
-        newSprite.on('load', function () {
+        newSprite.on('data', function () {
             this.img = newSprite.img;
             this.data = newSprite.data;
             this.retina = newSprite.retina;
@@ -31490,7 +29456,7 @@ ImageSprite.prototype.getSpritePosition = function (name) {
         return pos;
     return new SpritePosition();
 };
-},{"../util/ajax":519,"../util/browser":520,"../util/evented":527,"../util/mapbox":532}],471:[function(require,module,exports){
+},{"../util/ajax":526,"../util/browser":527,"../util/evented":535,"../util/mapbox":541}],477:[function(require,module,exports){
 'use strict';
 var parseColorString = require('csscolorparser').parseCSSColor;
 var util = require('../util/util');
@@ -31524,7 +29490,7 @@ module.exports = function parseColor(input) {
         throw new Error('Invalid color ' + input);
     }
 };
-},{"../util/util":535,"./style_function":474,"csscolorparser":309}],472:[function(require,module,exports){
+},{"../util/util":544,"./style_function":480,"csscolorparser":309}],478:[function(require,module,exports){
 'use strict';
 var Evented = require('../util/evented');
 var StyleLayer = require('./style_layer');
@@ -31534,58 +29500,58 @@ var SpriteAtlas = require('../symbol/sprite_atlas');
 var LineAtlas = require('../render/line_atlas');
 var util = require('../util/util');
 var ajax = require('../util/ajax');
-var normalizeURL = require('../util/mapbox').normalizeStyleURL;
+var mapbox = require('../util/mapbox');
 var browser = require('../util/browser');
 var Dispatcher = require('../util/dispatcher');
 var AnimationLoop = require('./animation_loop');
 var validateStyle = require('./validate_style');
 var Source = require('../source/source');
+var QueryFeatures = require('../source/query_features');
+var SourceCache = require('../source/source_cache');
 var styleSpec = require('./style_spec');
 var StyleFunction = require('./style_function');
+var getWorkerPool = require('../global_worker_pool');
 module.exports = Style;
-function Style(stylesheet, animationLoop, workerCount) {
-    this.animationLoop = animationLoop || new AnimationLoop();
-    this.dispatcher = new Dispatcher(workerCount || 1, this);
+function Style(stylesheet, map, options) {
+    this.map = map;
+    this.animationLoop = map && map.animationLoop || new AnimationLoop();
+    this.dispatcher = new Dispatcher(getWorkerPool(), this);
     this.spriteAtlas = new SpriteAtlas(1024, 1024);
     this.lineAtlas = new LineAtlas(256, 512);
     this._layers = {};
     this._order = [];
     this._groups = [];
-    this.sources = {};
+    this.sourceCaches = {};
     this.zoomHistory = {};
-    util.bindAll([
-        '_forwardSourceEvent',
-        '_forwardTileEvent',
-        '_forwardLayerEvent',
-        '_redoPlacement'
-    ], this);
+    util.bindAll(['_redoPlacement'], this);
     this._resetUpdates();
-    var loaded = function (err, stylesheet) {
+    options = util.extend({ validate: typeof stylesheet === 'string' ? !mapbox.isMapboxURL(stylesheet) : true }, options);
+    var stylesheetLoaded = function (err, stylesheet) {
         if (err) {
             this.fire('error', { error: err });
             return;
         }
-        if (validateStyle.emitErrors(this, validateStyle(stylesheet)))
+        if (options.validate && validateStyle.emitErrors(this, validateStyle(stylesheet)))
             return;
         this._loaded = true;
         this.stylesheet = stylesheet;
         this.updateClasses();
-        var sources = stylesheet.sources;
-        for (var id in sources) {
-            this.addSource(id, sources[id]);
+        for (var id in stylesheet.sources) {
+            this.addSource(id, stylesheet.sources[id], options);
         }
         if (stylesheet.sprite) {
             this.sprite = new ImageSprite(stylesheet.sprite);
-            this.sprite.on('load', this.fire.bind(this, 'change'));
+            this.sprite.setEventedParent(this);
         }
         this.glyphSource = new GlyphSource(stylesheet.glyphs);
         this._resolve();
-        this.fire('load');
+        this.fire('data', { dataType: 'style' });
+        this.fire('style.load');
     }.bind(this);
     if (typeof stylesheet === 'string') {
-        ajax.getJSON(normalizeURL(stylesheet), loaded);
+        ajax.getJSON(mapbox.normalizeStyleURL(stylesheet), stylesheetLoaded);
     } else {
-        browser.frame(loaded.bind(this, null, stylesheet));
+        browser.frame(stylesheetLoaded.bind(this, null, stylesheet));
     }
     this.on('source.load', function (event) {
         var source = event.source;
@@ -31602,11 +29568,12 @@ function Style(stylesheet, animationLoop, workerCount) {
 Style.prototype = util.inherit(Evented, {
     _loaded: false,
     _validateLayer: function (layer) {
-        var source = this.sources[layer.source];
+        var sourceCache = this.sourceCaches[layer.source];
         if (!layer.sourceLayer)
             return;
-        if (!source)
+        if (!sourceCache)
             return;
+        var source = sourceCache.getSource();
         if (!source.vectorLayerIds)
             return;
         if (source.vectorLayerIds.indexOf(layer.sourceLayer) === -1) {
@@ -31618,8 +29585,8 @@ Style.prototype = util.inherit(Evented, {
             return false;
         if (Object.keys(this._updates.sources).length)
             return false;
-        for (var id in this.sources)
-            if (!this.sources[id].loaded())
+        for (var id in this.sourceCaches)
+            if (!this.sourceCaches[id].loaded())
                 return false;
         if (this.sprite && !this.sprite.loaded())
             return false;
@@ -31637,7 +29604,7 @@ Style.prototype = util.inherit(Evented, {
                 continue;
             layer = StyleLayer.create(layerJSON);
             this._layers[layer.id] = layer;
-            layer.on('error', this._forwardLayerEvent);
+            layer.setEventedParent(this, { layer: { id: layer.id } });
         }
         for (var j = 0; j < this.stylesheet.layers.length; j++) {
             layerJSON = this.stylesheet.layers[j];
@@ -31646,7 +29613,7 @@ Style.prototype = util.inherit(Evented, {
             var refLayer = this.getLayer(layerJSON.ref);
             layer = StyleLayer.create(layerJSON, refLayer);
             this._layers[layer.id] = layer;
-            layer.on('error', this._forwardLayerEvent);
+            layer.setEventedParent(this, { layer: { id: layer.id } });
         }
         this._groupLayers();
         this._updateWorkerLayers();
@@ -31696,15 +29663,15 @@ Style.prototype = util.inherit(Evented, {
         }
     },
     _recalculate: function (z) {
-        for (var sourceId in this.sources)
-            this.sources[sourceId].used = false;
+        for (var sourceId in this.sourceCaches)
+            this.sourceCaches[sourceId].used = false;
         this._updateZoomHistory(z);
         this.rasterFadeDuration = 300;
         for (var layerId in this._layers) {
             var layer = this._layers[layerId];
             layer.recalculate(z, this.zoomHistory);
             if (!layer.isHidden(z) && layer.source) {
-                this.sources[layer.source].used = true;
+                this.sourceCaches[layer.source].used = true;
             }
         }
         var maxZoomTransitionDuration = 300;
@@ -31712,7 +29679,6 @@ Style.prototype = util.inherit(Evented, {
             this.animationLoop.set(maxZoomTransitionDuration);
         }
         this.z = z;
-        this.fire('zoom');
     },
     _updateZoomHistory: function (z) {
         var zh = this.zoomHistory;
@@ -31758,7 +29724,7 @@ Style.prototype = util.inherit(Evented, {
         }
         this._applyClasses(classes, options);
         if (this._updates.changed) {
-            this.fire('change');
+            this.fire('data', { dataType: 'style' });
         }
         this._resetUpdates();
         return this;
@@ -31771,64 +29737,66 @@ Style.prototype = util.inherit(Evented, {
             paintProps: {}
         };
     },
-    addSource: function (id, source) {
+    addSource: function (id, source, options) {
         this._checkLoaded();
-        if (this.sources[id] !== undefined) {
+        if (this.sourceCaches[id] !== undefined) {
             throw new Error('There is already a source with this ID');
         }
-        if (!Source.is(source) && this._handleErrors(validateStyle.source, 'sources.' + id, source))
+        if (!source.type) {
+            throw new Error('The type property must be defined, but the only the following properties were given: ' + Object.keys(source) + '.');
+        }
+        var builtIns = [
+            'vector',
+            'raster',
+            'geojson',
+            'video',
+            'image'
+        ];
+        var shouldValidate = builtIns.indexOf(source.type) >= 0;
+        if (shouldValidate && this._validate(validateStyle.source, 'sources.' + id, source, null, options))
             return this;
-        source = Source.create(source);
-        this.sources[id] = source;
-        source.id = id;
+        source = new SourceCache(id, source, this.dispatcher);
+        this.sourceCaches[id] = source;
         source.style = this;
-        source.dispatcher = this.dispatcher;
-        source.on('load', this._forwardSourceEvent).on('error', this._forwardSourceEvent).on('change', this._forwardSourceEvent).on('tile.add', this._forwardTileEvent).on('tile.load', this._forwardTileEvent).on('tile.error', this._forwardTileEvent).on('tile.remove', this._forwardTileEvent).on('tile.stats', this._forwardTileEvent);
-        this._updates.events.push([
-            'source.add',
-            { source: source }
-        ]);
+        source.setEventedParent(this, { source: source.getSource() });
+        if (source.onAdd)
+            source.onAdd(this.map);
         this._updates.changed = true;
         return this;
     },
     removeSource: function (id) {
         this._checkLoaded();
-        if (this.sources[id] === undefined) {
+        if (this.sourceCaches[id] === undefined) {
             throw new Error('There is no source with this ID');
         }
-        var source = this.sources[id];
-        delete this.sources[id];
-        source.off('load', this._forwardSourceEvent).off('error', this._forwardSourceEvent).off('change', this._forwardSourceEvent).off('tile.add', this._forwardTileEvent).off('tile.load', this._forwardTileEvent).off('tile.error', this._forwardTileEvent).off('tile.remove', this._forwardTileEvent).off('tile.stats', this._forwardTileEvent);
-        this._updates.events.push([
-            'source.remove',
-            { source: source }
-        ]);
+        var sourceCache = this.sourceCaches[id];
+        delete this.sourceCaches[id];
+        delete this._updates.sources[id];
+        sourceCache.setEventedParent(null);
+        if (sourceCache.onRemove)
+            sourceCache.onRemove(this.map);
         this._updates.changed = true;
         return this;
     },
     getSource: function (id) {
-        return this.sources[id];
+        return this.sourceCaches[id] && this.sourceCaches[id].getSource();
     },
-    addLayer: function (layer, before) {
+    addLayer: function (layer, before, options) {
         this._checkLoaded();
         if (!(layer instanceof StyleLayer)) {
-            if (this._handleErrors(validateStyle.layer, 'layers.' + layer.id, layer, false, { arrayIndex: -1 }))
+            if (this._validate(validateStyle.layer, 'layers.' + layer.id, layer, { arrayIndex: -1 }, options))
                 return this;
             var refLayer = layer.ref && this.getLayer(layer.ref);
             layer = StyleLayer.create(layer, refLayer);
         }
         this._validateLayer(layer);
-        layer.on('error', this._forwardLayerEvent);
+        layer.setEventedParent(this, { layer: { id: layer.id } });
         this._layers[layer.id] = layer;
         this._order.splice(before ? this._order.indexOf(before) : Infinity, 0, layer.id);
         this._updates.allLayers = true;
         if (layer.source) {
             this._updates.sources[layer.source] = true;
         }
-        this._updates.events.push([
-            'layer.add',
-            { layer: layer }
-        ]);
         return this.updateClasses(layer.id);
     },
     removeLayer: function (id) {
@@ -31842,16 +29810,12 @@ Style.prototype = util.inherit(Evented, {
                 this.removeLayer(i);
             }
         }
-        layer.off('error', this._forwardLayerEvent);
+        layer.setEventedParent(null);
         delete this._layers[id];
         delete this._updates.layers[id];
         delete this._updates.paintProps[id];
         this._order.splice(this._order.indexOf(id), 1);
         this._updates.allLayers = true;
-        this._updates.events.push([
-            'layer.remove',
-            { layer: layer }
-        ]);
         this._updates.changed = true;
         return this;
     },
@@ -31881,7 +29845,7 @@ Style.prototype = util.inherit(Evented, {
     setFilter: function (layerId, filter) {
         this._checkLoaded();
         var layer = this.getReferentLayer(layerId);
-        if (filter !== null && this._handleErrors(validateStyle.filter, 'layers.' + layer.id + '.filter', filter))
+        if (filter !== null && this._validate(validateStyle.filter, 'layers.' + layer.id + '.filter', filter))
             return this;
         if (util.deepEqual(layer.filter, filter))
             return this;
@@ -31889,7 +29853,7 @@ Style.prototype = util.inherit(Evented, {
         return this._updateLayer(layer);
     },
     getFilter: function (layer) {
-        return this.getReferentLayer(layer).filter;
+        return util.clone(this.getReferentLayer(layer).filter);
     },
     setLayoutProperty: function (layerId, name, value) {
         this._checkLoaded();
@@ -31945,7 +29909,7 @@ Style.prototype = util.inherit(Evented, {
             sprite: this.stylesheet.sprite,
             glyphs: this.stylesheet.glyphs,
             transition: this.stylesheet.transition,
-            sources: util.mapObject(this.sources, function (source) {
+            sources: util.mapObject(this.sourceCaches, function (source) {
                 return source.serialize();
             }),
             layers: this._order.map(function (id) {
@@ -31980,90 +29944,90 @@ Style.prototype = util.inherit(Evented, {
     },
     queryRenderedFeatures: function (queryGeometry, params, zoom, bearing) {
         if (params && params.filter) {
-            this._handleErrors(validateStyle.filter, 'queryRenderedFeatures.filter', params.filter, true);
+            this._validate(validateStyle.filter, 'queryRenderedFeatures.filter', params.filter);
+        }
+        var includedSources = {};
+        if (params && params.layers) {
+            for (var i = 0; i < params.layers.length; i++) {
+                var layer = this._layers[params.layers[i]];
+                if (!(layer instanceof StyleLayer)) {
+                    return this.fire('error', { error: 'The layer \'' + params.layers[i] + '\' does not exist in the map\'s style and cannot be queried for features.' });
+                }
+                includedSources[layer.source] = true;
+            }
         }
         var sourceResults = [];
-        for (var id in this.sources) {
-            var source = this.sources[id];
-            if (source.queryRenderedFeatures) {
-                sourceResults.push(source.queryRenderedFeatures(queryGeometry, params, zoom, bearing));
-            }
+        for (var id in this.sourceCaches) {
+            if (params.layers && !includedSources[id])
+                continue;
+            var sourceCache = this.sourceCaches[id];
+            var results = QueryFeatures.rendered(sourceCache, this._layers, queryGeometry, params, zoom, bearing);
+            sourceResults.push(results);
         }
         return this._flattenRenderedFeatures(sourceResults);
     },
     querySourceFeatures: function (sourceID, params) {
         if (params && params.filter) {
-            this._handleErrors(validateStyle.filter, 'querySourceFeatures.filter', params.filter, true);
+            this._validate(validateStyle.filter, 'querySourceFeatures.filter', params.filter);
         }
-        var source = this.getSource(sourceID);
-        return source && source.querySourceFeatures ? source.querySourceFeatures(params) : [];
+        var sourceCache = this.sourceCaches[sourceID];
+        return sourceCache ? QueryFeatures.source(sourceCache, params) : [];
     },
-    _handleErrors: function (validate, key, value, throws, props) {
-        var action = throws ? validateStyle.throwErrors : validateStyle.emitErrors;
-        var result = validate.call(validateStyle, util.extend({
+    addSourceType: function (name, SourceType, callback) {
+        if (Source.getType(name)) {
+            return callback(new Error('A source type called "' + name + '" already exists.'));
+        }
+        Source.setType(name, SourceType);
+        if (!SourceType.workerSourceURL) {
+            return callback(null, null);
+        }
+        this.dispatcher.broadcast('load worker source', {
+            name: name,
+            url: SourceType.workerSourceURL
+        }, callback);
+    },
+    _validate: function (validate, key, value, props, options) {
+        if (options && options.validate === false) {
+            return false;
+        }
+        return validateStyle.emitErrors(this, validate.call(validateStyle, util.extend({
             key: key,
             style: this.serialize(),
             value: value,
             styleSpec: styleSpec
-        }, props));
-        return action.call(validateStyle, this, result);
+        }, props)));
     },
     _remove: function () {
         this.dispatcher.remove();
     },
     _reloadSource: function (id) {
-        this.sources[id].reload();
+        this.sourceCaches[id].reload();
     },
     _updateSources: function (transform) {
-        for (var id in this.sources) {
-            this.sources[id].update(transform);
+        for (var id in this.sourceCaches) {
+            this.sourceCaches[id].update(transform);
         }
     },
     _redoPlacement: function () {
-        for (var id in this.sources) {
-            if (this.sources[id].redoPlacement)
-                this.sources[id].redoPlacement();
+        for (var id in this.sourceCaches) {
+            if (this.sourceCaches[id].redoPlacement)
+                this.sourceCaches[id].redoPlacement();
         }
     },
-    _forwardSourceEvent: function (e) {
-        this.fire('source.' + e.type, util.extend({ source: e.target }, e));
-    },
-    _forwardTileEvent: function (e) {
-        this.fire(e.type, util.extend({ source: e.target }, e));
-    },
-    _forwardLayerEvent: function (e) {
-        this.fire('layer.' + e.type, util.extend({ layer: { id: e.target.id } }, e));
-    },
-    'get sprite json': function (params, callback) {
-        var sprite = this.sprite;
-        if (sprite.loaded()) {
-            callback(null, {
-                sprite: sprite.data,
-                retina: sprite.retina
-            });
-        } else {
-            sprite.on('load', function () {
-                callback(null, {
-                    sprite: sprite.data,
-                    retina: sprite.retina
-                });
-            });
-        }
-    },
-    'get icons': function (params, callback) {
+    'get icons': function (mapId, params, callback) {
         var sprite = this.sprite;
         var spriteAtlas = this.spriteAtlas;
         if (sprite.loaded()) {
             spriteAtlas.setSprite(sprite);
             spriteAtlas.addIcons(params.icons, callback);
         } else {
-            sprite.on('load', function () {
+            sprite.on('data', function () {
                 spriteAtlas.setSprite(sprite);
                 spriteAtlas.addIcons(params.icons, callback);
             });
         }
     },
-    'get glyphs': function (params, callback) {
+    'get glyphs': function (mapId, params, callback) {
         var stacks = params.stacks, remaining = Object.keys(stacks).length, allGlyphs = {};
         for (var fontName in stacks) {
             this.glyphSource.getSimpleGlyphs(fontName, stacks[fontName], params.uid, done);
@@ -32078,7 +30042,7 @@ Style.prototype = util.inherit(Evented, {
         }
     }
 });
-},{"../render/line_atlas":452,"../source/source":461,"../symbol/glyph_source":493,"../symbol/sprite_atlas":498,"../util/ajax":519,"../util/browser":520,"../util/dispatcher":522,"../util/evented":527,"../util/mapbox":532,"../util/util":535,"./animation_loop":469,"./image_sprite":470,"./style_function":474,"./style_layer":475,"./style_spec":482,"./validate_style":484}],473:[function(require,module,exports){
+},{"../global_worker_pool":441,"../render/line_atlas":454,"../source/query_features":464,"../source/source":466,"../source/source_cache":467,"../symbol/glyph_source":499,"../symbol/sprite_atlas":504,"../util/ajax":526,"../util/browser":527,"../util/dispatcher":533,"../util/evented":535,"../util/mapbox":541,"../util/util":544,"./animation_loop":475,"./image_sprite":476,"./style_function":480,"./style_layer":481,"./style_spec":488,"./validate_style":490}],479:[function(require,module,exports){
 'use strict';
 var MapboxGLFunction = require('./style_function');
 var parseColor = require('./parse_color');
@@ -32088,7 +30052,7 @@ function StyleDeclaration(reference, value) {
     this.value = util.clone(value);
     this.isFunction = MapboxGLFunction.isFunctionDefinition(value);
     this.json = JSON.stringify(this.value);
-    var parsedValue = reference.type === 'color' ? parseColor(this.value) : value;
+    var parsedValue = reference.type === 'color' && this.value ? parseColor(this.value) : value;
     this.calculate = MapboxGLFunction[reference.function || 'piecewise-constant'](parsedValue);
     this.isFeatureConstant = this.calculate.isFeatureConstant;
     this.isZoomConstant = this.calculate.isZoomConstant;
@@ -32149,7 +30113,7 @@ function transitioned(calculate) {
         }
     };
 }
-},{"../util/util":535,"./parse_color":471,"./style_function":474}],474:[function(require,module,exports){
+},{"../util/util":544,"./parse_color":477,"./style_function":480}],480:[function(require,module,exports){
 'use strict';
 var MapboxGLFunction = require('mapbox-gl-function');
 exports.interpolated = function (parameters) {
@@ -32171,7 +30135,7 @@ exports['piecewise-constant'] = function (parameters) {
     return outer;
 };
 exports.isFunctionDefinition = MapboxGLFunction.isFunctionDefinition;
-},{"mapbox-gl-function":400}],475:[function(require,module,exports){
+},{"mapbox-gl-function":401}],481:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var StyleTransition = require('./style_transition');
@@ -32182,17 +30146,6 @@ var parseColor = require('./parse_color');
 var Evented = require('../util/evented');
 module.exports = StyleLayer;
 var TRANSITION_SUFFIX = '-transition';
-StyleLayer.create = function (layer, refLayer) {
-    var Classes = {
-        background: require('./style_layer/background_style_layer'),
-        circle: require('./style_layer/circle_style_layer'),
-        fill: require('./style_layer/fill_style_layer'),
-        line: require('./style_layer/line_style_layer'),
-        raster: require('./style_layer/raster_style_layer'),
-        symbol: require('./style_layer/symbol_style_layer')
-    };
-    return new Classes[(refLayer || layer).type](layer, refLayer);
-};
 function StyleLayer(layer, refLayer) {
     this.set(layer, refLayer);
 }
@@ -32217,12 +30170,13 @@ StyleLayer.prototype = util.inherit(Evented, {
         this._layoutDeclarations = {};
         this._layoutFunctions = {};
         var paintName, layoutName;
+        var options = { validate: false };
         for (var key in layer) {
             var match = key.match(/^paint(?:\.(.*))?$/);
             if (match) {
                 var klass = match[1] || '';
                 for (paintName in layer[key]) {
-                    this.setPaintProperty(paintName, layer[key][paintName], klass);
+                    this.setPaintProperty(paintName, layer[key][paintName], klass, options);
                 }
             }
         }
@@ -32230,7 +30184,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             this._layoutDeclarations = refLayer._layoutDeclarations;
         } else {
             for (layoutName in layer.layout) {
-                this.setLayoutProperty(layoutName, layer.layout[layoutName]);
+                this.setLayoutProperty(layoutName, layer.layout[layoutName], options);
             }
         }
         for (paintName in this._paintSpecifications) {
@@ -32240,12 +30194,12 @@ StyleLayer.prototype = util.inherit(Evented, {
             this._updateLayoutValue(layoutName);
         }
     },
-    setLayoutProperty: function (name, value) {
+    setLayoutProperty: function (name, value, options) {
         if (value == null) {
             delete this._layoutDeclarations[name];
         } else {
             var key = 'layers.' + this.id + '.layout.' + name;
-            if (this._handleErrors(validateStyle.layoutProperty, key, name, value))
+            if (this._validate(validateStyle.layoutProperty, key, name, value, options))
                 return;
             this._layoutDeclarations[name] = new StyleDeclaration(this._layoutSpecifications[name], value);
         }
@@ -32263,7 +30217,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             return specification.default;
         }
     },
-    setPaintProperty: function (name, value, klass) {
+    setPaintProperty: function (name, value, klass, options) {
         var validateStyleKey = 'layers.' + this.id + (klass ? '["paint.' + klass + '"].' : '.paint.') + name;
         if (util.endsWith(name, TRANSITION_SUFFIX)) {
             if (!this._paintTransitionOptions[klass || '']) {
@@ -32272,7 +30226,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             if (value === null || value === undefined) {
                 delete this._paintTransitionOptions[klass || ''][name];
             } else {
-                if (this._handleErrors(validateStyle.paintProperty, validateStyleKey, name, value))
+                if (this._validate(validateStyle.paintProperty, validateStyleKey, name, value, options))
                     return;
                 this._paintTransitionOptions[klass || ''][name] = value;
             }
@@ -32283,7 +30237,7 @@ StyleLayer.prototype = util.inherit(Evented, {
             if (value === null || value === undefined) {
                 delete this._paintDeclarations[klass || ''][name];
             } else {
-                if (this._handleErrors(validateStyle.paintProperty, validateStyleKey, name, value))
+                if (this._validate(validateStyle.paintProperty, validateStyleKey, name, value, options))
                     return;
                 this._paintDeclarations[klass || ''][name] = new StyleDeclaration(this._paintSpecifications[name], value);
             }
@@ -32350,8 +30304,6 @@ StyleLayer.prototype = util.inherit(Evented, {
         if (this.maxzoom && zoom >= this.maxzoom)
             return true;
         if (this.layout['visibility'] === 'none')
-            return true;
-        if (this.paint[this.type + '-opacity'] === 0)
             return true;
         return false;
     },
@@ -32447,7 +30399,10 @@ StyleLayer.prototype = util.inherit(Evented, {
             this.layout[name] = this.getLayoutValue(name);
         }
     },
-    _handleErrors: function (validate, key, name, value) {
+    _validate: function (validate, key, name, value, options) {
+        if (options && options.validate === false) {
+            return false;
+        }
         return validateStyle.emitErrors(this, validate.call(validateStyle, {
             key: key,
             layerType: this.type,
@@ -32464,7 +30419,18 @@ StyleLayer.prototype = util.inherit(Evented, {
 function getDeclarationValue(declaration) {
     return declaration.value;
 }
-},{"../util/evented":527,"../util/util":535,"./parse_color":471,"./style_declaration":473,"./style_layer/background_style_layer":476,"./style_layer/circle_style_layer":477,"./style_layer/fill_style_layer":478,"./style_layer/line_style_layer":479,"./style_layer/raster_style_layer":480,"./style_layer/symbol_style_layer":481,"./style_spec":482,"./style_transition":483,"./validate_style":484}],476:[function(require,module,exports){
+var Classes = {
+    background: require('./style_layer/background_style_layer'),
+    circle: require('./style_layer/circle_style_layer'),
+    fill: require('./style_layer/fill_style_layer'),
+    line: require('./style_layer/line_style_layer'),
+    raster: require('./style_layer/raster_style_layer'),
+    symbol: require('./style_layer/symbol_style_layer')
+};
+StyleLayer.create = function (layer, refLayer) {
+    return new Classes[(refLayer || layer).type](layer, refLayer);
+};
+},{"../util/evented":535,"../util/util":544,"./parse_color":477,"./style_declaration":479,"./style_layer/background_style_layer":482,"./style_layer/circle_style_layer":483,"./style_layer/fill_style_layer":484,"./style_layer/line_style_layer":485,"./style_layer/raster_style_layer":486,"./style_layer/symbol_style_layer":487,"./style_spec":488,"./style_transition":489,"./validate_style":490}],482:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -32473,7 +30439,7 @@ function BackgroundStyleLayer() {
 }
 module.exports = BackgroundStyleLayer;
 BackgroundStyleLayer.prototype = util.inherit(StyleLayer, {});
-},{"../../util/util":535,"../style_layer":475}],477:[function(require,module,exports){
+},{"../../util/util":544,"../style_layer":481}],483:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -32482,7 +30448,7 @@ function CircleStyleLayer() {
 }
 module.exports = CircleStyleLayer;
 CircleStyleLayer.prototype = util.inherit(StyleLayer, {});
-},{"../../util/util":535,"../style_layer":475}],478:[function(require,module,exports){
+},{"../../util/util":544,"../style_layer":481}],484:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -32501,7 +30467,7 @@ FillStyleLayer.prototype = util.inherit(StyleLayer, {
         if (name === 'fill-outline-color' && this.getPaintProperty('fill-outline-color') === undefined) {
             return StyleLayer.prototype.getPaintValueStopZoomLevels.call(this, 'fill-color');
         } else {
-            return StyleLayer.prototype.getPaintValueStopZoomLevels.call(this, arguments);
+            return StyleLayer.prototype.getPaintValueStopZoomLevels.call(this, name);
         }
     },
     getPaintInterpolationT: function (name, zoom) {
@@ -32527,7 +30493,7 @@ FillStyleLayer.prototype = util.inherit(StyleLayer, {
     }
 });
 module.exports = FillStyleLayer;
-},{"../../util/util":535,"../style_layer":475}],479:[function(require,module,exports){
+},{"../../util/util":544,"../style_layer":481}],485:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -32550,7 +30516,7 @@ LineStyleLayer.prototype = util.inherit(StyleLayer, {
         return value;
     }
 });
-},{"../../util/util":535,"../style_layer":475}],480:[function(require,module,exports){
+},{"../../util/util":544,"../style_layer":481}],486:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -32559,7 +30525,7 @@ function RasterStyleLayer() {
 }
 module.exports = RasterStyleLayer;
 RasterStyleLayer.prototype = util.inherit(StyleLayer, {});
-},{"../../util/util":535,"../style_layer":475}],481:[function(require,module,exports){
+},{"../../util/util":544,"../style_layer":481}],487:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -32568,31 +30534,26 @@ function SymbolStyleLayer() {
 }
 module.exports = SymbolStyleLayer;
 SymbolStyleLayer.prototype = util.inherit(StyleLayer, {
-    isHidden: function () {
-        if (StyleLayer.prototype.isHidden.apply(this, arguments))
-            return true;
-        var isTextHidden = this.paint['text-opacity'] === 0 || !this.layout['text-field'];
-        var isIconHidden = this.paint['icon-opacity'] === 0 || !this.layout['icon-image'];
-        if (isTextHidden && isIconHidden)
-            return true;
-        return false;
-    },
     getLayoutValue: function (name, globalProperties, featureProperties) {
-        if (name === 'text-rotation-alignment' && this.getLayoutValue('symbol-placement', globalProperties, featureProperties) === 'line' && !this.getLayoutProperty('text-rotation-alignment')) {
-            return 'map';
-        } else if (name === 'icon-rotation-alignment' && this.getLayoutValue('symbol-placement', globalProperties, featureProperties) === 'line' && !this.getLayoutProperty('icon-rotation-alignment')) {
-            return 'map';
-        } else if (name === 'text-pitch-alignment' && !this.getLayoutProperty('text-pitch-alignment')) {
-            return this.getLayoutValue('text-rotation-alignment');
-        } else {
-            return StyleLayer.prototype.getLayoutValue.apply(this, arguments);
+        var value = StyleLayer.prototype.getLayoutValue.apply(this, arguments);
+        if (value !== 'auto') {
+            return value;
+        }
+        switch (name) {
+        case 'text-rotation-alignment':
+        case 'icon-rotation-alignment':
+            return this.getLayoutValue('symbol-placement', globalProperties, featureProperties) === 'line' ? 'map' : 'viewport';
+        case 'text-pitch-alignment':
+            return this.getLayoutValue('text-rotation-alignment', globalProperties, featureProperties);
+        default:
+            return value;
         }
     }
 });
-},{"../../util/util":535,"../style_layer":475}],482:[function(require,module,exports){
+},{"../../util/util":544,"../style_layer":481}],488:[function(require,module,exports){
 'use strict';
-module.exports = require('mapbox-gl-style-spec/reference/latest');
-},{"mapbox-gl-style-spec/reference/latest":423}],483:[function(require,module,exports){
+module.exports = require('mapbox-gl-style-spec/reference/latest.min');
+},{"mapbox-gl-style-spec/reference/latest.min":424}],489:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var interpolate = require('../util/interpolate');
@@ -32644,10 +30605,10 @@ function interpZoomTransitioned(from, to, t) {
         };
     }
 }
-},{"../util/interpolate":529,"../util/util":535}],484:[function(require,module,exports){
+},{"../util/interpolate":538,"../util/util":544}],490:[function(require,module,exports){
 'use strict';
 module.exports = require('mapbox-gl-style-spec/lib/validate_style.min');
-module.exports.emitErrors = function throwErrors(emitter, errors) {
+module.exports.emitErrors = function (emitter, errors) {
     if (errors && errors.length) {
         for (var i = 0; i < errors.length; i++) {
             emitter.fire('error', { error: new Error(errors[i].message) });
@@ -32657,14 +30618,7 @@ module.exports.emitErrors = function throwErrors(emitter, errors) {
         return false;
     }
 };
-module.exports.throwErrors = function throwErrors(emitter, errors) {
-    if (errors) {
-        for (var i = 0; i < errors.length; i++) {
-            throw new Error(errors[i].message);
-        }
-    }
-};
-},{"mapbox-gl-style-spec/lib/validate_style.min":422}],485:[function(require,module,exports){
+},{"mapbox-gl-style-spec/lib/validate_style.min":423}],491:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 module.exports = Anchor;
@@ -32680,7 +30634,7 @@ Anchor.prototype = Object.create(Point.prototype);
 Anchor.prototype.clone = function () {
     return new Anchor(this.x, this.y, this.angle, this.segment);
 };
-},{"point-geometry":544}],486:[function(require,module,exports){
+},{"point-geometry":554}],492:[function(require,module,exports){
 'use strict';
 module.exports = checkMaxAngle;
 function checkMaxAngle(line, anchor, labelLength, windowSize, maxAngle) {
@@ -32723,7 +30677,7 @@ function checkMaxAngle(line, anchor, labelLength, windowSize, maxAngle) {
     }
     return true;
 }
-},{}],487:[function(require,module,exports){
+},{}],493:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 module.exports = clipLine;
@@ -32772,7 +30726,7 @@ function clipLine(lines, x1, y1, x2, y2) {
     }
     return clippedLines;
 }
-},{"point-geometry":544}],488:[function(require,module,exports){
+},{"point-geometry":554}],494:[function(require,module,exports){
 'use strict';
 var StructArrayType = require('../util/struct_array');
 var util = require('../util/util');
@@ -32846,7 +30800,7 @@ util.extendAll(CollisionBoxArray.prototype.StructType.prototype, {
         return new Point(this.anchorPointX, this.anchorPointY);
     }
 });
-},{"../util/struct_array":533,"../util/util":535,"point-geometry":544}],489:[function(require,module,exports){
+},{"../util/struct_array":542,"../util/util":544,"point-geometry":554}],495:[function(require,module,exports){
 'use strict';
 module.exports = CollisionFeature;
 function CollisionFeature(collisionBoxArray, line, anchor, featureIndex, sourceLayerIndex, bucketIndex, shaped, boxScale, padding, alignLine, straight) {
@@ -32911,7 +30865,7 @@ CollisionFeature.prototype._addLineCollisionBoxes = function (collisionBoxArray,
     }
     return bboxes;
 };
-},{}],490:[function(require,module,exports){
+},{}],496:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var EXTENT = require('../data/bucket').EXTENT;
@@ -33119,7 +31073,7 @@ CollisionTile.prototype.insertCollisionFeature = function (collisionFeature, min
         }
     }
 };
-},{"../data/bucket":428,"grid-index":361,"point-geometry":544}],491:[function(require,module,exports){
+},{"../data/bucket":428,"grid-index":362,"point-geometry":554}],497:[function(require,module,exports){
 'use strict';
 var interpolate = require('../util/interpolate');
 var Anchor = require('../symbol/anchor');
@@ -33164,18 +31118,21 @@ function resample(line, offset, spacing, angleWindowSize, maxAngle, labelLength,
     }
     return anchors;
 }
-},{"../symbol/anchor":485,"../util/interpolate":529,"./check_max_angle":486}],492:[function(require,module,exports){
+},{"../symbol/anchor":491,"../util/interpolate":538,"./check_max_angle":492}],498:[function(require,module,exports){
 'use strict';
 var ShelfPack = require('shelf-pack');
 var util = require('../util/util');
+var SIZE_GROWTH_RATE = 4;
+var DEFAULT_SIZE = 128;
+var MAX_SIZE = 2048;
 module.exports = GlyphAtlas;
-function GlyphAtlas(width, height) {
-    this.width = width;
-    this.height = height;
-    this.bin = new ShelfPack(width, height);
+function GlyphAtlas() {
+    this.width = DEFAULT_SIZE;
+    this.height = DEFAULT_SIZE;
+    this.bin = new ShelfPack(this.width, this.height);
     this.index = {};
     this.ids = {};
-    this.data = new Uint8Array(width * height);
+    this.data = new Uint8Array(this.width * this.height);
 }
 GlyphAtlas.prototype.getGlyphs = function () {
     var glyphs = {}, split, name, id;
@@ -33245,8 +31202,9 @@ GlyphAtlas.prototype.addGlyph = function (id, name, glyph, buffer) {
     return rect;
 };
 GlyphAtlas.prototype.resize = function () {
-    var origw = this.width, origh = this.height;
-    if (origw > 512 || origh > 512)
+    var prevWidth = this.width;
+    var prevHeight = this.height;
+    if (prevWidth >= MAX_SIZE || prevHeight >= MAX_SIZE)
         return;
     if (this.texture) {
         if (this.gl) {
@@ -33254,13 +31212,13 @@ GlyphAtlas.prototype.resize = function () {
         }
         this.texture = null;
     }
-    this.width *= 2;
-    this.height *= 2;
+    this.width *= SIZE_GROWTH_RATE;
+    this.height *= SIZE_GROWTH_RATE;
     this.bin.resize(this.width, this.height);
-    var buf = new ArrayBuffer(this.width * this.height), src, dst;
-    for (var i = 0; i < origh; i++) {
-        src = new Uint8Array(this.data.buffer, origh * i, origw);
-        dst = new Uint8Array(buf, origh * i * 2, origw);
+    var buf = new ArrayBuffer(this.width * this.height);
+    for (var i = 0; i < prevHeight; i++) {
+        var src = new Uint8Array(this.data.buffer, prevHeight * i, prevWidth);
+        var dst = new Uint8Array(buf, prevHeight * i * SIZE_GROWTH_RATE, prevWidth);
         dst.set(src);
     }
     this.data = new Uint8Array(buf);
@@ -33286,10 +31244,10 @@ GlyphAtlas.prototype.updateTexture = function (gl) {
         this.dirty = false;
     }
 };
-},{"../util/util":535,"shelf-pack":730}],493:[function(require,module,exports){
+},{"../util/util":544,"shelf-pack":739}],499:[function(require,module,exports){
 'use strict';
 var normalizeURL = require('../util/mapbox').normalizeGlyphsURL;
-var getArrayBuffer = require('../util/ajax').getArrayBuffer;
+var ajax = require('../util/ajax');
 var Glyphs = require('../util/glyphs');
 var GlyphAtlas = require('../symbol/glyph_atlas');
 var Protobuf = require('pbf');
@@ -33305,7 +31263,7 @@ GlyphSource.prototype.getSimpleGlyphs = function (fontstack, glyphIDs, uid, call
         this.stacks[fontstack] = {};
     }
     if (this.atlases[fontstack] === undefined) {
-        this.atlases[fontstack] = new GlyphAtlas(128, 128);
+        this.atlases[fontstack] = new GlyphAtlas();
     }
     var glyphs = {};
     var stack = this.stacks[fontstack];
@@ -33371,8 +31329,8 @@ GlyphSource.prototype.loadRange = function (fontstack, range, callback) {
         loading[range] = [callback];
         var rangeName = range * 256 + '-' + (range * 256 + 255);
         var url = glyphUrl(fontstack, rangeName, this.url);
-        getArrayBuffer(url, function (err, data) {
-            var glyphs = !err && new Glyphs(new Protobuf(new Uint8Array(data)));
+        ajax.getArrayBuffer(url, function (err, data) {
+            var glyphs = !err && new Glyphs(new Protobuf(data));
             for (var i = 0; i < loading[range].length; i++) {
                 loading[range][i](err, range, glyphs);
             }
@@ -33387,7 +31345,7 @@ function glyphUrl(fontstack, range, url, subdomains) {
     subdomains = subdomains || 'abc';
     return url.replace('{s}', subdomains[fontstack.length % subdomains.length]).replace('{fontstack}', fontstack).replace('{range}', range);
 }
-},{"../symbol/glyph_atlas":492,"../util/ajax":519,"../util/glyphs":528,"../util/mapbox":532,"pbf":543}],494:[function(require,module,exports){
+},{"../symbol/glyph_atlas":498,"../util/ajax":526,"../util/glyphs":537,"../util/mapbox":541,"pbf":553}],500:[function(require,module,exports){
 'use strict';
 module.exports = function (features, textFeatures, geometries) {
     var leftIndex = {}, rightIndex = {}, mergedFeatures = [], mergedGeom = [], mergedTexts = [], mergedIndex = 0, k;
@@ -33447,7 +31405,7 @@ module.exports = function (features, textFeatures, geometries) {
         geometries: mergedGeom
     };
 };
-},{}],495:[function(require,module,exports){
+},{}],501:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 module.exports = {
@@ -33521,6 +31479,8 @@ function getGlyphQuads(anchor, shaping, boxScale, line, layer, alongLine) {
     for (var k = 0; k < positionedGlyphs.length; k++) {
         var positionedGlyph = positionedGlyphs[k];
         var glyph = positionedGlyph.glyph;
+        if (!glyph)
+            continue;
         var rect = glyph.rect;
         if (!rect)
             continue;
@@ -33605,7 +31565,7 @@ function getSegmentGlyphs(glyphs, anchor, offset, line, segment, forward) {
     }
     return placementScale;
 }
-},{"point-geometry":544}],496:[function(require,module,exports){
+},{"point-geometry":554}],502:[function(require,module,exports){
 'use strict';
 var resolveTokens = require('../util/token');
 module.exports = resolveText;
@@ -33631,7 +31591,7 @@ function resolveText(features, layoutProperties, codepoints) {
     }
     return textFeatures;
 }
-},{"../util/token":534}],497:[function(require,module,exports){
+},{"../util/token":543}],503:[function(require,module,exports){
 'use strict';
 module.exports = {
     shapeText: shapeText,
@@ -33641,7 +31601,7 @@ function PositionedGlyph(codePoint, x, y, glyph) {
     this.codePoint = codePoint;
     this.x = x;
     this.y = y;
-    this.glyph = glyph;
+    this.glyph = glyph || null;
 }
 function Shaping(positionedGlyphs, text, top, bottom, left, right) {
     this.positionedGlyphs = positionedGlyphs;
@@ -33651,19 +31611,23 @@ function Shaping(positionedGlyphs, text, top, bottom, left, right) {
     this.left = left;
     this.right = right;
 }
+var newLine = 10;
 function shapeText(text, glyphs, maxWidth, lineHeight, horizontalAlign, verticalAlign, justify, spacing, translate) {
     var positionedGlyphs = [];
     var shaping = new Shaping(positionedGlyphs, text, translate[1], translate[1], translate[0], translate[0]);
     var yOffset = -17;
     var x = 0;
     var y = yOffset;
+    text = text.trim();
     for (var i = 0; i < text.length; i++) {
         var codePoint = text.charCodeAt(i);
         var glyph = glyphs[codePoint];
-        if (!glyph)
+        if (!glyph && codePoint !== newLine)
             continue;
         positionedGlyphs.push(new PositionedGlyph(codePoint, x, y, glyph));
-        x += glyph.advance + spacing;
+        if (glyph) {
+            x += glyph.advance + spacing;
+        }
     }
     if (!positionedGlyphs.length)
         return false;
@@ -33686,6 +31650,7 @@ var breakable = {
     8208: true,
     8211: true
 };
+invisible[newLine] = breakable[newLine] = true;
 function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, verticalAlign, justify, translate) {
     var lastSafeBreak = null;
     var lengthBeforeCurrentLine = 0;
@@ -33698,7 +31663,7 @@ function linewrap(shaping, glyphs, lineHeight, maxWidth, horizontalAlign, vertic
             var positionedGlyph = positionedGlyphs[i];
             positionedGlyph.x -= lengthBeforeCurrentLine;
             positionedGlyph.y += lineHeight * line;
-            if (positionedGlyph.x > maxWidth && lastSafeBreak !== null) {
+            if (lastSafeBreak !== null && (positionedGlyph.x > maxWidth || positionedGlyphs[lastSafeBreak].codePoint === newLine)) {
                 var lineLength = positionedGlyphs[lastSafeBreak + 1].x;
                 maxLineLength = Math.max(lineLength, maxLineLength);
                 for (var k = lastSafeBreak + 1; k <= i; k++) {
@@ -33766,7 +31731,7 @@ function PositionedIcon(image, top, bottom, left, right) {
     this.left = left;
     this.right = right;
 }
-},{}],498:[function(require,module,exports){
+},{}],504:[function(require,module,exports){
 'use strict';
 var ShelfPack = require('shelf-pack');
 var browser = require('../util/browser');
@@ -33929,7 +31894,7 @@ function AtlasImage(rect, width, height, sdf, pixelRatio) {
     this.sdf = sdf;
     this.pixelRatio = pixelRatio;
 }
-},{"../util/browser":520,"../util/util":535,"shelf-pack":730}],499:[function(require,module,exports){
+},{"../util/browser":527,"../util/util":544,"shelf-pack":739}],505:[function(require,module,exports){
 'use strict';
 var StructArrayType = require('../util/struct_array');
 var util = require('../util/util');
@@ -33987,7 +31952,7 @@ util.extendAll(SymbolInstancesArray.prototype.StructType.prototype, {
         return new Point(this.anchorPointX, this.anchorPointY);
     }
 });
-},{"../util/struct_array":533,"../util/util":535,"point-geometry":544}],500:[function(require,module,exports){
+},{"../util/struct_array":542,"../util/util":544,"point-geometry":554}],506:[function(require,module,exports){
 'use strict';
 var StructArrayType = require('../util/struct_array');
 var util = require('../util/util');
@@ -34084,7 +32049,7 @@ util.extendAll(SymbolQuadsArray.prototype.StructType.prototype, {
         }, this.anchorAngle, this.glyphAngle, this.minScale, this.maxScale);
     }
 });
-},{"../util/struct_array":533,"../util/util":535,"./quads":495,"point-geometry":544}],501:[function(require,module,exports){
+},{"../util/struct_array":542,"../util/util":544,"./quads":501,"point-geometry":554}],507:[function(require,module,exports){
 'use strict';
 var DOM = require('../util/dom');
 var Point = require('point-geometry');
@@ -34210,7 +32175,7 @@ module.exports = function bindHandlers(map, options) {
         });
     }
 };
-},{"../util/dom":523,"./handler/box_zoom":507,"./handler/dblclick_zoom":508,"./handler/drag_pan":509,"./handler/drag_rotate":510,"./handler/keyboard":511,"./handler/scroll_zoom":512,"./handler/touch_zoom_rotate":513,"point-geometry":544}],502:[function(require,module,exports){
+},{"../util/dom":534,"./handler/box_zoom":514,"./handler/dblclick_zoom":515,"./handler/drag_pan":516,"./handler/drag_rotate":517,"./handler/keyboard":518,"./handler/scroll_zoom":519,"./handler/touch_zoom_rotate":520,"point-geometry":554}],508:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var interpolate = require('../util/interpolate');
@@ -34353,6 +32318,9 @@ util.extend(Camera.prototype, {
         this.zooming = zoom !== startZoom;
         this.rotating = startBearing !== bearing;
         this.pitching = pitch !== startPitch;
+        if (options.smoothEasing && options.duration !== 0) {
+            options.easing = this._smoothOutEasing(options.duration);
+        }
         if (!options.noMoveStart) {
             this.fire('movestart', eventData);
         }
@@ -34391,13 +32359,14 @@ util.extend(Camera.prototype, {
         return this;
     },
     _easeToEnd: function (eventData) {
-        if (this.zooming) {
-            this.fire('zoomend', eventData);
-        }
-        this.fire('moveend', eventData);
+        var wasZooming = this.zooming;
         this.zooming = false;
         this.rotating = false;
         this.pitching = false;
+        if (wasZooming) {
+            this.fire('zoomend', eventData);
+        }
+        this.fire('moveend', eventData);
     },
     flyTo: function (options, eventData) {
         this.stop();
@@ -34492,11 +32461,11 @@ util.extend(Camera.prototype, {
                 this.fire('pitch', eventData);
             }
         }, function () {
-            this.fire('zoomend', eventData);
-            this.fire('moveend', eventData);
             this.zooming = false;
             this.rotating = false;
             this.pitching = false;
+            this.fire('zoomend', eventData);
+            this.fire('moveend', eventData);
         }, options);
         return this;
     },
@@ -34534,24 +32503,21 @@ util.extend(Camera.prototype, {
             bearing += 360;
         return bearing;
     },
-    _updateEasing: function (duration, zoom, bezier) {
-        var easing;
-        if (this.ease) {
-            var ease = this.ease, t = (Date.now() - ease.start) / ease.duration, speed = ease.easing(t + 0.01) - ease.easing(t), x = 0.27 / Math.sqrt(speed * speed + 0.0001) * 0.01, y = Math.sqrt(0.27 * 0.27 - x * x);
+    _smoothOutEasing: function (duration) {
+        var easing = util.ease;
+        if (this._prevEase) {
+            var ease = this._prevEase, t = (Date.now() - ease.start) / ease.duration, speed = ease.easing(t + 0.01) - ease.easing(t), x = 0.27 / Math.sqrt(speed * speed + 0.0001) * 0.01, y = Math.sqrt(0.27 * 0.27 - x * x);
             easing = util.bezier(x, y, 0.25, 1);
-        } else {
-            easing = bezier ? util.bezier.apply(util, bezier) : util.ease;
         }
-        this.ease = {
+        this._prevEase = {
             start: new Date().getTime(),
-            to: Math.pow(2, zoom),
             duration: duration,
             easing: easing
         };
         return easing;
     }
 });
-},{"../geo/lng_lat":437,"../geo/lng_lat_bounds":438,"../util/browser":520,"../util/interpolate":529,"../util/util":535,"point-geometry":544}],503:[function(require,module,exports){
+},{"../geo/lng_lat":438,"../geo/lng_lat_bounds":439,"../util/browser":527,"../util/interpolate":538,"../util/util":544,"point-geometry":554}],509:[function(require,module,exports){
 'use strict';
 var Control = require('./control');
 var DOM = require('../../util/dom');
@@ -34560,44 +32526,44 @@ module.exports = Attribution;
 function Attribution(options) {
     util.setOptions(this, options);
 }
-Attribution.createAttributionString = function (sources) {
-    var attributions = [];
-    for (var id in sources) {
-        var source = sources[id];
-        if (source.attribution && attributions.indexOf(source.attribution) < 0) {
-            attributions.push(source.attribution);
-        }
-    }
-    attributions.sort(function (a, b) {
-        return a.length - b.length;
-    });
-    attributions = attributions.filter(function (attrib, i) {
-        for (var j = i + 1; j < attributions.length; j++) {
-            if (attributions[j].indexOf(attrib) >= 0) {
-                return false;
-            }
-        }
-        return true;
-    });
-    return attributions.join(' | ');
-};
 Attribution.prototype = util.inherit(Control, {
     options: { position: 'bottom-right' },
     onAdd: function (map) {
         var className = 'mapboxgl-ctrl-attrib', container = this._container = DOM.create('div', className, map.getContainer());
-        this._update();
-        map.on('source.load', this._update.bind(this));
-        map.on('source.change', this._update.bind(this));
-        map.on('source.remove', this._update.bind(this));
+        this._updateAttributions();
+        this._updateEditLink();
+        map.on('data', function (event) {
+            if (event.dataType === 'source') {
+                this._updateAttributions();
+                this._updateEditLink();
+            }
+        }.bind(this));
         map.on('moveend', this._updateEditLink.bind(this));
         return container;
     },
-    _update: function () {
-        if (this._map.style) {
-            this._container.innerHTML = Attribution.createAttributionString(this._map.style.sources);
+    _updateAttributions: function () {
+        if (!this._map.style)
+            return;
+        var attributions = [];
+        var sourceCaches = this._map.style.sourceCaches;
+        for (var id in sourceCaches) {
+            var source = sourceCaches[id].getSource();
+            if (source.attribution && attributions.indexOf(source.attribution) < 0) {
+                attributions.push(source.attribution);
+            }
         }
-        this._editLink = this._container.getElementsByClassName('mapbox-improve-map')[0];
-        this._updateEditLink();
+        attributions.sort(function (a, b) {
+            return a.length - b.length;
+        });
+        attributions = attributions.filter(function (attrib, i) {
+            for (var j = i + 1; j < attributions.length; j++) {
+                if (attributions[j].indexOf(attrib) >= 0) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        this._container.innerHTML = attributions.join(' | ');
     },
     _updateEditLink: function () {
         if (this._editLink) {
@@ -34606,7 +32572,7 @@ Attribution.prototype = util.inherit(Control, {
         }
     }
 });
-},{"../../util/dom":523,"../../util/util":535,"./control":504}],504:[function(require,module,exports){
+},{"../../util/dom":534,"../../util/util":544,"./control":510}],510:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var Evented = require('../../util/evented');
@@ -34638,12 +32604,13 @@ Control.prototype = {
     }
 };
 util.extend(Control.prototype, Evented);
-},{"../../util/evented":527,"../../util/util":535}],505:[function(require,module,exports){
+},{"../../util/evented":535,"../../util/util":544}],511:[function(require,module,exports){
 'use strict';
 var Control = require('./control');
 var browser = require('../../util/browser');
 var DOM = require('../../util/dom');
 var util = require('../../util/util');
+var window = require('../../util/window');
 module.exports = Geolocate;
 var geoOptions = {
     enableHighAccuracy: false,
@@ -34661,6 +32628,7 @@ Geolocate.prototype = util.inherit(Control, {
             return container;
         this._container.addEventListener('contextmenu', this._onContextMenu.bind(this));
         this._geolocateButton = DOM.create('button', className + '-icon ' + className + '-geolocate', this._container);
+        this._geolocateButton.type = 'button';
         this._geolocateButton.addEventListener('click', this._onClickGeolocate.bind(this));
         return container;
     },
@@ -34668,7 +32636,7 @@ Geolocate.prototype = util.inherit(Control, {
         e.preventDefault();
     },
     _onClickGeolocate: function () {
-        navigator.geolocation.getCurrentPosition(this._success.bind(this), this._error.bind(this), geoOptions);
+        window.navigator.geolocation.getCurrentPosition(this._success.bind(this), this._error.bind(this), geoOptions);
         this._timeoutId = setTimeout(this._finish.bind(this), 10000);
     },
     _success: function (position) {
@@ -34695,11 +32663,12 @@ Geolocate.prototype = util.inherit(Control, {
         this._timeoutId = undefined;
     }
 });
-},{"../../util/browser":520,"../../util/dom":523,"../../util/util":535,"./control":504}],506:[function(require,module,exports){
+},{"../../util/browser":527,"../../util/dom":534,"../../util/util":544,"../../util/window":529,"./control":510}],512:[function(require,module,exports){
 'use strict';
 var Control = require('./control');
 var DOM = require('../../util/dom');
 var util = require('../../util/util');
+var window = require('../../util/window');
 module.exports = Navigation;
 function Navigation(options) {
     util.setOptions(this, options);
@@ -34713,7 +32682,7 @@ Navigation.prototype = util.inherit(Control, {
         this._zoomInButton = this._createButton(className + '-icon ' + className + '-zoom-in', map.zoomIn.bind(map));
         this._zoomOutButton = this._createButton(className + '-icon ' + className + '-zoom-out', map.zoomOut.bind(map));
         this._compass = this._createButton(className + '-icon ' + className + '-compass', map.resetNorth.bind(map));
-        this._compassArrow = DOM.create('div', 'arrow', this._compass);
+        this._compassArrow = DOM.create('span', 'arrow', this._compass);
         this._compass.addEventListener('mousedown', this._onCompassDown.bind(this));
         this._onCompassMove = this._onCompassMove.bind(this);
         this._onCompassUp = this._onCompassUp.bind(this);
@@ -34729,8 +32698,8 @@ Navigation.prototype = util.inherit(Control, {
         if (e.button !== 0)
             return;
         DOM.disableDrag();
-        document.addEventListener('mousemove', this._onCompassMove);
-        document.addEventListener('mouseup', this._onCompassUp);
+        window.document.addEventListener('mousemove', this._onCompassMove);
+        window.document.addEventListener('mouseup', this._onCompassUp);
         this._el.dispatchEvent(copyMouseEvent(e));
         e.stopPropagation();
     },
@@ -34743,14 +32712,15 @@ Navigation.prototype = util.inherit(Control, {
     _onCompassUp: function (e) {
         if (e.button !== 0)
             return;
-        document.removeEventListener('mousemove', this._onCompassMove);
-        document.removeEventListener('mouseup', this._onCompassUp);
+        window.document.removeEventListener('mousemove', this._onCompassMove);
+        window.document.removeEventListener('mouseup', this._onCompassUp);
         DOM.enableDrag();
         this._el.dispatchEvent(copyMouseEvent(e));
         e.stopPropagation();
     },
     _createButton: function (className, fn) {
         var a = DOM.create('button', className, this._container);
+        a.type = 'button';
         a.addEventListener('click', function () {
             fn();
         });
@@ -34762,7 +32732,7 @@ Navigation.prototype = util.inherit(Control, {
     }
 });
 function copyMouseEvent(e) {
-    return new MouseEvent(e.type, {
+    return new window.MouseEvent(e.type, {
         button: 2,
         buttons: 2,
         bubbles: true,
@@ -34781,9 +32751,75 @@ function copyMouseEvent(e) {
         metaKey: e.metaKey
     });
 }
-},{"../../util/dom":523,"../../util/util":535,"./control":504}],507:[function(require,module,exports){
+},{"../../util/dom":534,"../../util/util":544,"../../util/window":529,"./control":510}],513:[function(require,module,exports){
 'use strict';
-var DOM = require('../../util/dom'), LngLatBounds = require('../../geo/lng_lat_bounds'), util = require('../../util/util');
+var util = require('../../util/util');
+var Control = require('./control');
+var DOM = require('../../util/dom');
+module.exports = Scale;
+function Scale(options) {
+    util.setOptions(this, options);
+}
+Scale.prototype = util.inherit(Control, {
+    options: { position: 'bottom-left' },
+    onAdd: function (map) {
+        var className = 'mapboxgl-ctrl-scale', container = this._container = DOM.create('div', className, map.getContainer()), options = this.options;
+        updateScale(map, container, options);
+        map.on('move', function () {
+            updateScale(map, container, options);
+        });
+        return container;
+    }
+});
+function updateScale(map, scale, options) {
+    var maxWidth = options && options.maxWidth || 100;
+    var y = map._container.clientHeight / 2;
+    var maxMeters = getDistance(map.unproject([
+        0,
+        y
+    ]), map.unproject([
+        maxWidth,
+        y
+    ]));
+    if (options && options.unit === 'imperial') {
+        var maxFeet = 3.2808 * maxMeters;
+        if (maxFeet > 5280) {
+            var maxMiles = maxFeet / 5280;
+            setScale(scale, maxWidth, maxMiles, 'mi');
+        } else {
+            setScale(scale, maxWidth, maxFeet, 'ft');
+        }
+    } else {
+        setScale(scale, maxWidth, maxMeters, 'm');
+    }
+}
+function setScale(scale, maxWidth, maxDistance, unit) {
+    var distance = getRoundNum(maxDistance);
+    var ratio = distance / maxDistance;
+    if (unit === 'm' && distance >= 1000) {
+        distance = distance / 1000;
+        unit = 'km';
+    }
+    scale.style.width = maxWidth * ratio + 'px';
+    scale.innerHTML = distance + unit;
+}
+function getDistance(latlng1, latlng2) {
+    var R = 6371000;
+    var rad = Math.PI / 180, lat1 = latlng1.lat * rad, lat2 = latlng2.lat * rad, a = Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos((latlng2.lng - latlng1.lng) * rad);
+    var maxMeters = R * Math.acos(Math.min(a, 1));
+    return maxMeters;
+}
+function getRoundNum(num) {
+    var pow10 = Math.pow(10, (Math.floor(num) + '').length - 1), d = num / pow10;
+    d = d >= 10 ? 10 : d >= 5 ? 5 : d >= 3 ? 3 : d >= 2 ? 2 : 1;
+    return pow10 * d;
+}
+},{"../../util/dom":534,"../../util/util":544,"./control":510}],514:[function(require,module,exports){
+'use strict';
+var DOM = require('../../util/dom');
+var LngLatBounds = require('../../geo/lng_lat_bounds');
+var util = require('../../util/util');
+var window = require('../../util/window');
 module.exports = BoxZoomHandler;
 function BoxZoomHandler(map) {
     this._map = map;
@@ -34815,9 +32851,9 @@ BoxZoomHandler.prototype = {
     _onMouseDown: function (e) {
         if (!(e.shiftKey && e.button === 0))
             return;
-        document.addEventListener('mousemove', this._onMouseMove, false);
-        document.addEventListener('keydown', this._onKeyDown, false);
-        document.addEventListener('mouseup', this._onMouseUp, false);
+        window.document.addEventListener('mousemove', this._onMouseMove, false);
+        window.document.addEventListener('keydown', this._onKeyDown, false);
+        window.document.addEventListener('mouseup', this._onMouseUp, false);
         DOM.disableDrag();
         this._startPos = DOM.mousePos(this._el, e);
         this._active = true;
@@ -34837,7 +32873,7 @@ BoxZoomHandler.prototype = {
     _onMouseUp: function (e) {
         if (e.button !== 0)
             return;
-        var p0 = this._startPos, p1 = DOM.mousePos(this._el, e), bounds = new LngLatBounds(this._map.unproject(p0), this._map.unproject(p1));
+        var p0 = this._startPos, p1 = DOM.mousePos(this._el, e), bounds = new LngLatBounds().extend(this._map.unproject(p0)).extend(this._map.unproject(p1));
         this._finish();
         if (p0.x === p1.x && p0.y === p1.y) {
             this._fireEvent('boxzoomcancel', e);
@@ -34856,9 +32892,9 @@ BoxZoomHandler.prototype = {
     },
     _finish: function () {
         this._active = false;
-        document.removeEventListener('mousemove', this._onMouseMove, false);
-        document.removeEventListener('keydown', this._onKeyDown, false);
-        document.removeEventListener('mouseup', this._onMouseUp, false);
+        window.document.removeEventListener('mousemove', this._onMouseMove, false);
+        window.document.removeEventListener('keydown', this._onKeyDown, false);
+        window.document.removeEventListener('mouseup', this._onMouseUp, false);
         this._container.classList.remove('mapboxgl-crosshair');
         if (this._box) {
             this._box.parentNode.removeChild(this._box);
@@ -34870,7 +32906,7 @@ BoxZoomHandler.prototype = {
         return this._map.fire(type, { originalEvent: e });
     }
 };
-},{"../../geo/lng_lat_bounds":438,"../../util/dom":523,"../../util/util":535}],508:[function(require,module,exports){
+},{"../../geo/lng_lat_bounds":439,"../../util/dom":534,"../../util/util":544,"../../util/window":529}],515:[function(require,module,exports){
 'use strict';
 module.exports = DoubleClickZoomHandler;
 function DoubleClickZoomHandler(map) {
@@ -34898,9 +32934,11 @@ DoubleClickZoomHandler.prototype = {
         this._map.zoomTo(this._map.getZoom() + (e.originalEvent.shiftKey ? -1 : 1), { around: e.lngLat }, e);
     }
 };
-},{}],509:[function(require,module,exports){
+},{}],516:[function(require,module,exports){
 'use strict';
-var DOM = require('../../util/dom'), util = require('../../util/util');
+var DOM = require('../../util/dom');
+var util = require('../../util/util');
+var window = require('../../util/window');
 module.exports = DragPanHandler;
 var inertiaLinearity = 0.3, inertiaEasing = util.bezier(0, 0, inertiaLinearity, 1), inertiaMaxSpeed = 1400, inertiaDeceleration = 2500;
 function DragPanHandler(map) {
@@ -34937,11 +32975,11 @@ DragPanHandler.prototype = {
         if (this.isActive())
             return;
         if (e.touches) {
-            document.addEventListener('touchmove', this._onMove);
-            document.addEventListener('touchend', this._onTouchEnd);
+            window.document.addEventListener('touchmove', this._onMove);
+            window.document.addEventListener('touchend', this._onTouchEnd);
         } else {
-            document.addEventListener('mousemove', this._onMove);
-            document.addEventListener('mouseup', this._onMouseUp);
+            window.document.addEventListener('mousemove', this._onMove);
+            window.document.addEventListener('mouseup', this._onMouseUp);
         }
         this._active = false;
         this._startPos = this._pos = DOM.mousePos(this._el, e);
@@ -35006,15 +33044,15 @@ DragPanHandler.prototype = {
         if (this._ignoreEvent(e))
             return;
         this._onUp(e);
-        document.removeEventListener('mousemove', this._onMove);
-        document.removeEventListener('mouseup', this._onMouseUp);
+        window.document.removeEventListener('mousemove', this._onMove);
+        window.document.removeEventListener('mouseup', this._onMouseUp);
     },
     _onTouchEnd: function (e) {
         if (this._ignoreEvent(e))
             return;
         this._onUp(e);
-        document.removeEventListener('touchmove', this._onMove);
-        document.removeEventListener('touchend', this._onTouchEnd);
+        window.document.removeEventListener('touchmove', this._onMove);
+        window.document.removeEventListener('touchend', this._onTouchEnd);
     },
     _fireEvent: function (type, e) {
         return this._map.fire(type, { originalEvent: e });
@@ -35040,15 +33078,18 @@ DragPanHandler.prototype = {
             inertia.shift();
     }
 };
-},{"../../util/dom":523,"../../util/util":535}],510:[function(require,module,exports){
+},{"../../util/dom":534,"../../util/util":544,"../../util/window":529}],517:[function(require,module,exports){
 'use strict';
-var DOM = require('../../util/dom'), Point = require('point-geometry'), util = require('../../util/util');
+var DOM = require('../../util/dom');
+var util = require('../../util/util');
+var window = require('../../util/window');
 module.exports = DragRotateHandler;
 var inertiaLinearity = 0.25, inertiaEasing = util.bezier(0, 0, inertiaLinearity, 1), inertiaMaxSpeed = 180, inertiaDeceleration = 720;
 function DragRotateHandler(map, options) {
     this._map = map;
     this._el = map.getCanvasContainer();
     this._bearingSnap = options.bearingSnap;
+    this._pitchWithRotate = options.pitchWithRotate !== false;
     util.bindHandlers(this);
 }
 DragRotateHandler.prototype = {
@@ -35077,8 +33118,8 @@ DragRotateHandler.prototype = {
             return;
         if (this.isActive())
             return;
-        document.addEventListener('mousemove', this._onMove);
-        document.addEventListener('mouseup', this._onUp);
+        window.document.addEventListener('mousemove', this._onMove);
+        window.document.addEventListener('mouseup', this._onUp);
         this._active = false;
         this._inertia = [[
                 Date.now(),
@@ -35086,10 +33127,6 @@ DragRotateHandler.prototype = {
             ]];
         this._startPos = this._pos = DOM.mousePos(this._el, e);
         this._center = this._map.transform.centerPoint;
-        var startToCenter = this._startPos.sub(this._center), startToCenterDist = startToCenter.mag();
-        if (startToCenterDist < 200) {
-            this._center = this._startPos.add(new Point(-200, 0)._rotate(startToCenter.angle()));
-        }
         e.preventDefault();
     },
     _onMove: function (e) {
@@ -35102,13 +33139,15 @@ DragRotateHandler.prototype = {
         }
         var map = this._map;
         map.stop();
-        var p1 = this._pos, p2 = DOM.mousePos(this._el, e), center = this._center, bearingDiff = p1.sub(center).angleWith(p2.sub(center)) / Math.PI * 180, bearing = map.getBearing() - bearingDiff, inertia = this._inertia, last = inertia[inertia.length - 1];
+        var p1 = this._pos, p2 = DOM.mousePos(this._el, e), bearingDiff = (p1.x - p2.x) * 0.8, pitchDiff = (p1.y - p2.y) * -0.5, bearing = map.getBearing() - bearingDiff, pitch = map.getPitch() - pitchDiff, inertia = this._inertia, last = inertia[inertia.length - 1];
         this._drainInertiaBuffer();
         inertia.push([
             Date.now(),
             map._normalizeBearing(bearing, last[1])
         ]);
         map.transform.bearing = bearing;
+        if (this._pitchWithRotate)
+            map.transform.pitch = pitch;
         this._fireEvent('rotate', e);
         this._fireEvent('move', e);
         this._pos = p2;
@@ -35116,8 +33155,8 @@ DragRotateHandler.prototype = {
     _onUp: function (e) {
         if (this._ignoreEvent(e))
             return;
-        document.removeEventListener('mousemove', this._onMove);
-        document.removeEventListener('mouseup', this._onUp);
+        window.document.removeEventListener('mousemove', this._onMove);
+        window.document.removeEventListener('mouseup', this._onUp);
         if (!this.isActive())
             return;
         this._active = false;
@@ -35177,14 +33216,17 @@ DragRotateHandler.prototype = {
             inertia.shift();
     }
 };
-},{"../../util/dom":523,"../../util/util":535,"point-geometry":544}],511:[function(require,module,exports){
+},{"../../util/dom":534,"../../util/util":544,"../../util/window":529}],518:[function(require,module,exports){
 'use strict';
 module.exports = KeyboardHandler;
-var panDelta = 80, rotateDelta = 2, pitchDelta = 5;
+var panStep = 100, bearingStep = 15, pitchStep = 10;
 function KeyboardHandler(map) {
     this._map = map;
     this._el = map.getCanvasContainer();
     this._onKeyDown = this._onKeyDown.bind(this);
+}
+function easeOut(t) {
+    return t * (2 - t);
 }
 KeyboardHandler.prototype = {
     _enabled: false,
@@ -35206,73 +33248,82 @@ KeyboardHandler.prototype = {
     _onKeyDown: function (e) {
         if (e.altKey || e.ctrlKey || e.metaKey)
             return;
-        var map = this._map, eventData = { originalEvent: e };
-        if (map.isEasing())
-            return;
+        var zoomDir = 0;
+        var bearingDir = 0;
+        var pitchDir = 0;
+        var xDir = 0;
+        var yDir = 0;
         switch (e.keyCode) {
         case 61:
         case 107:
         case 171:
         case 187:
-            map.zoomTo(Math.round(map.getZoom()) + (e.shiftKey ? 2 : 1), eventData);
+            zoomDir = 1;
             break;
         case 189:
         case 109:
         case 173:
-            map.zoomTo(Math.round(map.getZoom()) - (e.shiftKey ? 2 : 1), eventData);
+            zoomDir = -1;
             break;
         case 37:
             if (e.shiftKey) {
-                map.easeTo({ bearing: map.getBearing() - rotateDelta }, eventData);
+                bearingDir = -1;
             } else {
                 e.preventDefault();
-                map.panBy([
-                    -panDelta,
-                    0
-                ], eventData);
+                xDir = -1;
             }
             break;
         case 39:
             if (e.shiftKey) {
-                map.easeTo({ bearing: map.getBearing() + rotateDelta }, eventData);
+                bearingDir = 1;
             } else {
                 e.preventDefault();
-                map.panBy([
-                    panDelta,
-                    0
-                ], eventData);
+                xDir = 1;
             }
             break;
         case 38:
             if (e.shiftKey) {
-                map.easeTo({ pitch: map.getPitch() + pitchDelta }, eventData);
+                pitchDir = 1;
             } else {
                 e.preventDefault();
-                map.panBy([
-                    0,
-                    -panDelta
-                ], eventData);
+                yDir = -1;
             }
             break;
         case 40:
             if (e.shiftKey) {
-                map.easeTo({ pitch: Math.max(map.getPitch() - pitchDelta, 0) }, eventData);
+                pitchDir = -1;
             } else {
+                yDir = 1;
                 e.preventDefault();
-                map.panBy([
-                    0,
-                    panDelta
-                ], eventData);
             }
             break;
         }
+        var map = this._map;
+        var zoom = map.getZoom();
+        var easeOptions = {
+            duration: 300,
+            delayEndEvents: 500,
+            easing: easeOut,
+            zoom: zoomDir ? Math.round(zoom) + zoomDir * (e.shiftKey ? 2 : 1) : zoom,
+            bearing: map.getBearing() + bearingDir * bearingStep,
+            pitch: map.getPitch() + pitchDir * pitchStep,
+            offset: [
+                -xDir * panStep,
+                -yDir * panStep
+            ],
+            center: map.getCenter()
+        };
+        map.easeTo(easeOptions, { originalEvent: e });
     }
 };
-},{}],512:[function(require,module,exports){
+},{}],519:[function(require,module,exports){
 'use strict';
-var DOM = require('../../util/dom'), browser = require('../../util/browser'), util = require('../../util/util');
+var DOM = require('../../util/dom');
+var util = require('../../util/util');
+var browser = require('../../util/browser');
+var window = require('../../util/window');
 module.exports = ScrollZoomHandler;
-var ua = typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '', firefox = ua.indexOf('firefox') !== -1, safari = ua.indexOf('safari') !== -1 && ua.indexOf('chrom') === -1;
+var ua = window.navigator.userAgent.toLowerCase(), firefox = ua.indexOf('firefox') !== -1, safari = ua.indexOf('safari') !== -1 && ua.indexOf('chrom') === -1;
 function ScrollZoomHandler(map) {
     this._map = map;
     this._el = map.getCanvasContainer();
@@ -35315,7 +33366,6 @@ ScrollZoomHandler.prototype = {
         this._time = now;
         if (value !== 0 && value % 4.000244140625 === 0) {
             this._type = 'wheel';
-            value = Math.floor(value / 4);
         } else if (value !== 0 && Math.abs(value) < 4) {
             this._type = 'trackpad';
         } else if (timeDelta > 400) {
@@ -35349,15 +33399,18 @@ ScrollZoomHandler.prototype = {
             scale = 1 / scale;
         var fromScale = map.ease ? map.ease.to : map.transform.scale, targetZoom = map.transform.scaleZoom(fromScale * scale);
         map.zoomTo(targetZoom, {
-            duration: 0,
+            duration: this._type === 'wheel' ? 200 : 0,
             around: map.unproject(this._pos),
-            delayEndEvents: 200
+            delayEndEvents: 200,
+            smoothEasing: true
         }, { originalEvent: e });
     }
 };
-},{"../../util/browser":520,"../../util/dom":523,"../../util/util":535}],513:[function(require,module,exports){
+},{"../../util/browser":527,"../../util/dom":534,"../../util/util":544,"../../util/window":529}],520:[function(require,module,exports){
 'use strict';
-var DOM = require('../../util/dom'), util = require('../../util/util');
+var DOM = require('../../util/dom');
+var util = require('../../util/util');
+var window = require('../../util/window');
 module.exports = TouchZoomRotateHandler;
 var inertiaLinearity = 0.15, inertiaEasing = util.bezier(0, 0, inertiaLinearity, 1), inertiaDeceleration = 12, inertiaMaxSpeed = 2.5, significantScaleThreshold = 0.15, significantRotateThreshold = 4;
 function TouchZoomRotateHandler(map) {
@@ -35397,8 +33450,8 @@ TouchZoomRotateHandler.prototype = {
         this._startBearing = this._map.transform.bearing;
         this._gestureIntent = undefined;
         this._inertia = [];
-        document.addEventListener('touchmove', this._onMove, false);
-        document.addEventListener('touchend', this._onEnd, false);
+        window.document.addEventListener('touchmove', this._onMove, false);
+        window.document.addEventListener('touchend', this._onEnd, false);
     },
     _onMove: function (e) {
         if (e.touches.length !== 2)
@@ -35439,8 +33492,8 @@ TouchZoomRotateHandler.prototype = {
         e.preventDefault();
     },
     _onEnd: function (e) {
-        document.removeEventListener('touchmove', this._onMove);
-        document.removeEventListener('touchend', this._onEnd);
+        window.document.removeEventListener('touchmove', this._onMove);
+        window.document.removeEventListener('touchend', this._onEnd);
         this._drainInertiaBuffer();
         var inertia = this._inertia, map = this._map;
         if (inertia.length < 2) {
@@ -35477,10 +33530,11 @@ TouchZoomRotateHandler.prototype = {
             inertia.shift();
     }
 };
-},{"../../util/dom":523,"../../util/util":535}],514:[function(require,module,exports){
+},{"../../util/dom":534,"../../util/util":544,"../../util/window":529}],521:[function(require,module,exports){
 'use strict';
 module.exports = Hash;
 var util = require('../util/util');
+var window = require('../util/window');
 function Hash() {
     util.bindAll([
         '_onHashChange',
@@ -35501,7 +33555,7 @@ Hash.prototype = {
         return this;
     },
     _onHashChange: function () {
-        var loc = location.hash.replace('#', '').split('/');
+        var loc = window.location.hash.replace('#', '').split('/');
         if (loc.length >= 3) {
             this._map.jumpTo({
                 center: [
@@ -35509,23 +33563,27 @@ Hash.prototype = {
                     +loc[1]
                 ],
                 zoom: +loc[0],
-                bearing: +(loc[3] || 0)
+                bearing: +(loc[3] || 0),
+                pitch: +(loc[4] || 0)
             });
             return true;
         }
         return false;
     },
     _updateHash: function () {
-        var center = this._map.getCenter(), zoom = this._map.getZoom(), bearing = this._map.getBearing(), precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2)), hash = '#' + Math.round(zoom * 100) / 100 + '/' + center.lat.toFixed(precision) + '/' + center.lng.toFixed(precision) + (bearing ? '/' + Math.round(bearing * 10) / 10 : '');
+        var center = this._map.getCenter(), zoom = this._map.getZoom(), bearing = this._map.getBearing(), pitch = this._map.getPitch(), precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2)), hash = '#' + Math.round(zoom * 100) / 100 + '/' + center.lat.toFixed(precision) + '/' + center.lng.toFixed(precision);
+        if (bearing || pitch)
+            hash += '/' + Math.round(bearing * 10) / 10;
+        if (pitch)
+            hash += '/' + Math.round(pitch);
         window.history.replaceState('', '', hash);
     }
 };
-},{"../util/util":535}],515:[function(require,module,exports){
+},{"../util/util":544,"../util/window":529}],522:[function(require,module,exports){
 'use strict';
-var Canvas = require('../util/canvas');
 var util = require('../util/util');
 var browser = require('../util/browser');
-var window = require('../util/browser').window;
+var window = require('../util/window');
 var Evented = require('../util/evented');
 var DOM = require('../util/dom');
 var Style = require('../style/style');
@@ -35539,6 +33597,7 @@ var LngLat = require('../geo/lng_lat');
 var LngLatBounds = require('../geo/lng_lat_bounds');
 var Point = require('point-geometry');
 var Attribution = require('./control/attribution');
+var isSupported = require('mapbox-gl-supported');
 var defaultMinZoom = 0;
 var defaultMaxZoom = 20;
 var defaultOptions = {
@@ -35564,22 +33623,17 @@ var defaultOptions = {
     attributionControl: true,
     failIfMajorPerformanceCaveat: false,
     preserveDrawingBuffer: false,
-    trackResize: true,
-    workerCount: Math.max(browser.hardwareConcurrency - 1, 1)
+    trackResize: true
 };
 var Map = module.exports = function (options) {
     options = util.extend({}, defaultOptions, options);
-    if (options.workerCount < 1) {
-        throw new Error('workerCount must an integer greater than or equal to 1.');
-    }
     this._interactive = options.interactive;
     this._failIfMajorPerformanceCaveat = options.failIfMajorPerformanceCaveat;
     this._preserveDrawingBuffer = options.preserveDrawingBuffer;
     this._trackResize = options.trackResize;
-    this._workerCount = options.workerCount;
     this._bearingSnap = options.bearingSnap;
     if (typeof options.container === 'string') {
-        this._container = document.getElementById(options.container);
+        this._container = window.document.getElementById(options.container);
     } else {
         this._container = options.container;
     }
@@ -35589,18 +33643,10 @@ var Map = module.exports = function (options) {
         this.setMaxBounds(options.maxBounds);
     }
     util.bindAll([
-        '_forwardStyleEvent',
-        '_forwardSourceEvent',
-        '_forwardLayerEvent',
-        '_forwardTileEvent',
-        '_onStyleLoad',
-        '_onStyleChange',
-        '_onSourceAdd',
-        '_onSourceRemove',
-        '_onSourceUpdate',
         '_onWindowOnline',
         '_onWindowResize',
-        'onError',
+        '_contextLost',
+        '_contextRestored',
         '_update',
         '_render'
     ], this);
@@ -35626,7 +33672,6 @@ var Map = module.exports = function (options) {
             pitch: options.pitch
         });
     }
-    this.stacks = {};
     this._classes = [];
     this.resize();
     if (options.classes)
@@ -35635,11 +33680,19 @@ var Map = module.exports = function (options) {
         this.setStyle(options.style);
     if (options.attributionControl)
         this.addControl(new Attribution(options.attributionControl));
-    this.on('error', this.onError);
-    this.on('style.error', this.onError);
-    this.on('source.error', this.onError);
-    this.on('tile.error', this.onError);
-    this.on('layer.error', this.onError);
+    this.on('style.load', function () {
+        if (this.transform.unmodified) {
+            this.jumpTo(this.style.stylesheet);
+        }
+        this.style.update(this._classes, { transition: false });
+    });
+    this.on('data', function (event) {
+        if (event.dataType === 'style') {
+            this._update(true);
+        } else {
+            this._update();
+        }
+    });
 };
 util.extend(Map.prototype, Evented);
 util.extend(Map.prototype, Camera.prototype);
@@ -35686,18 +33739,16 @@ util.extend(Map.prototype, {
         return this._classes;
     },
     resize: function () {
-        var width = 0, height = 0;
-        if (this._container) {
-            width = this._container.offsetWidth || 400;
-            height = this._container.offsetHeight || 300;
-        }
-        this._canvas.resize(width, height);
+        var dimensions = this._containerDimensions();
+        var width = dimensions[0];
+        var height = dimensions[1];
+        this._resizeCanvas(width, height);
         this.transform.resize(width, height);
         this.painter.resize(width, height);
         return this.fire('movestart').fire('move').fire('resize').fire('moveend');
     },
     getBounds: function () {
-        var bounds = new LngLatBounds(this.transform.pointLocation(new Point(0, 0)), this.transform.pointLocation(this.transform.size));
+        var bounds = new LngLatBounds(this.transform.pointLocation(new Point(0, this.transform.height)), this.transform.pointLocation(new Point(this.transform.width, 0)));
         if (this.transform.angle || this.transform.pitch) {
             bounds.extend(this.transform.pointLocation(new Point(this.transform.size.x, 0)));
             bounds.extend(this.transform.pointLocation(new Point(0, this.transform.size.y)));
@@ -35752,13 +33803,21 @@ util.extend(Map.prototype, {
     unproject: function (point) {
         return this.transform.pointLocation(Point.convert(point));
     },
-    queryRenderedFeatures: function (pointOrBox, params) {
-        if (!(pointOrBox instanceof Point || Array.isArray(pointOrBox))) {
-            params = pointOrBox;
-            pointOrBox = undefined;
+    queryRenderedFeatures: function () {
+        var params = {};
+        var geometry;
+        if (arguments.length === 2) {
+            geometry = arguments[0];
+            params = arguments[1];
+        } else if (arguments.length === 1 && isPointLike(arguments[0])) {
+            geometry = arguments[0];
+        } else if (arguments.length === 1) {
+            params = arguments[0];
         }
-        var queryGeometry = this._makeQueryGeometry(pointOrBox);
-        return this.style.queryRenderedFeatures(queryGeometry, params, this.transform.zoom, this.transform.angle);
+        return this.style.queryRenderedFeatures(this._makeQueryGeometry(geometry), params, this.transform.zoom, this.transform.angle);
+        function isPointLike(input) {
+            return input instanceof Point || Array.isArray(input);
+        }
     },
     _makeQueryGeometry: function (pointOrBox) {
         if (pointOrBox === undefined) {
@@ -35801,7 +33860,8 @@ util.extend(Map.prototype, {
     },
     setStyle: function (style) {
         if (this.style) {
-            this.style.off('load', this._onStyleLoad).off('error', this._forwardStyleEvent).off('change', this._onStyleChange).off('source.add', this._onSourceAdd).off('source.remove', this._onSourceRemove).off('source.load', this._onSourceUpdate).off('source.error', this._forwardSourceEvent).off('source.change', this._onSourceUpdate).off('layer.add', this._forwardLayerEvent).off('layer.remove', this._forwardLayerEvent).off('layer.error', this._forwardLayerEvent).off('tile.add', this._forwardTileEvent).off('tile.remove', this._forwardTileEvent).off('tile.load', this._update).off('tile.error', this._forwardTileEvent).off('tile.stats', this._forwardTileEvent)._remove();
+            this.style.setEventedParent(null);
+            this.style._remove();
             this.off('rotate', this.style._redoPlacement);
             this.off('pitch', this.style._redoPlacement);
         }
@@ -35811,9 +33871,9 @@ util.extend(Map.prototype, {
         } else if (style instanceof Style) {
             this.style = style;
         } else {
-            this.style = new Style(style, this.animationLoop, this._workerCount);
+            this.style = new Style(style, this);
         }
-        this.style.on('load', this._onStyleLoad).on('error', this._forwardStyleEvent).on('change', this._onStyleChange).on('source.add', this._onSourceAdd).on('source.remove', this._onSourceRemove).on('source.load', this._onSourceUpdate).on('source.error', this._forwardSourceEvent).on('source.change', this._onSourceUpdate).on('layer.add', this._forwardLayerEvent).on('layer.remove', this._forwardLayerEvent).on('layer.error', this._forwardLayerEvent).on('tile.add', this._forwardTileEvent).on('tile.remove', this._forwardTileEvent).on('tile.load', this._update).on('tile.error', this._forwardTileEvent).on('tile.stats', this._forwardTileEvent);
+        this.style.setEventedParent(this, { style: this.style });
         this.on('rotate', this.style._redoPlacement);
         this.on('pitch', this.style._redoPlacement);
         return this;
@@ -35827,6 +33887,9 @@ util.extend(Map.prototype, {
         this.style.addSource(id, source);
         this._update(true);
         return this;
+    },
+    addSourceType: function (name, SourceType, callback) {
+        return this.style.addSourceType(name, SourceType, callback);
     },
     removeSource: function (id) {
         this.style.removeSource(id);
@@ -35885,7 +33948,19 @@ util.extend(Map.prototype, {
         return this._canvasContainer;
     },
     getCanvas: function () {
-        return this._canvas.getElement();
+        return this._canvas;
+    },
+    _containerDimensions: function () {
+        var width = 0;
+        var height = 0;
+        if (this._container) {
+            width = this._container.offsetWidth || 400;
+            height = this._container.offsetHeight || 300;
+        }
+        return [
+            width,
+            height
+        ];
     },
     _setupContainer: function () {
         var container = this._container;
@@ -35894,7 +33969,13 @@ util.extend(Map.prototype, {
         if (this._interactive) {
             canvasContainer.classList.add('mapboxgl-interactive');
         }
-        this._canvas = new Canvas(this, canvasContainer);
+        this._canvas = DOM.create('canvas', 'mapboxgl-canvas', canvasContainer);
+        this._canvas.style.position = 'absolute';
+        this._canvas.addEventListener('webglcontextlost', this._contextLost, false);
+        this._canvas.addEventListener('webglcontextrestored', this._contextRestored, false);
+        this._canvas.setAttribute('tabindex', 0);
+        var dimensions = this._containerDimensions();
+        this._resizeCanvas(dimensions[0], dimensions[1]);
         var controlContainer = this._controlContainer = DOM.create('div', 'mapboxgl-control-container', container);
         var corners = this._controlCorners = {};
         [
@@ -35906,11 +33987,19 @@ util.extend(Map.prototype, {
             corners[pos] = DOM.create('div', 'mapboxgl-ctrl-' + pos, controlContainer);
         });
     },
+    _resizeCanvas: function (width, height) {
+        var pixelRatio = window.devicePixelRatio || 1;
+        this._canvas.width = pixelRatio * width;
+        this._canvas.height = pixelRatio * height;
+        this._canvas.style.width = width + 'px';
+        this._canvas.style.height = height + 'px';
+    },
     _setupPainter: function () {
-        var gl = this._canvas.getWebGLContext({
+        var attributes = util.extend({
             failIfMajorPerformanceCaveat: this._failIfMajorPerformanceCaveat,
             preserveDrawingBuffer: this._preserveDrawingBuffer
-        });
+        }, isSupported.webGLContextAttributes);
+        var gl = this._canvas.getContext('webgl', attributes) || this._canvas.getContext('experimental-webgl', attributes);
         if (!gl) {
             this.fire('error', { error: new Error('Failed to initialize WebGL') });
             return;
@@ -35973,7 +34062,7 @@ util.extend(Map.prototype, {
             if (!this.animationLoop.stopped()) {
                 this._styleDirty = true;
             }
-            if (this._sourcesDirty || this._repaint || !this.animationLoop.stopped()) {
+            if (this._sourcesDirty || this._repaint || this._styleDirty) {
                 this._rerender();
             }
         } catch (error) {
@@ -35989,56 +34078,18 @@ util.extend(Map.prototype, {
         if (typeof window !== 'undefined') {
             window.removeEventListener('resize', this._onWindowResize, false);
         }
+        var extension = this.painter.gl.getExtension('WEBGL_lose_context');
+        if (extension)
+            extension.loseContext();
         removeNode(this._canvasContainer);
         removeNode(this._controlContainer);
         this._container.classList.remove('mapboxgl-map');
-    },
-    onError: function (e) {
-        console.error(e.error);
+        this.fire('remove');
     },
     _rerender: function () {
         if (this.style && !this._frameId) {
             this._frameId = browser.frame(this._render);
         }
-    },
-    _forwardStyleEvent: function (e) {
-        this.fire('style.' + e.type, util.extend({ style: e.target }, e));
-    },
-    _forwardSourceEvent: function (e) {
-        this.fire(e.type, util.extend({ style: e.target }, e));
-    },
-    _forwardLayerEvent: function (e) {
-        this.fire(e.type, util.extend({ style: e.target }, e));
-    },
-    _forwardTileEvent: function (e) {
-        this.fire(e.type, util.extend({ style: e.target }, e));
-    },
-    _onStyleLoad: function (e) {
-        if (this.transform.unmodified) {
-            this.jumpTo(this.style.stylesheet);
-        }
-        this.style.update(this._classes, { transition: false });
-        this._forwardStyleEvent(e);
-    },
-    _onStyleChange: function (e) {
-        this._update(true);
-        this._forwardStyleEvent(e);
-    },
-    _onSourceAdd: function (e) {
-        var source = e.source;
-        if (source.onAdd)
-            source.onAdd(this);
-        this._forwardSourceEvent(e);
-    },
-    _onSourceRemove: function (e) {
-        var source = e.source;
-        if (source.onRemove)
-            source.onRemove(this);
-        this._forwardSourceEvent(e);
-    },
-    _onSourceUpdate: function (e) {
-        this._update();
-        this._forwardSourceEvent(e);
     },
     _onWindowOnline: function () {
         this._update();
@@ -36102,36 +34153,47 @@ function removeNode(node) {
         node.parentNode.removeChild(node);
     }
 }
-},{"../geo/lng_lat":437,"../geo/lng_lat_bounds":438,"../geo/transform":439,"../render/painter":453,"../style/animation_loop":469,"../style/style":472,"../util/browser":520,"../util/canvas":521,"../util/dom":523,"../util/evented":527,"../util/util":535,"./bind_handlers":501,"./camera":502,"./control/attribution":503,"./hash":514,"point-geometry":544}],516:[function(require,module,exports){
+},{"../geo/lng_lat":438,"../geo/lng_lat_bounds":439,"../geo/transform":440,"../render/painter":455,"../style/animation_loop":475,"../style/style":478,"../util/browser":527,"../util/dom":534,"../util/evented":535,"../util/util":544,"../util/window":529,"./bind_handlers":507,"./camera":508,"./control/attribution":509,"./hash":521,"mapbox-gl-supported":426,"point-geometry":554}],523:[function(require,module,exports){
 'use strict';
 module.exports = Marker;
 var DOM = require('../util/dom');
+var util = require('../util/util');
 var LngLat = require('../geo/lng_lat');
-function Marker(element) {
-    if (!element) {
-        element = DOM.create('div');
-    }
-    element.classList.add('mapboxgl-marker');
-    this._el = element;
+var Point = require('point-geometry');
+var Popup = require('./popup');
+function Marker(element, options) {
+    this._offset = Point.convert(options && options.offset || [
+        0,
+        0
+    ]);
     this._update = this._update.bind(this);
+    this._onMapClick = this._onMapClick.bind(this);
+    if (!element)
+        element = DOM.create('div');
+    element.classList.add('mapboxgl-marker');
+    this._element = element;
+    this._popup = null;
 }
 Marker.prototype = {
     addTo: function (map) {
         this.remove();
         this._map = map;
-        map.getCanvasContainer().appendChild(this._el);
-        map.on('move', this._update);
-        this._update();
+        map.getCanvasContainer().appendChild(this._element);
+        map.on('move', this._update.bind(this));
+        map.on('moveend', this._update.bind(this, { roundPos: true }));
+        this._update({ roundPos: true });
+        this._map.on('click', this._onMapClick);
         return this;
     },
     remove: function () {
         if (this._map) {
+            this._map.off('click', this._onMapClick);
             this._map.off('move', this._update);
             this._map = null;
         }
-        var parent = this._el.parentNode;
-        if (parent)
-            parent.removeChild(this._el);
+        DOM.remove(this._element);
+        if (this._popup)
+            this._popup.remove();
         return this;
     },
     getLngLat: function () {
@@ -36139,26 +34201,63 @@ Marker.prototype = {
     },
     setLngLat: function (lnglat) {
         this._lngLat = LngLat.convert(lnglat);
+        if (this._popup)
+            this._popup.setLngLat(this._lngLat);
         this._update();
         return this;
     },
     getElement: function () {
-        return this._el;
+        return this._element;
     },
-    _update: function () {
+    setPopup: function (popup) {
+        var that = this;
+        if (this._popup) {
+            this._popup.remove();
+            this._popup = null;
+        }
+        if (popup) {
+            this._popup = popup;
+            this._popup.setLngLat(this._lngLat);
+        }
+        return this;
+    },
+    _onMapClick: function (event) {
+        var targetElement = event.originalEvent.target;
+        var element = this._element;
+        if (this._popup && (targetElement === element || element.contains(targetElement))) {
+            this.togglePopup();
+        }
+    },
+    getPopup: function () {
+        return this._popup;
+    },
+    togglePopup: function () {
+        var popup = this._popup;
+        if (!popup)
+            return;
+        else if (popup.isOpen())
+            popup.remove();
+        else
+            popup.addTo(this._map);
+    },
+    _update: function (options) {
         if (!this._map)
             return;
-        var pos = this._map.project(this._lngLat);
-        DOM.setTransform(this._el, 'translate(' + pos.x + 'px,' + pos.y + 'px)');
+        var pos = this._map.project(this._lngLat)._add(this._offset);
+        if (options.roundPos)
+            pos = pos.round();
+        DOM.setTransform(this._element, 'translate(' + pos.x + 'px,' + pos.y + 'px)');
     }
 };
-},{"../geo/lng_lat":437,"../util/dom":523}],517:[function(require,module,exports){
+},{"../geo/lng_lat":438,"../util/dom":534,"../util/util":544,"./popup":524,"point-geometry":554}],524:[function(require,module,exports){
 'use strict';
 module.exports = Popup;
 var util = require('../util/util');
 var Evented = require('../util/evented');
 var DOM = require('../util/dom');
 var LngLat = require('../geo/lng_lat');
+var Point = require('point-geometry');
+var window = require('../util/window');
 function Popup(options) {
     util.setOptions(this, options);
     util.bindAll([
@@ -36180,6 +34279,9 @@ Popup.prototype = util.inherit(Evented, {
         this._update();
         return this;
     },
+    isOpen: function () {
+        return !!this._map;
+    },
     remove: function () {
         if (this._content && this._content.parentNode) {
             this._content.parentNode.removeChild(this._content);
@@ -36193,6 +34295,7 @@ Popup.prototype = util.inherit(Evented, {
             this._map.off('click', this._onClickClose);
             delete this._map;
         }
+        this.fire('close');
         return this;
     },
     getLngLat: function () {
@@ -36204,11 +34307,11 @@ Popup.prototype = util.inherit(Evented, {
         return this;
     },
     setText: function (text) {
-        return this.setDOMContent(document.createTextNode(text));
+        return this.setDOMContent(window.document.createTextNode(text));
     },
     setHTML: function (html) {
-        var frag = document.createDocumentFragment();
-        var temp = document.createElement('body'), child;
+        var frag = window.document.createDocumentFragment();
+        var temp = window.document.createElement('body'), child;
         temp.innerHTML = html;
         while (true) {
             child = temp.firstChild;
@@ -36231,6 +34334,7 @@ Popup.prototype = util.inherit(Evented, {
         this._content = DOM.create('div', 'mapboxgl-popup-content', this._container);
         if (this.options.closeButton) {
             this._closeButton = DOM.create('button', 'mapboxgl-popup-close-button', this._content);
+            this._closeButton.type = 'button';
             this._closeButton.innerHTML = '&#215;';
             this._closeButton.addEventListener('click', this._onClickClose);
         }
@@ -36244,7 +34348,9 @@ Popup.prototype = util.inherit(Evented, {
             this._tip = DOM.create('div', 'mapboxgl-popup-tip', this._container);
             this._container.appendChild(this._content);
         }
-        var pos = this._map.project(this._lngLat).round(), anchor = this.options.anchor;
+        var anchor = this.options.anchor;
+        var offset = normalizeOffset(this.options.offset);
+        var pos = this._map.project(this._lngLat).round();
         if (!anchor) {
             var width = this._container.offsetWidth, height = this._container.offsetHeight;
             if (pos.y < height) {
@@ -36265,6 +34371,7 @@ Popup.prototype = util.inherit(Evented, {
                 anchor = anchor.join('-');
             }
         }
+        var offsetedPos = pos.add(offset[anchor]);
         var anchorTranslate = {
             'top': 'translate(-50%,0)',
             'top-left': 'translate(0,0)',
@@ -36280,60 +34387,115 @@ Popup.prototype = util.inherit(Evented, {
             classList.remove('mapboxgl-popup-anchor-' + key);
         }
         classList.add('mapboxgl-popup-anchor-' + anchor);
-        DOM.setTransform(this._container, anchorTranslate[anchor] + ' translate(' + pos.x + 'px,' + pos.y + 'px)');
+        DOM.setTransform(this._container, anchorTranslate[anchor] + ' translate(' + offsetedPos.x + 'px,' + offsetedPos.y + 'px)');
     },
     _onClickClose: function () {
         this.remove();
     }
 });
-},{"../geo/lng_lat":437,"../util/dom":523,"../util/evented":527,"../util/util":535}],518:[function(require,module,exports){
+function normalizeOffset(offset) {
+    if (!offset) {
+        return normalizeOffset(new Point(0, 0));
+    } else if (typeof offset === 'number') {
+        var cornerOffset = Math.round(Math.sqrt(0.5 * Math.pow(offset, 2)));
+        return {
+            'top': new Point(0, offset),
+            'top-left': new Point(cornerOffset, cornerOffset),
+            'top-right': new Point(-cornerOffset, cornerOffset),
+            'bottom': new Point(0, -offset),
+            'bottom-left': new Point(cornerOffset, -cornerOffset),
+            'bottom-right': new Point(-cornerOffset, -cornerOffset),
+            'left': new Point(offset, 0),
+            'right': new Point(-offset, 0)
+        };
+    } else if (isPointLike(offset)) {
+        var convertedOffset = Point.convert(offset);
+        return {
+            'top': convertedOffset,
+            'top-left': convertedOffset,
+            'top-right': convertedOffset,
+            'bottom': convertedOffset,
+            'bottom-left': convertedOffset,
+            'bottom-right': convertedOffset,
+            'left': convertedOffset,
+            'right': convertedOffset
+        };
+    } else {
+        return {
+            'top': Point.convert(offset['top']),
+            'top-left': Point.convert(offset['top-left']),
+            'top-right': Point.convert(offset['top-right']),
+            'bottom': Point.convert(offset['bottom']),
+            'bottom-left': Point.convert(offset['bottom-left']),
+            'bottom-right': Point.convert(offset['bottom-right']),
+            'left': Point.convert(offset['left']),
+            'right': Point.convert(offset['right'])
+        };
+    }
+}
+function isPointLike(input) {
+    return input instanceof Point || Array.isArray(input);
+}
+},{"../geo/lng_lat":438,"../util/dom":534,"../util/evented":535,"../util/util":544,"../util/window":529,"point-geometry":554}],525:[function(require,module,exports){
 'use strict';
 module.exports = Actor;
-function Actor(target, parent) {
+function Actor(target, parent, mapId) {
     this.target = target;
     this.parent = parent;
+    this.mapId = mapId;
     this.callbacks = {};
     this.callbackID = 0;
     this.receive = this.receive.bind(this);
     this.target.addEventListener('message', this.receive, false);
 }
-Actor.prototype.receive = function (message) {
-    var data = message.data, callback;
-    if (data.type === '<response>') {
-        callback = this.callbacks[data.id];
-        delete this.callbacks[data.id];
-        callback(data.error || null, data.data);
-    } else if (typeof data.id !== 'undefined') {
-        var id = data.id;
-        this.parent[data.type](data.data, function (err, data, buffers) {
-            this.postMessage({
-                type: '<response>',
-                id: String(id),
-                error: err ? String(err) : null,
-                data: data
-            }, buffers);
-        }.bind(this));
-    } else {
-        this.parent[data.type](data.data);
-    }
-};
-Actor.prototype.send = function (type, data, callback, buffers) {
-    var id = null;
+Actor.prototype.send = function (type, data, callback, buffers, targetMapId) {
+    var id = callback ? this.mapId + ':' + this.callbackID++ : null;
     if (callback)
-        this.callbacks[id = this.callbackID++] = callback;
-    this.postMessage({
+        this.callbacks[id] = callback;
+    this.target.postMessage({
+        targetMapId: targetMapId,
+        sourceMapId: this.mapId,
         type: type,
         id: String(id),
         data: data
     }, buffers);
 };
-Actor.prototype.postMessage = function (message, transferList) {
-    this.target.postMessage(message, transferList);
+Actor.prototype.receive = function (message) {
+    var data = message.data, id = data.id, callback;
+    if (data.targetMapId && this.mapId !== data.targetMapId)
+        return;
+    if (data.type === '<response>') {
+        callback = this.callbacks[data.id];
+        delete this.callbacks[data.id];
+        if (callback)
+            callback(data.error || null, data.data);
+    } else if (typeof data.id !== 'undefined' && this.parent[data.type]) {
+        this.parent[data.type](data.sourceMapId, data.data, done.bind(this));
+    } else if (typeof data.id !== 'undefined' && this.parent.getWorkerSource) {
+        var keys = data.type.split('.');
+        var workerSource = this.parent.getWorkerSource(data.sourceMapId, keys[0]);
+        workerSource[keys[1]](data.data, done.bind(this));
+    } else {
+        this.parent[data.type](data.data);
+    }
+    function done(err, data, buffers) {
+        this.target.postMessage({
+            sourceMapId: this.mapId,
+            type: '<response>',
+            id: String(id),
+            error: err ? String(err) : null,
+            data: data
+        }, buffers);
+    }
 };
-},{}],519:[function(require,module,exports){
+Actor.prototype.remove = function () {
+    this.target.removeEventListener('message', this.receive, false);
+};
+},{}],526:[function(require,module,exports){
 'use strict';
+var window = require('./window');
 exports.getJSON = function (url, callback) {
-    var xhr = new XMLHttpRequest();
+    var xhr = new window.XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.onerror = function (e) {
@@ -36356,7 +34518,7 @@ exports.getJSON = function (url, callback) {
     return xhr;
 };
 exports.getArrayBuffer = function (url, callback) {
-    var xhr = new XMLHttpRequest();
+    var xhr = new window.XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'arraybuffer';
     xhr.onerror = function (e) {
@@ -36373,23 +34535,23 @@ exports.getArrayBuffer = function (url, callback) {
     return xhr;
 };
 function sameOrigin(url) {
-    var a = document.createElement('a');
+    var a = window.document.createElement('a');
     a.href = url;
-    return a.protocol === document.location.protocol && a.host === document.location.host;
+    return a.protocol === window.document.location.protocol && a.host === window.document.location.host;
 }
 exports.getImage = function (url, callback) {
     return exports.getArrayBuffer(url, function (err, imgData) {
         if (err)
             return callback(err);
-        var img = new Image();
+        var img = new window.Image();
         img.onload = function () {
             callback(null, img);
             (window.URL || window.webkitURL).revokeObjectURL(img.src);
         };
-        var blob = new Blob([new Uint8Array(imgData)], { type: 'image/png' });
+        var blob = new window.Blob([new Uint8Array(imgData)], { type: 'image/png' });
         img.src = (window.URL || window.webkitURL).createObjectURL(blob);
         img.getData = function () {
-            var canvas = document.createElement('canvas');
+            var canvas = window.document.createElement('canvas');
             var context = canvas.getContext('2d');
             canvas.width = img.width;
             canvas.height = img.height;
@@ -36400,12 +34562,12 @@ exports.getImage = function (url, callback) {
     });
 };
 exports.getVideo = function (urls, callback) {
-    var video = document.createElement('video');
+    var video = window.document.createElement('video');
     video.onloadstart = function () {
         callback(null, video);
     };
     for (var i = 0; i < urls.length; i++) {
-        var s = document.createElement('source');
+        var s = window.document.createElement('source');
         if (!sameOrigin(urls[i])) {
             video.crossOrigin = 'Anonymous';
         }
@@ -36417,9 +34579,9 @@ exports.getVideo = function (urls, callback) {
     };
     return video;
 };
-},{}],520:[function(require,module,exports){
+},{"./window":529}],527:[function(require,module,exports){
 'use strict';
-exports.window = window;
+var window = require('./window');
 module.exports.now = function () {
     if (window.performance && window.performance.now) {
         return window.performance.now.bind(window.performance);
@@ -36458,69 +34620,118 @@ exports.timed = function (fn, dur, ctx) {
     };
 };
 exports.supported = require('mapbox-gl-supported');
-exports.hardwareConcurrency = navigator.hardwareConcurrency || 4;
+exports.hardwareConcurrency = window.navigator.hardwareConcurrency || 4;
 Object.defineProperty(exports, 'devicePixelRatio', {
     get: function () {
         return window.devicePixelRatio;
     }
 });
 exports.supportsWebp = false;
-var webpImgTest = document.createElement('img');
+var webpImgTest = window.document.createElement('img');
 webpImgTest.onload = function () {
     exports.supportsWebp = true;
 };
 webpImgTest.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//73v/+BiOh/AAA=';
-exports.supportsGeolocation = !!navigator.geolocation;
-},{"mapbox-gl-supported":427}],521:[function(require,module,exports){
+exports.supportsGeolocation = !!window.navigator.geolocation;
+},{"./window":529,"mapbox-gl-supported":426}],528:[function(require,module,exports){
 'use strict';
-var util = require('../util');
-var isSupported = require('mapbox-gl-supported');
-module.exports = Canvas;
-function Canvas(parent, container) {
-    this.canvas = document.createElement('canvas');
-    if (parent && container) {
-        this.canvas.style.position = 'absolute';
-        this.canvas.classList.add('mapboxgl-canvas');
-        this.canvas.addEventListener('webglcontextlost', parent._contextLost.bind(parent), false);
-        this.canvas.addEventListener('webglcontextrestored', parent._contextRestored.bind(parent), false);
-        this.canvas.setAttribute('tabindex', 0);
-        container.appendChild(this.canvas);
+var WebWorkify = require('webworkify');
+var window = require('../window');
+var workerURL = window.URL.createObjectURL(new WebWorkify(require('../../source/worker'), { bare: true }));
+module.exports = function () {
+    return new window.Worker(workerURL);
+};
+},{"../../source/worker":473,"../window":529,"webworkify":755}],529:[function(require,module,exports){
+'use strict';
+module.exports = self;
+},{}],530:[function(require,module,exports){
+'use strict';
+var quickselect = require('quickselect');
+var calculateSignedArea = require('./util').calculateSignedArea;
+module.exports = function classifyRings(rings, maxRings) {
+    var len = rings.length;
+    if (len <= 1)
+        return [rings];
+    var polygons = [], polygon, ccw;
+    for (var i = 0; i < len; i++) {
+        var area = calculateSignedArea(rings[i]);
+        if (area === 0)
+            continue;
+        rings[i].area = Math.abs(area);
+        if (ccw === undefined)
+            ccw = area < 0;
+        if (ccw === area < 0) {
+            if (polygon)
+                polygons.push(polygon);
+            polygon = [rings[i]];
+        } else {
+            polygon.push(rings[i]);
+        }
+    }
+    if (polygon)
+        polygons.push(polygon);
+    if (maxRings > 1) {
+        for (var j = 0; j < polygons.length; j++) {
+            if (polygons[j].length <= maxRings)
+                continue;
+            quickselect(polygons[j], maxRings, 1, polygons[j].length - 1, compareAreas);
+            polygons[j] = polygons[j].slice(0, maxRings);
+        }
+    }
+    return polygons;
+};
+function compareAreas(a, b) {
+    return b.area - a.area;
+}
+},{"./util":544,"quickselect":563}],531:[function(require,module,exports){
+'use strict';
+module.exports = {
+    API_URL: 'https://api.mapbox.com',
+    REQUIRE_ACCESS_TOKEN: true
+};
+},{}],532:[function(require,module,exports){
+'use strict';
+module.exports = DictionaryCoder;
+function DictionaryCoder(strings) {
+    this._stringToNumber = {};
+    this._numberToString = [];
+    for (var i = 0; i < strings.length; i++) {
+        var string = strings[i];
+        this._stringToNumber[string] = i;
+        this._numberToString[i] = string;
     }
 }
-Canvas.prototype.resize = function (width, height) {
-    var pixelRatio = window.devicePixelRatio || 1;
-    this.canvas.width = pixelRatio * width;
-    this.canvas.height = pixelRatio * height;
-    this.canvas.style.width = width + 'px';
-    this.canvas.style.height = height + 'px';
+DictionaryCoder.prototype.encode = function (string) {
+    return this._stringToNumber[string];
 };
-Canvas.prototype.getWebGLContext = function (attributes) {
-    attributes = util.extend({}, attributes, isSupported.webGLContextAttributes);
-    return this.canvas.getContext('webgl', attributes) || this.canvas.getContext('experimental-webgl', attributes);
+DictionaryCoder.prototype.decode = function (n) {
+    return this._numberToString[n];
 };
-Canvas.prototype.getElement = function () {
-    return this.canvas;
-};
-},{"../util":535,"mapbox-gl-supported":427}],522:[function(require,module,exports){
+},{}],533:[function(require,module,exports){
 'use strict';
-var Actor = require('../actor');
-var WebWorkify = require('webworkify');
+var util = require('./util');
+var Actor = require('./actor');
 module.exports = Dispatcher;
-function Dispatcher(length, parent) {
+function Dispatcher(workerPool, parent) {
+    this.workerPool = workerPool;
     this.actors = [];
     this.currentActor = 0;
-    for (var i = 0; i < length; i++) {
-        var worker = new WebWorkify(require('../../source/worker'));
-        var actor = new Actor(worker, parent);
+    this.id = util.uniqueId();
+    var workers = this.workerPool.acquire(this.id);
+    for (var i = 0; i < workers.length; i++) {
+        var worker = workers[i];
+        var actor = new Actor(worker, parent, this.id);
         actor.name = 'Worker ' + i;
         this.actors.push(actor);
     }
 }
 Dispatcher.prototype = {
-    broadcast: function (type, data) {
-        for (var i = 0; i < this.actors.length; i++) {
-            this.actors[i].send(type, data);
-        }
+    broadcast: function (type, data, cb) {
+        cb = cb || function () {
+        };
+        util.asyncAll(this.actors, function (actor, done) {
+            actor.send(type, data, done);
+        }, cb);
     },
     send: function (type, data, callback, targetID, buffers) {
         if (typeof targetID !== 'number' || isNaN(targetID)) {
@@ -36530,30 +34741,33 @@ Dispatcher.prototype = {
         return targetID;
     },
     remove: function () {
-        for (var i = 0; i < this.actors.length; i++) {
-            this.actors[i].target.terminate();
-        }
+        this.actors.forEach(function (actor) {
+            actor.remove();
+        });
         this.actors = [];
+        this.workerPool.release(this.id);
     }
 };
-},{"../../source/worker":467,"../actor":518,"webworkify":745}],523:[function(require,module,exports){
+},{"./actor":525,"./util":544}],534:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
+var window = require('./window');
 exports.create = function (tagName, className, container) {
-    var el = document.createElement(tagName);
+    var el = window.document.createElement(tagName);
     if (className)
         el.className = className;
     if (container)
         container.appendChild(el);
     return el;
 };
-var docStyle = document.documentElement.style;
+var docStyle = window.document.documentElement.style;
 function testProp(props) {
     for (var i = 0; i < props.length; i++) {
         if (props[i] in docStyle) {
             return props[i];
         }
     }
+    return props[0];
 }
 var selectProp = testProp([
         'userSelect',
@@ -36602,104 +34816,27 @@ exports.touchPos = function (el, e) {
     }
     return points;
 };
-},{"point-geometry":544}],524:[function(require,module,exports){
-'use strict';
-var quickselect = require('quickselect');
-module.exports = function classifyRings(rings, maxRings) {
-    var len = rings.length;
-    if (len <= 1)
-        return [rings];
-    var polygons = [], polygon, ccw;
-    for (var i = 0; i < len; i++) {
-        var area = calculateSignedArea(rings[i]);
-        if (area === 0)
-            continue;
-        rings[i].area = Math.abs(area);
-        if (ccw === undefined)
-            ccw = area < 0;
-        if (ccw === area < 0) {
-            if (polygon)
-                polygons.push(polygon);
-            polygon = [rings[i]];
-        } else {
-            polygon.push(rings[i]);
-        }
+exports.remove = function (node) {
+    if (node.parentNode) {
+        node.parentNode.removeChild(node);
     }
-    if (polygon)
-        polygons.push(polygon);
-    if (maxRings > 1) {
-        for (var j = 0; j < polygons.length; j++) {
-            if (polygons[j].length <= maxRings)
-                continue;
-            quickselect(polygons[j], maxRings, 1, polygons[j].length - 1, compareAreas);
-            polygons[j] = polygons[j].slice(0, maxRings);
-        }
-    }
-    return polygons;
 };
-function compareAreas(a, b) {
-    return b.area - a.area;
-}
-function calculateSignedArea(ring) {
-    var sum = 0;
-    for (var i = 0, len = ring.length, j = len - 1, p1, p2; i < len; j = i++) {
-        p1 = ring[i];
-        p2 = ring[j];
-        sum += (p2.x - p1.x) * (p1.y + p2.y);
-    }
-    return sum;
-}
-},{"quickselect":553}],525:[function(require,module,exports){
-'use strict';
-module.exports = {
-    API_URL: 'https://api.mapbox.com',
-    REQUIRE_ACCESS_TOKEN: true
-};
-},{}],526:[function(require,module,exports){
-'use strict';
-module.exports = DictionaryCoder;
-function DictionaryCoder(strings) {
-    this._stringToNumber = {};
-    this._numberToString = [];
-    for (var i = 0; i < strings.length; i++) {
-        var string = strings[i];
-        this._stringToNumber[string] = i;
-        this._numberToString[i] = string;
-    }
-}
-DictionaryCoder.prototype.encode = function (string) {
-    return this._stringToNumber[string];
-};
-DictionaryCoder.prototype.decode = function (n) {
-    return this._numberToString[n];
-};
-},{}],527:[function(require,module,exports){
+},{"./window":529,"point-geometry":554}],535:[function(require,module,exports){
 'use strict';
 var util = require('./util');
 var Evented = {
     on: function (type, listener) {
-        this._events = this._events || {};
-        this._events[type] = this._events[type] || [];
-        this._events[type].push(listener);
+        this._listeners = this._listeners || {};
+        this._listeners[type] = this._listeners[type] || [];
+        this._listeners[type].push(listener);
         return this;
     },
     off: function (type, listener) {
-        if (!type) {
-            delete this._events;
-            return this;
-        }
-        if (!this.listens(type))
-            return this;
-        if (listener) {
-            var idx = this._events[type].indexOf(listener);
-            if (idx >= 0) {
-                this._events[type].splice(idx, 1);
+        if (this._listeners && this._listeners[type]) {
+            var index = this._listeners[type].indexOf(listener);
+            if (index !== -1) {
+                this._listeners[type].splice(index, 1);
             }
-            if (!this._events[type].length) {
-                delete this._events[type];
-            }
-        } else {
-            delete this._events[type];
         }
         return this;
     },
@@ -36712,25 +34849,127 @@ var Evented = {
         return this;
     },
     fire: function (type, data) {
-        if (!this.listens(type))
-            return this;
-        data = util.extend({}, data);
-        util.extend(data, {
-            type: type,
-            target: this
-        });
-        var listeners = this._events[type].slice();
-        for (var i = 0; i < listeners.length; i++) {
-            listeners[i].call(this, data);
+        if (this.listens(type)) {
+            data = util.extend({}, data, {
+                type: type,
+                target: this
+            });
+            var listeners = this._listeners && this._listeners[type] ? this._listeners[type].slice() : [];
+            for (var i = 0; i < listeners.length; i++) {
+                listeners[i].call(this, data);
+            }
+            if (this._eventedParent) {
+                this._eventedParent.fire(type, util.extend({}, data, this._eventedParentData));
+            }
+        } else if (util.endsWith(type, 'error')) {
+            console.error(data && data.error || data || 'Empty error event');
         }
         return this;
     },
     listens: function (type) {
-        return !!(this._events && this._events[type]);
+        return this._listeners && this._listeners[type] || this._eventedParent && this._eventedParent.listens(type);
+    },
+    setEventedParent: function (parent, data) {
+        this._eventedParent = parent;
+        this._eventedParentData = data;
+        return this;
     }
 };
 module.exports = Evented;
-},{"./util":535}],528:[function(require,module,exports){
+},{"./util":544}],536:[function(require,module,exports){
+'use strict';
+var Queue = require('tinyqueue');
+var Point = require('point-geometry');
+var distToSegmentSquared = require('./intersection_tests').distToSegmentSquared;
+module.exports = function (polygonRings, precision, debug) {
+    precision = precision || 1;
+    var minX, minY, maxX, maxY;
+    var outerRing = polygonRings[0];
+    for (var i = 0; i < outerRing.length; i++) {
+        var p = outerRing[i];
+        if (!i || p.x < minX)
+            minX = p.x;
+        if (!i || p.y < minY)
+            minY = p.y;
+        if (!i || p.x > maxX)
+            maxX = p.x;
+        if (!i || p.y > maxY)
+            maxY = p.y;
+    }
+    var width = maxX - minX;
+    var height = maxY - minY;
+    var cellSize = Math.min(width, height);
+    var h = cellSize / 2;
+    var cellQueue = new Queue(null, compareMax);
+    for (var x = minX; x < maxX; x += cellSize) {
+        for (var y = minY; y < maxY; y += cellSize) {
+            cellQueue.push(new Cell(x + h, y + h, h, polygonRings));
+        }
+    }
+    var bestCell = getCentroidCell(polygonRings);
+    var numProbes = cellQueue.length;
+    while (cellQueue.length) {
+        var cell = cellQueue.pop();
+        if (cell.d > bestCell.d) {
+            bestCell = cell;
+            if (debug)
+                console.log('found best %d after %d probes', Math.round(10000 * cell.d) / 10000, numProbes);
+        }
+        if (cell.max - bestCell.d <= precision)
+            continue;
+        h = cell.h / 2;
+        cellQueue.push(new Cell(cell.p.x - h, cell.p.y - h, h, polygonRings));
+        cellQueue.push(new Cell(cell.p.x + h, cell.p.y - h, h, polygonRings));
+        cellQueue.push(new Cell(cell.p.x - h, cell.p.y + h, h, polygonRings));
+        cellQueue.push(new Cell(cell.p.x + h, cell.p.y + h, h, polygonRings));
+        numProbes += 4;
+    }
+    if (debug) {
+        console.log('num probes: ' + numProbes);
+        console.log('best distance: ' + bestCell.d);
+    }
+    return bestCell.p;
+};
+function compareMax(a, b) {
+    return b.max - a.max;
+}
+function Cell(x, y, h, polygon) {
+    this.p = new Point(x, y);
+    this.h = h;
+    this.d = pointToPolygonDist(this.p, polygon);
+    this.max = this.d + this.h * Math.SQRT2;
+}
+function pointToPolygonDist(p, polygon) {
+    var inside = false;
+    var minDistSq = Infinity;
+    for (var k = 0; k < polygon.length; k++) {
+        var ring = polygon[k];
+        for (var i = 0, len = ring.length, j = len - 1; i < len; j = i++) {
+            var a = ring[i];
+            var b = ring[j];
+            if (a.y > p.y !== b.y > p.y && p.x < (b.x - a.x) * (p.y - a.y) / (b.y - a.y) + a.x)
+                inside = !inside;
+            minDistSq = Math.min(minDistSq, distToSegmentSquared(p, a, b));
+        }
+    }
+    return (inside ? 1 : -1) * Math.sqrt(minDistSq);
+}
+function getCentroidCell(polygon) {
+    var area = 0;
+    var x = 0;
+    var y = 0;
+    var points = polygon[0];
+    for (var i = 0, len = points.length, j = len - 1; i < len; j = i++) {
+        var a = points[i];
+        var b = points[j];
+        var f = a.x * b.y - b.x * a.y;
+        x += (a.x + b.x) * f;
+        y += (a.y + b.y) * f;
+        area += f * 3;
+    }
+    return new Cell(x / area, y / area, 0, polygon);
+}
+},{"./intersection_tests":539,"point-geometry":554,"tinyqueue":741}],537:[function(require,module,exports){
 'use strict';
 module.exports = Glyphs;
 function Glyphs(pbf, end) {
@@ -36768,7 +35007,7 @@ function readGlyph(tag, glyph, pbf) {
     else if (tag === 7)
         glyph.advance = pbf.readVarint();
 }
-},{}],529:[function(require,module,exports){
+},{}],538:[function(require,module,exports){
 'use strict';
 module.exports = interpolate;
 function interpolate(a, b, t) {
@@ -36794,12 +35033,14 @@ interpolate.array = function (from, to, t) {
         return interpolate(d, to[i], t);
     });
 };
-},{}],530:[function(require,module,exports){
+},{}],539:[function(require,module,exports){
 'use strict';
+var isCounterClockwise = require('./util').isCounterClockwise;
 module.exports = {
     multiPolygonIntersectsBufferedMultiPoint: multiPolygonIntersectsBufferedMultiPoint,
     multiPolygonIntersectsMultiPolygon: multiPolygonIntersectsMultiPolygon,
-    multiPolygonIntersectsBufferedMultiLine: multiPolygonIntersectsBufferedMultiLine
+    multiPolygonIntersectsBufferedMultiLine: multiPolygonIntersectsBufferedMultiLine,
+    distToSegmentSquared: distToSegmentSquared
 };
 function multiPolygonIntersectsBufferedMultiPoint(multiPolygon, rings, radius) {
     for (var j = 0; j < multiPolygon.length; j++) {
@@ -36886,9 +35127,6 @@ function lineIntersectsLine(lineA, lineB) {
     }
     return false;
 }
-function isCounterClockwise(a, b, c) {
-    return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
-}
 function lineSegmentIntersectsLineSegment(a0, a1, b0, b1) {
     return isCounterClockwise(a0, b0, b1) !== isCounterClockwise(a1, b0, b1) && isCounterClockwise(a0, a1, b0) !== isCounterClockwise(a0, a1, b1);
 }
@@ -36939,7 +35177,7 @@ function polygonContainsPoint(ring, p) {
     }
     return c;
 }
-},{}],531:[function(require,module,exports){
+},{"./util":544}],540:[function(require,module,exports){
 'use strict';
 module.exports = LRUCache;
 function LRUCache(max, onRemove) {
@@ -36995,33 +35233,35 @@ LRUCache.prototype.setMaxSize = function (max) {
     }
     return this;
 };
-},{}],532:[function(require,module,exports){
+},{}],541:[function(require,module,exports){
 'use strict';
 var config = require('./config');
 var browser = require('./browser');
 var URL = require('url');
 var util = require('./util');
-function normalizeURL(url, pathPrefix, accessToken) {
+function makeAPIURL(path, query, accessToken) {
     accessToken = accessToken || config.ACCESS_TOKEN;
     if (!accessToken && config.REQUIRE_ACCESS_TOKEN) {
         throw new Error('An API access token is required to use Mapbox GL. ' + 'See https://www.mapbox.com/developers/api/#access-tokens');
     }
-    url = url.replace(/^mapbox:\/\//, config.API_URL + pathPrefix);
-    url += url.indexOf('?') !== -1 ? '&access_token=' : '?access_token=';
+    var url = config.API_URL + path + (query ? '?' + query : '');
     if (config.REQUIRE_ACCESS_TOKEN) {
         if (accessToken[0] === 's') {
             throw new Error('Use a public access token (pk.*) with Mapbox GL JS, not a secret access token (sk.*). ' + 'See https://www.mapbox.com/developers/api/#access-tokens');
         }
-        url += accessToken;
+        url += (query ? '&' : '?') + 'access_token=' + accessToken;
     }
     return url;
 }
+module.exports.isMapboxURL = function (url) {
+    return URL.parse(url).protocol === 'mapbox:';
+};
 module.exports.normalizeStyleURL = function (url, accessToken) {
     var urlObject = URL.parse(url);
     if (urlObject.protocol !== 'mapbox:') {
         return url;
     } else {
-        return normalizeURL('mapbox:/' + urlObject.pathname + formatQuery(urlObject.query), '/styles/v1/', accessToken);
+        return makeAPIURL('/styles/v1' + urlObject.pathname, urlObject.query, accessToken);
     }
 };
 module.exports.normalizeSourceURL = function (url, accessToken) {
@@ -37029,7 +35269,8 @@ module.exports.normalizeSourceURL = function (url, accessToken) {
     if (urlObject.protocol !== 'mapbox:') {
         return url;
     } else {
-        return normalizeURL(url + '.json', '/v4/', accessToken) + '&secure';
+        var sources = url.match(/mapbox:\/\/([^?]+)/)[1];
+        return makeAPIURL('/v4/' + sources + '.json', urlObject.query, accessToken) + '&secure';
     }
 };
 module.exports.normalizeGlyphsURL = function (url, accessToken) {
@@ -37038,7 +35279,7 @@ module.exports.normalizeGlyphsURL = function (url, accessToken) {
         return url;
     } else {
         var user = urlObject.pathname.split('/')[1];
-        return normalizeURL('mapbox://' + user + '/{fontstack}/{range}.pbf' + formatQuery(urlObject.query), '/fonts/v1/', accessToken);
+        return makeAPIURL('/fonts/v1/' + user + '/{fontstack}/{range}.pbf', urlObject.query, accessToken);
     }
 };
 module.exports.normalizeSpriteURL = function (url, format, extension, accessToken) {
@@ -37047,7 +35288,7 @@ module.exports.normalizeSpriteURL = function (url, format, extension, accessToke
         urlObject.pathname += format + extension;
         return URL.format(urlObject);
     } else {
-        return normalizeURL('mapbox:/' + urlObject.pathname + '/sprite' + format + extension + formatQuery(urlObject.query), '/styles/v1/', accessToken);
+        return makeAPIURL('/styles/v1' + urlObject.pathname + '/sprite' + format + extension, urlObject.query, accessToken);
     }
 };
 module.exports.normalizeTileURL = function (tileURL, sourceURL, tileSize) {
@@ -37066,9 +35307,6 @@ module.exports.normalizeTileURL = function (tileURL, sourceURL, tileSize) {
         query: replaceTempAccessToken(tileURLObject.query)
     });
 };
-function formatQuery(query) {
-    return query ? '?' + query : '';
-}
 function replaceTempAccessToken(query) {
     if (query.access_token && query.access_token.slice(0, 3) === 'tk.') {
         return util.extend({}, query, { 'access_token': config.ACCESS_TOKEN });
@@ -37076,7 +35314,7 @@ function replaceTempAccessToken(query) {
         return query;
     }
 }
-},{"./browser":520,"./config":525,"./util":535,"url":734}],533:[function(require,module,exports){
+},{"./browser":527,"./config":531,"./util":544,"url":744}],542:[function(require,module,exports){
 'use strict';
 module.exports = StructArrayType;
 var viewTypes = {
@@ -37251,7 +35489,7 @@ StructArray.prototype.toArray = function (startIndex, endIndex) {
     }
     return array;
 };
-},{}],534:[function(require,module,exports){
+},{}],543:[function(require,module,exports){
 'use strict';
 module.exports = resolveTokens;
 function resolveTokens(properties, text) {
@@ -37259,7 +35497,7 @@ function resolveTokens(properties, text) {
         return key in properties ? properties[key] : '';
     });
 }
-},{}],535:[function(require,module,exports){
+},{}],544:[function(require,module,exports){
 'use strict';
 var UnitBezier = require('unitbezier');
 var Coordinate = require('../geo/coordinate');
@@ -37365,6 +35603,9 @@ exports.debounce = function (fn, time) {
 };
 exports.bindAll = function (fns, context) {
     fns.forEach(function (fn) {
+        if (!context[fn]) {
+            return;
+        }
         context[fn] = context[fn].bind(context);
     });
 };
@@ -37422,12 +35663,12 @@ exports.filterObject = function (input, iterator, context) {
     }
     return output;
 };
-exports.deepEqual = function deepEqual(a, b) {
+exports.deepEqual = function (a, b) {
     if (Array.isArray(a)) {
         if (!Array.isArray(b) || a.length !== b.length)
             return false;
         for (var i = 0; i < a.length; i++) {
-            if (!deepEqual(a[i], b[i]))
+            if (!exports.deepEqual(a[i], b[i]))
                 return false;
         }
         return true;
@@ -37439,14 +35680,14 @@ exports.deepEqual = function deepEqual(a, b) {
         if (keys.length !== Object.keys(b).length)
             return false;
         for (var key in a) {
-            if (!deepEqual(a[key], b[key]))
+            if (!exports.deepEqual(a[key], b[key]))
                 return false;
         }
         return true;
     }
     return a === b;
 };
-exports.clone = function deepEqual(input) {
+exports.clone = function (input) {
     if (Array.isArray(input)) {
         return input.map(exports.clone);
     } else if (typeof input === 'object') {
@@ -37470,7 +35711,29 @@ exports.warnOnce = function (message) {
         warnOnceHistory[message] = true;
     }
 };
-},{"../geo/coordinate":436,"unitbezier":733}],536:[function(require,module,exports){
+exports.isCounterClockwise = function (a, b, c) {
+    return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
+};
+exports.calculateSignedArea = function (ring) {
+    var sum = 0;
+    for (var i = 0, len = ring.length, j = len - 1, p1, p2; i < len; j = i++) {
+        p1 = ring[i];
+        p2 = ring[j];
+        sum += (p2.x - p1.x) * (p1.y + p2.y);
+    }
+    return sum;
+};
+exports.isClosedPolygon = function (points) {
+    if (points.length < 4)
+        return false;
+    var p1 = points[0];
+    var p2 = points[points.length - 1];
+    if (Math.abs(p1.x - p2.x) > 0 || Math.abs(p1.y - p2.y) > 0) {
+        return false;
+    }
+    return Math.abs(exports.calculateSignedArea(points)) > 0.01;
+};
+},{"../geo/coordinate":437,"unitbezier":743}],545:[function(require,module,exports){
 'use strict';
 module.exports = Feature;
 function Feature(vectorTileFeature, z, x, y) {
@@ -37479,8 +35742,8 @@ function Feature(vectorTileFeature, z, x, y) {
     vectorTileFeature._x = x;
     vectorTileFeature._y = y;
     this.properties = vectorTileFeature.properties;
-    if (vectorTileFeature._id) {
-        this.id = vectorTileFeature._id;
+    if (vectorTileFeature.id != null) {
+        this.id = vectorTileFeature.id;
     }
 }
 Feature.prototype = {
@@ -37504,342 +35767,38 @@ Feature.prototype = {
         return json;
     }
 };
-},{}],537:[function(require,module,exports){
-module.exports={
-  "_args": [
-    [
-      {
-        "raw": "mapbox-gl@0.21.0",
-        "scope": null,
-        "escapedName": "mapbox-gl",
-        "name": "mapbox-gl",
-        "rawSpec": "0.21.0",
-        "spec": "0.21.0",
-        "type": "version"
-      },
-      "/Users/dcloud/code/python/new-silk-road"
-    ]
-  ],
-  "_from": "mapbox-gl@0.21.0",
-  "_id": "mapbox-gl@0.21.0",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/mapbox-gl",
-  "_nodeVersion": "4.4.5",
-  "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/mapbox-gl-0.21.0.tgz_1468445721242_0.4356071606744081"
-  },
-  "_npmUser": {
-    "name": "lucaswoj",
-    "email": "lucas@mapbox.com"
-  },
-  "_npmVersion": "2.15.5",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "mapbox-gl@0.21.0",
-    "scope": null,
-    "escapedName": "mapbox-gl",
-    "name": "mapbox-gl",
-    "rawSpec": "0.21.0",
-    "spec": "0.21.0",
-    "type": "version"
-  },
-  "_requiredBy": [
-    "#DEV:/",
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.21.0.tgz",
-  "_shasum": "64cba9e14ea0481f69d24185060f6b7f0f9ac39a",
-  "_shrinkwrap": null,
-  "_spec": "mapbox-gl@0.21.0",
-  "_where": "/Users/dcloud/code/python/new-silk-road",
-  "browser": {
-    "./js/util/ajax.js": "./js/util/browser/ajax.js",
-    "./js/util/browser.js": "./js/util/browser/browser.js",
-    "./js/util/canvas.js": "./js/util/browser/canvas.js",
-    "./js/util/dom.js": "./js/util/browser/dom.js",
-    "./js/util/dispatcher.js": "./js/util/browser/dispatcher.js"
-  },
-  "browserify": {
-    "transform": [
-      "unassertify"
-    ]
-  },
-  "bugs": {
-    "url": "https://github.com/mapbox/mapbox-gl-js/issues"
-  },
-  "dependencies": {
-    "csscolorparser": "^1.0.2",
-    "earcut": "^2.0.3",
-    "feature-filter": "^2.1.0",
-    "geojson-rewind": "^0.1.0",
-    "geojson-vt": "^2.2.0",
-    "gl-matrix": "^2.3.1",
-    "grid-index": "^1.0.0",
-    "mapbox-gl-function": "^1.2.1",
-    "mapbox-gl-shaders": "github:mapbox/mapbox-gl-shaders#4d1f89514bf03536c8e682439df165c33a37122a",
-    "mapbox-gl-style-spec": "github:mapbox/mapbox-gl-style-spec#83b1a3e5837d785af582efd5ed1a212f2df6a4ae",
-    "mapbox-gl-supported": "^1.2.0",
-    "pbf": "^1.3.2",
-    "pngjs": "^2.2.0",
-    "point-geometry": "^0.0.0",
-    "quickselect": "^1.0.0",
-    "request": "^2.39.0",
-    "resolve-url": "^0.2.1",
-    "shelf-pack": "^1.0.0",
-    "supercluster": "^2.0.1",
-    "unassertify": "^2.0.0",
-    "unitbezier": "^0.0.0",
-    "vector-tile": "^1.2.1",
-    "vt-pbf": "^2.0.2",
-    "webworkify": "^1.3.0",
-    "whoots-js": "^2.0.0"
-  },
-  "description": "A WebGL interactive maps library",
-  "devDependencies": {
-    "benchmark": "~2.1.0",
-    "browserify": "^13.0.0",
-    "browserify-middleware": "^7.0.0",
-    "concat-stream": "1.5.1",
-    "coveralls": "^2.11.8",
-    "doctrine": "^1.2.1",
-    "documentation": "https://github.com/documentationjs/documentation/archive/bb41619c734e59ef3fbc3648610032efcfdaaace.tar.gz",
-    "documentation-theme-utils": "3.0.0",
-    "envify": "^3.4.0",
-    "eslint": "^2.5.3",
-    "eslint-config-mourner": "^2.0.0",
-    "eslint-plugin-html": "^1.5.1",
-    "express": "^4.13.4",
-    "gl": "^4.0.1",
-    "handlebars": "4.0.5",
-    "highlight.js": "9.3.0",
-    "istanbul": "^0.4.2",
-    "lodash": "^4.13.1",
-    "mapbox-gl-test-suite": "github:mapbox/mapbox-gl-test-suite#dd5b5c93e13f8760bad6c6288d18f286f0a752d4",
-    "minifyify": "^7.0.1",
-    "nyc": "6.4.0",
-    "remark": "4.2.2",
-    "remark-html": "3.0.0",
-    "sinon": "^1.15.4",
-    "st": "^1.0.0",
-    "tap": "^5.7.0",
-    "through": "^2.3.7",
-    "unist-util-visit": "1.1.0",
-    "vinyl": "1.1.1",
-    "vinyl-fs": "2.4.3",
-    "watchify": "^3.2.2"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "64cba9e14ea0481f69d24185060f6b7f0f9ac39a",
-    "tarball": "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.21.0.tgz"
-  },
-  "engines": {
-    "node": ">=4.0.0"
-  },
-  "gitHead": "8bb551b3bc5d00eaebe6f8044fed59c5428a7873",
-  "homepage": "https://github.com/mapbox/mapbox-gl-js#readme",
-  "license": "BSD-3-Clause",
-  "main": "js/mapbox-gl.js",
-  "maintainers": [
-    {
-      "name": "aaronlidman",
-      "email": "aaronlidman@gmail.com"
-    },
-    {
-      "name": "ajashton",
-      "email": "aj.ashton@gmail.com"
-    },
-    {
-      "name": "ansis",
-      "email": "ansis.brammanis@gmail.com"
-    },
-    {
-      "name": "bergwerkgis",
-      "email": "wb@bergwerk-gis.at"
-    },
-    {
-      "name": "bhousel",
-      "email": "bryan@mapbox.com"
-    },
-    {
-      "name": "bsudekum",
-      "email": "bobby@mapbox.com"
-    },
-    {
-      "name": "camilleanne",
-      "email": "camille@mapbox.com"
-    },
-    {
-      "name": "dnomadb",
-      "email": "damon@mapbox.com"
-    },
-    {
-      "name": "dthompson",
-      "email": "dthompson@gmail.com"
-    },
-    {
-      "name": "emilymcafee",
-      "email": "emily@mapbox.com"
-    },
-    {
-      "name": "flippmoke",
-      "email": "flippmoke@gmail.com"
-    },
-    {
-      "name": "freenerd",
-      "email": "spam@freenerd.de"
-    },
-    {
-      "name": "gretacb",
-      "email": "carol@mapbox.com"
-    },
-    {
-      "name": "ian29",
-      "email": "ian.villeda@gmail.com"
-    },
-    {
-      "name": "ianshward",
-      "email": "ian@mapbox.com"
-    },
-    {
-      "name": "ingalls",
-      "email": "nicholas.ingalls@gmail.com"
-    },
-    {
-      "name": "jfirebaugh",
-      "email": "john.firebaugh@gmail.com"
-    },
-    {
-      "name": "jrpruit1",
-      "email": "jake@jakepruitt.com"
-    },
-    {
-      "name": "karenzshea",
-      "email": "karen@mapbox.com"
-    },
-    {
-      "name": "kkaefer",
-      "email": "kkaefer@gmail.com"
-    },
-    {
-      "name": "lbud",
-      "email": "lauren@mapbox.com"
-    },
-    {
-      "name": "lucaswoj",
-      "email": "lucas@lucaswoj.com"
-    },
-    {
-      "name": "lxbarth",
-      "email": "alex@mapbox.com"
-    },
-    {
-      "name": "lyzidiamond",
-      "email": "lyzi@mapbox.com"
-    },
-    {
-      "name": "mapbox-admin",
-      "email": "accounts@mapbox.com"
-    },
-    {
-      "name": "mateov",
-      "email": "matt@mapbox.com"
-    },
-    {
-      "name": "mcwhittemore",
-      "email": "mcwhittemore@gmail.com"
-    },
-    {
-      "name": "miccolis",
-      "email": "jeff@miccolis.net"
-    },
-    {
-      "name": "mikemorris",
-      "email": "michael.patrick.morris@gmail.com"
-    },
-    {
-      "name": "morganherlocker",
-      "email": "morgan.herlocker@gmail.com"
-    },
-    {
-      "name": "mourner",
-      "email": "agafonkin@gmail.com"
-    },
-    {
-      "name": "nickidlugash",
-      "email": "nicki@mapbox.com"
-    },
-    {
-      "name": "rclark",
-      "email": "ryan.clark.j@gmail.com"
-    },
-    {
-      "name": "samanbb",
-      "email": "saman@mapbox.com"
-    },
-    {
-      "name": "sbma44",
-      "email": "tlee@mapbox.com"
-    },
-    {
-      "name": "scothis",
-      "email": "scothis@gmail.com"
-    },
-    {
-      "name": "sgillies",
-      "email": "sean@mapbox.com"
-    },
-    {
-      "name": "springmeyer",
-      "email": "dane@mapbox.com"
-    },
-    {
-      "name": "themarex",
-      "email": "patrick@mapbox.com"
-    },
-    {
-      "name": "tmcw",
-      "email": "tom@macwright.org"
-    },
-    {
-      "name": "tristen",
-      "email": "tristen.brown@gmail.com"
-    },
-    {
-      "name": "willwhite",
-      "email": "will@mapbox.com"
-    },
-    {
-      "name": "yhahn",
-      "email": "young@mapbox.com"
-    }
-  ],
-  "name": "mapbox-gl",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/mapbox/mapbox-gl-js.git"
-  },
-  "scripts": {
-    "//": "The 'build' script is invoked by publisher when publishing docs on the mb-pages branch",
-    "build": "npm run build-docs",
-    "build-dev": "browserify js/mapbox-gl.js --debug --ignore-transform unassertify --standalone mapboxgl > dist/mapbox-gl-dev.js && tap --no-coverage test/build/dev.test.js",
-    "build-docs": "documentation build --github --format html -c documentation.yml --theme ./docs/_theme --output docs/api/",
-    "build-min": "browserify js/mapbox-gl.js --debug --plugin [minifyify --map mapbox-gl.js.map --output dist/mapbox-gl.js.map] --standalone mapboxgl > dist/mapbox-gl.js && tap --no-coverage test/build/min.test.js",
-    "lint": "eslint js test bench server.js docs/_posts/examples/*.html",
-    "open-changed-examples": "git diff --name-only mb-pages HEAD -- docs/_posts/examples/*.html | awk '{print \"http://127.0.0.1:4000/mapbox-gl-js/example/\" substr($0,33,length($0)-37)}' | xargs open",
-    "start": "node server.js",
-    "start-docs": "npm run build-min && npm run build-docs && jekyll serve -w",
-    "test": "npm run lint && tap --reporter dot test/js/*/*.js",
-    "test-suite": "node test/render.test.js && node test/query.test.js"
-  },
-  "version": "0.21.0"
+},{}],546:[function(require,module,exports){
+'use strict';
+var WebWorker = require('./web_worker');
+module.exports = WorkerPool;
+function WorkerPool() {
+    this.active = {};
 }
-
-},{}],538:[function(require,module,exports){
+WorkerPool.prototype = {
+    acquire: function (mapId) {
+        if (!this.workers) {
+            var workerCount = require('../mapbox-gl').workerCount;
+            this.workers = [];
+            while (this.workers.length < workerCount) {
+                this.workers.push(new WebWorker());
+            }
+        }
+        this.active[mapId] = true;
+        return this.workers.slice();
+    },
+    release: function (mapId) {
+        delete this.active[mapId];
+        if (Object.keys(this.active).length === 0) {
+            this.workers.forEach(function (w) {
+                w.terminate();
+            });
+            this.workers = null;
+        }
+    }
+};
+},{"../mapbox-gl":443,"./web_worker":528}],547:[function(require,module,exports){
+module.exports={"version":"0.25.1"}
+},{}],548:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -37924,7 +35883,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],539:[function(require,module,exports){
+},{}],549:[function(require,module,exports){
 /**
  * Executes a function on each of an objects own enumerable properties. The
  *  callback function will receive three arguments: the value of the current
@@ -37943,7 +35902,7 @@ function objectForeach(obj, callback) {
     return obj;
 };
 module.exports = objectForeach;
-},{}],540:[function(require,module,exports){
+},{}],550:[function(require,module,exports){
 /*
 License gpl-3.0 http://www.gnu.org/licenses/gpl-3.0-standalone.html
 */
@@ -38164,7 +36123,7 @@ function objectMerge(shadows) {
 }
 objectMerge.createOptions = createOptions;
 module.exports = objectMerge;
-},{"clone-function":13,"object-foreach":539}],541:[function(require,module,exports){
+},{"clone-function":13,"object-foreach":549}],551:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -38393,7 +36352,7 @@ var substr = 'ab'.substr(-1) === 'b'
 
 }).call(this,require('_process'))
 
-},{"_process":545}],542:[function(require,module,exports){
+},{"_process":555}],552:[function(require,module,exports){
 'use strict';
 
 // lightweight Buffer shim for pbf browser build
@@ -38554,7 +36513,7 @@ function encodeString(str) {
     return bytes;
 }
 
-},{"ieee754":362}],543:[function(require,module,exports){
+},{"ieee754":363}],553:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -38981,7 +36940,7 @@ function writePackedSFixed64(arr, pbf) { for (var i = 0; i < arr.length; i++) pb
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./buffer":542}],544:[function(require,module,exports){
+},{"./buffer":552}],554:[function(require,module,exports){
 'use strict';
 
 module.exports = Point;
@@ -39114,7 +37073,7 @@ Point.convert = function (a) {
     return a;
 };
 
-},{}],545:[function(require,module,exports){
+},{}],555:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -39210,7 +37169,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],546:[function(require,module,exports){
+},{}],556:[function(require,module,exports){
 (function (process){
 module.exports = process.env.PROMISE_QUEUE_COVERAGE ?
     require('./lib-cov') :
@@ -39218,9 +37177,9 @@ module.exports = process.env.PROMISE_QUEUE_COVERAGE ?
 
 }).call(this,require('_process'))
 
-},{"./lib":548,"./lib-cov":547,"_process":545}],547:[function(require,module,exports){
+},{"./lib":558,"./lib-cov":557,"_process":555}],557:[function(require,module,exports){
 
-},{}],548:[function(require,module,exports){
+},{}],558:[function(require,module,exports){
 /* global define, Promise */
 (function (root, factory) {
     'use strict';
@@ -39400,7 +37359,7 @@ module.exports = process.env.PROMISE_QUEUE_COVERAGE ?
     return Queue;
 });
 
-},{}],549:[function(require,module,exports){
+},{}],559:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -39938,7 +37897,7 @@ module.exports = process.env.PROMISE_QUEUE_COVERAGE ?
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],550:[function(require,module,exports){
+},{}],560:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -40024,7 +37983,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],551:[function(require,module,exports){
+},{}],561:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -40111,13 +38070,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],552:[function(require,module,exports){
+},{}],562:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":550,"./encode":551}],553:[function(require,module,exports){
+},{"./decode":560,"./encode":561}],563:[function(require,module,exports){
 'use strict';
 
 module.exports = partialSort;
@@ -40179,7 +38138,7 @@ function defaultCompare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-},{}],554:[function(require,module,exports){
+},{}],564:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40203,7 +38162,7 @@ function appendImportantToEachValue(style) {
   });
 }
 module.exports = exports['default'];
-},{"./append-px-if-needed":555,"./map-object":567}],555:[function(require,module,exports){
+},{"./append-px-if-needed":565,"./map-object":577}],565:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40253,7 +38212,7 @@ function appendPxIfNeeded(propertyName, value) {
   return needsPxSuffix ? value + 'px' : value;
 }
 module.exports = exports['default'];
-},{}],556:[function(require,module,exports){
+},{}],566:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40289,7 +38248,7 @@ var camelCasePropsToDashCase = function camelCasePropsToDashCase(prefixedStyle) 
 
 exports.default = camelCasePropsToDashCase;
 module.exports = exports['default'];
-},{}],557:[function(require,module,exports){
+},{}],567:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40370,7 +38329,7 @@ StyleRoot = (0, _enhancer2.default)(StyleRoot);
 
 exports.default = StyleRoot;
 module.exports = exports['default'];
-},{"../enhancer":561,"../style-keeper":580,"./style-sheet":558,"react":727}],558:[function(require,module,exports){
+},{"../enhancer":571,"../style-keeper":590,"./style-sheet":568,"react":737}],568:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40445,7 +38404,7 @@ var StyleSheet = (_temp = _class = function (_Component) {
 }, _temp);
 exports.default = StyleSheet;
 module.exports = exports['default'];
-},{"../style-keeper":580,"react":727}],559:[function(require,module,exports){
+},{"../style-keeper":590,"react":737}],569:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40538,7 +38497,7 @@ var Style = _react2.default.createClass({
 
 exports.default = Style;
 module.exports = exports['default'];
-},{"../css-rule-set-to-string":560,"react":727}],560:[function(require,module,exports){
+},{"../css-rule-set-to-string":570,"react":737}],570:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40583,7 +38542,7 @@ function cssRuleSetToString(selector, rules, userAgent) {
   return selector + '{' + serializedRules + '}';
 }
 module.exports = exports['default'];
-},{"./append-px-if-needed":555,"./camel-case-props-to-dash-case":556,"./map-object":567,"./prefixer":578}],561:[function(require,module,exports){
+},{"./append-px-if-needed":565,"./camel-case-props-to-dash-case":566,"./map-object":577,"./prefixer":588}],571:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -40766,7 +38725,7 @@ function enhanceWithRadium(configOrComposedComponent) {
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./resolve-styles.js":579,"./style-keeper.js":580,"_process":545,"react":727}],562:[function(require,module,exports){
+},{"./resolve-styles.js":589,"./style-keeper.js":590,"_process":555,"react":737}],572:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40780,7 +38739,7 @@ var getStateKey = function getStateKey(elementKey) {
 
 exports.default = getStateKey;
 module.exports = exports['default'];
-},{}],563:[function(require,module,exports){
+},{}],573:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40801,7 +38760,7 @@ var getState = function getState(state, elementKey, value) {
 
 exports.default = getState;
 module.exports = exports['default'];
-},{"./get-state-key":562}],564:[function(require,module,exports){
+},{"./get-state-key":572}],574:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40829,7 +38788,7 @@ function hash(text) {
   return (hashValue >>> 0).toString(16);
 }
 module.exports = exports['default'];
-},{}],565:[function(require,module,exports){
+},{}],575:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -40887,7 +38846,7 @@ exports.default = Radium;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./components/style":559,"./components/style-root":557,"./enhancer":561,"./get-state":563,"./keyframes":566,"./plugins":570,"./resolve-styles":579,"_process":545}],566:[function(require,module,exports){
+},{"./components/style":569,"./components/style-root":567,"./enhancer":571,"./get-state":573,"./keyframes":576,"./plugins":580,"./resolve-styles":589,"_process":555}],576:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40922,7 +38881,7 @@ function keyframes(keyframeRules, name) {
   };
 }
 module.exports = exports['default'];
-},{"./css-rule-set-to-string":560,"./hash":564,"./prefixer":578}],567:[function(require,module,exports){
+},{"./css-rule-set-to-string":570,"./hash":574,"./prefixer":588}],577:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -40936,7 +38895,7 @@ function mapObject(object, mapper) {
   }, {});
 }
 module.exports = exports['default'];
-},{}],568:[function(require,module,exports){
+},{}],578:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40996,7 +38955,7 @@ function mergeStyles(styles) {
 
   return result;
 }
-},{}],569:[function(require,module,exports){
+},{}],579:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -41061,7 +39020,7 @@ exports.default = _checkProps;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"_process":545}],570:[function(require,module,exports){
+},{"_process":555}],580:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41110,7 +39069,7 @@ exports.default = {
   visited: _visitedPlugin2.default
 };
 module.exports = exports['default'];
-},{"./check-props-plugin":569,"./keyframes-plugin":571,"./merge-style-array-plugin":572,"./prefix-plugin":574,"./resolve-interaction-styles-plugin":575,"./resolve-media-queries-plugin":576,"./visited-plugin":577}],571:[function(require,module,exports){
+},{"./check-props-plugin":579,"./keyframes-plugin":581,"./merge-style-array-plugin":582,"./prefix-plugin":584,"./resolve-interaction-styles-plugin":585,"./resolve-media-queries-plugin":586,"./visited-plugin":587}],581:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41143,7 +39102,7 @@ function keyframesPlugin(_ref // eslint-disable-line no-shadow
   return { style: newStyle };
 }
 module.exports = exports['default'];
-},{}],572:[function(require,module,exports){
+},{}],582:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41163,7 +39122,7 @@ var mergeStyleArrayPlugin = function mergeStyleArrayPlugin(_ref) {
 
 exports.default = mergeStyleArrayPlugin;
 module.exports = exports['default'];
-},{}],573:[function(require,module,exports){
+},{}],583:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41208,7 +39167,7 @@ exports.default = {
   __triggerForTests: _handleMouseUp
 };
 module.exports = exports['default'];
-},{}],574:[function(require,module,exports){
+},{}],584:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41227,7 +39186,7 @@ function prefixPlugin(_ref // eslint-disable-line no-shadow
   return { style: newStyle };
 }
 module.exports = exports['default'];
-},{"../prefixer":578}],575:[function(require,module,exports){
+},{"../prefixer":588}],585:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41356,7 +39315,7 @@ var resolveInteractionStyles = function resolveInteractionStyles(config) {
 
 exports.default = resolveInteractionStyles;
 module.exports = exports['default'];
-},{"./mouse-up-listener":573}],576:[function(require,module,exports){
+},{"./mouse-up-listener":583}],586:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41533,7 +39492,7 @@ function resolveMediaQueries(_ref3) {
   };
 }
 module.exports = exports['default'];
-},{}],577:[function(require,module,exports){
+},{}],587:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41574,7 +39533,7 @@ function visited(_ref) {
   };
 }
 module.exports = exports['default'];
-},{}],578:[function(require,module,exports){
+},{}],588:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -41656,7 +39615,7 @@ function getPrefixedStyle(style, userAgent) {
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"_process":545,"inline-style-prefixer":379}],579:[function(require,module,exports){
+},{"_process":555,"inline-style-prefixer":380}],589:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -42017,7 +39976,7 @@ exports.default = resolveStyles;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./append-important-to-each-value":554,"./css-rule-set-to-string":560,"./get-state":563,"./get-state-key":562,"./hash":564,"./merge-styles":568,"./plugins/":570,"_process":545,"exenv":311,"react":727}],580:[function(require,module,exports){
+},{"./append-important-to-each-value":564,"./css-rule-set-to-string":570,"./get-state":573,"./get-state-key":572,"./hash":574,"./merge-styles":578,"./plugins/":580,"_process":555,"exenv":311,"react":737}],590:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42085,12 +40044,12 @@ var StyleKeeper = function () {
 
 exports.default = StyleKeeper;
 module.exports = exports['default'];
-},{}],581:[function(require,module,exports){
+},{}],591:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":624}],582:[function(require,module,exports){
+},{"react/lib/ReactDOM":634}],592:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -42217,7 +40176,7 @@ var AutosizeInput = React.createClass({
 });
 
 module.exports = AutosizeInput;
-},{"react":727}],583:[function(require,module,exports){
+},{"react":737}],593:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -42394,7 +40353,7 @@ var Async = _react2['default'].createClass({
 });
 
 module.exports = Async;
-},{"./Select":585,"./utils/stripDiacritics":587,"react":727}],584:[function(require,module,exports){
+},{"./Select":595,"./utils/stripDiacritics":597,"react":737}],594:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -42499,7 +40458,7 @@ var Option = _react2['default'].createClass({
 });
 
 module.exports = Option;
-},{"classnames":12,"react":727}],585:[function(require,module,exports){
+},{"classnames":12,"react":737}],595:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -43450,7 +41409,7 @@ var Select = _react2['default'].createClass({
 
 exports['default'] = Select;
 module.exports = exports['default'];
-},{"./Async":583,"./Option":584,"./Value":586,"./utils/stripDiacritics":587,"classnames":12,"react":727,"react-dom":581,"react-input-autosize":582}],586:[function(require,module,exports){
+},{"./Async":593,"./Option":594,"./Value":596,"./utils/stripDiacritics":597,"classnames":12,"react":737,"react-dom":591,"react-input-autosize":592}],596:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -43555,7 +41514,7 @@ var Value = _react2['default'].createClass({
 });
 
 module.exports = Value;
-},{"classnames":12,"react":727}],587:[function(require,module,exports){
+},{"classnames":12,"react":737}],597:[function(require,module,exports){
 'use strict';
 
 var map = [{ 'base': 'A', 'letters': /[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g }, { 'base': 'AA', 'letters': /[\uA732]/g }, { 'base': 'AE', 'letters': /[\u00C6\u01FC\u01E2]/g }, { 'base': 'AO', 'letters': /[\uA734]/g }, { 'base': 'AU', 'letters': /[\uA736]/g }, { 'base': 'AV', 'letters': /[\uA738\uA73A]/g }, { 'base': 'AY', 'letters': /[\uA73C]/g }, { 'base': 'B', 'letters': /[\u0042\u24B7\uFF22\u1E02\u1E04\u1E06\u0243\u0182\u0181]/g }, { 'base': 'C', 'letters': /[\u0043\u24B8\uFF23\u0106\u0108\u010A\u010C\u00C7\u1E08\u0187\u023B\uA73E]/g }, { 'base': 'D', 'letters': /[\u0044\u24B9\uFF24\u1E0A\u010E\u1E0C\u1E10\u1E12\u1E0E\u0110\u018B\u018A\u0189\uA779]/g }, { 'base': 'DZ', 'letters': /[\u01F1\u01C4]/g }, { 'base': 'Dz', 'letters': /[\u01F2\u01C5]/g }, { 'base': 'E', 'letters': /[\u0045\u24BA\uFF25\u00C8\u00C9\u00CA\u1EC0\u1EBE\u1EC4\u1EC2\u1EBC\u0112\u1E14\u1E16\u0114\u0116\u00CB\u1EBA\u011A\u0204\u0206\u1EB8\u1EC6\u0228\u1E1C\u0118\u1E18\u1E1A\u0190\u018E]/g }, { 'base': 'F', 'letters': /[\u0046\u24BB\uFF26\u1E1E\u0191\uA77B]/g }, { 'base': 'G', 'letters': /[\u0047\u24BC\uFF27\u01F4\u011C\u1E20\u011E\u0120\u01E6\u0122\u01E4\u0193\uA7A0\uA77D\uA77E]/g }, { 'base': 'H', 'letters': /[\u0048\u24BD\uFF28\u0124\u1E22\u1E26\u021E\u1E24\u1E28\u1E2A\u0126\u2C67\u2C75\uA78D]/g }, { 'base': 'I', 'letters': /[\u0049\u24BE\uFF29\u00CC\u00CD\u00CE\u0128\u012A\u012C\u0130\u00CF\u1E2E\u1EC8\u01CF\u0208\u020A\u1ECA\u012E\u1E2C\u0197]/g }, { 'base': 'J', 'letters': /[\u004A\u24BF\uFF2A\u0134\u0248]/g }, { 'base': 'K', 'letters': /[\u004B\u24C0\uFF2B\u1E30\u01E8\u1E32\u0136\u1E34\u0198\u2C69\uA740\uA742\uA744\uA7A2]/g }, { 'base': 'L', 'letters': /[\u004C\u24C1\uFF2C\u013F\u0139\u013D\u1E36\u1E38\u013B\u1E3C\u1E3A\u0141\u023D\u2C62\u2C60\uA748\uA746\uA780]/g }, { 'base': 'LJ', 'letters': /[\u01C7]/g }, { 'base': 'Lj', 'letters': /[\u01C8]/g }, { 'base': 'M', 'letters': /[\u004D\u24C2\uFF2D\u1E3E\u1E40\u1E42\u2C6E\u019C]/g }, { 'base': 'N', 'letters': /[\u004E\u24C3\uFF2E\u01F8\u0143\u00D1\u1E44\u0147\u1E46\u0145\u1E4A\u1E48\u0220\u019D\uA790\uA7A4]/g }, { 'base': 'NJ', 'letters': /[\u01CA]/g }, { 'base': 'Nj', 'letters': /[\u01CB]/g }, { 'base': 'O', 'letters': /[\u004F\u24C4\uFF2F\u00D2\u00D3\u00D4\u1ED2\u1ED0\u1ED6\u1ED4\u00D5\u1E4C\u022C\u1E4E\u014C\u1E50\u1E52\u014E\u022E\u0230\u00D6\u022A\u1ECE\u0150\u01D1\u020C\u020E\u01A0\u1EDC\u1EDA\u1EE0\u1EDE\u1EE2\u1ECC\u1ED8\u01EA\u01EC\u00D8\u01FE\u0186\u019F\uA74A\uA74C]/g }, { 'base': 'OI', 'letters': /[\u01A2]/g }, { 'base': 'OO', 'letters': /[\uA74E]/g }, { 'base': 'OU', 'letters': /[\u0222]/g }, { 'base': 'P', 'letters': /[\u0050\u24C5\uFF30\u1E54\u1E56\u01A4\u2C63\uA750\uA752\uA754]/g }, { 'base': 'Q', 'letters': /[\u0051\u24C6\uFF31\uA756\uA758\u024A]/g }, { 'base': 'R', 'letters': /[\u0052\u24C7\uFF32\u0154\u1E58\u0158\u0210\u0212\u1E5A\u1E5C\u0156\u1E5E\u024C\u2C64\uA75A\uA7A6\uA782]/g }, { 'base': 'S', 'letters': /[\u0053\u24C8\uFF33\u1E9E\u015A\u1E64\u015C\u1E60\u0160\u1E66\u1E62\u1E68\u0218\u015E\u2C7E\uA7A8\uA784]/g }, { 'base': 'T', 'letters': /[\u0054\u24C9\uFF34\u1E6A\u0164\u1E6C\u021A\u0162\u1E70\u1E6E\u0166\u01AC\u01AE\u023E\uA786]/g }, { 'base': 'TZ', 'letters': /[\uA728]/g }, { 'base': 'U', 'letters': /[\u0055\u24CA\uFF35\u00D9\u00DA\u00DB\u0168\u1E78\u016A\u1E7A\u016C\u00DC\u01DB\u01D7\u01D5\u01D9\u1EE6\u016E\u0170\u01D3\u0214\u0216\u01AF\u1EEA\u1EE8\u1EEE\u1EEC\u1EF0\u1EE4\u1E72\u0172\u1E76\u1E74\u0244]/g }, { 'base': 'V', 'letters': /[\u0056\u24CB\uFF36\u1E7C\u1E7E\u01B2\uA75E\u0245]/g }, { 'base': 'VY', 'letters': /[\uA760]/g }, { 'base': 'W', 'letters': /[\u0057\u24CC\uFF37\u1E80\u1E82\u0174\u1E86\u1E84\u1E88\u2C72]/g }, { 'base': 'X', 'letters': /[\u0058\u24CD\uFF38\u1E8A\u1E8C]/g }, { 'base': 'Y', 'letters': /[\u0059\u24CE\uFF39\u1EF2\u00DD\u0176\u1EF8\u0232\u1E8E\u0178\u1EF6\u1EF4\u01B3\u024E\u1EFE]/g }, { 'base': 'Z', 'letters': /[\u005A\u24CF\uFF3A\u0179\u1E90\u017B\u017D\u1E92\u1E94\u01B5\u0224\u2C7F\u2C6B\uA762]/g }, { 'base': 'a', 'letters': /[\u0061\u24D0\uFF41\u1E9A\u00E0\u00E1\u00E2\u1EA7\u1EA5\u1EAB\u1EA9\u00E3\u0101\u0103\u1EB1\u1EAF\u1EB5\u1EB3\u0227\u01E1\u00E4\u01DF\u1EA3\u00E5\u01FB\u01CE\u0201\u0203\u1EA1\u1EAD\u1EB7\u1E01\u0105\u2C65\u0250]/g }, { 'base': 'aa', 'letters': /[\uA733]/g }, { 'base': 'ae', 'letters': /[\u00E6\u01FD\u01E3]/g }, { 'base': 'ao', 'letters': /[\uA735]/g }, { 'base': 'au', 'letters': /[\uA737]/g }, { 'base': 'av', 'letters': /[\uA739\uA73B]/g }, { 'base': 'ay', 'letters': /[\uA73D]/g }, { 'base': 'b', 'letters': /[\u0062\u24D1\uFF42\u1E03\u1E05\u1E07\u0180\u0183\u0253]/g }, { 'base': 'c', 'letters': /[\u0063\u24D2\uFF43\u0107\u0109\u010B\u010D\u00E7\u1E09\u0188\u023C\uA73F\u2184]/g }, { 'base': 'd', 'letters': /[\u0064\u24D3\uFF44\u1E0B\u010F\u1E0D\u1E11\u1E13\u1E0F\u0111\u018C\u0256\u0257\uA77A]/g }, { 'base': 'dz', 'letters': /[\u01F3\u01C6]/g }, { 'base': 'e', 'letters': /[\u0065\u24D4\uFF45\u00E8\u00E9\u00EA\u1EC1\u1EBF\u1EC5\u1EC3\u1EBD\u0113\u1E15\u1E17\u0115\u0117\u00EB\u1EBB\u011B\u0205\u0207\u1EB9\u1EC7\u0229\u1E1D\u0119\u1E19\u1E1B\u0247\u025B\u01DD]/g }, { 'base': 'f', 'letters': /[\u0066\u24D5\uFF46\u1E1F\u0192\uA77C]/g }, { 'base': 'g', 'letters': /[\u0067\u24D6\uFF47\u01F5\u011D\u1E21\u011F\u0121\u01E7\u0123\u01E5\u0260\uA7A1\u1D79\uA77F]/g }, { 'base': 'h', 'letters': /[\u0068\u24D7\uFF48\u0125\u1E23\u1E27\u021F\u1E25\u1E29\u1E2B\u1E96\u0127\u2C68\u2C76\u0265]/g }, { 'base': 'hv', 'letters': /[\u0195]/g }, { 'base': 'i', 'letters': /[\u0069\u24D8\uFF49\u00EC\u00ED\u00EE\u0129\u012B\u012D\u00EF\u1E2F\u1EC9\u01D0\u0209\u020B\u1ECB\u012F\u1E2D\u0268\u0131]/g }, { 'base': 'j', 'letters': /[\u006A\u24D9\uFF4A\u0135\u01F0\u0249]/g }, { 'base': 'k', 'letters': /[\u006B\u24DA\uFF4B\u1E31\u01E9\u1E33\u0137\u1E35\u0199\u2C6A\uA741\uA743\uA745\uA7A3]/g }, { 'base': 'l', 'letters': /[\u006C\u24DB\uFF4C\u0140\u013A\u013E\u1E37\u1E39\u013C\u1E3D\u1E3B\u017F\u0142\u019A\u026B\u2C61\uA749\uA781\uA747]/g }, { 'base': 'lj', 'letters': /[\u01C9]/g }, { 'base': 'm', 'letters': /[\u006D\u24DC\uFF4D\u1E3F\u1E41\u1E43\u0271\u026F]/g }, { 'base': 'n', 'letters': /[\u006E\u24DD\uFF4E\u01F9\u0144\u00F1\u1E45\u0148\u1E47\u0146\u1E4B\u1E49\u019E\u0272\u0149\uA791\uA7A5]/g }, { 'base': 'nj', 'letters': /[\u01CC]/g }, { 'base': 'o', 'letters': /[\u006F\u24DE\uFF4F\u00F2\u00F3\u00F4\u1ED3\u1ED1\u1ED7\u1ED5\u00F5\u1E4D\u022D\u1E4F\u014D\u1E51\u1E53\u014F\u022F\u0231\u00F6\u022B\u1ECF\u0151\u01D2\u020D\u020F\u01A1\u1EDD\u1EDB\u1EE1\u1EDF\u1EE3\u1ECD\u1ED9\u01EB\u01ED\u00F8\u01FF\u0254\uA74B\uA74D\u0275]/g }, { 'base': 'oi', 'letters': /[\u01A3]/g }, { 'base': 'ou', 'letters': /[\u0223]/g }, { 'base': 'oo', 'letters': /[\uA74F]/g }, { 'base': 'p', 'letters': /[\u0070\u24DF\uFF50\u1E55\u1E57\u01A5\u1D7D\uA751\uA753\uA755]/g }, { 'base': 'q', 'letters': /[\u0071\u24E0\uFF51\u024B\uA757\uA759]/g }, { 'base': 'r', 'letters': /[\u0072\u24E1\uFF52\u0155\u1E59\u0159\u0211\u0213\u1E5B\u1E5D\u0157\u1E5F\u024D\u027D\uA75B\uA7A7\uA783]/g }, { 'base': 's', 'letters': /[\u0073\u24E2\uFF53\u00DF\u015B\u1E65\u015D\u1E61\u0161\u1E67\u1E63\u1E69\u0219\u015F\u023F\uA7A9\uA785\u1E9B]/g }, { 'base': 't', 'letters': /[\u0074\u24E3\uFF54\u1E6B\u1E97\u0165\u1E6D\u021B\u0163\u1E71\u1E6F\u0167\u01AD\u0288\u2C66\uA787]/g }, { 'base': 'tz', 'letters': /[\uA729]/g }, { 'base': 'u', 'letters': /[\u0075\u24E4\uFF55\u00F9\u00FA\u00FB\u0169\u1E79\u016B\u1E7B\u016D\u00FC\u01DC\u01D8\u01D6\u01DA\u1EE7\u016F\u0171\u01D4\u0215\u0217\u01B0\u1EEB\u1EE9\u1EEF\u1EED\u1EF1\u1EE5\u1E73\u0173\u1E77\u1E75\u0289]/g }, { 'base': 'v', 'letters': /[\u0076\u24E5\uFF56\u1E7D\u1E7F\u028B\uA75F\u028C]/g }, { 'base': 'vy', 'letters': /[\uA761]/g }, { 'base': 'w', 'letters': /[\u0077\u24E6\uFF57\u1E81\u1E83\u0175\u1E87\u1E85\u1E98\u1E89\u2C73]/g }, { 'base': 'x', 'letters': /[\u0078\u24E7\uFF58\u1E8B\u1E8D]/g }, { 'base': 'y', 'letters': /[\u0079\u24E8\uFF59\u1EF3\u00FD\u0177\u1EF9\u0233\u1E8F\u00FF\u1EF7\u1E99\u1EF5\u01B4\u024F\u1EFF]/g }, { 'base': 'z', 'letters': /[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g }];
@@ -43566,7 +41525,7 @@ module.exports = function stripDiacritics(str) {
 	}
 	return str;
 };
-},{}],588:[function(require,module,exports){
+},{}],598:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -43591,7 +41550,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactDOMComponentTree":628,"fbjs/lib/focusNode":321}],589:[function(require,module,exports){
+},{"./ReactDOMComponentTree":638,"fbjs/lib/focusNode":321}],599:[function(require,module,exports){
 /**
  * Copyright 2013-present Facebook, Inc.
  * All rights reserved.
@@ -43980,7 +41939,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":603,"./EventPropagators":607,"./FallbackCompositionState":608,"./SyntheticCompositionEvent":683,"./SyntheticInputEvent":687,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/keyOf":331}],590:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPropagators":617,"./FallbackCompositionState":618,"./SyntheticCompositionEvent":693,"./SyntheticInputEvent":697,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/keyOf":331}],600:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44129,7 +42088,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],591:[function(require,module,exports){
+},{}],601:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -44338,7 +42297,7 @@ var CSSPropertyOperations = {
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
 
-},{"./CSSProperty":590,"./ReactInstrumentation":659,"./dangerousStyleValue":701,"_process":545,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/camelizeStyleName":315,"fbjs/lib/hyphenateStyleName":326,"fbjs/lib/memoizeStringOnly":333,"fbjs/lib/warning":337}],592:[function(require,module,exports){
+},{"./CSSProperty":600,"./ReactInstrumentation":669,"./dangerousStyleValue":711,"_process":555,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/camelizeStyleName":315,"fbjs/lib/hyphenateStyleName":326,"fbjs/lib/memoizeStringOnly":333,"fbjs/lib/warning":337}],602:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -44448,7 +42407,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
 
-},{"./PooledClass":612,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"object-assign":538}],593:[function(require,module,exports){
+},{"./PooledClass":622,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"object-assign":548}],603:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -44774,7 +42733,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":603,"./EventPluginHub":604,"./EventPropagators":607,"./ReactDOMComponentTree":628,"./ReactUpdates":676,"./SyntheticEvent":685,"./getEventTarget":709,"./isEventSupported":716,"./isTextInputElement":717,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/keyOf":331}],594:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPluginHub":614,"./EventPropagators":617,"./ReactDOMComponentTree":638,"./ReactUpdates":686,"./SyntheticEvent":695,"./getEventTarget":719,"./isEventSupported":726,"./isTextInputElement":727,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/keyOf":331}],604:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -44972,7 +42931,7 @@ var DOMChildrenOperations = {
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
 
-},{"./DOMLazyTree":595,"./Danger":599,"./ReactDOMComponentTree":628,"./ReactInstrumentation":659,"./ReactMultiChildUpdateTypes":664,"./createMicrosoftUnsafeLocalFunction":700,"./setInnerHTML":722,"./setTextContent":723,"_process":545}],595:[function(require,module,exports){
+},{"./DOMLazyTree":605,"./Danger":609,"./ReactDOMComponentTree":638,"./ReactInstrumentation":669,"./ReactMultiChildUpdateTypes":674,"./createMicrosoftUnsafeLocalFunction":710,"./setInnerHTML":732,"./setTextContent":733,"_process":555}],605:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -45091,7 +43050,7 @@ DOMLazyTree.queueHTML = queueHTML;
 DOMLazyTree.queueText = queueText;
 
 module.exports = DOMLazyTree;
-},{"./DOMNamespaces":596,"./createMicrosoftUnsafeLocalFunction":700,"./setInnerHTML":722,"./setTextContent":723}],596:[function(require,module,exports){
+},{"./DOMNamespaces":606,"./createMicrosoftUnsafeLocalFunction":710,"./setInnerHTML":732,"./setTextContent":733}],606:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45112,7 +43071,7 @@ var DOMNamespaces = {
 };
 
 module.exports = DOMNamespaces;
-},{}],597:[function(require,module,exports){
+},{}],607:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45331,7 +43290,7 @@ var DOMProperty = {
 module.exports = DOMProperty;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],598:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],608:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45571,7 +43530,7 @@ var DOMPropertyOperations = {
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":597,"./ReactDOMComponentTree":628,"./ReactDOMInstrumentation":636,"./ReactInstrumentation":659,"./quoteAttributeValueForBrowser":719,"_process":545,"fbjs/lib/warning":337}],599:[function(require,module,exports){
+},{"./DOMProperty":607,"./ReactDOMComponentTree":638,"./ReactDOMInstrumentation":646,"./ReactInstrumentation":669,"./quoteAttributeValueForBrowser":729,"_process":555,"fbjs/lib/warning":337}],609:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -45721,7 +43680,7 @@ var Danger = {
 module.exports = Danger;
 }).call(this,require('_process'))
 
-},{"./DOMLazyTree":595,"./reactProdInvariant":720,"_process":545,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/createNodesFromMarkup":318,"fbjs/lib/emptyFunction":319,"fbjs/lib/getMarkupWrap":323,"fbjs/lib/invariant":327}],600:[function(require,module,exports){
+},{"./DOMLazyTree":605,"./reactProdInvariant":730,"_process":555,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/createNodesFromMarkup":318,"fbjs/lib/emptyFunction":319,"fbjs/lib/getMarkupWrap":323,"fbjs/lib/invariant":327}],610:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45749,7 +43708,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":331}],601:[function(require,module,exports){
+},{"fbjs/lib/keyOf":331}],611:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45800,7 +43759,7 @@ var DisabledInputUtils = {
 };
 
 module.exports = DisabledInputUtils;
-},{}],602:[function(require,module,exports){
+},{}],612:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -45906,7 +43865,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":603,"./EventPropagators":607,"./ReactDOMComponentTree":628,"./SyntheticMouseEvent":689,"fbjs/lib/keyOf":331}],603:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPropagators":617,"./ReactDOMComponentTree":638,"./SyntheticMouseEvent":699,"fbjs/lib/keyOf":331}],613:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46004,7 +43963,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":330}],604:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":330}],614:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46249,7 +44208,7 @@ var EventPluginHub = {
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
 
-},{"./EventPluginRegistry":605,"./EventPluginUtils":606,"./ReactErrorUtils":650,"./accumulateInto":696,"./forEachAccumulated":705,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],605:[function(require,module,exports){
+},{"./EventPluginRegistry":615,"./EventPluginUtils":616,"./ReactErrorUtils":660,"./accumulateInto":706,"./forEachAccumulated":715,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],615:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46500,7 +44459,7 @@ var EventPluginRegistry = {
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],606:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],616:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46733,7 +44692,7 @@ var EventPluginUtils = {
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
 
-},{"./EventConstants":603,"./ReactErrorUtils":650,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],607:[function(require,module,exports){
+},{"./EventConstants":613,"./ReactErrorUtils":660,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],617:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -46874,7 +44833,7 @@ var EventPropagators = {
 module.exports = EventPropagators;
 }).call(this,require('_process'))
 
-},{"./EventConstants":603,"./EventPluginHub":604,"./EventPluginUtils":606,"./accumulateInto":696,"./forEachAccumulated":705,"_process":545,"fbjs/lib/warning":337}],608:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPluginHub":614,"./EventPluginUtils":616,"./accumulateInto":706,"./forEachAccumulated":715,"_process":555,"fbjs/lib/warning":337}],618:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -46970,7 +44929,7 @@ _assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./PooledClass":612,"./getTextContentAccessor":713,"object-assign":538}],609:[function(require,module,exports){
+},{"./PooledClass":622,"./getTextContentAccessor":723,"object-assign":548}],619:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47179,7 +45138,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":597}],610:[function(require,module,exports){
+},{"./DOMProperty":607}],620:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47238,7 +45197,7 @@ var KeyEscapeUtils = {
 };
 
 module.exports = KeyEscapeUtils;
-},{}],611:[function(require,module,exports){
+},{}],621:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47377,7 +45336,7 @@ var LinkedValueUtils = {
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
 
-},{"./ReactPropTypeLocations":669,"./ReactPropTypes":670,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],612:[function(require,module,exports){
+},{"./ReactPropTypeLocations":679,"./ReactPropTypes":680,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],622:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47502,7 +45461,7 @@ var PooledClass = {
 module.exports = PooledClass;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],613:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],623:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -47593,7 +45552,7 @@ var React = {
 module.exports = React;
 }).call(this,require('_process'))
 
-},{"./ReactChildren":616,"./ReactClass":617,"./ReactComponent":618,"./ReactDOMFactories":632,"./ReactElement":647,"./ReactElementValidator":648,"./ReactPropTypes":670,"./ReactVersion":677,"./onlyChild":718,"_process":545,"fbjs/lib/warning":337,"object-assign":538}],614:[function(require,module,exports){
+},{"./ReactChildren":626,"./ReactClass":627,"./ReactComponent":628,"./ReactDOMFactories":642,"./ReactElement":657,"./ReactElementValidator":658,"./ReactPropTypes":680,"./ReactVersion":687,"./onlyChild":728,"_process":555,"fbjs/lib/warning":337,"object-assign":548}],624:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -47911,7 +45870,7 @@ var ReactBrowserEventEmitter = _assign({}, ReactEventEmitterMixin, {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":603,"./EventPluginRegistry":605,"./ReactEventEmitterMixin":651,"./ViewportMetrics":695,"./getVendorPrefixedEventName":714,"./isEventSupported":716,"object-assign":538}],615:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPluginRegistry":615,"./ReactEventEmitterMixin":661,"./ViewportMetrics":705,"./getVendorPrefixedEventName":724,"./isEventSupported":726,"object-assign":548}],625:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -48049,7 +46008,7 @@ var ReactChildReconciler = {
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
 
-},{"./KeyEscapeUtils":610,"./ReactComponentTreeDevtool":621,"./ReactReconciler":672,"./instantiateReactComponent":715,"./shouldUpdateReactComponent":724,"./traverseAllChildren":725,"_process":545,"fbjs/lib/warning":337}],616:[function(require,module,exports){
+},{"./KeyEscapeUtils":620,"./ReactComponentTreeDevtool":631,"./ReactReconciler":682,"./instantiateReactComponent":725,"./shouldUpdateReactComponent":734,"./traverseAllChildren":735,"_process":555,"fbjs/lib/warning":337}],626:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -48241,7 +46200,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":612,"./ReactElement":647,"./traverseAllChildren":725,"fbjs/lib/emptyFunction":319}],617:[function(require,module,exports){
+},{"./PooledClass":622,"./ReactElement":657,"./traverseAllChildren":735,"fbjs/lib/emptyFunction":319}],627:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -48970,7 +46929,7 @@ var ReactClass = {
 module.exports = ReactClass;
 }).call(this,require('_process'))
 
-},{"./ReactComponent":618,"./ReactElement":647,"./ReactNoopUpdateQueue":666,"./ReactPropTypeLocationNames":668,"./ReactPropTypeLocations":669,"./reactProdInvariant":720,"_process":545,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/keyMirror":330,"fbjs/lib/keyOf":331,"fbjs/lib/warning":337,"object-assign":538}],618:[function(require,module,exports){
+},{"./ReactComponent":628,"./ReactElement":657,"./ReactNoopUpdateQueue":676,"./ReactPropTypeLocationNames":678,"./ReactPropTypeLocations":679,"./reactProdInvariant":730,"_process":555,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/keyMirror":330,"fbjs/lib/keyOf":331,"fbjs/lib/warning":337,"object-assign":548}],628:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -49092,7 +47051,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactComponent;
 }).call(this,require('_process'))
 
-},{"./ReactNoopUpdateQueue":666,"./canDefineProperty":698,"./reactProdInvariant":720,"_process":545,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],619:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":676,"./canDefineProperty":708,"./reactProdInvariant":730,"_process":555,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],629:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -49132,7 +47091,7 @@ var ReactComponentBrowserEnvironment = {
 };
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./DOMChildrenOperations":594,"./ReactDOMIDOperations":634}],620:[function(require,module,exports){
+},{"./DOMChildrenOperations":604,"./ReactDOMIDOperations":644}],630:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -49189,7 +47148,7 @@ var ReactComponentEnvironment = {
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],621:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],631:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -49416,7 +47375,7 @@ var ReactComponentTreeDevtool = {
 module.exports = ReactComponentTreeDevtool;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":623,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],622:[function(require,module,exports){
+},{"./ReactCurrentOwner":633,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],632:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50303,7 +48262,7 @@ var ReactCompositeComponent = {
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
 
-},{"./ReactComponentEnvironment":620,"./ReactCurrentOwner":623,"./ReactElement":647,"./ReactErrorUtils":650,"./ReactInstanceMap":658,"./ReactInstrumentation":659,"./ReactNodeTypes":665,"./ReactPropTypeLocations":669,"./ReactReconciler":672,"./ReactUpdateQueue":675,"./checkReactTypeSpec":699,"./reactProdInvariant":720,"./shouldUpdateReactComponent":724,"_process":545,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":538}],623:[function(require,module,exports){
+},{"./ReactComponentEnvironment":630,"./ReactCurrentOwner":633,"./ReactElement":657,"./ReactErrorUtils":660,"./ReactInstanceMap":668,"./ReactInstrumentation":669,"./ReactNodeTypes":675,"./ReactPropTypeLocations":679,"./ReactReconciler":682,"./ReactUpdateQueue":685,"./checkReactTypeSpec":709,"./reactProdInvariant":730,"./shouldUpdateReactComponent":734,"_process":555,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":548}],633:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50335,7 +48294,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],624:[function(require,module,exports){
+},{}],634:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -50440,7 +48399,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = React;
 }).call(this,require('_process'))
 
-},{"./ReactDOMComponentTree":628,"./ReactDefaultInjection":646,"./ReactMount":662,"./ReactReconciler":672,"./ReactUpdates":676,"./ReactVersion":677,"./findDOMNode":703,"./getHostComponentFromComposite":710,"./renderSubtreeIntoContainer":721,"_process":545,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/warning":337}],625:[function(require,module,exports){
+},{"./ReactDOMComponentTree":638,"./ReactDefaultInjection":656,"./ReactMount":672,"./ReactReconciler":682,"./ReactUpdates":686,"./ReactVersion":687,"./findDOMNode":713,"./getHostComponentFromComposite":720,"./renderSubtreeIntoContainer":731,"_process":555,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/warning":337}],635:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -50465,7 +48424,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{"./DisabledInputUtils":601}],626:[function(require,module,exports){
+},{"./DisabledInputUtils":611}],636:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -51472,7 +49431,7 @@ _assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mi
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
 
-},{"./AutoFocusUtils":588,"./CSSPropertyOperations":591,"./DOMLazyTree":595,"./DOMNamespaces":596,"./DOMProperty":597,"./DOMPropertyOperations":598,"./EventConstants":603,"./EventPluginHub":604,"./EventPluginRegistry":605,"./ReactBrowserEventEmitter":614,"./ReactComponentBrowserEnvironment":619,"./ReactDOMButton":625,"./ReactDOMComponentFlags":627,"./ReactDOMComponentTree":628,"./ReactDOMInput":635,"./ReactDOMOption":637,"./ReactDOMSelect":638,"./ReactDOMTextarea":641,"./ReactInstrumentation":659,"./ReactMultiChild":663,"./ReactServerRenderingTransaction":674,"./escapeTextContentForBrowser":702,"./isEventSupported":716,"./reactProdInvariant":720,"./validateDOMNesting":726,"_process":545,"fbjs/lib/emptyFunction":319,"fbjs/lib/invariant":327,"fbjs/lib/keyOf":331,"fbjs/lib/shallowEqual":336,"fbjs/lib/warning":337,"object-assign":538}],627:[function(require,module,exports){
+},{"./AutoFocusUtils":598,"./CSSPropertyOperations":601,"./DOMLazyTree":605,"./DOMNamespaces":606,"./DOMProperty":607,"./DOMPropertyOperations":608,"./EventConstants":613,"./EventPluginHub":614,"./EventPluginRegistry":615,"./ReactBrowserEventEmitter":624,"./ReactComponentBrowserEnvironment":629,"./ReactDOMButton":635,"./ReactDOMComponentFlags":637,"./ReactDOMComponentTree":638,"./ReactDOMInput":645,"./ReactDOMOption":647,"./ReactDOMSelect":648,"./ReactDOMTextarea":651,"./ReactInstrumentation":669,"./ReactMultiChild":673,"./ReactServerRenderingTransaction":684,"./escapeTextContentForBrowser":712,"./isEventSupported":726,"./reactProdInvariant":730,"./validateDOMNesting":736,"_process":555,"fbjs/lib/emptyFunction":319,"fbjs/lib/invariant":327,"fbjs/lib/keyOf":331,"fbjs/lib/shallowEqual":336,"fbjs/lib/warning":337,"object-assign":548}],637:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -51491,7 +49450,7 @@ var ReactDOMComponentFlags = {
 };
 
 module.exports = ReactDOMComponentFlags;
-},{}],628:[function(require,module,exports){
+},{}],638:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -51683,7 +49642,7 @@ var ReactDOMComponentTree = {
 module.exports = ReactDOMComponentTree;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":597,"./ReactDOMComponentFlags":627,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],629:[function(require,module,exports){
+},{"./DOMProperty":607,"./ReactDOMComponentFlags":637,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],639:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -51720,7 +49679,7 @@ function ReactDOMContainerInfo(topLevelWrapper, node) {
 module.exports = ReactDOMContainerInfo;
 }).call(this,require('_process'))
 
-},{"./validateDOMNesting":726,"_process":545}],630:[function(require,module,exports){
+},{"./validateDOMNesting":736,"_process":555}],640:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -51791,7 +49750,7 @@ ReactDOMDebugTool.addDevtool(ReactDOMUnknownPropertyDevtool);
 module.exports = ReactDOMDebugTool;
 }).call(this,require('_process'))
 
-},{"./ReactDOMUnknownPropertyDevtool":643,"./ReactDebugTool":644,"_process":545,"fbjs/lib/warning":337}],631:[function(require,module,exports){
+},{"./ReactDOMUnknownPropertyDevtool":653,"./ReactDebugTool":654,"_process":555,"fbjs/lib/warning":337}],641:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -51852,7 +49811,7 @@ _assign(ReactDOMEmptyComponent.prototype, {
 });
 
 module.exports = ReactDOMEmptyComponent;
-},{"./DOMLazyTree":595,"./ReactDOMComponentTree":628,"object-assign":538}],632:[function(require,module,exports){
+},{"./DOMLazyTree":605,"./ReactDOMComponentTree":638,"object-assign":548}],642:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -52032,7 +49991,7 @@ var ReactDOMFactories = mapObject({
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
 
-},{"./ReactElement":647,"./ReactElementValidator":648,"_process":545,"fbjs/lib/mapObject":332}],633:[function(require,module,exports){
+},{"./ReactElement":657,"./ReactElementValidator":658,"_process":555,"fbjs/lib/mapObject":332}],643:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52051,7 +50010,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],634:[function(require,module,exports){
+},{}],644:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52086,7 +50045,7 @@ var ReactDOMIDOperations = {
 };
 
 module.exports = ReactDOMIDOperations;
-},{"./DOMChildrenOperations":594,"./ReactDOMComponentTree":628}],635:[function(require,module,exports){
+},{"./DOMChildrenOperations":604,"./ReactDOMComponentTree":638}],645:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -52332,7 +50291,7 @@ function _handleChange(event) {
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
 
-},{"./DOMPropertyOperations":598,"./DisabledInputUtils":601,"./LinkedValueUtils":611,"./ReactDOMComponentTree":628,"./ReactUpdates":676,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":538}],636:[function(require,module,exports){
+},{"./DOMPropertyOperations":608,"./DisabledInputUtils":611,"./LinkedValueUtils":621,"./ReactDOMComponentTree":638,"./ReactUpdates":686,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":548}],646:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52349,7 +50308,7 @@ module.exports = ReactDOMInput;
 var ReactDOMDebugTool = require('./ReactDOMDebugTool');
 
 module.exports = { debugTool: ReactDOMDebugTool };
-},{"./ReactDOMDebugTool":630}],637:[function(require,module,exports){
+},{"./ReactDOMDebugTool":640}],647:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -52476,7 +50435,7 @@ var ReactDOMOption = {
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
 
-},{"./ReactChildren":616,"./ReactDOMComponentTree":628,"./ReactDOMSelect":638,"_process":545,"fbjs/lib/warning":337,"object-assign":538}],638:[function(require,module,exports){
+},{"./ReactChildren":626,"./ReactDOMComponentTree":638,"./ReactDOMSelect":648,"_process":555,"fbjs/lib/warning":337,"object-assign":548}],648:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -52693,7 +50652,7 @@ function _handleChange(event) {
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
 
-},{"./DisabledInputUtils":601,"./LinkedValueUtils":611,"./ReactDOMComponentTree":628,"./ReactUpdates":676,"_process":545,"fbjs/lib/warning":337,"object-assign":538}],639:[function(require,module,exports){
+},{"./DisabledInputUtils":611,"./LinkedValueUtils":621,"./ReactDOMComponentTree":638,"./ReactUpdates":686,"_process":555,"fbjs/lib/warning":337,"object-assign":548}],649:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -52906,7 +50865,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":712,"./getTextContentAccessor":713,"fbjs/lib/ExecutionEnvironment":313}],640:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":722,"./getTextContentAccessor":723,"fbjs/lib/ExecutionEnvironment":313}],650:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -53081,7 +51040,7 @@ _assign(ReactDOMTextComponent.prototype, {
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
 
-},{"./DOMChildrenOperations":594,"./DOMLazyTree":595,"./ReactDOMComponentTree":628,"./ReactInstrumentation":659,"./escapeTextContentForBrowser":702,"./reactProdInvariant":720,"./validateDOMNesting":726,"_process":545,"fbjs/lib/invariant":327,"object-assign":538}],641:[function(require,module,exports){
+},{"./DOMChildrenOperations":604,"./DOMLazyTree":605,"./ReactDOMComponentTree":638,"./ReactInstrumentation":669,"./escapeTextContentForBrowser":712,"./reactProdInvariant":730,"./validateDOMNesting":736,"_process":555,"fbjs/lib/invariant":327,"object-assign":548}],651:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -53254,7 +51213,7 @@ function _handleChange(event) {
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
 
-},{"./DisabledInputUtils":601,"./LinkedValueUtils":611,"./ReactDOMComponentTree":628,"./ReactUpdates":676,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":538}],642:[function(require,module,exports){
+},{"./DisabledInputUtils":611,"./LinkedValueUtils":621,"./ReactDOMComponentTree":638,"./ReactUpdates":686,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":548}],652:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -53394,7 +51353,7 @@ module.exports = {
 };
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],643:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],653:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -53510,7 +51469,7 @@ var ReactDOMUnknownPropertyDevtool = {
 module.exports = ReactDOMUnknownPropertyDevtool;
 }).call(this,require('_process'))
 
-},{"./DOMProperty":597,"./EventPluginRegistry":605,"./ReactComponentTreeDevtool":621,"_process":545,"fbjs/lib/warning":337}],644:[function(require,module,exports){
+},{"./DOMProperty":607,"./EventPluginRegistry":615,"./ReactComponentTreeDevtool":631,"_process":555,"fbjs/lib/warning":337}],654:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -53825,7 +51784,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactDebugTool;
 }).call(this,require('_process'))
 
-},{"./ReactComponentTreeDevtool":621,"./ReactHostOperationHistoryDevtool":655,"./ReactInvalidSetStateWarningDevTool":660,"_process":545,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/performanceNow":335,"fbjs/lib/warning":337}],645:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":631,"./ReactHostOperationHistoryDevtool":665,"./ReactInvalidSetStateWarningDevTool":670,"_process":555,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/performanceNow":335,"fbjs/lib/warning":337}],655:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -53894,7 +51853,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./ReactUpdates":676,"./Transaction":694,"fbjs/lib/emptyFunction":319,"object-assign":538}],646:[function(require,module,exports){
+},{"./ReactUpdates":686,"./Transaction":704,"fbjs/lib/emptyFunction":319,"object-assign":548}],656:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -53979,7 +51938,7 @@ function inject() {
 module.exports = {
   inject: inject
 };
-},{"./BeforeInputEventPlugin":589,"./ChangeEventPlugin":593,"./DefaultEventPluginOrder":600,"./EnterLeaveEventPlugin":602,"./HTMLDOMPropertyConfig":609,"./ReactComponentBrowserEnvironment":619,"./ReactDOMComponent":626,"./ReactDOMComponentTree":628,"./ReactDOMEmptyComponent":631,"./ReactDOMTextComponent":640,"./ReactDOMTreeTraversal":642,"./ReactDefaultBatchingStrategy":645,"./ReactEventListener":652,"./ReactInjection":656,"./ReactReconcileTransaction":671,"./SVGDOMPropertyConfig":678,"./SelectEventPlugin":679,"./SimpleEventPlugin":680}],647:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":599,"./ChangeEventPlugin":603,"./DefaultEventPluginOrder":610,"./EnterLeaveEventPlugin":612,"./HTMLDOMPropertyConfig":619,"./ReactComponentBrowserEnvironment":629,"./ReactDOMComponent":636,"./ReactDOMComponentTree":638,"./ReactDOMEmptyComponent":641,"./ReactDOMTextComponent":650,"./ReactDOMTreeTraversal":652,"./ReactDefaultBatchingStrategy":655,"./ReactEventListener":662,"./ReactInjection":666,"./ReactReconcileTransaction":681,"./SVGDOMPropertyConfig":688,"./SelectEventPlugin":689,"./SimpleEventPlugin":690}],657:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -54335,7 +52294,7 @@ ReactElement.REACT_ELEMENT_TYPE = REACT_ELEMENT_TYPE;
 module.exports = ReactElement;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":623,"./canDefineProperty":698,"_process":545,"fbjs/lib/warning":337,"object-assign":538}],648:[function(require,module,exports){
+},{"./ReactCurrentOwner":633,"./canDefineProperty":708,"_process":555,"fbjs/lib/warning":337,"object-assign":548}],658:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -54565,7 +52524,7 @@ var ReactElementValidator = {
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
 
-},{"./ReactComponentTreeDevtool":621,"./ReactCurrentOwner":623,"./ReactElement":647,"./ReactPropTypeLocations":669,"./canDefineProperty":698,"./checkReactTypeSpec":699,"./getIteratorFn":711,"_process":545,"fbjs/lib/warning":337}],649:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":631,"./ReactCurrentOwner":633,"./ReactElement":657,"./ReactPropTypeLocations":679,"./canDefineProperty":708,"./checkReactTypeSpec":709,"./getIteratorFn":721,"_process":555,"fbjs/lib/warning":337}],659:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -54596,7 +52555,7 @@ var ReactEmptyComponent = {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{}],650:[function(require,module,exports){
+},{}],660:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -54676,7 +52635,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
 
-},{"_process":545}],651:[function(require,module,exports){
+},{"_process":555}],661:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -54710,7 +52669,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":604}],652:[function(require,module,exports){
+},{"./EventPluginHub":614}],662:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -54868,7 +52827,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./PooledClass":612,"./ReactDOMComponentTree":628,"./ReactUpdates":676,"./getEventTarget":709,"fbjs/lib/EventListener":312,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/getUnboundedScrollPosition":324,"object-assign":538}],653:[function(require,module,exports){
+},{"./PooledClass":622,"./ReactDOMComponentTree":638,"./ReactUpdates":686,"./getEventTarget":719,"fbjs/lib/EventListener":312,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/getUnboundedScrollPosition":324,"object-assign":548}],663:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -54890,7 +52849,7 @@ var ReactFeatureFlags = {
 };
 
 module.exports = ReactFeatureFlags;
-},{}],654:[function(require,module,exports){
+},{}],664:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -54970,7 +52929,7 @@ var ReactHostComponent = {
 module.exports = ReactHostComponent;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"object-assign":538}],655:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"object-assign":548}],665:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -55008,7 +52967,7 @@ var ReactHostOperationHistoryDevtool = {
 };
 
 module.exports = ReactHostOperationHistoryDevtool;
-},{}],656:[function(require,module,exports){
+},{}],666:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -55045,7 +53004,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":597,"./EventPluginHub":604,"./EventPluginUtils":606,"./ReactBrowserEventEmitter":614,"./ReactClass":617,"./ReactComponentEnvironment":620,"./ReactEmptyComponent":649,"./ReactHostComponent":654,"./ReactUpdates":676}],657:[function(require,module,exports){
+},{"./DOMProperty":607,"./EventPluginHub":614,"./EventPluginUtils":616,"./ReactBrowserEventEmitter":624,"./ReactClass":627,"./ReactComponentEnvironment":630,"./ReactEmptyComponent":659,"./ReactHostComponent":664,"./ReactUpdates":686}],667:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -55170,7 +53129,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":639,"fbjs/lib/containsNode":316,"fbjs/lib/focusNode":321,"fbjs/lib/getActiveElement":322}],658:[function(require,module,exports){
+},{"./ReactDOMSelection":649,"fbjs/lib/containsNode":316,"fbjs/lib/focusNode":321,"fbjs/lib/getActiveElement":322}],668:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -55219,7 +53178,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],659:[function(require,module,exports){
+},{}],669:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -55236,7 +53195,7 @@ module.exports = ReactInstanceMap;
 var ReactDebugTool = require('./ReactDebugTool');
 
 module.exports = { debugTool: ReactDebugTool };
-},{"./ReactDebugTool":644}],660:[function(require,module,exports){
+},{"./ReactDebugTool":654}],670:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -55276,7 +53235,7 @@ var ReactInvalidSetStateWarningDevTool = {
 module.exports = ReactInvalidSetStateWarningDevTool;
 }).call(this,require('_process'))
 
-},{"_process":545,"fbjs/lib/warning":337}],661:[function(require,module,exports){
+},{"_process":555,"fbjs/lib/warning":337}],671:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -55327,7 +53286,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":697}],662:[function(require,module,exports){
+},{"./adler32":707}],672:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -55832,7 +53791,7 @@ var ReactMount = {
 module.exports = ReactMount;
 }).call(this,require('_process'))
 
-},{"./DOMLazyTree":595,"./DOMProperty":597,"./ReactBrowserEventEmitter":614,"./ReactCurrentOwner":623,"./ReactDOMComponentTree":628,"./ReactDOMContainerInfo":629,"./ReactDOMFeatureFlags":633,"./ReactElement":647,"./ReactFeatureFlags":653,"./ReactInstrumentation":659,"./ReactMarkupChecksum":661,"./ReactReconciler":672,"./ReactUpdateQueue":675,"./ReactUpdates":676,"./instantiateReactComponent":715,"./reactProdInvariant":720,"./setInnerHTML":722,"./shouldUpdateReactComponent":724,"_process":545,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],663:[function(require,module,exports){
+},{"./DOMLazyTree":605,"./DOMProperty":607,"./ReactBrowserEventEmitter":624,"./ReactCurrentOwner":633,"./ReactDOMComponentTree":638,"./ReactDOMContainerInfo":639,"./ReactDOMFeatureFlags":643,"./ReactElement":657,"./ReactFeatureFlags":663,"./ReactInstrumentation":669,"./ReactMarkupChecksum":671,"./ReactReconciler":682,"./ReactUpdateQueue":685,"./ReactUpdates":686,"./instantiateReactComponent":725,"./reactProdInvariant":730,"./setInnerHTML":732,"./shouldUpdateReactComponent":734,"_process":555,"fbjs/lib/emptyObject":320,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],673:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -56281,7 +54240,7 @@ var ReactMultiChild = {
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
 
-},{"./ReactChildReconciler":615,"./ReactComponentEnvironment":620,"./ReactCurrentOwner":623,"./ReactInstanceMap":658,"./ReactInstrumentation":659,"./ReactMultiChildUpdateTypes":664,"./ReactReconciler":672,"./flattenChildren":704,"./reactProdInvariant":720,"_process":545,"fbjs/lib/emptyFunction":319,"fbjs/lib/invariant":327}],664:[function(require,module,exports){
+},{"./ReactChildReconciler":625,"./ReactComponentEnvironment":630,"./ReactCurrentOwner":633,"./ReactInstanceMap":668,"./ReactInstrumentation":669,"./ReactMultiChildUpdateTypes":674,"./ReactReconciler":682,"./flattenChildren":714,"./reactProdInvariant":730,"_process":555,"fbjs/lib/emptyFunction":319,"fbjs/lib/invariant":327}],674:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -56314,7 +54273,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":330}],665:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":330}],675:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -56357,7 +54316,7 @@ var ReactNodeTypes = {
 module.exports = ReactNodeTypes;
 }).call(this,require('_process'))
 
-},{"./ReactElement":647,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],666:[function(require,module,exports){
+},{"./ReactElement":657,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],676:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -56456,7 +54415,7 @@ var ReactNoopUpdateQueue = {
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
 
-},{"_process":545,"fbjs/lib/warning":337}],667:[function(require,module,exports){
+},{"_process":555,"fbjs/lib/warning":337}],677:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -56554,7 +54513,7 @@ var ReactOwner = {
 module.exports = ReactOwner;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],668:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],678:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -56582,7 +54541,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
 
-},{"_process":545}],669:[function(require,module,exports){
+},{"_process":555}],679:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -56605,7 +54564,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":330}],670:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":330}],680:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -57009,7 +54968,7 @@ function getClassName(propValue) {
 }
 
 module.exports = ReactPropTypes;
-},{"./ReactElement":647,"./ReactPropTypeLocationNames":668,"./getIteratorFn":711,"fbjs/lib/emptyFunction":319}],671:[function(require,module,exports){
+},{"./ReactElement":657,"./ReactPropTypeLocationNames":678,"./getIteratorFn":721,"fbjs/lib/emptyFunction":319}],681:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -57172,7 +55131,7 @@ _assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
-},{"./CallbackQueue":592,"./PooledClass":612,"./ReactBrowserEventEmitter":614,"./ReactInputSelection":657,"./Transaction":694,"object-assign":538}],672:[function(require,module,exports){
+},{"./CallbackQueue":602,"./PooledClass":622,"./ReactBrowserEventEmitter":624,"./ReactInputSelection":667,"./Transaction":704,"object-assign":548}],682:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -57352,7 +55311,7 @@ var ReactReconciler = {
 module.exports = ReactReconciler;
 }).call(this,require('_process'))
 
-},{"./ReactInstrumentation":659,"./ReactRef":673,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],673:[function(require,module,exports){
+},{"./ReactInstrumentation":669,"./ReactRef":683,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],683:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -57431,7 +55390,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":667}],674:[function(require,module,exports){
+},{"./ReactOwner":677}],684:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -57505,7 +55464,7 @@ _assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
-},{"./PooledClass":612,"./Transaction":694,"object-assign":538}],675:[function(require,module,exports){
+},{"./PooledClass":622,"./Transaction":704,"object-assign":548}],685:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -57732,7 +55691,7 @@ var ReactUpdateQueue = {
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":623,"./ReactInstanceMap":658,"./ReactInstrumentation":659,"./ReactUpdates":676,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],676:[function(require,module,exports){
+},{"./ReactCurrentOwner":633,"./ReactInstanceMap":668,"./ReactInstrumentation":669,"./ReactUpdates":686,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],686:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -57996,7 +55955,7 @@ var ReactUpdates = {
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
 
-},{"./CallbackQueue":592,"./PooledClass":612,"./ReactFeatureFlags":653,"./ReactInstrumentation":659,"./ReactReconciler":672,"./Transaction":694,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"object-assign":538}],677:[function(require,module,exports){
+},{"./CallbackQueue":602,"./PooledClass":622,"./ReactFeatureFlags":663,"./ReactInstrumentation":669,"./ReactReconciler":682,"./Transaction":704,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"object-assign":548}],687:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -58011,7 +55970,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '15.2.0';
-},{}],678:[function(require,module,exports){
+},{}],688:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -58312,7 +56271,7 @@ Object.keys(ATTRS).forEach(function (key) {
 });
 
 module.exports = SVGDOMPropertyConfig;
-},{}],679:[function(require,module,exports){
+},{}],689:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -58509,7 +56468,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":603,"./EventPropagators":607,"./ReactDOMComponentTree":628,"./ReactInputSelection":657,"./SyntheticEvent":685,"./isTextInputElement":717,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/getActiveElement":322,"fbjs/lib/keyOf":331,"fbjs/lib/shallowEqual":336}],680:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPropagators":617,"./ReactDOMComponentTree":638,"./ReactInputSelection":667,"./SyntheticEvent":695,"./isTextInputElement":727,"fbjs/lib/ExecutionEnvironment":313,"fbjs/lib/getActiveElement":322,"fbjs/lib/keyOf":331,"fbjs/lib/shallowEqual":336}],690:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -59142,7 +57101,7 @@ var SimpleEventPlugin = {
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
 
-},{"./EventConstants":603,"./EventPropagators":607,"./ReactDOMComponentTree":628,"./SyntheticAnimationEvent":681,"./SyntheticClipboardEvent":682,"./SyntheticDragEvent":684,"./SyntheticEvent":685,"./SyntheticFocusEvent":686,"./SyntheticKeyboardEvent":688,"./SyntheticMouseEvent":689,"./SyntheticTouchEvent":690,"./SyntheticTransitionEvent":691,"./SyntheticUIEvent":692,"./SyntheticWheelEvent":693,"./getEventCharCode":706,"./reactProdInvariant":720,"_process":545,"fbjs/lib/EventListener":312,"fbjs/lib/emptyFunction":319,"fbjs/lib/invariant":327,"fbjs/lib/keyOf":331}],681:[function(require,module,exports){
+},{"./EventConstants":613,"./EventPropagators":617,"./ReactDOMComponentTree":638,"./SyntheticAnimationEvent":691,"./SyntheticClipboardEvent":692,"./SyntheticDragEvent":694,"./SyntheticEvent":695,"./SyntheticFocusEvent":696,"./SyntheticKeyboardEvent":698,"./SyntheticMouseEvent":699,"./SyntheticTouchEvent":700,"./SyntheticTransitionEvent":701,"./SyntheticUIEvent":702,"./SyntheticWheelEvent":703,"./getEventCharCode":716,"./reactProdInvariant":730,"_process":555,"fbjs/lib/EventListener":312,"fbjs/lib/emptyFunction":319,"fbjs/lib/invariant":327,"fbjs/lib/keyOf":331}],691:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59182,7 +57141,7 @@ function SyntheticAnimationEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticAnimationEvent, AnimationEventInterface);
 
 module.exports = SyntheticAnimationEvent;
-},{"./SyntheticEvent":685}],682:[function(require,module,exports){
+},{"./SyntheticEvent":695}],692:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59221,7 +57180,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":685}],683:[function(require,module,exports){
+},{"./SyntheticEvent":695}],693:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59258,7 +57217,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":685}],684:[function(require,module,exports){
+},{"./SyntheticEvent":695}],694:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59295,7 +57254,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":689}],685:[function(require,module,exports){
+},{"./SyntheticMouseEvent":699}],695:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -59559,7 +57518,7 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
 }
 }).call(this,require('_process'))
 
-},{"./PooledClass":612,"_process":545,"fbjs/lib/emptyFunction":319,"fbjs/lib/warning":337,"object-assign":538}],686:[function(require,module,exports){
+},{"./PooledClass":622,"_process":555,"fbjs/lib/emptyFunction":319,"fbjs/lib/warning":337,"object-assign":548}],696:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59596,7 +57555,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":692}],687:[function(require,module,exports){
+},{"./SyntheticUIEvent":702}],697:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59634,7 +57593,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":685}],688:[function(require,module,exports){
+},{"./SyntheticEvent":695}],698:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59719,7 +57678,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":692,"./getEventCharCode":706,"./getEventKey":707,"./getEventModifierState":708}],689:[function(require,module,exports){
+},{"./SyntheticUIEvent":702,"./getEventCharCode":716,"./getEventKey":717,"./getEventModifierState":718}],699:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59792,7 +57751,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":692,"./ViewportMetrics":695,"./getEventModifierState":708}],690:[function(require,module,exports){
+},{"./SyntheticUIEvent":702,"./ViewportMetrics":705,"./getEventModifierState":718}],700:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59838,7 +57797,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":692,"./getEventModifierState":708}],691:[function(require,module,exports){
+},{"./SyntheticUIEvent":702,"./getEventModifierState":718}],701:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59878,7 +57837,7 @@ function SyntheticTransitionEvent(dispatchConfig, dispatchMarker, nativeEvent, n
 SyntheticEvent.augmentClass(SyntheticTransitionEvent, TransitionEventInterface);
 
 module.exports = SyntheticTransitionEvent;
-},{"./SyntheticEvent":685}],692:[function(require,module,exports){
+},{"./SyntheticEvent":695}],702:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59938,7 +57897,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":685,"./getEventTarget":709}],693:[function(require,module,exports){
+},{"./SyntheticEvent":695,"./getEventTarget":719}],703:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -59993,7 +57952,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":689}],694:[function(require,module,exports){
+},{"./SyntheticMouseEvent":699}],704:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -60230,7 +58189,7 @@ var Transaction = {
 module.exports = Transaction;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],695:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],705:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -60258,7 +58217,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],696:[function(require,module,exports){
+},{}],706:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -60323,7 +58282,7 @@ function accumulateInto(current, next) {
 module.exports = accumulateInto;
 }).call(this,require('_process'))
 
-},{"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],697:[function(require,module,exports){
+},{"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],707:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -60367,7 +58326,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],698:[function(require,module,exports){
+},{}],708:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -60395,7 +58354,7 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
 
-},{"_process":545}],699:[function(require,module,exports){
+},{"_process":555}],709:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -60470,7 +58429,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 module.exports = checkReactTypeSpec;
 }).call(this,require('_process'))
 
-},{"./ReactComponentTreeDevtool":621,"./ReactPropTypeLocationNames":668,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],700:[function(require,module,exports){
+},{"./ReactComponentTreeDevtool":631,"./ReactPropTypeLocationNames":678,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],710:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -60503,7 +58462,7 @@ var createMicrosoftUnsafeLocalFunction = function (func) {
 };
 
 module.exports = createMicrosoftUnsafeLocalFunction;
-},{}],701:[function(require,module,exports){
+},{}],711:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -60586,7 +58545,7 @@ function dangerousStyleValue(name, value, component) {
 module.exports = dangerousStyleValue;
 }).call(this,require('_process'))
 
-},{"./CSSProperty":590,"_process":545,"fbjs/lib/warning":337}],702:[function(require,module,exports){
+},{"./CSSProperty":600,"_process":555,"fbjs/lib/warning":337}],712:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -60709,7 +58668,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],703:[function(require,module,exports){
+},{}],713:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -60773,7 +58732,7 @@ function findDOMNode(componentOrElement) {
 module.exports = findDOMNode;
 }).call(this,require('_process'))
 
-},{"./ReactCurrentOwner":623,"./ReactDOMComponentTree":628,"./ReactInstanceMap":658,"./getHostComponentFromComposite":710,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],704:[function(require,module,exports){
+},{"./ReactCurrentOwner":633,"./ReactDOMComponentTree":638,"./ReactInstanceMap":668,"./getHostComponentFromComposite":720,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],714:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -60835,7 +58794,7 @@ function flattenChildren(children, selfDebugID) {
 module.exports = flattenChildren;
 }).call(this,require('_process'))
 
-},{"./KeyEscapeUtils":610,"./ReactComponentTreeDevtool":621,"./traverseAllChildren":725,"_process":545,"fbjs/lib/warning":337}],705:[function(require,module,exports){
+},{"./KeyEscapeUtils":620,"./ReactComponentTreeDevtool":631,"./traverseAllChildren":735,"_process":555,"fbjs/lib/warning":337}],715:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -60866,7 +58825,7 @@ var forEachAccumulated = function (arr, cb, scope) {
 };
 
 module.exports = forEachAccumulated;
-},{}],706:[function(require,module,exports){
+},{}],716:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -60917,7 +58876,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],707:[function(require,module,exports){
+},{}],717:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61020,7 +58979,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":706}],708:[function(require,module,exports){
+},{"./getEventCharCode":716}],718:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61064,7 +59023,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],709:[function(require,module,exports){
+},{}],719:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61100,7 +59059,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],710:[function(require,module,exports){
+},{}],720:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61131,7 +59090,7 @@ function getHostComponentFromComposite(inst) {
 }
 
 module.exports = getHostComponentFromComposite;
-},{"./ReactNodeTypes":665}],711:[function(require,module,exports){
+},{"./ReactNodeTypes":675}],721:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61172,7 +59131,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],712:[function(require,module,exports){
+},{}],722:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61247,7 +59206,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],713:[function(require,module,exports){
+},{}],723:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61281,7 +59240,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":313}],714:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":313}],724:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61383,7 +59342,7 @@ function getVendorPrefixedEventName(eventName) {
 }
 
 module.exports = getVendorPrefixedEventName;
-},{"fbjs/lib/ExecutionEnvironment":313}],715:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":313}],725:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -61532,7 +59491,7 @@ function instantiateReactComponent(node) {
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
 
-},{"./ReactCompositeComponent":622,"./ReactEmptyComponent":649,"./ReactHostComponent":654,"./ReactInstrumentation":659,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":538}],716:[function(require,module,exports){
+},{"./ReactCompositeComponent":632,"./ReactEmptyComponent":659,"./ReactHostComponent":664,"./ReactInstrumentation":669,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337,"object-assign":548}],726:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61593,7 +59552,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":313}],717:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":313}],727:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61635,7 +59594,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],718:[function(require,module,exports){
+},{}],728:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -61677,7 +59636,7 @@ function onlyChild(children) {
 module.exports = onlyChild;
 }).call(this,require('_process'))
 
-},{"./ReactElement":647,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327}],719:[function(require,module,exports){
+},{"./ReactElement":657,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327}],729:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61704,7 +59663,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":702}],720:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":712}],730:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61743,7 +59702,7 @@ function reactProdInvariant(code) {
 }
 
 module.exports = reactProdInvariant;
-},{}],721:[function(require,module,exports){
+},{}],731:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61760,7 +59719,7 @@ module.exports = reactProdInvariant;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":662}],722:[function(require,module,exports){
+},{"./ReactMount":672}],732:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61859,7 +59818,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"./DOMNamespaces":596,"./createMicrosoftUnsafeLocalFunction":700,"fbjs/lib/ExecutionEnvironment":313}],723:[function(require,module,exports){
+},{"./DOMNamespaces":606,"./createMicrosoftUnsafeLocalFunction":710,"fbjs/lib/ExecutionEnvironment":313}],733:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61908,7 +59867,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":702,"./setInnerHTML":722,"fbjs/lib/ExecutionEnvironment":313}],724:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":712,"./setInnerHTML":732,"fbjs/lib/ExecutionEnvironment":313}],734:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -61951,7 +59910,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],725:[function(require,module,exports){
+},{}],735:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -62115,7 +60074,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
 
-},{"./KeyEscapeUtils":610,"./ReactCurrentOwner":623,"./ReactElement":647,"./getIteratorFn":711,"./reactProdInvariant":720,"_process":545,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],726:[function(require,module,exports){
+},{"./KeyEscapeUtils":620,"./ReactCurrentOwner":633,"./ReactElement":657,"./getIteratorFn":721,"./reactProdInvariant":730,"_process":555,"fbjs/lib/invariant":327,"fbjs/lib/warning":337}],736:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -62488,12 +60447,12 @@ if (process.env.NODE_ENV !== 'production') {
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
 
-},{"_process":545,"fbjs/lib/emptyFunction":319,"fbjs/lib/warning":337,"object-assign":538}],727:[function(require,module,exports){
+},{"_process":555,"fbjs/lib/emptyFunction":319,"fbjs/lib/warning":337,"object-assign":548}],737:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":613}],728:[function(require,module,exports){
+},{"./lib/React":623}],738:[function(require,module,exports){
 (function (process,global){
 /**
  * Copyright (c) 2014, Facebook, Inc.
@@ -63166,60 +61125,12 @@ module.exports = require('./lib/React');
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"_process":545}],729:[function(require,module,exports){
-// Copyright 2014 Simon Lydell
-// X11 (“MIT”) Licensed. (See LICENSE.)
-
-void (function(root, factory) {
-  if (typeof define === "function" && define.amd) {
-    define(factory)
-  } else if (typeof exports === "object") {
-    module.exports = factory()
-  } else {
-    root.resolveUrl = factory()
-  }
-}(this, function() {
-
-  function resolveUrl(/* ...urls */) {
-    var numUrls = arguments.length
-
-    if (numUrls === 0) {
-      throw new Error("resolveUrl requires at least one argument; got none.")
-    }
-
-    var base = document.createElement("base")
-    base.href = arguments[0]
-
-    if (numUrls === 1) {
-      return base.href
-    }
-
-    var head = document.getElementsByTagName("head")[0]
-    head.insertBefore(base, head.firstChild)
-
-    var a = document.createElement("a")
-    var resolved
-
-    for (var index = 1; index < numUrls; index++) {
-      a.href = arguments[index]
-      resolved = a.href
-      base.href = resolved
-    }
-
-    head.removeChild(base)
-
-    return resolved
-  }
-
-  return resolveUrl
-
-}));
-
-},{}],730:[function(require,module,exports){
-'use strict';
-
-module.exports = ShelfPack;
-
+},{"_process":555}],739:[function(require,module,exports){
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.ShelfPack = factory());
+}(this, function () {
 
 /**
  * Create a new ShelfPack bin allocator.
@@ -63283,6 +61194,23 @@ ShelfPack.prototype.pack = function(bins, options) {
             }
             results.push(allocation);
         }
+    }
+
+    // Shrink the width/height of the sprite to the bare minimum.
+    // Since shelf-pack doubles first width, then height when running out of shelf space
+    // this can result in fairly large unused space both in width and height if that happens
+    // towards the end of bin packing.
+    if (this.shelves.length > 0) {
+        var w2 = 0;
+        var h2 = 0;
+
+        for (var j = 0; j < this.shelves.length; j++) {
+            var shelf = this.shelves[j];
+            h2 += shelf.h;
+            w2 = Math.max(shelf.w - shelf.free, w2);
+        }
+
+        this.resize(w2, h2);
     }
 
     return results;
@@ -63378,7 +61306,6 @@ ShelfPack.prototype.clear = function() {
 
 /**
  * Resize the sprite.
- * The resize will fail if the requested dimensions are smaller than the current sprite dimensions.
  *
  * @param   {number}  w  Requested new sprite width
  * @param   {number}  h  Requested new sprite height
@@ -63387,10 +61314,6 @@ ShelfPack.prototype.clear = function() {
  * sprite.resize(256, 256);
  */
 ShelfPack.prototype.resize = function(w, h) {
-    if (w < this.w || h < this.h) {
-        return false;
-    }
-
     this.w = w;
     this.h = h;
     for (var i = 0; i < this.shelves.length; i++) {
@@ -63441,7 +61364,6 @@ Shelf.prototype.alloc = function(w, h) {
 
 /**
  * Resize the shelf.
- * The resize will fail if the requested width is smaller than the current shelf width.
  *
  * @private
  * @param   {number}  w  Requested new width of the shelf
@@ -63450,15 +61372,15 @@ Shelf.prototype.alloc = function(w, h) {
  * shelf.resize(512);
  */
 Shelf.prototype.resize = function(w) {
-    if (w < this.w) {
-        return false;
-    }
     this.free += (w - this.w);
     this.w = w;
     return true;
 };
 
-},{}],731:[function(require,module,exports){
+return ShelfPack;
+
+}));
+},{}],740:[function(require,module,exports){
 'use strict';
 
 var kdbush = require('kdbush');
@@ -63531,34 +61453,48 @@ SuperCluster.prototype = {
     },
 
     getTile: function (z, x, y) {
+        var tree = this.trees[this._limitZoom(z)];
         var z2 = Math.pow(2, z);
         var extent = this.options.extent;
-        var p = this.options.radius / extent;
-        var tree = this.trees[this._limitZoom(z)];
-        var ids = tree.range(
-            (x - p) / z2,
-            (y - p) / z2,
-            (x + 1 + p) / z2,
-            (y + 1 + p) / z2);
-
-        if (!ids.length) return null;
+        var r = this.options.radius;
+        var p = r / extent;
+        var top = (y - p) / z2;
+        var bottom = (y + 1 + p) / z2;
 
         var tile = {
             features: []
         };
+
+        this._addTileFeatures(
+            tree.range((x - p) / z2, top, (x + 1 + p) / z2, bottom),
+            tree.points, x, y, z2, tile);
+
+        if (x === 0) {
+            this._addTileFeatures(
+                tree.range(1 - p / z2, top, 1, bottom),
+                tree.points, z2, y, z2, tile);
+        }
+        if (x === z2 - 1) {
+            this._addTileFeatures(
+                tree.range(0, top, p / z2, bottom),
+                tree.points, -1, y, z2, tile);
+        }
+
+        return tile.features.length ? tile : null;
+    },
+
+    _addTileFeatures: function (ids, points, x, y, z2, tile) {
         for (var i = 0; i < ids.length; i++) {
-            var c = tree.points[ids[i]];
-            var feature = {
+            var c = points[ids[i]];
+            tile.features.push({
                 type: 1,
                 geometry: [[
-                    Math.round(extent * (c.x * z2 - x)),
-                    Math.round(extent * (c.y * z2 - y))
+                    Math.round(this.options.extent * (c.x * z2 - x)),
+                    Math.round(this.options.extent * (c.y * z2 - y))
                 ]],
                 tags: c.id !== -1 ? this.points[c.id].properties : getClusterProperties(c)
-            };
-            tile.features.push(feature);
+            });
         }
-        return tile;
     },
 
     _limitZoom: function (z) {
@@ -63673,7 +61609,88 @@ function getY(p) {
     return p.y;
 }
 
-},{"kdbush":396}],732:[function(require,module,exports){
+},{"kdbush":397}],741:[function(require,module,exports){
+'use strict';
+
+module.exports = TinyQueue;
+
+function TinyQueue(data, compare) {
+    if (!(this instanceof TinyQueue)) return new TinyQueue(data, compare);
+
+    this.data = data || [];
+    this.length = this.data.length;
+    this.compare = compare || defaultCompare;
+
+    if (data) for (var i = Math.floor(this.length / 2); i >= 0; i--) this._down(i);
+}
+
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+TinyQueue.prototype = {
+
+    push: function (item) {
+        this.data.push(item);
+        this.length++;
+        this._up(this.length - 1);
+    },
+
+    pop: function () {
+        var top = this.data[0];
+        this.data[0] = this.data[this.length - 1];
+        this.length--;
+        this.data.pop();
+        this._down(0);
+        return top;
+    },
+
+    peek: function () {
+        return this.data[0];
+    },
+
+    _up: function (pos) {
+        var data = this.data,
+            compare = this.compare;
+
+        while (pos > 0) {
+            var parent = Math.floor((pos - 1) / 2);
+            if (compare(data[pos], data[parent]) < 0) {
+                swap(data, parent, pos);
+                pos = parent;
+
+            } else break;
+        }
+    },
+
+    _down: function (pos) {
+        var data = this.data,
+            compare = this.compare,
+            len = this.length;
+
+        while (true) {
+            var left = 2 * pos + 1,
+                right = left + 1,
+                min = pos;
+
+            if (left < len && compare(data[left], data[min]) < 0) min = left;
+            if (right < len && compare(data[right], data[min]) < 0) min = right;
+
+            if (min === pos) return;
+
+            swap(data, min, pos);
+            pos = min;
+        }
+    }
+};
+
+function swap(data, i, j) {
+    var tmp = data[i];
+    data[i] = data[j];
+    data[j] = tmp;
+}
+
+},{}],742:[function(require,module,exports){
 'use strict';
 
 function transmitter() {
@@ -63717,7 +61734,7 @@ function transmitter() {
 module.exports = transmitter;
 
 
-},{}],733:[function(require,module,exports){
+},{}],743:[function(require,module,exports){
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
@@ -63824,7 +61841,7 @@ UnitBezier.prototype.solve = function(x, epsilon) {
     return this.sampleCurveY(this.solveCurveX(x, epsilon));
 };
 
-},{}],734:[function(require,module,exports){
+},{}],744:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -64558,7 +62575,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":735,"punycode":549,"querystring":552}],735:[function(require,module,exports){
+},{"./util":745,"punycode":559,"querystring":562}],745:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -64576,14 +62593,14 @@ module.exports = {
   }
 };
 
-},{}],736:[function(require,module,exports){
+},{}],746:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],737:[function(require,module,exports){
+},{}],747:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -65174,12 +63191,12 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./support/isBuffer":736,"_process":545,"inherits":363}],738:[function(require,module,exports){
+},{"./support/isBuffer":746,"_process":555,"inherits":364}],748:[function(require,module,exports){
 module.exports.VectorTile = require('./lib/vectortile.js');
 module.exports.VectorTileFeature = require('./lib/vectortilefeature.js');
 module.exports.VectorTileLayer = require('./lib/vectortilelayer.js');
 
-},{"./lib/vectortile.js":739,"./lib/vectortilefeature.js":740,"./lib/vectortilelayer.js":741}],739:[function(require,module,exports){
+},{"./lib/vectortile.js":749,"./lib/vectortilefeature.js":750,"./lib/vectortilelayer.js":751}],749:[function(require,module,exports){
 'use strict';
 
 var VectorTileLayer = require('./vectortilelayer');
@@ -65198,7 +63215,7 @@ function readTile(tag, layers, pbf) {
 }
 
 
-},{"./vectortilelayer":741}],740:[function(require,module,exports){
+},{"./vectortilelayer":751}],750:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -65221,7 +63238,7 @@ function VectorTileFeature(pbf, end, extent, keys, values) {
 }
 
 function readFeature(tag, feature, pbf) {
-    if (tag == 1) feature._id = pbf.readVarint();
+    if (tag == 1) feature.id = pbf.readVarint();
     else if (tag == 2) readTag(pbf, feature);
     else if (tag == 3) feature.type = pbf.readVarint();
     else if (tag == 4) feature._geometry = pbf.pos;
@@ -65386,8 +63403,8 @@ VectorTileFeature.prototype.toGeoJSON = function(x, y, z) {
         properties: this.properties
     };
 
-    if ('_id' in this) {
-        result.id = this._id;
+    if ('id' in this) {
+        result.id = this.id;
     }
 
     return result;
@@ -65433,7 +63450,7 @@ function signedArea(ring) {
     return sum;
 }
 
-},{"point-geometry":544}],741:[function(require,module,exports){
+},{"point-geometry":554}],751:[function(require,module,exports){
 'use strict';
 
 var VectorTileFeature = require('./vectortilefeature.js');
@@ -65496,7 +63513,7 @@ VectorTileLayer.prototype.feature = function(i) {
     return new VectorTileFeature(this._pbf, end, this.extent, this._keys, this._values);
 };
 
-},{"./vectortilefeature.js":740}],742:[function(require,module,exports){
+},{"./vectortilefeature.js":750}],752:[function(require,module,exports){
 var Pbf = require('pbf')
 var vtpb = require('./vector-tile-pb')
 var GeoJSONWrapper = require('./lib/geojson_wrapper')
@@ -65636,22 +63653,23 @@ function wrapValue (value) {
   } else if (type === 'boolean') {
     result = { bool_value: value }
   } else if (type === 'number') {
-    if (value !== (value | 0)) {
-      result = { float_value: value }
+    if (value % 1 !== 0) {
+      result = { double_value: value }
     } else if (value < 0) {
       result = { sint_value: value }
     } else {
       result = { uint_value: value }
     }
   } else {
-    result = { string_value: '' + value }
+    value = JSON.stringify(value)
+    result = { string_value: value }
   }
 
   result.key = type + ':' + value
   return result
 }
 
-},{"./lib/geojson_wrapper":743,"./vector-tile-pb":744,"pbf":543}],743:[function(require,module,exports){
+},{"./lib/geojson_wrapper":753,"./vector-tile-pb":754,"pbf":553}],753:[function(require,module,exports){
 'use strict'
 
 var Point = require('point-geometry')
@@ -65670,6 +63688,7 @@ GeoJSONWrapper.prototype.feature = function (i) {
 }
 
 function FeatureWrapper (feature) {
+  this.id = typeof feature.id === 'number' ? feature.id : undefined
   this.type = feature.type
   this.rawGeometry = feature.type === 1 ? [feature.geometry] : feature.geometry
   this.properties = feature.tags
@@ -65718,7 +63737,7 @@ FeatureWrapper.prototype.bbox = function () {
 
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON
 
-},{"point-geometry":544,"vector-tile":738}],744:[function(require,module,exports){
+},{"point-geometry":554,"vector-tile":748}],754:[function(require,module,exports){
 'use strict';
 
 // tile ========================================
@@ -65824,7 +63843,7 @@ function writeLayer(layer, pbf) {
     if (layer.extent !== undefined) pbf.writeVarintField(5, layer.extent);
 }
 
-},{}],745:[function(require,module,exports){
+},{}],755:[function(require,module,exports){
 var bundleFn = arguments[3];
 var sources = arguments[4];
 var cache = arguments[5];
@@ -65873,8 +63892,22 @@ module.exports = function (fn, options) {
         scache
     ];
 
+    var workerSources = {};
+    resolveSources(skey);
+
+    function resolveSources(key) {
+        workerSources[key] = true;
+
+        for (var depPath in sources[key][1]) {
+            var depKey = sources[key][1][depPath];
+            if (!workerSources[depKey]) {
+                resolveSources(depKey);
+            }
+        }
+    }
+
     var src = '(' + bundleFn + ')({'
-        + Object.keys(sources).map(function (key) {
+        + Object.keys(workerSources).map(function (key) {
             return stringify(key) + ':['
                 + sources[key][0]
                 + ',' + stringify(sources[key][1]) + ']'
@@ -65893,12 +63926,12 @@ module.exports = function (fn, options) {
     return worker;
 };
 
-},{}],746:[function(require,module,exports){
+},{}],756:[function(require,module,exports){
 module.exports.RADIUS = 6378137;
 module.exports.FLATTENING = 1/298.257223563;
 module.exports.POLAR_RADIUS = 6356752.3142;
 
-},{}],747:[function(require,module,exports){
+},{}],757:[function(require,module,exports){
 (function(self) {
   'use strict';
 
@@ -66333,8 +64366,12 @@ module.exports.POLAR_RADIUS = 6356752.3142;
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
-},{}],748:[function(require,module,exports){
-'use strict';
+},{}],758:[function(require,module,exports){
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (factory((global.WhooTS = global.WhooTS || {})));
+}(this, function (exports) {
 
 /**
  * getURL
@@ -66358,11 +64395,11 @@ module.exports.POLAR_RADIUS = 6356752.3142;
  * var layer = 'Natural2015';
  * var url = whoots.getURL(baseUrl, layer, 154308, 197167, 19);
  */
-exports.getURL = function(baseUrl, layer, x, y, z, options) {
+function getURL(baseUrl, layer, x, y, z, options) {
     options = options || {};
 
     var url = baseUrl + '?' + [
-        'bbox='    + exports.getTileBBox(x, y, z),
+        'bbox='    + getTileBBox(x, y, z),
         'format='  + (options.format || 'image/png'),
         'service=' + (options.service || 'WMS'),
         'version=' + (options.version || '1.1.1'),
@@ -66374,7 +64411,7 @@ exports.getURL = function(baseUrl, layer, x, y, z, options) {
     ].join('&');
 
     return url;
-};
+}
 
 
 /**
@@ -66385,15 +64422,16 @@ exports.getURL = function(baseUrl, layer, x, y, z, options) {
  * @param    {Number}  z  Tile zoom
  * @returns  {String}  String of the bounding box
  */
-exports.getTileBBox = function(x, y, z) {
+function getTileBBox(x, y, z) {
     // for Google/OSM tile scheme we need to alter the y
     y = (Math.pow(2, z) - y - 1);
 
-    var min = exports.getMercCoords(x * 256, y * 256, z),
-        max = exports.getMercCoords((x + 1) * 256, (y + 1) * 256, z);
+    var min = getMercCoords(x * 256, y * 256, z),
+        max = getMercCoords((x + 1) * 256, (y + 1) * 256, z);
 
     return min[0] + ',' + min[1] + ',' + max[0] + ',' + max[1];
-};
+}
+
 
 /**
  * getMercCoords
@@ -66403,15 +64441,22 @@ exports.getTileBBox = function(x, y, z) {
  * @param    {Number}  z  Tile zoom
  * @returns  {Array}   [x, y]
  */
-exports.getMercCoords = function(x, y, z) {
+function getMercCoords(x, y, z) {
     var resolution = (2 * Math.PI * 6378137 / 256) / Math.pow(2, z),
         merc_x = (x * resolution - 2 * Math.PI  * 6378137 / 2.0),
         merc_y = (y * resolution - 2 * Math.PI  * 6378137 / 2.0);
 
     return [merc_x, merc_y];
-};
+}
 
-},{}],749:[function(require,module,exports){
+exports.getURL = getURL;
+exports.getTileBBox = getTileBBox;
+exports.getMercCoords = getMercCoords;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+}));
+},{}],759:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66432,7 +64477,7 @@ var CountryActions = _alt2.default.createActions((0, _apiactions.createApiAction
 
 exports.default = CountryActions;
 
-},{"../alt":759,"../sources/apisources":787,"./apiactions":758}],750:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797,"./apiactions":768}],760:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66490,7 +64535,7 @@ var CurrencyActions = function () {
 CurrencyActions = _alt2.default.createActions(CurrencyActions);
 exports.default = CurrencyActions;
 
-},{"../alt":759,"../sources/CurrencySource":785}],751:[function(require,module,exports){
+},{"../alt":769,"../sources/CurrencySource":795}],761:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66550,7 +64595,7 @@ var GeoCentroidActions = function () {
 GeoCentroidActions = _alt2.default.createActions(GeoCentroidActions);
 exports.default = GeoCentroidActions;
 
-},{"../alt":759,"../sources/apisources":787,"whatwg-fetch":747}],752:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797,"whatwg-fetch":757}],762:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66615,7 +64660,7 @@ var GeoStoreActions = function () {
 GeoStoreActions = _alt2.default.createActions(GeoStoreActions);
 exports.default = GeoStoreActions;
 
-},{"../alt":759,"../sources/GeoStoreSource":786}],753:[function(require,module,exports){
+},{"../alt":769,"../sources/GeoStoreSource":796}],763:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66636,7 +64681,7 @@ var InfrastructureTypeActions = _alt2.default.createActions((0, _apiactions.crea
 
 exports.default = InfrastructureTypeActions;
 
-},{"../alt":759,"../sources/apisources":787,"./apiactions":758}],754:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797,"./apiactions":768}],764:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66694,7 +64739,7 @@ var PrincipalAgentActions = function () {
 PrincipalAgentActions = _alt2.default.createActions(PrincipalAgentActions);
 exports.default = PrincipalAgentActions;
 
-},{"../alt":759,"../sources/apisources":787}],755:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797}],765:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66715,7 +64760,7 @@ var RegionActions = _alt2.default.createActions((0, _apiactions.createApiActions
 
 exports.default = RegionActions;
 
-},{"../alt":759,"../sources/apisources":787,"./apiactions":758}],756:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797,"./apiactions":768}],766:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66791,7 +64836,7 @@ var SearchActions = function () {
 SearchActions = _alt2.default.createActions(SearchActions);
 exports.default = SearchActions;
 
-},{"../alt":759,"../sources/apisources":787,"whatwg-fetch":747}],757:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797,"whatwg-fetch":757}],767:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -66812,7 +64857,7 @@ var StatusActions = _alt2.default.createActions((0, _apiactions.createApiActions
 
 exports.default = StatusActions;
 
-},{"../alt":759,"../sources/apisources":787,"./apiactions":758}],758:[function(require,module,exports){
+},{"../alt":769,"../sources/apisources":797,"./apiactions":768}],768:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -66865,7 +64910,7 @@ function createApiActions(Source) {
 
 exports.createApiActions = createApiActions;
 
-},{}],759:[function(require,module,exports){
+},{}],769:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -66882,7 +64927,7 @@ var alt = new _alt2.default();
 
 exports.default = alt;
 
-},{"alt":4}],760:[function(require,module,exports){
+},{"alt":4}],770:[function(require,module,exports){
 "use strict";
 
 require("babel-polyfill");
@@ -66927,7 +64972,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _react2.default.createElement(_SearchView2.default, null)
 ), document.getElementById('app'));
 
-},{"./components/MapContainer":766,"./components/SearchView":773,"./helpers/map-constants":783,"babel-polyfill":10,"radium":565,"react":727,"react-dom":581}],761:[function(require,module,exports){
+},{"./components/MapContainer":776,"./components/SearchView":783,"./helpers/map-constants":793,"babel-polyfill":10,"radium":575,"react":737,"react-dom":591}],771:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67036,7 +65081,7 @@ CurrencyAmountSelectContainer.propTypes = {
 };
 exports.default = CurrencyAmountSelectContainer;
 
-},{"../actions/CurrencyActions":750,"../models/Option":784,"../stores/CurrencyStore":790,"react":727,"react-select":585}],762:[function(require,module,exports){
+},{"../actions/CurrencyActions":760,"../models/Option":794,"../stores/CurrencyStore":800,"react":737,"react-select":595}],772:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67240,7 +65285,7 @@ DateRangeSelect.defaultProps = {
 };
 exports.default = DateRangeSelect;
 
-},{"../models/Option":784,"./forms":777,"react":727,"react-select":585}],763:[function(require,module,exports){
+},{"../models/Option":794,"./forms":787,"react":737,"react-select":595}],773:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67293,7 +65338,7 @@ ErrorView.propTypes = {
 };
 exports.default = ErrorView;
 
-},{"react":727}],764:[function(require,module,exports){
+},{"react":737}],774:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67329,7 +65374,7 @@ var InfrastructureTypeSelectContainer = (0, _containers.createSelectContainer)(_
 
 exports.default = InfrastructureTypeSelectContainer;
 
-},{"../actions/InfrastructureTypeActions":753,"../models/Option":784,"../stores/InfrastructureTypeStore":791,"./containers":775}],765:[function(require,module,exports){
+},{"../actions/InfrastructureTypeActions":763,"../models/Option":794,"../stores/InfrastructureTypeStore":801,"./containers":785}],775:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67438,7 +65483,7 @@ Map.defaultProps = {
 };
 exports.default = Map;
 
-},{"mapbox-gl/js/mapbox-gl":441,"react":727}],766:[function(require,module,exports){
+},{"mapbox-gl/js/mapbox-gl":443,"react":737}],776:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67539,7 +65584,7 @@ var MapContainer = function (_Component) {
 
 exports.default = MapContainer;
 
-},{"../actions/GeoCentroidActions":751,"../helpers/Cartographer":779,"../stores/SearchStore":794,"./Map":765,"mapbox-gl/js/mapbox-gl":441,"react":727}],767:[function(require,module,exports){
+},{"../actions/GeoCentroidActions":761,"../helpers/Cartographer":789,"../stores/SearchStore":804,"./Map":775,"mapbox-gl/js/mapbox-gl":443,"react":737}],777:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67646,7 +65691,7 @@ Panel = (0, _radium2.default)(Panel);
 
 exports.default = Panel;
 
-},{"./forms":777,"radium":565,"react":727}],768:[function(require,module,exports){
+},{"./forms":787,"radium":575,"react":737}],778:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67682,7 +65727,7 @@ var PrincipalAgentSelectContainer = (0, _containers.createSelectContainer)(_Prin
 
 exports.default = PrincipalAgentSelectContainer;
 
-},{"../actions/PrincipalAgentActions":754,"../models/Option":784,"../stores/PrincipalAgentStore":792,"./containers":775}],769:[function(require,module,exports){
+},{"../actions/PrincipalAgentActions":764,"../models/Option":794,"../stores/PrincipalAgentStore":802,"./containers":785}],779:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -67780,7 +65825,7 @@ ProjectResultView.propTypes = {
 };
 exports.default = ProjectResultView;
 
-},{"react":727}],770:[function(require,module,exports){
+},{"react":737}],780:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -67885,7 +65930,7 @@ ResultsList.propTypes = {
 };
 exports.default = ResultsList;
 
-},{"../actions/GeoStoreActions":752,"./ProjectResultView":769,"./forms":777,"react":727}],771:[function(require,module,exports){
+},{"../actions/GeoStoreActions":762,"./ProjectResultView":779,"./forms":787,"react":737}],781:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68041,7 +66086,7 @@ ResultsView.defaultProps = {
 ResultsView = (0, _radium2.default)(ResultsView);
 exports.default = ResultsView;
 
-},{"./ResultsList":770,"./forms":777,"radium":565,"react":727}],772:[function(require,module,exports){
+},{"./ResultsList":780,"./forms":787,"radium":575,"react":737}],782:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68158,7 +66203,7 @@ SearchBar = (0, _radium2.default)(SearchBar);
 
 exports.default = SearchBar;
 
-},{"./forms":777,"radium":565,"react":727}],773:[function(require,module,exports){
+},{"./forms":787,"radium":575,"react":737}],783:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -68477,7 +66522,7 @@ var SearchView = function (_Component) {
 
 exports.default = SearchView;
 
-},{"../actions/SearchActions":756,"../stores/SearchStore":794,"./CurrencyAmountSelectContainer":761,"./DateRangeSelect":762,"./ErrorView":763,"./InfrastructureTypeSelectContainer":764,"./Panel":767,"./PrincipalAgentSelectContainer":768,"./ResultsView":771,"./SearchBar":772,"./StatusSelectContainer":774,"./country-selects":776,"./forms":777,"./region-selects":778,"react":727}],774:[function(require,module,exports){
+},{"../actions/SearchActions":766,"../stores/SearchStore":804,"./CurrencyAmountSelectContainer":771,"./DateRangeSelect":772,"./ErrorView":773,"./InfrastructureTypeSelectContainer":774,"./Panel":777,"./PrincipalAgentSelectContainer":778,"./ResultsView":781,"./SearchBar":782,"./StatusSelectContainer":784,"./country-selects":786,"./forms":787,"./region-selects":788,"react":737}],784:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68513,7 +66558,7 @@ var StatusSelectContainer = (0, _containers.createSelectContainer)(_StatusStore2
 
 exports.default = StatusSelectContainer;
 
-},{"../actions/StatusActions":757,"../models/Option":784,"../stores/StatusStore":795,"./containers":775}],775:[function(require,module,exports){
+},{"../actions/StatusActions":767,"../models/Option":794,"../stores/StatusStore":805,"./containers":785}],785:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68649,7 +66694,7 @@ function createSelectContainer(Store, Actions, options) {
 
 exports.createSelectContainer = createSelectContainer;
 
-},{"react":727,"react-select":585}],776:[function(require,module,exports){
+},{"react":737,"react-select":595}],786:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68698,7 +66743,7 @@ var ProjectCountrySelect = (0, _containers.createSelectContainer)(_CountryStore2
 exports.FunderCountrySelect = FunderCountrySelect;
 exports.ProjectCountrySelect = ProjectCountrySelect;
 
-},{"../actions/CountryActions":749,"../models/Option":784,"../stores/CountryStore":789,"./containers":775}],777:[function(require,module,exports){
+},{"../actions/CountryActions":759,"../models/Option":794,"../stores/CountryStore":799,"./containers":785}],787:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68882,7 +66927,7 @@ exports.Input = Input;
 exports.Button = Button;
 exports.Select = Select;
 
-},{"react":727}],778:[function(require,module,exports){
+},{"react":737}],788:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -68919,7 +66964,7 @@ var ProjectRegionSelect = (0, _containers.createSelectContainer)(_RegionStore2.d
 
 exports.ProjectRegionSelect = ProjectRegionSelect;
 
-},{"../actions/RegionActions":755,"../models/Option":784,"../stores/RegionStore":793,"./containers":775}],779:[function(require,module,exports){
+},{"../actions/RegionActions":765,"../models/Option":794,"../stores/RegionStore":803,"./containers":785}],789:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69046,9 +67091,10 @@ var Cartographer = function () {
       this._gm.setGeoIdentifiers(data.features.map(function (feat) {
         return feat.id;
       }));
-      var source = new _mapboxGl.GeoJSONSource({
-        data: data
-      });
+      var source = {
+        data: data,
+        type: 'geojson'
+      };
       var layer = Object.assign({
         source: centroidsLayerId,
         id: centroidsLayerId
@@ -69099,9 +67145,10 @@ var Cartographer = function () {
             if (data.features.length) {
               var layerId = '' + identifier + identiferSep + t;
               identifiers.push(layerId);
-              var source = new _mapboxGl.GeoJSONSource({
-                data: data
-              });
+              var source = {
+                data: data,
+                type: 'geojson'
+              };
               var layer = Object.assign({
                 source: layerId,
                 id: layerId,
@@ -69403,7 +67450,7 @@ var Cartographer = function () {
 exports.default = Cartographer;
 exports.defaultZoom = _mapConstants.defaultZoom;
 
-},{"../actions/GeoCentroidActions":751,"../actions/GeoStoreActions":752,"../alt":759,"./GeoManager":780,"./GeoStoreQueue":781,"./GeoStyles":782,"./map-constants":783,"alt-utils/lib/ActionListeners":1,"mapbox-gl/js/mapbox-gl":441}],780:[function(require,module,exports){
+},{"../actions/GeoCentroidActions":761,"../actions/GeoStoreActions":762,"../alt":769,"./GeoManager":790,"./GeoStoreQueue":791,"./GeoStyles":792,"./map-constants":793,"alt-utils/lib/ActionListeners":1,"mapbox-gl/js/mapbox-gl":443}],790:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69489,7 +67536,7 @@ var GeoManager = function () {
 
 exports.default = GeoManager;
 
-},{}],781:[function(require,module,exports){
+},{}],791:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69543,7 +67590,7 @@ var GeoStoreQueue = function () {
 
 exports.default = GeoStoreQueue;
 
-},{"../actions/GeoStoreActions":752,"promise-queue":546}],782:[function(require,module,exports){
+},{"../actions/GeoStoreActions":762,"promise-queue":556}],792:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69674,7 +67721,7 @@ var GeoStyles = function () {
 
 exports.default = GeoStyles;
 
-},{"./map-constants":783,"object-merge":540}],783:[function(require,module,exports){
+},{"./map-constants":793,"object-merge":550}],793:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69698,7 +67745,7 @@ exports.updateInterval = updateInterval;
 exports.popContentClass = popContentClass;
 exports.defaultCenter = defaultCenter;
 
-},{}],784:[function(require,module,exports){
+},{}],794:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69716,7 +67763,7 @@ var Option = function Option(name, value) {
 
 exports.default = Option;
 
-},{}],785:[function(require,module,exports){
+},{}],795:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69768,7 +67815,7 @@ var CurrencySource = function () {
 
 exports.default = CurrencySource;
 
-},{}],786:[function(require,module,exports){
+},{}],796:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69800,7 +67847,7 @@ var GeoStoreSource = function () {
 GeoStoreSource.baseURL = '/api/geostore/';
 exports.default = GeoStoreSource;
 
-},{"whatwg-fetch":747}],787:[function(require,module,exports){
+},{"whatwg-fetch":757}],797:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69869,7 +67916,7 @@ exports.StatusSource = StatusSource;
 exports.SearchSource = SearchSource;
 exports.GeoCentroidSource = GeoCentroidSource;
 
-},{"./utils":788,"whatwg-fetch":747}],788:[function(require,module,exports){
+},{"./utils":798,"whatwg-fetch":757}],798:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -69895,7 +67942,7 @@ function parameterizeQuery(query) {
 
 exports.parameterizeQuery = parameterizeQuery;
 
-},{}],789:[function(require,module,exports){
+},{}],799:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69919,7 +67966,7 @@ CountryStore = _alt2.default.createStore(CountryStore, 'CountryStore');
 
 exports.default = CountryStore;
 
-},{"../actions/CountryActions":749,"../alt":759,"./apistores":796}],790:[function(require,module,exports){
+},{"../actions/CountryActions":759,"../alt":769,"./apistores":806}],800:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69970,7 +68017,7 @@ CurrencyStore = _alt2.default.createStore(CurrencyStore, 'CurrencyStore');
 
 exports.default = CurrencyStore;
 
-},{"../actions/CurrencyActions":750,"../alt":759}],791:[function(require,module,exports){
+},{"../actions/CurrencyActions":760,"../alt":769}],801:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -69994,7 +68041,7 @@ InfrastructureTypeStore = _alt2.default.createStore(InfrastructureTypeStore, 'In
 
 exports.default = InfrastructureTypeStore;
 
-},{"../actions/InfrastructureTypeActions":753,"../alt":759,"./apistores":796}],792:[function(require,module,exports){
+},{"../actions/InfrastructureTypeActions":763,"../alt":769,"./apistores":806}],802:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70018,7 +68065,7 @@ PrincipalAgentStore = _alt2.default.createStore(PrincipalAgentStore, 'PrincipalA
 
 exports.default = PrincipalAgentStore;
 
-},{"../actions/PrincipalAgentActions":754,"../alt":759,"./apistores":796}],793:[function(require,module,exports){
+},{"../actions/PrincipalAgentActions":764,"../alt":769,"./apistores":806}],803:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70042,7 +68089,7 @@ RegionStore = _alt2.default.createStore(RegionStore, 'RegionStore');
 
 exports.default = RegionStore;
 
-},{"../actions/RegionActions":755,"../alt":759,"./apistores":796}],794:[function(require,module,exports){
+},{"../actions/RegionActions":765,"../alt":769,"./apistores":806}],804:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70116,7 +68163,7 @@ SearchStore = _alt2.default.createStore(SearchStore, 'SearchStore');
 
 exports.default = SearchStore;
 
-},{"../actions/SearchActions":756,"../alt":759}],795:[function(require,module,exports){
+},{"../actions/SearchActions":766,"../alt":769}],805:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70140,7 +68187,7 @@ StatusStore = _alt2.default.createStore(StatusStore, 'StatusStore');
 
 exports.default = StatusStore;
 
-},{"../actions/StatusActions":757,"../alt":759,"./apistores":796}],796:[function(require,module,exports){
+},{"../actions/StatusActions":767,"../alt":769,"./apistores":806}],806:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -70193,7 +68240,7 @@ function createApiStore(Actions) {
 
 exports.createApiStore = createApiStore;
 
-},{}]},{},[760])
+},{}]},{},[770])
 
 
 //# sourceMappingURL=megamap.js.map

@@ -2,8 +2,7 @@ import alt from '../alt';
 import ActionListeners from 'alt-utils/lib/ActionListeners';
 import MapboxGl, {
   Navigation,
-  Popup,
-  GeoJSONSource
+  Popup
 } from "mapbox-gl/js/mapbox-gl";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
@@ -84,9 +83,10 @@ export default class Cartographer {
 
   _handleCentroidsUpdate(data) {
     this._gm.setGeoIdentifiers(data.features.map((feat) => feat.id));
-    const source = new GeoJSONSource({
-      data
-    });
+    const source = {
+      data,
+      type: 'geojson',
+    };
     const layer = Object.assign({
       source: centroidsLayerId,
       id: centroidsLayerId,
@@ -126,9 +126,10 @@ export default class Cartographer {
         if (data.features.length) {
           const layerId = `${identifier}${identiferSep}${t}`;
           identifiers.push(layerId);
-          const source = new GeoJSONSource({
-            data
-          })
+          const source = {
+            data,
+            type: 'geojson',
+          };
           const layer = Object.assign({
             source: layerId,
             id: layerId,
