@@ -120,8 +120,17 @@
 
 .selected-facets {
     font-size: $minor-text-size;
-    p > span {
-        font-size: $compact-text-size;
+    display: block;
+    position: relative;
+    @include widows-peak($light-blue-arrow-img, $main-arrow-width, $adjust: 4px);
+    border-bottom: $thin-border-width solid $blue-steel;
+    margin-bottom: $medium-spacing;
+
+    p {
+        margin-bottom: 0.1rem;
+        > span {
+            font-size: $compact-text-size;
+        }
     }
 
     .remove {
@@ -136,12 +145,87 @@
     @include flex-direction(column);
     @include justify-content(space-between);
 
+    nav.pages {
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+
+        > p, > div, > ul {
+            @include flex(0 1 auto);
+            margin-bottom: 0;
+        }
+
+        p {
+            padding-top: $tiny-spacing;
+        }
+
+        ul {
+            display: block;
+        }
+
+        li {
+            $gem-width: 10px;
+            $gem-height: 35px;
+            $gem-vector: $gem-height/2;
+
+            display: inline-block;
+            position: relative;
+            margin: 0;
+            height: $gem-height;
+            vertical-align: middle;
+
+            &:not(:last-child) {
+                margin-right: $medium-spacing;
+            }
+
+            &.previous {
+                a::before {
+                    display: block;
+                    position: absolute;
+                    left: -$gem-width;
+                    top: 0;
+                    content: " ";
+                    width: $gem-width;
+                    border-top: $gem-vector solid transparent;
+                    border-right: $gem-width solid $light-green;
+                    border-bottom: $gem-vector solid transparent;
+                }
+            }
+            &.next {
+                a::after {
+                    display: block;
+                    position: absolute;
+                    right: -$gem-width;
+                    top: 0;
+                    content: " ";
+                    width: $gem-width;
+                    border-top: $gem-vector solid transparent;
+                    border-left: $gem-width solid $light-green;
+                    border-bottom: $gem-vector solid transparent;
+                }
+            }
+
+            a {
+                display: block;
+                padding: $tiny-spacing;
+                text-decoration: none;
+                height: 100%;
+                vertical-align: middle;
+            }
+        }
+    }
+
     > section {
         max-width: 100%;
         @include flex(1 1 auto);
 
         @include media($medium-break) {
             max-width: 80%;
+        }
+
+        > h3 {
+            font-family: $serif-font-family;
+            font-size: $section-hed-size;
         }
 
         ol {
@@ -173,6 +257,7 @@
 
                         h3 {
                             width: 25%;
+                            text-transform: uppercase;
                         }
 
                         h2,
@@ -193,6 +278,10 @@
     > nav {
         max-width: 180px;
         @include flex(1 1 auto);
+
+        h3 {
+            text-transform: uppercase;
+        }
 
         > ul {
             background-color: $light-green;

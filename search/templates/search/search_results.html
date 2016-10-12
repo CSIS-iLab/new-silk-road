@@ -47,15 +47,17 @@ Search | {{ block.super }}
         <section class="results-list">
             <h3>Results</h3>
             {% if search.total > 0 %}
-            <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
-            <ul>
-                {% if search.page.previous %}
-                <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
-                {% endif %}
-                {% if search.page.next %}
-                <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
-                {% endif %}
-            </ul>
+            <nav class="pages">
+                <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
+                <ul class="clean">
+                    {% if search.page.previous %}
+                    <li class="previous"><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
+                    {% endif %}
+                    {% if search.page.next %}
+                    <li class="next"><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
             <ol start="{{search.offset|add:'1'}}">{% for result in search.results %}
                 <li>{% spaceless %}
                     <section>
@@ -64,7 +66,7 @@ Search | {{ block.super }}
                             <h3>{{ result.get_model_meta.model }}</h3>
                         </header>
                         <div class="description">
-                            {{ result.description|markdown|html_text|truncatewords_html:80|safe }}
+                            {{ result.description|html_text|truncatewords_html:80|safe }}
                         </div>
                         <div class="highlights">{% for field,value_list in result.meta.highlight.to_dict.items|slice:":1"  %}
                             {% if field|lower != 'name' %}
@@ -76,15 +78,17 @@ Search | {{ block.super }}
                     </section>{% endspaceless %}
                 </li>{% endfor %}
             </ol>
-            <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
-            <ul>
-                {% if search.page.previous %}
-                <li><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
-                {% endif %}
-                {% if search.page.next %}
-                <li><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
-                {% endif %}
-            </ul>
+            <nav class="pages">
+                <p>{{search.total}} items | Page {{search.page.number}} of {{search.page.num_pages}}</p>
+                <ul class="clean">
+                    {% if search.page.previous %}
+                    <li class="previous"><a href="{% url 'search:search' %}?{{search.page.previous}}">Previous</a></li>
+                    {% endif %}
+                    {% if search.page.next %}
+                    <li class="next"><a href="{% url 'search:search' %}?{{search.page.next}}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
             {% elif search.query.total == 0 and search.query.q %}
             <p>No results found!</p>
             {% endif %}
