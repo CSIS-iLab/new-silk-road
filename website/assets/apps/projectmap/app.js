@@ -1,7 +1,6 @@
 import "babel-polyfill";
 import 'whatwg-fetch';
 import MapboxGl, {
-  GeoJSONSource,
   Navigation,
 } from "mapbox-gl/js/mapbox-gl";
 import GeoStyles from '../megamap/helpers/GeoStyles';
@@ -62,10 +61,10 @@ class Map {
       const data = json[t];
       if (data.features.length) {
         const layerId = `${t}-layer`;
-        const source = new GeoJSONSource({
-          data
-        })
-        this._map.addSource(layerId, source);
+        this._map.addSource(layerId, {
+          data: data,
+          type: 'geojson'
+        });
         const layer = Object.assign({
           source: layerId,
           id: layerId,
