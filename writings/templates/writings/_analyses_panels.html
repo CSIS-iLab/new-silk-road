@@ -1,11 +1,16 @@
 {% for entry in entry_list %}{% load html_text from html_utils %}
 <div class="analysis panel">
-    <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
-    <h5 class='date'><time datetime='{{entry.publication_date|date:"c"}}'>{{entry.publication_date|date}}</time></h5>
+    <header>
+        <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
+        <div class="subheader">
+            <h5>By {{entry.author}}</h5>
+            <h5 class='date'><time datetime='{{entry.publication_date|date:"c"}}'>{{entry.publication_date|date}}</time></h5>
+        </div>
+    </header>
     {% if entry.description_rendered %}
-    {{entry.description_rendered|html_text|truncatewords_html:max_words|safe}}
+    {{entry.description_rendered|html_text:'p,b,i,em,strong'|truncatewords_html:max_words|safe}}
     {% elif entry.content_rendered %}
-    {{entry.content_rendered|html_text|truncatewords_html:max_words|safe}}
+    {{entry.content_rendered|html_text:'p,b,i,em,strong'|truncatewords_html:max_words|safe}}
     {% else %}
     <p>&mdash;</p>
     {% endif %}

@@ -15,6 +15,17 @@
         font-style: italic;
     }
 
+    header {
+        .subheader {
+            @include display(flex);
+            @include flex-direction(row);
+            @include justify-content(space-between);
+            > * {
+                @include flex(0 1 auto);
+            }
+        }
+    }
+
     p:last-of-type {
         margin: 0;
     }
