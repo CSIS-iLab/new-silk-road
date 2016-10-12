@@ -61,17 +61,18 @@ class ConfiguredCollectionMixin(ContextMixin):
 class FeaturedEntryMixin(object):
     featured_config_key = None
 
-    def get_feature_config_key(self):
-        if not self.feature_config_key:
-            raise AttributeError('CollectionFeaturedEntryMixin must define feature_config_key property or override get_feature_config_key method')
-        return self.feature_config_key
+    def get_featured_config_key(self):
+        if not self.featured_config_key:
+            raise AttributeError('CollectionFeaturedEntryMixin must define featured_config_key property or override get_featured_config_key method')
+        return self.featured_config_key
 
-    def get_slug(self):
-        config_key = self.get_config_key()
+    def get_featured_slug(self):
+        config_key = self.get_featured_config_key()
         return getattr(config, config_key, None)
 
     def get_featured_entry(self):
-        slug = self.get_slug()
+        slug = self.get_featured_slug()
+
         if slug:
             try:
                 collection = filter_collection_to_published(EntryCollection.objects.get(slug=slug))

@@ -13,7 +13,13 @@
 <section class="quote-wrap">
     <blockquote>
         {% if featured_entry %}
-        <div class="quotation">{{featured_entry.description_rendered|html_text:'p,b,i,em,strong'|truncatewords_html:400|safe}}</div>
+        <div class="quotation">
+            {% if featured_entry.description_rendered %}
+            {{featured_entry.description_rendered|html_text:'p,b,i,em,strong'|truncatechars_html:400|safe}}
+            {% else %}
+            {{featured_entry.content_rendered|html_text:'p,b,i,em,strong'|truncatechars_html:400|safe}}
+            {% endif %}
+        </div>
         <p class="attribution">{{featured_entry.author}}</p>
         <span class="call-to-action"><a href="{{featured_entry.get_absolute_url}}">Read More</a></span>
         {% else %}

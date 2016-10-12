@@ -3,11 +3,12 @@ from constance import config
 from website.models import Collection
 from facts.models.organizations import DETAIL_MODEL_NAMES
 from infrastructure.models import InfrastructureType
-from writings.views import FeaturedAnalysesMixin
+from writings.views import FeaturedAnalysesMixin, FeaturedEntryMixin
 
 
-class HomeView(FeaturedAnalysesMixin, TemplateView):
+class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
     template_name = "website/home.html"
+    featured_config_key = 'HOMEPAGE_FEATURED_ANALYSIS_COLLECTION'
 
 
 class DatabaseView(TemplateView):
