@@ -72,7 +72,7 @@ export default class DateRangeSelect extends Component {
       if (obj && obj.value) {
         lObj[obj.value] = null;
         lObj[`${obj.value}__gte`] = null;
-        lObj[`${obj.value}__lt`] = null;
+        lObj[`${obj.value}__lte`] = null;
       }
       return lObj;
     });
@@ -86,7 +86,7 @@ export default class DateRangeSelect extends Component {
           q[dateLookupType] = lowerNum;
         } else {
           q[`${dateLookupType}__gte`] = lowerNum;
-          q[`${dateLookupType}__lt`] = upperNum;
+          q[`${dateLookupType}__lte`] = upperNum;
         }
       }
     }
