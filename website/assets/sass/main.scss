@@ -73,6 +73,10 @@ h3 {
 
 figure {
     margin: 0;
+
+    img {
+        display: block;
+    }
 }
 
 img {
@@ -81,6 +85,7 @@ img {
 
 figcaption {
     color: $gravel-grey;
+    font-size: $minorer-text-size;
 }
 
 .iframe-container {
