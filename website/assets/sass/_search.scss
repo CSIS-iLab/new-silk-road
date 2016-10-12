@@ -1,12 +1,12 @@
 @import "variables";
 
-.search, .search-bar-wrap {
+.search, .search-form-wrap {
     .custom-dropdown > select {
         padding-right: 60px;
     }
 }
 
-.search-bar-wrap {
+.search-form-wrap {
     width: 60%;
     margin: 0 auto $large-spacing;
 
@@ -17,9 +17,13 @@
         @include justify-content(space-between);
         @include align-items(center);
 
-        > div, .search-bar {
+        .search-controls {
+            @include flex(1 1 auto);
+        }
+        span + .search-controls {
             @include flex(0 1 auto);
         }
+
         input {
             @include flex(0 1 auto);
         }
@@ -31,7 +35,7 @@
     }
 }
 
-.search-bar {
+.search-controls {
     border: 2px solid $pale-green;
     background-color: #363d4e;
     @include display(flex);
@@ -45,6 +49,7 @@
 
     input.primary {
         min-width: 320px;
+        @include flex(1 0 auto);
     }
 
     input[type='submit'], button[type='submit'] {
@@ -244,8 +249,6 @@
         }
 
         ol {
-            list-style-position: outside;
-            padding-left: 1.2em;
 
             li {
                 margin-bottom: $large-spacing;

@@ -1,4 +1,5 @@
 <form action="{% url 'search:search' %}">
+    {% if not hide_categories %}
     <span class="custom-dropdown">
         <select name="facet">
             {# FIXME: Generate menu dynamically using info from search facet #}
@@ -11,8 +12,9 @@
             <option {% if selected_category|lower in 'persons' %}selected{% endif %} value="_category:Person">People</option>
         </select>
     </span>
-    <div class="search-bar">
-        <input type="text" class="primary" name="q" value="" placeholder="Search the database">
+    {% endif %}
+    <div class="search-controls">
+        <input type="search" class="primary" name="q" value="{{q}}" placeholder="Search the database">
         <button type="submit">Search</button>
     </div>
 </form>
