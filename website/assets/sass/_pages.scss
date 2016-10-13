@@ -849,6 +849,12 @@ article {
     section {
         margin-bottom: $section-spacing;
 
+        header {
+            h2 {
+                padding-top: $medium-spacing;
+            }
+        }
+
         img {
             margin-bottom: $small-spacing;
         }
