@@ -305,7 +305,7 @@ article {
             height: $poster-height;
             @include background-poster($database-img);
             @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
-            border-bottom: $thin-border-width solid $dark-green-line;
+            border-bottom: $thin-border-width solid $dark-green;
 
             header {
                 position: absolute;
@@ -622,7 +622,7 @@ article {
         @include widows-peak($light-blue-arrow-img, $main-arrow-width, $order: before, $adjust: 5px);
         border-top: $thin-border-width solid $blue-steel;
         @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-green-line;
+        border-bottom: $thin-border-width solid $dark-green;
 
 
     }

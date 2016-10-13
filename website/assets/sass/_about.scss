@@ -1,0 +1,90 @@
+@import "variables";
+@import "mixins";
+@import "lib/neat/neat";
+
+
+.about {
+    .video-container {
+        background-color: $not-so-dark-night;
+        position: relative;
+        @include widows-peak($light-blue-arrow-img, $main-arrow-width, $order: before, $adjust: 5px);
+        border-top: $thin-border-width solid $blue-steel;
+
+        > iframe {
+            width: 980px;
+            height: 551px;
+        }
+    }
+
+    header {
+        margin: $small-spacing 0;
+
+        h2 {
+            font: $section-hedier-size $sans-font-family;
+            text-transform: uppercase;
+            color: #FFF;
+            background-color: $dark-green;
+            display: inline-block;
+            line-height: 1;
+            padding: $tiny-spacing * 2;
+            margin: 0;
+        }
+    }
+
+    section:not(:first-child) {
+        margin-top: $section-spacing;
+    }
+
+    section.leadership > .profiles {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(flex-start);
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+            @include flex-wrap(wrap);
+        }
+
+        > figure {
+            @include flex(0 1 33.33%);
+            margin-bottom: $medium-spacing;
+
+            img {
+                max-width: 150px;
+                max-height: 225px;
+                margin: 0 auto;
+            }
+
+            figcaption {
+                max-width: 180px;
+                margin: $tiny-spacing auto 0;
+                text-align: center;
+
+                .name {
+                    text-transform: uppercase;
+                    margin-bottom: $tiny-spacing;
+                }
+                .position {
+                    font-style: italic;
+                }
+            }
+        }
+    }
+
+    ul.credits {
+        list-style-type: none;
+        padding-left: $large-spacing;
+
+        li {
+            font-family: $sans-font-family;
+            font-weight: 700;
+            text-transform: uppercase;
+            span {
+                font-family: $serif-font-family;
+                font-style: italic;
+                font-weight: 200;
+                text-transform: none;
+            }
+        }
+    }
+}

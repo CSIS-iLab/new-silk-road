@@ -72,7 +72,7 @@
         @include background-poster($megamap-img);
 
         @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-green-line;
+        border-bottom: $thin-border-width solid $dark-green;
 
         h2, h3 {
             text-shadow: 0 0 4px rgb(76, 129, 126);
@@ -186,7 +186,7 @@
         @include background-poster($database-img);
 
         @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-blue-line;
+        border-bottom: $thin-border-width solid $dark-blue;
 
         .inner {
             position: absolute;
@@ -210,7 +210,7 @@
         font-family: $serif-font-family;
 
         @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-green-line;
+        border-bottom: $thin-border-width solid $dark-green;
 
         .inner {
             padding-top: $section-spacing;
@@ -270,7 +270,7 @@
         @include background-poster($video-img);
 
         @include widows-peak($medium-blue-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $medium-blue-line;
+        border-bottom: $thin-border-width solid $medium-blue;
 
         $inner-margin-vertical: ($video-area-height - $play-button-size - $text-height)/2;
         .inner {
