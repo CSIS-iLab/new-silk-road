@@ -27,6 +27,7 @@ class ConfiguredCollectionMixin(ContextMixin):
     context_label = None
     slug = None
     config_key = None
+    collection_limit = None
 
     def get_config_key(self):
         if not self.config_key:
@@ -42,16 +43,24 @@ class ConfiguredCollectionMixin(ContextMixin):
             raise AttributeError('ConfiguredCollectionMixin must define context_label property or override get_context_label method')
         return self.context_label
 
+    def get_collection_limit(self):
+        if not isinstance(self.collection_limit, int):
+            raise AttributeError('ConfiguredCollectionMixin collection_limit must be an integer')
+        return self.collection_limit
+
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
         slug = self.get_slug()
         context_label = self.get_context_label()
         if slug and context_label:
+            collection_limit = self.get_collection_limit()
             kwargs[context_label] = None
             if slug:
                 try:
                     collection = filter_collection_to_published(EntryCollection.objects.get(slug=slug))
                     if collection:
+                        if collection_limit:
+                            collection = collection[:collection_limit]
                         kwargs[context_label] = [instance.entry for instance in collection]
                 except EntryCollection.DoesNotExist:
                     pass
@@ -92,6 +101,7 @@ class FeaturedEntryMixin(object):
 class FeaturedAnalysesMixin(ConfiguredCollectionMixin):
     context_label = 'featured_analyses'
     config_key = 'FEATURED_ANALYSES_COLLECTION'
+    collection_limit = 2
 
 
 class CategoryListView(ListView):
@@ -160,6 +170,7 @@ class EntryCategoryListView(EntryListView):
 class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
     template_name = "writings/home.html"
     featured_config_key = 'ANALYSISPAGE_FEATURED_ANALYSIS_COLLECTION'
+    collection_limit = 4
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
