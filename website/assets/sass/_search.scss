@@ -184,53 +184,17 @@
         }
 
         li {
-            $gem-width: 10px;
-            $gem-height: 35px;
-            $gem-vector: $gem-height/2;
-
             display: inline-block;
             position: relative;
             margin: 0;
-            height: $gem-height;
-            vertical-align: middle;
 
             &:not(:last-child) {
                 margin-right: $medium-spacing;
             }
 
-            &.previous {
-                a::before {
-                    display: block;
-                    position: absolute;
-                    left: -$gem-width;
-                    top: 0;
-                    content: " ";
-                    width: $gem-width;
-                    border-top: $gem-vector solid transparent;
-                    border-right: $gem-width solid $light-green;
-                    border-bottom: $gem-vector solid transparent;
-                }
-            }
-            &.next {
-                a::after {
-                    display: block;
-                    position: absolute;
-                    right: -$gem-width;
-                    top: 0;
-                    content: " ";
-                    width: $gem-width;
-                    border-top: $gem-vector solid transparent;
-                    border-left: $gem-width solid $light-green;
-                    border-bottom: $gem-vector solid transparent;
-                }
-            }
-
             a {
                 display: block;
                 padding: $tiny-spacing;
-                text-decoration: none;
-                height: 100%;
-                vertical-align: middle;
             }
         }
     }
