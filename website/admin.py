@@ -4,7 +4,6 @@ from django.forms import Textarea
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.contenttypes.admin import GenericStackedInline
-from suit.admin import SortableStackedInline
 from reversion.admin import VersionAdmin
 from django.utils.html import format_html
 from .models import CollectionItem, Collection
@@ -58,7 +57,7 @@ class CollectionItemAdmin(admin.ModelAdmin):
     item_admin_url.short_description = 'Admin URL'
 
 
-class CollectionItemInline(SortableStackedInline):
+class CollectionItemInline(admin.StackedInline):
     model = CollectionItem
     sortable = 'order'
 
