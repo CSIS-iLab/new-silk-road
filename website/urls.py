@@ -19,7 +19,6 @@ urlpatterns = [
     url(r'^methodology/$', views.flatpage, {'url': '/methodology/'}, name='methodology'),
     url(r'^analysis/historical-atlas/$', views.flatpage, {'url': '/analysis/historical-atlas/'}, name='historical-atlas'),
     url(r'^analysis/competing-visions/$', views.flatpage, {'url': '/analysis/competing-visions/'}, name='competing-visions'),
-    url(r'^analysis/historical-atlas/$', views.flatpage, {'url': '/analysis/historical-atlas/'}, name='historical-atlas'),
     url(r'^analysis/feed/$', LatestEntriesFeed()),
     url(r'^analysis/', include('writings.urls')),
     url(r'^database/$', DatabaseView.as_view(), name='database-home'),

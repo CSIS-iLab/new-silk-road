@@ -828,3 +828,91 @@ article {
         }
     }
 }
+
+
+.historical-atlas {
+
+    section.featured {
+        position: relative;
+        @include widows-peak($light-blue-arrow-img, $width: $small-arrow-width, $height: $small-arrow-height, $order: before);
+        border-top: $thin-border-width solid $blue-steel;
+
+        padding-top: $small-spacing;
+        padding-bottom: $small-spacing;
+
+        h3 {
+            font-family: $serif-font-family;
+            margin-bottom: 0;
+        }
+    }
+
+    section {
+        margin-bottom: $section-spacing;
+
+        img {
+            margin-bottom: $small-spacing;
+        }
+        p, p:last-child {
+            margin: 0 $large-spacing $large-spacing;
+        }
+
+        footer {
+            nav {
+                @include clearfix();
+                a.button.up {
+                    float: right;
+                    background-image: url($collapse-btn-img);
+                    background-size: 19px;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-color: transparent;
+                    padding: $small-spacing;
+                }
+            }
+        }
+    }
+
+    nav {
+        margin: $small-spacing 0;
+        ul {
+            @include display(flex);
+            @include flex-direction(column);
+            @include justify-content(space-between);
+            width: 60%;
+            margin: 0 auto;
+            padding: 0 8px;
+
+            > li {
+                @include flex(0 1 auto);
+                margin-bottom: $small-spacing;
+
+                a {
+                    display: block;
+                    padding: 2px $small-spacing 0;
+                    text-decoration: none;
+                    text-align: center;
+                    color: #FFF;
+                    @include gemify($dark-green);
+
+                    h4 {
+                        margin-bottom: 2px;
+                    }
+                    h5 {
+                        font-size: rem(11);
+                        font-style: italic;
+                    }
+                }
+            }
+
+            @include media($medium-break) {
+                @include flex-direction(row);
+                width: auto;
+
+                > li {
+                    @include flex(0 1 20%);
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
