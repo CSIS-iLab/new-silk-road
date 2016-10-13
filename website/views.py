@@ -10,6 +10,12 @@ class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
     template_name = "website/home.html"
     featured_config_key = 'HOMEPAGE_FEATURED_ANALYSIS_COLLECTION'
 
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        video_url = getattr(config, 'HOMEPAGE_VIDEO_URL', None)
+        kwargs['video_url'] = video_url.strip() if isinstance(video_url, str) and video_url.startswith('http') else None
+        return kwargs
+
 
 class DatabaseView(TemplateView):
     template_name = "website/database.html"

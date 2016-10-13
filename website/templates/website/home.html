@@ -18,9 +18,11 @@
     </div>
 </section>
 <section id='video' class='poster'>
+    {% if video_url %}
     <div class="inner">
-        <a class="play button" href="https://vimeo.com/177601766">Play</a>
+        <a class="play button" href="{{video_url}}">Play</a>
     </div>
+    {% endif %}
 </section>
 <section id='analysis'>
     <div class="inner">

@@ -384,7 +384,11 @@ CONSTANCE_CONFIG = {
     'FEATURED_WRITINGS_CATEGORY': (
         'news',
         'Slug for the Category that the featured writings call under', str
-    )
+    ),
+    'HOMEPAGE_VIDEO_URL': (
+        'https://vimeo.com/177601766',
+        'Video embed used on homepags'
+    ),
 }
 
 PUBLISH_FILTER_ENABLED = os.getenv('PUBLISH_FILTER_ENABLED', 'True') != 'False'
