@@ -24,37 +24,31 @@ input {
     }
 
     &.gem {
-        $gem-width: 8px;
-        $gem-height: 42px;
-        $gem-vector: $gem-height/2;
+        @include gemify($slate-grey, $height: 30px);
+
         text-transform: uppercase;
         font-family: $sans-font-family;
-        height: $gem-height;
+        line-height: 1.7;
+        padding: 0 $small-spacing;
 
-        &::before {
-            display: block;
-            position: absolute;
-            left: -$gem-width;
-            top: 0;
-            content: " ";
-            width: $gem-width;
-            height: 100%;
-            border-top: $gem-vector solid transparent;
-            border-right: $gem-width solid $slate-grey;
-            border-bottom: $gem-vector solid transparent;
+        color: $pale-green;
+        transition: color 0.5s;
+
+        &:hover {
+            color: lighten($pale-green, 10%);
         }
 
-        &::after {
-            display: block;
-            position: absolute;
-            right: -$gem-width;
-            top: 0;
-            content: " ";
-            width: $gem-width;
-            height: 100%;
-            border-top: $gem-vector solid transparent;
-            border-left: $gem-width solid $slate-grey;
-            border-bottom: $gem-vector solid transparent;
+        &.large {
+            line-height: 1.5;
+            font-size: $section-hed-size;
+            padding: 0 $medium-spacing;
+            @include gemify($slate-grey);
+        }
+
+        @include media($medium-break) {
+            &.large {
+                padding: 0 $large-spacing;
+            }
         }
     }
 }

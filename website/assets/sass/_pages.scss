@@ -413,16 +413,6 @@ article {
 
     }
 
-    a.button {
-        font-size: $section-hed-size;
-        color: $pale-green;
-        padding: $tiny-spacing $medium-spacing;
-
-        @include media($medium-break) {
-            padding: $tiny-spacing $large-spacing;
-        }
-    }
-
     > nav {
         padding-top: 0;
         margin: $section-spacing 0;
@@ -918,6 +908,47 @@ article {
                     @include flex(0 1 20%);
                     margin-bottom: 0;
                 }
+            }
+        }
+    }
+}
+
+
+.contribute {
+    nav {
+        ul {
+            @include display(flex);
+            @include flex-direction(column);
+            @include justify-content(space-between);
+            width: 80%;
+            margin: 0 auto;
+
+            > li {
+                @include flex(1 1 100%);
+                margin-bottom: $small-spacing;
+
+                a {
+                    display: block;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    @include media($medium-break) {
+        nav {
+            margin-top: $section-spacing;
+
+            ul {
+                @include flex-direction(row);
+                width: 60%;
+                margin: 0 auto;
+
+                > li {
+                    @include flex(0 1 auto);
+                    margin-bottom: 0;
+                }
+
             }
         }
     }
