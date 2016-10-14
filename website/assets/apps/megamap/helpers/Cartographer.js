@@ -157,8 +157,10 @@ export default class Cartographer {
   }
 
   _handleMapMove(event) {
-    let features = this._map.queryRenderedFeatures(event.point, { layers: [centroidsLayerId] });
-    this._map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+    if (this._map.getLayer(centroidsLayerId) !== undefined) {
+      let features = this._map.queryRenderedFeatures(event.point, { layers: [centroidsLayerId] });
+      this._map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+    }
   }
 
   _handleEndMapMove(event) {

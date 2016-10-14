@@ -37222,65 +37222,87 @@ var GeoStyles = function () {
       }
     };
     this._styles = {
-      centroids: {
-        type: 'symbol',
-        layout: {
-          'icon-allow-overlap': true,
-          'icon-image': '{icon-image}'
-        },
-        paint: {
-          'icon-opacity': 1
+      default: {
+        lines: lineStyle,
+        points: pointStyle,
+        polygons: polygonStyle,
+        centroids: {
+          type: 'symbol',
+          layout: {
+            'icon-allow-overlap': true,
+            'icon-image': '{icon-image}'
+          },
+          paint: {
+            'icon-opacity': 1
+          }
         }
       },
-      lines: lineStyle,
-      points: pointStyle,
-      polygons: polygonStyle,
-      rail: (0, _objectMerge2.default)(lineStyle, {
-        paint: {
-          'line-color': '#c34242'
-        }
-      }),
-      road: (0, _objectMerge2.default)(lineStyle, {
-        paint: {
-          'line-color': '#f68b3f'
-        }
-      }),
-      seaport: (0, _objectMerge2.default)(pointStyle, {
-        layout: {
-          'icon-image': 'Seaport'
-        }
-      }),
-      pipeline: (0, _objectMerge2.default)(lineStyle, {
-        paint: {
-          'line-color': '#7e3c22'
-        }
-      }),
-      ict: (0, _objectMerge2.default)(lineStyle, {
-        paint: {
-          'line-color': '#65bc46'
-        }
-      }),
-      dryport: (0, _objectMerge2.default)(pointStyle, {
-        layout: {
-          'icon-image': 'Dryport'
-        }
-      }),
-      multimodal: (0, _objectMerge2.default)(pointStyle, {
-        layout: {
-          'icon-image': 'Dryport'
-        }
-      }),
-      intermodal: (0, _objectMerge2.default)(pointStyle, {
-        layout: {
-          'icon-image': 'Dryport'
-        }
-      })
-    };
-
-    this._compatibilityTable = {
-      'lines': new Set(['rail', 'road', 'pipeline', 'ict']),
-      'points': new Set(['seaport', 'dryport', 'multimodal', 'intermodal']),
-      'polygons': new Set([])
+      rail: {
+        lines: (0, _objectMerge2.default)(lineStyle, {
+          paint: {
+            'line-color': '#c34242'
+          }
+        }),
+        points: (0, _objectMerge2.default)(pointStyle, {
+          layout: {
+            'icon-image': 'Rail'
+          }
+        })
+      },
+      road: {
+        lines: (0, _objectMerge2.default)(lineStyle, {
+          paint: {
+            'line-color': '#f68b3f'
+          }
+        }),
+        points: (0, _objectMerge2.default)(pointStyle, {
+          layout: {
+            'icon-image': 'Road'
+          }
+        })
+      },
+      seaport: {
+        points: (0, _objectMerge2.default)(pointStyle, {
+          layout: {
+            'icon-image': 'Seaport'
+          }
+        })
+      },
+      pipeline: {
+        lines: (0, _objectMerge2.default)(lineStyle, {
+          paint: {
+            'line-color': '#7e3c22'
+          }
+        })
+      },
+      ict: {
+        lines: (0, _objectMerge2.default)(lineStyle, {
+          paint: {
+            'line-color': '#65bc46'
+          }
+        })
+      },
+      dryport: {
+        points: (0, _objectMerge2.default)(pointStyle, {
+          layout: {
+            'icon-image': 'Dryport'
+          }
+        })
+      },
+      multimodal: {
+        points: (0, _objectMerge2.default)(pointStyle, {
+          layout: {
+            'icon-image': 'Dryport'
+          }
+        })
+      },
+      intermodal: {
+        points: (0, _objectMerge2.default)(pointStyle, {
+          layout: {
+            'icon-image': 'Dryport'
+          }
+        })
+      }
     };
   }
 
@@ -37290,11 +37312,13 @@ var GeoStyles = function () {
       var infrastructureType = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
       var typeLookup = infrastructureType ? infrastructureType.toLowerCase().replace(' ', '-') : null;
-      var isGeometryCompatible = typeLookup ? this._compatibilityTable[geometryType].has(typeLookup) : false;
-      if (this._styles.hasOwnProperty(typeLookup) && isGeometryCompatible) {
-        return this._styles[typeLookup];
+      if (this._styles.hasOwnProperty(typeLookup)) {
+        var lookup = this._styles[typeLookup];
+        if (lookup.hasOwnProperty(geometryType)) {
+          return lookup[geometryType];
+        }
       }
-      return this._styles[geometryType];
+      return this._styles['default'][geometryType];
     }
   }]);
 

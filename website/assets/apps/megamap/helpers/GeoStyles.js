@@ -30,74 +30,98 @@ export default class GeoStyles {
       }
     };
     this._styles = {
-      centroids: {
-        type: 'symbol',
-        layout: {
-          'icon-allow-overlap': true,
-          'icon-image': '{icon-image}',
+      default: {
+        lines: lineStyle,
+        points: pointStyle,
+        polygons: polygonStyle,
+        centroids: {
+          type: 'symbol',
+          layout: {
+            'icon-allow-overlap': true,
+            'icon-image': '{icon-image}',
+          },
+          paint: {
+            'icon-opacity': 1
+          }
         },
-        paint: {
-          'icon-opacity': 1
-        }
       },
-      lines: lineStyle,
-      points: pointStyle,
-      polygons: polygonStyle,
-      rail: objectMerge(lineStyle, {
-        paint: {
-          'line-color': '#c34242',
-        }
-      }),
-      road: objectMerge(lineStyle, {
-        paint: {
-          'line-color': '#f68b3f',
-        }
-      }),
-      seaport: objectMerge(pointStyle, {
-        layout: {
-          'icon-image': 'Seaport',
-        },
-      }),
-      pipeline: objectMerge(lineStyle, {
-        paint: {
-          'line-color': '#7e3c22',
-        }
-      }),
-      ict: objectMerge(lineStyle, {
-        paint: {
-          'line-color': '#65bc46',
-        }
-      }),
-      dryport: objectMerge(pointStyle, {
-        layout: {
-          'icon-image': 'Dryport',
-        },
-      }),
-      multimodal: objectMerge(pointStyle, {
-        layout: {
-          'icon-image': 'Dryport',
-        },
-      }),
-      intermodal: objectMerge(pointStyle, {
-        layout: {
-          'icon-image': 'Dryport',
-        },
-      }),
+      rail: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#c34242',
+          }
+        }),
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': 'Rail',
+          },
+        }),
+      },
+      road: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#f68b3f',
+          }
+        }),
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': 'Road',
+          },
+        }),
+      },
+      seaport: {
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': 'Seaport',
+          },
+        }),
+      },
+      pipeline: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#7e3c22',
+          }
+        }),
+      },
+      ict: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#65bc46',
+          }
+        }),
+      },
+      dryport: {
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': 'Dryport',
+          },
+        }),
+      },
+      multimodal: {
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': 'Dryport',
+          },
+        }),
+      },
+      intermodal: {
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': 'Dryport',
+          },
+        }),
+      },
     };
-
-    this._compatibilityTable = {
-      'lines': new Set(['rail', 'road', 'pipeline', 'ict']),
-      'points': new Set(['seaport', 'dryport', 'multimodal', 'intermodal']),
-      'polygons': new Set([]),
-    }
   }
 
   getStyleFor(geometryType, infrastructureType = null) {
     const typeLookup = infrastructureType ? infrastructureType.toLowerCase().replace(' ', '-') : null;
-    const isGeometryCompatible = typeLookup ? this._compatibilityTable[geometryType].has(typeLookup) : false;
-    if (this._styles.hasOwnProperty(typeLookup) && isGeometryCompatible) {
-      return this._styles[typeLookup];
+    if (this._styles.hasOwnProperty(typeLookup)) {
+      let lookup = this._styles[typeLookup];
+      if (lookup.hasOwnProperty(geometryType)) {
+        return lookup[geometryType];
+      }
     }
-    return this._styles[geometryType];
+    return this._styles['default'][geometryType];
   }
 }
