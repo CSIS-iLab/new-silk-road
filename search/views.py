@@ -102,11 +102,15 @@ class SearchView(TemplateView):
         if facets:
             facets_dict = facets.to_dict()
             facets_info = []
+            qd = self.query_dict.copy()
+            for key in ('offset', 'size'):
+                if key in qd:
+                    del qd[key]
             for name, facet_list in facets_dict.items():
                 facets_info.append({
                     'raw': name,
                     'name': name.translate(FACET_NAME_TRANSLATOR).strip(),
-                    'info': list(process_raw_facets(name, facet_list, self.query_dict.copy())),
+                    'info': list(process_raw_facets(name, facet_list, qd)),
                 })
 
             context['search']['facets'] = facets_info
