@@ -10,14 +10,8 @@ const resultsNavStyle = {
   }
 }
 
-const resultsViewStyle = {
-  maxHeight: '100%',
-  overflow: 'hidden',
-}
-
 const scrollWrap = {
   base: {
-    maxHeight: '88%',
     overflowX: 'hidden',
     overflowY: 'scroll',
     '.scrollContent': {
@@ -70,16 +64,20 @@ class ResultsView extends Component {
         <div className="resultsNav" style={[
           noResults && resultsNavStyle.hidden
         ]}>
-          <Button
+          <div className="buttonWrap">
+            <Button
             enabled={this.props.previousURL !== null}
             onClick={this.handlePreviousClick}
             value={this.props.previousURL}
-          >Previous</Button>
-          <Button
+            >Previous</Button>
+          </div>
+          <div className="buttonWrap">
+            <Button
             enabled={this.props.nextURL !== null}
             onClick={this.handleNextClick}
             value={this.props.nextURL}
-          >Next</Button>
+            >Next</Button>
+          </div>
         </div>
         <div className="scrollWrap" ref="scrollWrap"
         style={[
@@ -90,10 +88,6 @@ class ResultsView extends Component {
             <ResultsList results={this.props.results} />
           </div>
         </div>
-        <Style
-          scopeSelector=".resultsView"
-          rules={resultsViewStyle}
-        />
       </div>
     );
   }

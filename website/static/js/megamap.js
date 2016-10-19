@@ -65967,14 +65967,8 @@ var resultsNavStyle = {
   }
 };
 
-var resultsViewStyle = {
-  maxHeight: '100%',
-  overflow: 'hidden'
-};
-
 var scrollWrap = {
   base: {
-    maxHeight: '88%',
     overflowX: 'hidden',
     overflowY: 'scroll',
     '.scrollContent': {
@@ -66027,22 +66021,30 @@ var ResultsView = function (_Component) {
           "div",
           { className: "resultsNav", style: [noResults && resultsNavStyle.hidden] },
           _react2.default.createElement(
-            _forms.Button,
-            {
-              enabled: this.props.previousURL !== null,
-              onClick: this.handlePreviousClick,
-              value: this.props.previousURL
-            },
-            "Previous"
+            "div",
+            { className: "buttonWrap" },
+            _react2.default.createElement(
+              _forms.Button,
+              {
+                enabled: this.props.previousURL !== null,
+                onClick: this.handlePreviousClick,
+                value: this.props.previousURL
+              },
+              "Previous"
+            )
           ),
           _react2.default.createElement(
-            _forms.Button,
-            {
-              enabled: this.props.nextURL !== null,
-              onClick: this.handleNextClick,
-              value: this.props.nextURL
-            },
-            "Next"
+            "div",
+            { className: "buttonWrap" },
+            _react2.default.createElement(
+              _forms.Button,
+              {
+                enabled: this.props.nextURL !== null,
+                onClick: this.handleNextClick,
+                value: this.props.nextURL
+              },
+              "Next"
+            )
           )
         ),
         _react2.default.createElement(
@@ -66054,11 +66056,7 @@ var ResultsView = function (_Component) {
             { className: "scrollContent" },
             _react2.default.createElement(_ResultsList2.default, { results: this.props.results })
           )
-        ),
-        _react2.default.createElement(_radium.Style, {
-          scopeSelector: ".resultsView",
-          rules: resultsViewStyle
-        })
+        )
       );
     }
   }]);
@@ -66491,13 +66489,17 @@ var SearchView = function (_Component) {
               );
             }
           }(),
-          _react2.default.createElement(_ResultsView2.default, {
-            results: results,
-            onNextClick: this.handleResultsNavClick,
-            nextURL: nextURL,
-            onPreviousClick: this.handleResultsNavClick,
-            previousURL: previousURL
-          }),
+          _react2.default.createElement(
+            "div",
+            { className: "resultsViewWrapper" },
+            _react2.default.createElement(_ResultsView2.default, {
+              results: results,
+              onNextClick: this.handleResultsNavClick,
+              nextURL: nextURL,
+              onPreviousClick: this.handleResultsNavClick,
+              previousURL: previousURL
+            })
+          ),
           errorView
         ),
         _react2.default.createElement(

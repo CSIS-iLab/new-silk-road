@@ -172,6 +172,7 @@ export default class SearchView extends Component {
                 );
               }
             })()}
+            <div className="resultsViewWrapper">
             <ResultsView
             results={results}
             onNextClick={this.handleResultsNavClick}
@@ -179,6 +180,8 @@ export default class SearchView extends Component {
             onPreviousClick={this.handleResultsNavClick}
             previousURL={previousURL}
             />
+            </div>
+
             {errorView}
         </div>
         <footer>
