@@ -286,6 +286,9 @@ class EntrySerializer(ModelSerializer):
             'url',
         )
 
+    def get_content(self, instance):
+        return instance.content_rendered
+
     def get_description(self, instance):
         return instance.description_rendered
 
