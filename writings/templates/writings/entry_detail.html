@@ -41,7 +41,7 @@
     {% if object.featured_image %}
     <section class="featured_image">
         <figure>
-            <img src="{{object.featured_image.url}}" alt="{{object.featured_image.default_alt_text}}" />
+            <img src="{{object.featured_image.url}}" alt="{{object.featured_image.default_alt_text|default:object.featured_image.default_caption|default:''}}" />
             <figcaption>{{object.featured_image.default_caption|default:""}}</figcaption>
         </figure>
     </section>
