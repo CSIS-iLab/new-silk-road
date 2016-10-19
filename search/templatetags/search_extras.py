@@ -45,6 +45,6 @@ def cleanhighlight(value):
     value = value.strip(',.;:\'\"')
     if value.startswith(' '):
         value = "&hellip;{}".format(value.lstrip())
-    if ' ' in value and not value.endswith('.'):
+    if ' ' in value and not value.endswith('.') and not value.endswith('>'):
         value = "{}&hellip;".format(value.rstrip())
     return value
