@@ -43,6 +43,9 @@ def facettitle(value):
 @stringfilter
 def cleanhighlight(value):
     value = value.strip(',.;:\'\"')
+    if '&gt;' in value:
+        value = ' '.join(value.split('&gt;')[1:])
+
     if value.startswith(' '):
         value = "&hellip;{}".format(value.lstrip())
     if ' ' in value and not value.endswith('.') and not value.endswith('>'):

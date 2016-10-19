@@ -67,7 +67,7 @@ Search | {{ block.super }}
                         {% if field|lower != 'name' %}
                         <h4>{{field|facettitle}}</h4>
                         {% for item in value_list  %}
-                        <p>{{item|html_text:'p,b,i,em,strong'|cleanhighlight|safe}}</p>{% endfor %}
+                        <p>{{item|html_text:'b,i,em,strong'|cleanhighlight|safe}}</p>{% endfor %}
                         {% endif %}{% endfor %}
                     </div>
                 </section>{% endspaceless %}
