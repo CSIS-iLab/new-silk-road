@@ -240,6 +240,7 @@ article {
                     @include flex(1 0 auto);
                     margin-bottom: $large-spacing;
                     @include media($medium-break) {
+                        min-width: 50%;
                         @include flex(1 0 50%);
                     }
                 }
@@ -905,6 +906,7 @@ article {
                 width: auto;
 
                 > li {
+                    max-width: 20%;
                     @include flex(0 1 20%);
                     margin-bottom: 0;
                 }

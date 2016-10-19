@@ -191,8 +191,10 @@ $scroll-max-height: $results-view-max-height - 46;
                 @include align-items(center);
                 margin: 0;
                 height: 25px;
+                width: 50%;
                 span, img {
                     @include flex(0 1 50%);
+                    min-width: 50%;
                 }
                 span {
                     text-align: right;
@@ -276,6 +278,7 @@ $scroll-max-height: $results-view-max-height - 46;
         > *, > .button-wrap {
             @include flex(0 1 40%);
             min-width: 80px;
+            max-width: 40%;
             max-height: 36px;
             display: block;
 

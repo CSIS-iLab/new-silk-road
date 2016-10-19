@@ -167,6 +167,7 @@
         > div {
             display: block;
             min-height: 240px;
+            width: 100%;
             @include flex(1 0 100%);
         }
 

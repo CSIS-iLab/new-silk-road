@@ -463,7 +463,7 @@ body > footer {
             }
 
             .branding {
-                @include flex(0 1 auto);
+                @include flex(0 1 33%);
                 min-height: auto;
                 padding-top: 0;
             }
@@ -471,6 +471,7 @@ body > footer {
 
         @include media($large-break) {
             .branding {
+                max-width: 33%;
                 @include flex(0 1 33%);
             }
 

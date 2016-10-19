@@ -28,7 +28,8 @@
 
     .wrap {
         > div {
-            @include flex(0 1 45%);
+            max-width: auto;
+            @include flex(0 1 100%);
             min-height: 360px;
             margin-bottom: $small-spacing;
         }
@@ -42,6 +43,8 @@
         @include media($medium-break) {
             @include flex-direction(row);
             > div {
+                max-width: 45%;
+                @include flex(0 1 45%);
                 margin-bottom: 0;
             }
         }
@@ -76,6 +79,7 @@ section.columnar {
             @include flex-wrap(wrap);
             > div, > section {
                 min-height: 200px;
+                max-width: 48%;
                 @include flex(0 1 48%);
                 &:last-of-type {
                     margin-bottom: $medium-spacing;
@@ -90,6 +94,7 @@ section.columnar {
         }
         > div {
             @include media($medium-break) {
+                max-width: 32%;
                 @include flex(0 0 32%);
             }
         }
@@ -137,6 +142,7 @@ header {
         @include flex-wrap(wrap);
 
         section, > div {
+            max-width: 40%;
             @include flex(0 1 40%);
             &:not(:last-of-type) {
                 margin-right: 20%;
@@ -149,6 +155,7 @@ header {
         @include flex-wrap(wrap);
 
         section, > div {
+            max-width: 25%;
             @include flex(0 1 25%);
             &:not(:last-of-type) {
                 margin-right: 12.5%;
