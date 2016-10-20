@@ -53,6 +53,10 @@ input {
     }
 }
 
+input[type=search] {
+    @include appearance(textfield);
+}
+
 input.primary {
     background-color: $dark-night;
     padding: 8px 4px 8px 8px;
