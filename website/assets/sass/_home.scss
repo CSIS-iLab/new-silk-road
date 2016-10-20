@@ -187,7 +187,7 @@
         @include background-poster($database-img);
 
         @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-blue;
+        border-bottom: $thin-border-width solid $dark-night;
 
         .inner {
             position: absolute;

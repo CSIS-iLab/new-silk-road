@@ -15,6 +15,7 @@ $scroll-max-height: $results-view-max-height - 46;
     font-size: $search-text-size;
     top: 5px;
     right: 10px;
+    z-index: 10;
 
     @include media($megamap-break) {
         display: block;
@@ -94,12 +95,18 @@ $scroll-max-height: $results-view-max-height - 46;
         > button[type='submit'] {
             @include hide-text;
             padding: 0;
-            margin-right: 8px;
             background: url($search-btn-active-img) center no-repeat;
-            width: $search-btn-width;
+            background-size: $search-btn-width $search-btn-width;
+            width: $search-btn-width + 16px;
+            border-left: 1px solid $blue-steel;
 
             &[disabled] {
                 background: url($search-btn-inactive-img) center no-repeat;
+                background-size: $search-btn-width $search-btn-width;
+            }
+
+            &:hover {
+                background-size: $search-btn-width+2 $search-btn-width+2;
             }
         }
         > button[type='reset'] {
@@ -276,15 +283,54 @@ $scroll-max-height: $results-view-max-height - 46;
         @include align-content(stretch);
 
         > *, > .button-wrap {
-            @include flex(0 1 40%);
+            @include flex(0 1 33%);
             min-width: 80px;
             max-width: 40%;
             max-height: 36px;
             display: block;
 
+            $arr-width: 12px;
+            $arr-color: darken($slate-grey, 10%);
+            $height: 30px;
+            $vector: $height/2;
+            $arr-margin: $arr-width * 1.5;
+
             button {
                 width: 100%;
                 height: 100%;
+                background-color: $arr-color;
+                position: relative;
+            }
+
+            &:first-child {
+                margin-left: $arr-margin;
+                button::before {
+                    display: block;
+                    position: absolute;
+                    left: -$arr-width;
+                    top: 0;
+                    content: " ";
+                    width: $arr-width;
+                    height: 100%;
+                    border-top: $vector solid transparent;
+                    border-right: $arr-width solid $arr-color;
+                    border-bottom: $vector solid transparent;
+                }
+            }
+            &:last-child {
+                margin-right: $arr-margin;
+                button::after {
+                    display: block;
+                    position: absolute;
+                    right: -$arr-width;
+                    top: 0;
+                    content: " ";
+                    width: $arr-width;
+                    height: 100%;
+                    border-top: $vector solid transparent;
+                    border-left: $arr-width solid $arr-color;
+                    border-bottom: $vector solid transparent;
+                }
             }
         }
 
