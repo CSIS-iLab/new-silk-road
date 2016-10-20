@@ -14,11 +14,15 @@
     }
 
     .inner {
-        max-width: $max-content-width;
+        max-width: $small-wrap;
         margin: 0 auto;
         p:last-of-type {
             margin: 0;
         }
+
+        @include media($large-break) {
+            max-width: $max-content-width;
+        };
     }
 
     h2.highlighter {
@@ -58,7 +62,7 @@
         }
     }
 
-    #video, #analysis {
+    #video, #analysis, #partner-analysis {
         h3 {
             font-size: $major-hed-size;
             font-family: $serif-font-family;
@@ -159,6 +163,84 @@
         }
 
     }
+    img#nikkei-logo {
+        max-width: 340px;
+        max-height: auto;
+    }
+
+    #partner-analysis {
+        background-color: $pale-green;
+
+        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
+        border-bottom: $thin-border-width solid $dark-green;
+
+        .inner {
+            padding: $section-spacing 0;
+            color: $slate-grey;
+
+            h4, h5 {
+                color: $slate-grey;
+            }
+            h5 {
+                font-size: $minor-text-size;
+            }
+        }
+
+        header {
+            @include display(flex);
+            @include flex-direction(column);
+            @include justify-content(space-between)
+            @include align-items(center);
+            max-width: 100%;
+            margin-bottom: $large-spacing;
+            color: $callout-color;
+
+            overflow-wrap: normal;
+
+            > h2 {
+                font-size: $section-hed-size;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
+            > h3 {
+                font-family: $serif-font-family;
+                font-size: $minor-text-size;
+                font-style: italic;
+            }
+
+            > h2, > h3 {
+                text-decoration: none;
+                margin-bottom: 0;
+            }
+
+            > h2, > h3 {
+                @include flex(1 1 auto);
+                max-width: 100%;
+                margin-bottom: $small-spacing;
+                text-align: center;
+            }
+
+            > img {
+                @include flex(0 1 auto);
+                max-width: auto;
+                margin-bottom: $small-spacing;
+            }
+
+            @include media($medium-break) {
+                @include flex-direction(row);
+                > h2, > h3, > img {
+                    text-align: left;
+                    margin-bottom: 0;
+                }
+
+                > img {
+                    @include flex(0 1 340px);
+                }
+            }
+
+        }
+    }
+
     #featured-analysis .row {
         @include display(flex);
         @include flex-direction(column);
@@ -205,6 +287,28 @@
         }
     }
 
+    #analysis, #partner-analysis {
+        h3 {
+            font-size: $major-hed-size;
+            font-weight: 400;
+            font-style: italic;
+            line-height: normal;
+            margin-bottom: $small-spacing;
+        }
+
+        h4 {
+            font-size: $section-hed-size;
+        }
+
+        h5 {
+            font-style: italic;
+        }
+
+        h5, h4, button a {
+            color: $pale-green;
+        }
+    }
+
     #analysis {
         background-color: $dark-night;
         color: $medium-green;
@@ -241,26 +345,6 @@
             span {
                 background-color: $medium-green;
             }
-        }
-
-        h3 {
-            font-size: $major-hed-size;
-            font-weight: 400;
-            font-style: italic;
-            line-height: normal;
-            margin-bottom: $small-spacing;
-        }
-
-        h4 {
-            font-size: $section-hed-size;
-        }
-
-        h5 {
-            font-style: italic;
-        }
-
-        h5, h4, button a {
-            color: $pale-green;
         }
     }
 

@@ -29,7 +29,7 @@
         {% if featured_entry %}
         <div>
             <h3><a href="{{featured_entry.get_absolute_url}}">{{featured_entry.title}}</a></h3>
-            <h5 class='date'><time datetime='{{entry.publication_date|date:"c"}}'>{{featured_entry.publication_date|date}}</time></h5>
+            <h5 class='date'><time datetime='{{featured_entry.publication_date|date:"c"}}'>{{featured_entry.publication_date|date}}</time></h5>
             {% if featured_entry.author %}
             <h4>By {{featured_entry.author}}</h4>
             {% endif %}
@@ -53,6 +53,24 @@
             <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
         </div>
     </a>
+</section>
+<section id='partner-analysis'>
+    <div class="inner">
+        <header>
+            <h2>From the reporter&rsquo;s notebook</h2>
+            <h3>In partnership with</h3>
+            <img id='nikkei-logo' src='{% static "img/Nikkei_Asian_Logo.svg" %}' alt='Nikkei Asian Review' />
+        </header>
+        {% if partner_entry %}
+        <div>
+            <h3><a href="{{partner_entry.get_absolute_url}}">{{partner_entry.title}}</a></h3>
+            <h5 class='date'><time datetime='{{partner_entry.publication_date|date:"c"}}'>{{partner_entry.publication_date|date}}</time></h5>
+            {% if partner_entry.author %}
+            <h4>By {{partner_entry.author}}</h4>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
 </section>
 <section id='featured-analysis' class='feature columnar'>
     <h2>News and Features</h2>

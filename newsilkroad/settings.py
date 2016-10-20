@@ -378,6 +378,11 @@ CONSTANCE_CONFIG = {
         'Slug for the collection (writings.EntryCollection) containing the Entry to be'
         'featured on the home page', str
     ),
+    'HOMEPAGE_PARTNER_ANALYSIS_COLLECTION': (
+        'home-page-partner-analysis',
+        'Slug for the collection (writings.EntryCollection) containing the partner Entry to be'
+        'featured on the home page', str
+    ),
     'ANALYSISPAGE_FEATURED_ANALYSIS_COLLECTION': (
         'analysis-page-featured-analysis',
         'Slug for the collection (writings.EntryCollection) containing the Entry to be'
