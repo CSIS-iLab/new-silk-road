@@ -1,0 +1,43 @@
+
+@include keyframes(fadeIn) {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+    @include animation(1s ease-in 0s 1 both fadeIn);
+
+    &.fast {
+        @include animation-duration(0.5s);
+
+        @for $i from 1 through 6 {
+            &.delay-#{$i} {
+                @include animation-delay($i*0.25s);
+            }
+        }
+
+    }
+
+    &.slow {
+        @include animation-duration(1.5s);
+    }
+
+}
+
+
+@include keyframes(slideIn) {
+    from {
+        transform: translate(-2000px, 0);
+    }
+    to {
+        transform: translate(0, 0);
+    }
+}
+
+.slideIn {
+    @include animation(0.75s ease-in 0s 1 both slideIn);
+}
