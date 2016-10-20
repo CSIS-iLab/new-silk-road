@@ -28,7 +28,7 @@ Search | {{ block.super }}
                 <h4>{{ facet.name|title }}</h4>
                 <ol class='submenu'>{% for f in facet.info  %}
                     <li>{% spaceless %}
-                        <a href="{% url 'search:search' %}?{{f.querystring}}">{{f.label}} ({{f.count}})</a>{% endspaceless %}
+                        <a href="{% url 'search:search' %}?{{f.querystring}}">{{f.label}} <strong>({{f.count}}&nbsp;results)</strong></a>{% endspaceless %}
                     </li>{% endfor %}
                 </ol>
             </li>{% endif %}
