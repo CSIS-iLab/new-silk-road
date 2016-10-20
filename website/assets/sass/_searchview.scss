@@ -297,7 +297,7 @@ $scroll-max-height: $results-view-max-height - 46;
 
             button {
                 width: 100%;
-                height: 100%;
+                height: $height;
                 background-color: $arr-color;
                 position: relative;
             }
@@ -311,7 +311,7 @@ $scroll-max-height: $results-view-max-height - 46;
                     top: 0;
                     content: " ";
                     width: $arr-width;
-                    height: 100%;
+                    height: $height;
                     border-top: $vector solid transparent;
                     border-right: $arr-width solid $arr-color;
                     border-bottom: $vector solid transparent;
@@ -326,7 +326,7 @@ $scroll-max-height: $results-view-max-height - 46;
                     top: 0;
                     content: " ";
                     width: $arr-width;
-                    height: 100%;
+                    height: $height;
                     border-top: $vector solid transparent;
                     border-left: $arr-width solid $arr-color;
                     border-bottom: $vector solid transparent;
