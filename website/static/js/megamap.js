@@ -66315,7 +66315,7 @@ var SearchView = function (_Component) {
           if (typeof value === "string") {
             value = value.trim();
           }
-          if (value && value !== '' && Array.isArray(value) && value.length !== 0) {
+          if (value !== null && (typeof value === "string" && value !== '' || Array.isArray(value) && value.length !== 0)) {
             queryUpdate[key] = value;
           } else {
             delete queryUpdate[key];

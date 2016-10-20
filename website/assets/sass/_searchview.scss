@@ -194,7 +194,7 @@ $scroll-max-height: $results-view-max-height - 46;
                 width: 50%;
                 span, img {
                     @include flex(0 1 50%);
-                    min-width: 50%;
+                    max-width: 50%;
                 }
                 span {
                     text-align: right;
