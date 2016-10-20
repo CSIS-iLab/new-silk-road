@@ -342,6 +342,7 @@ class ShareholderBase(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['investment', '-value']
 
 
 class OrganizationShareholder(ShareholderBase):
