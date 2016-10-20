@@ -92,6 +92,8 @@ if DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True":
     from debug_toolbar.settings import PANELS_DEFAULTS
     INSTALLED_APPS.append('debug_toolbar')
     DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + ['cachalot.panels.CachalotPanel']
+    if os.getenv("DEBUG_PROFILING", "False") == "True":
+        DEBUG_TOOLBAR_PANELS += ['debug_toolbar.panels.profiling.ProfilingPanel']
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
