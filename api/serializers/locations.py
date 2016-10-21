@@ -92,7 +92,9 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         id_field = 'identifier'
 
     def get_properties(self, instance, fields):
-        project = Project.objects.filter(geo=instance).only('name', 'alternate_name', 'infrastructure_type__name').first()
+        project = Project.objects.filter(geo=instance)\
+                         .select_related('infrastructure_type')\
+                         .only('name', 'alternate_name', 'infrastructure_type__name').first()
         infra_name = project.infrastructure_type.name if project else None
         proj_name = project.alternate_name or project.name if project else None
         icon_type = ICON_MAP.get(infra_name.lower(), 'dot') if infra_name else None
