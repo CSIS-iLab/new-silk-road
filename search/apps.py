@@ -12,11 +12,13 @@ class SearchAppConfig(AppConfig):
     def ready(self):
         from search.signals import run_post_save_search_tasks, run_post_delete_search_tasks  # noqa: F401
 
-        search_conf = SearchConf()
+        search_conf = SearchConf(auto_setup=True)
         model_labels = search_conf.get_registered_models()
 
+        logger.info('Connect post_save signals for {} models'.format(len(model_labels)))
+
         for label in model_labels:
-            logger.debug('Connecting post_save for {}'.format(label))
+            logger.info('Connecting post_save for {}'.format(label))
             post_save.connect(
                 run_post_save_search_tasks,
                 sender=label,
