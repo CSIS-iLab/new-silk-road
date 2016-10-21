@@ -40,13 +40,11 @@
         @include flex-direction(column);
         @include justify-content(flex-start);
 
-        @include media($medium-break) {
-            @include flex-direction(row);
-            @include flex-wrap(wrap);
-        }
-
         > figure {
-            @include flex(0 1 33.33%);
+            display: block;
+            @include flex(1 1 25%);
+            max-width: none;
+            min-height: 170px;
             margin-bottom: $medium-spacing;
 
             img {
@@ -67,6 +65,15 @@
                 .position {
                     font-style: italic;
                 }
+            }
+        }
+
+        @include media($medium-break) {
+            @include flex-direction(row);
+
+            > figure {
+                max-width: 25%;
+                margin-bottom: 0;
             }
         }
     }

@@ -160,8 +160,8 @@ section.buzz {
                     height: 27px;
                     display: block;
                     position: absolute;
-                    top: 12px;
-                    right: -12px;
+                    top: -3px;
+                    right: -27px;
 
                     @include media($medium-break) {
                         top: 3px;
