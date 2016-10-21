@@ -327,12 +327,18 @@
                 @include flex(1 1 auto);
                 margin-bottom: $medium-spacing;
 
+                &:first-of-type {
+                    max-width: 74%;
+                }
+
                 &:last-of-type {
                     max-width: 240px;
+                    margin-bottom: 0;
                 }
             }
             @include media($medium-break) {
                 @include flex-direction(row);
+                @include justify-content(space-between)
 
                 > div {
                     margin-bottom: inherit;
