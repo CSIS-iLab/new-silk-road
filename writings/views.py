@@ -13,7 +13,7 @@ from django.utils import timezone
 from constance import config
 
 
-def filter_collection_to_published(collection):
+def get_published_orderedentries_from_collection(collection):
     if isinstance(collection, EntryCollection):
         return collection.orderedentry_set.filter(
             entry__published=True,
@@ -57,11 +57,12 @@ class ConfiguredCollectionMixin(ContextMixin):
             kwargs[context_label] = None
             if slug:
                 try:
-                    collection = filter_collection_to_published(EntryCollection.objects.get(slug=slug))
-                    if collection:
+                    entry_list = get_published_orderedentries_from_collection(EntryCollection.objects.get(slug=slug))
+                    if entry_list:
+                        entry_list = entry_list.order_by('order')
                         if collection_limit:
-                            collection = collection[:collection_limit]
-                        kwargs[context_label] = [instance.entry for instance in collection]
+                            entry_list = entry_list[:collection_limit]
+                        kwargs[context_label] = [instance.entry for instance in entry_list]
                 except EntryCollection.DoesNotExist:
                     pass
         return kwargs
@@ -84,9 +85,9 @@ class FeaturedEntryMixin(object):
 
         if slug:
             try:
-                collection = filter_collection_to_published(EntryCollection.objects.get(slug=slug))
-                if collection:
-                    ordered_entry = collection.order_by('order').first()
+                entry_list = get_published_orderedentries_from_collection(EntryCollection.objects.get(slug=slug))
+                if entry_list:
+                    ordered_entry = entry_list.order_by('order').first()
                     return ordered_entry.entry
             except EntryCollection.DoesNotExist:
                 pass

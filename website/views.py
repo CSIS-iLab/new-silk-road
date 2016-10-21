@@ -3,26 +3,25 @@ from constance import config
 from website.models import Collection
 from facts.models.organizations import DETAIL_MODEL_NAMES
 from infrastructure.models import InfrastructureType
-from writings.views import FeaturedAnalysesMixin, FeaturedEntryMixin, filter_collection_to_published
+from writings.views import FeaturedAnalysesMixin, FeaturedEntryMixin, get_published_orderedentries_from_collection
 from writings.models import EntryCollection
+
 
 class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
     template_name = "website/home.html"
     featured_config_key = 'HOMEPAGE_FEATURED_ANALYSIS_COLLECTION'
 
-    def get_partner_slug(self):
-        return getattr(config, 'HOMEPAGE_PARTNER_ANALYSIS_COLLECTION', None)
-
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
         video_url = getattr(config, 'HOMEPAGE_VIDEO_URL', None)
         kwargs['video_url'] = video_url.strip() if isinstance(video_url, str) and video_url.startswith('http') else None
-        partner_slug = self.get_partner_slug()
+        partner_slug = getattr(config, 'HOMEPAGE_PARTNER_ANALYSIS_COLLECTION', None)
         if partner_slug:
             try:
-                collection = filter_collection_to_published(EntryCollection.objects.get(slug=partner_slug))
-                if collection:
-                    kwargs['partner_entry'] = collection.first().entry
+                entry_list = get_published_orderedentries_from_collection(EntryCollection.objects.get(slug=partner_slug))
+                if entry_list:
+                    ordered_entry = entry_list.order_by('order').first()
+                    kwargs['partner_entry'] = ordered_entry.entry
             except EntryCollection.DoesNotExist:
                 pass
         return kwargs
