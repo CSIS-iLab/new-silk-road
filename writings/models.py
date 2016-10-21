@@ -89,6 +89,9 @@ class Entry(Publishable):
             }
         )
 
+    def is_visible(self):
+        return self.published and self.publication_date <= timezone.now()
+
     def get_next_published_entry(self):
         if not self.publication_date:
             return None  # If no publication date

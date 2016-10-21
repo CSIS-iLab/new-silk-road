@@ -99,7 +99,7 @@ class EntryAdmin(TaggitCounter, admin.ModelAdmin):
     page_link.description = "View on Site"
 
     def page_is_visible(self, obj):
-        return obj.published and obj.publication_date <= timezone.now()
+        return obj.is_visible()
     page_is_visible.description = "Visible on Site?"
     page_is_visible.boolean = True
 
@@ -107,21 +107,31 @@ class EntryAdmin(TaggitCounter, admin.ModelAdmin):
 class OrderedEntryInline(admin.StackedInline):
     model = OrderedEntry
     sortable = 'order'
-    readonly_fields = ('entry_published',)
+    ordering = ['order', ]
+    readonly_fields = ('entry_visible', 'entry_published', 'entry_publication_date')
     show_change_link = True
     fieldsets = (
         (None, {
             'fields': (('entry', 'order'),)
         }),
         (None, {
-            'fields': ('entry_published',)
+            'fields': ('entry_publication_date', 'entry_published', 'entry_visible',)
         }),
     )
+
+    def entry_publication_date(self, instance):
+        return instance.entry.publication_date.strftime('%Y-%m-%d %H:%M:%S')
+    entry_publication_date.description = 'Publication Date'
 
     def entry_published(self, instance):
         return instance.entry.published
     entry_published.description = 'Published'
     entry_published.boolean = True
+
+    def entry_visible(self, instance):
+        return instance.entry.is_visible()
+    entry_visible.description = 'Visible'
+    entry_visible.boolean = True
 
 
 class EntryCollectionAdmin(admin.ModelAdmin):
