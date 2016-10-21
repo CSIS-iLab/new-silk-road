@@ -126,7 +126,7 @@ class OrderedEntryInline(admin.StackedInline):
 
 class EntryCollectionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    list_display = ('name', 'entry_count')
+    list_display = ('name', 'slug', 'entry_count')
 
     inlines = [
         OrderedEntryInline,
