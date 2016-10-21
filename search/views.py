@@ -1,4 +1,6 @@
 from django.views.generic.base import TemplateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from collections import defaultdict
 from .searches import SiteSearch
 from .utils import FACET_NAME_TRANSLATOR
@@ -27,6 +29,7 @@ def process_selected_facets(facet_query_list):
         }
 
 
+@method_decorator(never_cache, name='dispatch')
 class SearchView(TemplateView):
 
     template_name = "search/search_results.html"
