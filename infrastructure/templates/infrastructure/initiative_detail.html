@@ -31,12 +31,22 @@
         <section>
             <h3>Principal Agent</h3>
             <ul class="clean">
-                <li>{{object.principal_agent.name|default:"&mdash;"}}</li>
+                <li>{% if object.principal_agent %}
+                    <a href="{{object.principal_agent.get_absolute_url}}">{{object.principal_agent.name|default:"&mdash;"}}</a>
+                    {% else %}
+                    &mdash;
+                    {% endif %}
+                </li>
             </ul>
         </section>
         <section>
             <h3>Parent Initiative</h3>
-            <p>{{object.parent.name|default:"&mdash;"}}</p>
+            <p>{% if object.parent %}
+                <a href="{{object.parent.get_absolute_url}}">{{object.parent.name|default:"&mdash;"}}</a>
+                {% else %}
+                &mdash;
+                {% endif %}
+            </p>
         </section>
         <section>
             <h3>Type</h3>
