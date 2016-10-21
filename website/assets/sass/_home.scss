@@ -428,6 +428,7 @@
 
             .callout {
                 @include flex(1 0 100%);
+                max-width: none;
                 min-height: inherit;
                 text-align: center;
             }

@@ -137,11 +137,10 @@ section.buzz {
             top: 50%;
             left: 0;
             max-width: 90%;
-            padding: $small-spacing;
+            padding: $small-spacing $large-spacing $small-spacing $large-spacing;
 
             @include media($medium-break) {
                 max-width: 55%;
-                padding: $small-spacing $large-spacing $small-spacing $large-spacing;
                 top: auto;
                 bottom: 20px;
             }
@@ -150,6 +149,7 @@ section.buzz {
                 font-size: $base-font-size;
                 text-transform: uppercase;
                 margin-bottom: $tiny-spacing;
+                position: relative;
 
                 @include media($medium-break) {
                     font-size: $section-hed-size;
@@ -161,11 +161,11 @@ section.buzz {
                     display: block;
                     position: absolute;
                     top: 12px;
-                    right: 8px;
+                    right: -12px;
 
                     @include media($medium-break) {
-                        top: 18px;
-                        right: 18px;
+                        top: 3px;
+                        right: -27px;
                     }
 
                 }
