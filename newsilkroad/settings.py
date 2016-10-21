@@ -465,6 +465,8 @@ SEARCH = {
         }
     }
 }
+# Hook to enable signals set up in search.apps.SearchAppConfig
+SEARCH_SIGNALS = os.getenv('SEARCH_SIGNALS', 'False') == 'True'
 
 # Silence cachealot check as it seems to work
 SILENCED_SYSTEM_CHECKS = [
