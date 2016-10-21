@@ -144,8 +144,13 @@ LOGGING = {
             'format': '%(asctime)s %(message)s',
             'datefmt': '%H:%M:%S',
         },
+        'informative': {
+            'format': '[%(name)s]%(levelname)s %(asctime)s '
+                      '%(message)s',
+            'datefmt': '%H:%M:%S',
+        },
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
+            'format': '[%(name)s]%(levelname)s %(asctime)s %(module)s '
                       '%(process)d %(thread)d %(message)s'
         },
     },
@@ -163,6 +168,7 @@ LOGGING = {
         },
         "console": {
             "class": "logging.StreamHandler",
+            'formatter': 'informative',
         },
     },
     "loggers": {
