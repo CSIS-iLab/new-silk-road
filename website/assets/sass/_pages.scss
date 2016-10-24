@@ -386,10 +386,13 @@ article {
         border-bottom: none;
 
         form {
-            width: 55%;
             margin: 0 auto;
             @include justify-content(space-around);
             @include align-items(center);
+
+            > span:first-child {
+                margin-bottom: $tiny-spacing;
+            }
         }
 
         button.dropdown {
@@ -411,6 +414,16 @@ article {
                 border-left: 2px solid rgba(0, 0, 0, 0.2);
             }
         }
+
+        @include media($medium-break) {
+            form {
+                width: 55%;
+
+                > span:first-child {
+                    margin-bottom: 0;
+                }
+            }
+        };
 
     }
 

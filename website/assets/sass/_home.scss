@@ -377,7 +377,7 @@
                 background: url($play-button) no-repeat transparent;
                 background-position: 0px $text-height;
                 width: $play-button-size;
-                height: $play-button-size + $text-height;
+                height: $play-button-size + $text-height + 30px;
                 padding: 0;
             }
 

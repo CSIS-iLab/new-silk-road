@@ -260,16 +260,19 @@ header[role=banner] {
 
     .headers {
         float: none;
-        max-width: 98%;
+        min-width: 40%;
+        max-width: 94%;
         margin: 15px auto 0;
         > a {
             padding: $small-spacing/2 0 $small-spacing/2;
             display: block;
         }
         h1 {
-            @include hide-text;
+            font: 0/0 a;
+            color: transparent;
             background: url($logo-image) no-repeat;
-            line-height: inherit;
+            max-width: 300px;
+            min-height: 25px;
             margin: 0;
             text-overflow: clip;
         }
@@ -284,7 +287,6 @@ header[role=banner] {
         @include media($medium-break) {
             float: left;
             margin: 24px 0 0;
-            max-width: $medium * .40;
         }
         @include media($large-break) {
             width: 376px;

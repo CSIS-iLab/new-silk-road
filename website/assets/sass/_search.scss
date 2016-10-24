@@ -7,8 +7,12 @@
 }
 
 .search-form-wrap {
-    width: 60%;
+    width: 98%;
     margin: 0 auto $large-spacing;
+
+    @include media($medium-break) {
+        width: 60%;
+    }
 
     form {
         width: 100%;
@@ -233,24 +237,30 @@
                             NOTE: Flex had alignment issues with section inside a standard li with display: list-item;
                             Tried removing whitespace and fiddling with align-items and whatnot.
                         */
-                        h2 {
-                            width: 75%;
-                        }
 
                         h3 {
-                            width: 25%;
                             text-transform: uppercase;
                         }
 
-                        h2,
-                        h3 {
-                            display: inline-block;
-                            vertical-align: top;
+                        @include media($medium-break) {
+                            h2 {
+                                width: 75%;
+                            }
 
-                            &:last-child {
-                                text-align: right;
+                            h3 {
+                                width: 25%;
+                            }
+                            h2,
+                            h3 {
+                                display: inline-block;
+                                vertical-align: top;
+
+                                &:last-child {
+                                    text-align: right;
+                                }
                             }
                         }
+
                     }
                 }
             }
