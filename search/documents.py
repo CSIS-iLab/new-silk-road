@@ -1,6 +1,7 @@
 from elasticsearch_dsl import (
     DocType, field,
 )
+from search.analyzers import html_strip
 
 
 class CategoryDoc(field.InnerObjectWrapper):
@@ -42,7 +43,10 @@ class SerializedDoc(DocType):
 
 class EventDoc(SerializedDoc):
     name = field.String()
-    description = field.String()
+    description = field.String(
+        analyzer=html_strip,
+        fields={'raw': field.String(index='not_analyzed')}
+    )
     event_type = field.Object(properties={'name': field.String(fields={'raw': field.String(index='not_analyzed')})})
     start_year = field.Integer()
     places = field.Nested(
@@ -56,7 +60,10 @@ class EventDoc(SerializedDoc):
 
 class OrganizationDoc(SerializedDoc):
     name = field.String()
-    description = field.String()
+    description = field.String(
+        analyzer=html_strip,
+        fields={'raw': field.String(index='not_analyzed')}
+    )
     mission = field.String()
     countries = field.Nested(doc_class=CountryDoc)
     headquarters_location = field.String(fields={'raw': field.String(index='not_analyzed')})
@@ -85,7 +92,10 @@ class PersonDoc(SerializedDoc):
     given_name = field.String()
     additional_name = field.String()
     family_name = field.String()
-    description = field.String()
+    description = field.String(
+        analyzer=html_strip,
+        fields={'raw': field.String(index='not_analyzed')}
+    )
     citizenships = field.Nested(doc_class=CountryDoc)
     position_set = field.Nested(
         doc_class=PositionDoc,
@@ -122,7 +132,10 @@ class ProjectDoc(SerializedDoc):
     identifier = field.String()
     name = field.String()
     alternate_name = field.String()
-    description = field.String()
+    description = field.String(
+        analyzer=html_strip,
+        fields={'raw': field.String(index='not_analyzed')}
+    )
     status = field.String(fields={'raw': field.String(index='not_analyzed')})
     start_year = field.Integer()
     countries = field.Nested(
@@ -161,8 +174,14 @@ class ProjectDoc(SerializedDoc):
 class EntryDoc(SerializedDoc):
     title = field.String()
     author = field.String()
-    content = field.String()
-    description = field.String()
+    content = field.String(
+        analyzer=html_strip,
+        fields={'raw': field.String(index='not_analyzed')}
+    )
+    description = field.String(
+        analyzer=html_strip,
+        fields={'raw': field.String(index='not_analyzed')}
+    )
     publication_date = field.Date()
     categories = field.Nested(
         doc_class=CategoryDoc,
