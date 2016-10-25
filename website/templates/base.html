@@ -14,12 +14,16 @@
         <script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
         <script>Raven.config('{% sentry_public_dsn %}').install()</script>{% endif %}
 {% block extrahead %}{% endblock %}
-    <script>
+{% if GOOGLE_ANALYTICS_KEY %}
+        <script>
         window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-        ga('create', 'UA-86298672-1', 'auto');
+        ga('create', '{{GOOGLE_ANALYTICS_KEY}}', 'auto');
         ga('send', 'pageview');
-    </script>
-    <script async src='https://www.google-analytics.com/analytics.js'></script>
+        </script>
+        <script async src='https://www.google-analytics.com/analytics.js'></script>
+{% else %}
+    <!-- Analytics disabled -->
+{% endif %}
     </head>
     <body class="{% block bodyclass %}{% endblock %}">
         <header role="banner">

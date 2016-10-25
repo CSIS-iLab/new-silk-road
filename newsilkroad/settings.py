@@ -124,6 +124,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'website.context_processors.analytics',
             ],
         },
     },
@@ -287,6 +288,11 @@ MEDIAFILES_LOCATION = 'media'
 MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 DEFAULT_FILE_STORAGE = 'newsilkroad.project_storages.MediaStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# analytics
+
+GOOGLE_ANALYTICS_KEY = os.getenv('GOOGLE_ANALYTICS_KEY', None)
+
 
 # django-suit
 SUIT_CONFIG = {
