@@ -39,7 +39,7 @@
     "mapbox-gl": "^0.25.1",
     "object-merge": "^2.5.1",
     "promise-queue": "^2.2.3",
-    "radium": "^0.17.1",
+    "radium": "^0.18.1",
     "react": "^15.1.0",
     "react-addons-create-fragment": "^15.1.0",
     "react-dom": "^15.1.0",
