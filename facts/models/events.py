@@ -29,7 +29,7 @@ class EventType(MPTTModel):
 class Event(Publishable):
     """Describes an event, one which may have a start and end date"""
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=110, allow_unicode=True)
+    slug = models.SlugField(max_length=110, allow_unicode=True, unique=True)
     event_type = models.ForeignKey('EventType', verbose_name='type',
                                    on_delete=models.SET_NULL,
                                    blank=True, null=True)
