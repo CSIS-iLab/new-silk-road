@@ -36,3 +36,4 @@ coverage.xml
 
 # Node modules
 /node_modules
+/website/assets/apps/lib
