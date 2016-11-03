@@ -4,7 +4,8 @@
   "description": "Build assets for new-silk-road",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp",
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
@@ -49,5 +50,12 @@
     "watchify": "^3.7.0",
     "whatwg-fetch": "^1.0.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "babel": {
+      "presets": ["react", "es2015"],
+      "plugins": [
+          "transform-class-properties",
+          "transform-object-rest-spread"
+      ]
+  }
 }
