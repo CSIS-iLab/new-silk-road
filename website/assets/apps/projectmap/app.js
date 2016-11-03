@@ -2,7 +2,7 @@ import "babel-polyfill";
 import 'whatwg-fetch';
 import MapboxGl, {
   Navigation,
-} from "mapbox-gl/js/mapbox-gl";
+} from "mapbox-gl/dist/mapbox-gl.js";
 import GeoStyles from '../megamap/helpers/GeoStyles';
 
 var ProjectDetail = window.ProjectDetail || {};

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import Map from './Map';
-import MapboxGl from "mapbox-gl/js/mapbox-gl";
-import {Popup} from "mapbox-gl/js/mapbox-gl";
+import MapboxGl from "mapbox-gl/dist/mapbox-gl.js";
+import {Popup} from "mapbox-gl/dist/mapbox-gl.js";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import SearchStore from '../stores/SearchStore';
 import Cartographer, {defaultZoom} from '../helpers/Cartographer';

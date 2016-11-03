@@ -3,7 +3,7 @@ import ActionListeners from 'alt-utils/lib/ActionListeners';
 import MapboxGl, {
   Navigation,
   Popup
-} from "mapbox-gl/js/mapbox-gl";
+} from "mapbox-gl/dist/mapbox-gl.js";
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
 import GeoStoreQueue from './GeoStoreQueue';
