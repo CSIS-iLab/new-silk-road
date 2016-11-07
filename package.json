@@ -24,6 +24,7 @@
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "browser-sync": "^2.17.5",
+    "chai": "^3.5.0",
     "del": "^2.2.2",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^13.0.0",
@@ -39,6 +40,7 @@
     "gulp-sourcemaps": "^2.2.0",
     "gulp-svgmin": "^1.2.3",
     "json-loader": "^0.5.4",
+    "mocha": "^3.1.2",
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
@@ -51,7 +53,6 @@
     "promise-queue": "^2.2.3",
     "radium": "^0.18.1",
     "react": "^15.1.0",
-    "react-addons-create-fragment": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-select": "^1.0.0-beta13",
     "whatwg-fetch": "^1.0.0"
