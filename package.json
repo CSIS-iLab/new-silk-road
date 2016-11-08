@@ -4,7 +4,7 @@
   "description": "Build assets for new-silk-road",
   "readme": "README.md",
   "scripts": {
-    "start": "gulp",
+    "start": "gulp watch",
     "test": "gulp test"
   },
   "repository": {
@@ -52,8 +52,8 @@
     "object-merge": "^2.5.1",
     "promise-queue": "^2.2.3",
     "radium": "^0.18.1",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "react-select": "^1.0.0-beta13",
     "whatwg-fetch": "^1.0.0"
   },

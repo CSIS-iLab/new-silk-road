@@ -23,7 +23,7 @@ const paths = {
   cssDist: `${distBase}/css`,
   svgDist: `${distBase}/img`,
   gulpFile: 'gulpfile.babel.js',
-  allSrcJs: `${assetsBase}/apps/**/*.js`,
+  allSrcJs: `${assetsBase}/apps/**/*.js?(x)`,
   jsLibDir: `${assetsBase}/apps/lib`,
   jsDist: `${distBase}/js`,
   clientEntryPoints: [
@@ -86,12 +86,13 @@ gulp.task('js:package', ['js:build'], () =>
     .pipe(gulp.dest(paths.jsDist)),
 );
 
+gulp.task('js:watch', () => {
+  gulp.watch(paths.allSrcJs, ['js:package']);
+});
 
-// gulp.task('default', ['sass:watch', 'megamap:watch', 'projectmap:watch']);
+gulp.task('default', ['js:watch', 'js:package']);
 
-// gulp.task('build', ['sass:build', 'megamap:build', 'projectmap:build']);
-
-gulp.task('sass:watch', () => {
+gulp.task('watch', ['default'], () => {
   gulp.watch(paths.allSass, ['sass:build']);
   sync.init({
     proxy: 'localhost:8000',
