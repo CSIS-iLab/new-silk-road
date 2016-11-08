@@ -5,7 +5,7 @@ class Map extends Component {
 
   constructor() {
     super();
-    this.map = null;
+    this.glmap = null;
   }
 
   componentDidMount() {
@@ -13,26 +13,26 @@ class Map extends Component {
 
     MapboxGl.accessToken = accessToken;
 
-    this.map = new MapboxGl.Map({
-      container: this.refs.mapContainer,
+    this.glmap = new MapboxGl.Map({
+      container: this.mapContainer,
       style: mapStyle,
       zoom: initialZoom,
       center,
     });
 
-    this.map.on('load', () => {
+    this.glmap.on('load', () => {
       if (this.props.onMapLoad) {
         this.props.onMapLoad();
       }
     });
 
-    this.map.on('click', (event) => {
+    this.glmap.on('click', (event) => {
       if (this.props.onClick) {
         this.props.onClick(event);
       }
     });
 
-    this.map.on('mousemove', (event) => {
+    this.glmap.on('mousemove', (event) => {
       if (this.props.onMouseMove) {
         this.props.onMouseMove(event);
       }
@@ -42,7 +42,7 @@ class Map extends Component {
   render() {
     const { containerStyle } = this.props;
     return (
-      <div className="map" ref="mapContainer" style={containerStyle} />
+      <div className="map" ref={(el) => { this.mapContainer = el; }} style={containerStyle} />
     );
   }
 }

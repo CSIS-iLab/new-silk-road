@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import Map from './Map';
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import SearchStore from '../stores/SearchStore';
-import { defaultZoom } from '../helpers/Cartographer';
+import Cartographer, { defaultZoom } from '../helpers/Cartographer';
 
 
 export default class MapContainer extends Component {
 
   constructor() {
     super();
+    this.mapCtl = null;
+
     this.handleMapLoad = this.handleMapLoad.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
+    this.onSearchResults = this.onSearchResults.bind(this);
   }
 
   onSearchResults(data) {
@@ -33,6 +36,7 @@ export default class MapContainer extends Component {
   }
 
   handleMapLoad() {
+    this.mapCtl = new Cartographer(this.map.glmap);
     SearchStore.listen(this.onSearchResults);
     GeoCentroidActions.fetch();
   }
@@ -43,7 +47,7 @@ export default class MapContainer extends Component {
       <Map
         {...mapProps}
         initialZoom={defaultZoom}
-        ref="map"
+        ref={(map) => { this.map = map; }}
         onMapLoad={this.handleMapLoad}
         onClick={this.handleMapClick}
       />

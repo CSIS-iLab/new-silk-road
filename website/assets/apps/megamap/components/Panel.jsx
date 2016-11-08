@@ -1,32 +1,35 @@
-import React, { Component, PropTypes } from "react";
-import Radium from "radium";
-import { Button } from "./forms";
+import React, { Component, PropTypes } from 'react';
+import Radium from 'radium';
+import { Button } from './forms';
 
 class Panel extends Component {
-  static propTypes = {
-    title: PropTypes.string,
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: false,
+    };
+
+    this.handleToggle = this.handleToggle.bind(this);
+    this.collapse = this.collapse.bind(this);
+    this.expand = this.expand.bind(this);
   }
 
-  state = {
-    expanded: false
+  handleToggle() {
+    this.setState({ expanded: !this.state.expanded });
   }
 
-
-  handleToggle = (e) => {
-    this.setState({expanded: !this.state.expanded});
+  collapse() {
+    this.setState({ expanded: false });
   }
 
-  collapse = () => {
-    this.setState({expanded: false});
-  }
-
-  expand = () => {
-    this.setState({expanded: True});
+  expand() {
+    this.setState({ expanded: true });
   }
 
   render() {
-    let toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
-    let styles = {
+    const toggleButtonText = this.state.expanded ? 'Collapse' : 'Expand';
+    const styles = {
       sectionBody: {
         base: {
           display: 'block',
@@ -36,27 +39,36 @@ class Panel extends Component {
         },
         collapsed: {
           display: 'none',
-        }
-      }
-    }
-    let buttonClass = `toggle ${this.state.expanded ? 'expanded' : 'collapsed'}`;
+        },
+      },
+    };
+    const buttonClass = `toggle ${this.state.expanded ? 'expanded' : 'collapsed'}`;
     return (
       <section className="expandable">
-        <header onClick={this.handleToggle}>
-        <h4>{this.props.title}</h4>
-        <Button className={buttonClass}>{toggleButtonText}</Button>
-        </header>
-        <div className="sectionBody" style={[
-          styles.sectionBody.base,
-          styles.sectionBody[this.state.expanded ? 'expanded': 'collapsed']
-        ]}>
-        {this.props.children}
+        <a onClick={this.handleToggle} tabIndex="0">
+          <header>
+            <h4>{this.props.title}</h4>
+            <Button className={buttonClass}>{toggleButtonText}</Button>
+          </header>
+        </a>
+        <div
+          className="sectionBody"
+          style={[
+            styles.sectionBody.base,
+            styles.sectionBody[this.state.expanded ? 'expanded' : 'collapsed'],
+          ]}
+        >
+          {this.props.children}
         </div>
       </section>
     );
-
   }
 }
-Panel = Radium(Panel);
 
-export default Panel;
+Panel.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.node,
+};
+
+
+export default Radium(Panel);
