@@ -1,43 +1,45 @@
-import React, { Component, PropTypes } from "react";
+import React, { PropTypes } from 'react';
 
-export default class ProjectResultView extends Component {
-  static propTypes = {
-    project: PropTypes.object.isRequired,
-  }
+const ProjectResultView = (props) => {
+  const {
+    project,
+  } = props;
 
-
-  render() {
-    const {
-      project
-    } = this.props;
-
+  const listItems = project.initiatives.map((init) => {
+    const url = init.page_url || null;
     return (
-      <section className="projectResult">
+      <li key={init.name}>
+        <a href={url} target="_blank" rel="noopener noreferrer">{init.name}</a>
+      </li>
+    );
+  });
+
+  return (
+    <section className="projectResult">
       <h1>{project.name}</h1>
       <p><em>Type:</em> {project.infrastructure_type}</p>
-
-      {(() => {
-        const listItems = project.initiatives.map((init) => {
-          const url = init.page_url || null;
-          return (
-            <li key={init.name}>
-            <a href={url} target="_blank">{init.name}</a>
-            </li>
-          );
-        })
-        if (listItems.length > 0) {
-          return (
-            <section className="initiativesList">
+      {
+        listItems.length > 0 &&
+          <section className="initiativesList">
             <h2>Initiatives:</h2>
             <ul>
-            {listItems}
+              {listItems}
             </ul>
-            </section>
-          );
-        }
-        return;
-      })()}
-      </section>
-    );
-  }
-}
+          </section>
+      }
+    </section>
+  );
+};
+
+ProjectResultView.propTypes = {
+  project: PropTypes.shape({
+    name: PropTypes.string,
+    infrastructure_type: PropTypes.string,
+    initiatives: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      page_url: PropTypes.string,
+    })),
+  }).isRequired,
+};
+
+export default ProjectResultView;
