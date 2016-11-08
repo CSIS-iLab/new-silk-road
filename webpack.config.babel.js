@@ -4,11 +4,11 @@ const entryBase = './website/assets';
 
 export default {
   entry: {
-    megamap: `${entryBase}/apps/megamap/app.js`,
-    projectmap: `${entryBase}/apps/projectmap/app.js`,
+    megamap: `${entryBase}/apps/megamap/app.jsx`,
+    projectmap: `${entryBase}/apps/projectmap/app.jsx`,
   },
   output: {
-    path: path.join(__dirname, "website/static/js"),
+    path: path.join(__dirname, 'website/static/js'),
     filename: '[name].js',
   },
   devtool: 'source-map',
@@ -19,11 +19,6 @@ export default {
         loader: 'babel-loader',
         exclude: [/node_modules/],
       },
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
-        exclude: [/node_modules/],
-      }
     ],
   },
   resolve: {

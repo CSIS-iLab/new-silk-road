@@ -1,8 +1,8 @@
-import "babel-polyfill";
+import 'babel-polyfill';
 import 'whatwg-fetch';
 import MapboxGl, {
   Navigation,
-} from "mapbox-gl/dist/mapbox-gl.js";
+} from 'mapbox-gl/dist/mapbox-gl.js';
 import GeoStyles from '../megamap/helpers/GeoStyles';
 
 var ProjectDetail = window.ProjectDetail || {};
@@ -43,7 +43,7 @@ class Map {
       })
       .catch((error) => console.error(error));
     } else {
-      console.error("No geoURL to load!");
+      console.error('No geoURL to load!');
     }
   }
 

@@ -27,8 +27,8 @@ const paths = {
   jsLibDir: `${assetsBase}/apps/lib`,
   jsDist: `${distBase}/js`,
   clientEntryPoints: [
-    `${assetsBase}/js/apps/megamap/app.js`,
-    `${assetsBase}/js/apps/projectmap/app.js`,
+    `${assetsBase}/js/apps/megamap/app.jsx`,
+    `${assetsBase}/js/apps/projectmap/app.jsx`,
   ],
 };
 

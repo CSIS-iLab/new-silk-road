@@ -1,4 +1,4 @@
-import Alt from "alt";
+import Alt from 'alt';
 
 const alt = new Alt();
 
