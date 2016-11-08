@@ -1,15 +1,9 @@
-import React, { Component, PropTypes } from "react";
+import React, { PropTypes } from 'react';
 
-export default class ErrorView extends Component {
-  static propTypes = {
-    errorMessage: PropTypes.string
-  }
+const ErrorView = props => (<div className="errorView"><p>{props.errorMessage}</p></div>);
 
-  render() {
-    return (
-      <div className="errorView">
-        <p>{this.props.errorMessage}</p>
-      </div>
-    );
-  }
-}
+ErrorView.propTypes = {
+  errorMessage: PropTypes.string,
+};
+
+export default ErrorView;
