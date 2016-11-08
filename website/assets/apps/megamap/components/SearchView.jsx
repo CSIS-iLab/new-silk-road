@@ -72,29 +72,26 @@ export default class SearchView extends Component {
   }
 
   collapsePanels() {
-    this.refs.projectsPanel.collapse();
-    this.refs.initiativesPanel.collapse();
-    this.refs.fundersPanel.collapse();
+    this.projectsPanel.collapse();
+    this.initiativesPanel.collapse();
+    this.fundersPanel.collapse();
   }
 
   handleQueryUpdate(q) {
     const queryUpdate = Object.assign({}, this.state.query);
-    for (const key in q) {
-      if ({}.hasOwnProperty.call(q, key)) {
-        let value = q[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== null &&
-            ((typeof value === 'string' && value !== '') ||
-            (Array.isArray(value) && value.length !== 0)))
-          {
-          queryUpdate[key] = value;
-        } else {
-          delete queryUpdate[key];
-        }
+    Object.entries(q).forEach(([key, value]) => {
+      let outValue = null;
+      if (typeof value === 'string' && value !== '') {
+        outValue = value.trim();
+      } else if (Array.isArray(value)) {
+        outValue = value;
       }
-    }
+      if (outValue !== null) {
+        queryUpdate[key] = value;
+      } else {
+        delete queryUpdate[key];
+      }
+    });
     const enableSearch = Object.keys(queryUpdate).length > 0;
     this.setState({ query: queryUpdate, searchEnabled: enableSearch });
   }
@@ -124,7 +121,10 @@ export default class SearchView extends Component {
                 onSearchInput={this.handleQueryUpdate}
                 searchEnabled={this.state.searchEnabled}
               />
-              <Panel title="Projects" ref="projectsPanel">
+              <Panel
+                title="Projects"
+                ref={(el) => { this.projectsPanel = el; }}
+              >
                 <div className="sectionRow">
                   <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
                 </div>
@@ -147,7 +147,10 @@ export default class SearchView extends Component {
                   />
                 </div>
               </Panel>
-              <Panel title="Initiatives" ref="initiativesPanel">
+              <Panel
+                title="Initiatives"
+                ref={(el) => { this.initiativesPanel = el; }}
+              >
                 <div className="sectionRow">
                   <SearchBar
                     placeholder="Initiative Title"
@@ -161,7 +164,10 @@ export default class SearchView extends Component {
                   <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
                 </div>
               </Panel>
-              <Panel title="Funders" ref="fundersPanel">
+              <Panel
+                title="Funders"
+                ref={(el) => { this.fundersPanel = el; }}
+              >
                 <div className="sectionRow">
                   <SearchBar
                     placeholder="Funder Name"
@@ -209,7 +215,8 @@ export default class SearchView extends Component {
           <p>
             <a
               href="/map/help/"
-              target="_blank" rel="noreferrer noopener"
+              target="_blank"
+              rel="noreferrer noopener"
               className="button help"
               title="Help"
             >
