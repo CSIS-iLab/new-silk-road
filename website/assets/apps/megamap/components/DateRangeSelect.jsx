@@ -1,26 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
-import {Input} from './forms';
-import Option from '../models/Option';
+import { Input } from './forms';
 
-export default class DateRangeSelect extends Component {
-  static propTypes = {
-    dateLookupOptions: PropTypes.array.isRequired,
-    labelName: PropTypes.string,
-    lowerBoundLabel: PropTypes.string.isRequired,
-    upperBoundLabel: PropTypes.string.isRequired,
-    boundLength: PropTypes.number,
-    onSelect: PropTypes.func,
-  }
+class DateRangeSelect extends Component {
 
-  static defaultProps = {
-    boundLength: 4,
-  }
-
-  state = {
-    dateLookupType: null,
-    lowerValue: '',
-    upperValue: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      dateLookupType: null,
+      lowerValue: '',
+      upperValue: '',
+    };
+    this.onLookupChange = this.onLookupChange.bind(this);
+    this.handleLowerInput = this.handleLowerInput.bind(this);
+    this.handleUpperInput = this.handleUpperInput.bind(this);
   }
 
   componentDidUpdate(_, prevState) {
@@ -29,46 +22,30 @@ export default class DateRangeSelect extends Component {
       'lowerValue',
       'upperValue',
     ];
-    for (let prop of importantState) {
-      if (this.state.hasOwnProperty(prop) &&
-          prevState.hasOwnProperty(prop) &&
-          prevState[prop] !== this.state[prop]
-        ) {
-          this.triggerSelectHandler();
-          break;
-      }
+    const stateIsUpdated = importantState.some(element =>
+      ({}.hasOwnProperty.call(this.state, element) &&
+      {}.hasOwnProperty.call(prevState, element) &&
+      prevState[element] !== this.state[element]),
+    );
+    if (stateIsUpdated) {
+      this.triggerSelectHandler();
     }
   }
 
-  onLookupChange = (option, event) => {
+  onLookupChange(option) {
     const value = option ? option.value : '';
-    this.setState({dateLookupType: value});
+    this.setState({ dateLookupType: value });
   }
 
-  handleLowerInput = (value, event) => {
-    this.setState({lowerValue: value});
-  }
-
-  handleUpperInput = (value, event) => {
-    this.setState({upperValue: value});
-  }
-
-  triggerSelectHandler() {
-    const {onSelect} = this.props;
-    if (onSelect) {
-      const q = this._getCalculatedQuery();
-      onSelect(q);
-    }
-  }
-
-  _getCalculatedQuery() {
+  getCalculatedQuery() {
+    // TODO: Test this function and refactor as needed
     const {
       dateLookupType,
       lowerValue,
       upperValue,
     } = this.state;
-    const lookupMap = this.props.dateLookupOptions.map(function (obj) {
-      let lObj = {};
+    const lookupMap = this.props.dateLookupOptions.map((obj) => {
+      const lObj = {};
       if (obj && obj.value) {
         lObj[obj.value] = null;
         lObj[`${obj.value}__gte`] = null;
@@ -76,7 +53,7 @@ export default class DateRangeSelect extends Component {
       }
       return lObj;
     });
-    let q = Object.assign({}, ...lookupMap);
+    const q = Object.assign({}, ...lookupMap);
     // See if our input can update q
     if (dateLookupType) {
       const lowerNum = +lowerValue || null;
@@ -93,11 +70,27 @@ export default class DateRangeSelect extends Component {
     return q;
   }
 
+  triggerSelectHandler() {
+    const { onSelect } = this.props;
+    if (onSelect) {
+      const q = this.getCalculatedQuery();
+      onSelect(q);
+    }
+  }
+
+  handleLowerInput(value) {
+    this.setState({ lowerValue: value });
+  }
+
+  handleUpperInput(value) {
+    this.setState({ upperValue: value });
+  }
+
   render() {
     const {
       dateLookupType,
       lowerValue,
-      upperValue
+      upperValue,
     } = this.state;
     const {
       dateLookupOptions,
@@ -107,31 +100,49 @@ export default class DateRangeSelect extends Component {
       boundLength,
     } = this.props;
     return (
-      <div className='dateRangeSelect'>
+      <div className="dateRangeSelect">
         <Select
-        value={dateLookupType}
-        name='date_lookup_type'
-        placeholder={labelName}
-        options={dateLookupOptions}
-        onChange={this.onLookupChange}
+          value={dateLookupType}
+          name="date_lookup_type"
+          placeholder={labelName}
+          options={dateLookupOptions}
+          onChange={this.onLookupChange}
         />
         <span>between</span>
         <Input
-        inputText={lowerValue}
-        name='lowerValue'
-        size={boundLength}
-        placeholder={lowerBoundLabel}
-        onUserInput={this.handleLowerInput.bind(this)}
+          inputText={lowerValue}
+          name="lowerValue"
+          size={boundLength}
+          placeholder={lowerBoundLabel}
+          onUserInput={this.handleLowerInput}
         />
         <span>&amp;</span>
         <Input
-        inputText={upperValue}
-        name='upperValue'
-        size={boundLength}
-        placeholder={upperBoundLabel}
-        onUserInput={this.handleUpperInput.bind(this)}
+          inputText={upperValue}
+          name="upperValue"
+          size={boundLength}
+          placeholder={upperBoundLabel}
+          onUserInput={this.handleUpperInput}
         />
       </div>
     );
   }
 }
+
+DateRangeSelect.propTypes = {
+  dateLookupOptions: React.PropTypes.arrayOf(React.PropTypes.shape({
+    label: React.PropTypes.string,
+    value: React.PropTypes.string,
+  })),
+  labelName: PropTypes.string,
+  lowerBoundLabel: PropTypes.string.isRequired,
+  upperBoundLabel: PropTypes.string.isRequired,
+  boundLength: PropTypes.number,
+  onSelect: PropTypes.func,
+};
+
+DateRangeSelect.defaultProps = {
+  boundLength: 4,
+};
+
+export default DateRangeSelect;
