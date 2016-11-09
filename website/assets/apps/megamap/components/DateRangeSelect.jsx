@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
-import { Input } from './forms';
 
 class DateRangeSelect extends Component {
 
@@ -78,20 +77,15 @@ class DateRangeSelect extends Component {
     }
   }
 
-  handleLowerInput(value) {
-    this.setState({ lowerValue: value });
+  handleLowerInput(event) {
+    this.setState({ lowerValue: event.target.value });
   }
 
-  handleUpperInput(value) {
-    this.setState({ upperValue: value });
+  handleUpperInput(event) {
+    this.setState({ upperValue: event.target.value });
   }
 
   render() {
-    const {
-      dateLookupType,
-      lowerValue,
-      upperValue,
-    } = this.state;
     const {
       dateLookupOptions,
       lowerBoundLabel,
@@ -102,27 +96,27 @@ class DateRangeSelect extends Component {
     return (
       <div className="dateRangeSelect">
         <Select
-          value={dateLookupType}
+          value={this.state.dateLookupType}
           name="date_lookup_type"
           placeholder={labelName}
           options={dateLookupOptions}
           onChange={this.onLookupChange}
         />
         <span>between</span>
-        <Input
-          inputText={lowerValue}
+        <input
+          value={this.state.lowerValue}
           name="lowerValue"
           size={boundLength}
           placeholder={lowerBoundLabel}
-          onUserInput={this.handleLowerInput}
+          onChange={this.handleLowerInput}
         />
         <span>&amp;</span>
-        <Input
-          inputText={upperValue}
+        <input
+          value={this.state.upperValue}
           name="upperValue"
           size={boundLength}
           placeholder={upperBoundLabel}
-          onUserInput={this.handleUpperInput}
+          onChange={this.handleUpperInput}
         />
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
-import { Input, Button } from './forms';
+import { Button } from './forms';
 
 class SearchBar extends Component {
 
@@ -12,11 +12,11 @@ class SearchBar extends Component {
     this.handleUserInput = this.handleUserInput.bind(this);
   }
 
-  handleUserInput(value) {
+  handleUserInput(event) {
     const { name } = this.props;
     if (this.props.onSearchInput) {
-      this.setState({ inputText: value });
-      this.props.onSearchInput({ [name]: value.trim() });
+      this.setState({ inputText: event.target.value });
+      this.props.onSearchInput({ [name]: event.target.value.trim() });
     }
   }
 
@@ -28,9 +28,9 @@ class SearchBar extends Component {
             {this.props.label}:
           </label>
         }
-        <Input
+        <input
           inputText={this.state.inputText}
-          onUserInput={this.handleUserInput}
+          onChange={this.handleUserInput}
           name={this.props.name}
           placeholder={this.props.placeholder}
         />

@@ -1,16 +1,15 @@
-import {createSelectContainer} from './containers';
-import Option from '../models/Option';
+import { createSelectContainer, nameIdMapper } from './containers';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
 
-var InfrastructureTypeSelectContainer = createSelectContainer(
+const InfrastructureTypeSelectContainer = createSelectContainer(
   InfrastructureTypeStore, InfrastructureTypeActions,
   {
     selectName: 'infrastructure_type',
     labelName: 'Infrastructure Type',
     selectMultiple: true,
-    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
-  }
+    mapOptions: nameIdMapper,
+  },
 );
 
 export default InfrastructureTypeSelectContainer;

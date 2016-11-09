@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 import CurrencyStore from '../stores/CurrencyStore';
 import CurrencyActions from '../actions/CurrencyActions';
-import Option from '../models/Option';
 
 class CurrencyAmountSelectContainer extends Component {
 
@@ -37,7 +36,7 @@ class CurrencyAmountSelectContainer extends Component {
   updateOptions(data) {
     this.setState({
       lookups: data.lookups,
-      options: Object.keys(data.lookups).map(key => new Option(key, key)),
+      options: Object.keys(data.lookups).map(key => Object.create({ label: key, value: key })),
       error: data.error,
       isLoading: false,
     });

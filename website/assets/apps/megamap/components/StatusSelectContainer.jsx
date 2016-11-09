@@ -1,16 +1,15 @@
-import {createSelectContainer} from './containers';
-import Option from '../models/Option';
+import { createSelectContainer, nameIdMapper } from './containers';
 import StatusStore from '../stores/StatusStore';
 import StatusActions from '../actions/StatusActions';
 
-var StatusSelectContainer = createSelectContainer(
+const StatusSelectContainer = createSelectContainer(
   StatusStore, StatusActions,
   {
     selectName: 'status',
     labelName: 'Status',
     selectMultiple: true,
-    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
-  }
+    mapOptions: nameIdMapper,
+  },
 );
 
 export default StatusSelectContainer;

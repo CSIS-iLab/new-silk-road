@@ -2,21 +2,12 @@ import React, { Component, PropTypes } from "react";
 
 
 class Input extends Component {
-  static defaultProps = {
-    type: 'text',
-    inputText: '',
-    size: 10
+  constructor(props) {
+    super(props);
+    this.handleUserInput = this.handleUserInput.bind(this);
   }
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
-    type: PropTypes.string,
-    size: PropTypes.number,
-    inputText: PropTypes.string,
-    onUserInput: PropTypes.func
-  };
 
-  handleUserInput = (e) => {
+  handleUserInput(e) {
     const {onUserInput} = this.props;
     if (onUserInput) {
       onUserInput(this.refs.inputEl.value, e);
@@ -27,51 +18,69 @@ class Input extends Component {
     const {inputText, onUserInput, ...inputProps} = this.props;
     return (
       <input  {...inputProps}
-              ref="inputEl"
-              value={this.props.inputText}
-              onChange={this.handleUserInput.bind(this)}
-               />
+        ref="inputEl"
+        value={this.props.inputText}
+        onChange={this.handleUserInput.bind(this)}
+      />
     )
   }
 }
+
+Input.defaultProps = {
+  type: 'text',
+  inputText: '',
+  size: 10,
+};
+
+Input.propTypes = {
+  name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  type: PropTypes.string,
+  size: PropTypes.number,
+  inputText: PropTypes.string,
+  onUserInput: PropTypes.func,
+};
 
 class Button extends Component {
-  static defaultProps = {
-    type: 'button',
-    enabled: true,
-    value: null
-  }
-  static propTypes = {
-    type: PropTypes.oneOf(['submit', 'reset', 'button']),
-    onClick: PropTypes.func,
-    enabled: PropTypes.bool,
-    value: PropTypes.string
-  };
-
   render() {
-    const {enabled, ...buttonProps} = this.props;
+    const { enabled, ...buttonProps } = this.props;
     return (
       <button {...buttonProps}
-              disabled={!this.props.enabled}
-              onClick={this.props.onClick}
-               >{this.props.children}</button>
+        disabled={!this.props.enabled}
+        onClick={this.props.onClick}
+      >
+        {this.props.children}
+      </button>
     )
   }
 }
+
+Button.defaultProps = {
+  type: 'button',
+  enabled: true,
+  value: null,
+};
+
+Button.propTypes = {
+  type: PropTypes.oneOf(['submit', 'reset', 'button']),
+  onClick: PropTypes.func,
+  enabled: PropTypes.bool,
+  value: PropTypes.string,
+};
 
 
 class Select extends Component {
-  static propTypes = {
-    enabled: PropTypes.bool,
-    onSelect: PropTypes.func
-  };
-    state = {
+  constructor(props) {
+    super(props);
+    this.state = {
       value: '',
-      enabled: true
-    }
+      enabled: true,
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
 
-    handleChange = (event) => {
-      this.setState({value: event.target.value});
+    handleChange(event) {
+      this.setState({ value: event.target.value });
       if (this.props.onSelect) {
         this.props.onSelect(this.refs.selectEl.value, event);
       }
@@ -96,5 +105,11 @@ class Select extends Component {
     );
   }
 }
+
+Select.propTypes = {
+  enabled: PropTypes.bool,
+  onSelect: PropTypes.func
+};
+
 
 export { Input, Button, Select };

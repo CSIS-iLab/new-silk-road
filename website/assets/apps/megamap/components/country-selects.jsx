@@ -1,26 +1,25 @@
-import {createSelectContainer} from './containers';
+import { createSelectContainer, nameIdMapper } from './containers';
 import CountryStore from '../stores/CountryStore';
 import CountryActions from '../actions/CountryActions';
-import Option from '../models/Option';
 
-var FunderCountrySelect = createSelectContainer(
+const FunderCountrySelect = createSelectContainer(
   CountryStore, CountryActions,
   {
     selectName: 'funding__sources__countries',
     labelName: 'Country',
     selectMultiple: true,
-    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
-  }
+    mapOptions: nameIdMapper,
+  },
 );
 
-var ProjectCountrySelect = createSelectContainer(
+const ProjectCountrySelect = createSelectContainer(
   CountryStore, CountryActions,
   {
     selectName: 'countries',
     labelName: 'Country',
     selectMultiple: true,
-    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
-  }
+    mapOptions: nameIdMapper,
+  },
 );
 
-export {FunderCountrySelect, ProjectCountrySelect};
+export { FunderCountrySelect, ProjectCountrySelect };

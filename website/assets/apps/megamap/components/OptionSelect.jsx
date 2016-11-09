@@ -1,45 +1,40 @@
-import React, { Component, PropTypes } from 'react';
-import {Select} from './forms';
-import Option from '../models/Option';
+import React, { PropTypes } from 'react';
+import { Select } from './forms';
 
-export default class OptionSelect extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    labelName: PropTypes.string.isRequired,
-    onSelect: PropTypes.func,
-    options: PropTypes.arrayOf(PropTypes.instanceOf(Option)),
-    enabled: PropTypes.bool
-  }
-  static defaultProps = {
-    options: [],
-    enabled: true
-  }
+const OptionSelect = props => (
+  <div>
+    <label htmlFor={props.name}>
+      {props.labelName}:
+    </label>
+    <Select
+      onSelect={props.onSelect}
+      name={props.name}
+      value=""
+      enabled={props.enabled}
+    >
+      <option value="">---------</option>
+      {props.options.map((opt, i) => {
+        const optKey = `${opt.name}-${i}`;
+        return (
+          <option key={optKey} value={opt.value}>{opt.name}</option>
+        );
+      })}
+    </Select>
+  </div>
+);
 
-  render() {
-    var {
-      name,
-      labelName,
-      options
-    } = this.props;
-    return (
-      <div>
-        <label for={ name }>
-        {labelName}:
-        </label>
-        <Select
-          onSelect={this.props.onSelect}
-          name={ name } value=""
-          enabled={this.props.enabled}
-        >
-        <option value="">---------</option>
-        {options.map((opt, i) => {
-          let optKey = `${opt.name}-${i}`;
-          return (
-            <option key={optKey} value={opt.value}>{opt.name}</option>
-          );
-        })}
-        </Select>
-      </div>
-    );
-  }
-}
+OptionSelect.propTypes = {
+  name: PropTypes.string.isRequired,
+  labelName: PropTypes.string.isRequired,
+  onSelect: PropTypes.func,
+  options: PropTypes.arrayOf(PropTypes.instanceOf(Option)),
+  enabled: PropTypes.bool,
+};
+
+OptionSelect.defaultProps = {
+  options: [],
+  enabled: true,
+};
+
+
+export default OptionSelect;

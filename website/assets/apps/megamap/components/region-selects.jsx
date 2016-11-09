@@ -1,16 +1,15 @@
-import {createSelectContainer} from './containers';
-import Option from '../models/Option';
+import { createSelectContainer, nameIdMapper } from './containers';
 import RegionStore from '../stores/RegionStore';
 import RegionActions from '../actions/RegionActions';
 
-var ProjectRegionSelect = createSelectContainer(
+const ProjectRegionSelect = createSelectContainer(
   RegionStore, RegionActions,
   {
     selectName: 'region',
     labelName: 'Region',
     selectMultiple: true,
-    mapOptions: (data) => { return data.results.map((obj) => new Option(obj.name, obj.id)) },
-  }
+    mapOptions: nameIdMapper,
+  },
 );
 
-export {ProjectRegionSelect};
+export default ProjectRegionSelect;
