@@ -11,6 +11,7 @@ export default {
     path: path.join(__dirname, 'website/static/js'),
     filename: '[name].js',
   },
+  target: 'web',
   devtool: 'source-map',
   module: {
     loaders: [
