@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Button } from './forms';
 import GeoStoreActions from '../actions/GeoStoreActions';
 import ProjectResultView from './ProjectResultView';
 
@@ -27,17 +26,17 @@ class ResultsList extends Component {
               <li key={index} className="result">
                 <ProjectResultView key={result.identifier} project={result} />
                 <div className="buttonBar">
-                  <Button
+                  <button
                     type="button"
-                    onClick={(e) => { ResultsList.handleMapButtonClick(e); }}
+                    onClick={ResultsList.handleMapButtonClick}
                     value={geoid}
-                    enabled={geoid !== null}
-                  >View on Map</Button>
-                  <Button
+                    disabled={geoid == null}
+                  >View on Map</button>
+                  <button
                     type="button"
-                    onClick={(e) => { ResultsList.handleDetailClick(e); }}
+                    onClick={ResultsList.handleDetailClick}
                     value={result.page_url}
-                  >Open detail page</Button>
+                  >Open detail page</button>
                 </div>
               </li>
             );

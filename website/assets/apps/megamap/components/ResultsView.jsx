@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import ResultsList from './ResultsList';
-import { Button } from './forms';
 
 
 const resultsNavStyle = {
@@ -60,18 +59,18 @@ class ResultsView extends Component {
           ]}
         >
           <div className="buttonWrap">
-            <Button
-              enabled={this.props.previousURL !== null}
+            <button
+              disabled={this.props.previousURL == null}
               onClick={this.handlePreviousClick}
               value={this.props.previousURL}
-            >Previous</Button>
+            >Previous</button>
           </div>
           <div className="buttonWrap">
-            <Button
-              enabled={this.props.nextURL !== null}
+            <button
+              disabled={this.props.nextURL == null}
               onClick={this.handleNextClick}
               value={this.props.nextURL}
-            >Next</Button>
+            >Next</button>
           </div>
         </div>
         <div

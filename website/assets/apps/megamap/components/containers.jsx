@@ -20,6 +20,7 @@ function createSelectContainer(Store, Actions, classOpts) {
         error: null,
       };
       this.onChange = this.onChange.bind(this);
+      this.updateOptions = this.updateOptions.bind(this);
     }
 
     componentDidMount() {

@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
-import { Button } from './forms';
 
 class SearchBar extends Component {
 
@@ -29,18 +28,18 @@ class SearchBar extends Component {
           </label>
         }
         <input
-          inputText={this.state.inputText}
+          value={this.state.inputText}
           onChange={this.handleUserInput}
           name={this.props.name}
           placeholder={this.props.placeholder}
         />
         {this.props.showSubmit &&
-          <Button
+          <button
             type="submit"
             title="Search"
-            enabled={this.props.searchEnabled}
+            disabled={!this.props.searchEnabled}
           >Search
-          </Button>
+          </button>
         }
       </div>
     );

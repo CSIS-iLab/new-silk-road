@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import Radium from 'radium';
-import { Button } from './forms';
 
 class Panel extends Component {
 
@@ -48,7 +47,7 @@ class Panel extends Component {
         <a onClick={this.handleToggle} tabIndex="0">
           <header>
             <h4>{this.props.title}</h4>
-            <Button className={buttonClass}>{toggleButtonText}</Button>
+            <button type="button" className={buttonClass}>{toggleButtonText}</button>
           </header>
         </a>
         <div

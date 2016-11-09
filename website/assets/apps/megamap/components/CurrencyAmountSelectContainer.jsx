@@ -5,8 +5,6 @@ import CurrencyActions from '../actions/CurrencyActions';
 
 class CurrencyAmountSelectContainer extends Component {
 
-  static get labelName() { return 'Cost'; }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +45,7 @@ class CurrencyAmountSelectContainer extends Component {
       <Select
         value={this.state.value}
         name="cost"
-        placeholder={this.labelName}
+        placeholder="Cost"
         options={this.state.options}
         onChange={this.onChange}
         isLoading={this.state.isLoading}

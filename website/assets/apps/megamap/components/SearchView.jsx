@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Panel from './Panel';
 import SearchBar from './SearchBar';
 import { FunderCountrySelect, ProjectCountrySelect } from './country-selects';
-import { ProjectRegionSelect } from './region-selects';
+import ProjectRegionSelect from './region-selects';
 import StatusSelectContainer from './StatusSelectContainer';
 import InfrastructureTypeSelectContainer from './InfrastructureTypeSelectContainer';
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
@@ -202,9 +202,9 @@ export default class SearchView extends Component {
           <div className="resultsViewWrapper">
             <ResultsView
               results={results}
-              onNextClick={this.handleResultsNavClick}
+              onNextClick={SearchView.handleResultsNavClick}
               nextURL={nextURL}
-              onPreviousClick={this.handleResultsNavClick}
+              onPreviousClick={SearchView.handleResultsNavClick}
               previousURL={previousURL}
             />
           </div>

@@ -52,7 +52,11 @@ Map.propTypes = {
   mapStyle: PropTypes.string.isRequired,
   center: PropTypes.arrayOf(PropTypes.number),
   initialZoom: PropTypes.number,
-  containerStyle: PropTypes.object,
+  /*
+    TODO: containerStyle sets height and with of map inside container, but should that be moved
+          to regular CSS or CSS bundled via webpack?
+  */
+  containerStyle: PropTypes.shape({ width: PropTypes.string, height: PropTypes.string }),
   onMapLoad: PropTypes.func,
   onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
