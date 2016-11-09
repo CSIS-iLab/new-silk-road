@@ -78,12 +78,13 @@ export default class SearchView extends Component {
   }
 
   handleQueryUpdate(q) {
+    // TODO: Migrate this logic to a Store that manages the state of the search query.
     const queryUpdate = Object.assign({}, this.state.query);
     Object.entries(q).forEach(([key, value]) => {
       let outValue = null;
       if (typeof value === 'string' && value !== '') {
         outValue = value.trim();
-      } else if (Array.isArray(value)) {
+      } else if (Array.isArray(value) && value.length > 0) {
         outValue = value;
       }
       if (outValue !== null) {
