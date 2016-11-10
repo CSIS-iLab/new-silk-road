@@ -1,7 +1,9 @@
+/* eslint-disable class-methods-use-this */
+
 import alt from '../alt';
 import CurrencySource from '../sources/CurrencySource';
 
-class CurrencyActions {
+class CurrencyActionsBase {
 
   update(data) {
     return data;
@@ -16,8 +18,8 @@ class CurrencyActions {
       })
       .catch((error) => {
         this.failed(error);
-      })
-    }
+      });
+    };
   }
 
   failed(error) {
@@ -25,5 +27,5 @@ class CurrencyActions {
   }
 }
 
-CurrencyActions = alt.createActions(CurrencyActions);
+const CurrencyActions = alt.createActions(CurrencyActionsBase);
 export default CurrencyActions;

@@ -1,7 +1,9 @@
-import alt from '../alt';
-import {OrganizationSource} from '../sources/apisources';
+/* eslint-disable class-methods-use-this */
 
-class PrincipalAgentActions {
+import alt from '../alt';
+import { OrganizationSource } from '../sources/apisources';
+
+class PrincipalAgentActionsBase {
 
   update(data) {
     return data.results;
@@ -11,16 +13,14 @@ class PrincipalAgentActions {
     return (dispatch) => {
       dispatch();
       OrganizationSource.fetch(query)
-      .then((response) => {
-        return response.json();
-      })
+      .then(response => response.json())
       .then((json) => {
         this.update(json);
       })
       .catch((error) => {
         this.failed(error);
-      })
-    }
+      });
+    };
   }
 
   failed(error) {
@@ -28,5 +28,5 @@ class PrincipalAgentActions {
   }
 }
 
-PrincipalAgentActions = alt.createActions(PrincipalAgentActions);
+const PrincipalAgentActions = alt.createActions(PrincipalAgentActionsBase);
 export default PrincipalAgentActions;
