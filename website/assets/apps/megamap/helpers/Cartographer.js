@@ -1,9 +1,11 @@
-import alt from '../alt';
-import ActionListeners from 'alt-utils/lib/ActionListeners';
+/* eslint-disable no-console, class-methods-use-this */
+
 import MapboxGl, {
   Navigation,
-  Popup
-} from "mapbox-gl/dist/mapbox-gl.js";
+  Popup,
+} from 'mapbox-gl/dist/mapbox-gl';
+import ActionListeners from 'alt-utils/lib/ActionListeners';
+import alt from '../alt';
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 import GeoStoreActions from '../actions/GeoStoreActions';
 import GeoStoreQueue from './GeoStoreQueue';
@@ -22,67 +24,76 @@ import {
 
 const identiferSep = ' : ';
 const centroidsLayerId = 'project : centroids';
-const metadataIdentifier = 'cartographer:identifier';
-const metadataInfrastructureType = 'cartographer:infrastructureType';
-const metadataProjects = 'cartographer:projects';
-
 
 export default class Cartographer {
 
   constructor(map) {
-    this._map = map;
-    this._al = new ActionListeners(alt);
-    this._gm = new GeoManager();
-    this._gq = new GeoStoreQueue();
-    this._stylo = new GeoStyles();
-    this._lastUpdate = null;
-    this._updateFrameId = null;
-    this._updateDelayId = null;
-    this._popup = null;
-    this._popupLayerId = null;
-    this._addListeners();
-    this._configureMap();
+    this.map = map;
+    this.actionListeners = new ActionListeners(alt);
+    this.geoManager = new GeoManager();
+    this.geostoreQueue = new GeoStoreQueue();
+    this.styles = new GeoStyles();
+    this.lastUpdate = null;
+    this.updateFrameId = null;
+    this.updateDelayId = null;
+    this.popup = null;
+    this.popupLayerId = null;
+    this.addListeners();
+    this.configureMap();
   }
 
-  _addListeners() {
-    this._al.addActionListener(GeoCentroidActions.UPDATE, this._handleCentroidsUpdate.bind(this));
-    this._al.addActionListener(GeoCentroidActions.FAIL, this._handleCentroidsFail.bind(this));
-    this._al.addActionListener(GeoStoreActions.SELECT_GEO_STORE_ID, this._handleGeoStoreSelect.bind(this));
-    this._al.addActionListener(GeoStoreActions.DID_GET_GEO_STORE, this._handleDidGetGeoStore.bind(this));
-    this._map.on('mousemove', this._handleMapMove.bind(this));
-    this._map.on('movestart', this._handleStartMapMove.bind(this));
-    this._map.on('moveend', this._handleEndMapMove.bind(this));
-    this._map.on('click', this._handleMapClick.bind(this));
+  addListeners() {
+    this.actionListeners.addActionListener(
+      GeoCentroidActions.UPDATE,
+      this.handleCentroidsUpdate.bind(this),
+    );
+    this.actionListeners.addActionListener(
+      GeoCentroidActions.FAIL,
+      this.handleCentroidsFail.bind(this),
+    );
+    this.actionListeners.addActionListener(
+      GeoStoreActions.SELECT_GEO_STORE_ID,
+      this.handleGeoStoreSelect.bind(this),
+    );
+    this.actionListeners.addActionListener(
+      GeoStoreActions.DID_GET_GEO_STORE,
+      this.handleDidGetGeoStore.bind(this),
+    );
+    this.map.on('mousemove', this.handleMapMove.bind(this));
+    this.map.on('movestart', this.handleStartMapMove.bind(this));
+    this.map.on('moveend', this.handleEndMapMove.bind(this));
+    this.map.on('click', this.handleMapClick.bind(this));
   }
 
-  _beginPeriodicUpdates() {
-    this._updateFrameId = window.requestAnimationFrame(this._periodicallyUpdate.bind(this));
+  beginPeriodicUpdates() {
+    this.updateFrameId = window.requestAnimationFrame(this.periodicallyUpdate.bind(this));
   }
 
-  _periodicallyUpdate(timestamp) {
-    if (!this._lastUpdate) this._lastUpdate = timestamp;
-    const progress = timestamp - this._lastUpdate;
-    if (progress > updateInterval && !this._mapIsMoving) {
-      this._updateMapState();
-      this._lastUpdate = timestamp;
+  periodicallyUpdate(timestamp) {
+    if (!this.lastUpdate) this.lastUpdate = timestamp;
+    const progress = timestamp - this.lastUpdate;
+    if (progress > updateInterval && !this.mapIsMoving) {
+      this.updateMapState();
+      this.lastUpdate = timestamp;
     }
-    this._updateFrameId = window.requestAnimationFrame(this._periodicallyUpdate.bind(this));
+    this.updateFrameId = window.requestAnimationFrame(this.periodicallyUpdate.bind(this));
   }
 
-  _configureMap() {
-    this._map.addControl(new Navigation({position: 'top-left'}));
-    this._map['scrollZoom'].disable();
-    this._beginPeriodicUpdates();
+  configureMap() {
+    this.map.addControl(new Navigation({ position: 'top-left' }));
+    this.map.scrollZoom.disable();
+    this.beginPeriodicUpdates();
   }
 
   // Handlers
 
-  _handleCentroidsFail(error) {
+  handleCentroidsFail(error) {
     console.log('Error!');
+    console.log(error);
   }
 
-  _handleCentroidsUpdate(data) {
-    this._gm.setGeoIdentifiers(data.features.map((feat) => feat.id));
+  handleCentroidsUpdate(data) {
+    this.geoManager.setGeoIdentifiers(data.features.map(feat => feat.id));
     const source = {
       data,
       type: 'geojson',
@@ -90,38 +101,38 @@ export default class Cartographer {
     const layer = Object.assign({
       source: centroidsLayerId,
       id: centroidsLayerId,
-    }, this._stylo.getStyleFor('centroids'));
+    }, this.styles.getStyleFor('centroids'));
     this.setSource(layer.source, source);
     this.addLayer(layer);
-    this._removePopup();
-    this._setPopupLayer(layer.id);
+    this.removePopup();
+    this.setPopupLayer(layer.id);
   }
 
-  _handleGeoStoreSelect(identifier) {
-    this._gm.selectedGeoStore = identifier;
-    if (!this._gm.hasGeo(identifier)) {
+  handleGeoStoreSelect(identifier) {
+    this.geoManager.selectedGeoStore = identifier;
+    if (!this.geoManager.hasGeo(identifier)) {
       GeoStoreActions.getGeoStore.defer(identifier);
     } else {
-      const extent = this._gm.selectedGeoExtent;
+      const extent = this.geoManager.selectedGeoExtent;
       if (extent) {
-        this._zoomToExtent(extent);
+        this.zoomToExtent(extent);
       }
     }
   }
 
-  _handleDidGetGeoStore(geostore) {
-    this.removePopup()
+  handleDidGetGeoStore(geostore) {
+    this.removePopup();
     const {
       identifier,
       extent,
       projects,
     } = geostore;
-    const [{infrastructure_type}] = projects;
-    this._gq.resolveGeoStore(identifier);
-    if (!this._gm.hasGeo(identifier)) {
+    const [{ infrastructure_type }] = projects;
+    this.geostoreQueue.resolveGeoStore(identifier);
+    if (!this.geoManager.hasGeo(identifier)) {
       const geoTypes = ['lines', 'points', 'polygons'];
-      let identifiers = [];
-      for (let t of geoTypes) {
+      const identifiers = [];
+      geoTypes.forEach((t) => {
         const data = geostore[t];
         if (data.features.length) {
           const layerId = `${identifier}${identiferSep}${t}`;
@@ -134,84 +145,82 @@ export default class Cartographer {
             source: layerId,
             id: layerId,
             metadata: {
-              metadataIdentifier: identifier,
-              metadataInfrastructureType: infrastructure_type,
-              metadataProjects: projects,
-            }
-          }, this._stylo.getStyleFor(t, infrastructure_type));
+              identifier,
+              projects,
+              infrastructureType: infrastructure_type,
+            },
+          }, this.styles.getStyleFor(t, infrastructure_type));
           this.setSource(layer.source, source, false);
           this.addLayer(layer);
         }
-      }
-      this._gm.addGeoRecord(identifier, identifiers, extent);
+      });
+      this.geoManager.addGeoRecord(identifier, identifiers, extent);
     }
-    if (this._gm.selectedGeoStore === identifier && extent) {
-      this._zoomToExtent(extent);
-    }
-  }
-
-  _handleStartMapMove(event) {
-    if (this._updateFrameId) {
-      window.cancelAnimationFrame(this._updateFrameId);
+    if (this.geoManager.selectedGeoStore === identifier && extent) {
+      this.zoomToExtent(extent);
     }
   }
 
-  _handleMapMove(event) {
-    if (this._map.getLayer(centroidsLayerId) !== undefined) {
-      let features = this._map.queryRenderedFeatures(event.point, { layers: [centroidsLayerId] });
-      this._map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+  handleStartMapMove() {
+    if (this.updateFrameId) {
+      window.cancelAnimationFrame(this.updateFrameId);
     }
   }
 
-  _handleEndMapMove(event) {
-    this._beginPeriodicUpdates();
-    if (this._updateDelayId) {
-      clearTimeout(this._updateDelayId);
-      this._updateDelayId = null;
+  handleMapMove(event) {
+    if (this.map.getLayer(centroidsLayerId) !== undefined) {
+      const features = this.map.queryRenderedFeatures(event.point, { layers: [centroidsLayerId] });
+      this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+    }
+  }
+
+  handleEndMapMove() {
+    this.beginPeriodicUpdates();
+    if (this.updateDelayId) {
+      clearTimeout(this.updateDelayId);
+      this.updateDelayId = null;
     } else {
-      let self = this;
-      this._updateDelayId = setTimeout(() => {
-        self._updateDelayId = null;
-        const zoomLevel = self._map.getZoom();
+      const self = this;
+      this.updateDelayId = setTimeout(() => {
+        self.updateDelayId = null;
+        const zoomLevel = self.map.getZoom();
         if (zoomLevel >= minDetailZoom) {
-          const identifiers = self._getCurrentCentroids()
-            .map((obj) => obj.properties.geostore);
-          self._updateGeometries([...new Set(identifiers)]);
+          const identifiers = self.getCurrentCentroids()
+            .map(obj => obj.properties.geostore);
+          self.updateGeometries([...new Set(identifiers)]);
         }
       }, onMoveDelayTime);
     }
   }
 
-  _handleMapClick(event) {
+  handleMapClick(event) {
     const {
       point,
-      lngLat
+      lngLat,
     } = event;
-    const layers = this._gm.layerIdentifiers;
+    const layers = this.geoManager.layerIdentifiers;
     if (layers.length) {
-      const width = 20,
-        height = 20;
+      const width = 20;
+      const height = 20;
       const bbox = [
-        [point.x - width / 2, point.y - height / 2],
-        [point.x + width / 2, point.y + height / 2]
-      ]
-      const features = this._map.queryRenderedFeatures(bbox, {
-        layers
+        [point.x - (width / 2), point.y - (height / 2)],
+        [point.x + (width / 2), point.y + (height / 2)],
+      ];
+      const features = this.map.queryRenderedFeatures(bbox, {
+        layers,
       });
 
       if (!features.length) return;
 
       const feat = features[0];
       const {
-        metadataIdentifier: identifier,
-        metadataInfrastructureType: infrastructureType,
-        metadataProjects: projects,
+        projects,
       } = feat.layer.metadata;
 
 
       const popup = new Popup();
 
-      const itemsListHTML = projects.map((project, index) => `<li><h4>${project.name}</h4>
+      const itemsListHTML = projects.map(project => `<li><h4>${project.name}</h4>
       <p><a class='button' href='${project.page_url}' target='_blank'>Open detail page</a></p></li>`)
         .join('');
 
@@ -220,72 +229,74 @@ export default class Cartographer {
            <ul class='clean'>${itemsListHTML}</ul>
            </div>`);
 
-      this._addPopup(popup);
+      this.addPopup(popup);
     }
   }
 
     // Manage map
 
-  _updateGeometries(identifiers) {
-    identifiers.filter((id) => !this._gm.hasGeo(id))
+  updateGeometries(identifiers) {
+    identifiers.filter(id => !this.geoManager.hasGeo(id))
       .forEach((id) => {
-        this._gq.loadGeoStore(id);
+        this.geostoreQueue.loadGeoStore(id);
       });
   }
 
-  _updateMapState() {
-    if (this._gm.selectedGeoIdentifiers) {
-      let visibleCentroids = [...this._gm.selectedGeoIdentifiers];
-      if (this._map.getZoom() >= minDetailZoom) {
-        visibleCentroids = visibleCentroids.filter(x => !this._gm.loadedGeoIdentifiers.has(x));
+  updateMapState() {
+    if (this.geoManager.selectedGeoIdentifiers) {
+      let visibleCentroids = [...this.geoManager.selectedGeoIdentifiers];
+      if (this.map.getZoom() >= minDetailZoom) {
+        visibleCentroids = visibleCentroids.filter(
+          x => !this.geoManager.loadedGeoIdentifiers.has(x),
+        );
       }
       this.showCentroids(visibleCentroids);
     }
   }
 
   setSource(id, source, replace = true) {
-    const src = this._map.getSource(id);
+    const src = this.map.getSource(id);
     if (src && replace) {
-      this._map.removeSource(id);
+      this.map.removeSource(id);
     }
-    this._map.addSource(id, source);
+    this.map.addSource(id, source);
   }
 
   addLayer(layer) {
-    this._map.addLayer(layer);
+    this.map.addLayer(layer);
   }
 
   filterMap(layerId, filterArray) {
-    this._map.setFilter(layerId, filterArray);
+    this.map.setFilter(layerId, filterArray);
   }
 
   // View methods
 
   hideLayer(layerId) {
-    this._map.setLayoutProperty(layerId, 'visibility', 'none');
+    this.map.setLayoutProperty(layerId, 'visibility', 'none');
   }
 
   showLayer(layerId) {
-    this._map.setLayoutProperty(layerId, 'visibility', 'visible');
+    this.map.setLayoutProperty(layerId, 'visibility', 'visible');
   }
 
   resetMapZoom() {
-    this._map.zoomTo(defaultZoom);
+    this.map.zoomTo(defaultZoom);
   }
 
-  _zoomToExtent(extent) {
+  zoomToExtent(extent) {
     const isPoint = extent[0] === extent[2] && extent[1] === extent[3];
     if (isPoint) {
       const pt = extent.slice(0, 2);
-      this._map.flyTo({
+      this.map.flyTo({
         center: pt,
-        zoom: maxFitZoom
+        zoom: maxFitZoom,
       });
     } else if (extent.length === 4) {
-      const bounds = new MapboxGl.LngLatBounds.convert(extent);
-      this._map.fitBounds(bounds, {
+      const bounds = MapboxGl.LngLatBounds.convert(extent);
+      this.map.fitBounds(bounds, {
         padding: boundsPadding,
-        maxZoom: maxFitZoom
+        maxZoom: maxFitZoom,
       });
     }
   }
@@ -293,43 +304,43 @@ export default class Cartographer {
   // search results
 
   setCurrentGeo(identifiers) {
-    this._gm.selectedGeoIdentifiers = identifiers;
+    this.geoManager.selectedGeoIdentifiers = identifiers;
   }
 
   showCentroids(centroidsIds) {
     this.showLayer(centroidsLayerId);
     if (centroidsIds) {
-      this.filterMap(centroidsLayerId, ['in', 'geostore'].concat(centroidsIds))
+      this.filterMap(centroidsLayerId, ['in', 'geostore'].concat(centroidsIds));
     } else {
       this.filterMap(centroidsLayerId, ['!in', 'geostore', false]);
     }
   }
 
   hideCentroids(centroidsIds) {
-    if (centroidsIds && this._gm.centroidsLoaded) {
+    if (centroidsIds && this.geoManager.centroidsLoaded) {
       this.showLayer(centroidsLayerId);
-      this.filterMap(centroidsLayerId, ['!in', 'geostore'].concat(centroidsIds))
+      this.filterMap(centroidsLayerId, ['!in', 'geostore'].concat(centroidsIds));
     } else {
       this.hideLayer(centroidsLayerId);
     }
   }
 
-  _getCurrentCentroids() {
-    return this._map.queryRenderedFeatures({
-      layers: [centroidsLayerId]
+  getCurrentCentroids() {
+    return this.map.queryRenderedFeatures({
+      layers: [centroidsLayerId],
     });
   }
 
 
   // Popups
-  _setPopupLayer(layerId) {
-    this._popupLayerId = layerId;
+  setPopupLayer(layerId) {
+    this.popupLayerId = layerId;
   }
 
   queryForPopup(event) {
-    if (this._popupLayerId && event.point) {
-      const features = this._map.queryRenderedFeatures(event.point, {
-        layers: [this._popupLayerId]
+    if (this.popupLayerId && event.point) {
+      const features = this.map.queryRenderedFeatures(event.point, {
+        layers: [this.popupLayerId],
       });
 
       if (!features.length) return;
@@ -338,40 +349,35 @@ export default class Cartographer {
       const popup = new Popup();
 
       // Create popup HTML, the hard way. (So we can easily add the event listener to that button)
-      let popupContainer = document.createElement('div');
+      const popupContainer = document.createElement('div');
       popupContainer.className = popContentClass;
-      let header = document.createElement('h4');
+      const header = document.createElement('h4');
       header.appendChild(document.createTextNode(feat.properties.label || ''));
-      let button = document.createElement('button');
+      const button = document.createElement('button');
       button.appendChild(document.createTextNode('Zoom to Detail'));
-      button.addEventListener('click', (event) => GeoStoreActions.selectGeoStoreId(feat.properties.geostore));
+      button.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(feat.properties.geostore));
       popupContainer.appendChild(header);
       popupContainer.appendChild(button);
       popup.setLngLat(feat.geometry.coordinates)
            .setDOMContent(popupContainer);
 
-      this._addPopup(popup);
-
+      this.addPopup(popup);
     }
   }
 
+  addPopup(popup) {
+    popup.addTo(this.map);
+    this.popup = popup;
+  }
+
   removePopup() {
-    this._removePopup();
-  }
-
-  _addPopup(popup) {
-    popup.addTo(this._map);
-    this._popup = popup;
-  }
-
-  _removePopup() {
-    if (this._popup) {
-      this._popup.remove();
-      this._popup = null;
+    if (this.popup) {
+      this.popup.remove();
+      this.popup = null;
     }
   }
 }
 
 export {
-  defaultZoom
+  defaultZoom,
 };
