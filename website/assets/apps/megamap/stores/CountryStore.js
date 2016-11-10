@@ -1,9 +1,11 @@
 import alt from '../alt';
-import {createApiStore} from './apistores';
+import createApiStore from './apistores';
 import CountryActions from '../actions/CountryActions';
 
 
-var CountryStore = createApiStore(CountryActions);
-CountryStore = alt.createStore(CountryStore, 'CountryStore');
+const CountryStore = alt.createStore(
+  createApiStore(CountryActions),
+  'CountryStore',
+);
 
 export default CountryStore;

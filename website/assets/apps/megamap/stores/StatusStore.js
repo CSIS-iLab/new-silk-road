@@ -1,9 +1,11 @@
 import alt from '../alt';
-import {createApiStore} from './apistores';
+import createApiStore from './apistores';
 import StatusActions from '../actions/StatusActions';
 
 
-var StatusStore = createApiStore(StatusActions);
-StatusStore = alt.createStore(StatusStore, 'StatusStore');
+const StatusStore = alt.createStore(
+  createApiStore(StatusActions),
+  'StatusStore',
+);
 
 export default StatusStore;

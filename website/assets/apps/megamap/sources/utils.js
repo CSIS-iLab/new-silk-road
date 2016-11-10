@@ -3,13 +3,13 @@ function parameterizeQuery(query) {
     const value = query[key];
     if (value) {
       if (Array.isArray(value)) {
-        return value.map((x) => `${key}=${x}`).join("&");
+        return value.map(x => `${key}=${x}`).join('&');
       }
-      return [key, value].join("=");
+      return [key, value].join('=');
     }
     return null;
   });
-  return params.filter((value) => value !== null).join("&");
+  return params.filter(value => value !== null).join('&');
 }
 
-export {parameterizeQuery};
+export default parameterizeQuery;

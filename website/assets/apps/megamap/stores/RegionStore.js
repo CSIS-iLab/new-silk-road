@@ -1,8 +1,10 @@
 import alt from '../alt';
-import {createApiStore} from './apistores';
+import createApiStore from './apistores';
 import RegionActions from '../actions/RegionActions';
 
-var RegionStore = createApiStore(RegionActions);
-RegionStore = alt.createStore(RegionStore, 'RegionStore');
+const RegionStore = alt.createStore(
+  createApiStore(RegionActions),
+  'RegionStore',
+);
 
 export default RegionStore;
