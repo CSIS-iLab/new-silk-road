@@ -1,80 +1,79 @@
+/* eslint-disable no-console */
+
 import 'babel-polyfill';
 import 'whatwg-fetch';
 import MapboxGl, {
   Navigation,
-} from 'mapbox-gl/dist/mapbox-gl.js';
+} from 'mapbox-gl/dist/mapbox-gl';
 import GeoStyles from '../megamap/helpers/GeoStyles';
 
-var ProjectDetail = window.ProjectDetail || {};
+const ProjectDetail = window.ProjectDetail || {};
 
 class Map {
   constructor(geoURL, mapConfig, infrastructureType = null) {
-    this._geoURL = geoURL;
-    this._geoLoaded = false;
-    this._infrastructureType = infrastructureType;
-    const {accessToken, disableHandlers, hideNavigation, ...config} = mapConfig;
+    this.geoURL = geoURL;
+    this.geoLoaded = false;
+    this.infrastructureType = infrastructureType;
+    const { accessToken, disableHandlers, hideNavigation, ...config } = mapConfig;
     MapboxGl.accessToken = accessToken;
-    this._map = new MapboxGl.Map(config);
-    for (let handler of disableHandlers) {
-      this._map[handler].disable()
-    }
+    this.map = new MapboxGl.Map(config);
+    disableHandlers.forEach((handler) => {
+      this.map[handler].disable();
+    });
     if (hideNavigation !== true) {
-      this._map.addControl(new Navigation({position: 'top-left'}));
+      this.map.addControl(new Navigation({ position: 'top-left' }));
     }
-    this._map.on('load', this._handleMapDidLoad.bind(this));
-    this._stylo = new GeoStyles();
+    this.map.on('load', this.handleMapDidLoad.bind(this));
+    this.stylo = new GeoStyles();
   }
 
-  _handleMapDidLoad = (event) => {
-    if (!this._geoLoaded) {
-      this._loadGeodata();
+  handleMapDidLoad() {
+    if (!this.geoLoaded) {
+      this.loadGeodata();
     }
   }
 
-  _loadGeodata() {
-    if (this._geoURL) {
-      fetch(this._geoURL, { credentials: 'same-origin',})
-      .then((response) => {
-        return response.json();
-      })
+  loadGeodata() {
+    if (this.geoURL) {
+      fetch(this.geoURL, { credentials: 'same-origin' })
+      .then(response => response.json())
       .then((json) => {
-        this._geoLoaded = true;
-        return this._mapProjectLayers(json)
+        this.geoLoaded = true;
+        return this.mapProjectLayers(json);
       })
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
     } else {
       console.error('No geoURL to load!');
     }
   }
 
-  _mapProjectLayers(json) {
+  mapProjectLayers(json) {
     const {
       extent,
     } = json;
     const camera = {
-        bounds: extent,
-        maxZoom: 10,
-        padding: 40
+      bounds: extent,
+      maxZoom: 10,
+      padding: 40,
     };
     const geoTypes = ['lines', 'points', 'polygons'];
-    for (let t of geoTypes) {
+    geoTypes.forEach((t) => {
       const data = json[t];
       if (data.features.length) {
         const layerId = `${t}-layer`;
-        this._map.addSource(layerId, {
-          data: data,
-          type: 'geojson'
+        this.map.addSource(layerId, {
+          data,
+          type: 'geojson',
         });
         const layer = Object.assign({
           source: layerId,
           id: layerId,
-        }, this._stylo.getStyleFor(t, this._infrastructureType));
+        }, this.stylo.getStyleFor(t, this.infrastructureType));
         delete layer.minzoom; // Some big shapes won't show otherwise
-        this._map.addLayer(layer);
+        this.map.addLayer(layer);
       }
-    }
-    this._map.fitBounds(camera.bounds, camera);
-
+    });
+    this.map.fitBounds(camera.bounds, camera);
   }
 }
 

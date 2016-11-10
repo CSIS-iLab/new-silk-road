@@ -1,35 +1,35 @@
-import {minDetailZoom} from './map-constants';
 import objectMerge from 'object-merge';
+import { minDetailZoom } from './map-constants';
 
 export default class GeoStyles {
   constructor() {
-    let lineStyle = {
+    const lineStyle = {
       type: 'line',
       minzoom: minDetailZoom,
       layout: {},
       paint: {
         'line-color': '#4d8d8e',
-        'line-width': 2
-      }
+        'line-width': 2,
+      },
     };
-    let pointStyle = {
+    const pointStyle = {
       type: 'symbol',
       minzoom: minDetailZoom,
       layout: {
         'icon-allow-overlap': true,
-        'icon-image': 'dot'
+        'icon-image': 'dot',
       },
-      paint: {}
+      paint: {},
     };
-    let polygonStyle = {
+    const polygonStyle = {
       type: 'fill',
       minzoom: minDetailZoom,
       layout: {},
       paint: {
-        'fill-color': '#4d8d8e'
-      }
+        'fill-color': '#4d8d8e',
+      },
     };
-    this._styles = {
+    this.styles = {
       default: {
         lines: lineStyle,
         points: pointStyle,
@@ -41,15 +41,15 @@ export default class GeoStyles {
             'icon-image': '{icon-image}',
           },
           paint: {
-            'icon-opacity': 1
-          }
+            'icon-opacity': 1,
+          },
         },
       },
       rail: {
         lines: objectMerge(lineStyle, {
           paint: {
             'line-color': '#c34242',
-          }
+          },
         }),
         points: objectMerge(pointStyle, {
           layout: {
@@ -61,7 +61,7 @@ export default class GeoStyles {
         lines: objectMerge(lineStyle, {
           paint: {
             'line-color': '#f68b3f',
-          }
+          },
         }),
         points: objectMerge(pointStyle, {
           layout: {
@@ -80,14 +80,14 @@ export default class GeoStyles {
         lines: objectMerge(lineStyle, {
           paint: {
             'line-color': '#7e3c22',
-          }
+          },
         }),
       },
       ict: {
         lines: objectMerge(lineStyle, {
           paint: {
             'line-color': '#65bc46',
-          }
+          },
         }),
       },
       dryport: {
@@ -116,12 +116,12 @@ export default class GeoStyles {
 
   getStyleFor(geometryType, infrastructureType = null) {
     const typeLookup = infrastructureType ? infrastructureType.toLowerCase().replace(' ', '-') : null;
-    if (this._styles.hasOwnProperty(typeLookup)) {
-      let lookup = this._styles[typeLookup];
-      if (lookup.hasOwnProperty(geometryType)) {
+    if ({}.hasOwnProperty.call(this.styles, typeLookup)) {
+      const lookup = this.styles[typeLookup];
+      if ({}.hasOwnProperty.call(lookup, geometryType)) {
         return lookup[geometryType];
       }
     }
-    return this._styles['default'][geometryType];
+    return this.styles.default[geometryType];
   }
 }
