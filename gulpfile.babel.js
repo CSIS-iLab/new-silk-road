@@ -90,10 +90,18 @@ gulp.task('js:package', ['js:build'], () => {
   const config = Object.create(webpackConfig);
   if (process.env.NODE_ENV === 'production') {
     console.log('Production build!');
-    config.plugins = [
+    if ({}.hasOwnProperty.call(config, 'plugins') === false) {
+      config.plugins = [];
+    }
+    config.plugins = config.plugins.concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        },
+      }),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.UglifyJsPlugin(),
-    ];
+    ]);
   } else {
     console.log('Development build!');
   }
