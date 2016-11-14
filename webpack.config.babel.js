@@ -1,4 +1,6 @@
+/* eslint import/no-extraneous-dependencies: ["error", {"devDependencies": true}] */
 import path from 'path';
+import webpack from 'webpack';
 
 const entryBase = './website/assets';
 
@@ -22,6 +24,9 @@ export default {
       },
     ],
   },
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+  ],
   resolve: {
     extensions: ['', '.js', '.jsx'],
   },

@@ -6,6 +6,7 @@ import eslint from 'gulp-eslint';
 import browserSync from 'browser-sync';
 import webpackStream from 'webpack-stream';
 import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import del from 'del';
 import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
@@ -32,6 +33,28 @@ const paths = {
     `${assetsBase}/js/apps/megamap/app.jsx`,
     `${assetsBase}/js/apps/projectmap/app.jsx`,
   ],
+};
+
+const makeBundler = (type = 'default') => {
+  const config = Object.create(webpackConfig);
+  if (process.env.NODE_ENV === 'production') {
+    if ({}.hasOwnProperty.call(config, 'plugins') === false) {
+      config.plugins = [];
+    }
+    config.plugins = config.plugins.concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        },
+      }),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.UglifyJsPlugin(),
+    ]);
+  } else {
+    config.debug = true;
+  }
+  const bundler = type === 'streaming' ? webpackStream(config) : webpack(config);
+  return bundler;
 };
 
 gulp.task('sass:build', () =>
@@ -86,33 +109,16 @@ gulp.task('js:watch', () => {
   gulp.watch(paths.allSrcJs, ['js:package']);
 });
 
-gulp.task('js:package', ['js:build'], () => {
-  const config = Object.create(webpackConfig);
-  if (process.env.NODE_ENV === 'production') {
-    console.log('Production build!');
-    if ({}.hasOwnProperty.call(config, 'plugins') === false) {
-      config.plugins = [];
-    }
-    config.plugins = config.plugins.concat([
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        },
-      }),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin(),
-    ]);
-  } else {
-    console.log('Development build!');
-  }
-  return gulp.src(paths.clientEntryPoints)
-    .pipe(webpackStream(config))
-    .pipe(gulp.dest(paths.jsDist));
-});
+gulp.task('js:package', ['js:build'], () =>
+  gulp.src(paths.clientEntryPoints)
+    .pipe(makeBundler('streaming'))
+    .pipe(gulp.dest(paths.jsDist)),
+);
 
 gulp.task('default', ['js:watch', 'js:package']);
 
-gulp.task('watch', ['default'], () => {
+gulp.task('watch', () => {
+  const bundler = makeBundler();
   gulp.watch(paths.allSass, ['sass:build']);
   sync.init({
     proxy: 'localhost:8000',
@@ -120,5 +126,11 @@ gulp.task('watch', ['default'], () => {
     files: [`${paths.cssDist}/*.css`],
     ghostMode: false,
     open: false,
+    middleware: [
+      webpackDevMiddleware(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+        stats: { colors: true },
+      }),
+    ],
   });
 });
