@@ -23,7 +23,7 @@ import {
 
 
 const identiferSep = ' : ';
-const centroidsLayerId = 'project : centroids';
+const centroidsLayerId = `project${identiferSep}centroids`;
 
 export default class Cartographer {
 
