@@ -190,7 +190,7 @@ When you see a # symbol, that indicates the start of a comment, which is not pro
 Now that you've created the `.env` file you can cross your fingers and run:
 
 ```sh
-heroku local:run python manage.py runserver
+$ heroku local:run python manage.py runserver
 ```
 
 If everything was installed and configured successfully, you should see something like:
@@ -209,4 +209,34 @@ Quit the server with CONTROL-C.
 
 That means you can open <http://127.0.0.1:8000/> (or <http://localhost:8000/>, both are "addresses" for your computer) in a web browser and you should see your local copy of the website up and running!
 
-## Node for JavaScript and Sass/CSS
+## Working on JavaScript and Sass/CSS: Use Node
+
+Since [Node](https://nodejs.org/) has its own ecosystem of tools oriented toward front-end web development, this project includes a `package.json` and `gulpfile.babel.js`. If you plan to write Sass/CSS or JavaScript, you should install the required tools:
+
+```sh
+$ npm install
+```
+
+`npm` will look at the `package.json` and install the tools for writing JavaScript using ES6 and React, and Sass. You will also want to install the [Gulp](http://gulpjs.com) command line client "globally" by running:
+
+```sh
+npm install --global gulp-cli
+```
+
+Once that's done, you can run the various tasks defined in `gulpfile.babel.js`. Some are Sass-related, some are JavaScript-related, and there is one task for optimizing svg files from website/assets/svg and copying them into website/static/img.
+
+### Running a Sass dev server
+
+If you want to run the website and edit the Sass styles (\*.scss files) with a live preview, you can open two terminal windows/tabs and run one command in each. The first starts the website at <http://127.0.0.1:8000/> and handle serving the database-driven HTML pages:
+
+```sh
+$ heroku local:run python manage.py runserver
+```
+
+The following will start watching the Sass files for changes and update the resulting CSS. It runs a webserver on <http://127.0.0.1:3000/> (note the different port: 3000, rather than 8000) that live updates the stylesheets as you edit them, and it proxies HTML page requests to the other webserver (running on port 8000):
+
+```sh
+$ gulp sass:watch
+```
+
+So if you have both running, you can access <http://127.0.0.1:3000/> or <http://localhost:3000/> to see styles update moments after you edit and save the Sass files.
