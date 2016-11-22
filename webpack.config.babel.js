@@ -11,6 +11,7 @@ export default {
   },
   output: {
     path: path.join(__dirname, 'website/static/js'),
+    publicPath: '/static/js/',
     filename: '[name].js',
   },
   target: 'web',
