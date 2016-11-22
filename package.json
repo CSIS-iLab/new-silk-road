@@ -58,7 +58,7 @@
     "radium": "^0.18.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-select": "^1.0.0-beta13",
+    "react-select": "^1.0.0-rc.2",
     "whatwg-fetch": "^1.0.0"
   },
   "babel": {
