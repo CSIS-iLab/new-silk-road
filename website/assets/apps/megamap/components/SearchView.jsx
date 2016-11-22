@@ -3,11 +3,12 @@ import Select from 'react-select';
 import Panel from './Panel';
 import { FunderCountrySelect, ProjectCountrySelect } from './country-selects';
 import ProjectRegionSelect from './region-selects';
-import StatusSelectContainer from './StatusSelectContainer';
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
+import StatusStore from '../stores/StatusStore';
+import StatusActions from '../actions/StatusActions';
 import DateRangeSelect from './DateRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
@@ -18,11 +19,12 @@ const nameIdMapper = data => data.results.map(
   obj => Object.create({ label: obj.name, value: obj.id }),
 );
 
-const emptyQueryState = () => Object.create({
+const emptyQueryState = () => Object.assign({}, {
   name__icontains: '',
   initiatives__name__icontains: '',
   funding__sources__name__icontains: '',
   infrastructure_type: [],
+  status: [],
 });
 
 const yearLookupOptions = [
@@ -54,6 +56,9 @@ export default class SearchView extends Component {
       infrastructure_type: {
         options: [],
       },
+      status: {
+        options: [],
+      },
       query: emptyQueryState(),
       results: [],
       nextURL: null,
@@ -79,6 +84,12 @@ export default class SearchView extends Component {
       }),
     );
     InfrastructureTypeActions.fetch();
+    StatusStore.listen(
+      store => this.setState({
+        status: { options: nameIdMapper(store) },
+      }),
+    );
+    StatusActions.fetch();
   }
 
   onSearchResults(data) {
@@ -175,7 +186,19 @@ export default class SearchView extends Component {
                   />
                 </div>
                 <div className="sectionRow">
-                  <StatusSelectContainer onSelect={this.handleQueryUpdate} />
+                  <Select
+                    value={this.state.query.status}
+                    name="status"
+                    placeholder="Status"
+                    options={this.state.status.options}
+                    onChange={selections => this.handleQueryUpdate(
+                      { status: selections.map(s => s.value) },
+                    )
+                  }
+                    isLoading={this.state.status.options.length === 0}
+                    multi
+                    backspaceToRemoveMessage=""
+                  />
                 </div>
                 <div className="sectionRow">
                   <ProjectRegionSelect onSelect={this.handleQueryUpdate} />
