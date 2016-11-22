@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Panel from './Panel';
-import SearchBar from './SearchBar';
 import { FunderCountrySelect, ProjectCountrySelect } from './country-selects';
 import ProjectRegionSelect from './region-selects';
 import StatusSelectContainer from './StatusSelectContainer';
@@ -39,7 +38,11 @@ export default class SearchView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: {},
+      query: {
+        name__icontains: '',
+        initiatives__name__icontains: '',
+        funding__sources__name__icontains: '',
+      },
       results: [],
       nextURL: null,
       previousURL: null,
@@ -49,6 +52,7 @@ export default class SearchView extends Component {
       isSearching: false,
       searchCount: 0,
     };
+    this.handleChange = this.handleChange.bind(this);
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSearchResults = this.onSearchResults.bind(this);
@@ -75,6 +79,11 @@ export default class SearchView extends Component {
     this.projectsPanel.collapse();
     this.initiativesPanel.collapse();
     this.fundersPanel.collapse();
+  }
+
+  handleChange(event) {
+    const { name, value } = event.target;
+    this.handleQueryUpdate({ [`${name}`]: value });
   }
 
   handleQueryUpdate(q) {
@@ -116,12 +125,21 @@ export default class SearchView extends Component {
         <div className="inner">
           <div className="searchWidget">
             <form onSubmit={this.handleSubmit}>
-              <SearchBar
-                id="primarySearch"
-                placeholder="Project Title" name="name__icontains"
-                onSearchInput={this.handleQueryUpdate}
-                searchEnabled={this.state.searchEnabled}
-              />
+              <div className="searchBar" id="primarySearch">
+                <input
+                  type="text"
+                  value={this.state.query.name__icontains}
+                  onChange={this.handleChange}
+                  name="name__icontains"
+                  placeholder="Project Title"
+                />
+                <button
+                  type="submit"
+                  title="Search"
+                  disabled={!this.state.searchEnabled}
+                >Search
+                </button>
+              </div>
               <Panel
                 title="Projects"
                 ref={(el) => { this.projectsPanel = el; }}
@@ -153,13 +171,15 @@ export default class SearchView extends Component {
                 ref={(el) => { this.initiativesPanel = el; }}
               >
                 <div className="sectionRow">
-                  <SearchBar
-                    placeholder="Initiative Title"
-                    name="initiatives__name__icontains"
-                    onSearchInput={this.handleQueryUpdate}
-                    searchEnabled={this.state.searchEnabled}
-                    showSubmit={false}
-                  />
+                  <div className="searchBar">
+                    <input
+                      type="text"
+                      value={this.state.query.initiatives__name__icontains}
+                      onChange={this.handleChange}
+                      name="initiatives__name__icontains"
+                      placeholder="Initiative Title"
+                    />
+                  </div>
                 </div>
                 <div className="sectionRow">
                   <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
@@ -170,13 +190,15 @@ export default class SearchView extends Component {
                 ref={(el) => { this.fundersPanel = el; }}
               >
                 <div className="sectionRow">
-                  <SearchBar
-                    placeholder="Funder Name"
-                    name="funding__sources__name__icontains"
-                    onSearchInput={this.handleQueryUpdate}
-                    searchEnabled={this.state.searchEnabled}
-                    showSubmit={false}
-                  />
+                  <div className="searchBar">
+                    <input
+                      type="text"
+                      value={this.state.query.funding__sources__name__icontains}
+                      onChange={this.handleChange}
+                      name="funding__sources__name__icontains"
+                      placeholder="Funder Name"
+                    />
+                  </div>
                 </div>
                 <div className="sectionRow">
                   <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
