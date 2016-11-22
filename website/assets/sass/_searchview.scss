@@ -41,6 +41,12 @@ $scroll-max-height: $results-view-max-height - 46;
             width: $search-btn-width;
             padding: 0;
         }
+        button.reset {
+            position: relative;
+            content: "X";
+            width: $search-btn-width;
+            padding: 0;
+        }
     }
 
     .inner {

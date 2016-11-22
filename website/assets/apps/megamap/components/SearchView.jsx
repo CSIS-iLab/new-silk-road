@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
+import Select from 'react-select';
 import Panel from './Panel';
 import { FunderCountrySelect, ProjectCountrySelect } from './country-selects';
 import ProjectRegionSelect from './region-selects';
 import StatusSelectContainer from './StatusSelectContainer';
-import InfrastructureTypeSelectContainer from './InfrastructureTypeSelectContainer';
 import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
 import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
+import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
+import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
 import DateRangeSelect from './DateRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
+
+const nameIdMapper = data => data.results.map(
+  obj => Object.create({ label: obj.name, value: obj.id }),
+);
+
+const emptyQueryState = () => Object.create({
+  name__icontains: '',
+  initiatives__name__icontains: '',
+  funding__sources__name__icontains: '',
+  infrastructure_type: [],
+});
 
 const yearLookupOptions = [
   {
@@ -38,11 +51,10 @@ export default class SearchView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: {
-        name__icontains: '',
-        initiatives__name__icontains: '',
-        funding__sources__name__icontains: '',
+      infrastructure_type: {
+        options: [],
       },
+      query: emptyQueryState(),
       results: [],
       nextURL: null,
       previousURL: null,
@@ -52,6 +64,7 @@ export default class SearchView extends Component {
       isSearching: false,
       searchCount: 0,
     };
+    this.resetQueryState = this.resetQueryState.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -60,6 +73,12 @@ export default class SearchView extends Component {
 
   componentDidMount() {
     SearchStore.listen(this.onSearchResults);
+    InfrastructureTypeStore.listen(
+      store => this.setState({
+        infrastructure_type: { options: nameIdMapper(store) },
+      }),
+    );
+    InfrastructureTypeActions.fetch();
   }
 
   onSearchResults(data) {
@@ -81,6 +100,10 @@ export default class SearchView extends Component {
     this.fundersPanel.collapse();
   }
 
+  resetQueryState() {
+    this.setState({ query: emptyQueryState(), searchEnabled: false });
+  }
+
   handleChange(event) {
     const { name, value } = event.target;
     this.handleQueryUpdate({ [`${name}`]: value });
@@ -88,21 +111,13 @@ export default class SearchView extends Component {
 
   handleQueryUpdate(q) {
     // TODO: Migrate this logic to a Store that manages the state of the search query.
-    const queryUpdate = Object.assign({}, this.state.query);
-    Object.entries(q).forEach(([key, value]) => {
-      let outValue = null;
-      if (typeof value === 'string' && value !== '') {
-        outValue = value.trim();
-      } else if (Array.isArray(value) && value.length > 0) {
-        outValue = value;
+    const queryUpdate = Object.assign({}, this.state.query, q);
+    const enableSearch = Object.values(queryUpdate).some((value) => {
+      if (Array.isArray(value)) {
+        return value.length !== 0;
       }
-      if (outValue !== null) {
-        queryUpdate[key] = value;
-      } else {
-        delete queryUpdate[key];
-      }
+      return value !== '';
     });
-    const enableSearch = Object.keys(queryUpdate).length > 0;
     this.setState({ query: queryUpdate, searchEnabled: enableSearch });
   }
 
@@ -145,7 +160,19 @@ export default class SearchView extends Component {
                 ref={(el) => { this.projectsPanel = el; }}
               >
                 <div className="sectionRow">
-                  <InfrastructureTypeSelectContainer onSelect={this.handleQueryUpdate} />
+                  <Select
+                    value={this.state.query.infrastructure_type}
+                    name="infrastructure_type"
+                    placeholder="Infrastructure Type"
+                    options={this.state.infrastructure_type.options}
+                    onChange={selections => this.handleQueryUpdate(
+                      { infrastructure_type: selections.map(s => s.value) },
+                    )
+                  }
+                    isLoading={this.state.infrastructure_type.options.length === 0}
+                    multi
+                    backspaceToRemoveMessage=""
+                  />
                 </div>
                 <div className="sectionRow">
                   <StatusSelectContainer onSelect={this.handleQueryUpdate} />
@@ -245,6 +272,15 @@ export default class SearchView extends Component {
             >
               Help
             </a>
+          </p>
+          <p>
+            <button
+              className="reset"
+              type="reset"
+              onClick={this.resetQueryState}
+            >
+              Reset
+            </button>
           </p>
         </footer>
       </div>
