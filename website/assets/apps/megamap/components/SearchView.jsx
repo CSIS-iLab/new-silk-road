@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
 import Panel from './Panel';
-import { FunderCountrySelect, ProjectCountrySelect } from './country-selects';
-import ProjectRegionSelect from './region-selects';
-import PrincipalAgentSelectContainer from './PrincipalAgentSelectContainer';
-import CurrencyAmountSelectContainer from './CurrencyAmountSelectContainer';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
 import StatusStore from '../stores/StatusStore';
@@ -19,12 +15,19 @@ const nameIdMapper = data => data.results.map(
   obj => Object.create({ label: obj.name, value: obj.id }),
 );
 
+const nameSlugMapper = data => data.results.map(
+  obj => Object.create({ label: obj.name, value: obj.slug }),
+);
+
 const emptyQueryState = () => Object.assign({}, {
   name__icontains: '',
   initiatives__name__icontains: '',
   funding__sources__name__icontains: '',
   infrastructure_type: [],
   status: [],
+  date_range: {
+    dateLookupType: '',
+  },
 });
 
 const yearLookupOptions = [
@@ -53,11 +56,13 @@ export default class SearchView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      infrastructure_type: {
-        options: [],
-      },
-      status: {
-        options: [],
+      options: {
+        infrastructure_type: [],
+        status: [],
+        region: [],
+        countries: [],
+        cost: [],
+        funding__sources__countries: [],
       },
       query: emptyQueryState(),
       results: [],
@@ -175,12 +180,12 @@ export default class SearchView extends Component {
                     value={this.state.query.infrastructure_type}
                     name="infrastructure_type"
                     placeholder="Infrastructure Type"
-                    options={this.state.infrastructure_type.options}
+                    options={this.state.options.infrastructure_type}
                     onChange={selections => this.handleQueryUpdate(
                       { infrastructure_type: selections.map(s => s.value) },
                     )
                   }
-                    isLoading={this.state.infrastructure_type.options.length === 0}
+                    isLoading={this.state.options.infrastructure_type.length === 0}
                     multi
                     backspaceToRemoveMessage=""
                   />
@@ -190,21 +195,45 @@ export default class SearchView extends Component {
                     value={this.state.query.status}
                     name="status"
                     placeholder="Status"
-                    options={this.state.status.options}
+                    options={this.state.options.status}
                     onChange={selections => this.handleQueryUpdate(
                       { status: selections.map(s => s.value) },
                     )
                   }
-                    isLoading={this.state.status.options.length === 0}
+                    isLoading={this.state.options.status.length === 0}
                     multi
                     backspaceToRemoveMessage=""
                   />
                 </div>
                 <div className="sectionRow">
-                  <ProjectRegionSelect onSelect={this.handleQueryUpdate} />
+                  <Select
+                    value={this.state.query.region}
+                    name="region"
+                    placeholder="Region"
+                    options={this.state.options.region}
+                    onChange={selections => this.handleQueryUpdate(
+                      { region: selections.map(s => s.value) },
+                    )
+                  }
+                    isLoading={this.state.options.region.length === 0}
+                    multi
+                    backspaceToRemoveMessage=""
+                  />
                 </div>
                 <div className="sectionRow">
-                  <ProjectCountrySelect onSelect={this.handleQueryUpdate} />
+                  <Select
+                    value={this.state.query.countries}
+                    name="countries"
+                    placeholder="Country"
+                    options={this.state.options.countries}
+                    onChange={selections => this.handleQueryUpdate(
+                      { countries: selections.map(s => s.value) },
+                    )
+                  }
+                    isLoading={this.state.options.countries.length === 0}
+                    multi
+                    backspaceToRemoveMessage=""
+                  />
                 </div>
                 <div className="sectionRow">
                   <DateRangeSelect
@@ -212,7 +241,11 @@ export default class SearchView extends Component {
                     dateLookupOptions={yearLookupOptions}
                     lowerBoundLabel="Year"
                     upperBoundLabel="Year"
-                    onSelect={this.handleQueryUpdate}
+                    onChange={value => this.handleQueryUpdate(
+                      { date_range: Object.assign({}, value) },
+                    )
+                  }
+                    value={this.state.query.date_range}
                   />
                 </div>
               </Panel>
@@ -232,7 +265,13 @@ export default class SearchView extends Component {
                   </div>
                 </div>
                 <div className="sectionRow">
-                  <PrincipalAgentSelectContainer onSelect={this.handleQueryUpdate} />
+                  <input
+                    type="text"
+                    value={this.state.query.initiatives__name__icontains}
+                    onChange={this.handleChange}
+                    name="initiatives__principal_agent__slug"
+                    placeholder="Principal Agent"
+                  />
                 </div>
               </Panel>
               <Panel
@@ -251,10 +290,30 @@ export default class SearchView extends Component {
                   </div>
                 </div>
                 <div className="sectionRow">
-                  <CurrencyAmountSelectContainer onSelect={this.handleQueryUpdate} />
+                  <Select
+                    value={this.state.query.cost}
+                    name="cost"
+                    placeholder="Cost"
+                    options={this.state.options.cost}
+                    onChange={this.handleQueryUpdate}
+                    isLoading={this.state.options.cost.length === 0}
+                    backspaceToRemoveMessage=""
+                  />
                 </div>
                 <div className="sectionRow">
-                  <FunderCountrySelect onSelect={this.handleQueryUpdate} />
+                  <Select
+                    value={this.state.query.funding__sources__countries}
+                    name="funding__sources__countries"
+                    placeholder="Country"
+                    options={this.state.options.funding__sources__countries}
+                    onChange={selections => this.handleQueryUpdate(
+                      { funding__sources__countries: selections.map(s => s.value) },
+                    )
+                  }
+                    isLoading={this.state.options.funding__sources__countries.length === 0}
+                    multi
+                    backspaceToRemoveMessage=""
+                  />
                 </div>
               </Panel>
             </form>
