@@ -5,6 +5,14 @@ import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
 import StatusStore from '../stores/StatusStore';
 import StatusActions from '../actions/StatusActions';
+import RegionStore from '../stores/RegionStore';
+import RegionActions from '../actions/RegionActions';
+import CountryStore from '../stores/CountryStore';
+import CountryActions from '../actions/CountryActions';
+import PrincipalAgentStore from '../stores/PrincipalAgentStore';
+import PrincipalAgentActions from '../actions/PrincipalAgentActions';
+import CurrencyStore from '../stores/CurrencyStore';
+import CurrencyActions from '../actions/CurrencyActions';
 import DateRangeSelect from './DateRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
@@ -24,6 +32,7 @@ const emptyQueryState = () => Object.assign({}, {
   initiatives__name__icontains: '',
   funding__sources__name__icontains: '',
   initiatives__principal_agent__slug: '',
+  cost: '',
   infrastructure_type: [],
   status: [],
   date_range: {
@@ -85,18 +94,81 @@ export default class SearchView extends Component {
 
   componentDidMount() {
     SearchStore.listen(this.onSearchResults);
+
     InfrastructureTypeStore.listen(
-      store => this.setState({
-        infrastructure_type: { options: nameIdMapper(store) },
+      store => this.setState((prevState) => {
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { infrastructure_type: nameIdMapper(store) },
+        );
+        return { options };
       }),
     );
     InfrastructureTypeActions.fetch();
+
     StatusStore.listen(
-      store => this.setState({
-        status: { options: nameIdMapper(store) },
+      store => this.setState((prevState) => {
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { status: nameIdMapper(store) },
+        );
+        return { options };
       }),
     );
     StatusActions.fetch();
+
+    RegionStore.listen(
+      store => this.setState((prevState) => {
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { region: nameIdMapper(store) },
+        );
+        return { options };
+      }),
+    );
+    RegionActions.fetch();
+
+    CountryStore.listen(
+      store => this.setState((prevState) => {
+        const countryOpts = nameIdMapper(store);
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { countries: countryOpts, funding__sources__countries: countryOpts },
+        );
+        return { options };
+      }),
+    );
+    CountryActions.fetch();
+
+    PrincipalAgentStore.listen(
+      store => this.setState((prevState) => {
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { initiatives__principal_agent__slug: nameIdMapper(store) },
+        );
+        return { options };
+      }),
+    );
+    PrincipalAgentActions.fetch({ principal_initiatives__isnull: 'False' });
+
+    CurrencyStore.listen(
+      store => this.setState((prevState) => {
+        const lookups = Object.entries(store.lookups)
+                              .map(([key, value]) => ({ label: key, value }));
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { cost: lookups },
+        );
+        return { options };
+      }),
+    );
+    CurrencyActions.fetch();
   }
 
   onSearchResults(data) {
@@ -191,9 +263,9 @@ export default class SearchView extends Component {
                     placeholder="Infrastructure Type"
                     options={this.state.options.infrastructure_type}
                     onChange={selections => this.handleQueryUpdate(
-                      { infrastructure_type: selections.map(s => s.value) },
-                    )
-                  }
+                        { infrastructure_type: selections.map(s => s.value) },
+                      )
+                    }
                     isLoading={this.state.options.infrastructure_type.length === 0}
                     multi
                     backspaceToRemoveMessage=""
@@ -206,9 +278,9 @@ export default class SearchView extends Component {
                     placeholder="Status"
                     options={this.state.options.status}
                     onChange={selections => this.handleQueryUpdate(
-                      { status: selections.map(s => s.value) },
-                    )
-                  }
+                        { status: selections.map(s => s.value) },
+                      )
+                    }
                     isLoading={this.state.options.status.length === 0}
                     multi
                     backspaceToRemoveMessage=""
@@ -221,9 +293,9 @@ export default class SearchView extends Component {
                     placeholder="Region"
                     options={this.state.options.region}
                     onChange={selections => this.handleQueryUpdate(
-                      { region: selections.map(s => s.value) },
-                    )
-                  }
+                        { region: selections.map(s => s.value) },
+                      )
+                    }
                     isLoading={this.state.options.region.length === 0}
                     multi
                     backspaceToRemoveMessage=""
@@ -236,9 +308,9 @@ export default class SearchView extends Component {
                     placeholder="Country"
                     options={this.state.options.countries}
                     onChange={selections => this.handleQueryUpdate(
-                      { countries: selections.map(s => s.value) },
-                    )
-                  }
+                        { countries: selections.map(s => s.value) },
+                      )
+                    }
                     isLoading={this.state.options.countries.length === 0}
                     multi
                     backspaceToRemoveMessage=""
@@ -251,9 +323,9 @@ export default class SearchView extends Component {
                     lowerBoundLabel="Year"
                     upperBoundLabel="Year"
                     onChange={value => this.handleQueryUpdate(
-                      { date_range: Object.assign({}, value) },
-                    )
-                  }
+                        { date_range: Object.assign({}, value) },
+                      )
+                    }
                     value={this.state.query.date_range}
                   />
                 </div>
@@ -278,11 +350,11 @@ export default class SearchView extends Component {
                     value={this.state.query.initiatives__principal_agent__slug}
                     name="initiatives__principal_agent__slug"
                     placeholder="Principal Agent"
-                    options={this.state.options.countries}
-                    onChange={selections => this.handleQueryUpdate(
-                      { initiatives__principal_agent__slug: selections.map(s => s.value) },
-                    )
-                  }
+                    options={this.state.options.initiatives__principal_agent__slug}
+                    onChange={selection => this.handleQueryUpdate(
+                        { initiatives__principal_agent__slug: selection.value },
+                      )
+                    }
                     isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
                     backspaceToRemoveMessage=""
                   />
@@ -309,7 +381,10 @@ export default class SearchView extends Component {
                     name="cost"
                     placeholder="Cost"
                     options={this.state.options.cost}
-                    onChange={this.handleQueryUpdate}
+                    onChange={option => this.handleQueryUpdate(
+                        { cost: option.value },
+                      )
+                    }
                     isLoading={this.state.options.cost.length === 0}
                     backspaceToRemoveMessage=""
                   />
@@ -321,9 +396,9 @@ export default class SearchView extends Component {
                     placeholder="Country"
                     options={this.state.options.funding__sources__countries}
                     onChange={selections => this.handleQueryUpdate(
-                      { funding__sources__countries: selections.map(s => s.value) },
-                    )
-                  }
+                        { funding__sources__countries: selections.map(s => s.value) },
+                      )
+                    }
                     isLoading={this.state.options.funding__sources__countries.length === 0}
                     multi
                     backspaceToRemoveMessage=""
