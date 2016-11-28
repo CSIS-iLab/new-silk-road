@@ -3,6 +3,7 @@ function parameterizeQuery(query) {
     const value = query[key];
     if (value) {
       if (Array.isArray(value)) {
+        if (value.length === 0) return null;
         return value.map(x => `${key}=${x}`).join('&');
       }
       return [key, value].join('=');

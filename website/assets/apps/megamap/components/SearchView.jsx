@@ -28,6 +28,18 @@ const nameSlugMapper = data => data.results.map(
   obj => Object.create({ label: obj.name, value: obj.slug }),
 );
 
+const generateDateQuery = (obj) => {
+  const {
+    dateLookupType,
+    lowerValue,
+    upperValue,
+  } = obj;
+  return {
+    [`${dateLookupType}__gte`]: lowerValue !== '' ? +lowerValue : null,
+    [`${dateLookupType}__lte`]: upperValue !== '' ? +upperValue : null,
+  };
+};
+
 const emptyQueryState = () => Object.assign({}, {
   name__icontains: '',
   initiatives__name__icontains: '',
@@ -36,9 +48,7 @@ const emptyQueryState = () => Object.assign({}, {
   cost: '',
   infrastructure_type: [],
   status: [],
-  date_range: {
-    dateLookupType: '',
-  },
+  dateRange: {},
 });
 
 const yearLookupOptions = [
@@ -215,7 +225,23 @@ export default class SearchView extends Component {
   handleSubmit(e) {
     e.preventDefault();
     if (Object.keys(this.state.query).length > 0) {
-      SearchActions.search(this.state.query);
+      let searchParams = Object.assign({}, this.state.query);
+      if ({}.hasOwnProperty.call(searchParams, 'cost')) {
+        searchParams = Object.assign(searchParams, searchParams.cost);
+        delete searchParams.cost;
+      }
+      if ({}.hasOwnProperty.call(searchParams, 'dateRange')) {
+        if (Object.keys(searchParams.dateRange).length > 0) {
+          searchParams = Object.assign(searchParams, generateDateQuery(searchParams.dateRange));
+        }
+        delete searchParams.dateRange;
+      }
+      Object.entries(searchParams).forEach(([key, value]) => {
+        if (value === '' || value === null) {
+          delete searchParams[key];
+        }
+      });
+      SearchActions.search(searchParams);
     }
   }
 
@@ -324,10 +350,10 @@ export default class SearchView extends Component {
                     lowerBoundLabel="Year"
                     upperBoundLabel="Year"
                     onChange={value => this.handleQueryUpdate(
-                        { date_range: Object.assign({}, value) },
+                        { dateRange: Object.assign({}, this.state.query.dateRange, value) },
                       )
                     }
-                    value={this.state.query.date_range}
+                    value={this.state.query.dateRange}
                   />
                 </div>
               </Panel>
