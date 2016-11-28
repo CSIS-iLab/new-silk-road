@@ -48,7 +48,7 @@ class DateRangeSelect extends Component {
   }
 
   handleSelectUpdate(option) {
-    const obj = { dateLookupType: option.value };
+    const obj = { dateLookupType: (option ? option.value : '') };
     this.setState(obj);
     const { onChange } = this.props;
     if (onChange) {
@@ -57,9 +57,9 @@ class DateRangeSelect extends Component {
   }
 
   handleInputUpdate(event) {
-    // FIXME: Create a complete object with all 3 values, using new value for item being updated
     const { target } = event;
     const obj = { [target.name]: target.value };
+    this.setState(obj);
     const { onChange } = this.props;
     if (onChange) {
       onChange(Object.assign({}, this.state, obj));
