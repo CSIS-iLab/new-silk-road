@@ -149,7 +149,7 @@ export default class SearchView extends Component {
         const options = Object.assign(
           {},
           prevState.options,
-          { initiatives__principal_agent__slug: nameIdMapper(store) },
+          { initiatives__principal_agent__slug: nameSlugMapper(store) },
         );
         return { options };
       }),
