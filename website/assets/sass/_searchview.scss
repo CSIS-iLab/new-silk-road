@@ -484,8 +484,12 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 .has-value.Select > .Select-control > .Select-value .Select-value-label,
-.has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
+.has-valueis-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label,
+.has-value.Select--single>.Select-control .Select-value .Select-value-label,
+.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+.has-value.Select > .Select-control > .Select-value .Select-value-label {
     color: $creamer;
+    display: inline-block;
 }
 
 .Select--multi {
