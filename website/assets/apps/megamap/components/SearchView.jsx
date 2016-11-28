@@ -14,6 +14,7 @@ import PrincipalAgentActions from '../actions/PrincipalAgentActions';
 import CurrencyStore from '../stores/CurrencyStore';
 import CurrencyActions from '../actions/CurrencyActions';
 import DateRangeSelect from './DateRangeSelect';
+import CurrencyRangeSelect from './CurrencyRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import SearchActions from '../actions/SearchActions';
@@ -376,17 +377,15 @@ export default class SearchView extends Component {
                   </div>
                 </div>
                 <div className="sectionRow">
-                  <Select
-                    value={this.state.query.cost}
+                  <CurrencyRangeSelect
                     name="cost"
                     placeholder="Cost"
-                    options={this.state.options.cost}
-                    onChange={option => this.handleQueryUpdate(
-                        { cost: option ? option.value : {} },
+                    clear={Object.keys(this.state.query.cost).length === 0}
+                    onChange={value =>
+                      this.handleQueryUpdate(
+                        { cost: value },
                       )
                     }
-                    isLoading={this.state.options.cost.length === 0}
-                    backspaceToRemoveMessage=""
                   />
                 </div>
                 <div className="sectionRow">
