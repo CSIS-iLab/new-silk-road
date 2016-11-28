@@ -23,6 +23,7 @@ const emptyQueryState = () => Object.assign({}, {
   name__icontains: '',
   initiatives__name__icontains: '',
   funding__sources__name__icontains: '',
+  initiatives__principal_agent__slug: '',
   infrastructure_type: [],
   status: [],
   date_range: {
@@ -63,6 +64,7 @@ export default class SearchView extends Component {
         countries: [],
         cost: [],
         funding__sources__countries: [],
+        initiatives__principal_agent__slug: [],
       },
       query: emptyQueryState(),
       results: [],
@@ -170,6 +172,13 @@ export default class SearchView extends Component {
                   disabled={!this.state.searchEnabled}
                 >Search
                 </button>
+                <button
+                  className="reset"
+                  type="reset"
+                  onClick={this.resetQueryState}
+                >
+                  Reset
+                </button>
               </div>
               <Panel
                 title="Projects"
@@ -265,12 +274,17 @@ export default class SearchView extends Component {
                   </div>
                 </div>
                 <div className="sectionRow">
-                  <input
-                    type="text"
-                    value={this.state.query.initiatives__name__icontains}
-                    onChange={this.handleChange}
+                  <Select
+                    value={this.state.query.initiatives__principal_agent__slug}
                     name="initiatives__principal_agent__slug"
                     placeholder="Principal Agent"
+                    options={this.state.options.countries}
+                    onChange={selections => this.handleQueryUpdate(
+                      { initiatives__principal_agent__slug: selections.map(s => s.value) },
+                    )
+                  }
+                    isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
+                    backspaceToRemoveMessage=""
                   />
                 </div>
               </Panel>
@@ -354,15 +368,6 @@ export default class SearchView extends Component {
             >
               Help
             </a>
-          </p>
-          <p>
-            <button
-              className="reset"
-              type="reset"
-              onClick={this.resetQueryState}
-            >
-              Reset
-            </button>
           </p>
         </footer>
       </div>
