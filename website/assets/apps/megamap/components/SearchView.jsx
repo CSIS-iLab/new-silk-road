@@ -351,8 +351,8 @@ export default class SearchView extends Component {
                     name="initiatives__principal_agent__slug"
                     placeholder="Principal Agent"
                     options={this.state.options.initiatives__principal_agent__slug}
-                    onChange={selection => this.handleQueryUpdate(
-                        { initiatives__principal_agent__slug: selection.value },
+                    onChange={option => this.handleQueryUpdate(
+                        { initiatives__principal_agent__slug: option ? option.value : '' },
                       )
                     }
                     isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
@@ -382,7 +382,7 @@ export default class SearchView extends Component {
                     placeholder="Cost"
                     options={this.state.options.cost}
                     onChange={option => this.handleQueryUpdate(
-                        { cost: option.value },
+                        { cost: option ? option.value : {} },
                       )
                     }
                     isLoading={this.state.options.cost.length === 0}
