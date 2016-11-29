@@ -1,28 +1,33 @@
 import React, { Component, PropTypes } from 'react';
 import Select from 'react-select';
 
+const defaultValue = () => ({ dateLookupType: '', lowerValue: '', upperValue: '' });
+
+const validValue = (obj) => {
+  if ({}.hasOwnProperty.call(obj, 'dateLookupType') && obj.dateLookupType !== '') {
+    return obj;
+  }
+  return defaultValue();
+};
+
 class DateRangeSelect extends Component {
 
   constructor(props) {
     super(props);
-    this.handleSelectUpdate = this.handleSelectUpdate.bind(this);
-    this.handleInputUpdate = this.handleInputUpdate.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
-  handleSelectUpdate(option) {
-    const obj = { dateLookupType: (option ? option.value : '') };
-    const { onChange } = this.props;
-    if (onChange) {
-      onChange(Object.assign({}, obj));
+  handleUpdate(updateObj) {
+    const hasTarget = updateObj && {}.hasOwnProperty.call(updateObj, 'target');
+    const obj = Object.assign({}, this.props.value);
+    if (hasTarget) {
+      Object.assign(obj, { [updateObj.target.name]: updateObj.target.value });
+    } else {
+      Object.assign(obj, { dateLookupType: (updateObj ? updateObj.value : '') });
     }
-  }
-
-  handleInputUpdate(event) {
-    const { target } = event;
-    const obj = { [target.name]: target.value };
     const { onChange } = this.props;
     if (onChange) {
-      onChange(Object.assign({}, obj));
+      onChange(validValue(obj));
     }
   }
 
@@ -42,7 +47,7 @@ class DateRangeSelect extends Component {
           name="dateLookupType"
           placeholder={labelName}
           options={dateLookupOptions}
-          onChange={this.handleSelectUpdate}
+          onChange={this.handleUpdate}
         />
         <span>between</span>
         <input
@@ -50,7 +55,7 @@ class DateRangeSelect extends Component {
           name="lowerValue"
           size={boundLength}
           placeholder={lowerBoundLabel}
-          onChange={this.handleInputUpdate}
+          onChange={this.handleUpdate}
         />
         <span>&amp;</span>
         <input
@@ -58,7 +63,7 @@ class DateRangeSelect extends Component {
           name="upperValue"
           size={boundLength}
           placeholder={upperBoundLabel}
-          onChange={this.handleInputUpdate}
+          onChange={this.handleUpdate}
         />
       </div>
     );
@@ -84,11 +89,7 @@ DateRangeSelect.propTypes = {
 
 DateRangeSelect.defaultProps = {
   boundLength: 4,
-  value: {
-    dateLookupType: '',
-    lowerValue: '',
-    upperValue: '',
-  },
+  value: defaultValue(),
 };
 
 export default DateRangeSelect;

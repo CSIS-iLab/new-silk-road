@@ -31,4 +31,34 @@ describe('DateRangeSelect', () => {
     expect(select.find('input[name="lowerValue"]').prop('value')).toEqual('2010');
     expect(select.find('input[name="upperValue"]').prop('value')).toEqual('2012');
   });
+
+  it('onChange handler gets object with blank "dateLookupType", "lowerValue", and "upperValue" props when "dateLookupType" is not set', () => {
+    const mockonChange = jest.fn();
+    const select = shallow(
+      <DateRangeSelect
+        upperBoundLabel="upper"
+        lowerBoundLabel="lower"
+        onChange={mockonChange}
+      />,
+    );
+    const input = select.find('input[name="lowerValue"]');
+    input.simulate('change', { target: { name: 'lowerValue', value: '2000' } });
+    expect(mockonChange).toBeCalledWith({ dateLookupType: '', lowerValue: '', upperValue: '' });
+  });
+
+
+  it('onChange handler gets object with values for "dateLookupType", "lowerValue", and "upperValue" props when "dateLookupType" *is* set', () => {
+    const mockonChange = jest.fn();
+    const select = shallow(
+      <DateRangeSelect
+        value={({ dateLookupType: 'foo', lowerValue: '', upperValue: '' })}
+        upperBoundLabel="upper"
+        lowerBoundLabel="lower"
+        onChange={mockonChange}
+      />,
+    );
+    const input = select.find('input[name="lowerValue"]');
+    input.simulate('change', { target: { name: 'lowerValue', value: '2000' } });
+    expect(mockonChange).toBeCalledWith({ dateLookupType: 'foo', lowerValue: '2000', upperValue: '' });
+  });
 });
