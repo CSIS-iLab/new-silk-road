@@ -5,7 +5,7 @@
   "readme": "README.md",
   "scripts": {
     "start": "gulp watch",
-    "test": "gulp test"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,14 +18,15 @@
   },
   "homepage": "https://github.com/CSIS-iLab/new-silk-road#readme",
   "devDependencies": {
+    "babel-jest": "^17.0.2",
     "babel-loader": "^6.2.7",
     "babel-plugin-transform-class-properties": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "browser-sync": "^2.17.5",
-    "chai": "^3.5.0",
     "del": "^2.2.2",
+    "enzyme": "^2.6.0",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
@@ -39,9 +40,11 @@
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^2.2.0",
     "gulp-svgmin": "^1.2.3",
+    "jest": "^17.0.3",
     "json-loader": "^0.5.4",
-    "mocha": "^3.1.2",
+    "react-addons-test-utils": "^15.4.1",
     "react-hot-loader": "^3.0.0-beta.6",
+    "react-test-renderer": "^15.4.1",
     "strip-ansi": "^3.0.1",
     "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.8.4",
@@ -73,6 +76,17 @@
   },
   "eslintConfig": {
     "extends": "airbnb",
+    "rules": {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "**/*.test.js?(x)",
+            "**/*.spec.js?(x)"
+          ]
+        }
+      ]
+    },
     "plugins": [
       "import"
     ],
