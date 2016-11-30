@@ -24,8 +24,12 @@ def fuzzydate_filter(value, arg):
                 yield part
             elif all((p in DAY_FORMATS for p in part)) and value.day:
                 yield part
+
     if isinstance(value, fuzzydate):
-        format_options = arg.split(' ')
+        format_options = arg.split()
         format_parts = process_format(format_options, value)
-        fakedate = value.fillin(date.today())
+        try:
+            fakedate = value.fillin(date(1, 1, 1))
+        except ValueError:
+            return None
         return dateformat.format(fakedate, ' '.join(format_parts))
