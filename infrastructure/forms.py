@@ -20,15 +20,21 @@ from locations.models import (
     GeometryStore
 )
 
-MONTH_FIELD_KWARGS = (
-    ('min_value', 1),
-    ('max_value', 12),
-)
 
-DAY_FIELD_KWARGS = (
-    ('min_value', 1),
-    ('max_value', 31),
-)
+class MonthField(forms.IntegerField):
+
+    def __init__(self, *args, **kwargs):
+        kwargs['min_value'] = 1
+        kwargs['max_value'] = 12
+        super(MonthField, self).__init__(*args, **kwargs)
+
+
+class DayField(forms.IntegerField):
+
+    def __init__(self, *args, **kwargs):
+        kwargs['min_value'] = 1
+        kwargs['max_value'] = 31
+        super(DayField, self).__init__(*args, **kwargs)
 
 
 class InitiativeForm(forms.ModelForm):
@@ -48,11 +54,11 @@ class InitiativeForm(forms.ModelForm):
         required=False
     )
 
-    founding_month = forms.IntegerField(**dict(MONTH_FIELD_KWARGS)),
-    founding_day = forms.IntegerField(**dict(DAY_FIELD_KWARGS)),
+    founding_month = MonthField()
+    founding_day = DayField()
 
-    appeared_month = forms.IntegerField(**dict(MONTH_FIELD_KWARGS)),
-    appeared_day = forms.IntegerField(**dict(DAY_FIELD_KWARGS)),
+    appeared_month = MonthField()
+    appeared_day = DayField()
 
     class Meta:
         model = Initiative
@@ -71,14 +77,14 @@ class ProjectForm(forms.ModelForm):
         help_text=GeometrySearchField.help_text
     )
 
-    start_month = forms.IntegerField(**dict(MONTH_FIELD_KWARGS)),
-    start_day = forms.IntegerField(**dict(DAY_FIELD_KWARGS)),
+    start_month = MonthField()
+    start_day = DayField()
 
-    commencement_month = forms.IntegerField(**dict(MONTH_FIELD_KWARGS)),
-    commencement_day = forms.IntegerField(**dict(DAY_FIELD_KWARGS)),
+    commencement_month = MonthField()
+    commencement_day = DayField()
 
-    planned_completion_month = forms.IntegerField(**dict(MONTH_FIELD_KWARGS)),
-    planned_completion_day = forms.IntegerField(**dict(DAY_FIELD_KWARGS)),
+    planned_completion_month = MonthField()
+    planned_completion_day = DayField()
 
     class Meta:
         model = Project

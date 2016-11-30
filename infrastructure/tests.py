@@ -1,14 +1,21 @@
-from django.test import TestCase
-from .model_fields import DayField, MonthField
+from django.test import SimpleTestCase
+from .forms import MonthField, DayField
 
 
-class DayFieldTestCase(TestCase):
+class FormFieldTestCase(SimpleTestCase):
 
-    def test_day_field_accepts_valid_day(self, arg):
-        self.fail('Unimplemented test')
+    def test_monthfield(self):
+        self.assertFieldOutput(
+            MonthField,
+            {'12': 12},
+            {'14': ['Ensure this value is less than or equal to 12.']},
+            empty_value=None
+        )
 
-
-class MonthFieldTestCase(TestCase):
-
-    def test_month_field_accepts_valid_day(self, arg):
-        self.fail('Unimplemented test')
+    def test_dayfield(self):
+        self.assertFieldOutput(
+            DayField,
+            {'1': 1},
+            {'42': ['Ensure this value is less than or equal to 31.']},
+            empty_value=None
+        )
