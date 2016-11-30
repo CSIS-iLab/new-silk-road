@@ -19,26 +19,11 @@ import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
-
-const nameIdMapper = data => data.results.map(
-  obj => Object.create({ label: obj.name, value: obj.id }),
-);
-
-const nameSlugMapper = data => data.results.map(
-  obj => Object.create({ label: obj.name, value: obj.slug }),
-);
-
-const generateDateQuery = (obj) => {
-  const {
-    dateLookupType,
-    lowerValue,
-    upperValue,
-  } = obj;
-  return {
-    [`${dateLookupType}__gte`]: lowerValue !== '' ? +lowerValue : null,
-    [`${dateLookupType}__lte`]: upperValue !== '' ? +upperValue : null,
-  };
-};
+import {
+  nameIdMapper,
+  nameSlugMapper,
+  generateRangeQuery,
+} from '../functions';
 
 const emptyQueryState = () => Object.assign({}, {
   name__icontains: '',
@@ -111,7 +96,7 @@ export default class SearchView extends Component {
         const options = Object.assign(
           {},
           prevState.options,
-          { infrastructure_type: nameIdMapper(store) },
+          { infrastructure_type: nameIdMapper(store.results) },
         );
         return { options };
       }),
@@ -123,7 +108,7 @@ export default class SearchView extends Component {
         const options = Object.assign(
           {},
           prevState.options,
-          { status: nameIdMapper(store) },
+          { status: nameIdMapper(store.results) },
         );
         return { options };
       }),
@@ -135,7 +120,7 @@ export default class SearchView extends Component {
         const options = Object.assign(
           {},
           prevState.options,
-          { region: nameIdMapper(store) },
+          { region: nameIdMapper(store.results) },
         );
         return { options };
       }),
@@ -144,7 +129,7 @@ export default class SearchView extends Component {
 
     CountryStore.listen(
       store => this.setState((prevState) => {
-        const countryOpts = nameIdMapper(store);
+        const countryOpts = nameIdMapper(store.results);
         const options = Object.assign(
           {},
           prevState.options,
@@ -160,7 +145,7 @@ export default class SearchView extends Component {
         const options = Object.assign(
           {},
           prevState.options,
-          { initiatives__principal_agent__slug: nameSlugMapper(store) },
+          { initiatives__principal_agent__slug: nameSlugMapper(store.results) },
         );
         return { options };
       }),
@@ -232,7 +217,15 @@ export default class SearchView extends Component {
       }
       if ({}.hasOwnProperty.call(searchParams, 'dateRange')) {
         if (Object.keys(searchParams.dateRange).length > 0) {
-          searchParams = Object.assign(searchParams, generateDateQuery(searchParams.dateRange));
+          const {
+            dateLookupType: lookupName,
+            lowerValue,
+            upperValue,
+          } = searchParams.dateRange;
+          searchParams = Object.assign(
+            searchParams,
+            generateRangeQuery(lookupName, lowerValue, upperValue),
+          );
         }
         delete searchParams.dateRange;
       }
