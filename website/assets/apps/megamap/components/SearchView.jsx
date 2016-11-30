@@ -274,9 +274,11 @@ export default class SearchView extends Component {
                 <button
                   className="reset"
                   type="reset"
+                  title="Clear"
+                  disabled={!this.state.searchEnabled}
                   onClick={this.resetQueryState}
                 >
-                  Reset
+                  Clear
                 </button>
               </div>
               <Panel

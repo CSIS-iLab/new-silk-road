@@ -41,12 +41,6 @@ $scroll-max-height: $results-view-max-height - 46;
             width: $search-btn-width;
             padding: 0;
         }
-        button.reset {
-            position: relative;
-            content: "X";
-            width: $search-btn-width;
-            padding: 0;
-        }
     }
 
     .inner {
@@ -119,11 +113,28 @@ $scroll-max-height: $results-view-max-height - 46;
             }
         }
         > button[type='reset'] {
-            // @include hide-text;
+            @include hide-text;
             padding: 0;
-            margin-right: 8px;
-            // background: url($search-btn-img) center no-repeat;
-            // width: $search-btn-width;
+            width: $search-btn-width;
+            &::after {
+                display: block;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                margin: 50% 0;
+                text-indent: 0;
+                font: normal 1.25rem/75% $sans-font-family;
+                vertical-align: middle;
+                content: "X";
+                width: $search-btn-width;
+                padding: 0;
+            }
+
+            &:hover {
+                &::after {
+                    font-weight: bold;
+                }
+            }
         }
     }
     .sectionRow {
