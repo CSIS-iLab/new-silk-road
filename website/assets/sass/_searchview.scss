@@ -54,6 +54,9 @@ $scroll-max-height: $results-view-max-height - 46;
         background-color: $pale-green;
         padding: $tiny-spacing;
         max-height: $search-inner-height;
+        overflow-y: scroll;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(space-between);
