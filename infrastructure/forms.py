@@ -24,16 +24,24 @@ from locations.models import (
 class MonthField(forms.IntegerField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['min_value'] = 1
-        kwargs['max_value'] = 12
+        help_text = kwargs.get('help_text', 'Enter a whole number representing the month (1-12)')
+        kwargs.update({
+            'min_value': 1,
+            'max_value': 12,
+            'help_text': help_text,
+        })
         super(MonthField, self).__init__(*args, **kwargs)
 
 
 class DayField(forms.IntegerField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['min_value'] = 1
-        kwargs['max_value'] = 31
+        help_text = kwargs.get('help_text', 'Enter a whole number representing a day in the range 1-31')
+        kwargs.update({
+            'min_value': 1,
+            'max_value': 31,
+            'help_text': help_text,
+        })
         super(DayField, self).__init__(*args, **kwargs)
 
 

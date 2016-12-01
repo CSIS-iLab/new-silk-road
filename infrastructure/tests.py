@@ -17,12 +17,40 @@ class FormFieldTestCase(SimpleTestCase):
             empty_value=None
         )
 
+    def test_monthfield_has_default_help_text(self):
+        field = MonthField()
+        self.assertEqual(
+            field.help_text,
+            'Enter a whole number representing the month (1-12)'
+        )
+
+    def test_monthfield_default_help_text_is_overridable(self):
+        field = MonthField(help_text='Help text override')
+        self.assertEqual(
+            field.help_text,
+            'Help text override'
+        )
+
     def test_dayfield(self):
         self.assertFieldOutput(
             DayField,
             {'1': 1},
             {'42': ['Ensure this value is less than or equal to 31.']},
             empty_value=None
+        )
+
+    def test_dayfield_has_default_help_text(self):
+        field = DayField()
+        self.assertEqual(
+            field.help_text,
+            'Enter a whole number representing a day in the range 1-31'
+        )
+
+    def test_dayfield_default_help_text_is_overridable(self):
+        field = DayField(help_text='Help text override')
+        self.assertEqual(
+            field.help_text,
+            'Help text override'
         )
 
 
