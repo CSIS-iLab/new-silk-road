@@ -54,11 +54,11 @@ class InitiativeForm(forms.ModelForm):
         required=False
     )
 
-    founding_month = MonthField()
-    founding_day = DayField()
+    founding_month = MonthField(required=False)
+    founding_day = DayField(required=False)
 
-    appeared_month = MonthField()
-    appeared_day = DayField()
+    appeared_month = MonthField(required=False)
+    appeared_day = DayField(required=False)
 
     class Meta:
         model = Initiative
@@ -77,14 +77,14 @@ class ProjectForm(forms.ModelForm):
         help_text=GeometrySearchField.help_text
     )
 
-    start_month = MonthField()
-    start_day = DayField()
+    start_month = MonthField(required=False)
+    start_day = DayField(required=False)
 
-    commencement_month = MonthField()
-    commencement_day = DayField()
+    commencement_month = MonthField(required=False)
+    commencement_day = DayField(required=False)
 
-    planned_completion_month = MonthField()
-    planned_completion_day = DayField()
+    planned_completion_month = MonthField(required=False)
+    planned_completion_day = DayField(required=False)
 
     class Meta:
         model = Project
