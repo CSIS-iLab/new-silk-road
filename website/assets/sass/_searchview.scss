@@ -45,15 +45,19 @@ $scroll-max-height: $results-view-max-height - 46;
 
     .inner {
         width: 260px;
-        background-color: $pale-green;
-        padding: $tiny-spacing;
         max-height: $search-inner-height;
+        padding-right: 20px; // Providing space for scrollbar
         overflow-y: scroll;
         -ms-overflow-style: -ms-autohiding-scrollbar;
 
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(space-between);
+
+        > div {
+            background-color: $pale-green;
+            padding: $tiny-spacing;
+        }
     }
     section {
         margin-top: $tiny-spacing;
@@ -87,6 +91,8 @@ $scroll-max-height: $results-view-max-height - 46;
 
         button {
             @include flex(0 1 auto);
+            min-width: $search-btn-width;
+            padding: 0;
         }
 
         input,
@@ -97,10 +103,9 @@ $scroll-max-height: $results-view-max-height - 46;
 
         > button[type='submit'] {
             @include hide-text;
-            padding: 0;
             background: url($search-btn-active-img) center no-repeat;
             background-size: $search-btn-width $search-btn-width;
-            width: $search-btn-width + 16px;
+            width: $search-btn-width + 8px;
             border-left: 1px solid $blue-steel;
 
             &[disabled] {
@@ -112,21 +117,22 @@ $scroll-max-height: $results-view-max-height - 46;
                 background-size: $search-btn-width+2 $search-btn-width+2;
             }
         }
+
         > button[type='reset'] {
             @include hide-text;
-            padding: 0;
             width: $search-btn-width;
+            border-left: 1px solid $blue-steel;
+
             &::after {
                 display: block;
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                margin: 50% 0;
                 text-indent: 0;
-                font: normal 1.25rem/75% $sans-font-family;
+                font: normal 1.25rem/36px $sans-font-family;
                 vertical-align: middle;
                 content: "X";
-                width: $search-btn-width;
+                min-width: $search-btn-width;
                 padding: 0;
             }
 
@@ -263,6 +269,7 @@ $scroll-max-height: $results-view-max-height - 46;
         background-color: $dark-night;
     }
     input {
+        max-width: 75%;
         padding: 8px $tiny-spacing 8px 8px;
     }
 }
