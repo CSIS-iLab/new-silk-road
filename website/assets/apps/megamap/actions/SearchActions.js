@@ -30,10 +30,10 @@ class SearchActionsBase {
       fetch(url)
       .then(response => response.json())
       .then((json) => {
-        SearchActionsBase.update(json);
+        this.update(json);
       })
       .catch((error) => {
-        SearchActionsBase.failed(error);
+        this.failed(error);
       });
     };
   }
