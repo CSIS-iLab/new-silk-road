@@ -440,7 +440,7 @@ export default class SearchView extends Component {
             }
             return '';
           })()}
-          <div className="resultsViewWrapper">
+          <div className={`resultsViewWrapper ${results.length === 0 ? 'no-results' : 'results'}`}>
             <ResultsView
               results={results}
               onNextClick={SearchView.handleResultsNavClick}

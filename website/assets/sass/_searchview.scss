@@ -45,10 +45,7 @@ $scroll-max-height: $results-view-max-height - 46;
 
     .inner {
         width: 260px;
-        max-height: $search-inner-height;
-        padding-right: 20px; // Providing space for scrollbar
-        overflow-y: scroll;
-        -ms-overflow-style: -ms-autohiding-scrollbar;
+        height: $search-inner-height;
 
         @include display(flex);
         @include flex-direction(column);
@@ -277,6 +274,10 @@ $scroll-max-height: $results-view-max-height - 46;
 
 .resultsViewWrapper {
     display: block;
+
+    &.no-results {
+        display: none;
+    }
 }
 
 .resultsView {
