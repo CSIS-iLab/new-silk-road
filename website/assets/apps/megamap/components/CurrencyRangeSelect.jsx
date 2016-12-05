@@ -56,7 +56,7 @@ export default class CurrencyRangeSelect extends Component {
 }
 
 CurrencyRangeSelect.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   clear: PropTypes.bool,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
