@@ -1,7 +1,7 @@
 /* eslint-disable no-console, class-methods-use-this */
 
 import MapboxGl, {
-  Navigation,
+  NavigationControl,
   Popup,
 } from 'mapbox-gl/dist/mapbox-gl';
 import ActionListeners from 'alt-utils/lib/ActionListeners';
@@ -80,7 +80,7 @@ export default class Cartographer {
   }
 
   configureMap() {
-    this.map.addControl(new Navigation({ position: 'top-left' }));
+    this.map.addControl(new NavigationControl(), 'top-left');
     this.map.scrollZoom.disable();
     this.beginPeriodicUpdates();
   }

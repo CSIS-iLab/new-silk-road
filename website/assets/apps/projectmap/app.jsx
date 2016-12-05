@@ -3,7 +3,7 @@
 import 'babel-polyfill';
 import 'whatwg-fetch';
 import MapboxGl, {
-  Navigation,
+  NavigationControl,
 } from 'mapbox-gl/dist/mapbox-gl';
 import GeoStyles from '../megamap/helpers/GeoStyles';
 
@@ -21,7 +21,7 @@ class Map {
       this.map[handler].disable();
     });
     if (hideNavigation !== true) {
-      this.map.addControl(new Navigation({ position: 'top-left' }));
+      this.map.addControl(new NavigationControl({ position: 'top-left' }));
     }
     this.map.on('load', this.handleMapDidLoad.bind(this));
     this.stylo = new GeoStyles();

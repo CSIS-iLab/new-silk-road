@@ -55,7 +55,7 @@
     "alt-utils": "^1.0.0",
     "babel-polyfill": "^6.9.1",
     "fetch": "^1.0.1",
-    "mapbox-gl": "^0.25.1",
+    "mapbox-gl": "^0.28.0",
     "object-merge": "^2.5.1",
     "promise-queue": "^2.2.3",
     "radium": "^0.18.1",
