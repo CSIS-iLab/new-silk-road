@@ -1,14 +1,14 @@
 import alt from '../alt';
 import CurrencyActions from '../actions/CurrencyActions';
 
-class CurrencyStore {
+class CurrencyStoreBase {
 
   constructor() {
     this.lookups = {};
     this.bindListeners({
       handleFetch: CurrencyActions.FETCH,
-      handleUpdate: CurrencyActions.UPDATE
-    })
+      handleUpdate: CurrencyActions.UPDATE,
+    });
   }
 
   handleFetch() {
@@ -20,6 +20,6 @@ class CurrencyStore {
   }
 }
 
-CurrencyStore = alt.createStore(CurrencyStore, 'CurrencyStore');
+const CurrencyStore = alt.createStore(CurrencyStoreBase, 'CurrencyStore');
 
 export default CurrencyStore;

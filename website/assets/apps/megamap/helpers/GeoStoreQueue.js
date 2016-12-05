@@ -6,21 +6,21 @@ const maxQueue = Infinity;
 
 export default class GeoStoreQueue {
   constructor() {
-    this._id_q = new Set();
-    this._q = new Queue(maxConcurrent, maxQueue);
+    this.id_q = new Set();
+    this.q = new Queue(maxConcurrent, maxQueue);
   }
 
   loadGeoStore(id) {
-    if (!this._id_q.has(id)) {
-      this._id_q.add(id);
-      this._q.add(() => {
+    if (!this.id_q.has(id)) {
+      this.id_q.add(id);
+      this.q.add(() => {
         GeoStoreActions.getGeoStore(id);
       });
     }
   }
 
   resolveGeoStore(identifier) {
-    this._id_q.delete(identifier);
+    this.id_q.delete(identifier);
   }
 
 }

@@ -1,7 +1,7 @@
 import alt from '../alt';
 import GeoCentroidActions from '../actions/GeoCentroidActions';
 
-class GeoCentroidStore {
+class GeoCentroidStoreBase {
   constructor() {
     this.geo = null;
     this.error = null;
@@ -9,8 +9,8 @@ class GeoCentroidStore {
     this.bindListeners({
       handleFetchCentroids: GeoCentroidActions.FETCH,
       handleCentroidsUpdate: GeoCentroidActions.UPDATE,
-      handleFailed: GeoCentroidActions.FAILED
-    })
+      handleFailed: GeoCentroidActions.FAILED,
+    });
   }
 
   handleFetchCentroids() {
@@ -29,6 +29,6 @@ class GeoCentroidStore {
 
 }
 
-GeoCentroidStore = alt.createStore(GeoCentroidStore, 'GeoCentroidStore');
+const GeoCentroidStore = alt.createStore(GeoCentroidStoreBase, 'GeoCentroidStore');
 
 export default GeoCentroidStore;

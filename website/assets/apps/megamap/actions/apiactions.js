@@ -1,4 +1,4 @@
-
+/* eslint-disable class-methods-use-this */
 
 function createApiActions(Source) {
   class ApiActions {
@@ -10,16 +10,14 @@ function createApiActions(Source) {
       return (dispatch) => {
         dispatch();
         Source.fetch(params)
-          .then((response) => {
-            return response.json();
-          })
+          .then(response => response.json())
           .then((json) => {
             this.update(json);
           })
           .catch((error) => {
-            this.failed(error)
+            this.failed(error);
           });
-      }
+      };
     }
 
     failed(error) {
@@ -30,4 +28,4 @@ function createApiActions(Source) {
   return ApiActions;
 }
 
-export { createApiActions };
+export default createApiActions;

@@ -1,7 +1,7 @@
 import alt from '../alt';
 import SearchActions from '../actions/SearchActions';
 
-class SearchStore {
+class SearchStoreBase {
   constructor() {
     this.results = [];
     this.next = null;
@@ -13,8 +13,8 @@ class SearchStore {
     this.bindListeners({
       handleSearch: SearchActions.SEARCH,
       handleSearchResults: SearchActions.UPDATE,
-      handleSearchFail: SearchActions.FAILED
-    })
+      handleSearchFail: SearchActions.FAILED,
+    });
   }
 
   handleSearch() {
@@ -22,7 +22,7 @@ class SearchStore {
     this.next = null;
     this.previous = null;
     this.isSearching = true;
-    this.searchCount++;
+    this.searchCount += 1;
   }
 
   handleSearchResults(data) {
@@ -36,13 +36,12 @@ class SearchStore {
   handleSearchFail(error) {
     this.results = [];
     this.isSearching = false;
-    console.log(error);
     this.error = error;
   }
 
 
 }
 
-SearchStore = alt.createStore(SearchStore, 'SearchStore');
+const SearchStore = alt.createStore(SearchStoreBase, 'SearchStore');
 
 export default SearchStore;

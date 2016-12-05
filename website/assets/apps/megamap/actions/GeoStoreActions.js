@@ -1,7 +1,9 @@
+/* eslint-disable class-methods-use-this */
+
 import alt from '../alt';
 import GeoStoreSource from '../sources/GeoStoreSource';
 
-class GeoStoreActions {
+class GeoStoreActionsBase {
   selectGeoStoreId(identifier) {
     return identifier;
   }
@@ -14,16 +16,14 @@ class GeoStoreActions {
     return (dispatch) => {
       dispatch();
       GeoStoreSource.get(identifier)
-      .then((response) => {
-        return response.json();
-      })
+      .then(response => response.json())
       .then((json) => {
         this.didGetGeoStore(json);
       })
       .catch((error) => {
         this.fetchFailed(error);
       });
-    }
+    };
   }
 
   fetchFailed(error) {
@@ -32,5 +32,5 @@ class GeoStoreActions {
 
 }
 
-GeoStoreActions = alt.createActions(GeoStoreActions);
+const GeoStoreActions = alt.createActions(GeoStoreActionsBase);
 export default GeoStoreActions;

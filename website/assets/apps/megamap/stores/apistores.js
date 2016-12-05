@@ -8,8 +8,8 @@ function createApiStore(Actions) {
       this.bindListeners({
         handleFetch: Actions.FETCH,
         handleUpdate: Actions.UPDATE,
-        handleFailed: Actions.FAILED
-      })
+        handleFailed: Actions.FAILED,
+      });
     }
 
     handleUpdate(results) {
@@ -29,4 +29,4 @@ function createApiStore(Actions) {
   return ApiStore;
 }
 
-export { createApiStore };
+export default createApiStore;

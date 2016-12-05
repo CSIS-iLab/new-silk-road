@@ -1,8 +1,10 @@
-import alt from '../alt';
-import {GeoCentroidSource} from '../sources/apisources';
-import 'whatwg-fetch';
+/* eslint-disable class-methods-use-this */
 
-class GeoCentroidActions {
+import 'whatwg-fetch';
+import alt from '../alt';
+import { GeoCentroidSource } from '../sources/apisources';
+
+class GeoCentroidActionsBase {
 
   update(data) {
     return data;
@@ -12,16 +14,14 @@ class GeoCentroidActions {
     return (dispatch) => {
       dispatch();
       GeoCentroidSource.fetch(query)
-      .then((response) => {
-        return response.json();
-      })
+      .then(response => response.json())
       .then((json) => {
         this.update(json);
       })
       .catch((error) => {
         this.failed(error);
-      })
-    }
+      });
+    };
   }
 
   failed(error) {
@@ -29,5 +29,5 @@ class GeoCentroidActions {
   }
 }
 
-GeoCentroidActions = alt.createActions(GeoCentroidActions);
+const GeoCentroidActions = alt.createActions(GeoCentroidActionsBase);
 export default GeoCentroidActions;

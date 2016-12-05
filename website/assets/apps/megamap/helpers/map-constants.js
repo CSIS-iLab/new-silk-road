@@ -16,4 +16,4 @@ export {
   updateInterval,
   popContentClass,
   defaultCenter,
-}
+};

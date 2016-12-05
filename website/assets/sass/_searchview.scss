@@ -45,12 +45,16 @@ $scroll-max-height: $results-view-max-height - 46;
 
     .inner {
         width: 260px;
-        background-color: $pale-green;
-        padding: $tiny-spacing;
-        max-height: $search-inner-height;
+        height: $search-inner-height;
+
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(space-between);
+
+        > div {
+            background-color: $pale-green;
+            padding: $tiny-spacing;
+        }
     }
     section {
         margin-top: $tiny-spacing;
@@ -84,6 +88,8 @@ $scroll-max-height: $results-view-max-height - 46;
 
         button {
             @include flex(0 1 auto);
+            min-width: $search-btn-width;
+            padding: 0;
         }
 
         input,
@@ -94,10 +100,9 @@ $scroll-max-height: $results-view-max-height - 46;
 
         > button[type='submit'] {
             @include hide-text;
-            padding: 0;
             background: url($search-btn-active-img) center no-repeat;
             background-size: $search-btn-width $search-btn-width;
-            width: $search-btn-width + 16px;
+            width: $search-btn-width + 8px;
             border-left: 1px solid $blue-steel;
 
             &[disabled] {
@@ -109,12 +114,30 @@ $scroll-max-height: $results-view-max-height - 46;
                 background-size: $search-btn-width+2 $search-btn-width+2;
             }
         }
+
         > button[type='reset'] {
-            // @include hide-text;
-            padding: 0;
-            margin-right: 8px;
-            // background: url($search-btn-img) center no-repeat;
-            // width: $search-btn-width;
+            @include hide-text;
+            width: $search-btn-width;
+            border-left: 1px solid $blue-steel;
+
+            &::after {
+                display: block;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                text-indent: 0;
+                font: normal 1.25rem/36px $sans-font-family;
+                vertical-align: middle;
+                content: "X";
+                min-width: $search-btn-width;
+                padding: 0;
+            }
+
+            &:hover {
+                &::after {
+                    font-weight: bold;
+                }
+            }
         }
     }
     .sectionRow {
@@ -243,6 +266,7 @@ $scroll-max-height: $results-view-max-height - 46;
         background-color: $dark-night;
     }
     input {
+        max-width: 75%;
         padding: 8px $tiny-spacing 8px 8px;
     }
 }
@@ -250,6 +274,10 @@ $scroll-max-height: $results-view-max-height - 46;
 
 .resultsViewWrapper {
     display: block;
+
+    &.no-results {
+        display: none;
+    }
 }
 
 .resultsView {
@@ -478,8 +506,12 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 .has-value.Select > .Select-control > .Select-value .Select-value-label,
-.has-value.is-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label {
+.has-valueis-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label,
+.has-value.Select--single>.Select-control .Select-value .Select-value-label,
+.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
+.has-value.Select > .Select-control > .Select-value .Select-value-label {
     color: $creamer;
+    display: inline-block;
 }
 
 .Select--multi {

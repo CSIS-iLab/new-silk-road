@@ -1,16 +1,19 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies, no-console */
 
 import gulp from 'gulp';
 import babel from 'gulp-babel';
 import eslint from 'gulp-eslint';
 import browserSync from 'browser-sync';
-import webpack from 'webpack-stream';
+import webpackStream from 'webpack-stream';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import del from 'del';
 import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
 import cleanCss from 'gulp-clean-css';
 import concat from 'gulp-concat';
 import svgmin from 'gulp-svgmin';
+import process from 'process';
 
 import webpackConfig from './webpack.config.babel';
 
@@ -23,13 +26,35 @@ const paths = {
   cssDist: `${distBase}/css`,
   svgDist: `${distBase}/img`,
   gulpFile: 'gulpfile.babel.js',
-  allSrcJs: `${assetsBase}/apps/**/*.js`,
-  jsLibDir: `${assetsBase}/apps/lib`,
+  allSrcJs: `${assetsBase}/apps/**/*.js?(x)`,
+  jsLibDir: `${assetsBase}/lib`,
   jsDist: `${distBase}/js`,
   clientEntryPoints: [
-    `${assetsBase}/js/apps/megamap/app.js`,
-    `${assetsBase}/js/apps/projectmap/app.js`,
+    `${assetsBase}/js/apps/megamap/app.jsx`,
+    `${assetsBase}/js/apps/projectmap/app.jsx`,
   ],
+};
+
+const makeBundler = (type = 'default') => {
+  const config = Object.create(webpackConfig);
+  if (process.env.NODE_ENV === 'production') {
+    if ({}.hasOwnProperty.call(config, 'plugins') === false) {
+      config.plugins = [];
+    }
+    config.plugins = config.plugins.concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        },
+      }),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.UglifyJsPlugin(),
+    ]);
+  } else {
+    config.debug = true;
+  }
+  const bundler = type === 'streaming' ? webpackStream(config) : webpack(config);
+  return bundler;
 };
 
 gulp.task('sass:build', () =>
@@ -80,18 +105,20 @@ gulp.task('js:build', ['js:lint', 'js:clean'], () =>
     .pipe(gulp.dest(paths.jsLibDir)),
 );
 
+gulp.task('js:watch', () => {
+  gulp.watch(paths.allSrcJs, ['js:package']);
+});
+
 gulp.task('js:package', ['js:build'], () =>
   gulp.src(paths.clientEntryPoints)
-    .pipe(webpack(webpackConfig))
+    .pipe(makeBundler('streaming'))
     .pipe(gulp.dest(paths.jsDist)),
 );
 
+gulp.task('default', ['js:watch', 'js:package']);
 
-// gulp.task('default', ['sass:watch', 'megamap:watch', 'projectmap:watch']);
-
-// gulp.task('build', ['sass:build', 'megamap:build', 'projectmap:build']);
-
-gulp.task('sass:watch', () => {
+gulp.task('watch', () => {
+  const bundler = makeBundler();
   gulp.watch(paths.allSass, ['sass:build']);
   sync.init({
     proxy: 'localhost:8000',
@@ -99,5 +126,11 @@ gulp.task('sass:watch', () => {
     files: [`${paths.cssDist}/*.css`],
     ghostMode: false,
     open: false,
+    middleware: [
+      webpackDevMiddleware(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+        stats: { colors: true },
+      }),
+    ],
   });
 });

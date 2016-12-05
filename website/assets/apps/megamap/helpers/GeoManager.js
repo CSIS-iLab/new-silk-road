@@ -1,56 +1,56 @@
 export default class GeoManager {
   constructor() {
-    this._selectedGeo = null;
-    this._geoReferences = new Map();
-    this._selectedGeoReferences = new Set();
-    this._layerIdentifiers = new Set();
+    this.selectedGeo = null;
+    this.geoReferences = new Map();
+    this.selectedGeoReferences = new Set();
+    this.layerIds = new Set();
   }
 
-  _updateLayerIdentifiers(layerIds) {
-    const updated = [...this._layerIdentifiers].concat(layerIds);
-    this._layerIdentifiers = new Set(updated);
+  updateLayerIdentifiers(layerIds) {
+    const updated = [...this.layerIds].concat(layerIds);
+    this.layerIds = new Set(updated);
   }
 
   setGeoIdentifiers(identifiers) {
-    this._geoIdentifiers = new Set(identifiers);
+    this.geoIdentifiers = new Set(identifiers);
   }
 
   get layerIdentifiers() {
-    return [...this._layerIdentifiers];
+    return [...this.layerIds];
   }
 
   set selectedGeoIdentifiers(values) {
-    this._selectedGeoReferences = new Set(values);
+    this.selectedGeoReferences = new Set(values);
   }
 
   get selectedGeoIdentifiers() {
-    if (this._selectedGeoReferences.size > 0) {
-      return this._selectedGeoReferences;
+    if (this.selectedGeoReferences.size > 0) {
+      return this.selectedGeoReferences;
     }
-    return this._geoIdentifiers;
+    return this.geoIdentifiers;
   }
 
   get selectedGeoStore() {
-    return this._selectedGeo;
+    return this.selectedGeo;
   }
   set selectedGeoStore(value) {
-    this._selectedGeo = value;
+    this.selectedGeo = value;
   }
 
   get selectedGeoExtent() {
-    return this._geoReferences.get(this._selectedGeo);
+    return this.geoReferences.get(this.selectedGeo);
   }
 
   get loadedGeoIdentifiers() {
-    return new Set(this._geoReferences.keys());
+    return new Set(this.geoReferences.keys());
   }
 
   addGeoRecord(identifier, layerIds, extent) {
-    this._geoReferences.set(identifier, extent);
-    this._updateLayerIdentifiers(layerIds)
+    this.geoReferences.set(identifier, extent);
+    this.updateLayerIdentifiers(layerIds);
   }
 
   hasGeo(identifier) {
-    return this._geoReferences.has(identifier);
+    return this.geoReferences.has(identifier);
   }
 }

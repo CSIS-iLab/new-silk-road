@@ -1,8 +1,10 @@
 import alt from '../alt';
-import {createApiStore} from './apistores';
+import createApiStore from './apistores';
 import PrincipalAgentActions from '../actions/PrincipalAgentActions';
 
-var PrincipalAgentStore = createApiStore(PrincipalAgentActions);
-PrincipalAgentStore = alt.createStore(PrincipalAgentStore, 'PrincipalAgentStore');
+const PrincipalAgentStore = alt.createStore(
+  createApiStore(PrincipalAgentActions),
+  'PrincipalAgentStore',
+);
 
 export default PrincipalAgentStore;

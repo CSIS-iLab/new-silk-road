@@ -1,28 +1,27 @@
 import 'whatwg-fetch';
-import {parameterizeQuery} from './utils';
+import parameterizeQuery from './utils';
 
 function createApiSource(endpoint) {
   class ApiSource {
-    static baseURL = endpoint;
     static fetch(query) {
-      let fetchURL = ApiSource.baseURL;
+      let fetchURL = endpoint;
       if (query) {
         const queryString = parameterizeQuery(query);
-        fetchURL = `${ApiSource.baseURL}?${queryString}`;
+        fetchURL = `${endpoint}?${queryString}`;
       }
-      return fetch(fetchURL, { credentials: 'same-origin',});
+      return fetch(fetchURL, { credentials: 'same-origin' });
     }
   }
   return ApiSource;
 }
 
-var CountrySource = createApiSource('/api/countries/');
-var OrganizationSource = createApiSource('/api/organizations/');
-var InfrastructureTypeSource = createApiSource('/api/infrastructure-types/');
-var RegionSource = createApiSource('/api/regions/');
-var StatusSource = createApiSource('/api/project-statuses/');
-var SearchSource = createApiSource('/api/projects/');
-var GeoCentroidSource = createApiSource('/api/geostore-centroids/');
+const CountrySource = createApiSource('/api/countries/');
+const OrganizationSource = createApiSource('/api/organizations/');
+const InfrastructureTypeSource = createApiSource('/api/infrastructure-types/');
+const RegionSource = createApiSource('/api/regions/');
+const StatusSource = createApiSource('/api/project-statuses/');
+const SearchSource = createApiSource('/api/projects/');
+const GeoCentroidSource = createApiSource('/api/geostore-centroids/');
 
 export {
   createApiSource,
