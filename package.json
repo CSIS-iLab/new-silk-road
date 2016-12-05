@@ -59,10 +59,10 @@
     "object-merge": "^2.5.1",
     "promise-queue": "^2.2.3",
     "radium": "^0.18.1",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
     "react-select": "^1.0.0-rc.2",
-    "whatwg-fetch": "^1.0.0"
+    "whatwg-fetch": "^2.0.1"
   },
   "babel": {
     "presets": [
