@@ -49,7 +49,7 @@ $scroll-max-height: $results-view-max-height - 46;
 
         @include display(flex);
         @include flex-direction(column);
-        @include justify-content(space-between);
+        @include justify-content(flex-start);
 
         > div {
             background-color: $pale-green;

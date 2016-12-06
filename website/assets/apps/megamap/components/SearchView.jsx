@@ -202,7 +202,15 @@ export default class SearchView extends Component {
       if (Array.isArray(value)) {
         return value.length !== 0;
       }
-      return value !== '';
+      if (typeof value === 'string' || value instanceof String) {
+        return value.trim() !== '';
+      }
+      return Object.values(value).some((x) => {
+        if (typeof value === 'string' || value instanceof String) {
+          return x.trim() !== '';
+        }
+        return x !== null;
+      });
     });
     this.setState({ query: queryUpdate, searchEnabled: enableSearch });
   }
