@@ -4,6 +4,7 @@ import {
   nameIdMapper,
   nameSlugMapper,
   generateRangeQuery,
+  hasSearchableValue,
 } from '../megamap/functions';
 
 describe('optionMapper functions', () => {
@@ -47,5 +48,38 @@ describe('generateRangeQuery', () => {
       foo__gte: '2000',
       foo__lte: '2010',
     });
+  });
+});
+
+describe('hasSearchableValue', () => {
+  it('returns true when passed an object with a non-empty string value', () => {
+    const testObj = {
+      foo: 'bar',
+    };
+    const isSearchable = hasSearchableValue(testObj);
+    expect(isSearchable).toEqual(true);
+  });
+  it('returns false when passed an object with an string value consisting only of spaces', () => {
+    const testObj = {
+      foo: '  ',
+    };
+    const isSearchable = hasSearchableValue(testObj);
+    expect(isSearchable).toEqual(false);
+  });
+  it('returns true when passed an object with a number', () => {
+    const testObj = {
+      foo: 1,
+    };
+    const isSearchable = hasSearchableValue(testObj);
+    expect(isSearchable).toEqual(true);
+  });
+  it('returns true when passed an object with nested object with a non-empty string value', () => {
+    const testObj = {
+      foo: {
+        bar: 'baz',
+      },
+    };
+    const isSearchable = hasSearchableValue(testObj);
+    expect(isSearchable).toEqual(true);
   });
 });

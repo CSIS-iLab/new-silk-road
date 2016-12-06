@@ -23,6 +23,7 @@ import {
   nameIdMapper,
   nameSlugMapper,
   generateRangeQuery,
+  hasSearchableValue,
 } from '../functions';
 
 const emptyQueryState = () => Object.assign({}, {
@@ -187,7 +188,13 @@ export default class SearchView extends Component {
   }
 
   resetQueryState() {
-    this.setState({ query: emptyQueryState(), searchEnabled: false });
+    this.setState({
+      query: emptyQueryState(),
+      searchEnabled: false,
+      error: null,
+      searchCount: 0,
+      results: [],
+    });
   }
 
   handleChange(event) {
@@ -198,20 +205,7 @@ export default class SearchView extends Component {
   handleQueryUpdate(q) {
     // TODO: Migrate this logic to a Store that manages the state of the search query.
     const queryUpdate = Object.assign({}, this.state.query, q);
-    const enableSearch = Object.values(queryUpdate).some((value) => {
-      if (Array.isArray(value)) {
-        return value.length !== 0;
-      }
-      if (typeof value === 'string' || value instanceof String) {
-        return value.trim() !== '';
-      }
-      return Object.values(value).some((x) => {
-        if (typeof value === 'string' || value instanceof String) {
-          return x.trim() !== '';
-        }
-        return x !== null;
-      });
-    });
+    const enableSearch = hasSearchableValue(queryUpdate);
     this.setState({ query: queryUpdate, searchEnabled: enableSearch });
   }
 

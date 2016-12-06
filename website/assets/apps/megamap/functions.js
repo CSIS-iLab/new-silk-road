@@ -20,9 +20,29 @@ const generateRangeQuery = (lookupName, lowerValue = null, upperValue = null) =>
   };
 };
 
+const hasSearchableValue = queryObj =>
+  Object.values(queryObj).some((value) => {
+    if (Array.isArray(value)) {
+      return value.length !== 0;
+    }
+    if (typeof value === 'string' || value instanceof String) {
+      return value.trim() !== '';
+    }
+    if (typeof value === 'number') {
+      return true;
+    }
+    return Object.values(value).some((x) => {
+      if (typeof value === 'string' || value instanceof String) {
+        return x.trim() !== '';
+      }
+      return x !== null;
+    });
+  });
+
 
 export {
   nameIdMapper,
   nameSlugMapper,
   generateRangeQuery,
+  hasSearchableValue,
 };
