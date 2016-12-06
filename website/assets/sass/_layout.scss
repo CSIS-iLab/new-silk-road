@@ -103,10 +103,22 @@ section.columnar {
 
 header {
     .wrap {
+        @include display(flex);
+        @include flex-direction(column);
+        @include justify-content(center);
+
+        > div, > nav {
+            @include flex(1 0 auto);
+        }
         max-width: $small-wrap;
-        margin-bottom: 0;
+        margin: 0 auto 0;
+
         @include media($medium-break) {
             @include outer-container($medium * 0.96);
+            @include flex-direction(row);
+            @include justify-content(flex-end);
+            @include flex-wrap(wrap);
+            margin-bottom: $small-spacing;
         }
         @include media($large-break) {
             max-width: $max-content-width + 102;

@@ -33,6 +33,9 @@
                     <h2>Mapping continental ambitions</h2>
                 </div>
                 {% include "_navigation.html" %}
+                <div class="site-search">
+                    {% include "search/_search_form.html" with hide_categories=True %}
+                </div>
             </div>
         </header>
         <div class='widows-peak'></div>
@@ -63,6 +66,12 @@
             Zepto(function($) {
                 var iframes = $('iframe, a[data-flickr-embed]');
                 iframes.parent().addClass('iframe-container');
+
+                var searchForm = $('header div.site-search');
+                searchForm.hide();
+                $('a.search').on('click', function(event) {
+                    searchForm.toggle();
+                });
             });
         </script>
 {% block postbodyjs %}{% endblock %}

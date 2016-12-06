@@ -255,12 +255,11 @@ header[role=banner] {
     border-bottom: $thin-dark-border;
 
     @include media($medium-break) {
-        height: 118px;
+        min-height: 118px;
     }
 
     .headers {
-        float: none;
-        min-width: 40%;
+        min-width: 70%;
         max-width: 94%;
         margin: 15px auto 0;
         > a {
@@ -285,7 +284,7 @@ header[role=banner] {
             }
         }
         @include media($medium-break) {
-            float: left;
+            min-width: 40%;
             margin: 24px 0 0;
         }
         @include media($large-break) {
@@ -294,7 +293,6 @@ header[role=banner] {
         }
     }
     nav {
-        float: none;
         margin: $small-spacing auto $small-spacing*1.5 $small-spacing;
         @include media($medium-break) {
             float: right;
@@ -302,24 +300,52 @@ header[role=banner] {
         }
         ul {
             margin-bottom: 0;
+            @include display(flex);
+            @include flex-direction(column);
+            @include justify-content(center);
+
+            @include media($medium-break) {
+                @include flex-direction(row);
+                @include justify-content(flex-end);
+            }
 
             li {
                 display: block;
-                margin: 0 0 16px 0;
+                &:not(:last-child) {
+                    margin-bottom: $medium-spacing;
+                }
+                @include flex(0 1 auto);
                 font-size: $nav-text-size;
                 @include media($medium-break) {
-                    display: inline-block;
                     margin: 0 0 $tiny-spacing*2 1em;
                 }
+
                 a {
+                    margin: 0 0 16px 0;
                     padding: 3px 0 2px 0;
                     font-weight: bold;
                     text-decoration: none;
                     color: $slate-grey;
                     border-bottom: 2px solid $slate-grey;
 
+                    &.button.search {
+                        @include hide-text;
+                        cursor: pointer;
+                        border: none;
+                        padding: 0;
+                        margin: 0;
+                        background: url($global-search-btn-img) center no-repeat;
+                        width: $search-btn-width;
+                        min-height: $search-btn-width;
+                    }
                 }
             }
+        }
+    }
+
+    .site-search {
+        @include media($medium-break) {
+            max-width: 33%;
         }
     }
 }
