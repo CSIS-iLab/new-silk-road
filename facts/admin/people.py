@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db import models
+from reversion.admin import VersionAdmin
 
 from facts.models.people import (Position)
 from facts.admin.events import PersonEventInline
@@ -24,7 +25,7 @@ class PositionInline(admin.TabularInline):
         }
 
 
-class PersonAdmin(admin.ModelAdmin):
+class PersonAdmin(VersionAdmin):
     save_on_top = True
     list_display = ('full_display_name', 'birth_year', 'identifier',) + ('published',)
     search_fields = (

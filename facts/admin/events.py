@@ -1,4 +1,5 @@
 from django.contrib import admin
+from reversion.admin import VersionAdmin
 from facts.models import Person
 from facts.models.organizations import Organization
 from infrastructure.models import Initiative
@@ -21,7 +22,7 @@ class InitiativeEventInline(admin.TabularInline):
     model = Initiative.affiliated_events.through
 
 
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(VersionAdmin):
     save_on_top = True
     search_fields = ['name']
     filter_horizontal = (
@@ -60,6 +61,6 @@ class EventAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
-class EventTypeAdmin(admin.ModelAdmin):
+class EventTypeAdmin(VersionAdmin):
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ['name']

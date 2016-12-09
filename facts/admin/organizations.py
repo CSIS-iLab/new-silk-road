@@ -1,4 +1,5 @@
 from django.contrib import admin
+from reversion.admin import VersionAdmin
 from mptt.admin import MPTTModelAdmin
 from facts.models import (
     CompanySector,
@@ -38,7 +39,7 @@ class CompanySectorListFilter(admin.SimpleListFilter):
             return queryset.filter(sectors__contains=[int(self.value())])
 
 
-class ShareholderAdmin(admin.ModelAdmin):
+class ShareholderAdmin(VersionAdmin):
     value = PercentageField()
 
 
@@ -62,7 +63,7 @@ class PersonShareholderInline(admin.TabularInline):
         }
 
 
-class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
+class OrganizationAdmin(PhraseSearchAdminMixin, VersionAdmin, MPTTModelAdmin):
     form = OrganizationForm
     filter_horizontal = [
         'leaders',
@@ -97,11 +98,11 @@ class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
-class OrganizationType(MPTTModelAdmin):
+class OrganizationType(VersionAdmin, MPTTModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
-class OrganizationDetailsAdmin(admin.ModelAdmin):
+class OrganizationDetailsAdmin(VersionAdmin):
     list_display = ['__str__']
     search_fields = (
         'organization__name',
@@ -170,5 +171,5 @@ class PoliticalDetailsAdmin(OrganizationDetailsAdmin):
     ]
 
 
-class CompanyStructureAdmin(admin.ModelAdmin):
+class CompanyStructureAdmin(VersionAdmin):
     prepopulated_fields = {"slug": ("name",)}

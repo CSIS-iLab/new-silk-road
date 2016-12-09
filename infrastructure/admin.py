@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.utils.html import format_html, format_html_join
 from django.core.urlresolvers import reverse
+from reversion.admin import VersionAdmin
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
@@ -87,7 +88,7 @@ class HasGeoListFilter(admin.SimpleListFilter):
 
 
 @admin.register(Project)
-class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
+class ProjectAdmin(PhraseSearchAdminMixin, VersionAdmin):
     save_on_top = True
     form = ProjectForm
     prepopulated_fields = {
@@ -181,7 +182,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(Initiative)
-class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
+class InitiativeAdmin(PhraseSearchAdminMixin, VersionAdmin, MPTTModelAdmin):
     save_on_top = True
     form = InitiativeForm
     prepopulated_fields = {"slug": ("name",)}
@@ -231,12 +232,12 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
 
 
 @admin.register(InfrastructureType)
-class InfrastructureTypeAdmin(admin.ModelAdmin):
+class InfrastructureTypeAdmin(VersionAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(ProjectDocument)
-class ProjectDocumentAdmin(admin.ModelAdmin):
+class ProjectDocumentAdmin(VersionAdmin):
     list_display = (
         'identifier',
         'document_type',
@@ -262,12 +263,12 @@ class ProjectDocumentAdmin(admin.ModelAdmin):
 
 
 @admin.register(InitiativeType)
-class InitiativeTypeAdmin(admin.ModelAdmin):
+class InitiativeTypeAdmin(VersionAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(ProjectFunding)
-class ProjectFundingAdmin(admin.ModelAdmin):
+class ProjectFundingAdmin(VersionAdmin):
     form = ProjectFundingForm
     # TODO: Add a list display of sources?
     list_display = ('project', 'amount', 'currency')
