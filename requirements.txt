@@ -1,6 +1,6 @@
 bleach==1.4.3
 boto3==1.4.1
-Django=1.9.12
+Django>=1.9.12,<1.10
 dj_database_url
 django-cachalot==1.2.1
 django-constance[database]==1.2
