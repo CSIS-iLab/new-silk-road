@@ -66,7 +66,7 @@ class EntrySerializerTestCase(BaseSearchTestCase):
         for category in doc.categories:
             self.assertIn('name', category)
         self.assertEqual(obj.author, doc.author)
-        self.assertEqual(obj.content, doc.content)
+        self.assertEqual(obj.content_rendered, doc.content)
         self.assertEqual(obj.description, doc.description)
         self.assertEqual(obj.publication_date, doc.publication_date)
 
