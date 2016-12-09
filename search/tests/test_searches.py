@@ -29,13 +29,13 @@ class SiteSearchTestCase(SimpleTestCase):
         self.assertTrue(hasattr(s, '_s'))
         self.assertIsNotNone(s._s._doc_type)
 
-    def test_creates_countries_nested_aggregation(self):
-        """SiteSearch should have a nested terms aggregation on countries.name"""
+    def test_creates_project_location_nested_aggregation(self):
+        """SiteSearch should have a nested terms aggregation 'project_location', on countries.name"""
         s = SiteSearch()
         aggs_dict = s._s.aggs.to_dict()
         self.assertIsNotNone(aggs_dict)
 
-        agg_label = 'countries'
+        agg_label = 'project_location'
         filter_label = '_filter_{}'.format(agg_label)
 
         agg = aggs_dict['aggs'].get(filter_label, None)
@@ -53,7 +53,7 @@ class SiteSearchTestCase(SimpleTestCase):
         aggs_dict = s._s.aggs.to_dict()
         self.assertIsNotNone(aggs_dict)
 
-        agg_label = 'kind'
+        agg_label = '_category'
         filter_label = '_filter_{}'.format(agg_label)
 
         agg = aggs_dict['aggs'].get(filter_label, None)
@@ -65,7 +65,7 @@ class SiteSearchTestCase(SimpleTestCase):
         self.assertNotIn('nested', agg['aggs'][agg_label])  # This should not be a nested agg
         self.assertIn('terms', agg['aggs'][agg_label])
         self.assertIn('field', agg['aggs'][agg_label]['terms'])
-        self.assertEqual('_meta.model', agg['aggs'][agg_label]['terms']['field'])
+        self.assertEqual('_meta.model.raw', agg['aggs'][agg_label]['terms']['field'])
 
     def test_creates_infrastructure_type_nested_aggregation(self):
         """SiteSearch should have a nested terms aggregation on infrastructure_type.name"""
@@ -82,8 +82,6 @@ class SiteSearchTestCase(SimpleTestCase):
         self.assertIn('aggs', agg)
         self.assertIn('filter', agg)
         self.assertIn(agg_label, agg['aggs'])
-        self.assertIn('nested', agg['aggs'][agg_label])
-        self.assertIn('aggs', agg['aggs'][agg_label])
 
     def test_has_highlights(self):
         """SiteSearch should have highlights for matches"""
