@@ -17,19 +17,19 @@ class fuzzydate:
         '''
         self = object.__new__(cls)
         self._year = year
-        if month and (month <= 1 or month > 12):
+        if month is not None and (month < 1 or month > 12):
             if raise_errors:
                 raise ValueError('Month value must be in range 1-12')
             else:
                 month = None
         self._month = month
-        if day:
-            if day <= 1 or day > 31:
+        if day is not None:
+            if day < 1 or day > 31:
                 if raise_errors:
                     raise ValueError('Day value must be in range 1-31')
                 else:
                     day = None
-            if year and month:
+            if day is not None and year is not None and month is not None:
                 max_days = MONTH_DAYS[month]
                 if is_leap(year) and month == 2:
                     max_days = MONTH_DAYS[month] + 1

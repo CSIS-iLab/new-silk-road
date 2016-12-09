@@ -12,6 +12,34 @@ class FuzzyDateTestCase(SimpleTestCase):
         self.assertEqual(fd.month, 7)
         self.assertEqual(fd.day, 4)
 
+    def test_fuzzydate_can_raise_error_on_invalid_day(self):
+        with self.assertRaises(ValueError):
+            fuzzydate(day=0, raise_errors=True)
+
+        with self.assertRaises(ValueError):
+            fuzzydate(day=32, raise_errors=True)
+
+    def test_fuzzydate_invalid_day_is_none(self):
+        d1 = fuzzydate(day=0)
+        self.assertIsNone(d1.day)
+
+        d2 = fuzzydate(day=32)
+        self.assertIsNone(d2.day)
+
+    def test_fuzzydate_can_raise_error_on_invalid_month(self):
+        with self.assertRaises(ValueError):
+            fuzzydate(month=0, raise_errors=True)
+
+        with self.assertRaises(ValueError):
+            fuzzydate(month=13, raise_errors=True)
+
+    def test_fuzzydate_invalid_month_is_none(self):
+        d1 = fuzzydate(month=0)
+        self.assertIsNone(d1.month)
+
+        d2 = fuzzydate(month=13)
+        self.assertIsNone(d2.month)
+
     def test_fuzzydate_creates_year_only_instance(self):
         fd = fuzzydate(1776)
         self.assertEqual(fd.year, 1776)
