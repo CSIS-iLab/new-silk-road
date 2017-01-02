@@ -238,7 +238,7 @@ $ heroku local:run python manage.py runserver
 The following will start watching the Sass files for changes and update the resulting CSS. It runs a webserver on <http://127.0.0.1:3000/> (note the different port: 3000, rather than 8000) that live updates the stylesheets as you edit them, and it proxies HTML page requests to the other webserver (running on port 8000):
 
 ```sh
-$ gulp sass:watch
+$ gulp watch
 ```
 
 So if you have both running, you can access <http://127.0.0.1:3000/> or <http://localhost:3000/> to see styles update moments after you edit and save the Sass files.
