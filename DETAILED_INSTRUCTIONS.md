@@ -37,12 +37,12 @@ Next in that list is `postgresql` and `postgis`. PostgreSQL is a database progra
 Without the packages listed below, you will not be able all parts of the website, such as the search engine. You may not need to work with those parts, but if you do, you'll need to install additional software:
 
 ```sh
-$ brew install redis elasticsearch memcached
+$ brew install redis elasticsearch memcached libmemcached
 ```
 
 `elasticsearch` is software for a search database. Basically, information gets copied from the PostgreSQL database and transformed into a format optimized for searchability.
 
-`memcached` is a program that stores things in computer's memory for fast retrieval. The live website caches pages and other pieces of information to give the website a speed boost. We may turn this feature on or off in development for testing purposes.
+`memcached` is a program that stores things in computer's memory for fast retrieval. The live website caches pages and other pieces of information to give the website a speed boost. We may turn this feature on or off in development for testing purposes. `libmemcached` is a helper library used to help Django communicate with memcached.
 
 `redis` is a database of sorts, and is used in the code for storing and running automated tasks, such as rebuilding the Elasticsearch database from the PostgreSQL database. You probably don't need this unless you are writing and testing automated tasks.
 
@@ -117,8 +117,10 @@ You'll need to run `$ source ~/virtualenvs/reconasia` to activate that environme
 Once you have your virtual environment created and activated, you can install the packages this project needs by running the following command from the project directory:
 
 ```sh
-$ pip install -r dev-requirements.txt
+$ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip install -r dev-requirements.txt
 ```
+
+If it weren't for the django-pylibmc package, you could run `$ pip install -r dev-requirements.txt` but it needs `CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib` to compile.
 
 You should see a bunch of lines appear in your terminal in a fairly rapid manner, which indicates that pip is fetching packages from the internet and installing them into your virtual environment. This may take a few minutes. When it's done, you should have almost enough to get started.
 
@@ -236,7 +238,7 @@ $ heroku local:run python manage.py runserver
 The following will start watching the Sass files for changes and update the resulting CSS. It runs a webserver on <http://127.0.0.1:3000/> (note the different port: 3000, rather than 8000) that live updates the stylesheets as you edit them, and it proxies HTML page requests to the other webserver (running on port 8000):
 
 ```sh
-$ gulp sass:watch
+$ gulp watch
 ```
 
 So if you have both running, you can access <http://127.0.0.1:3000/> or <http://localhost:3000/> to see styles update moments after you edit and save the Sass files.
