@@ -4,9 +4,9 @@ These are detailed for setting up the project and it's dependencies. Unlike the 
 
 When you see a `$` followed by a space then some other words, i.e. `$ brew install python3`, that means this should be run on the command line. You don't type the `$`.
 
-# Part 1: Transform your computer into a developer's machine
+# Part 1a: Transform your computer into a developer's machine (macOS)
 
-This section covers installing a number of tools commonly used by web and application developers, with a focus on macOS. This section involves a number of steps, but those steps should only need to be performed once per machine. After you've installed these tools, you may update them occasionally.
+This section covers installing a number of tools commonly used by web and application developers, with a focus on macOS. This section involves a number of steps, but those steps should only need to be performed once per machine. After you've installed these tools, you may update them occasionally. If you are using a Linux based operating system then you should skip this section and follow the direction in the follow section on setup for Debian/Ubuntu based distributions.
 
 ## Install a Homebrew, package manager
 
@@ -66,6 +66,57 @@ Since you will someday be working on many python projects and need to keep the p
 
 Basically you need to run `$ pip3 install virtualenv`. If you're comfortable creating or editing your `.bashrc`, you can also `$ pip3 install virtualenvwrapper` and [add the proper entries](https://virtualenvwrapper.readthedocs.io/en/latest/install.html#shell-startup-file) to your `.bashrc`.
 
+# Part 1b: Transform your computer into a developer's machine (Debian/Ubuntu)
+
+This section details the setup of some of the primary tools required for setting up your development machine for Linux with the assumption of using a Debian/Ubuntu based system. If you are using a different Linux distribution, these steps should be roughly the same changing out the appropriate package manager commands and package names. If you followed the previous section for your macOS system then you should skip this section and continue to part 2.
+
+## Version control
+
+This project requires using `git` and if you don't currently have it installed you should install it with `apt`:
+
+```sh
+$ sudo apt-get install git
+```
+
+## Python Essentials
+
+This project uses Python 3.5 which ships by default on Ubuntu 16.04 and Debian testing. In addition to the base installation, you should ensure you have the development headers to build some of the Python requirements from source:
+
+```sh
+$ sudo apt-get install python3.5 python3.5-dev python-pip build-essential libjpeg8 libjpeg8-dev libfreetype6 libfreetype6-dev zlib1g zlib1g-dev libxml2-dev libxslt1-dev ghostscript libffi-dev
+```
+
+With those installed you should also install `virtualenv` and `virtualenvwrapper` using `pip`:
+
+```sh
+$ sudo pip install virtualenv virtualenvwrapper
+```
+
+This will be used later to create an isolated Python environment for the development of the project.
+
+## Search, Caching, and related packages
+
+This project uses Postrgres, Memecached, Redis, and ElasticSearch for DB storage, caching, background queuing, and search respectively. With the exception of ElasticSearch, you can use the OS provided versions of these services installable via `apt`:
+
+```sh
+$ sudo apt-get install postgresql postgis postgresql-contrib postgresql-server-dev postgresql-client libpq-dev redis-server memcached libmemcached-dev
+```
+
+It can be helpful to create a superuser matching your current local user so that you can access the server using ident authentication:
+
+```sh
+$ sudo -u postgres createuser --superuser $USER
+```
+
+ElasticSearch can be installed using either a `.deb` file or from a repository following the directions provided by [elastic](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html):
+
+``sh
+$ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+$ sudo apt-get install apt-transport-https
+$ echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
+$ sudo apt-get update && sudo apt-get install elasticsearch
+```
+
 # Part 2: Setting up the website
 
 ## "Clone" the code repository
@@ -99,8 +150,12 @@ You don't want to create your virtual environment folder inside the project fold
 If you have `virtualenvwrapper` set up, it should manage this for you. Run:
 
 ```sh
+# macOS
 $ mkvirtualenv -p python3 reconasia
+# Linux
+$ mkvirtualenv -p `which python3.5` reconasia
 ```
+
 
 That should create a folder named "reconasia" in the directory specified by `$WORKON_HOME`. When you want to work on the project, you'll run `$ workon reconasia` to activate that environment.
 
@@ -117,7 +172,10 @@ You'll need to run `$ source ~/virtualenvs/reconasia` to activate that environme
 Once you have your virtual environment created and activated, you can install the packages this project needs by running the following command from the project directory:
 
 ```sh
+# macOS
 $ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip install -r dev-requirements.txt
+# Linux
+$ pip install -r dev-requirements.txt
 ```
 
 If it weren't for the django-pylibmc package, you could run `$ pip install -r dev-requirements.txt` but it needs `CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib` to compile.
@@ -182,6 +240,8 @@ Right now, this env file is missing values for a number of keys. Anywhere you se
 `SECRET_KEY` is a [Django setting](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY) and is used for ["Cryptographic signing"](https://docs.djangoproject.com/en/1.10/topics/signing/). It's about website security, so "a-bad-secret-key" is a bad secret key that should **never** be used for a website accessible to the public.
 
 The setting `DATABASE_URL=postgres://localhost/reconasia` may be fine for your local environment if you have PostgreSQL installed and a database created named 'reconasia'. `postgres://localhost/reconasia` is a URL for configuring a connection to a postgres database. In production the URL will include things like a username and password, but we don't need that for developing locally.
+
+For Linux you may want to change this to `DATABASE_URL=postgres:///reconasia` to connect over the Unix socket instead particular if you are using ident auth as previously described.
 
 `DEBUG` and `DEBUG_STATIC` control how the Django website behaves, particularly when there are errors. Having these set to `True` (with a capital T) is useful for developing locally because you get more information about the errors.
 
