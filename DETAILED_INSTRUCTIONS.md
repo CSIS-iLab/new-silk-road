@@ -211,6 +211,8 @@ Quit the server with CONTROL-C.
 
 That means you can open <http://127.0.0.1:8000/> (or <http://localhost:8000/>, both are "addresses" for your computer) in a web browser and you should see your local copy of the website up and running!
 
+Note that any Django commands will need to be run with heroku or foreman, so that the environment variables in the `.env` file can be picked up. For example, to open a shell, you will need to run `heroku local:run python manage.py shell`, rather than just `python manage.py shell`.
+
 ## Working on JavaScript and Sass/CSS: Use Node
 
 Since [Node](https://nodejs.org/) has its own ecosystem of tools oriented toward front-end web development, this project includes a `package.json` and `gulpfile.babel.js`. If you plan to write Sass/CSS or JavaScript, you should install the required tools:
