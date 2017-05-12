@@ -249,6 +249,14 @@ For Linux you may want to change this to `DATABASE_URL=postgres:///reconasia` to
 
 When you see a # symbol, that indicates the start of a comment, which is not processed as an environment variable. If a line begins with a #, that entire line is a treated as a comment. So `# ELASTICSEARCH_URL=` is a comment, despite the `KEY=` syntax. You can comment and uncomment various lines to change which settings are processed as an environment variable. So if you aren't using Elasticsearch to test the search, you can put a # in front on `ELASTICSEARCH_URL=http://localhost:9200`.
 
+## Run migrations
+
+You may need to run some database migrations at this point. Migrations update the database with any new model changes since your database was created. So, if your db_archive.tar is from a few months ago, there may be some updates that need to occur. To read more about migrations, see https://docs.djangoproject.com/en/dev/topics/migrations/. To run the migrations:
+
+```sh
+$ heroku local:run python manage.py migrate
+```
+
 ## Run the application
 
 Now that you've created the `.env` file you can cross your fingers and run:
@@ -272,6 +280,8 @@ Quit the server with CONTROL-C.
 ```
 
 That means you can open <http://127.0.0.1:8000/> (or <http://localhost:8000/>, both are "addresses" for your computer) in a web browser and you should see your local copy of the website up and running!
+
+Note that any Django commands will need to be run with heroku or foreman, so that the environment variables in the `.env` file can be picked up. For example, to open a shell, you will need to run `heroku local:run python manage.py shell`, rather than just `python manage.py shell`.
 
 ## Working on JavaScript and Sass/CSS: Use Node
 
