@@ -96,7 +96,7 @@ This will be used later to create an isolated Python environment for the develop
 
 ## Search, Caching, and related packages
 
-This project uses Postrgres, Memecached, Redis, and ElasticSearch for DB storage, caching, background queuing, and search respectively. With the exception of ElasticSearch, you can use the OS provided versions of these services installable via `apt`:
+This project uses Postgres, Memcached, Redis, and ElasticSearch for DB storage, caching, background queuing, and search respectively. With the exception of ElasticSearch, you can use the OS provided versions of these services installable via `apt`:
 
 ```sh
 $ sudo apt-get install postgresql postgis postgresql-contrib postgresql-server-dev postgresql-client libpq-dev redis-server memcached libmemcached-dev
@@ -110,7 +110,7 @@ $ sudo -u postgres createuser --superuser $USER
 
 ElasticSearch can be installed using either a `.deb` file or from a repository following the directions provided by [elastic](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html):
 
-``sh
+```sh
 $ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 $ sudo apt-get install apt-transport-https
 $ echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
