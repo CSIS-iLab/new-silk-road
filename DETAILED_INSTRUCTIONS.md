@@ -314,3 +314,27 @@ $ gulp watch
 ```
 
 So if you have both running, you can access <http://127.0.0.1:3000/> or <http://localhost:3000/> to see styles update moments after you edit and save the Sass files.
+
+
+## Running the tests
+
+This project has a number of tests in order to verify that the code runs as expected.
+While developing you should add tests for the code you contribute, and may run the
+tests by:
+
+```sh
+$ heroku local:run python manange.py tests
+```
+
+Since some of the tests rely on elasticsearch, you will also need to:
+
+1.) have the `ELASTICSEARCH_URL` environment variable set in your `.env` file:
+   ```
+   ...
+   ELASTICSEARCH_URL=http://localhost:9200
+   ...
+   ```
+
+2.) run elasticsearch in a separate shell:
+
+   `$ elasticsearch`
