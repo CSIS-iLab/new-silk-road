@@ -42,6 +42,18 @@ $ brew install redis elasticsearch memcached libmemcached
 
 `elasticsearch` is software for a search database. Basically, information gets copied from the PostgreSQL database and transformed into a format optimized for searchability.
 
+To run it on your machine you may run the following command:
+
+```sh
+$ elasticsearch
+```
+
+or to run it in the background, add a `-d` flag:
+
+```sh
+elasticsearch -d
+```
+
 `memcached` is a program that stores things in computer's memory for fast retrieval. The live website caches pages and other pieces of information to give the website a speed boost. We may turn this feature on or off in development for testing purposes. `libmemcached` is a helper library used to help Django communicate with memcached.
 
 `redis` is a database of sorts, and is used in the code for storing and running automated tasks, such as rebuilding the Elasticsearch database from the PostgreSQL database. You probably don't need this unless you are writing and testing automated tasks.
@@ -319,22 +331,12 @@ So if you have both running, you can access <http://127.0.0.1:3000/> or <http://
 ## Running the tests
 
 This project has a number of tests in order to verify that the code runs as expected.
-While developing you should add tests for the code you contribute, and may run the
+While developing, you should add tests for the code you contribute, and may run the
 tests by:
 
 ```sh
 $ heroku local:run python manange.py tests
 ```
 
-Since some of the tests rely on elasticsearch, you will also need to:
-
-1.) have the `ELASTICSEARCH_URL` environment variable set in your `.env` file:
-   ```
-   ...
-   ELASTICSEARCH_URL=http://localhost:9200
-   ...
-   ```
-
-2.) run elasticsearch in a separate shell:
-
-   `$ elasticsearch`
+Note: Since some of the tests rely on elasticsearch, make sure that is is running on
+your machine. Refer to the section above on elasticsearch for more information.
