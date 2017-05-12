@@ -53,15 +53,4 @@ You can run tests locally with the following command:
 heroku local:run python manange.py tests
 ```
 
-Since many of the tests use elasticsearch, make sure you
-
-1.) have the `ELASTICSEARCH_URL` environment variable set in your `.env` file:
-   ```
-   ...
-   ELASTICSEARCH_URL=http://localhost:9200
-   ...
-   ```
-
-2.) and that elasticsearch is running on your machine:
-
-   `$ elasticsearch`
+For more detailed instrutions, refer to the [DETAILED_INSTRUCTIONS.md](DETAILED_INSTRUCTIONS.md).
