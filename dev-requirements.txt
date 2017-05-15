@@ -5,3 +5,4 @@ django-debug-toolbar
 factory-boy==2.8.1
 Werkzeug
 pyOpenSSL
+coverage==4.4.1
