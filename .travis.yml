@@ -35,6 +35,7 @@ install:
   - wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
   - tar -xzf elasticsearch-${ES_VERSION}.tar.gz
   - ./elasticsearch-${ES_VERSION}/bin/elasticsearch &
+  - sleep 10
 
 script:
   - wget -q --waitretry=10 --retry-connrefused --read-timeout=10 --timeout=10 --tries=2 -O - http://127.0.0.1:9200
