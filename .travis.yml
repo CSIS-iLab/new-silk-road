@@ -1,0 +1,41 @@
+language: python
+
+sudo: false
+
+python:
+  - "3.5"
+
+addons:
+  postgresql: "9.5"
+
+services:
+  - postgresql
+  - elasticsearch
+  - redis-server
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.cache/venvs
+
+before_script:
+  - sleep 10
+  - psql -d template1 -c "CREATE EXTENSION postgis;" -U postgres
+  - createdb -E UTF-8 reconasia -U postgres -O `whoami`
+
+env:
+  - SECRET_KEY='very-secret' DISABLE_CACHE='True' DEBUG_STATIC='True' DATABASE_URL='postgres:///reconasia'
+
+install:
+  - pip install -U pip wheel
+  - pip install -r dev-requirements.txt
+
+script:
+  - python manage.py makemigrations --dry-run | grep 'No changes detected' || (echo 'There are changes which require migrations.' && exit 1)
+  - coverage run manage.py test
+  - coverage report
+
+branches:
+  only:
+    - master
+    - staging
