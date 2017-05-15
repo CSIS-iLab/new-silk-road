@@ -39,3 +39,10 @@ urlpatterns = [
 
 if DEBUG:
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if getattr(settings, 'DEBUG_TOOLBAR', False):
+    import debug_toolbar
+    print('Toolbar')
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
