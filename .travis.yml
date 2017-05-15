@@ -30,7 +30,7 @@ env:
   - ES_VERSION=5.4.0 SECRET_KEY='very-secret' DISABLE_CACHE='True' DEBUG_STATIC='True' DATABASE_URL='postgres:///reconasia'
 
 install:
-  - pip install -U pip wheel
+  - pip install -U pip wheel codecov
   - pip install -r dev-requirements.txt
   - wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
   - tar -xzf elasticsearch-${ES_VERSION}.tar.gz
@@ -41,6 +41,9 @@ script:
   - python manage.py makemigrations --dry-run | grep 'No changes detected' || (echo 'There are changes which require migrations.' && exit 1)
   - coverage run manage.py test
   - coverage report
+
+after_success:
+  - codecov
 
 branches:
   only:
