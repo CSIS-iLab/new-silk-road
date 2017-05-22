@@ -265,12 +265,8 @@
     }
 
     #database {
-        height: 400px;
-        @include background-poster($database-img);
-
-        @include widows-peak($dark-blue-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-night;
-
+        // height: 400px;
+        background-color: $search-content;
         .inner {
             position: absolute;
             left: $section-spacing;
@@ -310,12 +306,10 @@
     }
 
     #analysis {
-        background-color: $dark-night;
+        // background-color: $dark-night;
+        background-color: $article-content;
         color: $medium-green;
         font-family: $serif-font-family;
-
-        @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
-        border-bottom: $thin-border-width solid $dark-green;
 
         .inner {
             padding-top: $section-spacing;

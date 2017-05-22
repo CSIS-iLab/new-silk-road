@@ -12,21 +12,13 @@
         </div>
     </a>
 </section>
-<section id='mission'>
-    <div class="inner">
-        <p><strong>Reconnecting Asia</strong> maps new linkages&mdash;roads, railways, and other infrastructure&mdash;that are reshaping economic and geopolitical realities across the continent. Through data curation and objective analysis, the project aims to fill Asia's infrastructure-information gap, squaring lofty ambitions with facts on the ground.</p>
-    </div>
-</section>
-<section id='video' class='poster'>
-    {% if video_url %}
-    <div class="inner">
-        <a class="play button" href="{{video_url}}">Play</a>
-    </div>
-    {% endif %}
-</section>
 <section id='analysis'>
-    <div class="inner">
-        {% if featured_entry %}
+    
+        <header>
+            <h2>Articles</h2>
+        </header>
+    <!-- ARTICLES two columns -->
+        <!-- {% if featured_entry %}
         <div>
             <h3><a href="{{featured_entry.get_absolute_url}}">{{featured_entry.title}}</a></h3>
             <h5 class='date'><time datetime='{{featured_entry.publication_date|date:"c"}}'>{{featured_entry.publication_date|date}}</time></h5>
@@ -43,16 +35,29 @@
         {% endif %}
         <div>
             <h2 class="highlighter"><a href="{% url 'writings:home' %}"><span>Expert</span><br><span>analysis</span></a></h2>
-        </div>
-    </div>
+        </div> -->
+    
 </section>
 <section id='database' class='poster'>
-    <a href="{% url 'database-home' %}">
-        <div class="inner">
+    
+        <header>
+            <h2>Search the Database</h2>
+        </header>
+        
+<!-- SEARCH -->
+    <!-- <a href="{% url 'database-home' %}">
+        
             <h2 class="highlighter"><span>The</span><br><span>Database</span></h2>
             <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
-        </div>
-    </a>
+        
+    </a> -->
+</section>
+<section id='infographics'>
+    
+        <header>
+            <h2>Infographics</h2>
+        </header>
+    
 </section>
 <section id='partner-analysis'>
     <div class="inner">
