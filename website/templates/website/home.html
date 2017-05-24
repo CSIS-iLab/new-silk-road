@@ -23,9 +23,24 @@
     </header>
 </section>
 <section id='db-summary'>
-    <header>
-        <h2>Infographics</h2>
-    </header>
+    <div class="wrap">
+        <div class="count">
+            <span class="value">{{ db_totals.road.count }}</span>
+            <span class="label">Roads</span>
+        </div>
+        <div class="count">
+            <span class="">{{ db_totals.rail.count }}</span>
+            <span class="label">Railroads</span>
+        </div>
+        <div class="count">
+            <span class="">{{ db_totals.seaport.count }}</span>
+            <span class="label">Seaports</span>
+        </div>
+        <div class="count">
+            <span class="">{{ db_totals.intermodal.count }}</span>
+            <span class="label">Dryports</span>
+        </div>
+    </div>
 </section>
 <section id='visions' class="buzz">
 {% include "writings/_special_analyses.html" %}
