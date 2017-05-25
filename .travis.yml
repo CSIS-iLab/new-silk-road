@@ -27,7 +27,7 @@ before_script:
   - createdb -E UTF-8 reconasia -U postgres -O `whoami`
 
 env:
-  - ES_VERSION=5.4.0 SECRET_KEY='very-secret' DISABLE_CACHE='True' DEBUG_STATIC='True' DATABASE_URL='postgres:///reconasia'
+  - ES_VERSION=5.4.0 SECRET_KEY='very-secret' DISABLE_CACHE='True' DEBUG_STATIC='True' DEBUG='True' DATABASE_URL='postgres:///reconasia'
 
 install:
   - pip install -U pip wheel codecov
