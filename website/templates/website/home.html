@@ -20,7 +20,7 @@
         <div class="featured-entry entry-{{ forloop.counter }}">
             <h3 class="entry-title">{{ entry.0.entry.title }}</h3>
             <div class="entry-byline">
-                <span class="entry-date">{{ entry.0.entry.publication_date }}</span>
+                <span class="entry-date">{{ entry.0.entry.publication_date.date }}</span>
                 <span class="entry-author">{{ entry.0.entry.author }}</span>
             </div>
             <img src="{{ entry.0.entry.featured_image.url }}">
