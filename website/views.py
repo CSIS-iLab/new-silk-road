@@ -33,8 +33,14 @@ class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
 
         # Zip the articles together with the lengths that each preview should be truncated to.
         # This also takes care of limiting the number of articles to a max of 4.
+        article_lengths = [
+            config.HOMEPAGE_ARTICLE_1_WORDS,
+            config.HOMEPAGE_ARTICLE_2_WORDS,
+            config.HOMEPAGE_ARTICLE_3_WORDS,
+            config.HOMEPAGE_ARTICLE_4_WORDS,
+        ]
         if kwargs['featured_entry_set']:
-            kwargs['featured_entry_set'] = zip(kwargs['featured_entry_set'], [100, 40, 25, 25])
+            kwargs['featured_entry_set'] = list(zip(kwargs['featured_entry_set'], article_lengths))
 
         # Add project stat totals
         totals = Project.objects.filter(

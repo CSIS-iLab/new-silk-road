@@ -16,15 +16,15 @@
     <header>
         <h2>Articles</h2>
     </header>
-    {% for entry in featured_entry_set %}
+    {% for entry, truncate_length in featured_entry_set %}
         <div class="featured-entry entry-{{ forloop.counter }}">
-            <h3 class="entry-title">{{ entry.0.entry.title }}</h3>
+            <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
             <div class="entry-byline">
-                <span class="entry-date">{{ entry.0.entry.publication_date.date }}</span>
-                <span class="entry-author">{{ entry.0.entry.author }}</span>
+                <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                <span class="entry-author">{{ entry.entry.author }}</span>
             </div>
-            <img src="{{ entry.0.entry.featured_image.url }}">
-            <div class="entry-preview">{{ entry.0.entry.content_rendered | safe | truncatewords_html:entry.1 }}</div>
+            <a href="{{ entry.entry.get_absolute_url }}"><img src="{{ entry.entry.featured_image.url }}"></a>
+            <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
         </div>
     {% endfor %}
 </section>
