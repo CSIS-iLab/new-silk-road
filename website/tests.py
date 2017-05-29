@@ -27,6 +27,28 @@ class HomepageTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['partner_entry'], entry)
 
+    def test_featured_entries(self):
+        """The first 4 featured entries should be in the homepage context."""
+
+        collection = EntryCollectionFactory()
+        collection.slug = config.HOMEPAGE_FEATURED_ANALYSIS_COLLECTION
+        collection.save()
+        entries = [EntryFactory.create(published=True) for i in range(4)]
+        [OrderedEntryFactory.create(collection=collection, entry=entry) for entry in entries]
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        # Unzip featured entries
+        entries_in_context, truncate_lengths = zip(*response.context['featured_entry_set'])
+        entries_in_context = [elem.entry for elem in entries_in_context]
+        for i in range(4):
+            self.assertIn(entries[i], entries_in_context)
+        self.assertEqual(truncate_lengths, (
+            config.HOMEPAGE_ARTICLE_1_WORDS,
+            config.HOMEPAGE_ARTICLE_2_WORDS,
+            config.HOMEPAGE_ARTICLE_3_WORDS,
+            config.HOMEPAGE_ARTICLE_4_WORDS,
+        ))
+
     def test_project_totals(self):
         """Project totals should be in the homepage context."""
 
