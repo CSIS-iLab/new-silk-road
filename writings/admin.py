@@ -70,6 +70,9 @@ class EntryAdmin(TaggitCounter, admin.ModelAdmin):
         }),
         (None, {
             'fields': ('categories', 'tags', 'related_entries',)
+        }),
+        (None, {
+            'fields': ('is_sponsored', 'sponsored_logo',)
         })
     )
     form = EntryForm
