@@ -48,6 +48,9 @@ class Entry(Publishable):
     share_text = models.CharField(blank=True, max_length=140)
     featured_image = FilerImageField(blank=True, null=True)
 
+    is_sponsored = models.BooleanField(default=False)
+    sponsored_logo = FilerImageField(blank=True, null=True, related_name='sponsored_article')
+
     publication_date = models.DateTimeField(
         blank=True,
         null=True,

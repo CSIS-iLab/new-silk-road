@@ -12,71 +12,48 @@
         </div>
     </a>
 </section>
-<section id='mission'>
-    <div class="inner">
-        <p><strong>Reconnecting Asia</strong> maps new linkages&mdash;roads, railways, and other infrastructure&mdash;that are reshaping economic and geopolitical realities across the continent. Through data curation and objective analysis, the project aims to fill Asia's infrastructure-information gap, squaring lofty ambitions with facts on the ground.</p>
-    </div>
-</section>
-<section id='video' class='poster'>
-    {% if video_url %}
-    <div class="inner">
-        <a class="play button" href="{{video_url}}">Play</a>
-    </div>
-    {% endif %}
-</section>
-<section id='analysis'>
-    <div class="inner">
-        {% if featured_entry %}
-        <div>
-            <h3><a href="{{featured_entry.get_absolute_url}}">{{featured_entry.title}}</a></h3>
-            <h5 class='date'><time datetime='{{featured_entry.publication_date|date:"c"}}'>{{featured_entry.publication_date|date}}</time></h5>
-            {% if featured_entry.author %}
-            <h4>By {{featured_entry.author}}</h4>
-            {% endif %}
+<section id='featured-articles'>
+    <header>
+        <h2>Articles</h2>
+    </header>
+    {% for entry, truncate_length in featured_entry_set %}
+        <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
+            <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
+            <div class="entry-byline">
+                <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                <span class="entry-author">{{ entry.entry.author }}</span>
+            </div>
+            {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
+            <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
         </div>
-        {% else %}
-        <div>
-            <h3><a href="">A Silk Road for the 21st Century?</a></h3>
-            <h5 class='date'>July 2016</h5>
-            <h4>By Dr. Thomas Fingar</h4>
-        </div>
-        {% endif %}
-        <div>
-            <h2 class="highlighter"><a href="{% url 'writings:home' %}"><span>Expert</span><br><span>analysis</span></a></h2>
-        </div>
-    </div>
+    {% endfor %}
 </section>
-<section id='database' class='poster'>
-    <a href="{% url 'database-home' %}">
-        <div class="inner">
-            <h2 class="highlighter"><span>The</span><br><span>Database</span></h2>
-            <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
-        </div>
-    </a>
+<section id='db-search'>
+    <h2>Search the Database</h2>
+    <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
+    <section role="search">
+        {% include "search/_search_form.html" %}
+    </section>
 </section>
-<section id='partner-analysis'>
-    <div class="inner">
-        <header>
-            <h2>From the reporter&rsquo;s notebook</h2>
-            <h3>In partnership with</h3>
-            <img id='nikkei-logo' src='{% static "img/Nikkei_Asian_Logo.svg" %}' alt='Nikkei Asian Review' />
-        </header>
-        {% if partner_entry %}
-        <div>
-            <h3><a href="{{partner_entry.get_absolute_url}}">{{partner_entry.title}}</a></h3>
-            <h5 class='date'><time datetime='{{partner_entry.publication_date|date:"c"}}'>{{partner_entry.publication_date|date}}</time></h5>
-            {% if partner_entry.author %}
-            <h4>By {{partner_entry.author}}</h4>
-            {% endif %}
+<section id='db-summary'>
+    <div class="wrap">
+        <div class="count">
+            <span class="value">{{ db_totals.road.count }}</span>
+            <span class="label">Roads</span>
         </div>
-        {% endif %}
-    </div>
-</section>
-<section id='featured-analysis' class='feature columnar'>
-    <h2>News and Features</h2>
-    <div class="wrap">{% if featured_analyses %}
-    {% include "writings/_analyses_panels.html" with entry_list=featured_analyses max_words=120 %}
-    {% else %}{% include "writings/_fake_analyses_panels.html" %}{% endif %}
+        <div class="count">
+            <span class="">{{ db_totals.rail.count }}</span>
+            <span class="label">Railroads</span>
+        </div>
+        <div class="count">
+            <span class="">{{ db_totals.seaport.count }}</span>
+            <span class="label">Seaports</span>
+        </div>
+        <div class="count">
+            <span class="">{{ db_totals.intermodal.count }}</span>
+            <span class="label">Dryports</span>
+        </div>
     </div>
 </section>
 <section id='visions' class="buzz">
