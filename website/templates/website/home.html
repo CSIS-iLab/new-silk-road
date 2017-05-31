@@ -23,8 +23,8 @@
                 <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
                 <span class="entry-author">{{ entry.entry.author }}</span>
             </div>
-            {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
             <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
+            {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
             <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
         </div>
     {% endfor %}
