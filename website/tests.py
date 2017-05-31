@@ -49,6 +49,27 @@ class HomepageTestCase(TestCase):
             config.HOMEPAGE_ARTICLE_4_WORDS,
         ))
 
+    def test_sponsored_entry(self):
+        """Sponsored entries should have a class indicating that they are sponsored."""
+
+        collection = EntryCollectionFactory()
+        collection.slug = config.HOMEPAGE_FEATURED_ANALYSIS_COLLECTION
+        collection.save()
+        entries = [EntryFactory.create(published=True) for i in range(4)]
+        [OrderedEntryFactory.create(collection=collection, entry=entry) for entry in entries]
+
+        with self.subTest('no sponsored entry'):
+            response = self.client.get('/')
+            self.assertNotIn('sponsored-entry', str(response.content))
+
+        with self.subTest('entry 3 is sponsored'):
+            entries[2].is_sponsored = True
+            entries[2].save()
+            response = self.client.get('/')
+            self.assertNotIn('entry-1 sponsored-entry', str(response.content))
+            self.assertIn('entry-3 sponsored-entry', str(response.content))
+
+
     def test_project_totals(self):
         """Project totals should be in the homepage context."""
 

@@ -17,13 +17,14 @@
         <h2>Articles</h2>
     </header>
     {% for entry, truncate_length in featured_entry_set %}
-        <div class="featured-entry entry-{{ forloop.counter }}">
+        <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
             <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
             <div class="entry-byline">
                 <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
                 <span class="entry-author">{{ entry.entry.author }}</span>
             </div>
-            <a href="{{ entry.entry.get_absolute_url }}"><img src="{{ entry.entry.featured_image.url }}"></a>
+            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
+            {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
             <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
         </div>
     {% endfor %}
