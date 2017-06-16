@@ -1,8 +1,8 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 
-
+     
 // Sizes
-$large: 1200px;
+$large: 1000px;
 $medium: 768px;
 $small: 400px; // for larger smartphones. $small is a bad label
 $mega-map-min-width: 548px; // Totally eyeballed it
@@ -57,6 +57,22 @@ $concealer: #c6ac9d;
 $article-content: #f0f1f4;
 $search-content: #3c8283;
 
+
+//New colors 2017
+$green: #3D8283;
+$blue-steel: #788ca8;
+$greyish-teal: #6ca4a5;
+$pale-grey: #f1f2f4;
+$med-gray: #E0E0E2;
+$warm-grey: #747474;
+$cloudy-blue: #b4d0d0;
+$dark-grey-blue: #2c6565;
+$greyish-teal-two: #6ca4a5;
+
+
+
+
+
 // Image URLs
 $img-url-base: '/static/img/';
 $logo-image: $img-url-base + 'ReConAsiaLogo.svg';
@@ -78,7 +94,7 @@ $collapse-btn-img: $img-url-base + 'Collapse_button.svg';
 $expand-collapse-btn-width: 15px;
 $global-search-btn-img: $img-url-base + 'Search_icon.svg';
 $search-btn-inactive-img: $global-search-btn-img;
-$search-btn-active-img: $img-url-base + 'Search_icon_light.svg';
+$search-btn-active-img: $img-url-base + 'redesign/Search_icon_light.svg';
 $search-btn-width: 25px;
 $zoom-in-btn-img: $img-url-base + 'Zoom-In.svg';
 $zoom-out-btn-img: $img-url-base + 'Zoom-Out.svg';
@@ -86,6 +102,14 @@ $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 $facebook-img: $img-url-base + 'facebook.svg';
 $twitter-img: $img-url-base + 'twitter.svg';
+
+$search-gray: $img-url-base + 'redesign/search-icon-gray.svg';
+$search-gray-close: $img-url-base + 'redesign/search-icon-gray-close.svg';
+$search-white: $img-url-base + 'redesign/search-icon-white.svg';
+$search-white-close: $img-url-base + 'redesign/search-icon-white-close.svg';
+$mobile-map: $img-url-base + 'redesign/map_hero-mobile.jpg';
+$tablet-map: $img-url-base + 'redesign/map_hero-tablet.jpg';
+$desktop-map: $img-url-base + 'redesign/map_hero-copy.jpg';
 
 // Project & other images
 $banner-img-url: $img-url-base + 'banners/';
@@ -136,6 +160,24 @@ $medium-spacing: ceil($large-spacing * 0.6);
 $small-spacing: ceil($large-spacing * 0.4);
 $tiny-spacing: 4px;
 
-
+$mobile-margins: 20px;
+$mobile-margins-left: -($mobile-margins);
+$mobile-margins-right: -$mobile-margins * 2;
 // Grid
 $grid-columns: 12;
+
+$img-url-base: '/static/img/';
+//Fonts
+@font-face {
+      font-family: 'fontello';
+      src: url('/static/fonts/fontello/font/fontello.eot?98478670');
+      src: url('/static/fonts/fontello/font/fontello.eot?98478670#iefix') format('embedded-opentype'),
+           url('/static/fonts/fontello/font/fontello.woff?98478670') format('woff'),
+           url('/static/fonts/fontello/font/fontello.ttf?98478670') format('truetype'),
+           url('/static/fonts/fontello/font/fontello.svg?98478670#fontello') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    
+
+    
+}

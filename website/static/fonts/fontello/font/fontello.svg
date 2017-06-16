@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2017 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="search" unicode="&#xe800;" d="M643 386q0 103-73 176t-177 74-177-74-73-176 73-177 177-73 177 73 73 177z m286-465q0-29-22-50t-50-21q-30 0-50 21l-191 191q-100-69-223-69-80 0-153 31t-125 84-84 125-31 153 31 152 84 126 125 84 153 31 153-31 125-84 84-126 31-152q0-123-69-223l191-191q21-21 21-51z" horiz-adv-x="928.6" />
+
+<glyph glyph-name="mail" unicode="&#xe802;" d="M0 28v644q0 8 2 18l460-460q39-39 95-39 55 0 94 39l460 460q2-9 2-18v-644q0-37-26-62t-62-26h-937q-36 0-62 26t-26 62z m63 728q13 4 25 4h937q12 0 25-4l-463-463q-13-12-31-12t-30 12z" horiz-adv-x="1113.3" />
+
+<glyph glyph-name="right-open-big" unicode="&#xe804;" d="M13-20l358 370-358 372q-26 26 0 48 26 26 48 0l392-394q24-26 0-50l-392-394q-22-26-48 0-26 22 0 48z" horiz-adv-x="465" />
+
+<glyph glyph-name="down-open-big" unicode="&#xe806;" d="M63 570l370-356 372 356q22 26 48 0 26-22 0-48l-396-392q-22-22-48 0l-396 392q-26 26 0 48 24 24 50 0z" horiz-adv-x="866" />
+
+<glyph glyph-name="up-open-big" unicode="&#xe807;" d="M804 130l-372 358-370-358q-26-22-50 0-24 24 0 50l396 390q26 26 48 0l396-390q24-26 0-50-26-22-48 0z" horiz-adv-x="864" />
+
+<glyph glyph-name="twitter" unicode="&#xf099;" d="M904 622q-37-54-90-93 0-8 0-23 0-73-21-145t-64-139-103-117-144-82-181-30q-151 0-276 81 19-2 43-2 126 0 224 77-59 1-105 36t-64 89q19-3 34-3 24 0 48 6-63 13-104 62t-41 115v2q38-21 82-23-37 25-59 64t-22 86q0 49 25 91 68-83 164-133t208-55q-5 21-5 41 0 75 53 127t127 53q79 0 132-57 61 12 115 44-21-64-80-100 52 6 104 28z" horiz-adv-x="928.6" />
+
+<glyph glyph-name="facebook" unicode="&#xf09a;" d="M535 843v-147h-87q-48 0-65-20t-17-60v-106h164l-22-165h-142v-424h-171v424h-142v165h142v122q0 104 58 161t155 57q82 0 127-7z" horiz-adv-x="571.4" />
+</font>
+</defs>
+</svg>

@@ -12,6 +12,7 @@
 @import "pages";
 @import "home";
 @import "about";
+@import "navigation";
 
 html, body {
     height: 100%;
@@ -31,13 +32,41 @@ body {
     -webkit-font-kerning: auto;
 }
 
+
+// Responsive Font Sizing
+// These values are the minimum and maximum viewport sizes to apply the font scaling
+$min_width: 400;
+$max_width: 1000;
+// These values represent the range of fon-tsize to apply
+// These values effect the base font-size, headings and other elements will scale proportionally
+$min_font: 16;
+$max_font: 19; 
+
+:root { font-size: #{$min_font}px; }
+// This part is a little bit ugly, I will explain what is going on in a blog post soon.
+@media (min-width: #{$min_width}px) and (max-width: #{$max_width}px){
+  :root { 
+    font-size: calc( #{$min_font}px + (#{$max_font} - #{$min_font}) * ( (100vw - #{$min_width}px) / ( #{$max_width} - #{$min_width}) ));
+  }
+}
+@media (min-width: #{$max_width}px){
+   :root { 
+     font-size: #{$max_font}px;
+   }
+}
+
+
 a {
     color: $medium-green;
+    text-decoration: none;
+    color: $green;
     &:hover {
-        color: lighten($medium-green, 15%);
+        color: $green;
         transition: color 0.4s;
     }
 }
+
+
 
 h1 {
     font-size: $major-hed-size * 0.70;
@@ -459,11 +488,29 @@ body > footer {
     @include position(relative);
     display: block;
 
-    border-top: $thin-dark-border;
-    color: $dark-night;
-    padding: $small-spacing;
+    color: $cloudy-blue;
     @include media($medium-break) {
         @include pad($large-spacing 0 0);
+    }
+    h2.section-title {
+            text-align: left;
+             color: white;
+             margin-bottom: .5rem;
+    }
+    .green-button {
+            margin: 0px 0px 1rem;
+        }
+     a:not(.green-button){
+        &:after {
+            font-family: "fontello";
+            content: "\E804";
+            color: white;
+            font-size: 70%;
+            padding-left: 4px;
+            padding-bottom: 4px;
+        }
+
+
     }
     .wrap {
         @include display(flex);
@@ -471,6 +518,7 @@ body > footer {
         @include justify-content(space-between);
         @include align-items(stretch);
         @include flex-wrap(wrap);
+        padding: 5rem $small-spacing $small-spacing $small-spacing;
 
 
         .branding {
@@ -481,18 +529,23 @@ body > footer {
         .quick-links {
             display: block;
             min-height: 150px;
-            font-size: $compact-text-size;
+            
             @include flex(1 0 100%);
 
             h3 {
+
                 margin-bottom: 0.65rem;
             }
+             .quick-links-left, .quick-links-right {
+        width: calc(50% - 10px);
+        float: left;
+    }
 
         }
         .newsletter-signup {
             display: block;
             min-height: 150px;
-            font-size: $compact-text-size;
+           
             @include flex(1 0 100%);
         }
 
@@ -531,9 +584,11 @@ body > footer {
         }
 
     }
+
     nav {
         display: inline-block;
         vertical-align: top;
+        width: 100%;
 
         li {
             margin-bottom: $large-spacing/3;
@@ -544,20 +599,25 @@ body > footer {
         }
     }
     a {
-        color: $dark-night;
+        color: white;
         text-decoration: none;
     }
     .logo {
         max-width: 100%;
         @include media($small-break) {
             width: 100%;
-            max-width: 306px;
+            max-width: 400px;
         }
         margin-bottom: 0.65rem;
     }
     aside {
-        font-size: $minorer-text-size;
+        
         margin-top: $medium-spacing;
+    }
+    #copywrite {
+       padding: $small-spacing;
+       background-color: $dark-grey-blue;
+       color: $greyish-teal-two;
     }
 }
 
@@ -578,7 +638,7 @@ article {
         }
 
         h3 {
-            display: inline-block;
+            displray: inline-block;
             font-size: $mid-text-size;
             text-transform: uppercase;
             color: $slate-grey;
@@ -688,4 +748,8 @@ body {
             color: #58595b;
         }
     }
+}
+
+.clearfix {
+    clear:both;
 }

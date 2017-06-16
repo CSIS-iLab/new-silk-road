@@ -1,10 +1,43 @@
-<nav>
-    <ul>{% if showhome %}
-        <li><a href="/">Home</a></li>{% endif %}
-        <li><a href="{% url 'website-map' %}">The Map</a></li>
-        <li><a href="{% url 'database-home' %}">The Database</a></li>
-        <li><a href="{% url 'writings:home' %}">Analysis</a></li>
-        <li><a href="{% url 'about' %}">About</a></li>
-        <li><a class="button search">Search</a></li>
-    </ul>
-</nav>
+{% load static from staticfiles %}{% load raven %}
+<div class="navigation">
+    <div class="header-nav-trigger">
+        <svg class="ico-svg ico-13 ico-rendering" viewBox="0 0 15 13" xmlns="http://www.w3.org/2000/svg">
+            <g id="menu-main" data-size="15 13">
+                <path d="M0,5h15v3H0V5z M0,13h11.948v-3H0V13z M0,3h9.092V0H0V3z" />
+            </g>
+        </svg>
+    </div>
+    <div class="header-title">
+        <a href="/"><img class="recon-logo" src="{% static 'img/redesign/reconasia_logo.svg' %}" alt="Center for Strategic and International Studies"></a>
+    </div>
+
+    <div class="top-right-header">
+        <div class="search-trigger">
+            <svg class="ico-svg" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                <g id="search" data-size="14 14">
+                    <path d="M14,12.383l-2.73-2.73c0.678-0.99,1.078-2.188,1.078-3.479C12.348,2.77,9.578,0,6.174,0 C2.77,0,0,2.77,0,6.173c0,3.405,2.77,6.174,6.174,6.174c1.29,0,2.486-0.398,3.478-1.078l2.73,2.73L14,12.383z M1.759,6.173 c0-2.434,1.98-4.415,4.415-4.415c2.433,0,4.414,1.98,4.414,4.415s-1.98,4.415-4.414,4.415C3.739,10.588,1.759,8.607,1.759,6.173"></path>
+                </g>
+            </svg>
+        </div>
+        <div class="social-icons">
+            <a href="#" alt="Facebook"><div class="facebook-icon"> <i class="fontello icon-facebook">&#xf09a;</i> </div></a>
+            <a href="#" alt="Twitter"><div class="twitter-icon"><i class="fontello icon-twitter">&#xf099;</i></div></a>
+        </div>
+
+
+    </div>
+    <div class="box-search" id="box-search">
+        <div class="box-left">
+            {% include "search/_search_form_header.html"%}
+    </div>
+            <nav class="nav-main" id="nav-main">
+        <ul class="menu active" id="menu-main">{% if showhome %}
+            <li><a href="/">Home</a></li>{% endif %}
+            <li><a href="{% url 'website-map' %}">Map</a></li>
+            <li><a href="{% url 'database-home' %}">Database</a></li>
+            <li><a href="{% url 'writings:home' %}">Analysis</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+        </ul>
+    </nav>
+    </div>
+</div>
