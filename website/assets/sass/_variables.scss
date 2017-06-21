@@ -2,15 +2,18 @@
 
      
 // Sizes
+$xlarge: 1500px;
 $large: 1000px;
 $medium: 768px;
 $small: 400px; // for larger smartphones. $small is a bad label
 $mega-map-min-width: 548px; // Totally eyeballed it
 
+$xlarge-break: new-breakpoint(min-width $xlarge);
 $large-break: new-breakpoint(min-width $large);
 $medium-break: new-breakpoint(min-width $medium 4);
 $small-break: new-breakpoint(min-width $small 2);
 $megamap-break: new-breakpoint(min-width $mega-map-min-width);
+
 
 $small-wrap: 96%;
 $max-content-width: 980px;
@@ -60,6 +63,7 @@ $search-content: #3c8283;
 
 //New colors 2017
 $green: #3D8283;
+$light-green: #B3CFCF;
 $blue-steel: #788ca8;
 $greyish-teal: #6ca4a5;
 $pale-grey: #f1f2f4;
@@ -68,6 +72,7 @@ $warm-grey: #747474;
 $cloudy-blue: #b4d0d0;
 $dark-grey-blue: #2c6565;
 $greyish-teal-two: #6ca4a5;
+
 
 
 
@@ -107,10 +112,10 @@ $search-gray: $img-url-base + 'redesign/search-icon-gray.svg';
 $search-gray-close: $img-url-base + 'redesign/search-icon-gray-close.svg';
 $search-white: $img-url-base + 'redesign/search-icon-white.svg';
 $search-white-close: $img-url-base + 'redesign/search-icon-white-close.svg';
-$mobile-map: $img-url-base + 'redesign/map_hero-mobile.jpg';
-$tablet-map: $img-url-base + 'redesign/map_hero-tablet.jpg';
-$desktop-map: $img-url-base + 'redesign/map_hero-copy.jpg';
-
+$mobile-map: $img-url-base + 'redesign/homepage-asia-map-small.png';
+$tablet-map: $img-url-base + 'redesign/homepage-asia-map-medium.png';
+$desktop-map: $img-url-base + 'redesign/homepage-asia-map-large.png';
+$wide-desktop-map: $img-url-base + 'redesign/homepage-asia-map-xlarge.png';
 // Project & other images
 $banner-img-url: $img-url-base + 'banners/';
 $competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';

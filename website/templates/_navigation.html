@@ -7,6 +7,7 @@
             </g>
         </svg>
     </div>
+<div class="header-wrapper">
     <div class="header-title">
         <a href="/"><img class="recon-logo" src="{% static 'img/redesign/reconasia_logo.svg' %}" alt="Center for Strategic and International Studies"></a>
     </div>
@@ -32,12 +33,20 @@
     </div>
             <nav class="nav-main" id="nav-main">
         <ul class="menu active" id="menu-main">{% if showhome %}
-            <li><a href="/">Home</a></li>{% endif %}
-            <li><a href="{% url 'website-map' %}">Map</a></li>
-            <li><a href="{% url 'database-home' %}">Database</a></li>
-            <li><a href="{% url 'writings:home' %}">Analysis</a></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-        </ul>
+            <li ><a class="main-link" href="/">Home</a></li>{% endif %}
+            <li><a class="main-link" href="{% url 'website-map' %}">Map</a></li>
+            <li><a class="main-link" href="{% url 'database-home' %}">Database</a></li>
+            <li><a class="main-link" href="{% url 'writings:home' %}">Analysis</a></li>
+            <li><a class="main-link" href="{% url 'about' %}">About</a></li>
+            <li><div class="social-icons-mobile">
+            <a href="https://www.facebook.com/reconnasia/" alt="Facebook" rel="nofollow" target="_blank" title="Reconnecting Asia on Facebook"><div class="facebook-icon"> <i class="fontello icon-facebook" >&#xf09a;</i></div></a>
+            <a href="https://twitter.com/reconasia?lang=en" rel="nofollow" target="_blank"  alt="Twitter" title="Reconnecting Asia on Twitter"><div class="twitter-icon"><i class="fontello icon-twitter" >&#xf099;</i></div></a>
+
+        </div>
+        </li>
+        </ul>  
+
     </nav>
+    </div>
     </div>
 </div>

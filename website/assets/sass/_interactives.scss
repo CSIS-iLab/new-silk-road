@@ -113,7 +113,7 @@ select {
             background-size: $expand-collapse-btn-width auto;
 
             height: 1em;
-            right: 0.7em;
+            right: calc(35px /2 - 8px);
             top: 50%;
             margin-top: -.5em;
         }
@@ -126,6 +126,7 @@ select {
             margin: 0;
              width: 100%;
             max-width: 450px;
+            height: 38px;
             /* accommodate with the pseudo elements for the dropdown arrow */
             border: 0;
             @include appearance(none);

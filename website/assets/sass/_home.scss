@@ -1,5 +1,6 @@
 @import "variables";
 @import "mixins";
+@import "animations";
 @import "lib/bourbon/bourbon",
 "lib/neat/neat";
 .right-div {
@@ -17,19 +18,31 @@
 a .entry-title {
     text-decoration: none;
     color: black;
+    font-weight: normal;
     &:hover,
     &:focus {
         color: $green;
         transition: color 0.4s;
+        &:after {
+            font-family: "fontello";
+            content: "\E804";
+            color: black;
+            font-size: 70%;
+            padding-left: 10px;
+            -webkit-transition: padding .2s ease-in-out; /* Safari 3.1 to 6.0 */
+    transition: padding .2s ease-in-out;
+        }
     }
-}
+    &:after {
+        font-family: "fontello";
+        content: "\E804";
+        color: $green;
+        font-size: 70%;
+        padding-left: 4px;
 
-a .entry-title:after {
-    font-family: "fontello";
-    content: "\E804";
-    color: $green;
-    font-size: 70%;
-    padding-left: 4px;
+           -webkit-transition: padding .2s ease-in-out; /* Safari 3.1 to 6.0 */
+    transition: padding .2s ease-in-out;
+    }
 }
 
 h2.section-title {
@@ -45,14 +58,16 @@ h2.section-title {
 
 .content-wrapper {
     max-width: 1000px;
-    display: relative;
+    position: relative;
     margin: 0 auto;
+    display: block;
+    height: 100%;
 }
 
 #map-hero {
     background: url($mobile-map);
     position: relative;
-    background-size: cover;
+    background-position: center bottom;
     width: 100%;
     display: block;
     height: 60vh;
@@ -68,11 +83,19 @@ h2.section-title {
         background: url($desktop-map);
         height: 500px;
         background-size: cover;
+        background-position: center center;
         background-repeat: no-repeat;
+    }
+    @include media($xlarge-break) {
+        background: url($wide-desktop-map);
+        height: 600px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
     }
     .inner {
         position: absolute;
-        bottom: 0px;
+        bottom: 0;
         padding: $mobile-margins;
         font-size: 1.1rem;
         @include media($medium-break) {
@@ -80,6 +103,22 @@ h2.section-title {
             display: block;
             bottom: 0px;
             right: 0px;
+            margin-bottom: 5rem;
+        }
+        h1 {
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            font-weight: normal;
+            @include media($medium-break) {
+                font-size: 1.6rem;
+            }
+            @include media($large-break) {
+                font-size: 2rem;
+            }
+        }
+        .green-button {
+            margin: 1rem 0;
+            text-align: left;
         }
     }
 }
@@ -90,18 +129,53 @@ section h2 {
 
 #featured-articles {
     background-color: $pale-grey;
-    padding: $mobile-margins;
+    padding: 0px $mobile-margins 3rem;
     position: relative;
-    .main-articles {
+    p {
+        font-size: .9rem;
+        margin-bottom: 15px;
+    }
+    .articles-left {
+        background-color: white;
+        padding: 1rem $mobile-margins;
         @include media($medium-break) {
             margin-top: -100px;
+            padding: 1rem 3rem 3rem;
+            width: 70%;
+            float: left;
+        }
+        .green-button {
+            display: none;
+            @include media($medium-break) {
+                display: block;
+            }
+        }
+    }
+    .articles-right {
+        @include media($medium-break) {
+            display: block;
+            position: relative;
+            width: 30%;
+            padding-left: 20px;
+            float: left;
+        }
+        .entry-title {
+            font-size: 20px;
+        }
+        .sponsored-logo {
+            max-width: 100%;
+            max-height: 50px;
+            margin-bottom: 20px;
         }
     }
     .featured-entry {
         padding-bottom: 1rem;
     }
     h2.section-title {
-        margin: auto 0;
+        margin: 1rem 0;
+        @include media($medium-break) {
+            margin: auto 0;
+        }
     }
     h3.entry-title {
         margin: 0 0 0rem;
@@ -109,26 +183,10 @@ section h2 {
     h2 {
         margin-bottom: 0px;
     }
-    .featured-entry.entry-1,
-    .featured-entry.entry-2,
     .articles-section-title {
-        background-color: white;
-        padding: 1rem $mobile-margins;
         @include media($medium-break) {
-            padding: 1rem 2rem;
-            width: 70%;
+            padding: 2rem;
         }
-       
-    }
-     .articles-section-title {
-            @include media($medium-break) {
-                padding-top: 2rem;
-            }
-        }
-
-
-    .featured-entry.entry-3 {
-        padding-top: 1rem;
     }
     .featured-entry.entry-1 {
         .entry-title {
@@ -145,24 +203,94 @@ section h2 {
         }
     }
     .featured-entry.entry-3 {
-        margin: 1rem 0 .5rem;
+        margin: 0rem 0 1rem;
     }
     .featured-entry.entry-4 {
         margin: 0rem 0 1.5rem;
     }
-.featured-entry.entry-4, .featured-entry.entry-3 {
-    @include media($medium-break) {
-                width: 30%;
-                float: right;
-            }
-}
+    .sponsored-entry {
+        border-left: 5px $med-gray solid;
+        padding: 0px 0px 0px 10px;
+    }
+    a.green-button {
+        @include media($medium-break) {
+            display: none;
+        }
+    }
+    img.featured-image {
+        margin-bottom: .5rem;
+        width: 100%;
+        height: 250px;
+        
+        background-color: gray;
+        position: relative;
 
-    .sponsored-entry {}
+        &:after {
+            content: "";
+            position: absolute;
+            bottom: 0rem;
+            display: block;
+            width: 0px;
+            z-index: 60;
+            height: 0px;
+            border-left: 1.5rem solid transparent;
+            border-right: 1.5rem solid transparent;
+            border-bottom: 1.5rem solid $pale-grey;
+            left: calc(50% - 2rem);
+        }
+    }
+    .articles-left img.img-1 {
+        &:after {
+            border-bottom-color: white;
+            @include media($medium-break) {
+                top: 0rem;
+                border-bottom-color: transparent;
+                border-top: 1.5rem solid white;
+            }
+        }
+    }
+    .featured-entry.entry-2 {
+        @include media($medium-break) {
+            display: block;
+            position: relative;
+            width: 50%;
+            float: left;
+            padding-left: 20px;
+        }
+    }
+    .articles-left img.img-2 {
+        @include media($medium-break) {
+            width: 50%;
+            display: block;
+            position: relative;
+            float: left;
+        }
+        &:after {
+            border-bottom-color: white;
+            @include media($medium-break) {
+                top: calc(50% - .75rem);
+                left: calc(100% - 3rem);
+                border-left-color: transparent;
+                border-right: 1.5rem solid white;
+                border-top: 1.5rem solid transparent;
+                border-bottom: 1.5rem solid transparent;
+            }
+        }
+    }
+    .articles-right img.featured-image {
+        position: relative;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        @include media($medium-break) {
+            height: 150px;
+            margin-top: 1.5rem;
+        }
+    }
 }
 
 #db-search {
     background-color: $green;
-    padding: 3rem $mobile-margins;
+    padding: 4rem $mobile-margins;
     position: relative;
     display: block;
     h2 {
@@ -186,6 +314,31 @@ section h2 {
         border-top: 2rem solid $green;
         left: calc(50% - 2rem);
     }
+    .left-div {
+        @include media($medium-break) {
+            width: 50%;
+            display: block;
+            position: relative;
+            float: left;
+            text-align: right;
+            padding-right: 1rem;
+            padding-left: 10%;
+        }
+    }
+    .right-div {
+        @include media($medium-break) {
+            width: 50%;
+            display: block;
+            position: relative;
+            float: right;
+            text-align: left;
+            padding-left: 1rem;
+            padding-right: 10%;
+        }
+    }
+    .green-button {
+        margin-top: 2rem;
+    }
 }
 
 #db-summary {
@@ -196,6 +349,9 @@ section h2 {
         position: relative;
         padding-bottom: .8rem;
         float: left;
+        @include media($medium-break) {
+            width: 25%;
+        }
     }
     .count {
         float: left;
@@ -205,19 +361,43 @@ section h2 {
         width: calc(90% - 3px);
         .infra-icon {
             width: 3rem;
-            height: auto;
+            
             display: block;
             position: relative;
             float: left;
             @include media($medium-break) {
+                float: none;
+                display: block;
+                position: relative;
+                margin: 0 auto;
                 width: 70px;
+                height: 70px;
+                margin-bottom: 10px;
             }
+            @include media($large-break) {
+                float: left;
+                height: 80px;
+                width: 80px;
+            }
+
+         
         }
         div {
             display: block;
             position: relative;
             float: left;
             padding-left: 10px;
+            @include media($medium-break) {
+                float: none;
+                clear: both;
+                text-align: center;
+            }
+            @include media($large-break) {
+                float: left;
+                clear: none;
+                text-align: left;
+                padding: 10px;
+            }
         }
         .large-numbers {
             font-family: Lato;
@@ -229,12 +409,19 @@ section h2 {
             text-align: left;
             @include media($medium-break) {
                 font-size: 43px;
+                float: none;
+                text-align: center;
+                padding: 10px;
+            }
+            @include media($large-break) {
+                padding: 0px 0px 10px 0px;
+                text-align: left;
             }
         }
         .label {
             font-size: .9rem;
             @include media($medium-break) {
-                font-size: 1.5rem;
+                font-size: 1rem;
             }
         }
     }
@@ -246,24 +433,75 @@ section h2 {
 
 #illustrating-history {
     background-color: $pale-grey;
-    padding: 2em $mobile-margins 0rem;
+    .section-title {
+        display: block;
+        position: relative;
+        padding: 3rem $mobile-margins 0rem;
+        @include media($medium-break) {
+            &:after {
+                content: "";
+                position: absolute;
+                bottom: -3.5rem;
+                display: block;
+                width: 0px;
+                height: 0px;
+                border-left: 1.5rem solid transparent;
+                border-right: 1.5rem solid transparent;
+                border-top: 1.5rem solid $pale-grey;
+                left: calc(50% - 1.5rem);
+                z-index: 30;
+            }
+        }
+    }
+    .historical-atlas,
+    .competing-visions {
+        @include media($medium-break) {
+            width: 50%;
+            display: block;
+            position: relative;
+            float: left;
+        }
+    }
+    .illustrating-history-desc {
+        padding: 1rem $mobile-margins 0rem;
+        h3,
+        p {
+            padding: 0rem 1rem;
+        }
+    }
     .img-container {
-        width: calc(100% + $mobile-margins-right);
+        height: 100px;
+        overflow: hidden;
+        height: 200px;
+        display: block;
+        @include media($medium-break) {
+            height: 100%
+        }
     }
     img {
-        margin: 0px $mobile-margins-right .5rem $mobile-margins-left;
-        max-width: 500px;
+        margin: 0px 0px .5rem 0px;
+        max-width: 100%;
         width: 100vw;
+        position: relative;
+        @include media($medium-break) {
+            max-width: 100%;
+            margin: 0px;
+        }
     }
     .entry-title {
         margin-bottom: 0px;
     }
-    .entry-title p,
-    p:last-child {
+    .competing-visions p {
         padding-bottom: 2rem;
+        @include media($medium-break) {
+            padding-bottom: 0px;
+        }
+    }
+    .entry-title p {
+        padding-bottom: 0rem;
     }
     #lastp {
-        padding-bottom: 0rem !important;
+        padding: 0rem !important;
     }
 }
 
@@ -273,15 +511,38 @@ section h2 {
     width: 80%;
     margin: 0 auto;
     padding: $mobile-margins;
-    background-color: white;
+    background-color: white !important;
     bottom: -4rem;
     z-index: 100;
+    @include media($medium-break) {
+        padding: 2rem 3rem;
+    }
     h2.section-title {
         margin-bottom: 1rem;
+        text-align: left;
+    }
+    .left-div,
+    .right-div {
+        width: 50%;
+        position: relative;
+        display: block;
+        float: left;
     }
     .left-div {
-        margin-bottom: 2rem;
+        padding-right: 1rem;
     }
+    .right-div {
+        padding-left: 1rem;
+    }
+    .timeline-Header.timeline-InformationCircle-widgetParent {
+        display: none;
+    }
+}
+
+#post-contribute {
+     width: 100%;
+     height:calc(4rem - 14px);
+     background-color: $green;
 }
 
 .contribute-bkgd {
@@ -314,11 +575,11 @@ a.green-button {
     margin: 1rem auto;
     position: relative;
     width: 75%;
-    max-width: 200px;
+    max-width: 250px;
     .button-text {
         font-family: Lato;
         font-size: 15px;
-        font-weight: bold;
+        font-weight: 700;
         letter-spacing: 1.2px;
         color: white;
         text-decoration: none;
@@ -328,7 +589,7 @@ a.green-button {
         text-align: center;
         display: block;
         margin: 0 auto;
-        font-weight: 400;
+        font-weight: 700;
         width: 100%;
         &:after {
             font-family: "fontello";
@@ -337,10 +598,30 @@ a.green-button {
             font-size: 70%;
             padding-left: 4px;
             padding-bottom: 4px;
+            font-weight: 700;
         }
+           &:hover:after {
+            font-family: "fontello";
+            content: "\E804";
+            color: white;
+            font-size: 70%;
+            padding-left: 10px;
+            font-weight: 700;
+            -webkit-transition: padding .2s ease-in-out; /* Safari 3.1 to 6.0 */
+    transition: padding .2s ease-in-out;
+        }
+    }
+    &:hover {
+        background-color: $dark-grey-blue;
+        transition: background-color 0.4s;
+
     }
 }
 
 .white-text {
     color: white !important;
+}
+
+.timeline-Tweet .timeline-Tweet-media {
+    display: none;
 }

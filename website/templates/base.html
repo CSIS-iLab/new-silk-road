@@ -11,7 +11,9 @@
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
     <link rel="stylesheet" href="{% static 'css/site.min.css' %}" media="screen">
     <script src="{% static 'js/lib/zepto.min.js' %}"></script>
+
     <script src="{% static 'js/lib/navigation.js' %}"></script>
+
     {% if sentry_public_dsn %}
     <script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
     <script>
@@ -53,13 +55,14 @@
             {% include "_navigation.html" %}
         </div>
     </div> -->
+    
                 {% include "_navigation.html" %}
+               
             </div>
             <!-- /header-container-wrapper -->
         </div>
         <!-- /header-top-wrapper -->
         <div class="body-container-wrapper">
-         
             {% block content-shell %}
             <div class="content-wrap">
                 {% block content %}{% endblock content %}
@@ -71,22 +74,21 @@
     <!-- /site wrapper -->
     <footer>
         <div class="wrap">
-           
-                <div class="branding">
-                    <img class="logo" src="{% static 'img/redesign/csis_logo_white.svg' %}" alt="Center for Strategic and International Studies">
-                    <address>
-                        1616 Rhode Island Avenue, NW
-                        <br /> Washington, DC 20036
-                        <br /> Tel: 202.775.3242
-                        <br />
-                    </address>
-                    <aside>
-                        <p>This project, like many of the efforts it tracks, is a work in progress.
-                            <br /><a href="{% url 'contribute' %}"><strong>Help us improve this site</strong></a></p>
-                    </aside>
-                </div>
-                <div class="quick-links">
-                    <h2 class="section-title">Quick Links</h3>
+            <div class="branding">
+                <img class="logo" src="{% static 'img/redesign/csis_logo_white.svg' %}" alt="Center for Strategic and International Studies">
+                <address>
+                    1616 Rhode Island Avenue, NW
+                    <br /> Washington, DC 20036
+                    <br /> Tel: 202.775.3242
+                    <br />
+                </address>
+                <aside>
+                    <p>This project, like many of the efforts it tracks, is a work in progress.
+                        <br /><a href="{% url 'contribute' %}"><strong>Help us improve this site</strong></a></p>
+                </aside>
+            </div>
+            <div class="quick-links">
+                <h2 class="section-title">Quick Links</h3>
                     <nav>
                       <ul class="quick-links-left">
                             <li><a href="/">Home</a></li>
@@ -109,9 +111,20 @@
                 </div>
           
         </div>
+        </div>
+        <div id="lower-footer">
+        <div class="content-wrapper">
         <div id="copywrite">
         © 2017 by the Center for Strategic and  Internaional Studies. All rights reserved
         </div>
+
+               <div class="social-icons">Follow us!
+            <a href="#" alt="Facebook"><div class="facebook-icon"> <i class="fontello icon-facebook">&#xf09a;</i> </div></a>
+            <a href="#" alt="Twitter"><div class="twitter-icon"><i class="fontello icon-twitter">&#xf099;</i></div></a>
+        </div>
+<div class="clearfix"></div>
+</div>
+</div>
     </footer>
     <script type="text/javascript">
     Zepto(function($) {

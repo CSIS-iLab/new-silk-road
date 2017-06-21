@@ -5,6 +5,13 @@
 .navigation {
     padding: 15px;
     width: 100%;
+    box-shadow: 0px -3px 10px #000;
+.header-wrapper {
+	 @include media($medium-break) {
+	max-width: 1000px;
+        	margin: 0 auto;
+        }
+}
     a {
         text-decoration: none;
         -webkit-transition: all .3s ease-in-out;
@@ -38,6 +45,9 @@
         transition: transform .3s ease-in-out, background .3s ease-in-out, -webkit-transform .3s ease-in-out;
         background-color: $green;
         @include media($medium-break) {
+    
+     
+        
             display: block;
             position: relative;
             float: right;
@@ -53,7 +63,7 @@
         display: block;
     }
     .nav-main .menu .item,
-    .nav-main .menu a {
+    .nav-main .menu a.main-link {
         position: relative;
         display: block;
         padding: 24px 30px;
@@ -86,11 +96,14 @@
         }
     }
     .nav-main .menu .item:hover,
-    .nav-main .menu a:hover {
+    .nav-main .menu a.main-link:hover {
         background-color: $dark-grey-blue;
         @include media($medium-break) {
             background-color: transparent;
             color: $green;
+            font-weight: 700;
+            -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
         }
     }
 }
@@ -419,7 +432,7 @@ body.nav-active:before {
 .body-container-wrapper {
 	margin-top: 60px;
         @include media($medium-break) {
-margin-top: 80px;
+margin-top: 78px;
         	}
 }
 
@@ -442,7 +455,33 @@ display: inline-block;
     &:hover {
         color: $green;
     }
+}
 
+
+
+.social-icons-mobile {
+
+	color: $pale-green;
+	padding: 24px 30px;
+
+a{
+	color: $pale-green;
+	position: relative;
+	display: inline-block;
+
+	 &:hover {
+        color: white;
+    }
+    
+.fontello {
+    	font-size: 1.4rem !important;
+    }
+
+}
+
+ @include media($medium-break) {
+display: none;
+ 	}
 }
 
 .fontello {

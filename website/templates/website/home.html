@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% load static %} {% block bodyclass %}home{% endblock %} {% block content-shell %}
 <section id="map-hero">
-    <div class='content-wrapper'>
+    <div class="content-wrapper">
         <div class="inner">
             <h1 class="large-heading white-text">Mapping continental ambitions</h1>
             <p class="white-text">Use our interactive map to explore how infrastructure projects are reshaping Asia.</p>
@@ -12,20 +12,50 @@
 </section>
 <section id='featured-articles'>
     <div class='content-wrapper'>
-        <div class="main-articles">
-            <h2 class="section-title articles-section-title">FEATURED</h2> {% for entry, truncate_length in featured_entry_set %}
+        <div class="articles-left">
+            <h2 class="section-title articles-section-title">FEATURED</h2> {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 1 %}
             <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
                     <span class="entry-author">{{ entry.entry.author }}</span>
                 </div>
-                <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
+                <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"></a>
                 {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
                 <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
             </div>
-            {% endfor %}
+            {% endif %} {% endfor %} {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 2 %}
+            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"></a>
+            <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
+                <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
+                <div class="entry-byline">
+                    <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                    <span class="entry-author">{{ entry.entry.author }}</span>
+                </div>
+                {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
+            </div>
+            {% endif %} {% endfor %}
+            <div class="clearfix"></div>
+            <a class="green-button" href="#" alt="Read More">
+                <div class="button-text">Read more</div>
+            </a>
         </div>
+        <div class="articles-right">
+            {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter >= 3 %}
+            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
+            <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
+                <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
+                <div class="entry-byline">
+                    <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                    <span class="entry-author">{{ entry.entry.author }}</span>
+                </div>
+                {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
+            </div>
+            {% endif %} {% endfor %}
+        </div>
+        <div class="clearfix"></div>
         <a class="green-button" href="#" alt="Read More">
             <div class="button-text">Read more</div>
         </a>
@@ -33,8 +63,8 @@
 </section>
 <section id='db-search' class=" white-text">
     <div class='content-wrapper'>
+        <h2 class="section-title  white-text">Search the Database</h2>
         <div class="left-div">
-            <h2 class="section-title  white-text">Search the Database</h2>
             <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
         </div>
         <div class="right-div" role="search">
@@ -94,31 +124,36 @@
 </section>
 <section id='illustrating-history'>
 <div class='content-wrapper'>
+
     <h2 class="section-title ">Illustrating History & Ambition</h2>
-    <div>
+
+    <div class="competing-visions ">
     <a class="img-container " href="{% url 'competing-visions' %} ">
-        <img src="{% static 'img/redesign/illustrating-history-right.jpg' %} " alt="Competing Visions teaser image " />
-        <div>
-            <h3 class="entry-title ">Competing Visions</h3> </a>
+        <img src="{% static 'img/redesign/illustrating-history-right.jpg' %} " alt="Competing Visions teaser image " /></a>
+        <div class="illustrating-history-desc">
+            <a href="{% url 'competing-visions' %} "><h3 class="entry-title ">Competing Visions</h3> </a>
             <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
         </div>
-   
-    </div>
-    <div>
-        <a  class="img-container " href="{% url 'historical-atlas' %} ">
-            <img src="{% static 'img/redesign/illustrating-history-left.jpg' %} " alt="Historical Atlas teaser image " />
-            <div>
-                <a href="# " alt="# "><h3 class="entry-title ">Historical Atlas</h3></a>
+   </div>
+  
+    <div class="historical-atlas ">
+        <a  class="img-container" href="{% url 'historical-atlas' %} ">
+            <img src="{% static 'img/redesign/illustrating-history-left.jpg' %} " alt="Historical Atlas teaser image " /></a>
+            <a href="{% url 'historical-atlas' %} "><div class="illustrating-history-desc">
+                <h3 class="entry-title ">Historical Atlas</h3></a>
                 <p id="lastp ">Explore the rise and fall of trade, technology, and civilizations.</p>
             </div>
+            </div>
        
-    </div>
-</a>
+<div class="clearfix "></div>
+</div>
 </section>
+
 <div class="contribute-bkgd ">
 
-<section id="contribute ">
-<div class='content-wrapper'>
+
+<div class="content-wrapper">
+<section id="contribute">
     <div class="left-div ">
         <h2 class="section-title ">Partner with us!</h2>
         <p>Reconnecting Asia is partnering with select organizations and individuals to improve our data. If you are interested in becoming a partner, please apply through the links below.</p>
@@ -126,13 +161,18 @@
         <a href="# " alt="# "><h3 class="entry-title ">Organizations</h3></a>
     </div>
 
-    <div class="right-div ">
+    <div class="right-div twitter-block">
         <h2 class="section-title ">Twitter</h2>
+        <a class="twitter-timeline" href="https://twitter.com/ReconAsia" data-chrome="noheader nofooter noborders" data-link-color="#3D8283" data-tweet-limit="2"></a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
+    <div class="clearfix "></div>
+    </section>
     </div>
-</section>
+
 </div>
-{% endblock content-shell %} {% block extrahead %}
+<div id="post-contribute">
+</div>
+<!-- {% endblock content-shell %} {% block extrahead %}
 <link rel="stylesheet " href="{% static 'css/lib/magnific-popup.css' %} ">
 <script src="{% static 'js/lib/jquery.magnific-popup.min.js' %} "></script>
 {% endblock %} {% block postbodyjs %}
@@ -152,4 +192,4 @@ Zepto(function($) {
     });
 });
 </script>
-{% endblock %}
+{% endblock %} -->

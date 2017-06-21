@@ -1,12 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="13191 -1430.473 54.06 54.059">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #6ca4a5;
-      }
-    </style>
-  </defs>
-  <g id="Symbol_5_3" data-name="Symbol 5 – 3" transform="translate(13191 -1440.875)">
-    <path id="Subtraction_133" data-name="Subtraction 133" class="cls-1" d="M54.058,54.059H0V48.59H54.059v5.467Zm0-10.084H0v-32.8H54.059v32.8ZM44.969,23.993V28.56h6.1V23.993Zm-13.98,0V28.56h6.1V23.993Zm-13.929,0V28.56h6.1V23.993Zm-13.927,0V28.56h6.1V23.993ZM54.058,6.56H0V0H54.059V6.557Z" transform="translate(0 10.401)"/>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 55 70" style="enable-background:new 0 0 55 70;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#6CA4A5;}
+</style>
+<g id="Symbol_5_3" transform="translate(13191 -1440.875)">
+	<path id="Subtraction_133" class="st0" d="M-13136.5,1502.9h-54.1v-5.5h54.1L-13136.5,1502.9L-13136.5,1502.9z M-13136.5,1492.8
+		h-54.1V1460h54.1L-13136.5,1492.8L-13136.5,1492.8z M-13145.6,1472.8v4.6h6.1v-4.6H-13145.6z M-13159.5,1472.8v4.6h6.1v-4.6
+		H-13159.5z M-13173.5,1472.8v4.6h6.1v-4.6H-13173.5z M-13187.4,1472.8v4.6h6.1v-4.6H-13187.4z M-13136.5,1455.4h-54.1v-6.6h54.1
+		L-13136.5,1455.4L-13136.5,1455.4z"/>
+</g>
 </svg>
