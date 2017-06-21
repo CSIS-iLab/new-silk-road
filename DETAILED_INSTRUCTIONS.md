@@ -200,6 +200,7 @@ The command above tells `pip` to look at the `dev-requirements.txt` file and ins
 
 Notice we used `pip` rather than `pip3`. That's because with our virtual environment activated, `pip` is a copy of the tool installed in our virtual environment.
 
+
 ## Set up the database
 
 You could have done this before setting up Python, but this part should be relatively easy. Since the project uses a database for many pages, you should create a local copy. To create a totally empty PostgreSQL database on your computer, run:
@@ -208,11 +209,42 @@ You could have done this before setting up Python, but this part should be relat
 $ createdb reconasia
 ```
 
-If you have a database archive file, which may be the case if can get a copy of a pre-existing database, you can create a local database from that archive. You'll need to run something like:
+Installing the [Heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) can allow you to retrive a copy of the current staging or production databases.
+You can see the available DB snapshots via:
+
+```sh
+# For staging
+$ heroku pg:backups --app staging-db-follow-reconasia
+# For production
+$ heroku pg:backups --app db-follow-reconasia
+```
+
+You can download an existing backup by referencing its ID, listed in the first column of the output under "Backups".
+If there are no existing backups then you should create a new one. This can be done via:
+
+```sh
+# For staging
+$ heroku pg:backups:capture --app staging-db-follow-reconasia
+# For production
+$ heroku pg:backups:capture --app db-follow-reconasia
+```
+
+Once you know the ID of the backup you would like to use then you can download it. This example
+command downloads the backup with the ID `b002`:
+
+```sh
+# For staging
+$ heroku pg:backups:download b002 --app staging-db-follow-reconasia
+# For production
+$ heroku pg:backups:download b002 --app db-follow-reconasia
+```
+
+The `b002` reference in the above command would be replaced by the desired ID.
+This will create a new file named `latest.dump` which can be used to restore the database locally.
 
 ```sh
 $ createdb reconasia
-$ pg_restore --clean --no-owner --dbname=reconasia db_archive.tar
+$ pg_restore --clean --no-owner --dbname=reconasia latest.dump
 ```
 
 The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example.
