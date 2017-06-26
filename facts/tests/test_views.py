@@ -41,7 +41,7 @@ class PersonListingViewTestCase(TestCase):
         self.url = reverse('facts:person-list')
 
     def test_get_listing(self):
-        """Render page people."""
+        """Render listing of people."""
 
         with self.assertTemplateUsed('facts/person_list.html'):
             response = self.client.get(self.url)
@@ -86,3 +86,34 @@ class EventDetailViewTestCase(TestCase):
 
         response = self.client.get(self.event.get_absolute_url())
         self.assertEqual(response.status_code, 404)
+
+
+class EventListingViewTestCase(TestCase):
+    """Viewing a list of events."""
+
+    def setUp(self):
+        super().setUp()
+        self.event = EventFactory()
+        self.other = EventFactory()
+        self.url = reverse('facts:event-list')
+
+    def test_get_listing(self):
+        """Render event listing."""
+
+        with self.assertTemplateUsed('facts/event_list.html'):
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.event.get_absolute_url())
+            self.assertContains(response, self.other.get_absolute_url())
+
+    def test_get_unpublished_event(self):
+        """"Unpublished events should not be visible in the listing."""
+
+        self.event.published = False
+        self.event.save()
+
+        with self.assertTemplateUsed('facts/event_list.html'):
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertNotContains(response, self.event.get_absolute_url())
+            self.assertContains(response, self.other.get_absolute_url())
