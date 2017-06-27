@@ -248,3 +248,27 @@ class OrganziationListingViewsTestCase(TestCase):
             url_name='facts:politicaldetails-list',
             template_name='facts/organization_list.html',
             expected=[self.political, ])
+
+
+class OrganizationTypeRedirectView(TestCase):
+    """Redirect organization listing types."""
+
+    def test_valid_redirects(self):
+        """Valid organization types should be redirected to their URLs."""
+
+        valid = ('companydetails', 'financingorganizationdetails', 'governmentdetails',
+                 'militarydetails', 'multilateraldetails', 'ngodetails', 'politicaldetails', )
+        for org_type in valid:
+            url = reverse('facts:organization-list-redirect', kwargs={'org_type': org_type})
+            expected = reverse('facts:{}-list'.format(org_type))
+            response = self.client.get(url)
+            self.assertRedirects(response, expected, status_code=301)
+
+    def test_invalid_redirects(self):
+        """Invalid organization types should yield gone responses."""
+
+        invalid = ('foodetails', 'xxx', )
+        for org_type in invalid:
+            url = reverse('facts:organization-list-redirect', kwargs={'org_type': org_type})
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 410)
