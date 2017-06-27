@@ -7,4 +7,7 @@ class EventFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'Test Event %s' % n)
 
-    published = True
+    @factory.lazy_attribute
+    def description(self):
+        fake = factory.Faker('paragraphs')
+        return '\n\n'.join(fake.generate({'nb': 4}))

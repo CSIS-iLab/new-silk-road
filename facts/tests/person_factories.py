@@ -11,6 +11,7 @@ class PersonFactory(factory.django.DjangoModelFactory):
 
     image = None
 
-    description = ''
-
-    published = True
+    @factory.lazy_attribute
+    def description(self):
+        fake = factory.Faker('paragraphs')
+        return '\n\n'.join(fake.generate({'nb': 4}))
