@@ -28,9 +28,10 @@ a .entry-title {
             content: "\E804";
             color: black;
             font-size: 70%;
-            padding-left: 10px;
-            -webkit-transition: padding .2s ease-in-out; /* Safari 3.1 to 6.0 */
-    transition: padding .2s ease-in-out;
+            padding-left: 7px;
+            -webkit-transition: padding .2s ease-in-out;
+            /* Safari 3.1 to 6.0 */
+            transition: padding .2s ease-in-out;
         }
     }
     &:after {
@@ -39,9 +40,9 @@ a .entry-title {
         color: $green;
         font-size: 70%;
         padding-left: 4px;
-
-           -webkit-transition: padding .2s ease-in-out; /* Safari 3.1 to 6.0 */
-    transition: padding .2s ease-in-out;
+        -webkit-transition: padding .2s ease-in-out;
+        /* Safari 3.1 to 6.0 */
+        transition: padding .2s ease-in-out;
     }
 }
 
@@ -53,8 +54,10 @@ h2.section-title {
     text-align: center;
     text-transform: uppercase;
     font-weight: 400;
-    margin: 1rem auto 2rem
+    margin: 1rem auto 2rem;
+    text-decoration: none;
 }
+
 
 .content-wrapper {
     max-width: 1000px;
@@ -96,10 +99,12 @@ h2.section-title {
     .inner {
         position: absolute;
         bottom: 0;
-        padding: $mobile-margins;
+        padding: $mobile-margins $mobile-margins 2rem;
         font-size: 1.1rem;
+        max-width: 400px;
         @include media($medium-break) {
             width: 50%;
+            max-width: 50%;
             display: block;
             bottom: 0px;
             right: 0px;
@@ -123,11 +128,31 @@ h2.section-title {
     }
 }
 
+.mobile-overlap {
+    height: 20px;
+    width: 100%;
+    padding: 0 20px;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    div {
+        display: block;
+        width: 100%;
+        background-color: #fff;
+        margin: 0 auto;
+        position: relative;
+        height: 100%;
+    }
+    @include media($medium-break) {
+        display: none;
+    }
+}
+
 section h2 {
     margin-bottom: 0px;
 }
 
-#featured-articles {
+.featured-articles {
     background-color: $pale-grey;
     padding: 0px $mobile-margins 3rem;
     position: relative;
@@ -137,9 +162,9 @@ section h2 {
     }
     .articles-left {
         background-color: white;
-        padding: 1rem $mobile-margins;
+        padding: 0rem $mobile-margins 1rem;
         @include media($medium-break) {
-            margin-top: -100px;
+            margin-top: -75px;
             padding: 1rem 3rem 3rem;
             width: 70%;
             float: left;
@@ -163,9 +188,12 @@ section h2 {
             font-size: 20px;
         }
         .sponsored-logo {
-            max-width: 100%;
-            max-height: 50px;
+            width: 100%;
+            height: auto;
+            max-width: 250px;
+            max-height: 150px;
             margin-bottom: 20px;
+            background-color: gray;
         }
     }
     .featured-entry {
@@ -221,25 +249,32 @@ section h2 {
         margin-bottom: .5rem;
         width: 100%;
         height: 250px;
-        
         background-color: gray;
         position: relative;
-
+    }
+    figure.image-wrap {
+        margin-bottom: .5rem;
+        width: 100%;
+        height: 250px;
+        background-color: gray;
+        position: relative;
         &:after {
-            content: "";
+            content: " ";
             position: absolute;
             bottom: 0rem;
             display: block;
             width: 0px;
             z-index: 60;
             height: 0px;
+            border-top: 1.5rem solid transparent;
             border-left: 1.5rem solid transparent;
             border-right: 1.5rem solid transparent;
             border-bottom: 1.5rem solid $pale-grey;
             left: calc(50% - 2rem);
         }
     }
-    .articles-left img.img-1 {
+    .articles-left figure.img-1 {
+        margin-top: .5rem;
         &:after {
             border-bottom-color: white;
             @include media($medium-break) {
@@ -258,9 +293,10 @@ section h2 {
             padding-left: 20px;
         }
     }
-    .articles-left img.img-2 {
+    .articles-left figure.img-2 {
         @include media($medium-break) {
-            width: 50%;
+            width: 50% !important;
+            position: relative;
             display: block;
             position: relative;
             float: left;
@@ -277,14 +313,23 @@ section h2 {
             }
         }
     }
-    .articles-right img.featured-image {
+    .articles-right figure.image-wrap {
         position: relative;
         margin-top: 1.5rem;
         margin-bottom: 1rem;
         @include media($medium-break) {
             height: 150px;
             margin-top: 1.5rem;
+            overflow: hidden;
         }
+
+        img {
+            @include media($medium-break) {
+            min-height: 150px;
+            }
+        }
+
+       
     }
 }
 
@@ -315,6 +360,7 @@ section h2 {
         left: calc(50% - 2rem);
     }
     .left-div {
+        text-align: center;
         @include media($medium-break) {
             width: 50%;
             display: block;
@@ -339,6 +385,9 @@ section h2 {
     .green-button {
         margin-top: 2rem;
     }
+    .custom-dropdown::after {
+        font-weight: 700;
+    }
 }
 
 #db-summary {
@@ -361,7 +410,6 @@ section h2 {
         width: calc(90% - 3px);
         .infra-icon {
             width: 3rem;
-            
             display: block;
             position: relative;
             float: left;
@@ -379,8 +427,6 @@ section h2 {
                 height: 80px;
                 width: 80px;
             }
-
-         
         }
         div {
             display: block;
@@ -519,20 +565,39 @@ section h2 {
     }
     h2.section-title {
         margin-bottom: 1rem;
+        margin-top: 0rem;
         text-align: left;
+        @include media($medium-break) {
+            margin-top: 1rem;
+        }
+    }
+    .twitter-block h2 {
+        margin-top: 2rem;
+        @include media($medium-break) {
+            margin-top: 1rem;
+        }
     }
     .left-div,
     .right-div {
-        width: 50%;
+        width: 100%;
         position: relative;
         display: block;
         float: left;
+        @include media($medium-break) {
+            width: 50%;
+        }
     }
     .left-div {
-        padding-right: 1rem;
+        padding-right: 0rem;
+        @include media($medium-break) {
+            padding-right: 1rem;
+        }
     }
     .right-div {
-        padding-left: 1rem;
+        padding-left: 0rem;
+        @include media($medium-break) {
+            padding-left: 1rem;
+        }
     }
     .timeline-Header.timeline-InformationCircle-widgetParent {
         display: none;
@@ -540,9 +605,9 @@ section h2 {
 }
 
 #post-contribute {
-     width: 100%;
-     height:calc(4rem - 14px);
-     background-color: $green;
+    width: 100%;
+    height: calc(4rem - 14px);
+    background-color: $green;
 }
 
 .contribute-bkgd {
@@ -600,21 +665,21 @@ a.green-button {
             padding-bottom: 4px;
             font-weight: 700;
         }
-           &:hover:after {
+        &:hover:after {
             font-family: "fontello";
             content: "\E804";
             color: white;
             font-size: 70%;
-            padding-left: 10px;
+            padding-left: 8px;
             font-weight: 700;
-            -webkit-transition: padding .2s ease-in-out; /* Safari 3.1 to 6.0 */
-    transition: padding .2s ease-in-out;
+            -webkit-transition: padding .2s ease-in-out;
+            /* Safari 3.1 to 6.0 */
+            transition: padding .2s ease-in-out;
         }
     }
     &:hover {
         background-color: $dark-grey-blue;
         transition: background-color 0.4s;
-
     }
 }
 
@@ -622,6 +687,3 @@ a.green-button {
     color: white !important;
 }
 
-.timeline-Tweet .timeline-Tweet-media {
-    display: none;
-}

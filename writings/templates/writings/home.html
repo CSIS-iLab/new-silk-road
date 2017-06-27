@@ -31,14 +31,14 @@
     </blockquote>
 </section>
 <section class="feature columnar">
-    <h2>Featured</h2>
+    <h2 class="section-title">Featured</h2>
     <div class="wrap">{% if featured_analyses %}
         {% include "writings/_analyses_panels.html" with entry_list=featured_analyses max_words=120 %}
         {% else %}{% include "writings/_fake_analyses_panels.html" %}{% endif %}
     </div>
 </section>
 <section class="feature mini columnar">
-    <h2>Recent</h2>
+       <h2 class="section-title">Recent</h2>
     <div class="wrap">
         {% if highlighted_entry %}
         <div class="analysis panel">

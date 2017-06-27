@@ -21,8 +21,8 @@ body {
 
 html {
     font-size: $base-font-size;
--webkit-font-smoothing: antialiased;
-
+    -webkit-font-smoothing: antialiased;
+    overflow-y: hidden;
 }
 
 body {
@@ -35,7 +35,6 @@ body {
     font-kerning: auto;
     -webkit-font-kerning: auto;
 }
-
 
 // Responsive Font Sizing
 // These values are the minimum and maximum viewport sizes to apply the font scaling
@@ -107,9 +106,40 @@ h6 {
     margin: 0 0 0.75rem;
 }
 
-h3 {
+
+h3 a {
     font-size: $mid-hed-size;
     margin: 0 0 0.5rem;
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+    text-transform: capitalize;
+    font-family: $serif-font-family !important;
+    &:hover,
+    &:focus {
+        color: $green;
+        transition: color 0.4s;
+        &:after {
+            font-family: "fontello";
+            content: "\E804";
+            color: black;
+            font-size: 70%;
+            padding-left: 7px;
+            -webkit-transition: padding .2s ease-in-out;
+            /* Safari 3.1 to 6.0 */
+            transition: padding .2s ease-in-out;
+        }
+    }
+    &:after {
+        font-family: "fontello";
+        content: "\E804";
+        color: $green;
+        font-size: 70%;
+        padding-left: 4px;
+        -webkit-transition: padding .2s ease-in-out;
+        /* Safari 3.1 to 6.0 */
+        transition: padding .2s ease-in-out;
+    }
 }
 
 figure {
@@ -193,7 +223,7 @@ ul {
 
 button {
     cursor: pointer;
-    background-color: $slate-grey;
+    background-color: $green;
     color: $creamer;
     border: none;
     padding: 2px 8px;
@@ -238,6 +268,12 @@ dl {
     dd {
         margin-left: 0;
         margin-bottom: $medium-spacing;
+    }
+}
+
+header {
+    h1 {
+        text-align: center;
     }
 }
 
@@ -409,10 +445,7 @@ header.decorated {
         display: block;
         @include position(absolute,
         100% 0 ($small-spacing - $thin-border-width - 2px) 0);
-        background-image: url($small-arrow-img);
-        background-position: 50% 100%;
-        background-size: $small-arrow-width auto;
-        background-repeat: no-repeat;
+        
         z-index: 1;
         @include media($medium-break) {
             @include position(absolute,
@@ -438,14 +471,16 @@ header.decorated {
 $img in $icons {
     header.#{$name},
     section.#{$name} {
-        min-height: 120px;
+        min-height: 80px;
         &.decorated {
+             
             padding-bottom: 0;
             h1 {
                 text-align: left;
             }
         }
         background-image: url($img);
+
         @include decorated-bg($decorated-bg-size);
         h1 {
             padding: 12px 0 12px 100px;
@@ -453,7 +488,7 @@ $img in $icons {
     }
     section.#{$name} {
         @include decorated-bg($medium-decorated-bg-size);
-        background-position: 20px center;
+        background-position: 20px top;
         font-size: $minor-text-size;
         line-height: 1.25em;
         padding: 0;
@@ -461,7 +496,7 @@ $img in $icons {
             padding: $medium-spacing $medium-spacing (3*$medium-spacing) $medium-decorated-bg-size + 40px;
         }
         @include media($large-break) {
-            background-size: $large-decorated-bg-size $large-decorated-bg-size;
+            background-size: $decorated-bg-size $decorated-bg-size;
             .inner {
                 padding-left: 220px;
             }
@@ -469,7 +504,7 @@ $img in $icons {
     }
 }
 
-body > footer {
+body > footer#page-footer {
     @include position(relative);
     display: block;
     color: $cloudy-blue;
@@ -489,6 +524,18 @@ body > footer {
             margin: 0px 0px 1rem;
         }
         a:not(.green-button) {
+            -webkit-transition: all .2s ease-in-out;
+            /* Safari 3.1 to 6.0 */
+            transition: all .2s ease-in-out;
+            &:hover,
+            &:focus {
+                &:after {
+                    padding-left: 8px;
+                    -webkit-transition: padding .2s ease-in-out;
+                    /* Safari 3.1 to 6.0 */
+                    transition: padding .2s ease-in-out;
+                }
+            }
             &:after {
                 font-family: "fontello";
                 content: "\E804";
@@ -511,18 +558,16 @@ body > footer {
             min-height: 150px;
             padding-top: $medium-spacing;
             @include media($medium-break) {
-            padding-right: 50px !important;
-        }
-        
+                padding-right: 50px !important;
+            }
         }
         h2 {
-                margin: .4rem 0px 0.65rem;
-            }
+            margin: .4rem 0px 0.65rem;
+        }
         .quick-links {
             display: block;
             min-height: 150px;
             @include flex(1 0 100%);
-           
             .quick-links-left,
             .quick-links-right {
                 width: calc(50% - 20px);
@@ -590,39 +635,39 @@ body > footer {
         margin-top: $medium-spacing;
     }
     #lower-footer {
-       
         line-height: 1.2;
-         padding: $small-spacing;
+        padding: $small-spacing;
         background-color: $dark-grey-blue;
         color: $greyish-teal-two;
         #copywrite {
-             font-size: .7rem;
-@include media($medium-break) {
-width: 50%;
-display: block;
-float: left;
-}
-        }
-    
-    .social-icons {
-        font-size: .9rem;
-        border-left: none;
-        margin: 0px;
-        text-align: right;
-        a {
-            padding-left: 0px;
-            color: $light-green;
-
-            &:hover {
-                color: white;
+            font-size: .7rem;
+            @include media($medium-break) {
+                width: 50%;
+                display: block;
+                float: left;
             }
         }
-        @include media($medium-break) {
-width: 50%;
-display: block;
-float: left;
-}
-    }
+        .social-icons {
+            font-size: .9rem;
+            border-left: none;
+            margin: 0px;
+            text-align: right;
+            display: block;
+            position: relative;
+            padding-top: 14px;
+            a {
+                padding-left: 0px;
+                color: $light-green;
+                &:hover {
+                    color: white;
+                }
+            }
+            @include media($medium-break) {
+                width: 50%;
+                display: block;
+                float: left;
+            }
+        }
     }
 }
 
@@ -717,6 +762,7 @@ body {
                 width: auto;
                 height: auto;
             }
+           
         }
         &:last-of-type {
             border: none;
@@ -732,6 +778,21 @@ body {
             overflow: hidden;
         }
     }
+}
+.inner {
+    section{
+       display: block;
+       float: left; 
+       width: 50px;
+       height: 50px;
+       background-size: 50px 50px;
+       background-position: top left;
+    }
+
+    h3 a{
+                padding-left: 70px;
+                display: block;
+            }
 }
 
 .ssk {

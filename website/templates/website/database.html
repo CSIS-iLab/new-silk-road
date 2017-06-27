@@ -8,31 +8,49 @@ The Database | {{ block.super }}
 {% block bodyclass %}database{% endblock %}
 
 {% block content-shell %}
-<section class='poster'>
+<section class='content-wrapper page-wrapper'>
     <header>
         <h1>The Database</h1>
     </header>
+
+<div id="database-page">
+
+<section id='db-search'>
+   
+        <div class="left-div">
+            <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
+        </div>
+        <div class="right-div" role="search">
+            {% include "search/_search_form.html" %}
+        </div>
+        <div class="clearfix"></div>
+        <a class="green-button" href="#" alt="Search">
+            <div class="button-text">Search</div>
+        </a>
+   
 </section>
-<section role="search" class="search">
-    {% include "search/_search_form.html" %}
 </section>
+</div>
 {% if featured_items %}
 <section class="featured columnar">
     <header>
-        <h2>Featured Entries</h2>
+        <h2 class="section-title">Featured Entries</h2>
     </header>
     <div class="wrap content-wrap">
         {% for item in featured_items.items.all %}{% with item.content_object as object %}
-        <section class="panel {{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
+        <section class="panel ">
             <div class="inner">
+            <section class="{{item.content_type}}{% if object.infrastructure_type %} {{object.infrastructure_type.slug}}{% endif %}">
+            </section>
                 <h3><a href="{{object.get_absolute_url}}">{% if object.name %}{{object.name}}{% else %}{{object.title}}{% endif %}</a></h3>
+                <div class="clearfix"></div>
                 {% if item.description_rendered %}
                 {{item.description_rendered|html_text|truncatewords_html:30|safe}}
                 {% else %}
                 {{object.description_rendered|html_text|truncatewords_html:30|safe}}
                 {% endif %}
                 <footer>
-                    <p><a href="{{object.get_absolute_url}}">Read More</a></p>
+                    <a class="green-button read-more"  href="{{object.get_absolute_url}}"><div class="button-text">Read More</div></a>
                 </footer>
             </div>
         </section>
@@ -43,13 +61,14 @@ The Database | {{ block.super }}
     </div>
 </section>
 {% endif %}
-<section class="wrap content-wrap browse">
+<section class="content-wrapper browse  content-wrapper page-wrapper">
     <header>
-        <h2>Browse the Database</h2>
+        <h2 class="section-title">Browse the Database</h2>
     </header>
     <div class="row">
         <section>
-            <h3><a href="{% url 'infrastructure:project-list' %}">Projects</a></h3>
+        <a href="{% url 'infrastructure:project-list' %}" alt="Projects"><h3 class="entry-title ">Projects</h3></a>
+          
             {% comment %}
             <ul class="clean details">
                 {% for infra_type in infrastructure_types %}
@@ -58,10 +77,12 @@ The Database | {{ block.super }}
             {% endcomment %}
         </section>
         <section>
-            <h3><a href="{% url 'infrastructure:initiative-list' %}">Initiatives</a></h3>
+         <a href="{% url 'infrastructure:initiative-list' %}" alt="Initiatives"><h3 class="entry-title ">Initiatives</h3></a>
+            
         </section>
         <section>
-            <h3><a href="{% url 'facts:organization-list' %}">Organizations</a></h3>
+            <a href="{% url 'facts:organization-list' %}" alt="Organizations"><h3 class="entry-title ">Organizations</h3></a>
+        
             {% comment %}
             <ul class="clean details">
                 {% for modelname, label in organization_types %}
@@ -70,17 +91,19 @@ The Database | {{ block.super }}
             {% endcomment %}
         </section>
         <section>
-            <h3><a href="{% url 'facts:event-list' %}">Events</a></h3>
+        <a href="{% url 'facts:event-list' %}" alt="Events"><h3 class="entry-title ">Events</h3></a>
+            
         </section>
         <section>
-            <h3><a href="{% url 'facts:person-list' %}">People</a></h3>
+        <a href="{% url 'facts:person-list' %}" alt="People"><h3 class="entry-title ">People</h3></a>
+           
         </section>
     </div>
 </section>
-<nav role="navigation">
+<nav role="navigation" class="content-wrapper">
     <ul>
-        <li><a class="button gem large" href="{% url 'glossary' %}">Glossary</a></li>
-        <li><a class="button gem large" href="{% url 'methodology' %}">Methodology</a></li>
+        <li><a class="green-button" href="{% url 'glossary' %}"><div class="button-text">Glossary</div></a></li>
+        <li><a class="green-button" href="{% url 'methodology' %}"><div class="button-text">Methodology</div></a></li>
     </ul>
 </nav>
 {% endblock %}

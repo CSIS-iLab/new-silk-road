@@ -41,7 +41,7 @@ $serif-font-family: Merriweather, $georgia;
 // Colors
 
 $pale-green: #d6e1d6;
-$light-green: #D7DFD4;
+$light-green2: #D7DFD4;
 $bright-green: #abd58c;
 $medium-green: #75986a;
 $serious-green: #4e736c;
@@ -116,6 +116,13 @@ $mobile-map: $img-url-base + 'redesign/homepage-asia-map-small.png';
 $tablet-map: $img-url-base + 'redesign/homepage-asia-map-medium.png';
 $desktop-map: $img-url-base + 'redesign/homepage-asia-map-large.png';
 $wide-desktop-map: $img-url-base + 'redesign/homepage-asia-map-xlarge.png';
+
+//Example photos
+$example-photo1: $img-url-base + 'redesign/examplephotos/photo1.jpg';
+$example-photo2: $img-url-base + 'redesign/examplephotos/photo2.jpg';
+$example-photo3: $img-url-base + 'redesign/examplephotos/photo3.jpg';
+$example-photo4: $img-url-base + 'redesign/examplephotos/photo4.jpg';
+
 // Project & other images
 $banner-img-url: $img-url-base + 'banners/';
 $competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';

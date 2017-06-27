@@ -34,7 +34,7 @@ input {
             line-height: 1.5;
             font-size: $section-hed-size;
             padding: 0 $medium-spacing;
-            @include gemify($slate-grey);
+            
         }
         @include media($medium-break) {
             &.large {
@@ -77,6 +77,7 @@ select {
     font-family: $sans-font-family;
     color: black;
     background-color: white;
+
     margin: 0;
     line-height: normal;
 }
@@ -142,5 +143,65 @@ select {
         .custom-dropdown > select {
             padding-right: 0.9em;
         }
+    }
+}
+
+#database-page {
+    #db-search {
+        background-color: white;
+        padding: 0rem 20px;
+        &:after {
+            content:" ";
+            border: 0px solid transparent;
+        }
+    }
+.custom-dropdown, .search-box {
+    display: block;
+    max-width: 450px;
+    width: 90%;
+        @include media($medium-break) {
+margin: .5rem 10px;
+    }
+}
+
+
+    .custom-dropdown {
+        height: 40px;
+    border: 1px solid $greyish-teal;
+}
+.search-controls {
+     height: 40px;
+
+}
+}
+
+.green-button.read-more {
+    background-color: $pale-green;
+    margin: .5rem auto;
+    position: relative;
+    width: 250px;
+    .button-text {
+        font-family: Lato;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .5px;
+        color: $warm-grey;
+        text-decoration: none;
+        
+        padding: .2rem 1rem;
+        &:after {
+        
+            color: $warm-grey;
+            
+        }
+        &:hover:after {
+            
+            color: $warm-grey;
+            
+        }
+    }
+      &:hover {
+        background-color: $light-green2;
+        transition: background-color 0.4s;
     }
 }

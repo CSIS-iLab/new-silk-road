@@ -20,18 +20,18 @@
     <aside>
         <h2>Analysis {% if entry.categories.count != 0 %}| {{entry.categories.first.name }}{% endif %}</h2>
     </aside>
-    <header class="decorated featured">
+    <header class=" featured">
         <h1>{{object.title}}</h1>
         <h2>{{object.subtitle}}</h2>
     </header>
     <section class="subheader details">
         <span>
-            {% if object.author %}
+             <span class="publication_date"><time datetime="{{object.publication_date|date:'c'}}">{{object.publication_date|date}}</time></span>{% if object.author %} | 
             <span class="author">
                 By {{object.author}}
             </span>
             {% endif %}
-            <span class="publication_date"><time datetime="{{object.publication_date|date:'c'}}">{{object.publication_date|date}}</time></span>
+           
         </span>
         <span class="social-icons ssk-group">
             <a class="ssk ssk-icon ssk-facebook" href=""></a>
@@ -52,11 +52,11 @@
 <footer>
     <section class="tags">
         <h4>Tags</h4>
-        <ul class="clean">{% for tag in object.tags.all %}
-            <li><a href="{% url 'writings:entry-tag-list' slug=tag.slug %}">{{tag}}</a></li>
+        {% for tag in object.tags.all %}
+            <a href="{% url 'writings:entry-tag-list' slug=tag.slug %}">{{tag}}</a>
         {% endfor %}
 
-        </ul>
+        
     </section>
     {% if object.related_entries.count > 0 %}
     <section class="related">

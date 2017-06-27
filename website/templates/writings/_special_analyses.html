@@ -1,18 +1,30 @@
-<div class="poster">{% load static %}
-    <a href="{% url 'competing-visions' %}">
-        <img src="{% static 'img/banners/CompetingVisions_graphic.jpg' %}" alt="Competing Visions teaser image" />
-        <div class="label">
-            <h3>Competing Visions</h3>
+{% load static %}
+<div class="special_analysis-page">
+<div class='content-wrapper'>
+<section id='illustrating-history'>
+
+
+ 
+
+    <div class="competing-visions ">
+    <a class="img-container " href="{% url 'competing-visions' %} ">
+        <img src="{% static 'img/redesign/illustrating-history-right.jpg' %} " alt="Competing Visions teaser image " /></a>
+        <div class="illustrating-history-desc">
+            <a href="{% url 'competing-visions' %} "><h3 class="entry-title ">Competing Visions</h3> </a>
             <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
         </div>
-    </a>
+   </div>
+  
+    <div class="historical-atlas ">
+        <a  class="img-container" href="{% url 'historical-atlas' %} ">
+            <img src="{% static 'img/redesign/illustrating-history-left.jpg' %} " alt="Historical Atlas teaser image " /></a>
+            <a href="{% url 'historical-atlas' %} "><div class="illustrating-history-desc">
+                <h3 class="entry-title ">Historical Atlas</h3></a>
+                <p id="lastp ">Explore the rise and fall of trade, technology, and civilizations.</p>
+            </div>
+            </div>
+       
+<div class="clearfix "></div>
+</section>
 </div>
-<div class="poster">
-    <a href="{% url 'historical-atlas' %}">
-        <img src="{% static 'img/banners/Historical_Atlas_graphic.jpg' %}" alt="Historical Atlas teaser image" />
-        <div class="label">
-            <h3>Historical Atlas</h3>
-            <p>Explore the rise and fall of trade, technology, and civilizations.</p>
-        </div>
-    </a>
-</div>
+<

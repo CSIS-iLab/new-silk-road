@@ -1,11 +1,11 @@
 {% load static from staticfiles %}{% load raven %}
 <div class="navigation">
     <div class="header-nav-trigger">
-        <svg class="ico-svg ico-13 ico-rendering" viewBox="0 0 15 13" xmlns="http://www.w3.org/2000/svg">
-            <g id="menu-main" data-size="15 13">
-                <path d="M0,5h15v3H0V5z M0,13h11.948v-3H0V13z M0,3h9.092V0H0V3z" />
-            </g>
-        </svg>
+        
+        <div class="main-nav__container">
+        <div class="main-nav__menu-btn-bar">
+        </div>
+        </div>
     </div>
 <div class="header-wrapper">
     <div class="header-title">
@@ -32,7 +32,13 @@
             {% include "search/_search_form_header.html"%}
     </div>
             <nav class="nav-main" id="nav-main">
-        <ul class="menu active" id="menu-main">{% if showhome %}
+        <ul class="menu active" id="menu-main">
+
+        <li class="nav-recon-icon-mobile">    
+        <a href="/"><img class="recon-logo-mobile" src="{% static 'img/redesign/reconasia_logo-mobile_nav.svg' %}" alt="Center for Strategic and International Studies"></a>
+    </li>
+        {% if showhome %}
+
             <li ><a class="main-link" href="/">Home</a></li>{% endif %}
             <li><a class="main-link" href="{% url 'website-map' %}">Map</a></li>
             <li><a class="main-link" href="{% url 'database-home' %}">Database</a></li>
@@ -47,6 +53,5 @@
         </ul>  
 
     </nav>
-    </div>
     </div>
 </div>

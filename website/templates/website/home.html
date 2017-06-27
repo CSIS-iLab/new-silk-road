@@ -8,9 +8,13 @@
                 <div class="button-text">Explore the Map</div>
             </a>
         </div>
+        <div class="mobile-overlap">
+        <div>
+        </div>
+        </div>
     </div>
 </section>
-<section id='featured-articles'>
+<section class='featured-articles'>
     <div class='content-wrapper'>
         <div class="articles-left">
             <h2 class="section-title articles-section-title">FEATURED</h2> {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 1 %}
@@ -18,21 +22,29 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    <span class="entry-author">{{ entry.entry.author }}</span>
+                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
-                <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"></a>
-                {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                <a href="{{ entry.entry.get_absolute_url }}">
+                <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"> </figure>
+                   
+                </a>
+                {% if entry.entry.is_sponsored %}
+                <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
                 <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
             </div>
             {% endif %} {% endfor %} {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 2 %}
-            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"></a>
+            <a href="{{ entry.entry.get_absolute_url }}">
+           <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image " src="{{ entry.entry.featured_image.url }}"> </figure>
+                  
+            </a>
             <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    <span class="entry-author">{{ entry.entry.author }}</span>
+                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
-                {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                {% if entry.entry.is_sponsored %}
+                <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
                 <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
             </div>
             {% endif %} {% endfor %}
@@ -43,12 +55,15 @@
         </div>
         <div class="articles-right">
             {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter >= 3 %}
-            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
+            <a href="{{ entry.entry.get_absolute_url }}">
+            <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"> </figure>
+                  
+            </a>
             <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    <span class="entry-author">{{ entry.entry.author }}</span>
+                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
                 <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
@@ -110,7 +125,7 @@
             </div>
             <div class="num-stat">
                 <div class="count">
-                    <img class="infra-icon" src="{% static 'img/redesign/dryport_icon_green.svg' %}" " alt="Dryport Statistics ">
+                    <img class="infra-icon" src="{% static 'img/redesign/dryport_icon_green.svg' %}"  alt="Dryport Statistics ">
             
             <div>
                 <span class="large-numbers ">{{ db_totals.intermodal.count }}</span>
@@ -157,13 +172,13 @@
     <div class="left-div ">
         <h2 class="section-title ">Partner with us!</h2>
         <p>Reconnecting Asia is partnering with select organizations and individuals to improve our data. If you are interested in becoming a partner, please apply through the links below.</p>
-        <a href="# " alt="# "><h3 class="entry-title ">Individuals</h3></a>
-        <a href="# " alt="# "><h3 class="entry-title ">Organizations</h3></a>
+        <a href="https://reconnectingasia.formstack.com/forms/outside_submission_individual" alt="Individuals "><h3 class="entry-title ">Individuals</h3></a>
+        <a href="https://reconnectingasia.formstack.com/forms/outside_submission_institution" alt="Organizations"><h3 class="entry-title ">Organizations</h3></a>
     </div>
 
     <div class="right-div twitter-block">
         <h2 class="section-title ">Twitter</h2>
-        <a class="twitter-timeline" href="https://twitter.com/ReconAsia" data-chrome="noheader nofooter noborders" data-link-color="#3D8283" data-tweet-limit="2"></a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <a class="twitter-timeline" href="https://twitter.com/ReconAsia" data-chrome="noheader nofooter noborders"  data-link-color="#3D8283" data-tweet-limit="1"></a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
     <div class="clearfix "></div>
     </section>
@@ -172,11 +187,11 @@
 </div>
 <div id="post-contribute">
 </div>
-<!-- {% endblock content-shell %} {% block extrahead %}
+ {% endblock content-shell %} {% block extrahead %}
 <link rel="stylesheet " href="{% static 'css/lib/magnific-popup.css' %} ">
 <script src="{% static 'js/lib/jquery.magnific-popup.min.js' %} "></script>
 {% endblock %} {% block postbodyjs %}
-<script type="text/javascript ">
+<!--<script type="text/javascript ">
 Zepto(function($) {
     $('#video a.play').magnificPopup({
         type: 'iframe',
@@ -191,5 +206,5 @@ Zepto(function($) {
         }
     });
 });
-</script>
-{% endblock %} -->
+</script>-->
+{% endblock %} 
