@@ -209,7 +209,7 @@ You could have done this before setting up Python, but this part should be relat
 $ createdb reconasia
 ```
 
-Installing the [Heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) can allow you to retrive a copy of the current staging or production databases.
+Installing the [Heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) can allow you to retrieve a copy of the current staging or production databases.
 You can see the available DB snapshots via:
 
 ```sh
@@ -245,6 +245,10 @@ This will create a new file named `latest.dump` which can be used to restore the
 ```sh
 $ createdb reconasia
 $ pg_restore --clean --no-owner --dbname=reconasia latest.dump
+```
+Notes: If you already had this db present, you may see some errors after running this command, but everything should be in working order. If it doesn't seem to work, try deleting your existing db with `$ dropdb reconasia` and run the above commands again. Also, if your local code has migrations that have not been deployed to the system you are restoring the db from, you may need to run migrations as follows:
+```sh
+$ heroku local:run python manage.py migrate
 ```
 
 The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example.
