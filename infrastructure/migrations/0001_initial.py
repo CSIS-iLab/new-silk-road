@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                 'ordering': ['name'],
             },
             managers=[
-                ('_default_manager', django.db.models.manager.Manager()),
+                ('objects', django.db.models.manager.Manager()),
             ],
         ),
         migrations.CreateModel(
