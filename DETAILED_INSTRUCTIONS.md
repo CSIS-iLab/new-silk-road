@@ -367,8 +367,47 @@ While developing, you should add tests for the code you contribute, and may run 
 tests by:
 
 ```sh
-$ heroku local:run python manange.py tests
+$ heroku local:run python manage.py tests
 ```
 
 Note: Since some of the tests rely on elasticsearch, make sure that is is running on
 your machine. Refer to the section above on elasticsearch for more information.
+
+
+# Managing Automatic Backups
+
+Heroku can automatically run daily backups, but these do need to be set up manually from time to time. In particular, the schedule will need to be recreated whenever a database is restored from a backup, and sometimes when changing the tier of the server.
+
+To see what time the backups are currently scheduled, run:
+
+```sh
+heroku pg:backups:schedules --app db-follow-reconasia
+```
+
+To schedule a backup (in this case, for 2am Eastern Time):
+
+```sh
+$ heroku pg:backups:schedule --at '02:00 America/New_York' --app db-follow-reconasia
+```
+
+Note that only one scheduled backup can exist at a time, so if there is already a scheduled time, this will replace the existing entry.
+
+To see backups that are currently available:
+
+```sh
+$ heroku pg:backups --app db-follow-reconasia
+
+=== Backups
+ID    Created at                 Status                               Size     Database
+────  ─────────────────────────  ───────────────────────────────────  ───────  ────────
+a004  2017-06-28 06:02:57 +0000  Completed 2017-06-28 06:03:04 +0000  14.57MB  DATABASE
+b003  2017-06-27 21:05:48 +0000  Completed 2017-06-27 21:05:53 +0000  14.57MB  DATABASE
+b002  2017-05-10 17:20:21 +0000  Completed 2017-05-10 17:20:28 +0000  12.00MB  DATABASE
+b001  2017-02-03 15:10:10 +0000  Completed 2017-02-03 15:10:19 +0000  10.66MB  DATABASE
+```
+
+To restore from a backup (for this example, I'll use the first one listed in the example results above, a004):
+
+```sh
+$ heroku pg:backups:restore a004 --app db-follow-reconasia
+```
