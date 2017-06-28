@@ -47,6 +47,12 @@
       "css": "search",
       "code": 59392,
       "src": "fontawesome"
+    },
+    {
+      "uid": "8da3ac534210aae9c0f0e13804c1df97",
+      "css": "cancel",
+      "code": 59393,
+      "src": "websymbols"
     }
   ]
 }

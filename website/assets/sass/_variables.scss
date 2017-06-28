@@ -31,7 +31,7 @@ $section-hed-size: rem(26);
 $section-hedier-size: rem(28);
 $minor-text-size: rem(16);
 $minorer-text-size: rem(14);
-$compact-text-size: rem(13);
+$compact-text-size: rem(12);
 $nav-text-size: $minor-text-size;
 $search-text-size: $minorer-text-size;
 $base-line-height: 1.45em;
@@ -68,6 +68,7 @@ $blue-steel: #788ca8;
 $greyish-teal: #6ca4a5;
 $pale-grey: #f1f2f4;
 $med-gray: #E0E0E2;
+$text-gray: #C8C8C8;
 $warm-grey: #747474;
 $cloudy-blue: #b4d0d0;
 $dark-grey-blue: #2c6565;
@@ -117,12 +118,6 @@ $tablet-map: $img-url-base + 'redesign/homepage-asia-map-medium.png';
 $desktop-map: $img-url-base + 'redesign/homepage-asia-map-large.png';
 $wide-desktop-map: $img-url-base + 'redesign/homepage-asia-map-xlarge.png';
 
-//Example photos
-$example-photo1: $img-url-base + 'redesign/examplephotos/photo1.jpg';
-$example-photo2: $img-url-base + 'redesign/examplephotos/photo2.jpg';
-$example-photo3: $img-url-base + 'redesign/examplephotos/photo3.jpg';
-$example-photo4: $img-url-base + 'redesign/examplephotos/photo4.jpg';
-
 // Project & other images
 $banner-img-url: $img-url-base + 'banners/';
 $competing-visions-img: $banner-img-url + 'CompetingVisions_graphic.jpg';
@@ -155,7 +150,7 @@ $icons: (
     'event': $database-icon-url + 'Event.svg',
     'person': $database-icon-url + 'Person.svg'
 );
-$decorated-bg-size: 80px;
+$decorated-bg-size: 70px;
 $medium-decorated-bg-size: $decorated-bg-size * 1.3;
 $large-decorated-bg-size: 172px;
 $play-button-size: 98px;

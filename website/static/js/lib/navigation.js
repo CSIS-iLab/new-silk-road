@@ -13,7 +13,8 @@ $(document).ready(function() {
     });
     $(document).click(function(e) {
         $('body').removeClass('nav-active');
-
+        $('.header-title').removeClass('trigger-active');
+$('.header-nav-trigger').removeClass('trigger-active');
     });
 
     $('.nav-main').click(function(e) {
@@ -23,8 +24,11 @@ $(document).ready(function() {
     $('.header-nav-trigger, .nav-main .bt-close').click(function(e) {
         e.stopPropagation();
         $('body').toggleClass('nav-active');
-        $('.header-nav-trigger').toggleClass('trigger-active');
+        $('.main-nav__container').toggleClass('active');
+
         $('.header-title').toggleClass('trigger-active');
+        $('.header-nav-trigger').toggleClass('trigger-active');
+
     });
 
     $('li.dropdown > span').click(function() {
@@ -40,10 +44,7 @@ $(document).ready(function() {
 
 
 
-});
 
-
-$(document).ready(function() {
 
     /*
         Version 1.3.2
@@ -63,6 +64,7 @@ $(document).ready(function() {
     */
 
     $.fn.viewportChecker = function(useroptions) {
+
         // Define options and extend with user
         var options = {
             classToAdd: 'visible',
@@ -75,6 +77,8 @@ $(document).ready(function() {
         var $elem = this,
             windowHeight = $(window).height();
 
+
+
         this.checkElements = function() {
 
             // Set some vars to check with
@@ -82,11 +86,14 @@ $(document).ready(function() {
                 viewportTop = $(scrollElem).scrollTop(),
                 viewportBottom = (viewportTop + windowHeight);
 
+
             $elem.each(function() {
                 var $obj = $(this);
+
                 // If class already exists; quit
                 if ($obj.hasClass(options.classToAdd)) {
                     return;
+
                 }
 
 
@@ -116,23 +123,28 @@ $(document).ready(function() {
                     }
 
 
-                    $(".large-numbers").each(function(index, element) {
+                    $(".large-numbers ").each(function(index, element) {
                         counter($(element));
                     });
 
                     // Do the callback function. Callback wil send the jQuery object as parameter
                     options.callbackFunction($obj);
+
                 }
             });
         };
 
         // Run checkelements on load and scroll
         $(window).scroll(this.checkElements);
+
         this.checkElements();
+
+
 
         // On resize change the height var
         $(window).resize(function(e) {
             windowHeight = e.currentTarget.innerHeight;
+
         });
 
     };
@@ -140,6 +152,7 @@ $(document).ready(function() {
 
 
     $('#db-summary').addClass("").viewportChecker({
+
         classToAdd: 'count-num', // Class to add to the elements when they are visible
         offset: 100
     });

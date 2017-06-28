@@ -4,7 +4,7 @@
 .panel {
     position: relative;
     background-color: $pale-grey;
-    padding: $medium-spacing $medium-spacing (3*$medium-spacing);
+    padding: $medium-spacing $medium-spacing $medium-spacing;
     .green-button {
         position: relative;
         bottom: 0;
@@ -17,18 +17,18 @@
     h5 {
         font-style: italic;
     }
-    header {
+    
         .subheader {
             
-        
             h5 {
                 font-style: inherit;
                 color: $green;
+                font-weight: normal;
             }
         }
-    }
+    
     p:last-of-type {
-        margin: 0;
+        margin-bottom: 1rem;
     }
     footer {
         position: relative;
@@ -106,7 +106,7 @@ section.buzz {
     @include justify-content(space-between);
     > div {
         display: block;
-        min-height: 240px;
+        //min-height: 240px;
         @include flex(1 0 100%);
     }
     @include media($medium-break) {
@@ -204,11 +204,43 @@ div {
         @include media($medium-break) {
             padding: $large-spacing;
         }
+
+        p:last-of-type {
+            padding-bottom: 1rem;
+        }
     }
 }
 
+.details {
+    h2.details-name{
+        color: black;
+        margin-bottom: 2rem;
+    }
+}
 
+ .documents.featured {
+            h2 {
+            font-family: Lato;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: $dark-grey-blue;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin: 0 auto 2rem;
+            text-decoration: none;
+            }
+            h3{
+                margin-bottom: .3rem;
+            }
+            margin-bottom: 0px;
 
+            a[rel="external nofollow"] {
+                color: $dark-grey-blue !important;
+                font-size: .8rem;
+         
+            }
+    }
 
 article {
     section {
@@ -225,6 +257,7 @@ article {
                     margin-bottom: $large-spacing;
                     @include media($medium-break) {
                         min-width: 50%;
+                        padding: 0px 1rem;
                         @include flex(1 0 50%);
                     }
                 }
@@ -235,17 +268,20 @@ article {
             }
         }
     }
+   
 }
 
 .details {
     h3 {
         border-bottom: 2px solid $slate-grey;
+        margin-bottom: .5rem;
     }
 }
 
 .description {
     h3 {
         text-transform: none;
+
     }
     p {
         font-size: $minor-text-size;
@@ -262,28 +298,49 @@ article {
 .document-list {
     display: block;
     ul > li {
-        margin-bottom: $small-spacing;
+        margin-bottom: $tiny-spacing;
         white-space: nowrap;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
 }
 
 .database {
-    > section {
+
+    #database-page {
+         display: block;
+        position: relative;
+        max-width: $max-content-width;
+
+        margin: 0 auto;
+        margin-top:-6rem;
+        padding: 0;
+        color: black;
+        text-align: center;
+        height: calc(100% - 6rem);
+
+        #db-search {
+            padding: .5rem;
+             
+        
+        }
+    }
+    h1{
+
+             color: $dark-night;       
+    }
+    section {
         position: relative;
         display: block;
         header > h2 {
-            font-family: $serif-font-family;
-            font-size: rem(24);
+            
         }
         &.poster {
             $poster-height: 205px;
             height: $poster-height;
             @include background-poster($database-img);
-            @include widows-peak($dark-green-arrow-img, $main-arrow-width, $adjust: 4px);
-            border-bottom: $thin-border-width solid $dark-green;
             header {
                 position: absolute;
                 bottom: $small-spacing;
@@ -308,16 +365,15 @@ article {
             }
         }
     }
+    
     .featured {
         header {
             max-width: $max-content-width;
             margin: 0 auto;
-            padding: $medium-spacing 0;
-            h2 {
-                text-decoration: none;
-                margin-bottom: 0;
-            }
+            padding: 0;
+            
         }
+     
         .panel {
             background-color: #FFF;
         }
@@ -418,23 +474,19 @@ article {
         }
     }
     .browse {
-        h3 {
-            a {
-                position: relative;
-            }
-            a::after {
-                content: " ";
-                display: block;
-          
-                width: 8px;
-                height: 15px;
-                position: absolute;
-                right: -16px;
-                bottom: 2px;
-            }
+        h2.section-title {
+            margin-bottom: $medium-spacing;
         }
         .row {
             margin-bottom: 0px;
+            section {
+                width: 100%;
+                margin: 0px 10px;
+            }
+        }
+
+        a.green-button {
+            width: 100%;
         }
     }
     section.columnar + section.wrap {
@@ -442,8 +494,12 @@ article {
     }
 }
 
-.database nav {
-margin-bottom: 2rem;
+ul.database-nav {
+    display: block;
+    position: relative;
+margin-bottom: 3rem;
+    
+
 }
 
 .analysis {
@@ -451,8 +507,10 @@ margin-bottom: 2rem;
         text-transform: uppercase;
         position: relative;
         left: -$medium-spacing;
+
         span {
             color: $pale-green;
+            padding: 3px 5px;
             background-color: $dark-night;
         }
     }
@@ -505,7 +563,7 @@ margin-bottom: 2rem;
         text-align: center;
         blockquote {
             margin: 0;
-            padding: $large-spacing $large-spacing $large-spacing*2;
+            padding: $large-spacing $large-spacing*2 $large-spacing*2;
             position: relative;
             quotes: "\201C" "\201D";
             &::before {
@@ -537,18 +595,18 @@ margin-bottom: 2rem;
         }
         @include media($medium-break) {
             blockquote {
-                padding: $large-spacing 3*$large-spacing $large-spacing*2;
+                padding: $large-spacing 4*$large-spacing $large-spacing*2;
                 &::before,
                 &::after {
                     font-size: 154px;
                     width: 80px;
                 }
                 &::before {
-                    left: 0;
+                    left: 2.5%;
                     top: 35%;
                 }
                 &::after {
-                    right: 2%;
+                    right: 4%;
                     top: 65%;
                 }
             }
@@ -577,6 +635,12 @@ margin-bottom: 2rem;
     width: 100%;
     background-color: $pale-grey;
     padding: 4rem 0rem 4rem;
+
+    h2.section-title {
+        padding: 0px 0px 0px 0px !important;
+        margin-top: 0px !important;
+        
+    }
 }
 
 .entry {
@@ -599,7 +663,7 @@ margin-bottom: 2rem;
         }
 
     }
-    .social-icons {
+    .social-icons.ssk-group {
             border-left: 0px solid transparent;
             margin-top:14px;
         }
@@ -671,8 +735,8 @@ margin-bottom: 2rem;
             text-transform: uppercase;
         }
         .links {
-            $arrow-height: 80px;
-            $arrow-width: 20px;
+            $arrow-height: 90px;
+            $arrow-width: 40px;
             $arrow-vector: $arrow-height/2;
             @include display(flex);
             @include flex-direction(column);
@@ -680,22 +744,36 @@ margin-bottom: 2rem;
             li {
                 @include flex(1 1 50%);
                 margin-bottom: $medium-spacing;
+
                 a {
                     position: relative;
+                    padding: .5rem;
                     display: inline-block;
                     text-decoration: none;
-                    color: $medium-green;
+                    color: $green;
                     height: $arrow-height;
                     @include display(flex);
                     @include flex-direction(column);
                     @include justify-content(flex-start);
                     span:first-of-type {
-                        margin-bottom: $small-spacing;
+                        margin-bottom: 5px;
                         text-transform: uppercase;
+                        font-size: .8rem;
                     }
                     span:not(:first-of-type) {
                         color: $callout-color;
                     }
+                    span.title {
+                        font-family: $serif-font-family;
+                        text-transform: capitalize;
+                    }
+                    span.author {
+                        padding-left: 0px;
+                        color: gray;
+                    }
+
+
+
                 }
                 &:first-of-type a::before,
                 &:last-of-type a::after {
@@ -709,21 +787,39 @@ margin-bottom: 2rem;
                 &:first-of-type {
                     text-align: left;
                     a::before {
-                        left: -$arrow-width * 1.5;
+                        left: -$arrow-width;
                         border-top: $arrow-vector solid transparent;
-                        border-right: $arrow-width solid $medium-green;
+                        border-right: $arrow-width solid $light-green;
                         border-bottom: $arrow-vector solid transparent;
+                        -webkit-transition: all .5s ease-in-out;
+                        transition: all .5s ease-in-out;
                     }
+                    &:hover {
+                        background-color: $pale-grey;
+                        a::before {
+                            border-right: $arrow-width solid $green;
+                        }
+                     }   
+                   
                 }
                 &:last-of-type {
                     text-align: right;
                     a::after {
-                        right: -$arrow-width * 1.5;
+                        right: -$arrow-width;
                         border-top: $arrow-vector solid transparent;
-                        border-left: $arrow-width solid $medium-green;
+                        border-left: $arrow-width solid $light-green;
                         border-bottom: $arrow-vector solid transparent;
+                        -webkit-transition: all .5s ease-in-out;
+                        transition: all .5s ease-in-out;
+                    }
+                     &:hover {
+                        background-color: $pale-grey;
+                            a::after {
+                            border-left: $arrow-width solid $green;
+                        }
                     }
                 }
+
             }
         }
         @include media($medium-break) {
@@ -896,5 +992,36 @@ margin-bottom: 2rem;
                 }
             }
         }
+    }
+}
+
+.green-button.read-more {
+    background-color: transparent;
+    margin: 1rem auto;
+    position: relative;
+    width: auto;
+    .button-text {
+        font-family: Lato;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .2px;
+        color: $warm-grey;
+        text-decoration: none;
+        text-align: center;
+        padding: 0px;
+        &:after {
+        
+            color: $warm-grey;
+            
+        }
+        &:hover:after {
+            
+            color: $warm-grey;
+            
+        }
+    }
+      &:hover {
+        background-color: transparent;
+        transition: background-color 0.4s;
     }
 }

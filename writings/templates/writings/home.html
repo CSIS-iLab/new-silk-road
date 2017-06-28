@@ -44,6 +44,7 @@
         <div class="analysis panel">
             <h4 class="highlighter"><span>{{highlighted_category.name}}</span></h4>
             <h3><a href="{{highlighted_entry.get_absolute_url}}">{{highlighted_entry.title}}</a></h3>
+            <div class="subheader">
             <h5 class='date'><time datetime='{{highlighted_entry.publication_date|date:"c"}}'>{{highlighted_entry.publication_date|date}}</time></h5>
             {% if highlighted_entry.description_rendered %}
             {{highlighted_entry.description_rendered|html_text|truncatewords_html:30|safe}}
@@ -52,9 +53,16 @@
             {% else %}
             <p>&mdash;</p>
             {% endif %}
-            <footer>
-                <p><a href="{{highlighted_entry.get_absolute_url}}">Read More</a></p>
-            </footer>
+            
+                
+
+                 <a class="green-button read-more" href="{{highlighted_entry.get_absolute_url}}" alt="Search">
+            <div class="button-text">Read More</div>
+        </a>
+
+
+           
+            </div>
         </div>
         {% endif %}
     {% include "writings/_analyses_panels.html" with entry_list=recent_entries max_words=30 %}

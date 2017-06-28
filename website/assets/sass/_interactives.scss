@@ -146,8 +146,8 @@ select {
     }
 }
 
-#database-page {
-    #db-search {
+
+#database-page #db-search {
         background-color: white;
         padding: 0rem 20px;
         &:after {
@@ -173,35 +173,10 @@ margin: .5rem 10px;
      height: 40px;
 
 }
+
+.searchWidget {
+
+    
+
 }
 
-.green-button.read-more {
-    background-color: $pale-green;
-    margin: .5rem auto;
-    position: relative;
-    width: 250px;
-    .button-text {
-        font-family: Lato;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: .5px;
-        color: $warm-grey;
-        text-decoration: none;
-        
-        padding: .2rem 1rem;
-        &:after {
-        
-            color: $warm-grey;
-            
-        }
-        &:hover:after {
-            
-            color: $warm-grey;
-            
-        }
-    }
-      &:hover {
-        background-color: $light-green2;
-        transition: background-color 0.4s;
-    }
-}

@@ -18,7 +18,7 @@
 {% endif %}
 <article>
     <aside>
-        <h2>Analysis {% if entry.categories.count != 0 %}| {{entry.categories.first.name }}{% endif %}</h2>
+        <h2><span>Analysis </span>{% if entry.categories.count != 0 %}<span>|</span> {{entry.categories.first.name }}{% endif %}</h2>
     </aside>
     <header class=" featured">
         <h1>{{object.title}}</h1>

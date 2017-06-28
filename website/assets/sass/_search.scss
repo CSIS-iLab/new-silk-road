@@ -17,10 +17,15 @@
     form {
         width: 100%;
         max-width: 450px;
+             @include media($medium-break) {
+            max-width: 700px;
+        }
+ 
         @include display(flex);
         @include flex-direction(row);
         @include justify-content(space-between);
         @include align-items(center);
+
 
         .search-controls {
             @include flex(1 1 auto);
@@ -41,13 +46,15 @@
 }
 
 .search-controls {
-            width: calc(100% - 34px);
-        max-width: calc(450px - 34px);
+    position: relative;
+    max-width: 100%;
     background-color: white;
     @include display(flex);
     @include flex-direction(row);
     @include justify-content(space-between);
-
+    @include media($medium-break) {
+        max-width: 450px;
+    }
     input {
         background-color: white;
         padding: .45em 28px .45em .45em;
@@ -79,6 +86,7 @@
         @include hide-text;
         padding: 0;
         width: $search-btn-width;
+
 
         &::after {
             position: absolute;
@@ -112,7 +120,9 @@
     button[type='submit'] {
         @include hide-text;
         padding: .45em 28px .45em .45em;
-       
+        right: 0px;
+        height: 39px;
+        position: absolute;
         color: transparent;
         background: url($search-btn-active-img) center no-repeat;
         width: $search-btn-width;
@@ -157,7 +167,6 @@
     font-size: $minor-text-size;
     display: block;
     position: relative;
-    @include widows-peak($light-blue-arrow-img, $main-arrow-width, $adjust: 4px);
     border-bottom: $thin-border-width solid $blue-steel;
     margin-bottom: $medium-spacing;
 

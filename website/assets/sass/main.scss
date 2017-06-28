@@ -22,7 +22,7 @@ body {
 html {
     font-size: $base-font-size;
     -webkit-font-smoothing: antialiased;
-    overflow-y: hidden;
+    
 }
 
 body {
@@ -151,6 +151,7 @@ figure {
 
 img {
     max-width: 100%;
+    height: auto;
 }
 
 figcaption {
@@ -162,6 +163,7 @@ figcaption {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     height: 100%;
+
 }
 
 iframe {
@@ -407,9 +409,21 @@ header[role=banner] {
 
 aside {
     h2 {
+        text-align: center;
         font-size: $mid-hed-size;
         font-weight: 300;
+        font-family: $sans-font-family;
+        color: $green;
+
+        span {
+            color: $text-gray;
+            text-transform: uppercase;
+        }
+        span:first-of-type {
+            color: $green;
+        }
     }
+
 }
 
 .widows-peak {
@@ -471,7 +485,7 @@ header.decorated {
 $img in $icons {
     header.#{$name},
     section.#{$name} {
-        min-height: 80px;
+        min-height: 70px;
         &.decorated {
              
             padding-bottom: 0;
@@ -483,7 +497,7 @@ $img in $icons {
 
         @include decorated-bg($decorated-bg-size);
         h1 {
-            padding: 12px 0 12px 100px;
+            padding: 12px 0 12px 80px;
         }
     }
     section.#{$name} {
@@ -508,8 +522,13 @@ body > footer#page-footer {
     @include position(relative);
     display: block;
     color: $cloudy-blue;
+    font-size: 90%;
     a:hover {
         color: white;
+    }
+    aside {
+         color: $cloudy-blue;
+
     }
     @include media($medium-break) {
         @include pad($large-spacing 0 0);
@@ -572,6 +591,14 @@ body > footer#page-footer {
             .quick-links-right {
                 width: calc(50% - 20px);
                 float: left;
+
+                a{
+                    line-height: 1.5;
+                }
+
+                li {
+                    margin-bottom: 5px;
+                }
             }
         }
         .newsletter-signup {
@@ -778,8 +805,11 @@ body {
             overflow: hidden;
         }
     }
+
 }
-.inner {
+
+
+.database .inner {
     section{
        display: block;
        float: left; 

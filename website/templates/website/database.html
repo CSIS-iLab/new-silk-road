@@ -8,15 +8,16 @@ The Database | {{ block.super }}
 {% block bodyclass %}database{% endblock %}
 
 {% block content-shell %}
-<section class='content-wrapper page-wrapper'>
-    <header>
-        <h1>The Database</h1>
-    </header>
+<section class='poster'>
+   
+</section>
 
 <div id="database-page">
 
 <section id='db-search'>
-   
+    
+        <h1>Database</h1>
+    
         <div class="left-div">
             <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
         </div>
@@ -67,7 +68,7 @@ The Database | {{ block.super }}
     </header>
     <div class="row">
         <section>
-        <a href="{% url 'infrastructure:project-list' %}" alt="Projects"><h3 class="entry-title ">Projects</h3></a>
+        <a class="green-button" href="{% url 'infrastructure:project-list' %}" alt="Projects"><div class="button-text"> Projects</div></a>
           
             {% comment %}
             <ul class="clean details">
@@ -77,33 +78,33 @@ The Database | {{ block.super }}
             {% endcomment %}
         </section>
         <section>
-         <a href="{% url 'infrastructure:initiative-list' %}" alt="Initiatives"><h3 class="entry-title ">Initiatives</h3></a>
+         <a class="green-button" href="{% url 'infrastructure:initiative-list' %}" alt="Initiatives"><div class="button-text">Initiatives</div></a>
             
         </section>
         <section>
-            <a href="{% url 'facts:organization-list' %}" alt="Organizations"><h3 class="entry-title ">Organizations</h3></a>
+            <a class="green-button" href="{% url 'facts:organization-list' %}" alt="Organizations"><div class="button-text">Organizations</div></a>
         
             {% comment %}
             <ul class="clean details">
                 {% for modelname, label in organization_types %}
-                <li><a href="{% url 'facts:organization-list-redirect' org_type=modelname %}">{{label}}</a></li>{% endfor %}
+                <li><a class="green-button" href="{% url 'facts:organization-list-redirect' org_type=modelname %}"><div class="button-text">{{label}}</div></a></li>{% endfor %}
             </ul>
             {% endcomment %}
         </section>
         <section>
-        <a href="{% url 'facts:event-list' %}" alt="Events"><h3 class="entry-title ">Events</h3></a>
+        <a class="green-button" href="{% url 'facts:event-list' %}" alt="Events"><div class="button-text">Events</div></a>
             
         </section>
         <section>
-        <a href="{% url 'facts:person-list' %}" alt="People"><h3 class="entry-title ">People</h3></a>
+        <a class="green-button" href="{% url 'facts:person-list' %}" alt="People"><div class="button-text">People</div></a>
            
         </section>
     </div>
 </section>
 <nav role="navigation" class="content-wrapper">
-    <ul>
-        <li><a class="green-button" href="{% url 'glossary' %}"><div class="button-text">Glossary</div></a></li>
-        <li><a class="green-button" href="{% url 'methodology' %}"><div class="button-text">Methodology</div></a></li>
+    <ul class="database-nav">
+        <li><a class="green-button read-more" href="{% url 'glossary' %}"><div class="button-text">Glossary</div></a></li>
+        <li><a class="green-button read-more" href="{% url 'methodology' %}"><div class="button-text">Methodology</div></a></li>
     </ul>
 </nav>
 {% endblock %}
