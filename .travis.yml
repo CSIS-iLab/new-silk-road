@@ -1,0 +1,51 @@
+language: python
+
+sudo: false
+
+dist: trusty
+
+python:
+  - "3.5"
+
+addons:
+  postgresql: "9.5"
+  apt:
+    packages:
+      - postgresql-9.5-postgis-2.3
+
+services:
+  - postgresql
+  - redis-server
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.cache/venvs
+
+before_script:
+  - psql -d template1 -c "CREATE EXTENSION postgis;" -U postgres
+  - createdb -E UTF-8 reconasia -U postgres -O `whoami`
+
+env:
+  - ES_VERSION=5.4.0 SECRET_KEY='very-secret' DISABLE_CACHE='True' DEBUG_STATIC='True' DEBUG='True' DATABASE_URL='postgres:///reconasia'
+
+install:
+  - pip install -U pip wheel codecov
+  - pip install -r dev-requirements.txt
+  - wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
+  - tar -xzf elasticsearch-${ES_VERSION}.tar.gz
+  - ./elasticsearch-${ES_VERSION}/bin/elasticsearch &
+  - sleep 10
+
+script:
+  - python manage.py makemigrations --dry-run | grep 'No changes detected' || (echo 'There are changes which require migrations.' && exit 1)
+  - coverage run manage.py test
+  - coverage report
+
+after_success:
+  - codecov
+
+branches:
+  only:
+    - master
+    - staging
