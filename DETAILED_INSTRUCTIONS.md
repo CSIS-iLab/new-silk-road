@@ -416,3 +416,5 @@ To restore from a backup (for this example, I'll use the first one listed in the
 ```sh
 $ heroku pg:backups:restore a004 --app db-follow-reconasia
 ```
+
+Also note that, as mentioned above, the scheduled backup should be set up again after a restore, as it will be dropped.
