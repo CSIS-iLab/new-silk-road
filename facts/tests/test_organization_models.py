@@ -5,9 +5,14 @@ from facts.tests.organization_factories import (
     FinancingOrganizationDetailsFactory,
     GovernmentDetailsFactory,
     MilitaryDetailsFactory,
-    # MultilateralDetailsFactory,
+    MultilateralDetailsFactory,
     NGODetailsFactory,
     PoliticalDetailsFactory,
+    CompanyTypeFactory,
+    FinancingTypeFactory,
+    MultilateralTypeFactory,
+    NGOTypeFactory,
+    PoliticalTypeFactory,
 )
 
 
@@ -29,10 +34,14 @@ class OrganizationTestCase(TestCase):
         self.assertIsNone(obj.headquarters)
 
     def test_organization_can_have_hierarchy(self):
-        parent_org = OrganizationFactory()
-        child_org = OrganizationFactory(parent=parent_org)
-        grandchild_org = OrganizationFactory(parent=child_org)
+        parent_org = OrganizationFactory(name='Parent')
+        child_org = OrganizationFactory(parent=parent_org, name='Child')
+        grandchild_org = OrganizationFactory(parent=child_org, name='Grandchild')
 
+        # Refresh the tree state of the newly created orgs
+        parent_org.refresh_from_db()
+        child_org.refresh_from_db()
+        grandchild_org.refresh_from_db()
         self.assertEqual(child_org.parent, parent_org)
         self.assertEqual(grandchild_org.parent, child_org)
         self.assertIn(grandchild_org, parent_org.get_descendants().all())
@@ -46,6 +55,11 @@ class CompanyDetailsTestCase(TestCase):
         self.assertIsNotNone(obj.organization)
         self.assertIn('companydetails', obj.organization.get_detail_types())
         self.assertIn('Company', obj.organization.get_organization_types())
+
+    def test_companies_can_have_type(self):
+        company_type = CompanyTypeFactory(name='Trucking')
+        obj = CompanyDetailsFactory(org_type=company_type)
+        self.assertEqual(str(obj.org_type), 'Trucking')
 
 
 class FinancingOrganizationTestCase(TestCase):
@@ -61,6 +75,11 @@ class FinancingOrganizationTestCase(TestCase):
         self.assertIsNotNone(obj.organization)
         self.assertIn('financingorganizationdetails', obj.organization.get_detail_types())
         self.assertIn('Financing Organization', obj.organization.get_organization_types())
+
+    def test_financing_can_have_type(self):
+        finance_type = FinancingTypeFactory(name='Bank')
+        obj = FinancingOrganizationDetailsFactory(org_type=finance_type)
+        self.assertEqual(str(obj.org_type), 'Bank')
 
 
 class GovernmentTestCase(TestCase):
@@ -92,6 +111,11 @@ class NGODetailsTestCase(TestCase):
         self.assertIn('ngodetails', obj.organization.get_detail_types())
         self.assertIn('NGO', obj.organization.get_organization_types())
 
+    def test_ngos_can_have_type(self):
+        ngo_type = NGOTypeFactory(name='Community Based')
+        obj = NGODetailsFactory(org_type=ngo_type)
+        self.assertEqual(str(obj.org_type), 'Community Based')
+
 
 class PoliticalDetailsTestCase(TestCase):
 
@@ -101,3 +125,22 @@ class PoliticalDetailsTestCase(TestCase):
         self.assertIsNotNone(obj.organization)
         self.assertIn('politicaldetails', obj.organization.get_detail_types())
         self.assertIn('Political Entity', obj.organization.get_organization_types())
+
+    def test_political_can_have_type(self):
+        political_type = PoliticalTypeFactory(name='PAC')
+        obj = PoliticalDetailsFactory(org_type=political_type)
+        self.assertEqual(str(obj.org_type), 'PAC')
+
+
+class MultilateralDetailsTestCase(TestCase):
+
+    def test_organization_has_details(self):
+        obj = MultilateralDetailsFactory()
+        self.assertIsNotNone(obj.organization)
+        self.assertIn('multilateraldetails', obj.organization.get_detail_types())
+        self.assertIn('Multilateral', obj.organization.get_organization_types())
+
+    def test_multilateral_can_have_type(self):
+        multi_type = MultilateralTypeFactory(name='Mega Corp')
+        obj = MultilateralDetailsFactory(org_type=multi_type)
+        self.assertEqual(str(obj.org_type), 'Mega Corp')
