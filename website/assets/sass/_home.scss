@@ -193,7 +193,7 @@ section h2 {
             max-width: 250px;
             max-height: 150px;
             margin-bottom: 20px;
-            background-color: gray;
+            
         }
     }
     .featured-entry {
@@ -201,7 +201,7 @@ section h2 {
     }
     h2.section-title {
         margin: 1rem 0;
-        @include media($medium-break) {
+        padding-bottom: 1rem;
             margin: auto 0;
         }
     }
@@ -248,15 +248,13 @@ section h2 {
     img.featured-image {
         margin-bottom: .5rem;
         width: 100%;
-        height: 250px;
-        background-color: gray;
         position: relative;
     }
     figure.image-wrap {
         margin-bottom: .5rem;
         width: 100%;
         height: 250px;
-        background-color: gray;
+        
         position: relative;
         &:after {
             content: " ";
