@@ -408,6 +408,18 @@ CONSTANCE_CONFIG = {
         'https://vimeo.com/177601766',
         'Video embed used on homepags'
     ),
+    'HOMEPAGE_ARTICLE_1_WORDS': (
+        100, 'Number of words to show in the preview of the first article on the homepage', int
+    ),
+    'HOMEPAGE_ARTICLE_2_WORDS': (
+        40, 'Number of words to show in the preview of the second article on the homepage', int
+    ),
+    'HOMEPAGE_ARTICLE_3_WORDS': (
+        25, 'Number of words to show in the preview of the third article on the homepage', int
+    ),
+    'HOMEPAGE_ARTICLE_4_WORDS': (
+        25, 'Number of words to show in the preview of the fourth article on the homepage', int
+    ),
 }
 
 PUBLISH_FILTER_ENABLED = os.getenv('PUBLISH_FILTER_ENABLED', 'True') != 'False'
