@@ -3,8 +3,9 @@
     <header>
         <h3><a href="{{entry.get_absolute_url}}">{{entry.title}}</a></h3>
         <div class="subheader">
-            {% if entry.author %}<h5>By {{entry.author}}</h5>{% endif %}
-            <h5 class='date'><time datetime='{{entry.publication_date|date:"c"}}'>{{entry.publication_date|date}}</time></h5>
+        <h5><time datetime='{{entry.publication_date|date:"c"}}'>{{entry.publication_date|date}}</time>
+            {% if entry.author %}| By {{entry.author}}</h5>{% endif %}
+            
         </div>
     </header>
     {% if entry.description_rendered %}
@@ -14,7 +15,11 @@
     {% else %}
     <p>&mdash;</p>
     {% endif %}
-    <footer>
-        <p><a href="{{entry.get_absolute_url}}">Read More</a></p>
-    </footer>
+    
+
+   <a class="green-button read-more" href="{{entry.get_absolute_url}}" alt="Search">
+            <div class="button-text">Read More</div>
+        </a>
+        
+    
 </div>{% endfor %}

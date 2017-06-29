@@ -1,4 +1,8 @@
 @import "variables";
+@import "mixins";
+@import "animations";
+@import "lib/bourbon/bourbon",
+"lib/neat/neat";
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
@@ -16,6 +20,8 @@ $scroll-max-height: $results-view-max-height - 46;
     top: 5px;
     right: 10px;
     z-index: 10;
+
+
 
     @include media($megamap-break) {
         display: block;
@@ -98,27 +104,11 @@ $scroll-max-height: $results-view-max-height - 46;
         }
 
 
+
         > button[type='submit'] {
             @include hide-text;
-            background: url($search-btn-active-img) center no-repeat;
-            background-size: $search-btn-width $search-btn-width;
-            width: $search-btn-width + 8px;
             border-left: 1px solid $blue-steel;
-
-            &[disabled] {
-                background: url($search-btn-inactive-img) center no-repeat;
-                background-size: $search-btn-width $search-btn-width;
-            }
-
-            &:hover {
-                background-size: $search-btn-width+2 $search-btn-width+2;
-            }
-        }
-
-        > button[type='reset'] {
-            @include hide-text;
-            width: $search-btn-width;
-            border-left: 1px solid $blue-steel;
+            width:1.5rem;
 
             &::after {
                 display: block;
@@ -126,11 +116,58 @@ $scroll-max-height: $results-view-max-height - 46;
                 top: 0;
                 bottom: 0;
                 text-indent: 0;
-                font: normal 1.25rem/36px $sans-font-family;
+                font: normal 130% "fontello";
                 vertical-align: middle;
-                content: "X";
+                content: "\E800";
+                width: 1.5rem;
+                height: 100%;
+                padding-left: 3px;
+                 top: 23%;
+
+       
+
+    
+
+            }
+           
+            &[disabled]::after  {
+               display: block;
+                text-align: center;
+                bottom: 0;
+                text-indent: 0;
+                font: normal 130% "fontello";
+                vertical-align: middle;
+                content: "\E800";
+                width: 1.5rem;
+                padding: 0;
+                height: 100%;
+                padding-left: 3px;
+                top: 23%;
+            }
+        
+
+            
+        }
+
+        > button[type='reset'] {
+            @include hide-text;
+            width: 1.6rem;
+            border-left: 1px solid $blue-steel;
+
+            &::after {
+                display: block;
+                position: absolute;
+                text-align: center;
+                bottom: 0;
+                text-indent: 0;
+                font: normal 100% "fontello";
+                vertical-align: middle;
+                content: "\E801";
+                padding: auto 3px;
                 min-width: $search-btn-width;
                 padding: 0;
+                height: 100%;
+                top: 30%;
             }
 
             &:hover {
@@ -179,13 +216,29 @@ $scroll-max-height: $results-view-max-height - 46;
             margin: 4px 20px 4px 10px;
         }
         button.toggle {
+            background-color: transparent;
+              width: 20px;
+              color: transparent;
+
+        
+        &.collapsed:before {
             @include hide-text;
             padding: 0;
-            background: url($expand-btn-img) center no-repeat;
-            width: $expand-collapse-btn-width;
+            font-family: "fontello";
+            content: "\E806";
+            color: black;
 
-            &.expanded {
-                background: url($collapse-btn-img) center no-repeat;
+            //background: url($expand-btn-img) center no-repeat;
+            width: $expand-collapse-btn-width;
+            }
+        &.expanded:before {
+                //background: url($collapse-btn-img) center no-repeat;
+            font-family: "fontello";
+            content: "\E807";
+            color: black;
+            @include hide-text;
+            padding: 0;
+            width: $expand-collapse-btn-width;
             }
         }
     }
@@ -259,15 +312,28 @@ $scroll-max-height: $results-view-max-height - 46;
     max-width: 49%;
     @include flex(0 1 49%);
     @include order(0);
+    background-color: lighten($pale-green, 7%);
+    color: $gravel-grey;
+-webkit-transition: background-color .2s ease-in-out;
+            transition: background-color .2s ease-in-out;
+                   &:disabled {
+        display: none;
+    }
+    &:hover{
+        background-color: darken($pale-green, 7%);
+        color: black;
+    }
 }
 
 #primarySearch {
     input, button {
         background-color: $dark-night;
+        background-size: 50%;
     }
     input {
         max-width: 75%;
         padding: 8px $tiny-spacing 8px 8px;
+        color: white;
     }
 }
 
@@ -318,7 +384,7 @@ $scroll-max-height: $results-view-max-height - 46;
             display: block;
 
             $arr-width: 12px;
-            $arr-color: darken($slate-grey, 10%);
+            $arr-color: darken($green, 10%);
             $height: 30px;
             $vector: $height/2;
             $arr-margin: $arr-width * 1.5;
@@ -326,8 +392,12 @@ $scroll-max-height: $results-view-max-height - 46;
             button {
                 width: 100%;
                 height: $height;
-                background-color: $arr-color;
+                background-color: $green;
                 position: relative;
+
+                &:disabled {
+                    color: lighten($green, 25%);
+                }
             }
 
             &:first-child {
@@ -341,7 +411,7 @@ $scroll-max-height: $results-view-max-height - 46;
                     width: $arr-width;
                     height: $height;
                     border-top: $vector solid transparent;
-                    border-right: $arr-width solid $arr-color;
+                    border-right: $arr-width solid $green;
                     border-bottom: $vector solid transparent;
                 }
             }
@@ -356,10 +426,12 @@ $scroll-max-height: $results-view-max-height - 46;
                     width: $arr-width;
                     height: $height;
                     border-top: $vector solid transparent;
-                    border-left: $arr-width solid $arr-color;
+                    border-left: $arr-width solid $green;
                     border-bottom: $vector solid transparent;
                 }
             }
+
+    
         }
 
         button {
@@ -373,8 +445,9 @@ $scroll-max-height: $results-view-max-height - 46;
 
         > li {
             margin: 0 10px 8px 6px;
-            padding-bottom: 8px;
+            padding: 2px 4px 16px 4px;
             border-bottom: 1px solid $slate-grey;
+
 
             &:last-of-type {
                 border: none;
@@ -402,9 +475,10 @@ $scroll-max-height: $results-view-max-height - 46;
         font-weight: normal;
         font-style: italic;
         margin-bottom: 3px;
+        margin-left: 0px;
     }
     ul {
-        padding: 0 0 0 12px;
+        padding: 0 0 0 0px;
         margin: 0;
         list-style: square inside;
         li {
@@ -413,6 +487,9 @@ $scroll-max-height: $results-view-max-height - 46;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            a {
+                margin: -15px;
+            }
         }
     }
 }
@@ -446,7 +523,7 @@ $scroll-max-height: $results-view-max-height - 46;
 
 
 .Select {
-    font-family: $serif-font-family;
+    font-family: $sans-font-family;
     font-size: $compact-text-size;
     .Select-input  {
         height: 24px;
@@ -455,8 +532,8 @@ $scroll-max-height: $results-view-max-height - 46;
         }
     }
     .Select-control {
-        color: $creamer;
-        background-color: $slate-grey;
+        color: black;
+        background-color: $pale-grey;
         border-radius: 0;
         height: auto;
 
@@ -464,7 +541,7 @@ $scroll-max-height: $results-view-max-height - 46;
             font-size: $compact-text-size;
         }
         .Select-value-label, .Select-clear-zone {
-            color: $creamer;
+            color: black;
             &:hover {
                 color: $dark-night transparent transparent;
             }
@@ -472,7 +549,7 @@ $scroll-max-height: $results-view-max-height - 46;
     }
     .Select-placeholder {
         font-size: $compact-text-size;
-        color: $placeholder-color;
+        color: gray;
         line-height: 24px;
         top: 2px;
     }
@@ -484,7 +561,7 @@ $scroll-max-height: $results-view-max-height - 46;
         }
     }
     .Select-arrow {
-        border-color: $creamer transparent transparent;
+        border-color: $blue-steel transparent transparent;
     }
 
     .Select-menu-outer {
@@ -492,12 +569,13 @@ $scroll-max-height: $results-view-max-height - 46;
         width: 100%;
     }
     .Select-option {
-        color: $creamer;
-        background-color: $slate-grey;
+        color: black;
+        background-color: $med-gray;
         padding: 4px 6px;
 
         &:hover {
-            background-color: $dark-night;
+            background-color: $dark-grey-blue;
+            color: white;
         }
         &:last-child {
             border-bottom-right-radius: 0;
@@ -510,7 +588,7 @@ $scroll-max-height: $results-view-max-height - 46;
 .has-value.Select--single>.Select-control .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
 .has-value.Select > .Select-control > .Select-value .Select-value-label {
-    color: $creamer;
+    color: $dark-grey-blue;
     display: inline-block;
 }
 
