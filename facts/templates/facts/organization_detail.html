@@ -178,6 +178,7 @@
             </section>
         </div>
     </section>
+    {% if object.documents.count %}
     <section class="documents featured">
         <h2>Documentation</h2>
         <div class="wrap">{% if object.documents.count %}
@@ -197,5 +198,6 @@
         <p>&mdash;</p>
         {% endif %}
     </section>
+    {% endif %}
 </article>
 {% endblock %}

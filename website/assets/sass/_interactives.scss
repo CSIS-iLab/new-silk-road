@@ -1,20 +1,17 @@
 @import "variables";
-
 .button,
 button,
 input {
-    font-family: $serif-font-family;
-    color: $creamer;
-    background-color: $slate-grey;
+    font-family: $sans-font-family;
+    color: black;
+    background-color: white;
     border: none;
     border-radius: 0;
     padding: 3px 8px;
     position: relative;
-
     &:focus {
         outline: none;
     }
-
     &:disabled {
         color: $placeholder-color;
     }
@@ -22,29 +19,23 @@ input {
         color: $placeholder-color;
         font-style: italic;
     }
-
     &.gem {
         @include gemify($slate-grey, $height: 30px);
-
         text-transform: uppercase;
         font-family: $sans-font-family;
         line-height: 1.7;
         padding: 0 $small-spacing;
-
         color: $pale-green;
         transition: color 0.5s;
-
         &:hover {
             color: lighten($pale-green, 10%);
         }
-
         &.large {
             line-height: 1.5;
             font-size: $section-hed-size;
             padding: 0 $medium-spacing;
-            @include gemify($slate-grey);
+            
         }
-
         @include media($medium-break) {
             &.large {
                 padding: 0 $large-spacing;
@@ -77,16 +68,16 @@ fieldset {
 
 select {
     line-height: normal;
-}
 
+}
 
 // Custom dropdown
 // Adapted from http://red-team-design.com/making-html-dropdowns-not-suck/
-
 .custom-dropdown {
-    font-family: $serif-font-family;
-    color: $pale-green;
-    background-color: $slate-grey;
+    font-family: $sans-font-family;
+    color: black;
+    background-color: white;
+
     margin: 0;
     line-height: normal;
 }
@@ -96,53 +87,55 @@ select {
         position: relative;
         display: inline-block;
         vertical-align: middle;
-
-        &::before, &::after {
+ width: 100%;
+            max-width: 450px;
+            margin-bottom: 10px;
+        &::before,
+        &::after {
             content: "";
             position: absolute;
             pointer-events: none;
         }
-
         &::before {
             /*  Custom dropdown arrow cover */
-            width: 2em;
+            width: 35px;
             right: 0;
-            top: 3px;
-            bottom: 3px;
-            background-color: $slate-grey;
-            border-left: 2px solid rgba(0, 0, 0, 0.15);
+            top: 0px;
+            bottom: 0px;
+            background-color: $greyish-teal;
         }
-
         &::after {
             /*  Custom dropdown arrow */
-            background-image: url($expand-btn-img);
+            font-family: "fontello";
+            content: "\E806";
+            text-align: center;
+            color: white;
             background-repeat: no-repeat;
             background-size: $expand-collapse-btn-width auto;
-            width: $expand-collapse-btn-width;
+
             height: 1em;
-            right: 0.5em;
+            right: calc(35px /2 - 8px);
             top: 50%;
             margin-top: -.5em;
-            color: rgba(0,0,0,.9);
         }
-
         > select {
             display: inline-block;
-            color: $pale-green;
-            background-color: $slate-grey;
+            color: black;
+            background-color: white;
             padding: 0.45em;
             padding-right: 28px;
             margin: 0;
+             width: 100%;
+            max-width: 450px;
+            height: 38px;
             /* accommodate with the pseudo elements for the dropdown arrow */
             border: 0;
             @include appearance(none);
-
             &[disabled] {
-                color: desaturate($pale-green, 30%);
+                color: desaturate(black, 30%);
             }
         }
     }
-
     /* FF only temporary & ugly fixes */
     /* the "appearance: none" applied on select still shows a dropdown arrow on Firefox */
     /* https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
@@ -152,3 +145,38 @@ select {
         }
     }
 }
+
+
+#database-page #db-search {
+        background-color: white;
+        padding: 0rem 20px;
+        &:after {
+            content:" ";
+            border: 0px solid transparent;
+        }
+    }
+.custom-dropdown, .search-box {
+    display: block;
+    max-width: 450px;
+    width: 90%;
+        @include media($medium-break) {
+margin: .5rem 10px;
+    }
+}
+
+
+    .custom-dropdown {
+        height: 40px;
+    border: 1px solid $greyish-teal;
+}
+.search-controls {
+     height: 40px;
+
+}
+
+.searchWidget {
+
+    
+
+}
+
