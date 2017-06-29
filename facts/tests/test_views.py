@@ -147,7 +147,7 @@ class OrganizationDetailViewTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-class OrganziationListingViewsTestCase(TestCase):
+class OrganizationListingViewsTestCase(TestCase):
     """View the various listings of organizations by type."""
 
     @classmethod
