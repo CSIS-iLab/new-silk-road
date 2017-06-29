@@ -216,6 +216,7 @@ section h2 {
         }
     }
     .featured-entry.entry-1 {
+        margin-bottom: 2rem;
         .entry-title {
             font-size: 25px;
         }
@@ -252,7 +253,7 @@ section h2 {
     figure.image-wrap {
         margin-bottom: .5rem;
         width: 100%;
-        background-color: gray;
+        
         position: relative;
         &:after {
             content: " ";
