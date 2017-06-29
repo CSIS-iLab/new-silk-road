@@ -8,6 +8,7 @@ import json
 from infrastructure.models import ProjectStatus
 from infrastructure.factories import ProjectFactory
 from locations.models import GeometryStore, PointGeometry
+from locations.factories import PointGeometryFactory
 
 
 class TestProjectStatusListView(TestCase):
@@ -22,16 +23,38 @@ class TestGeometryStoreDetailView(TestCase):
     def setUp(self):
         self.geometry_store = GeometryStore()
         self.geometry_store.save()
-        point = PointGeometry(geom=Point(30, 40))
+        point = PointGeometryFactory()
         point.save()
         self.geometry_store.points.add(point)
-        self.geometry_store.save()
         self.url = reverse('api:geometrystore-detail', args=[self.geometry_store.identifier])
+        # View ignores GeometryStores without projects, so add one
         self.project = ProjectFactory()
         self.project.geo = self.geometry_store
         self.project.save()
+
         self.user = User(username='test', password='test')
         self.user.save()
+
+    def test_geometrystore_with_no_project(self):
+        """
+        Without a project, the GeometryStoreDetailView should return a 404
+        """
+        geometry_store = GeometryStore()
+        geometry_store.save()
+        point = PointGeometryFactory()
+        point.save()
+        geometry_store.points.add(point)
+        url = reverse('api:geometrystore-detail', args=[geometry_store.identifier])
+
+        with self.subTest('Authenticated'):
+            self.client.force_login(self.user)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 404)
+
+        with self.subTest('Anonymous'):
+            self.client.logout()
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 404)
 
     def test_published_project(self):
         self.project.published = True
@@ -156,3 +179,44 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 data = json.loads(response.content.decode())
                 self.assertEqual(len(data['features']), 2)
 
+
+class TestOrganizationViewSet(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:organizations-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestProjectViewSet(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:projects-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestInitiativeViewSet(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:initiatives-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestLineViewSet(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:lines-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestPointViewSet(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:points-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestPolygonViewSet(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:polygons-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
