@@ -1,3 +1,4 @@
+import unittest
 from unittest.mock import patch
 from django.test import SimpleTestCase, override_settings
 from search.searches import SiteSearch
@@ -7,7 +8,8 @@ from .settings import TEST_SEARCH
 @override_settings(SEARCH=TEST_SEARCH)
 class SiteSearchTestCase(SimpleTestCase):
     """Test SiteSearch creates valid searches for ElasticSearch"""
-    # NOTE: SiteSearch is a specific search implementation. Should eventually be derived from a reusable base class
+    # NOTE: SiteSearch is a specific search implementation.
+    # Should eventually be derived from a reusable base class
 
     def test_constructor_builds_search(self):
         """SiteSearch should call build_search when a Search instance is created."""
@@ -30,7 +32,7 @@ class SiteSearchTestCase(SimpleTestCase):
         self.assertIsNotNone(s._s._doc_type)
 
     def test_creates_project_location_nested_aggregation(self):
-        """SiteSearch should have a nested terms aggregation 'project_location', on countries.name"""
+        """SiteSearch should have a nested terms aggregation 'project_location' on countries.name"""
         s = SiteSearch()
         aggs_dict = s._s.aggs.to_dict()
         self.assertIsNotNone(aggs_dict)
@@ -96,16 +98,19 @@ class SiteSearchTestCase(SimpleTestCase):
         self.assertIn('description', s._s._highlight)
         self.assertIn('content', s._s._highlight)
 
+    @unittest.expectedFailure
     def test_can_filter_on_kind_aggregation(self):
         """SiteSearch should let us filter on the 'kind' aggregation"""
-        s = SiteSearch()
         self.fail()
 
+    @unittest.expectedFailure
     def test_can_filter_on_infrastructure_type_aggregation(self):
         """SiteSearch should let us filter on the 'infrastructure_type' aggregation"""
-        # FIXME: Since infrastructure_type.name is nested, we'd need to create nested queries for post_filter
+        # FIXME: Since infrastructure_type.name is nested,
+        # we'd need to create nested queries for post_filter
         self.fail()
 
+    @unittest.expectedFailure
     def test_can_filter_on_countries_aggregation(self):
         """SiteSearch should let us filter on the 'countries' aggregation"""
         self.fail()

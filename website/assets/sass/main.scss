@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Merriweather:400,400i|Lato:400,700,900&subset=latin-ext");
 @import "variables";
 @import "mixins";
-@import "lib/bourbon/bourbon", "lib/neat/neat";
+@import "lib/bourbon/bourbon",
+"lib/neat/neat";
 @import "animations";
 @import "normalize";
 @import "layout";
@@ -12,14 +13,18 @@
 @import "pages";
 @import "home";
 @import "about";
-
-html, body {
+@import "navigation";
+html,
+body {
     height: 100%;
 }
 
 html {
     font-size: $base-font-size;
+    -webkit-font-smoothing: antialiased;
+    
 }
+
 body {
     margin: 0;
     font: 1em $sans-font-family;
@@ -31,10 +36,37 @@ body {
     -webkit-font-kerning: auto;
 }
 
+// Responsive Font Sizing
+// These values are the minimum and maximum viewport sizes to apply the font scaling
+$min_width: 400;
+$max_width: 1000;
+// These values represent the range of fon-tsize to apply
+// These values effect the base font-size, headings and other elements will scale proportionally
+$min_font: 16;
+$max_font: 18;
+:root {
+    font-size: #{$min_font}px;
+}
+
+// This part is a little bit ugly, I will explain what is going on in a blog post soon.
+@media (min-width: #{$min_width}px) and (max-width: #{$max_width}px) {
+    :root {
+        font-size: calc( #{$min_font}px + (#{$max_font} - #{$min_font}) * ( (100vw - #{$min_width}px) / ( #{$max_width} - #{$min_width})));
+    }
+}
+
+@media (min-width: #{$max_width}px) {
+    :root {
+        font-size: #{$max_font}px;
+    }
+}
+
 a {
     color: $medium-green;
+    text-decoration: none;
+    color: $green;
     &:hover {
-        color: lighten($medium-green, 15%);
+        color: $green;
         transition: color 0.4s;
     }
 }
@@ -47,35 +79,71 @@ h1 {
     }
 }
 
-h1,h2 {
+h1,
+h2 {
     font-family: $serif-font-family;
-
-        a {
-            text-decoration: none;
-        }
-}
-
-h3,h4,h5,h6 {
-    font-family: $sans-font-family;
-
     a {
         text-decoration: none;
     }
 }
 
-h2,h3,h4,h5,h6 {
+h3,
+h4,
+h5,
+h6 {
+    font-family: $sans-font-family;
+    a {
+        text-decoration: none;
+    }
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
     line-height: 1.25em;
     margin: 0 0 0.75rem;
 }
 
-h3 {
+
+h3 a {
     font-size: $mid-hed-size;
     margin: 0 0 0.5rem;
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+    text-transform: capitalize;
+    font-family: $serif-font-family !important;
+    &:hover,
+    &:focus {
+        color: $green;
+        transition: color 0.4s;
+        &:after {
+            font-family: "fontello";
+            content: "\E804";
+            color: black;
+            font-size: 70%;
+            padding-left: 7px;
+            -webkit-transition: padding .2s ease-in-out;
+            /* Safari 3.1 to 6.0 */
+            transition: padding .2s ease-in-out;
+        }
+    }
+    &:after {
+        font-family: "fontello";
+        content: "\E804";
+        color: $green;
+        font-size: 70%;
+        padding-left: 4px;
+        -webkit-transition: padding .2s ease-in-out;
+        /* Safari 3.1 to 6.0 */
+        transition: padding .2s ease-in-out;
+    }
 }
 
 figure {
     margin: 0;
-
     img {
         display: block;
     }
@@ -83,6 +151,7 @@ figure {
 
 img {
     max-width: 100%;
+    height: auto;
 }
 
 figcaption {
@@ -94,6 +163,7 @@ figcaption {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     height: 100%;
+
 }
 
 iframe {
@@ -102,11 +172,9 @@ iframe {
 
 p {
     margin: 0 0 1rem;
-
     @include media($small-break) {
         margin: 0 0 $small-spacing;
     }
-
     @include media($medium-break) {
         margin-bottom: 1.5rem;
     }
@@ -122,41 +190,33 @@ ul {
     margin: 0 0 1em;
     padding-left: 1em;
     line-height: normal;
-
     li {
         margin-bottom: 6px;
         &:last-child {
             margin-bottom: 0;
         }
     }
-
     &.clean {
         list-style-type: none;
         padding-left: 0;
     }
-
     &.compact {
         margin: 0;
         padding: 0;
-
-            li {
-                @extend li:last-child;
-                margin-bottom: 3px;
-            }
+        li {
+            @extend li:last-child;
+            margin-bottom: 3px;
+        }
     }
-
     &.details {
         font-size: $minorer-text-size;
     }
-
     &.multicolumn {
         column-fill: balance;
         width: 100%;
-
         @include media($medium-break) {
             column-count: 3;
         }
-
         li {
             display: block;
         }
@@ -165,7 +225,7 @@ ul {
 
 button {
     cursor: pointer;
-    background-color: $slate-grey;
+    background-color: $green;
     color: $creamer;
     border: none;
     padding: 2px 8px;
@@ -188,11 +248,9 @@ nav {
 
 ul.breadcrumbs {
     padding: 0;
-
     li {
         font-size: $compact-text-size;
         display: inline-block;
-
         &:not(:last-of-type) {
             &::after {
                 content: " > ";
@@ -215,8 +273,16 @@ dl {
     }
 }
 
-body > header, body > footer {
-    &::before, &::after {
+header {
+    h1 {
+        text-align: center;
+    }
+}
+
+body > header,
+body > footer {
+    &::before,
+    &::after {
         content: "";
         top: 0;
         left: 0;
@@ -226,26 +292,34 @@ body > header, body > footer {
         position: absolute;
         z-index: -1;
     }
-
     &::before {
         background: repeat left/$banner-img-size url($banner-bg-img) transparent;
         opacity: 0.4;
     }
     // NOTE: IE11 doesn't scale/repeat SVG images based on CSS. Follows SVG attributes.
-    &::-ms-backdrop, &::before {
+    &::-ms-backdrop,
+    &::before {
         background: repeat left/$banner-img-size url($banner-bg-img-ie11) transparent;
     }
-
     &::after {
         background-color: $pale-green;
         z-index: -2;
     }
-
     nav ul {
         line-height: 1.1rem;
     }
 }
 
+.404-page {
+    text-align: center
+    .404-icon {
+        display: block;
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin: 1rem auto;
+    }
+}
 header[role=banner] {
     position: relative;
     display: block;
@@ -253,11 +327,9 @@ header[role=banner] {
     width: 100%;
     border-top: $thick-dark-border;
     border-bottom: $thin-dark-border;
-
     @include media($medium-break) {
         min-height: 118px;
     }
-
     .headers {
         min-width: 70%;
         max-width: 94%;
@@ -303,12 +375,10 @@ header[role=banner] {
             @include display(flex);
             @include flex-direction(column);
             @include justify-content(center);
-
             @include media($medium-break) {
                 @include flex-direction(row);
                 @include justify-content(flex-end);
             }
-
             li {
                 display: block;
                 &:not(:last-child) {
@@ -319,7 +389,6 @@ header[role=banner] {
                 @include media($medium-break) {
                     margin: 0 0 $tiny-spacing*2 1em;
                 }
-
                 a {
                     margin: 0 0 16px 0;
                     padding: 3px 0 2px 0;
@@ -327,7 +396,6 @@ header[role=banner] {
                     text-decoration: none;
                     color: $slate-grey;
                     border-bottom: 2px solid $slate-grey;
-
                     &.button.search {
                         @include hide-text;
                         cursor: pointer;
@@ -342,7 +410,6 @@ header[role=banner] {
             }
         }
     }
-
     .site-search {
         @include media($medium-break) {
             max-width: 33%;
@@ -352,26 +419,37 @@ header[role=banner] {
 
 aside {
     h2 {
+        text-align: center;
         font-size: $mid-hed-size;
         font-weight: 300;
+        font-family: $sans-font-family;
+        color: $green;
+
+        span {
+            color: $text-gray;
+            text-transform: uppercase;
+        }
+        span:first-of-type {
+            color: $green;
+        }
     }
+
 }
 
 .widows-peak {
     display: block;
     position: relative;
-    @include widows-peak($main-arrow-img, $main-arrow-width);
+    @include widows-peak($main-arrow-img,
+    $main-arrow-width);
 }
 
 header.decorated {
     position: relative;
-
     border-bottom: $thin-border-width solid $blue-steel;
     margin-bottom: 0;
     padding-bottom: 25px;
     display: block;
     min-height: 120px;
-
     @include display(flex);
     @include flex-direction(column);
     @include justify-content(center);
@@ -384,69 +462,65 @@ header.decorated {
         position: relative;
         text-align: center;
     }
-
     &::after {
         content: "";
         width: 100%;
         height: 12px;
         display: block;
-        @include position(absolute, 100% 0 ($small-spacing - $thin-border-width - 2px) 0);
-        background-image: url($small-arrow-img);
-        background-position: 50% 100%;
-        background-size: $small-arrow-width auto;
-        background-repeat: no-repeat;
+        @include position(absolute,
+        100% 0 ($small-spacing - $thin-border-width - 2px) 0);
+        
         z-index: 1;
         @include media($medium-break) {
-            @include position(absolute, 100% 0 ($large-spacing - $thin-border-width - 2px) 0);
+            @include position(absolute,
+            100% 0 ($large-spacing - $thin-border-width - 2px) 0);
         }
     }
-    &::-ms-backdrop, &::after {
-        @include position(absolute, 100% 0 ($small-spacing - $thin-border-width - 2px) 0);
+    &::-ms-backdrop,
+    &::after {
+        @include position(absolute,
+        100% 0 ($small-spacing - $thin-border-width - 2px) 0);
         @include media($medium-break) {
-            @include position(absolute, 100% 0 ($large-spacing - $thin-border-width) 0);
+            @include position(absolute,
+            100% 0 ($large-spacing - $thin-border-width) 0);
         }
     }
-
-    + :not(.featured, .subheader) {
+    +:not(.featured,
+    .subheader) {
         margin-top: 50px;
     }
-
 }
 
-@each $name, $img in $icons
-{
-    header.#{$name}, section.#{$name} {
-        min-height: 120px;
-
+@each $name,
+$img in $icons {
+    header.#{$name},
+    section.#{$name} {
+        min-height: 70px;
         &.decorated {
+             
             padding-bottom: 0;
             h1 {
                 text-align: left;
             }
         }
-
         background-image: url($img);
-        @include decorated-bg($decorated-bg-size);
 
+        @include decorated-bg($decorated-bg-size);
         h1 {
-            padding: 12px 0 12px 100px;
+            padding: 12px 0 12px 80px;
         }
     }
-
     section.#{$name} {
         @include decorated-bg($medium-decorated-bg-size);
-        background-position: 20px center;
+        background-position: 20px top;
         font-size: $minor-text-size;
         line-height: 1.25em;
         padding: 0;
-
         .inner {
             padding: $medium-spacing $medium-spacing (3*$medium-spacing) $medium-decorated-bg-size + 40px;
         }
-
         @include media($large-break) {
-            background-size: $large-decorated-bg-size $large-decorated-bg-size;
-
+            background-size: $decorated-bg-size $decorated-bg-size;
             .inner {
                 padding-left: 220px;
             }
@@ -454,16 +528,52 @@ header.decorated {
     }
 }
 
-
-body > footer {
+body > footer#page-footer {
     @include position(relative);
     display: block;
+    color: $cloudy-blue;
+    font-size: 90%;
+    a:hover {
+        color: white;
+    }
+    aside {
+         color: $cloudy-blue;
 
-    border-top: $thin-dark-border;
-    color: $dark-night;
-    padding: $small-spacing;
+    }
     @include media($medium-break) {
         @include pad($large-spacing 0 0);
+    }
+    .wrap {
+        h2.section-title {
+            text-align: left;
+            color: white;
+            margin-bottom: .5rem;
+        }
+        .green-button {
+            margin: 0px 0px 1rem;
+        }
+        a:not(.green-button) {
+            -webkit-transition: all .2s ease-in-out;
+            /* Safari 3.1 to 6.0 */
+            transition: all .2s ease-in-out;
+            &:hover,
+            &:focus {
+                &:after {
+                    padding-left: 8px;
+                    -webkit-transition: padding .2s ease-in-out;
+                    /* Safari 3.1 to 6.0 */
+                    transition: padding .2s ease-in-out;
+                }
+            }
+            &:after {
+                font-family: "fontello";
+                content: "\E804";
+                color: white;
+                font-size: 70%;
+                padding-left: 4px;
+                padding-bottom: 4px;
+            }
+        }
     }
     .wrap {
         @include display(flex);
@@ -471,93 +581,130 @@ body > footer {
         @include justify-content(space-between);
         @include align-items(stretch);
         @include flex-wrap(wrap);
-
-
+        padding: $small-spacing $small-spacing $small-spacing $small-spacing;
         .branding {
             @include flex(1 0 100%);
             min-height: 150px;
             padding-top: $medium-spacing;
+            @include media($medium-break) {
+                padding-right: 50px !important;
+            }
+        }
+        h2 {
+            margin: .4rem 0px 0.65rem;
         }
         .quick-links {
             display: block;
             min-height: 150px;
-            font-size: $compact-text-size;
             @include flex(1 0 100%);
+            .quick-links-left,
+            .quick-links-right {
+                width: calc(50% - 20px);
+                float: left;
 
-            h3 {
-                margin-bottom: 0.65rem;
+                a{
+                    line-height: 1.5;
+                }
+
+                li {
+                    margin-bottom: 5px;
+                }
             }
-
         }
         .newsletter-signup {
             display: block;
             min-height: 150px;
-            font-size: $compact-text-size;
             @include flex(1 0 100%);
         }
-
         @include media($medium-break) {
             @include flex-direction(row);
-
             .quick-links {
                 @include flex(0 1 50%);
                 padding-left: 10%;
             }
-
             .newsletter-signup {
                 @include flex(1 1 100%);
             }
-
             .branding {
                 @include flex(0 1 50%);
                 min-height: auto;
                 padding-top: 0;
             }
         }
-
         @include media($large-break) {
             .branding {
                 max-width: 42%;
                 @include flex(0 1 42%);
                 padding-right: 12%;
             }
-
-            .quick-links, .newsletter-signup {
+            .quick-links,
+            .newsletter-signup {
                 max-width: 29%;
                 @include flex(0 1 29%);
                 padding: 0;
             }
-
         }
-
     }
     nav {
         display: inline-block;
         vertical-align: top;
-
+        width: 100%;
         li {
             margin-bottom: $large-spacing/3;
         }
-
         &:not(:first-of-type) {
             padding-left: 10%;
         }
     }
     a {
-        color: $dark-night;
+        color: white;
         text-decoration: none;
     }
     .logo {
         max-width: 100%;
         @include media($small-break) {
             width: 100%;
-            max-width: 306px;
+            max-width: 400px;
         }
         margin-bottom: 0.65rem;
     }
     aside {
-        font-size: $minorer-text-size;
         margin-top: $medium-spacing;
+    }
+    #lower-footer {
+        line-height: 1.2;
+        padding: $small-spacing;
+        background-color: $dark-grey-blue;
+        color: $greyish-teal-two;
+        #copywrite {
+            font-size: .7rem;
+            @include media($medium-break) {
+                width: 50%;
+                display: block;
+                float: left;
+            }
+        }
+        .social-icons {
+            font-size: .9rem;
+            border-left: none;
+            margin: 0px;
+            text-align: right;
+            display: block;
+            position: relative;
+            padding-top: 14px;
+            a {
+                padding-left: 0px;
+                color: $light-green;
+                &:hover {
+                    color: white;
+                }
+            }
+            @include media($medium-break) {
+                width: 50%;
+                display: block;
+                float: left;
+            }
+        }
     }
 }
 
@@ -567,43 +714,37 @@ article > section {
 
 article {
     section {
-
         .row:last-child {
             margin-bottom: 0;
         }
-
         h2 {
             font: $section-hed-size $serif-font-family;
             color: $serious-green;
         }
-
         h3 {
-            display: inline-block;
+            displray: inline-block;
             font-size: $mid-text-size;
             text-transform: uppercase;
             color: $slate-grey;
         }
-
         ul:last-child {
             margin-bottom: 0;
         }
-
         table {
             font-size: $minor-text-size;
             width: 100%;
-
-            tbody td, thead th {
+            tbody td,
+            thead th {
                 padding: 0;
                 &:first-child {
                     padding-right: 6px;
                 }
             }
-
             @include media($medium-break) {
                 width: 80%;
             }
-
-            th, td {
+            th,
+            td {
                 padding: 2px 5px;
                 text-align: left;
                 vertical-align: text-top;
@@ -618,12 +759,10 @@ article {
     }
 }
 
-
 .row {
     h3 {
         color: $slate-grey;
     }
-
     section {
         table {
             @include media($medium-break) {
@@ -635,44 +774,40 @@ article {
 
 body {
     > section {
-        h2, h3, h4, h5, h6 {
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: $sans-font-family;
             font-weight: 300;
-
             &.highlighter {
                 display: block;
-
                 span {
                     padding: 10px;
                     display: inline-block;
                 }
             }
         }
-
         border-bottom: $thin-dark-border;
         display: block;
         position: relative;
-
         .inner {
             width: 96%;
             margin: auto;
-
             @include media($medium-break) {
                 width: auto;
                 height: auto;
             }
-
+           
         }
-
         &:last-of-type {
             border: none;
         }
-
         h2 {
             font-size: $shouting-hed-size;
             line-height: normal;
         }
-
         > a {
             display: block;
             height: 100%;
@@ -680,12 +815,50 @@ body {
             overflow: hidden;
         }
     }
+
+}
+
+
+.database .inner {
+    section{
+       display: block;
+       float: left; 
+       width: 50px;
+       height: 50px;
+       background-size: 50px 50px;
+       background-position: top left;
+    }
+
+    h3 a{
+                padding-left: 70px;
+                display: block;
+            }
 }
 
 .ssk {
-    @each $soc in twitter, facebook, google-plus, pinterest, tumbler, vk, linkedin, email {
+    @each $soc in twitter,
+    facebook,
+    google-plus,
+    pinterest,
+    tumbler,
+    vk,
+    linkedin,
+    email {
         &.ssk-#{$soc}.ssk-icon {
             color: #58595b;
         }
     }
+}
+
+.clearfix {
+    clear: both;
+}
+
+.green {
+    background-color: green;
+    display: block;
+}
+
+.hidden {
+    display: none;
 }
