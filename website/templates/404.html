@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2><small>404:</small> Not Found</h2>
-    <p>Sorry, we couldn't find what you were looking for.</p>
+<div class="404-page">
+<img class="404-icon" src="{% static 'img/redesign/404.png' %}" alt="Page Not Found">
+    <p>We're unable to locate the page you requested. <br>
+The page may have moved or may no longer be available.</p>
+</div>
 {% endblock %}
