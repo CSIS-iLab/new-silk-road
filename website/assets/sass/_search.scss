@@ -257,6 +257,9 @@
                             NOTE: Flex had alignment issues with section inside a standard li with display: list-item;
                             Tried removing whitespace and fiddling with align-items and whatnot.
                         */
+                       
+                       background-color: $pale-gray;
+                       padding: 5px 10px;
 
                         h3 {
                             text-transform: uppercase;
@@ -265,10 +268,43 @@
                         @include media($medium-break) {
                             h2 {
                                 width: 75%;
+                                font-size: 1.3em;
+
+                                a {
+                                        text-decoration: none;
+                                        color: black;
+                                        font-weight: normal;
+                                        &:hover,
+                                        &:focus {
+                                            color: $green;
+                                            transition: color 0.4s;
+                                            &:after {
+                                                font-family: "fontello";
+                                                content: "\E804";
+                                                color: black;
+                                                font-size: 70%;
+                                                padding-left: 7px;
+                                                -webkit-transition: padding .2s ease-in-out;
+                                                /* Safari 3.1 to 6.0 */
+                                                transition: padding .2s ease-in-out;
+                                            }
+                                        }
+                                        &:after {
+                                            font-family: "fontello";
+                                            content: "\E804";
+                                            color: $green;
+                                            font-size: 70%;
+                                            padding-left: 4px;
+                                            -webkit-transition: padding .2s ease-in-out;
+                                            /* Safari 3.1 to 6.0 */
+                                            transition: padding .2s ease-in-out;
+                                        }
+                                    }
                             }
 
                             h3 {
                                 width: 25%;
+                                margin-bottom: 0px;
                             }
                             h2,
                             h3 {
@@ -318,20 +354,18 @@
                     }
 
                     &::after {
-                        content: "";
-                        background-image: url($expand-btn-img);
-                        background-position: 94% center;
-                        background-repeat: no-repeat;
-                        background-size: $expand-collapse-btn-width auto;
+                        font-family: "fontello";
+                        content: "\E806";
+                        color: black;
                         width: $expand-collapse-btn-width;
-                        height: 100%;
                         position: absolute;
                         right: $expand-collapse-btn-width/2;
-                        bottom: 0;
+                        font-size: .7rem;
+                        
                     }
 
                     &.selected::after {
-                        background-image: url($collapse-btn-img);
+                        content: "\E807";
                     }
                 }
 
@@ -339,7 +373,7 @@
                     display: block;
                     margin: 0;
                     padding: $small-spacing 0;
-                    background-color: $creamer;
+                    background-color: $pale-grey;
 
                     > li {
                         font-size: rem(12);
@@ -351,7 +385,7 @@
                             padding: $tiny-spacing $small-spacing;
 
                             &:hover {
-                                color: $medium-green;
+                                color: $green;
                                 transition: color 0.5s;
                             }
                         }

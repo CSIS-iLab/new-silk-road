@@ -395,9 +395,9 @@ $scroll-max-height: $results-view-max-height - 46;
                 background-color: $green;
                 position: relative;
 
-                         &:disabled {
-        color: lighten($green, 25%);
-    }
+                &:disabled {
+                    color: lighten($green, 25%);
+                }
             }
 
             &:first-child {
