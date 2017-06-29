@@ -48,6 +48,7 @@
         transition: transform .3s ease-in-out, background .3s ease-in-out, -webkit-transform .3s ease-in-out;
         background-color: $green;
         @include media($medium-break) {
+            max-width: 60%;
             display: block;
             position: relative;
             float: right;

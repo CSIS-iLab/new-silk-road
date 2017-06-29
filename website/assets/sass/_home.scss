@@ -165,7 +165,7 @@ section h2 {
         padding: 0rem $mobile-margins 1rem;
         @include media($medium-break) {
             margin-top: -75px;
-            padding: 1rem 3rem 3rem;
+            padding: 1rem 3rem 2rem;
             width: 70%;
             float: left;
         }
@@ -190,9 +190,10 @@ section h2 {
         .sponsored-logo {
             width: 100%;
             height: auto;
-            max-width: 250px;
+            max-width: 150px;
             max-height: 150px;
-            margin-bottom: 20px;
+            margin: 20px 0px;
+            
         }
     }
     .featured-entry {
@@ -200,7 +201,7 @@ section h2 {
     }
     h2.section-title {
         margin: 1rem 0;
-        @include media($medium-break) {
+        padding-bottom: 1rem;
             margin: auto 0;
         }
     }
@@ -212,11 +213,11 @@ section h2 {
     }
     .articles-section-title {
         @include media($medium-break) {
-            padding: 2rem;
+            padding: 1.5rem;
         }
     }
     .featured-entry.entry-1 {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         .entry-title {
             font-size: 25px;
         }
@@ -253,6 +254,7 @@ section h2 {
     figure.image-wrap {
         margin-bottom: .5rem;
         width: 100%;
+        
         
         position: relative;
         &:after {
@@ -324,15 +326,15 @@ section h2 {
             @include media($medium-break) {
             min-height: 150px;
             }
-        }
+    }
 
        
-    }
 }
+
 
 #db-search {
     background-color: $green;
-    padding: 4rem $mobile-margins;
+    padding: 2.5rem $mobile-margins;
     position: relative;
     display: block;
     h2 {
@@ -555,7 +557,7 @@ section h2 {
     margin: 0 auto;
     padding: $mobile-margins;
     background-color: white !important;
-    bottom: -4rem;
+    bottom: -3rem;
     z-index: 100;
     @include media($medium-break) {
         padding: 2rem 3rem;
