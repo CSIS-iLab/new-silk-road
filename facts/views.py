@@ -44,8 +44,7 @@ class OrganizationListView(PublicationMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(OrganizationListView, self).get_context_data(**kwargs)
-        if hasattr(self, 'display_name_plural'):
-            context['display_name_plural'] = self.display_name_plural
+        context['display_name_plural'] = getattr(self, 'display_name_plural', None)
         return context
 
 

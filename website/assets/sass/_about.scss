@@ -20,11 +20,11 @@
         margin: $small-spacing 0;
 
         h2 {
-            font: $section-hedier-size $sans-font-family;
-            text-transform: uppercase;
-            color: #FFF;
-            background-color: $dark-green;
-            display: inline-block;
+            font: $section-hedier-size $serif-font-family;
+            text-align: center;
+
+          
+            display: block;
             line-height: 1;
             padding: $tiny-spacing * 2;
             margin: 0;
