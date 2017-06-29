@@ -310,6 +310,16 @@ body > footer {
     }
 }
 
+.404-page {
+    text-align: center
+    .404-icon {
+        display: block;
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin: 1rem auto;
+    }
+}
 header[role=banner] {
     position: relative;
     display: block;
