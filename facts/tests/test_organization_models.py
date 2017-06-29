@@ -81,6 +81,32 @@ class FinancingOrganizationTestCase(TestCase):
         obj = FinancingOrganizationDetailsFactory(org_type=finance_type)
         self.assertEqual(str(obj.org_type), 'Bank')
 
+    def test_display_credit_ratings(self):
+        """Display available credit ratings for the financing org."""
+
+        obj = FinancingOrganizationDetailsFactory()
+        with self.subTest('No ratings'):
+            result = obj.get_credit_ratings_display()
+            self.assertEqual(result, (None, None, None))
+
+        # This maps to the 3rd element in MOODYS_LONG_TERM
+        obj.moodys_credit_rating = 3
+        with self.subTest('Moody rating'):
+            result = obj.get_credit_ratings_display()
+            self.assertEqual(result, ('Aa2', None, None))
+
+        # This maps to the 2nd element in FITCH_LONG_TERM
+        obj.fitch_credit_rating = 102
+        with self.subTest('Fitch rating'):
+            result = obj.get_credit_ratings_display()
+            self.assertEqual(result, ('Aa2', 'AA+', None))
+
+        # This maps to the 5th element in STANDARD_POORS_LONG_TERM
+        obj.sp_credit_rating = 205
+        with self.subTest('S&P rating'):
+            result = obj.get_credit_ratings_display()
+            self.assertEqual(result, ('Aa2', 'AA+', 'A+'))
+
 
 class GovernmentTestCase(TestCase):
 
