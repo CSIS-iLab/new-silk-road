@@ -220,3 +220,24 @@ class TestPolygonViewSet(TestCase):
         url = reverse('api:polygons-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class TestRegionListView(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:region-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestCountryListView(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:country-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestInfrastructureTypeList(TestCase):
+    def test_that_view_loads(self):
+        url = reverse('api:infrastructure-type-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
