@@ -192,8 +192,7 @@ section h2 {
             height: auto;
             max-width: 250px;
             max-height: 150px;
-            margin: 20px 0px;
-            
+            margin-bottom: 20px;
         }
     }
     .featured-entry {
@@ -201,7 +200,7 @@ section h2 {
     }
     h2.section-title {
         margin: 1rem 0;
-        padding-bottom: 1rem;
+        @include media($medium-break) {
             margin: auto 0;
         }
     }
@@ -217,7 +216,6 @@ section h2 {
         }
     }
     .featured-entry.entry-1 {
-        margin-bottom: 2rem;
         .entry-title {
             font-size: 25px;
         }
@@ -254,8 +252,7 @@ section h2 {
     figure.image-wrap {
         margin-bottom: .5rem;
         width: 100%;
-        
-        
+        background-color: gray;
         position: relative;
         &:after {
             content: " ";
