@@ -16,10 +16,16 @@
 
     form {
         width: 100%;
+        max-width: 450px;
+             @include media($medium-break) {
+            max-width: 700px;
+        }
+ 
         @include display(flex);
         @include flex-direction(row);
         @include justify-content(space-between);
         @include align-items(center);
+
 
         .search-controls {
             @include flex(1 1 auto);
@@ -40,27 +46,34 @@
 }
 
 .search-controls {
-    border: 2px solid $pale-green;
-    background-color: #363d4e;
+    position: relative;
+    max-width: 100%;
+    background-color: white;
     @include display(flex);
     @include flex-direction(row);
     @include justify-content(space-between);
-
+    @include media($medium-break) {
+        max-width: 450px;
+    }
     input {
-        background-color: #363d4e;
-        padding: $small-spacing;
+        background-color: white;
+        padding: .45em 28px .45em .45em;
+        border: 1px solid $greyish-teal;
+     
     }
 
     input.primary {
-        min-width: 320px;
         @include flex(1 0 auto);
+         width: 100%;
+            max-width: 450px;
     }
 
     input[type='submit'], button[type='submit'] {
         @include hide-text;
         padding: 0;
-        margin-right: 8px;
+        //margin-right: 8px;
         background: url($search-btn-active-img) center no-repeat;
+
         width: $search-btn-width;
 
         &[disabled] {
@@ -73,6 +86,7 @@
         @include hide-text;
         padding: 0;
         width: $search-btn-width;
+
 
         &::after {
             position: absolute;
@@ -99,16 +113,23 @@
     label {
         background-color: transparent;
         @include flex(1 1 auto);
+
     }
 
     button[type='search'],
     button[type='submit'] {
         @include hide-text;
-        padding: 0;
-        margin-right: 8px;
+        padding: .45em 28px .45em .45em;
+        right: 0px;
+        height: 39px;
+        position: absolute;
+        color: transparent;
         background: url($search-btn-active-img) center no-repeat;
         width: $search-btn-width;
-
+        background-color: $greyish-teal;
+                    background-size: $expand-collapse-btn-width auto;
+            width: $expand-collapse-btn-width;
+           
         &[disabled] {
             background: url($search-btn-inactive-img) center no-repeat;
         }
@@ -146,7 +167,6 @@
     font-size: $minor-text-size;
     display: block;
     position: relative;
-    @include widows-peak($light-blue-arrow-img, $main-arrow-width, $adjust: 4px);
     border-bottom: $thin-border-width solid $blue-steel;
     margin-bottom: $medium-spacing;
 
