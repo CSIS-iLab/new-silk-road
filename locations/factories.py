@@ -4,7 +4,7 @@ import random
 
 from django.contrib.gis.geos import Point
 
-from .models import PointGeometry, GeometryStore
+from .models import PointGeometry, Country
 
 
 class FuzzyPoint(factory.fuzzy.BaseFuzzyAttribute):
@@ -20,8 +20,11 @@ class PointGeometryFactory(factory.Factory):
     geom = FuzzyPoint()
 
 
-# class GeometryStoreFactory(factory.Factory):
-#     class Meta:
-#         model = GeometryStore
-#
-#     points = factory.SubFactory(PointGeometryFactory)
+class CountryFactory(factory.Factory):
+    class Meta:
+        model = Country
+
+    name = factory.Sequence(lambda n: 'Country %d' % n)
+    slug = factory.Sequence(lambda n: 'Country-%d' % n)
+    numeric = factory.Sequence(lambda n: n)
+    alpha_3 = factory.Sequence(lambda n: str(n))

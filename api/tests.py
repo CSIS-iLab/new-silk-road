@@ -6,9 +6,11 @@ from django.contrib.auth.models import User
 import json
 
 from infrastructure.models import ProjectStatus
-from infrastructure.factories import ProjectFactory
+from infrastructure.factories import ProjectFactory, InitiativeFactory
 from locations.models import GeometryStore, PointGeometry
-from locations.factories import PointGeometryFactory
+from locations.factories import PointGeometryFactory, CountryFactory
+from facts.tests.organization_factories import OrganizationFactory
+from facts.tests.person_factories import PersonFactory
 
 
 class TestProjectStatusListView(TestCase):
@@ -181,10 +183,86 @@ class TestGeometryStoreCentroidViewSet(TestCase):
 
 
 class TestOrganizationViewSet(TestCase):
+    def setUp(self):
+        self.url = reverse('api:organizations-list')
+
     def test_that_view_loads(self):
-        url = reverse('api:organizations-list')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+
+    def test_filters(self):
+        included_org = OrganizationFactory()
+        excluded_org = OrganizationFactory()
+
+        with self.subTest('no filters'):
+            response = self.client.get(self.url)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertIn(excluded_org.name, returned_orgs)
+
+        with self.subTest('filter by leader'):
+            leader = PersonFactory()
+            included_org.leaders.add(leader)
+            params = {
+                'leaders': leader.id
+            }
+            response = self.client.get(self.url, params)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertNotIn(excluded_org.name, returned_orgs)
+
+        with self.subTest('filter by parent'):
+            parent = OrganizationFactory()
+            included_org.parent = parent
+            included_org.save()
+            params = {
+                'parent': parent.id
+            }
+            response = self.client.get(self.url, params)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertNotIn(excluded_org.name, returned_orgs)
+
+        with self.subTest('filter by country (single)'):
+            country = CountryFactory()
+            country.save()
+            included_org.countries.add(country)
+            params = {
+                'country': country.id
+            }
+            response = self.client.get(self.url, params)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertNotIn(excluded_org.name, returned_orgs)
+
+        with self.subTest('filter by countries (multiple)'):
+            country1 = CountryFactory()
+            country1.save()
+            country2 = CountryFactory()
+            country2.save()
+            included_org.countries.add(country1)
+            extra_included_org = OrganizationFactory()
+            extra_included_org.countries.add(country2)
+            params = {
+                'countries': [country1.id, country2.id]
+            }
+            response = self.client.get(self.url, params)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertIn(extra_included_org.name, returned_orgs)
+            self.assertNotIn(excluded_org.name, returned_orgs)
+
+        with self.subTest('filter by principal initiative'):
+            principal_initiative = InitiativeFactory()
+            principal_initiative.save()
+            included_org.initiatives.add(principal_initiative)
+            params = {
+                'principal_initiatives': principal_initiative.id
+            }
+            response = self.client.get(self.url, params)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertNotIn(excluded_org.name, returned_orgs)
 
 
 class TestProjectViewSet(TestCase):
