@@ -44,8 +44,6 @@ from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 from api.filters.facts import (OrganizationFilter)
 from publish.views import PublicationMixin
 
-PUBLISH_FILTER_ENABLED = getattr(settings, 'PUBLISH_FILTER_ENABLED', True)
-
 
 class OrganizationViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Organization.objects.distinct().all()
@@ -121,7 +119,7 @@ class GeometryStoreDetailView(generics.RetrieveAPIView):
             .annotate(num_projects=Count('projects'))\
             .filter(num_projects__gt=0)
 
-        if PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
+        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
             queryset = queryset.filter(projects__published=True).distinct()
 
         return queryset
@@ -141,7 +139,7 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             .annotate(num_projects=Count('projects'))\
             .filter(num_projects__gt=0)
 
-        if PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
+        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
             queryset = queryset.filter(projects__published=True).distinct()
 
         return queryset
