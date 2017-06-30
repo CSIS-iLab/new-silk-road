@@ -209,7 +209,7 @@ You could have done this before setting up Python, but this part should be relat
 $ createdb reconasia
 ```
 
-Installing the [Heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) can allow you to retrive a copy of the current staging or production databases.
+Installing the [Heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) can allow you to retrieve a copy of the current staging or production databases.
 You can see the available DB snapshots via:
 
 ```sh
@@ -248,6 +248,11 @@ $ pg_restore --clean --no-owner --dbname=reconasia latest.dump
 ```
 
 The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example.
+
+Notes: If you already had this db present, you may see some errors after running this command, but everything should be in working order. If it doesn't seem to work, try deleting your existing db with `$ dropdb reconasia` and run the above commands again. Also, if your local code has migrations that have not been deployed to the system you are restoring the db from, you may need to run migrations as follows:
+```sh
+$ heroku local:run python manage.py migrate
+```
 
 If you ever need to destroy the database on your local machine, you can run `$ dropdb reconasia`.
 
@@ -367,8 +372,49 @@ While developing, you should add tests for the code you contribute, and may run 
 tests by:
 
 ```sh
-$ heroku local:run python manange.py tests
+$ heroku local:run python manage.py tests
 ```
 
 Note: Since some of the tests rely on elasticsearch, make sure that is is running on
 your machine. Refer to the section above on elasticsearch for more information.
+
+
+# Managing Automatic Backups
+
+Heroku can automatically run daily backups, but these do need to be set up manually from time to time. In particular, the schedule will need to be recreated whenever a database is restored from a backup, and sometimes when changing the tier of the server.
+
+To see what time the backups are currently scheduled, run:
+
+```sh
+heroku pg:backups:schedules --app db-follow-reconasia
+```
+
+To schedule a backup (in this case, for 2am Eastern Time):
+
+```sh
+$ heroku pg:backups:schedule --at '02:00 America/New_York' --app db-follow-reconasia
+```
+
+Note that only one scheduled backup can exist at a time, so if there is already a scheduled time, this will replace the existing entry.
+
+To see backups that are currently available:
+
+```sh
+$ heroku pg:backups --app db-follow-reconasia
+
+=== Backups
+ID    Created at                 Status                               Size     Database
+────  ─────────────────────────  ───────────────────────────────────  ───────  ────────
+a004  2017-06-28 06:02:57 +0000  Completed 2017-06-28 06:03:04 +0000  14.57MB  DATABASE
+b003  2017-06-27 21:05:48 +0000  Completed 2017-06-27 21:05:53 +0000  14.57MB  DATABASE
+b002  2017-05-10 17:20:21 +0000  Completed 2017-05-10 17:20:28 +0000  12.00MB  DATABASE
+b001  2017-02-03 15:10:10 +0000  Completed 2017-02-03 15:10:19 +0000  10.66MB  DATABASE
+```
+
+To restore from a backup (for this example, I'll use the first one listed in the example results above, a004):
+
+```sh
+$ heroku pg:backups:restore a004 --app db-follow-reconasia
+```
+
+Also note that, as mentioned above, the scheduled backup should be set up again after a restore, as it will be dropped.
