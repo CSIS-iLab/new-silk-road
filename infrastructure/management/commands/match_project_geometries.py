@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
         for item in GeometryStore.objects.all():
             if not item.label:
-                self.stderr(self.style.WARNING("Geometry {} has no 'name' attribute to match on".format(str(item.identifier))))
+                self.stderr.write(self.style.WARNING("Geometry {} has no 'name' attribute to match on".format(str(item.identifier))))
             else:
                 geom_name = item.label
                 if self.verbosity > 1:
@@ -30,7 +30,7 @@ class Command(BaseCommand):
                     stylefunc = self.style.SUCCESS if matches_count == 1 else self.style.NOTICE
                     self.stdout.write(stylefunc(msg))
 
-                if matches_count == 1 and not self.dry_run:
+                if matches_count == 1:
                     project = project_candidates.first()
                     if not project.geo:
                         if not self.dry_run:

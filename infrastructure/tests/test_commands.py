@@ -1,0 +1,132 @@
+import io
+
+from django.core.management import call_command
+from django.test import TestCase
+
+from locations.models import GeometryStore
+from ..models import Project
+
+
+class CommandTestMixin(object):
+    """Helpers for running a management command in tests."""
+
+    command = ''
+    defaults = {}
+
+    def call_command(self, *args, **kwargs):
+        command_args = self.defaults.copy()
+        command_args.update(kwargs)
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        command_args['stdout'] = stdout
+        command_args['stderr'] = stderr
+        call_command(self.command, *args, **command_args)
+        stdout.seek(0)
+        stderr.seek(0)
+        return stdout, stderr
+
+
+class MatchProjectGeometriesTestCase(CommandTestMixin, TestCase):
+    """Management command to match projects to their geometry stores."""
+
+    command = 'match_project_geometries'
+
+    def setUp(self):
+        super().setUp()
+        self.project = Project.objects.create(name='Test Project')
+        self.other = Project.objects.create(name='Other Project')
+
+    def test_no_geometries(self):
+        """Run command with no geometries to match."""
+
+        self.call_command()
+        # Both projects should be unchanged
+        self.project.refresh_from_db()
+        self.other.refresh_from_db()
+        self.assertIsNone(self.project.geo)
+        self.assertIsNone(self.other.geo)
+
+    def test_match_geometry_to_project(self):
+        """Update project with the matched geometry."""
+
+        match = GeometryStore.objects.create(label='Test Project')
+        stdout, stderr = self.call_command()
+        self.assertIn('Matched GeometryStore \'Test Project\'', stdout.read())
+        # Project should be updated
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.geo, match)
+        # Other should be unchanged
+        self.other.refresh_from_db()
+        self.assertIsNone(self.other.geo)
+
+    def test_dry_run_match(self):
+        """Check for matches but don't update the projects."""
+
+        GeometryStore.objects.create(label='Test Project')
+        stdout, stderr = self.call_command(dry_run=True)
+        self.assertIn('Matched GeometryStore \'Test Project\'', stdout.read())
+        # Both projects should be unchanged
+        self.project.refresh_from_db()
+        self.other.refresh_from_db()
+        self.assertIsNone(self.project.geo)
+        self.assertIsNone(self.other.geo)
+
+    def test_match_existing_geometry(self):
+        """Don't change the geometry on a project if it has already been set."""
+
+        store = GeometryStore.objects.create()
+        self.project.geo = store
+        self.project.save()
+        match = GeometryStore.objects.create(label='Test Project')
+        stdout, stderr = self.call_command()
+        self.assertIn('\'Test Project\' already has associated geodata', stderr.read())
+        # Project should be unchanged
+        self.project.refresh_from_db()
+        self.assertNotEqual(self.project.geo, match)
+        self.assertEqual(self.project.geo, store)
+        # Other should be unchanged
+        self.other.refresh_from_db()
+        self.assertIsNone(self.other.geo)
+
+    def test_multiple_matches(self):
+        """Geometry will not be updated if there are multiple matched projects."""
+
+        # This will match both since they both have the work Project in their name
+        GeometryStore.objects.create(label='Project')
+        self.call_command()
+        # Both projects should be unchanged
+        self.project.refresh_from_db()
+        self.other.refresh_from_db()
+        self.assertIsNone(self.project.geo)
+        self.assertIsNone(self.other.geo)
+
+    def test_missing_name(self):
+        """Show a warning when a GeometryStore is missing a name."""
+
+        store = GeometryStore.objects.create()
+        stdout, stderr = self.call_command()
+        self.assertIn('Geometry {} has no \'name\''.format(str(store.identifier)), stderr.read())
+        # Both projects should be unchanged
+        self.project.refresh_from_db()
+        self.other.refresh_from_db()
+        self.assertIsNone(self.project.geo)
+        self.assertIsNone(self.other.geo)
+
+    def test_verbose_matching(self):
+        """Additional logging at high verbosity."""
+
+        match = GeometryStore.objects.create(label='Test Project')
+        stdout, stderr = self.call_command(verbosity=2)
+        stdout = stdout.read()
+        self.assertIn(
+            'Attempting to match collection \'{}\''.format(str(match.identifier)),
+            stdout)
+        self.assertIn('Matched GeometryStore \'Test Project\'', stdout)
+
+    def test_quiet_matching(self):
+        """Less logging if requested."""
+
+        GeometryStore.objects.create(label='Test Project')
+        stdout, stderr = self.call_command(verbosity=0)
+        stdout = stdout.read()
+        self.assertEqual(stdout, '')
