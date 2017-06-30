@@ -1,10 +1,14 @@
 import io
+import json
+import os
+import tempfile
 
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.test import TestCase
 
 from locations.models import GeometryStore
-from ..models import Project
+from ..models import Initiative, Project
 
 
 class CommandTestMixin(object):
@@ -130,3 +134,128 @@ class MatchProjectGeometriesTestCase(CommandTestMixin, TestCase):
         stdout, stderr = self.call_command(verbosity=0)
         stdout = stdout.read()
         self.assertEqual(stdout, '')
+
+
+class MatchProjectInitiativesTestCase(CommandTestMixin, TestCase):
+    """Match projects to their initiatives via JSON file mapping."""
+
+    command = 'match_projects_to_initiatives'
+
+    def setUp(self):
+        super().setUp()
+        self.handle, self.filename = tempfile.mkstemp(suffix='.json')
+        os.close(self.handle)
+        self.project = Project.objects.create(name='Test Project')
+        self.other = Project.objects.create(name='Other Project')
+        self.initiative = Initiative.objects.create(name='Test Initiative')
+
+    def tearDown(self):
+        super().tearDown()
+        os.remove(self.filename)
+
+    def test_empty_file(self):
+        """Handle an empty file passed to the command."""
+
+        with self.assertRaises(CommandError):
+            self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 0)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_invalid_file(self):
+        """Handle an invalid JSON file passed to the command."""
+
+        with open(self.filename, 'w') as f:
+            f.write('xxxxx')
+
+        with self.assertRaises(CommandError):
+            self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 0)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_default_field_mapping(self):
+        """Map the initiatives using the default field names."""
+
+        with open(self.filename, 'w') as f:
+            data = [
+                {'project_title': 'Test Project', 'initiative_name': 'Test Initiative'}
+            ]
+            json.dump(data, f)
+
+        self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 1)
+        self.assertEqual(self.project.initiatives.first(), self.initiative)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_custom_field_mapping(self):
+        """Customize the fields expected in the JSON file."""
+
+        with open(self.filename, 'w') as f:
+            data = [
+                {'proj': 'Test Project', 'init': 'Test Initiative'}
+            ]
+            json.dump(data, f)
+
+        self.call_command(self.filename, project_field='proj', initiative_field='init')
+        self.assertEqual(self.project.initiatives.count(), 1)
+        self.assertEqual(self.project.initiatives.first(), self.initiative)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_already_mapped(self):
+        """Skip associations which already exist."""
+
+        self.project.initiatives.add(self.initiative)
+
+        with open(self.filename, 'w') as f:
+            data = [
+                {'project_title': 'Test Project', 'initiative_name': 'Test Initiative'}
+            ]
+            json.dump(data, f)
+
+        self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 1)
+        self.assertEqual(self.project.initiatives.first(), self.initiative)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_unkwown_project(self):
+        """Skip project names which aren't found."""
+
+        with open(self.filename, 'w') as f:
+            data = [
+                {'project_title': 'Test Project', 'initiative_name': 'Test Initiative'},
+                {'project_title': 'Does Not Exist', 'initiative_name': 'Test Initiative'},
+            ]
+            json.dump(data, f)
+
+        self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 1)
+        self.assertEqual(self.project.initiatives.first(), self.initiative)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_unknown_initiative(self):
+        """Skip initiatives which aren't found."""
+
+        with open(self.filename, 'w') as f:
+            data = [
+                {'project_title': 'Test Project', 'initiative_name': 'Test Initiative'},
+                {'project_title': 'Test Project', 'initiative_name': 'Does Not Exist'},
+            ]
+            json.dump(data, f)
+
+        self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 1)
+        self.assertEqual(self.project.initiatives.first(), self.initiative)
+        self.assertEqual(self.other.initiatives.count(), 0)
+
+    def test_blank_names(self):
+        """Blank names are skipped."""
+
+        with open(self.filename, 'w') as f:
+            data = [
+                {'project_title': '', 'initiative_name': 'Test Initiative'},
+                {'project_title': 'Test Project', 'initiative_name': ''},
+            ]
+            json.dump(data, f)
+
+        self.call_command(self.filename)
+        self.assertEqual(self.project.initiatives.count(), 0)
+        self.assertEqual(self.other.initiatives.count(), 0)
