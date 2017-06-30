@@ -13,14 +13,14 @@ class FuzzyPoint(factory.fuzzy.BaseFuzzyAttribute):
                      random.uniform(-90.0, 90.0))
 
 
-class PointGeometryFactory(factory.Factory):
+class PointGeometryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PointGeometry
 
     geom = FuzzyPoint()
 
 
-class CountryFactory(factory.Factory):
+class CountryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Country
 

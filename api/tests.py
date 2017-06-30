@@ -26,7 +26,6 @@ class TestGeometryStoreDetailView(TestCase):
         self.geometry_store = GeometryStore()
         self.geometry_store.save()
         point = PointGeometryFactory()
-        point.save()
         self.geometry_store.points.add(point)
         self.url = reverse('api:geometrystore-detail', args=[self.geometry_store.identifier])
         # View ignores GeometryStores without projects, so add one
@@ -44,7 +43,6 @@ class TestGeometryStoreDetailView(TestCase):
         geometry_store = GeometryStore()
         geometry_store.save()
         point = PointGeometryFactory()
-        point.save()
         geometry_store.points.add(point)
         url = reverse('api:geometrystore-detail', args=[geometry_store.identifier])
 
@@ -237,9 +235,7 @@ class TestOrganizationViewSet(TestCase):
 
         with self.subTest('filter by countries (multiple)'):
             country1 = CountryFactory()
-            country1.save()
             country2 = CountryFactory()
-            country2.save()
             included_org.countries.add(country1)
             extra_included_org = OrganizationFactory()
             extra_included_org.countries.add(country2)
@@ -254,7 +250,6 @@ class TestOrganizationViewSet(TestCase):
 
         with self.subTest('filter by principal initiative'):
             principal_initiative = InitiativeFactory(principal_agent=included_org)
-            principal_initiative.save()
             params = {
                 'principal_initiatives': principal_initiative.id
             }
@@ -289,6 +284,17 @@ class TestProjectViewSet(TestCase):
             funding.save()
             params = {
                 'funding__amount__gte': '4'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_project.name, returned_projects)
+            self.assertNotIn(excluded_project.name, returned_projects)
+
+        with self.subTest('filter by funding - currency amount'):
+            funding = ProjectFunding(project=included_project, amount=5)
+            funding.save()
+            params = {
+                'funding__currency_amount__gte': '4 USD'
             }
             response = self.client.get(self.url, params)
             returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]

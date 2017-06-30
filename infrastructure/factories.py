@@ -3,7 +3,7 @@ import factory
 from .models import Project, Initiative
 
 
-class ProjectFactory(factory.Factory):
+class ProjectFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Project
 
@@ -11,7 +11,7 @@ class ProjectFactory(factory.Factory):
     slug = factory.Sequence(lambda n: 'Project-%d' % n)
 
 
-class InitiativeFactory(factory.Factory):
+class InitiativeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Initiative
 
