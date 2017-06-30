@@ -117,9 +117,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
         point = PointGeometry(geom=Point(20, 30))
         point.save()
         self.geom_with_published_project.points.add(point)
-        self.geom_with_published_project.save()
-        self.published_project = ProjectFactory()
-        self.published_project.published = True
+        self.published_project = ProjectFactory(published=True)
         self.published_project.geo = self.geom_with_published_project
         self.published_project.save()
 
@@ -128,9 +126,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
         point = PointGeometry(geom=Point(40, 50))
         point.save()
         self.geom_with_unpublished_project.points.add(point)
-        self.geom_with_unpublished_project.save()
-        self.unpublished_project = ProjectFactory()
-        self.unpublished_project.published = False
+        self.unpublished_project = ProjectFactory(published=False)
         self.unpublished_project.geo = self.geom_with_unpublished_project
         self.unpublished_project.save()
 
@@ -303,10 +299,25 @@ class TestProjectViewSet(TestCase):
 
 
 class TestInitiativeViewSet(TestCase):
+    def setUp(self):
+        self.url = reverse('api:initiative-list')
+
     def test_that_view_loads(self):
-        url = reverse('api:initiative-list')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+
+    def test_dynamic_fields_view(self):
+        InitiativeFactory(published=True)
+        params = {
+            'fields': 'name,initiative_type,founding_month'
+        }
+        response = self.client.get(self.url, params)
+        data = json.loads(response.content.decode())
+        self.assertIn('name', data['results'][0])
+        self.assertIn('initiative_type', data['results'][0])
+        self.assertIn('founding_month', data['results'][0])
+        self.assertNotIn('founding_year', data['results'][0])
+        self.assertNotIn('geographic_scope', data['results'][0])
 
 
 class TestLineViewSet(TestCase):
