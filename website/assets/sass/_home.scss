@@ -193,7 +193,6 @@ section h2 {
             max-width: 150px;
             max-height: 150px;
             margin: 20px 0px;
-            
         }
     }
     .featured-entry {
@@ -241,7 +240,7 @@ section h2 {
         border-left: 5px $med-gray solid;
         padding: 0px 0px 0px 10px;
     }
-    a.green-button {
+    #mobile-button.green-button {
         @include media($medium-break) {
             display: none;
         }
@@ -303,8 +302,8 @@ section h2 {
         &:after {
             border-bottom-color: white;
             @include media($medium-break) {
-                top: calc(50% - .75rem);
-                left: calc(100% - 3rem);
+                top: calc(50% - 1rem);
+                left: calc(101% - 3rem);
                 border-left-color: transparent;
                 border-right: 1.5rem solid white;
                 border-top: 1.5rem solid transparent;
