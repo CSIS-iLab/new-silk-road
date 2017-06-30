@@ -21,12 +21,12 @@ from api.views import (
 
 
 router = routers.DefaultRouter()
-router.register(r'organizations', OrganizationViewSet, base_name='organizations')
-router.register(r'projects', ProjectViewSet, base_name='projects')
-router.register(r'initiatives', InitiativeViewSet, base_name='initiatives')
-router.register(r'lines', LineStringGeometryViewSet, base_name='lines')
-router.register(r'points', PointGeometryViewSet, base_name='points')
-router.register(r'polygons', PolygonGeometryViewSet, base_name='polygons')
+router.register(r'organizations', OrganizationViewSet)
+router.register(r'projects', ProjectViewSet)
+router.register(r'initiatives', InitiativeViewSet)
+router.register(r'lines', LineStringGeometryViewSet)
+router.register(r'points', PointGeometryViewSet)
+router.register(r'polygons', PolygonGeometryViewSet)
 router.register(r'geostore-centroids', GeometryStoreCentroidViewSet, base_name='geostore-centroids')
 
 app_name = 'api'

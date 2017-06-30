@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 import json
 
-from infrastructure.models import ProjectStatus
+from infrastructure.models import ProjectStatus, ProjectFunding
 from infrastructure.factories import ProjectFactory, InitiativeFactory
 from locations.models import GeometryStore, PointGeometry
 from locations.factories import PointGeometryFactory, CountryFactory
@@ -184,7 +184,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
 
 class TestOrganizationViewSet(TestCase):
     def setUp(self):
-        self.url = reverse('api:organizations-list')
+        self.url = reverse('api:organization-list')
 
     def test_that_view_loads(self):
         response = self.client.get(self.url)
@@ -253,9 +253,8 @@ class TestOrganizationViewSet(TestCase):
             self.assertNotIn(excluded_org.name, returned_orgs)
 
         with self.subTest('filter by principal initiative'):
-            principal_initiative = InitiativeFactory()
+            principal_initiative = InitiativeFactory(principal_agent=included_org)
             principal_initiative.save()
-            included_org.initiatives.add(principal_initiative)
             params = {
                 'principal_initiatives': principal_initiative.id
             }
@@ -266,36 +265,61 @@ class TestOrganizationViewSet(TestCase):
 
 
 class TestProjectViewSet(TestCase):
+    def setUp(self):
+        self.url = reverse('api:project-list')
+
     def test_that_view_loads(self):
-        url = reverse('api:projects-list')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+
+    def test_filters(self):
+        included_project = ProjectFactory(published=True)
+        included_project.save()
+        excluded_project = ProjectFactory(published=True)
+        excluded_project.save()
+
+        with self.subTest('no filters'):
+            response = self.client.get(self.url)
+            returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_project.name, returned_projects)
+            self.assertIn(excluded_project.name, returned_projects)
+
+        with self.subTest('filter by funding'):
+            funding = ProjectFunding(project=included_project, amount=5)
+            funding.save()
+            params = {
+                'funding__amount__gte': '4'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_project.name, returned_projects)
+            self.assertNotIn(excluded_project.name, returned_projects)
 
 
 class TestInitiativeViewSet(TestCase):
     def test_that_view_loads(self):
-        url = reverse('api:initiatives-list')
+        url = reverse('api:initiative-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
 
 class TestLineViewSet(TestCase):
     def test_that_view_loads(self):
-        url = reverse('api:lines-list')
+        url = reverse('api:linestringgeometry-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
 
 class TestPointViewSet(TestCase):
     def test_that_view_loads(self):
-        url = reverse('api:points-list')
+        url = reverse('api:pointgeometry-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
 
 class TestPolygonViewSet(TestCase):
     def test_that_view_loads(self):
-        url = reverse('api:polygons-list')
+        url = reverse('api:polygongeometry-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
