@@ -7,8 +7,14 @@
         padding-top: $section-spacing;
     }
 }
-::-ms-backdrop, .content-wrap {
-    background-position: 50% (-($section-spacing + 22));
+
+
+.featured.columnar {
+
+    .content-wrap {
+    margin-bottom: 1rem; 
+    
+    }
 }
 
 
@@ -52,7 +58,7 @@
 }
 
 section.columnar {
-    margin: $section-spacing auto;
+    margin: $section-spacing auto $medium-spacing;
 
     .wrap {
         &.content-wrap {
@@ -205,3 +211,10 @@ header {
         @include flex-wrap(nowrap);
     }
 }
+
+
+footer#page-footer {
+    background-color: $green;
+}
+
+

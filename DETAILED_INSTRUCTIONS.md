@@ -4,9 +4,9 @@ These are detailed for setting up the project and it's dependencies. Unlike the 
 
 When you see a `$` followed by a space then some other words, i.e. `$ brew install python3`, that means this should be run on the command line. You don't type the `$`.
 
-# Part 1: Transform your computer into a developer's machine
+# Part 1a: Transform your computer into a developer's machine (macOS)
 
-This section covers installing a number of tools commonly used by web and application developers, with a focus on macOS. This section involves a number of steps, but those steps should only need to be performed once per machine. After you've installed these tools, you may update them occasionally.
+This section covers installing a number of tools commonly used by web and application developers, with a focus on macOS. This section involves a number of steps, but those steps should only need to be performed once per machine. After you've installed these tools, you may update them occasionally. If you are using a Linux based operating system then you should skip this section and follow the direction in the follow section on setup for Debian/Ubuntu based distributions.
 
 ## Install a Homebrew, package manager
 
@@ -42,6 +42,18 @@ $ brew install redis elasticsearch memcached libmemcached
 
 `elasticsearch` is software for a search database. Basically, information gets copied from the PostgreSQL database and transformed into a format optimized for searchability.
 
+To run it on your machine you may run the following command:
+
+```sh
+$ elasticsearch
+```
+
+or to run it in the background, add a `-d` flag:
+
+```sh
+elasticsearch -d
+```
+
 `memcached` is a program that stores things in computer's memory for fast retrieval. The live website caches pages and other pieces of information to give the website a speed boost. We may turn this feature on or off in development for testing purposes. `libmemcached` is a helper library used to help Django communicate with memcached.
 
 `redis` is a database of sorts, and is used in the code for storing and running automated tasks, such as rebuilding the Elasticsearch database from the PostgreSQL database. You probably don't need this unless you are writing and testing automated tasks.
@@ -65,6 +77,59 @@ macOS comes with an older version of Python installed, but `python3` should poin
 Since you will someday be working on many python projects and need to keep the packages for one project separate from the packages for another project, you'll want two handy tools: `virtualenv` and `virtualenvwrapper`. There's a [good explanation of those tools](http://docs.python-guide.org/en/latest/dev/virtualenvs/) in the ["The Hitchhiker’s Guide to Python"](http://docs.python-guide.org/en/latest/). Go and [read about virtual environments](http://docs.python-guide.org/en/latest/dev/virtualenvs/) now. I'll wait.
 
 Basically you need to run `$ pip3 install virtualenv`. If you're comfortable creating or editing your `.bashrc`, you can also `$ pip3 install virtualenvwrapper` and [add the proper entries](https://virtualenvwrapper.readthedocs.io/en/latest/install.html#shell-startup-file) to your `.bashrc`.
+
+# Part 1b: Transform your computer into a developer's machine (Debian/Ubuntu)
+
+This section details the setup of some of the primary tools required for setting up your development machine for Linux with the assumption of using a Debian/Ubuntu based system. If you are using a different Linux distribution, these steps should be roughly the same changing out the appropriate package manager commands and package names. If you followed the previous section for your macOS system then you should skip this section and continue to part 2.
+
+## Version control
+
+This project requires using `git` and if you don't currently have it installed you should install it with `apt`:
+
+```sh
+$ sudo apt-get install git
+```
+
+## Python Essentials
+
+This project uses Python 3.5 which ships by default on Ubuntu 16.04 and Debian testing. In addition to the base installation, you should ensure you have the development headers to build some of the Python requirements from source:
+
+```sh
+$ sudo apt-get install python3.5 python3.5-dev python-pip build-essential libjpeg8 libjpeg8-dev libfreetype6 libfreetype6-dev zlib1g zlib1g-dev libxml2-dev libxslt1-dev ghostscript libffi-dev
+```
+
+With those installed you should also install `virtualenv` and `virtualenvwrapper` using `pip`:
+
+```sh
+$ sudo pip install virtualenv virtualenvwrapper
+```
+
+This will be used later to create an isolated Python environment for the development of the project.
+
+## Search, Caching, and related packages
+
+This project uses Postgres, Memcached, Redis, and ElasticSearch for DB storage, caching, background queuing, and search respectively. With the exception of ElasticSearch, you can use the OS provided versions of these services installable via `apt`:
+
+```sh
+$ sudo apt-get install postgresql postgis postgresql-contrib postgresql-server-dev postgresql-client libpq-dev redis-server memcached libmemcached-dev
+```
+
+It can be helpful to create a superuser matching your current local user so that you can access the server using ident authentication:
+
+```sh
+$ sudo -u postgres createuser --superuser $USER
+```
+
+ElasticSearch can be installed using either a `.deb` file or from a repository following the directions provided by [elastic](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html):
+
+```sh
+$ wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+$ sudo apt-get install apt-transport-https
+$ echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
+$ sudo apt-get update && sudo apt-get install elasticsearch
+$ sudo /bin/systemctl daemon-reload
+$ sudo /bin/systemctl enable elasticsearch.service
+```
 
 # Part 2: Setting up the website
 
@@ -99,8 +164,12 @@ You don't want to create your virtual environment folder inside the project fold
 If you have `virtualenvwrapper` set up, it should manage this for you. Run:
 
 ```sh
+# macOS
 $ mkvirtualenv -p python3 reconasia
+# Linux
+$ mkvirtualenv -p `which python3.5` reconasia
 ```
+
 
 That should create a folder named "reconasia" in the directory specified by `$WORKON_HOME`. When you want to work on the project, you'll run `$ workon reconasia` to activate that environment.
 
@@ -117,7 +186,10 @@ You'll need to run `$ source ~/virtualenvs/reconasia` to activate that environme
 Once you have your virtual environment created and activated, you can install the packages this project needs by running the following command from the project directory:
 
 ```sh
+# macOS
 $ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip install -r dev-requirements.txt
+# Linux
+$ pip install -r dev-requirements.txt
 ```
 
 If it weren't for the django-pylibmc package, you could run `$ pip install -r dev-requirements.txt` but it needs `CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib` to compile.
@@ -128,6 +200,7 @@ The command above tells `pip` to look at the `dev-requirements.txt` file and ins
 
 Notice we used `pip` rather than `pip3`. That's because with our virtual environment activated, `pip` is a copy of the tool installed in our virtual environment.
 
+
 ## Set up the database
 
 You could have done this before setting up Python, but this part should be relatively easy. Since the project uses a database for many pages, you should create a local copy. To create a totally empty PostgreSQL database on your computer, run:
@@ -136,14 +209,50 @@ You could have done this before setting up Python, but this part should be relat
 $ createdb reconasia
 ```
 
-If you have a database archive file, which may be the case if can get a copy of a pre-existing database, you can create a local database from that archive. You'll need to run something like:
+Installing the [Heroku CLI tools](https://devcenter.heroku.com/articles/heroku-cli) can allow you to retrieve a copy of the current staging or production databases.
+You can see the available DB snapshots via:
+
+```sh
+# For staging
+$ heroku pg:backups --app staging-db-follow-reconasia
+# For production
+$ heroku pg:backups --app db-follow-reconasia
+```
+
+You can download an existing backup by referencing its ID, listed in the first column of the output under "Backups".
+If there are no existing backups then you should create a new one. This can be done via:
+
+```sh
+# For staging
+$ heroku pg:backups:capture --app staging-db-follow-reconasia
+# For production
+$ heroku pg:backups:capture --app db-follow-reconasia
+```
+
+Once you know the ID of the backup you would like to use then you can download it. This example
+command downloads the backup with the ID `b002`:
+
+```sh
+# For staging
+$ heroku pg:backups:download b002 --app staging-db-follow-reconasia
+# For production
+$ heroku pg:backups:download b002 --app db-follow-reconasia
+```
+
+The `b002` reference in the above command would be replaced by the desired ID.
+This will create a new file named `latest.dump` which can be used to restore the database locally.
 
 ```sh
 $ createdb reconasia
-$ pg_restore --clean --no-owner --dbname=reconasia db_archive.tar
+$ pg_restore --clean --no-owner --dbname=reconasia latest.dump
 ```
 
 The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example.
+
+Notes: If you already had this db present, you may see some errors after running this command, but everything should be in working order. If it doesn't seem to work, try deleting your existing db with `$ dropdb reconasia` and run the above commands again. Also, if your local code has migrations that have not been deployed to the system you are restoring the db from, you may need to run migrations as follows:
+```sh
+$ heroku local:run python manage.py migrate
+```
 
 If you ever need to destroy the database on your local machine, you can run `$ dropdb reconasia`.
 
@@ -183,9 +292,19 @@ Right now, this env file is missing values for a number of keys. Anywhere you se
 
 The setting `DATABASE_URL=postgres://localhost/reconasia` may be fine for your local environment if you have PostgreSQL installed and a database created named 'reconasia'. `postgres://localhost/reconasia` is a URL for configuring a connection to a postgres database. In production the URL will include things like a username and password, but we don't need that for developing locally.
 
+For Linux you may want to change this to `DATABASE_URL=postgres:///reconasia` to connect over the Unix socket instead particular if you are using ident auth as previously described.
+
 `DEBUG` and `DEBUG_STATIC` control how the Django website behaves, particularly when there are errors. Having these set to `True` (with a capital T) is useful for developing locally because you get more information about the errors.
 
 When you see a # symbol, that indicates the start of a comment, which is not processed as an environment variable. If a line begins with a #, that entire line is a treated as a comment. So `# ELASTICSEARCH_URL=` is a comment, despite the `KEY=` syntax. You can comment and uncomment various lines to change which settings are processed as an environment variable. So if you aren't using Elasticsearch to test the search, you can put a # in front on `ELASTICSEARCH_URL=http://localhost:9200`.
+
+## Run migrations
+
+You may need to run some database migrations at this point. Migrations update the database with any new model changes since your database was created. So, if your db_archive.tar is from a few months ago, there may be some updates that need to occur. To read more about migrations, see https://docs.djangoproject.com/en/dev/topics/migrations/. To run the migrations:
+
+```sh
+$ heroku local:run python manage.py migrate
+```
 
 ## Run the application
 
@@ -210,6 +329,8 @@ Quit the server with CONTROL-C.
 ```
 
 That means you can open <http://127.0.0.1:8000/> (or <http://localhost:8000/>, both are "addresses" for your computer) in a web browser and you should see your local copy of the website up and running!
+
+Note that any Django commands will need to be run with heroku or foreman, so that the environment variables in the `.env` file can be picked up. For example, to open a shell, you will need to run `heroku local:run python manage.py shell`, rather than just `python manage.py shell`.
 
 ## Working on JavaScript and Sass/CSS: Use Node
 
@@ -242,3 +363,58 @@ $ gulp watch
 ```
 
 So if you have both running, you can access <http://127.0.0.1:3000/> or <http://localhost:3000/> to see styles update moments after you edit and save the Sass files.
+
+
+## Running the tests
+
+This project has a number of tests in order to verify that the code runs as expected.
+While developing, you should add tests for the code you contribute, and may run the
+tests by:
+
+```sh
+$ heroku local:run python manage.py tests
+```
+
+Note: Since some of the tests rely on elasticsearch, make sure that is is running on
+your machine. Refer to the section above on elasticsearch for more information.
+
+
+# Managing Automatic Backups
+
+Heroku can automatically run daily backups, but these do need to be set up manually from time to time. In particular, the schedule will need to be recreated whenever a database is restored from a backup, and sometimes when changing the tier of the server.
+
+To see what time the backups are currently scheduled, run:
+
+```sh
+heroku pg:backups:schedules --app db-follow-reconasia
+```
+
+To schedule a backup (in this case, for 2am Eastern Time):
+
+```sh
+$ heroku pg:backups:schedule --at '02:00 America/New_York' --app db-follow-reconasia
+```
+
+Note that only one scheduled backup can exist at a time, so if there is already a scheduled time, this will replace the existing entry.
+
+To see backups that are currently available:
+
+```sh
+$ heroku pg:backups --app db-follow-reconasia
+
+=== Backups
+ID    Created at                 Status                               Size     Database
+────  ─────────────────────────  ───────────────────────────────────  ───────  ────────
+a004  2017-06-28 06:02:57 +0000  Completed 2017-06-28 06:03:04 +0000  14.57MB  DATABASE
+b003  2017-06-27 21:05:48 +0000  Completed 2017-06-27 21:05:53 +0000  14.57MB  DATABASE
+b002  2017-05-10 17:20:21 +0000  Completed 2017-05-10 17:20:28 +0000  12.00MB  DATABASE
+b001  2017-02-03 15:10:10 +0000  Completed 2017-02-03 15:10:19 +0000  10.66MB  DATABASE
+```
+
+To restore from a backup (for this example, I'll use the first one listed in the example results above, a004):
+
+```sh
+$ heroku pg:backups:restore a004 --app db-follow-reconasia
+```
+
+Also note that, as mentioned above, the scheduled backup should be set up again after a restore, as it will be dropped.

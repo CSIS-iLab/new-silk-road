@@ -43,3 +43,14 @@ CFLAGS=-I$(brew --prefix)/include LDFLAGS=-L$(brew --prefix)/lib pip install pyg
 ## Running locally
 
 You can run the various Django management commands via `heroku local:run` or foreman, which will pick up the environment variables in your `.env` file. So to run the development web server, you'd run the command ` heroku local:run python manage.py runserver` from the project directory. ` heroku local:run ./manage.py runserver` should also work.
+
+
+## Running tests
+
+You can run tests locally with the following command:
+
+```
+heroku local:run python manange.py tests
+```
+
+For more detailed instrutions, refer to the [DETAILED_INSTRUCTIONS.md](DETAILED_INSTRUCTIONS.md).

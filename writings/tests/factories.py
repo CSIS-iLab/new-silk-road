@@ -69,11 +69,6 @@ class OrderedEntryFactory(factory.django.DjangoModelFactory):
     order = 1
 
 
-class CollectionWithConflictingEntriesFactory(EntryCollectionFactory):
-    entry1 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 1')
-    entry2 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 2')
-
-
 class CollectionWithSortedEntriesFactory(EntryCollectionFactory):
     entry1 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 1', order=1)
     entry2 = factory.RelatedFactory(OrderedEntryFactory, 'collection', entry__title='Entry 2', order=2)
