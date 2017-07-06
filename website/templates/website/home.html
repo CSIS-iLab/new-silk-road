@@ -22,7 +22,7 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 <a href="{{ entry.entry.get_absolute_url }}">
                 <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"> </figure>
@@ -41,7 +41,7 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 {% if entry.entry.is_sponsored %}
                 <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
@@ -63,7 +63,7 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
                 <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
