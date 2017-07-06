@@ -584,7 +584,7 @@ body > footer#page-footer {
         padding: $small-spacing $small-spacing $small-spacing $small-spacing;
         .branding {
             @include flex(1 0 100%);
-            min-height: 150px;
+            
             padding-top: $medium-spacing;
             @include media($medium-break) {
                 padding-right: 50px !important;
@@ -595,7 +595,7 @@ body > footer#page-footer {
         }
         .quick-links {
             display: block;
-            min-height: 150px;
+            
             @include flex(1 0 100%);
             .quick-links-left,
             .quick-links-right {
@@ -613,7 +613,7 @@ body > footer#page-footer {
         }
         .newsletter-signup {
             display: block;
-            min-height: 150px;
+            
             @include flex(1 0 100%);
         }
         @include media($medium-break) {
