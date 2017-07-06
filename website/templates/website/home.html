@@ -22,7 +22,7 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 <a href="{{ entry.entry.get_absolute_url }}">
                 <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"> </figure>
@@ -41,7 +41,7 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 {% if entry.entry.is_sponsored %}
                 <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
@@ -49,7 +49,7 @@
             </div>
             {% endif %} {% endfor %}
             <div class="clearfix"></div>
-            <a class="green-button" href="#" alt="Read More">
+            <a class="green-button" href="/analysis" alt="Read More">
                 <div class="button-text">Read more</div>
             </a>
         </div>
@@ -63,7 +63,7 @@
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
                 <div class="entry-byline">
                     <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                    {% if entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
                 </div>
                 {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
                 <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
@@ -71,7 +71,7 @@
             {% endif %} {% endfor %}
         </div>
         <div class="clearfix"></div>
-        <a class="green-button" id="mobile-button" href="#" alt="Read More">
+        <a class="green-button" id="mobile-button" href="/analysis" alt="Read More">
             <div class="button-text">Read more</div>
         </a>
     </div>
@@ -86,7 +86,7 @@
             {% include "search/_search_form.html" %}
         </div>
         <div class="clearfix"></div>
-        <a class="green-button" href="#" alt="Search">
+        <a class="green-button" href="/analysis" alt="Search">
             <div class="button-text">Search</div>
         </a>
     </div>
