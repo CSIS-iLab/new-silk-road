@@ -45,7 +45,7 @@
 {% endif %}
     <section class="details">
         {% if object.alternate_name != object.name and object.geo %}
-        <h1>{{ object.name }}</h1>
+        <h2 class="details-name">{{ object.name }}</h2>
         {% endif %}
 
         <div class="row">
@@ -129,42 +129,46 @@
     {{ object.description_rendered|safe }}
     </section>
     {% endif %}
+{% if object.documents.count %}
     <section class="documents featured">
         <h2>Documentation &amp; References</h2>
         <div class="wrap">{% if object.documents.count %}
-        {% regroup object.documents.all by get_document_type_display as docs_list %}
-        {% for doc_type in docs_list %}
-        <div class="document-list">
-            <h3>{{doc_type.grouper}}</h3>
-            <ul class="clean">{% for doc in doc_type.list  %}
-                <li>
-                    <a rel="external nofollow" target="_blank" href="{{ doc.source_url }}">{{ doc.get_source_url_tail }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
-        {% else %}
-        <p>&mdash;</p>
-        {% endif %}
-{% comment %}
-{% for doc_key, doc_set in project_documents %}
+            {% regroup object.documents.all by get_document_type_display as docs_list %}
+            {% for doc_type in docs_list %}
             <div class="document-list">
-                <h3>{{doc_key}}</h3>
-                <ul class="clean">{% if doc_set %}{% for doc in doc_set  %}
+                <h3>{{doc_type.grouper}}</h3>
+                <ul class="clean">{% for doc in doc_type.list  %}
                     <li>
                         <a rel="external nofollow" target="_blank" href="{{ doc.source_url }}">{{ doc.get_source_url_tail }}</a>
                     </li>
                     {% endfor %}
-                    {% else %}
-                    <li>&mdash;</li>
-                    {% endif %}
                 </ul>
             </div>
-{% endfor %}
-{% endcomment %}
+            {% endfor %}
+            {% else %}
+            <p>&mdash;</p>
+            {% endif %}
+
+            {% comment %}
+            {% for doc_key, doc_set in project_documents %}
+                <div class="document-list">
+                    <h3>{{doc_key}}</h3>
+                    <ul class="clean">{% if doc_set %}{% for doc in doc_set  %}
+                        <li>
+                            <a rel="external nofollow" target="_blank" href="{{ doc.source_url }}">{{ doc.get_source_url_tail }}</a>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li>&mdash;</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endfor %}
+            {% endcomment %}
         </div>
+        
     </section>
+{% endif %}
 </article>
 {% endblock %}
 

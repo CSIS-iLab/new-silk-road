@@ -1,110 +1,210 @@
-{% extends 'base.html' %}{% load static %}
-
-{% block bodyclass %}home{% endblock %}
-
-{% block content-shell %}
-<section id='map' class='poster'>
-    <a href="{% url 'website-map' %}">
+{% extends 'base.html' %}{% load static %} {% block bodyclass %}home{% endblock %} {% block content-shell %}
+<section id="map-hero">
+    <div class="content-wrapper">
         <div class="inner">
-                <h2>Explore</h2>
-                <h3>The Map</h3>
-                <img src='{% static "img/white_arrow.svg" %}' alt="Arrow button" />
+            <h1 class="large-heading white-text">Mapping continental ambitions</h1>
+            <p class="white-text">Use our interactive map to explore how infrastructure projects are reshaping Asia.</p>
+            <a class="green-button" href="{% url 'website-map' %}" alt="Explore the map">
+                <div class="button-text">Explore the Map</div>
+            </a>
         </div>
-    </a>
+        <div class="mobile-overlap">
+        <div>
+        </div>
+        </div>
+    </div>
 </section>
-<section id='featured-articles'>
-    <header>
-        <h2>Articles</h2>
-    </header>
-    {% for entry, truncate_length in featured_entry_set %}
-        <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
-            <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
-            <div class="entry-byline">
-                <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
-                <span class="entry-author">{{ entry.entry.author }}</span>
+<section class='featured-articles'>
+    <div class='content-wrapper'>
+        <div class="articles-left">
+            <h2 class="section-title articles-section-title">FEATURED</h2> {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 1 %}
+            <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
+                <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
+                <div class="entry-byline">
+                    <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                </div>
+                <a href="{{ entry.entry.get_absolute_url }}">
+                <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"> </figure>
+                   
+                </a>
+                {% if entry.entry.is_sponsored %}
+                <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
             </div>
-            <a href="{{ entry.entry.get_absolute_url }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"></a>
-            {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
-            <div class="entry-preview">{{ entry.entry.description_rendered | safe | truncatewords_html:truncate_length }}</div>
+            {% endif %} {% endfor %} {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 2 %}
+            <a href="{{ entry.entry.get_absolute_url }}">
+           <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image " src="{{ entry.entry.featured_image.url }}"> </figure>
+                  
+            </a>
+            <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
+                <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
+                <div class="entry-byline">
+                    <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                </div>
+                {% if entry.entry.is_sponsored %}
+                <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
+            </div>
+            {% endif %} {% endfor %}
+            <div class="clearfix"></div>
+            <a class="green-button" href="/analysis" alt="Read More">
+                <div class="button-text">Read more</div>
+            </a>
         </div>
-    {% endfor %}
+        <div class="articles-right">
+            {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter >= 3 %}
+            <a href="{{ entry.entry.get_absolute_url }}">
+            <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"> </figure>
+                  
+            </a>
+            <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
+                <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
+                <div class="entry-byline">
+                    <span class="entry-date">{{ entry.entry.publication_date.date }}</span>
+                    {% if entry.entry.author %} | <span class="entry-author">{{ entry.entry.author }}</span>{% endif %}
+                </div>
+                {% if entry.entry.is_sponsored %}<img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
+                <div class="entry-preview">{{ entry.entry.content_rendered | safe | truncatewords_html:truncate_length }}</div>
+            </div>
+            {% endif %} {% endfor %}
+        </div>
+        <div class="clearfix"></div>
+        <a class="green-button" id="mobile-button" href="/analysis" alt="Read More">
+            <div class="button-text">Read more</div>
+        </a>
+    </div>
 </section>
-<section id='db-search'>
-    <h2>Search the Database</h2>
-    <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
-    <section role="search">
-        {% include "search/_search_form.html" %}
-    </section>
+<section id='db-search' class=" white-text">
+    <div class='content-wrapper'>
+        <h2 class="section-title  white-text">Search the Database</h2>
+        <div class="left-div">
+            <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
+        </div>
+        <div class="right-div" role="search">
+            {% include "search/_search_form.html" %}
+        </div>
+        <div class="clearfix"></div>
+        <a class="green-button" href="/analysis" alt="Search">
+            <div class="button-text">Search</div>
+        </a>
+    </div>
 </section>
 <section id='db-summary'>
-    <div class="wrap">
-        <div class="count">
-            <span class="value">{{ db_totals.road.count }}</span>
-            <span class="label">Roads</span>
+    <div class='content-wrapper'>
+        <div class="wrap">
+            <div class="num-stat">
+                <div class="count statrt">
+                    <img class="infra-icon" src="{% static 'img/redesign/road_icon_green.svg' %}" alt="Road Statistics">
+                    <div>
+                        <span class="large-numbers">{{ db_totals.road.count }}</span>
+                        <span class="label">Roads</span>
+                    </div>
+                </div>
+            </div>
+            <div class="num-stat">
+                <div class="count">
+                    <img class="infra-icon" src="{% static 'img/redesign/rail_icon_green.svg' %}" " alt="Railroad Statistics ">
+            
+            <div>
+                <span class="large-numbers ">{{ db_totals.rail.count }}</span>
+                <span class="label ">Railroads</span>
+            </div>
         </div>
-        <div class="count">
-            <span class="">{{ db_totals.rail.count }}</span>
-            <span class="label">Railroads</span>
         </div>
-        <div class="count">
-            <span class="">{{ db_totals.seaport.count }}</span>
-            <span class="label">Seaports</span>
-        </div>
-        <div class="count">
-            <span class="">{{ db_totals.intermodal.count }}</span>
-            <span class="label">Dryports</span>
+         <div class="num-stat ">
+        <div class="count statrt ">
+            
+                <img class="infra-icon " src="{% static 'img/redesign/seaport_icon_green.svg' %} "" alt="Seaport Statistics">
+                    <div>
+                        <span class="large-numbers">{{ db_totals.seaport.count }}</span>
+                        <span class="label">Seaports</span>
+                    </div>
+                </div>
+            </div>
+            <div class="num-stat">
+                <div class="count">
+                    <img class="infra-icon" src="{% static 'img/redesign/dryport_icon_green.svg' %}"  alt="Dryport Statistics ">
+            
+            <div>
+                <span class="large-numbers ">{{ db_totals.intermodal.count }}</span>
+                <span class="label ">Dryports</span>
+            </div>
+            </div>
         </div>
     </div>
-</section>
-<section id='visions' class="buzz">
-{% include "writings/_special_analyses.html" %}
-</section>
-<section id="fantasy" class='feature columnar'>
-    <h2>From the Field</h2>
-    <div class="wrap">
-        <div class="poster">
-            <figure>
-                <img src="{% static 'img/homepage/Khorgos_photo.jpg' %}" alt="Photo of a dry port in Khorgos" />
-                <figcaption>Khorgos Dry Port by David Parker</figcaption>
-            </figure>
-        </div>
-        <div class="poster">
-            <figure>
-                <img src="{% static 'img/homepage/Gwadar_port.jpg' %}" alt="Photo of Gwadar Port" />
-                <figcaption>Gwadar Port by Umargondal</figcaption>
-            </figure>
-        </div>
-        <div class="callout">
-            <p>
-                <a class="button gem" href="{% url 'contribute' %}">Submit Content</a>
-            </p>
-        </div>
+    <div class="clearfix "></div>
     </div>
 </section>
-{% endblock content-shell %}
+<section id='illustrating-history'>
+<div class='content-wrapper'>
+
+    <h2 class="section-title ">Illustrating History & Ambition</h2>
+
+    <div class="competing-visions ">
+    <a class="img-container " href="{% url 'competing-visions' %} ">
+        <img src="{% static 'img/redesign/illustrating-history-right.jpg' %} " alt="Competing Visions teaser image " /></a>
+        <div class="illustrating-history-desc">
+            <a href="{% url 'competing-visions' %} "><h3 class="entry-title ">Competing Visions</h3> </a>
+            <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
+        </div>
+   </div>
+  
+    <div class="historical-atlas ">
+        <a  class="img-container" href="{% url 'historical-atlas' %} ">
+            <img src="{% static 'img/redesign/illustrating-history-left.jpg' %} " alt="Historical Atlas teaser image " /></a>
+            <a href="{% url 'historical-atlas' %} "><div class="illustrating-history-desc">
+                <h3 class="entry-title ">Historical Atlas</h3></a>
+                <p id="lastp ">Explore the rise and fall of trade, technology, and civilizations.</p>
+            </div>
+            </div>
+       
+<div class="clearfix "></div>
+</div>
+</section>
+
+<div class="contribute-bkgd ">
 
 
-{% block extrahead %}
-<link rel="stylesheet" href="{% static 'css/lib/magnific-popup.css' %}">
-<script src="{% static 'js/lib/jquery.magnific-popup.min.js' %}"></script>
-{% endblock %}
+<div class="content-wrapper">
+<section id="contribute">
+    <div class="left-div ">
+        <h2 class="section-title ">Partner with us!</h2>
+        <p>Reconnecting Asia is partnering with select organizations and individuals to improve our data. If you are interested in becoming a partner, please apply through the links below.</p>
+        <a href="https://reconnectingasia.formstack.com/forms/outside_submission_individual" alt="Individuals "><h3 class="entry-title ">Individuals</h3></a>
+        <a href="https://reconnectingasia.formstack.com/forms/outside_submission_institution" alt="Organizations"><h3 class="entry-title ">Organizations</h3></a>
+    </div>
 
+    <div class="right-div twitter-block">
+        <h2 class="section-title ">Twitter</h2>
+        <a class="twitter-timeline" href="https://twitter.com/ReconAsia" data-chrome="noheader nofooter noborders"  data-link-color="#3D8283" data-tweet-limit="1"></a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    <div class="clearfix "></div>
+    </section>
+    </div>
 
-{% block postbodyjs %}
-<script type="text/javascript">
-    Zepto(function($){
-        $('#video a.play').magnificPopup({
-            type:'iframe',
-            iframe: {
-                patterns: {
-                    vimeo: {
-                        index: 'vimeo.com/',
-                        id: '/',
-                        src: '//player.vimeo.com/video/%id%?color=abd58c&autoplay=1'
-                    }
+</div>
+<div id="post-contribute">
+</div>
+ {% endblock content-shell %} {% block extrahead %}
+<link rel="stylesheet " href="{% static 'css/lib/magnific-popup.css' %} ">
+<script src="{% static 'js/lib/jquery.magnific-popup.min.js' %} "></script>
+{% endblock %} {% block postbodyjs %}
+<!--<script type="text/javascript ">
+Zepto(function($) {
+    $('#video a.play').magnificPopup({
+        type: 'iframe',
+        iframe: {
+            patterns: {
+                vimeo: {
+                    index: 'vimeo.com/',
+                    id: '/',
+                    src: '//player.vimeo.com/video/%id%?color=abd58c&autoplay=1'
                 }
             }
-        });
+        }
     });
-</script>
-{% endblock %}
+});
+</script>-->
+{% endblock %} 

@@ -9,6 +9,13 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Test Organization%s' % n)
     staff_size = random.randint(0, 1000000)
 
+    @classmethod
+    def create(cls, **kwargs):
+        org = super().create(**kwargs)
+        # Keep tree state up to date
+        org.refresh_from_db()
+        return org
+
     # documents
     @factory.lazy_attribute
     def mission(self):
@@ -21,6 +28,8 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
+            # Ensure the parent tree state is up to date
+            extracted.refresh_from_db()
             self.parent = extracted
 
     @factory.lazy_attribute
@@ -148,3 +157,37 @@ class FODetailsWithShareholdersFactory(FinancingOrganizationDetailsFactory):
         OrganizationShareholderFactory,
         'shareholder'
     )
+
+
+class OrganizationTypeFactory(factory.django.DjangoModelFactory):
+    name = factory.Sequence(lambda n: 'Type %s' % n)
+
+
+class CompanyTypeFactory(OrganizationTypeFactory):
+
+    class Meta:
+        model = 'facts.CompanyType'
+
+
+class FinancingTypeFactory(OrganizationTypeFactory):
+
+    class Meta:
+        model = 'facts.FinancingType'
+
+
+class MultilateralTypeFactory(OrganizationTypeFactory):
+
+    class Meta:
+        model = 'facts.MultilateralType'
+
+
+class NGOTypeFactory(OrganizationTypeFactory):
+
+    class Meta:
+        model = 'facts.NGOType'
+
+
+class PoliticalTypeFactory(OrganizationTypeFactory):
+
+    class Meta:
+        model = 'facts.PoliticalType'

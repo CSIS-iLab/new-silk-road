@@ -1,16 +1,19 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 
-
+     
 // Sizes
-$large: 1200px;
+$xlarge: 1500px;
+$large: 1000px;
 $medium: 768px;
 $small: 400px; // for larger smartphones. $small is a bad label
 $mega-map-min-width: 548px; // Totally eyeballed it
 
+$xlarge-break: new-breakpoint(min-width $xlarge);
 $large-break: new-breakpoint(min-width $large);
 $medium-break: new-breakpoint(min-width $medium 4);
 $small-break: new-breakpoint(min-width $small 2);
 $megamap-break: new-breakpoint(min-width $mega-map-min-width);
+
 
 $small-wrap: 96%;
 $max-content-width: 980px;
@@ -28,7 +31,7 @@ $section-hed-size: rem(26);
 $section-hedier-size: rem(28);
 $minor-text-size: rem(16);
 $minorer-text-size: rem(14);
-$compact-text-size: rem(13);
+$compact-text-size: rem(12);
 $nav-text-size: $minor-text-size;
 $search-text-size: $minorer-text-size;
 $base-line-height: 1.45em;
@@ -38,7 +41,7 @@ $serif-font-family: Merriweather, $georgia;
 // Colors
 
 $pale-green: #d6e1d6;
-$light-green: #D7DFD4;
+$light-green2: #D7DFD4;
 $bright-green: #abd58c;
 $medium-green: #75986a;
 $serious-green: #4e736c;
@@ -56,6 +59,25 @@ $medium-blue: #16496F;
 $concealer: #c6ac9d;
 $article-content: #f0f1f4;
 $search-content: #3c8283;
+
+
+//New colors 2017
+$green: #3D8283;
+$light-green: #B3CFCF;
+$blue-steel: #788ca8;
+$greyish-teal: #6ca4a5;
+$pale-grey: #f1f2f4;
+$med-gray: #E0E0E2;
+$text-gray: #C8C8C8;
+$warm-grey: #747474;
+$cloudy-blue: #b4d0d0;
+$dark-grey-blue: #2c6565;
+$greyish-teal-two: #6ca4a5;
+
+
+
+
+
 
 // Image URLs
 $img-url-base: '/static/img/';
@@ -78,7 +100,7 @@ $collapse-btn-img: $img-url-base + 'Collapse_button.svg';
 $expand-collapse-btn-width: 15px;
 $global-search-btn-img: $img-url-base + 'Search_icon.svg';
 $search-btn-inactive-img: $global-search-btn-img;
-$search-btn-active-img: $img-url-base + 'Search_icon_light.svg';
+$search-btn-active-img: $img-url-base + 'redesign/Search_icon_light.svg';
 $search-btn-width: 25px;
 $zoom-in-btn-img: $img-url-base + 'Zoom-In.svg';
 $zoom-out-btn-img: $img-url-base + 'Zoom-Out.svg';
@@ -86,6 +108,15 @@ $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 $facebook-img: $img-url-base + 'facebook.svg';
 $twitter-img: $img-url-base + 'twitter.svg';
+
+$search-gray: $img-url-base + 'redesign/search-icon-gray.svg';
+$search-gray-close: $img-url-base + 'redesign/search-icon-gray-close.svg';
+$search-white: $img-url-base + 'redesign/search-icon-white.svg';
+$search-white-close: $img-url-base + 'redesign/search-icon-white-close.svg';
+$mobile-map: $img-url-base + 'redesign/homepage-asia-map-small.png';
+$tablet-map: $img-url-base + 'redesign/homepage-asia-map-medium.png';
+$desktop-map: $img-url-base + 'redesign/homepage-asia-map-large.png';
+$wide-desktop-map: $img-url-base + 'redesign/homepage-asia-map-xlarge.png';
 
 // Project & other images
 $banner-img-url: $img-url-base + 'banners/';
@@ -119,7 +150,7 @@ $icons: (
     'event': $database-icon-url + 'Event.svg',
     'person': $database-icon-url + 'Person.svg'
 );
-$decorated-bg-size: 80px;
+$decorated-bg-size: 70px;
 $medium-decorated-bg-size: $decorated-bg-size * 1.3;
 $large-decorated-bg-size: 172px;
 $play-button-size: 98px;
@@ -136,6 +167,24 @@ $medium-spacing: ceil($large-spacing * 0.6);
 $small-spacing: ceil($large-spacing * 0.4);
 $tiny-spacing: 4px;
 
-
+$mobile-margins: 20px;
+$mobile-margins-left: -($mobile-margins);
+$mobile-margins-right: -$mobile-margins * 2;
 // Grid
 $grid-columns: 12;
+
+$img-url-base: '/static/img/';
+//Fonts
+@font-face {
+      font-family: 'fontello';
+      src: url('/static/fonts/fontello/font/fontello.eot?98478670');
+      src: url('/static/fonts/fontello/font/fontello.eot?98478670#iefix') format('embedded-opentype'),
+           url('/static/fonts/fontello/font/fontello.woff?98478670') format('woff'),
+           url('/static/fonts/fontello/font/fontello.ttf?98478670') format('truetype'),
+           url('/static/fonts/fontello/font/fontello.svg?98478670#fontello') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    
+
+    
+}
