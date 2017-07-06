@@ -37,7 +37,6 @@ docutils==0.13.1
 easy-thumbnails==2.3
 elasticsearch==2.4.1
 elasticsearch-dsl==2.2.0
-git+https://github.com/CSIS-iLab/fieldbook-python.git@8b153e#fieldbook
 html5lib==0.9999999
 idna==2.5
 IPy==0.83
