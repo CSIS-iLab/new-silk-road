@@ -1,8 +1,8 @@
 from django.conf import settings
-from django.db import connection
 from django.test import TestCase
 
-from ..models import Publishable, PublishableQuerySet
+from .factories import ConcretePublishableModel, ConcretePublishableFactory, setupModels
+from ..models import PublishableQuerySet
 
 
 class PublishableTestCase(TestCase):
@@ -10,20 +10,11 @@ class PublishableTestCase(TestCase):
     def setUp(self):
         """Since Publishable is abstract, we need to set up a concrete model to test it."""
         super().setUp()
-
-        def setupModels(*models):
-            with connection.schema_editor() as schema_editor:
-                for model in models:
-                    schema_editor.create_model(model)
-
-        class ConcretePublishableModel(Publishable):
-            class Meta:
-                app_label = 'publish'
-
+        # Set up the ConcretePublishableModel
         setupModels(ConcretePublishableModel)
-
+        # Create a ConcretePublishableModel object to be used in the tests
         self.object_class = ConcretePublishableModel
-        self.object = self.object_class.objects.create()
+        self.object = ConcretePublishableFactory()
 
     def test_model_fields(self):
         """
@@ -52,7 +43,7 @@ class PublishableTestCase(TestCase):
     def test_publishable_queryset(self):
         """Test the PublishableQuerySet, which is used as the queryset for the Publishable model."""
         unpublished = self.object
-        published = self.object_class.objects.create(published=True)
+        published = ConcretePublishableFactory(published=True)
 
         qs = PublishableQuerySet(self.object_class)
         # Currently, there are 2 objects, 1 published and 1 unpublished
