@@ -96,7 +96,8 @@ class FeaturedEntryMixin(object):
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
         kwargs['featured_entry_set'] = self.get_featured_entry_set()
-        kwargs['featured_entry'] = kwargs['featured_entry_set'].first().entry
+        if kwargs['featured_entry_set']:
+            kwargs['featured_entry'] = kwargs['featured_entry_set'].first().entry
         return kwargs
 
 
