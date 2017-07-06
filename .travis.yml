@@ -31,7 +31,7 @@ env:
 
 install:
   - pip install -U pip wheel codecov
-  - pip install -r dev-requirements.txt
+  - pip install -r dev-requirements.txt --no-deps
   - wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
   - tar -xzf elasticsearch-${ES_VERSION}.tar.gz
   - ./elasticsearch-${ES_VERSION}/bin/elasticsearch &
