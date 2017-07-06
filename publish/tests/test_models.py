@@ -35,7 +35,7 @@ class PublishableTestCase(TestCase):
         """
         The Publishable model uses the PublishableQuerySet.
 
-        The ConcretePublishableModel (and as a result the Publishable model)
+        The Publishable model (and as a result the ConcretePublishableModel)
         is using the PublishableQuerySet as its queryset class.
         """
         self.assertEqual(self.object_class.objects._queryset_class, PublishableQuerySet)
