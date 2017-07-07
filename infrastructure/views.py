@@ -1,23 +1,22 @@
-from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
-from django.views.generic.edit import FormView
+import logging
+from tempfile import NamedTemporaryFile
+
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseServerError
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 
-from tempfile import NamedTemporaryFile
-from locations.utils import geostore_from_file
-from .models import (Project, ProjectDocument, Initiative)
+from .models import Project, Initiative
 from .forms import ProjectGeoUploadForm
+from locations.utils import geostore_from_file
 from publish.views import PublicationMixin
 
-import logging
-from django.conf import settings
 
 MAPBOX_TOKEN = getattr(settings, 'MAPBOX_TOKEN', None)
 MAPBOX_STYLE_URL = getattr(settings, 'MAPBOX_STYLE_URL', 'mapbox://styles/mapbox/streets-v8')
-LEAFLET_CONFIG = getattr(settings, 'LEAFLET_CONFIG', None)
-DEFAULT_CENTER = LEAFLET_CONFIG.get('DEFAULT_CENTER') if LEAFLET_CONFIG else None
 
 logger = logging.getLogger(__name__)
 
@@ -31,10 +30,6 @@ class ProjectDetailView(PublicationMixin, DetailView):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
-        # context['project_documents'] = (
-        #     (li[1], self.object.documents.filter(document_type=li[0]))
-        #     for _, ol in ProjectDocument.DOCUMENT_TYPES for li in ol
-        # )
         return context
 
 
