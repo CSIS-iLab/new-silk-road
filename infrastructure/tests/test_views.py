@@ -1,3 +1,5 @@
+import csv
+import io
 import json
 import os
 import tempfile
@@ -309,3 +311,51 @@ class GeoUploadViewTestCase(TestCase):
             response = self.client.post(self.url, data=data)
             self.assertContains(
                 response, 'Unable to create geodata from uploaded file', status_code=500)
+
+
+class ProjectCSVExportTestCase(TestCase):
+    """Export current projects as a CSV."""
+
+    def setUp(self):
+        super().setUp()
+        self.user = UserFactory(username='staff')
+        self.user.set_password('test')
+        self.user.is_staff = True
+        self.user.save()
+        self.client.login(username='staff', password='test')
+        self.url = reverse('infrastructure-admin:projects-export-view')
+        self.project = factories.ProjectFactory()
+        self.other = factories.ProjectFactory()
+
+    def test_get_csv(self):
+        """Download the CSV of projects."""
+
+        with self.subTest('Staff download'):
+            response = self.client.get(self.url)
+            self.assertEqual(response['Content-Type'], 'text/csv')
+            self.assertEqual(response.status_code, 200)
+
+        with self.subTest('Non-staff user'):
+            self.user.is_staff = False
+            self.user.save()
+            response = self.client.get(self.url)
+            self.assertRedirects(response, '{}?next={}'.format(reverse('admin:login'), self.url))
+
+    def test_csv_results(self):
+        """Spot checking some of the CSV results."""
+
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        self.assertEqual(
+            results.fieldnames,
+            ['identifier', 'name', 'infrastructure_type', 'countries', 'regions', 'contractors',
+             'initiatives', 'operators', 'funding_sources', 'funding_amounts', 'funding_currencies',
+             'status', 'new', 'verified', 'total_cost', 'total_cost_currency', 'start_day',
+             'start_month', 'start_year', 'commencement_day', 'commencement_month',
+             'commencement_year', 'planned_completion_day', 'planned_completion_month',
+             'planned_completion_year'])
+        expected = [self.other, self.project, ]
+        for i, row in enumerate(results):
+            self.assertEqual(row['name'], expected[i].name)
+            self.assertEqual(row['identifier'], str(expected[i].identifier))
