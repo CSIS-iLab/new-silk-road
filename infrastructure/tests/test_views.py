@@ -1,8 +1,16 @@
+import json
+import os
+import tempfile
+
 from django.conf import settings
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 
 from locations.factories import CountryFactory
+from locations.models import GeometryStore
+from publish.tests.factories import UserFactory
 from . import factories
 
 
@@ -195,3 +203,109 @@ class InitiativeListViewTestCase(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, self.initiative.get_absolute_url())
             self.assertNotContains(response, self.other.get_absolute_url())
+
+
+class GeoUploadViewTestCase(TestCase):
+    """Staff can upload new geo information as GeoJSON or KML."""
+
+    def setUp(self):
+        super().setUp()
+        self.user = UserFactory(username='staff')
+        self.user.set_password('test')
+        self.user.is_staff = True
+        self.user.save()
+        # User needs permissions for GeometryStores
+        ct = ContentType.objects.get_for_model(GeometryStore)
+        change_perm = Permission.objects.get(
+            content_type=ct, codename='change_geometrystore')
+        self.user.user_permissions.add(change_perm)
+        self.client.login(username='staff', password='test')
+        self.url = reverse('infrastructure-admin:project-geo-upload')
+        self.handle, self.filename = tempfile.mkstemp(suffix='.geojson')
+        os.close(self.handle)
+        with open(self.filename, 'w') as f:
+            data = {
+               'type': 'Point',
+               'coordinates': [30, 10]
+            }
+            json.dump(data, f)
+
+    def tearDown(self):
+        super().tearDown()
+        os.remove(self.filename)
+
+    def test_render_form(self):
+        """Get the page and render the form."""
+
+        with self.subTest('Valid staff login'):
+            with self.assertTemplateUsed('infrastructure/admin/geo_upload_form.html'):
+                response = self.client.get(self.url)
+                self.assertEqual(response.status_code, 200)
+
+        with self.subTest('Staff required'):
+            self.user.is_staff = False
+            self.user.save()
+            response = self.client.get(self.url)
+            self.assertRedirects(response, '{}?next={}'.format(reverse('admin:login'), self.url))
+
+    def test_valid_upload(self):
+        """Upload a valid geo shape."""
+
+        with open(self.filename, 'r') as f:
+            data = {
+                'project': '',
+                'label': '',
+                'geo_file': f,
+            }
+            response = self.client.post(self.url, data=data)
+            geo = GeometryStore.objects.get(label=os.path.basename(self.filename))
+            redirect = reverse('admin:locations_geometrystore_change', args=(geo.id,))
+            self.assertRedirects(response, redirect)
+
+    def test_custom_label(self):
+        """Change the label for the uploaded geo store."""
+
+        with open(self.filename, 'r') as f:
+            data = {
+                'project': '',
+                'label': 'My Point',
+                'geo_file': f,
+            }
+            response = self.client.post(self.url, data=data)
+            geo = GeometryStore.objects.get(label='My Point')
+            redirect = reverse('admin:locations_geometrystore_change', args=(geo.id,))
+            self.assertRedirects(response, redirect)
+
+    def test_upload_for_project(self):
+        """Associated the shape with a project."""
+
+        project = factories.ProjectFactory()
+
+        with open(self.filename, 'r') as f:
+            data = {
+                'project': project.pk,
+                'label': '',
+                'geo_file': f,
+            }
+            response = self.client.post(self.url, data=data)
+            geo = GeometryStore.objects.get(label=os.path.basename(self.filename))
+            redirect = reverse('admin:locations_geometrystore_change', args=(geo.id,))
+            self.assertRedirects(response, redirect)
+            project.refresh_from_db()
+            self.assertEqual(project.geo, geo)
+
+    def test_invalid_shape(self):
+        """Handle invalid shapes given by the user."""
+
+        with open(self.filename, 'w') as f:
+            f.write('XXXX')
+
+        with open(self.filename, 'r') as f:
+            data = {
+                'project': '',
+                'label': '',
+                'geo_file': f,
+            }
+            response = self.client.post(self.url, data=data)
+            self.assertContains(
+                response, 'Unable to create geodata from uploaded file', status_code=500)
