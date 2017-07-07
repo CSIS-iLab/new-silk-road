@@ -80,22 +80,24 @@ class FeaturedEntryMixin(object):
         config_key = self.get_featured_config_key()
         return getattr(config, config_key, None)
 
-    def get_featured_entry(self):
+    def get_featured_entry_set(self):
         slug = self.get_featured_slug()
 
         if slug:
             try:
                 entry_list = get_published_orderedentries_from_collection(EntryCollection.objects.get(slug=slug))
                 if entry_list:
-                    ordered_entry = entry_list.order_by('order').first()
-                    return ordered_entry.entry
+                    ordered_entry_set = entry_list.order_by('order')
+                    return ordered_entry_set
             except EntryCollection.DoesNotExist:
                 pass
         return None
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['featured_entry'] = self.get_featured_entry()
+        kwargs['featured_entry_set'] = self.get_featured_entry_set()
+        if kwargs['featured_entry_set']:
+            kwargs['featured_entry'] = kwargs['featured_entry_set'].first().entry
         return kwargs
 
 
@@ -188,5 +190,4 @@ class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
             pass
 
         kwargs['recent_entries'] = recent_entries[:2]
-
         return kwargs

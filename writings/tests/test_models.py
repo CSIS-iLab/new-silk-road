@@ -3,7 +3,8 @@ from django.db.utils import IntegrityError
 from .factories import (
     CategoryFactory,
     EntryFactory,
-    CollectionWithConflictingEntriesFactory,
+    EntryCollectionFactory,
+    OrderedEntryFactory,
     CollectionWithSortedEntriesFactory,
 )
 
@@ -24,9 +25,13 @@ class EntryTestCase(TestCase):
 
 class EntryCollectionTestCase(TestCase):
 
-    def test_entrycollection_fails_with_duplicate_order(self):
+    def test_entrycollection_fails_with_duplicate_entry(self):
+        """The same entry cannot be in the same collection more than once."""
+        collection = EntryCollectionFactory()
+        entry = EntryFactory()
+        OrderedEntryFactory(collection=collection, entry=entry)
         with self.assertRaises(IntegrityError):
-            CollectionWithConflictingEntriesFactory.create()
+            OrderedEntryFactory(collection=collection, entry=entry)
 
     def test_entrycollection_succeeds_with_different_order(self):
         obj = CollectionWithSortedEntriesFactory.create()
