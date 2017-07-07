@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseServerError
+from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -33,8 +34,7 @@ class ProjectDetailView(PublicationMixin, DetailView):
         return context
 
 
-class ProjectsMapView(PublicationMixin, ListView):
-    model = Project
+class ProjectsMapView(TemplateView):
     template_name = 'infrastructure/megamap.html'
 
     def get_context_data(self, **kwargs):
@@ -52,7 +52,7 @@ class ProjectListView(PublicationMixin, ListView):
 class CountryProjectListView(ProjectListView):
 
     def get_queryset(self):
-        self.queryset = self.model.objects.all()
+        self.queryset = super().get_queryset()
         country_identifier = self.kwargs.get('country_slug', None)
         if country_identifier:
             self.queryset = self.queryset.filter(countries__slug=country_identifier)
