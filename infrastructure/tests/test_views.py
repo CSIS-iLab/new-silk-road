@@ -139,3 +139,59 @@ class CountryProjectListViewTestCase(TestCase):
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, 200)
                 self.assertNotContains(response, self.all_project.get_absolute_url())
+
+
+class InitiativeDetailViewTestCase(TestCase):
+    """View the details of an initiative."""
+
+    def setUp(self):
+        super().setUp()
+        self.initiative = factories.InitiativeFactory(published=True)
+
+    def test_get_initiative(self):
+        """Fetch the initiative detail page."""
+
+        with self.assertTemplateUsed('infrastructure/initiative_detail.html'):
+            response = self.client.get(self.initiative.get_absolute_url())
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.initiative.name)
+
+    def test_unpublished_initiative(self):
+        """You should not be able to view unpublished initiatives."""
+
+        self.initiative.published = False
+        self.initiative.save()
+
+        response = self.client.get(self.initiative.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+
+class InitiativeListViewTestCase(TestCase):
+    """List tracked initiatives from the database."""
+
+    def setUp(self):
+        super().setUp()
+        self.initiative = factories.InitiativeFactory(published=True)
+        self.other = factories.InitiativeFactory(published=True)
+        self.url = reverse('infrastructure:initiative-list')
+
+    def test_get_listing(self):
+        """Render the list of initiatives."""
+
+        with self.assertTemplateUsed('infrastructure/initiative_list.html'):
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.initiative.get_absolute_url())
+            self.assertContains(response, self.other.get_absolute_url())
+
+    def test_unpublished_initiative(self):
+        """Unpublished initiatives shouldn't be listed."""
+
+        self.other.published = False
+        self.other.save()
+
+        with self.assertTemplateUsed('infrastructure/initiative_list.html'):
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.initiative.get_absolute_url())
+            self.assertNotContains(response, self.other.get_absolute_url())
