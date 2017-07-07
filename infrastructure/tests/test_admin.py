@@ -4,8 +4,8 @@ from django.test import TestCase
 
 from facts.models import Data
 from locations.models import GeometryStore
-from ..admin import HasGeoListFilter, ProjectAdmin
-from ..models import Project
+from ..admin import HasGeoListFilter, ProjectAdmin, InitiativeAdmin
+from ..models import Project, Initiative
 from . import factories
 
 
@@ -124,3 +124,35 @@ class ProjectAdminTestCase(TestCase):
                     self.assertHTMLEqual(result, expected)
                 else:
                     self.assertIsNone(result)
+
+
+class InitiativeAdminTestCase(TestCase):
+    """Admin customizations for initiatives."""
+
+    def setUp(self):
+        super().setUp()
+        self.admin = InitiativeAdmin(Initiative, admin_site=Mock())
+
+    @classmethod
+    def setUpTestData(cls):  # noqa
+        super().setUpTestData()
+        cls.initiative = factories.InitiativeFactory(name='Mine')
+        cls.other = factories.InitiativeFactory(name='Other')
+
+    def test_search(self):
+        """Find initiatives in the admin."""
+
+        qs = Initiative.objects.order_by('pk')
+        request = Mock()
+
+        tests = (
+            # Label, Term, Expected Results
+            ('No Term', '', [self.initiative.pk, self.other.pk, ]),
+            ('Name', 'Mine', [self.initiative.pk, ]),
+            ('ID', str(self.other.pk), [self.other.pk, ]),
+        )
+
+        for label, term, expected in tests:
+            with self.subTest(label):
+                results, _use_distinct = self.admin.get_search_results(request, qs, term)
+                self.assertQuerysetEqual(results, expected, lambda x: x.pk)
