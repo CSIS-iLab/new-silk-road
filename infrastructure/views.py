@@ -1,11 +1,14 @@
+import io
+import datetime
 import logging
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseServerError
-from django.views.generic import TemplateView
+from django.db import connection
+from django.http import HttpResponseServerError, HttpResponse
+from django.views.generic import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -95,3 +98,26 @@ class GeoUploadView(LoginRequiredMixin, FormView):
             err_msg = "Unable to create geodata from uploaded file!"
             error_response = '<h1>{}</h1><p>{}</p>'.format(err_msg, str(e))
             return HttpResponseServerError(error_response)
+
+
+def copy_projects_csv():
+    cursor = connection.cursor()
+    stream = io.StringIO()
+    cursor.copy_expert(
+        '''
+        COPY (SELECT * FROM infrastructure_projects_export_view)
+        TO STDOUT
+        WITH (FORMAT csv, HEADER TRUE, NULL 'NULL', FORCE_QUOTE *)''',
+        stream
+    )
+    return stream.getvalue()
+
+
+class ProjectExportView(View):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(copy_projects_csv(), content_type="text/csv")
+        d = datetime.datetime.now()
+        filename = "infrastructure_projects_{:%Y%m%d_%H%M}.csv".format(d)
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        return response

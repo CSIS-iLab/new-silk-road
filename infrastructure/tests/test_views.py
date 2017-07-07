@@ -355,7 +355,10 @@ class ProjectCSVExportTestCase(TestCase):
              'start_month', 'start_year', 'commencement_day', 'commencement_month',
              'commencement_year', 'planned_completion_day', 'planned_completion_month',
              'planned_completion_year'])
-        expected = [self.other, self.project, ]
-        for i, row in enumerate(results):
-            self.assertEqual(row['name'], expected[i].name)
-            self.assertEqual(row['identifier'], str(expected[i].identifier))
+        projects = {
+            str(self.project.identifier): self.project,
+            str(self.other.identifier): self.other,
+        }
+        for row in results:
+            expected = projects[row['identifier']]
+            self.assertEqual(row['name'], expected.name)
