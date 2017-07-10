@@ -270,6 +270,7 @@ You can run `$ touch .env` if you want to create the file on the command line, b
 SECRET_KEY="a-bad-secret-key"
 DEBUG=True
 DEBUG_STATIC=True
+#DEBUG_TOOLBAR=True
 # MAINTENANCE_MODE=False
 DATABASE_URL=postgres://localhost/reconasia
 # ELASTICSEARCH_URL=
@@ -295,6 +296,8 @@ The setting `DATABASE_URL=postgres://localhost/reconasia` may be fine for your l
 For Linux you may want to change this to `DATABASE_URL=postgres:///reconasia` to connect over the Unix socket instead particular if you are using ident auth as previously described.
 
 `DEBUG` and `DEBUG_STATIC` control how the Django website behaves, particularly when there are errors. Having these set to `True` (with a capital T) is useful for developing locally because you get more information about the errors.
+
+The `DEBUG_TOOLBAR` setting enables the use of [django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/stable/), a popular Django app for debugging sites particularly for tracing performance issues. It's installed by default in the dev requirements. This should not be enabled in any live/public environment.
 
 When you see a # symbol, that indicates the start of a comment, which is not processed as an environment variable. If a line begins with a #, that entire line is a treated as a comment. So `# ELASTICSEARCH_URL=` is a comment, despite the `KEY=` syntax. You can comment and uncomment various lines to change which settings are processed as an environment variable. So if you aren't using Elasticsearch to test the search, you can put a # in front on `ELASTICSEARCH_URL=http://localhost:9200`.
 
