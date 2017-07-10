@@ -82,8 +82,6 @@ INSTALLED_APPS = [
     'writings',
 
     'reversion',
-
-    'fieldbook_importer',
 ]
 
 SITE_ID = 1
