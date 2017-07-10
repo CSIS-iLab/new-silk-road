@@ -5,10 +5,7 @@ from .views import (
     ProjectDetailView, ProjectListView,
     CountryProjectListView,
     InitiativeDetailView, InitiativeListView,
-    GeoUploadView
-)
-from .export.views import (
-    ProjectExportView,
+    GeoUploadView, ProjectExportView
 )
 
 adminpatterns = [
