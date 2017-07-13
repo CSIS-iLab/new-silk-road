@@ -108,6 +108,11 @@ class SiteSearchTestCase(SimpleTestCase):
         """SiteSearch should let us filter on the 'infrastructure_type' aggregation"""
         # FIXME: Since infrastructure_type.name is nested,
         # we'd need to create nested queries for post_filter
+        search = SiteSearch()
+        aggs_dict = search._s.aggs.to_dict()
+        # import ipdb
+        # ipdb.set_trace()
+
         self.fail()
 
     @unittest.expectedFailure
