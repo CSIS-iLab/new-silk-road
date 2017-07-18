@@ -26,7 +26,13 @@ We've outlined some steps that have been helpful for us when upgrading Django. Y
 
    Note: if you upgrade a dependency, make sure you update requirements.txt with the newer version of the dependency, as well as newer versions of sub-dependencies. For example, if you update the `celery` dependency, and this upgrade also upgrades the `pytz` sub-dependency, then pin down both the `celery` version and the `pytz` version in the requirements.txt file.
 
-   It may also be a good idea to review our dependencies even if they don't generate deprecation warnings. Feel free to upgrade dependencies to newer versions and to run the test suite to make sure the upgrade didn't break anything, and make sure to update the version number in requirements.txt.
+   It may also be a good idea to review our dependencies even if they don't generate deprecation warnings. Feel free to upgrade dependencies to newer versions and to run the test suite to make sure the upgrade didn't break anything, and make sure to update the version number in requirements.txt. You can see which dependencies have updates available by running:
+
+   ```pip list --outdated```
+
+   and see the same list in a column format with:
+
+   ```pip list --outdated --format=columns```
 
 4. Once all of the deprecation warnings have been resolved, update requirements.txt with the new version of Django and run `pip install -r requirements.txt`.
 
