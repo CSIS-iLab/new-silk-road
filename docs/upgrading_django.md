@@ -14,11 +14,9 @@ We've outlined some steps that have been helpful for us when upgrading Django. Y
 
 1. Check out the release notes for the newer version. For instance, the release notes for Django2.0 can be found here: https://docs.djangoproject.com/en/dev/releases/2.0/. If there is anything from the notes that clearly needs to be updated (a certain function is deprecated, etc.), make those updates to the code. Don't worry about catching everything (sometimes there's not anything that sticks out from the notes).
 
-2. Determine if our code generates any deprecation warnings. Use the -W command line argument when running runserver:
+2. Determine if our code generates any deprecation warnings by running the test suite. Use the `-W` command line argument to show the deprecation warnings. Adding `once` after `-W` will only show the first occurrence of each warning in order to make seeing the warnings more manageable:
 
-   `heroku local:run python -W manage.py runserver`
-
-   This will print out all of the deprecation warnings from our code and any dependencies, as well as which version of Django will have that deprecation.
+   `heroku local:run python -Wonce manage.py test`
 
    A deprecation warning will look like:
 
