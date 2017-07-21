@@ -43,6 +43,7 @@ script:
   - coverage report
 
 after_success:
+  - pkill -f elasticsearch
   - codecov
 
 branches:
