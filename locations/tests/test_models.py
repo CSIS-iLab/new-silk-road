@@ -1,18 +1,7 @@
-from django.test import TestCase
-from .models import PointGeometry
 from django.contrib.gis.geos import Point
-from django.utils.text import slugify
-import factory
+from django.test import TestCase
 
-
-class CountryFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'locations.Country'
-
-    name = factory.Faker('country')
-    slug = factory.LazyAttribute(lambda x: slugify(x.name))
-    numeric = 4
-    alpha_3 = 'AFG'
+from ..models import PointGeometry
 
 
 class PointGeometryTestCase(TestCase):

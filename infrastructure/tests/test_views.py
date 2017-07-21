@@ -10,8 +10,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 
-from locations.factories import CountryFactory
 from locations.models import GeometryStore
+from locations.tests.factories import CountryFactory
 from publish.tests.factories import UserFactory
 from . import factories
 
