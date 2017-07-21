@@ -38,7 +38,7 @@ $ git push production master
 ```
 
 The deployment will automatically pick up new Python requirements listed in the `requirements.txt`
-file, collect any static file changes via `python manage.py collectstatic`, and runs the
+file, collect any static file changes via `python manage.py collectstatic`, and run the
 migrations via `python manage.py migrate --noinput`.
 
 The staging branch is automatically deployed by [Travis CI](https://travis-ci.org/CSIS-iLab/new-silk-road) when new commits are pushed or PRs are merged after the CI passes.
@@ -46,7 +46,7 @@ The staging branch is automatically deployed by [Travis CI](https://travis-ci.or
 
 ## Managing Services
 
-The staging and production environments have been created and thankfully require very little maintaince but it's worth noting how they are setup in the case that they need to be recreated. There are a number of services which come together for the site to run propery and this section details how they all work together.
+The staging and production environments have been created and thankfully require very little maintenance but it's worth noting how they are setup in the case that they need to be recreated. There are a number of services which come together for the site to run properly and this section details how they all work together.
 
 
 ### Application Dynos
@@ -104,7 +104,7 @@ The example output is not included here because it contains a number of values w
 - `BUILD_WITH_GEO_LIBRARIES` should be turned on to ensure that the GEOS related Python libraries can be compiled.
 - `MAPBOX_TOKEN` and `MAPBOX_STYLE_URL` are used for rendering the map with the Mapbox tiles.
 - `GOOGLE_ANALYTICS_KEY` is used to enable Google Analytics tracking.
-- `MAINTENANCE_MODE` can be enabled to show a maintaince page while the site is temporarily disabled (such as during a long data migration).
+- `MAINTENANCE_MODE` can be enabled to show a maintenance page while the site is temporarily disabled (such as during a long data migration).
 
 These are set with `heroku config:set <KEY>=<VALUE>` such as `heroku config:set SECRET_KEY='thisisverysecretandshouldnotbeshared' --app csis-reconasia-bravo`. Setting/changing these values can trigger an application restart which might result in a small amount of downtime.
 
