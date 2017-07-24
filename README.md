@@ -54,3 +54,8 @@ heroku local:run python manange.py tests
 ```
 
 For more detailed instrutions, refer to the [DETAILED_INSTRUCTIONS.md](DETAILED_INSTRUCTIONS.md).
+
+
+## Upgrading Django
+
+Check out the docs on [upgrading Django](docs/upgrading_django.md).
