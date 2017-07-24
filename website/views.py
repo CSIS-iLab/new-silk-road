@@ -9,7 +9,7 @@ from writings.views import (FeaturedAnalysesMixin, FeaturedEntryMixin,
 from writings.models import EntryCollection
 
 
-class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
+class HomeView(FeaturedEntryMixin, TemplateView):
     template_name = "website/home.html"
     featured_config_key = 'HOMEPAGE_FEATURED_ANALYSIS_COLLECTION'
 

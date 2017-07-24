@@ -68,7 +68,13 @@ class ConfiguredCollectionMixin(ContextMixin):
         return kwargs
 
 
-class FeaturedEntryMixin(object):
+class FeaturedAnalysesMixin(ConfiguredCollectionMixin):
+    context_label = 'featured_analyses'
+    config_key = 'FEATURED_ANALYSES_COLLECTION'
+    collection_limit = 2
+
+
+class FeaturedEntryMixin(FeaturedAnalysesMixin):
     featured_config_key = None
 
     def get_featured_config_key(self):
@@ -99,12 +105,6 @@ class FeaturedEntryMixin(object):
         if kwargs['featured_entry_set']:
             kwargs['featured_entry'] = kwargs['featured_entry_set'].first().entry
         return kwargs
-
-
-class FeaturedAnalysesMixin(ConfiguredCollectionMixin):
-    context_label = 'featured_analyses'
-    config_key = 'FEATURED_ANALYSES_COLLECTION'
-    collection_limit = 2
 
 
 class CategoryListView(ListView):
@@ -170,7 +170,7 @@ class EntryCategoryListView(EntryListView):
         return context
 
 
-class HomeView(FeaturedAnalysesMixin, FeaturedEntryMixin, TemplateView):
+class HomeView(FeaturedEntryMixin, TemplateView):
     template_name = "writings/home.html"
     featured_config_key = 'ANALYSISPAGE_FEATURED_ANALYSIS_COLLECTION'
     collection_limit = 4
