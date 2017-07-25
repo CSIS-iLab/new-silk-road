@@ -67,7 +67,8 @@ That will point the `FeaturedEntryMixin` to the correct collection, and include 
 
 ### Use in Template
 
-The resulting entries will be available in the template as `featured_entry_set`.
+The resulting entries will be available in the template as `featured_entry_set`, or, if you only need the first entry,
+as `featured_entry`.
 
 Because `EntryCollection` references `OrderedEntry` objects rather than `Entry` objects directly, attributes will be 
 accessed with what may seem to be an extra `.entry`. (See examples below.) If the extra `.entry` is omitted, nothing 
