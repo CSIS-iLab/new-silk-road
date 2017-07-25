@@ -58,6 +58,5 @@ deploy:
   app:
     staging: csis-reconasia-bravo
   run:
-    - python manage.py migrate
     - restart
   on: staging
