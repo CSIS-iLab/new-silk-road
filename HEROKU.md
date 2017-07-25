@@ -123,11 +123,11 @@ $ heroku run python manage.py migrate --app csis-reconasia-bravo
 Since the deploys are triggered automatically by a push to the staging or master branches, it's helpful to know when those have been completed. The notifications addons have been enabled to notify the team when a deploy is complete.
 
 ```sh
-$ heroku addons:create deployhooks:email --recipient=reconnecting-asia@caktusgroup.com --subject="{{app}} {{release}} Deployed ({{head}})" --body="{{user}} deployed app to {{url}}" --app csis-reconasia-bravo
-$ heroku addons:create deployhooks:email --recipient=reconnecting-asia@caktusgroup.com --subject="{{app}} {{release}} Deployed ({{head}})" --body="{{user}} deployed app to {{url}}" --app csis-reconasia-alfa
+$ heroku addons:create deployhooks:email --recipient=[INSERT EMAIL HERE] --subject="{{app}} {{release}} Deployed ({{head}})" --body="{{user}} deployed app to {{url}}" --app csis-reconasia-bravo
+$ heroku addons:create deployhooks:email --recipient=[INSERT EMAIL HERE] --subject="{{app}} {{release}} Deployed ({{head}})" --body="{{user}} deployed app to {{url}}" --app csis-reconasia-alfa
 ```
 
-The recipients, subject, and body can be managed in the [Heroku dashboard](https://dashboard.heroku.com/) under the Deploy Hooks Add On.
+`[INSERT EMAIL HERE]` in the above command would be replaced the desired email address. The recipients, subject, and body can be managed in the [Heroku dashboard](https://dashboard.heroku.com/) under the Deploy Hooks Add On.
 
 
 ### Postgres
