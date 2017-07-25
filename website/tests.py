@@ -56,7 +56,9 @@ class HomepageTestCase(TestCase):
         collection.slug = config.HOMEPAGE_FEATURED_ANALYSIS_COLLECTION
         collection.save()
         entries = [EntryFactory.create(published=True) for i in range(4)]
-        [OrderedEntryFactory.create(collection=collection, entry=entry) for entry in entries]
+        ordered_entries = [OrderedEntryFactory.create(collection=collection, entry=entry) for entry in entries]
+        for i in range(4):
+            ordered_entries[i].order = i + 1
 
         with self.subTest('no sponsored entry'):
             response = self.client.get('/')
@@ -68,7 +70,6 @@ class HomepageTestCase(TestCase):
             response = self.client.get('/')
             self.assertNotIn('entry-1 sponsored-entry', str(response.content))
             self.assertIn('entry-3 sponsored-entry', str(response.content))
-
 
     def test_project_totals(self):
         """Project totals should be in the homepage context."""
