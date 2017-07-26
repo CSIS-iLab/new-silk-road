@@ -1,10 +1,12 @@
 from datetime import date
 
+from django.core.exceptions import ValidationError 
 from django.test import SimpleTestCase
 
 from utilities.date import fuzzydate
 from utilities.string import clean_string
 from utilities.templatetags.date_extras import fuzzydate_filter
+from utilities.validators import URLLikeValidator
 
 
 class FuzzyDateTestCase(SimpleTestCase):
@@ -225,3 +227,53 @@ class CleanStringTestCase(SimpleTestCase):
         self.assertEqual(clean_string('    I love spaces'), 'I love spaces')
         self.assertEqual(clean_string('I love spaces    '), 'I love spaces')
         self.assertEqual(clean_string('I     love     spaces'), 'I love spaces')
+
+
+class URLLikeValidatorTestCase(SimpleTestCase):
+    """Flexible URL validation."""
+
+    def test_valid_urls(self):
+        """Valid URLs examples."""
+
+        valid = (
+            'http://example.com',
+            'https://example.com/about/',
+            'ftp://127.0.0.1/',
+            # FIXME: IPv6 validation incorrect
+            # 'ftp://::1/',
+            'https://example.com/about/?something=else',
+            'sftp://ftp.com/',
+        )
+
+        validator = URLLikeValidator()
+
+        for value in valid:
+            with self.subTest(value):
+                self.assertIsNone(validator(value))
+
+    def test_invalid_urls(self):
+        """Invalid URL examples."""
+
+        invalid = (
+            # No scheme
+            'example.com',
+            # Invalid scheme
+            'htp://example.com',
+            # Invalid host
+            'https://ecom/about/',
+            # Invalid IP
+            # FIXME: This is currently treated as a valid "domain" by the regex
+            # 'ftp://1200.1.1.1/',
+            # Random string
+            'this is not a url',
+            # Non-string values
+            None,
+            1,
+            1.0,
+        )
+
+        validator = URLLikeValidator()
+
+        for value in invalid:
+            with self.subTest(value):
+                self.assertRaises(ValidationError, validator, value)
