@@ -3,7 +3,6 @@ from django.contrib.gis.geos import MultiPoint, MultiLineString, MultiPolygon
 from django.test import TestCase
 
 from .. import models
-from . import factories
 
 
 class PointGeometryTestCase(TestCase):
@@ -118,6 +117,56 @@ class GeometryStoreTestCase(TestCase):
         self.assertTrue(isinstance(result, MultiPolygon))
         self.assertIn(polygon.geom, result)
         self.assertIn(other.geom, result)
+
+    def test_setting_centroid(self):
+        """Adding/removing related geometries should update the centroid of the store."""
+
+        self.assertIsNone(self.store.centroid)
+
+        with self.subTest('Adding Point'):
+            point = models.PointGeometry.objects.create(geom=Point(1, 1))
+            other = models.PointGeometry.objects.create(geom=Point(0, 0))
+            self.store.points.add(point)
+            self.store.points.add(other)
+            self.store.refresh_from_db()
+            self.assertEqual(self.store.centroid, Point(0.5, 0.5))
+
+        with self.subTest('Removing Point'):
+            self.store.points.remove(other)
+            self.store.refresh_from_db()
+            self.assertEqual(self.store.centroid, Point(1, 1))
+            self.store.points.remove(point)
+
+        with self.subTest('Adding Line'):
+            line = models.LineStringGeometry.objects.create(
+                geom=LineString((1.0, 0.0), (0.0, 1.0)))
+            other = models.LineStringGeometry.objects.create(
+                geom=LineString((0.0, 2.0), (2.0, 0.0)))
+            self.store.lines.add(line)
+            self.store.lines.add(other)
+            self.store.refresh_from_db()
+            self.assertEqual(self.store.centroid, Point(0.8333333333333333, 0.8333333333333333))
+
+        with self.subTest('Removing Line'):
+            self.store.lines.remove(other)
+            self.store.refresh_from_db()
+            self.assertEqual(self.store.centroid, Point(0.5, 0.5))
+            self.store.lines.remove(line)
+
+        with self.subTest('Adding Polygon'):
+            polygon = models.PolygonGeometry.objects.create(
+                geom=Polygon(((0.0, 0.0), (0.0, -1.0), (-1.0, -1.0), (-1.0, 0.0), (0.0, 0.0)), ))
+            other = models.PolygonGeometry.objects.create(
+                geom=Polygon(((0.0, 0.0), (0.0, 1.0), (1.0, 1.0), (1.0, 0.0), (0.0, 0.0)), ))
+            self.store.polygons.add(polygon)
+            self.store.polygons.add(other)
+            self.store.refresh_from_db()
+            self.assertEqual(self.store.centroid, Point(0, 0))
+
+        with self.subTest('Removing Polygon'):
+            self.store.polygons.remove(other)
+            self.store.refresh_from_db()
+            self.assertEqual(self.store.centroid, Point(-0.5, -0.5))
 
 
 class PlaceTestCase(TestCase):
