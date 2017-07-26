@@ -3,6 +3,7 @@ from datetime import date
 from django.test import SimpleTestCase
 
 from utilities.date import fuzzydate
+from utilities.string import clean_string
 from utilities.templatetags.date_extras import fuzzydate_filter
 
 
@@ -179,3 +180,48 @@ class FuzzyDateFilterTestCase(SimpleTestCase):
     def test_fuzzydate_filter_non_fuzzydate(self):
         for invalid in (1, 'XXX', None, 1.1, date(2001, 1, 31), fuzzydate(month=2, day=31), ):
             self.assertIsNone(fuzzydate_filter(invalid, 'N d Y'))
+
+
+class CleanStringTestCase(SimpleTestCase):
+    """Clean up smart quotes from strings."""
+
+    def test_replace_unicode_quotes(self):
+        """Unicode left and right quotes should be replaced by single quotes."""
+
+        self.assertEqual(clean_string('This is \u2018great\u2019'), 'This is \'great\'')
+
+    def test_replace_question_marks(self):
+        """Question marks should converted to dashes."""
+
+        self.assertEqual(clean_string('Why?'), 'Why–')
+
+    def test_strip_quotes(self):
+        """Optionally quotes are stripped."""
+
+        self.assertEqual(clean_string('\'ok\''), 'ok')
+        self.assertEqual(clean_string('\'ok\'', stripquotes=False), '\'ok\'')
+        self.assertEqual(clean_string('"ok"'), 'ok')
+        self.assertEqual(clean_string('"ok"', stripquotes=False), '"ok"')
+
+    def test_strip_newlines(self):
+        """Optionally newlines are stripped."""
+
+        self.assertEqual(clean_string('Hello\nWorld'), 'Hello World')
+        self.assertEqual(clean_string('Hello\nWorld', stripnewlines=False), 'Hello\nWorld')
+        self.assertEqual(clean_string('Hello\rWorld'), 'Hello World')
+        self.assertEqual(clean_string('Hello\rWorld', stripnewlines=False), 'Hello\rWorld')
+
+    def test_default_value(self):
+        """Default value is used for non-string arguments."""
+
+        self.assertEqual(clean_string(None), '')
+        self.assertEqual(clean_string(None, default='blip'), 'blip')
+        self.assertEqual(clean_string(1.0), '')
+        self.assertEqual(clean_string(1.0, default='invalid'), 'invalid')
+
+    def test_trim_whitespace(self):
+        """Leading, trailing, and double spaces are removed."""
+
+        self.assertEqual(clean_string('    I love spaces'), 'I love spaces')
+        self.assertEqual(clean_string('I love spaces    '), 'I love spaces')
+        self.assertEqual(clean_string('I     love     spaces'), 'I love spaces')
