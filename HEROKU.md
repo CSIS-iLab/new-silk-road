@@ -41,7 +41,7 @@ The deployment will automatically pick up new Python requirements listed in the 
 file, collect any static file changes via `python manage.py collectstatic`, and run the
 migrations via `python manage.py migrate --noinput`.
 
-Merging to the staging branch automatically triggers a deploy to `csis-reconasia-bravo` by [Travis CI](https://travis-ci.org/CSIS-iLab/new-silk-road) after the CI passes. The same is true for merging/pusing to the master branch. This will automatically trigger a deploy `csis-reconasia-alfa`. However, you can still deploy manually if needed.
+Merging to the staging branch automatically triggers a deploy to `csis-reconasia-bravo` by [Travis CI](https://travis-ci.org/CSIS-iLab/new-silk-road) after the CI passes. The same is true for merging/pushing to the master branch. This will automatically trigger a deploy `csis-reconasia-alfa`. However, you can still deploy manually if needed.
 
 
 ## Managing Services
