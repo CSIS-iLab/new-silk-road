@@ -30,7 +30,7 @@ class ConfiguredCollectionMixin(ContextMixin):
     collection_limit = None
 
     def get_config_key(self):
-        if not self.config_key:
+        if not self.config_key:  # pragma: no cover
             raise AttributeError('ConfiguredCollectionMixin must define config_key property or override get_config_key method')
         return self.config_key
 
@@ -39,12 +39,12 @@ class ConfiguredCollectionMixin(ContextMixin):
         return getattr(config, config_key, None)
 
     def get_context_label(self):
-        if not self.context_label:
+        if not self.context_label:  # pragma: no cover
             raise AttributeError('ConfiguredCollectionMixin must define context_label property or override get_context_label method')
         return self.context_label
 
     def get_collection_limit(self):
-        if not isinstance(self.collection_limit, int):
+        if not isinstance(self.collection_limit, int):  # pragma: no cover
             raise AttributeError('ConfiguredCollectionMixin collection_limit must be an integer')
         return self.collection_limit
 
@@ -78,7 +78,7 @@ class FeaturedEntryMixin(FeaturedAnalysesMixin):
     featured_config_key = None
 
     def get_featured_config_key(self):
-        if not self.featured_config_key:
+        if not self.featured_config_key:  # pragma: no cover
             raise AttributeError('CollectionFeaturedEntryMixin must define featured_config_key property or override get_featured_config_key method')
         return self.featured_config_key
 
