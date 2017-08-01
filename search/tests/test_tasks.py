@@ -1,10 +1,12 @@
-from django.test import TestCase, override_settings
 from elasticsearch_dsl.connections import connections
 from redis import Redis
 from rq import SimpleWorker, Queue
 from django_rq import get_worker
-from .base import BaseSearchTestCase
-from search.tasks import (
+
+from django.test import TestCase, override_settings
+
+from infrastructure.tests.factories import ProjectFactory
+from ..tasks import (
     create_search_index,
     handle_model_post_save,
     save_to_search_index,
@@ -13,11 +15,9 @@ from search.tasks import (
     index_model,
     rebuild_indices,
 )
-from search.utils import calculate_doc_id
-from .factories import (
-    EntryFactory,
-    ProjectFactory,
-)
+from ..utils import calculate_doc_id
+from .base import BaseSearchTestCase
+from .factories import EntryFactory
 from .settings import TEST_SEARCH, TEST_RQ_QUEUES
 
 

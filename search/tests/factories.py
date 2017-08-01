@@ -55,41 +55,6 @@ class CountryFactory(factory.django.DjangoModelFactory):
 
 
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
-class InfrastructureTypeFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker('text', max_nb_chars=100)
-
-    class Meta:
-        model = 'infrastructure.InfrastructureType'
-
-
-@factory.django.mute_signals(signals.pre_save, signals.post_save)
-class ProjectFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker('text', max_nb_chars=300)
-    alternate_name = factory.Faker('text', max_nb_chars=100)
-    infrastructure_type = factory.SubFactory(InfrastructureTypeFactory)
-    created_at = factory.Faker('date_time')
-    updated_at = factory.Faker('date_time')
-
-    @factory.lazy_attribute
-    def description(self):
-        fake = factory.Faker('paragraphs')
-        return '\n\n'.join(fake.generate({'nb': 4}))
-
-    @factory.post_generation
-    def countries(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            # A list of groups were passed in, use them
-            for country in extracted:
-                self.countries.add(country)
-
-    class Meta:
-        model = 'infrastructure.Project'
-
-
-@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class FinancingOrganizationDetailsFactory(factory.django.DjangoModelFactory):
     approved_capital = factory.Faker('pydecimal', right_digits=2)
 
@@ -102,7 +67,10 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('company')
     description = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
     mission = factory.Faker('paragraph', nb_sentences=5, variable_nb_sentences=True)
-    financingorganizationdetails = factory.RelatedFactory(FinancingOrganizationDetailsFactory, 'organization')
+    financingorganizationdetails = factory.RelatedFactory(
+        FinancingOrganizationDetailsFactory,
+        'organization'
+    )
 
     @factory.post_generation
     def countries(self, create, extracted, **kwargs):
