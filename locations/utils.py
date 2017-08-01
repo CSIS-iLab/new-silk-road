@@ -42,8 +42,8 @@ def geostore_from_file(source, label, verbosity=0, geo_attributes={}, create=Tru
                 # Add source information to attributes
                 data['layer'] = layer_name
                 if verbosity > 2:
-                    logger.info('Feature "{}": {}'.format(data.get('name', layer_name), feat.geom_type))
-
+                    logger.info('Feature "{}": {}'.format(
+                        data.get('name', layer_name), feat.geom_type))
                 if geom.geos:
                     geom_label = data.get('name') or "{}: {}".format(label, layer_name)
                     params = {
@@ -51,16 +51,16 @@ def geostore_from_file(source, label, verbosity=0, geo_attributes={}, create=Tru
                         'geom': geom.geos,
                         'attributes': data
                     }
-                    if geo_store and create:
-                        if geom.geom_type == 'Point':
-                            geo_store.points.create(**params)
-                        elif geom.geom_type == 'LineString':
-                            geo_store.lines.create(**params)
-                        elif geom.geom_type == 'Polygon':
-                            geo_store.polygons.create(**params)
-                        if verbosity > 1:
-                            logger.info("Geometry '{}' found and saved".format(geom_label))
-                    elif verbosity > 1:
-                        logger.info("Geometry '{}' found, but not saved".format(geom_label))
+                    if geom.geom_type == 'Point':
+                        geo_store.points.create(**params)
+                    elif geom.geom_type == 'LineString':
+                        geo_store.lines.create(**params)
+                    elif geom.geom_type == 'Polygon':
+                        geo_store.polygons.create(**params)
+                    if verbosity > 1:
+                        logger.info("Geometry '{}' found and saved".format(geom_label))
+            elif verbosity > 1:
+                logger.info("Geometry '{label}: {layer_name}' found, but not saved".format(
+                    label=label, layer_name=layer_name))
 
     return geo_store

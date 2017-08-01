@@ -93,7 +93,11 @@ class HomeViewTestCase(TestCase):
         collection.slug = config.HOMEPAGE_FEATURED_ANALYSIS_COLLECTION
         collection.save()
         entries = [EntryFactory.create(published=True) for i in range(4)]
-        [OrderedEntryFactory.create(collection=collection, entry=entry) for entry in entries]
+        ordered_entries = [
+            OrderedEntryFactory.create(collection=collection, entry=entry) for entry in entries
+        ]
+        for i in range(4):
+            ordered_entries[i].order = i + 1
 
         with self.subTest('no sponsored entry'):
             response = self.client.get(self.url)

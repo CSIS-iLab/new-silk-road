@@ -10,6 +10,6 @@ class Document(Temporal):
     source_file = FilerFileField(verbose_name='File')
 
     def __str__(self):
-        if self.source_file:
+        if self.source_file and self.source_file.original_filename:
             return self.source_file.original_filename
-        return "Document #{}".format(self.id)
+        return "Document #{}".format(self.id) if self.id else "Unsaved Document"
