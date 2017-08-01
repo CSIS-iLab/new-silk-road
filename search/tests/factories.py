@@ -57,6 +57,7 @@ class CountryFactory(factory.django.DjangoModelFactory):
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
 class InfrastructureTypeFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('text', max_nb_chars=100)
+    slug = factory.LazyAttribute(lambda o: slugify(o.name))
 
     class Meta:
         model = 'infrastructure.InfrastructureType'
