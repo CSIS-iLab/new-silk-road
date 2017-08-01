@@ -49,6 +49,41 @@ class EntryDetailViewTestCase(TestCase):
         response = EntryDetailView.as_view()(request, slug=obj.slug)
         self.assertEqual(response.status_code, 200)
 
+    def test_render_page(self):
+        """Render the detail page for an entry."""
+
+        entry = factories.EntryFactory.create(
+            published=True,
+            publication_date=self.fake.date_time_this_year(
+                before_now=True, after_now=False, tzinfo=pytz.utc)
+        )
+
+        with self.subTest('Public user. Public post'):
+            with self.assertTemplateUsed('writings/entry_detail.html'):
+                response = self.client.get(entry.get_absolute_url())
+                self.assertEqual(response.status_code, 200)
+                self.assertTrue(response.context['entry_visible'])
+
+        User.objects.create_user(
+            username='jacob', email='jacob@fake.email', password='top_secret')
+        self.client.login(username='jacob', password='top_secret')
+        other = factories.EntryFactory.create(
+            published=True,
+            publication_date=self.fake.date_time_this_year(
+                before_now=False, after_now=True, tzinfo=pytz.utc)
+        )
+
+        with self.subTest('Auth user. Private post'):
+            with self.assertTemplateUsed('writings/entry_detail.html'):
+                response = self.client.get(other.get_absolute_url())
+                self.assertEqual(response.status_code, 200)
+                self.assertFalse(response.context['entry_visible'])
+
+        with self.subTest('Public user. Private post'):
+            self.client.logout()
+            response = self.client.get(other.get_absolute_url())
+            self.assertEqual(response.status_code, 404)
+
 
 class EntryListViewTestCase(TestCase):
     """Listing published entries."""
