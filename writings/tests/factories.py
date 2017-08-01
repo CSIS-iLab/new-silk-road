@@ -1,6 +1,18 @@
-from django.utils.text import slugify
-import pytz
 import factory
+import pytz
+
+from django.utils.text import slugify
+
+
+class TagFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'taggit.Tag'
+
+    name = factory.Faker('text', max_nb_chars=100)
+
+    @factory.post_generation
+    def slug(self, create, extracted, **kwargs):
+        self.slug = slugify(self.name)
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):
@@ -40,9 +52,20 @@ class EntryFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            # A list of groups were passed in, use them
+            # A list of categories were passed in, use them
             for cat in extracted:
                 self.categories.add(cat)
+
+    @factory.post_generation
+    def tags(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of tags were passed in, use them
+            for cat in extracted:
+                self.tags.add(cat)
 
     @factory.post_generation
     def slug(self, create, extracted, **kwargs):

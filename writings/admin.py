@@ -123,7 +123,9 @@ class OrderedEntryInline(admin.StackedInline):
     )
 
     def entry_publication_date(self, instance):
-        return instance.entry.publication_date.strftime('%Y-%m-%d %H:%M:%S')
+        if instance.entry.publication_date:
+            return instance.entry.publication_date.strftime('%Y-%m-%d %H:%M:%S')
+        return None
     entry_publication_date.description = 'Publication Date'
 
     def entry_published(self, instance):

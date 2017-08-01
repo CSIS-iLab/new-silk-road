@@ -73,7 +73,7 @@
     {% endif %}
     <ul class="links clean">
         <li>
-            {% with object.get_previous_published_entry as entry %}{% if entry %}
+            {% with object.get_previous_published_entry as entry %}{% if entry and entry.is_visible %}
             <a href="{{entry.get_absolute_url}}">
                 <span class='action'>Previous</span>
                 <span class='title'>{{ entry.title|truncatechars:30 }}</span>
@@ -84,7 +84,7 @@
             {% endif %}{% endwith %}
         </li>
         <li>
-            {% with object.get_next_published_entry as entry %}{% if entry %}
+            {% with object.get_next_published_entry as entry %}{% if entry and entry.is_visible %}
             <a href="{{entry.get_absolute_url}}">
                 <span class='action'>Next</span>
                 <span class='title'>{{ entry.title|truncatechars:30 }}</span>
