@@ -1,7 +1,8 @@
 import datetime
 
-from django.test import TestCase
 from django.db.utils import IntegrityError
+from django.test import TestCase
+from django.urls import reverse
 from django.utils.timezone import now
 
 from . import factories
@@ -25,7 +26,9 @@ class EntryTestCase(TestCase):
         """Entries should know their own URL."""
 
         entry = factories.EntryFactory(title='My Awesome Entry')
-        self.assertEqual(entry.get_absolute_url(), '/analysis/entries/my-awesome-entry/')
+        self.assertEqual(
+            entry.get_absolute_url(),
+            reverse('writings:entry-detail', kwargs={'slug': 'my-awesome-entry'}))
 
     def test_render_on_save(self):
         """Markdown should be rendered on save."""
@@ -111,6 +114,11 @@ class EntryCollectionTestCase(TestCase):
         obj = factories.CollectionWithSortedEntriesFactory.create()
         self.assertEqual(obj.entries.count(), 2)
 
+    def test_str(self):
+        """Collections are represented by their name."""
+        collection = factories.EntryCollectionFactory(name='My Collection')
+        self.assertEqual(str(collection), 'My Collection')
+
 
 class CategoryTestCase(TestCase):
 
@@ -118,7 +126,9 @@ class CategoryTestCase(TestCase):
         """Categories should know their own URL."""
 
         category = factories.CategoryFactory(name='Awesome', slug='awesome')
-        self.assertEqual(category.get_absolute_url(), '/analysis/categories/awesome/')
+        self.assertEqual(
+            category.get_absolute_url(),
+            reverse('writings:category-detail', kwargs={'slug': 'awesome'}))
 
     def test_str(self):
         """Categories are represented by their name."""
