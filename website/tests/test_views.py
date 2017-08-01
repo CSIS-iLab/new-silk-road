@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from facts.models.organizations import DETAIL_MODEL_NAMES
 from infrastructure.models import InfrastructureType
-from search.tests.factories import ProjectFactory, InfrastructureTypeFactory
+from infrastructure.tests.factories import ProjectFactory, InfrastructureTypeFactory
 from writings.tests.factories import EntryFactory, EntryCollectionFactory, OrderedEntryFactory
 
 from . import factories
