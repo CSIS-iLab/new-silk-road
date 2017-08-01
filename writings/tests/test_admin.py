@@ -54,6 +54,8 @@ class CategoryAdminTestCase(TestCase):
         self.assertEqual(self.admin.entry_count(category), 0)
         factories.EntryFactory(categories=[category, ])
         self.assertEqual(self.admin.entry_count(category), 1)
+        factories.EntryFactory(categories=[category, ], published=False)
+        self.assertEqual(self.admin.entry_count(category), 2)
 
 
 class EntryAdminTestCase(TestCase):
@@ -141,3 +143,7 @@ class EntryCollectionAdminTestCase(TestCase):
         factories.OrderedEntryFactory(
             entry=entry, collection=collection, order=1)
         self.assertEqual(self.admin.entry_count(collection), 1)
+        other = factories.EntryFactory(published=False)
+        factories.OrderedEntryFactory(
+            entry=other, collection=collection, order=2)
+        self.assertEqual(self.admin.entry_count(collection), 2)
