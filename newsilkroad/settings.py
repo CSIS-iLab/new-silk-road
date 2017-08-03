@@ -86,13 +86,6 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-if DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True":
-    from debug_toolbar.settings import PANELS_DEFAULTS
-    INSTALLED_APPS.append('debug_toolbar')
-    DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + ['cachalot.panels.CachalotPanel']
-    if os.getenv("DEBUG_PROFILING", "False") == "True":
-        DEBUG_TOOLBAR_PANELS += ['debug_toolbar.panels.profiling.ProfilingPanel']
-
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
@@ -107,6 +100,17 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
+
+DEBUG_TOOLBAR = DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True"
+
+if DEBUG_TOOLBAR:
+    from debug_toolbar.settings import PANELS_DEFAULTS
+    INSTALLED_APPS.append('debug_toolbar')
+    DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + ['cachalot.panels.CachalotPanel']
+    if os.getenv("DEBUG_PROFILING", "False") == "True":
+        DEBUG_TOOLBAR_PANELS += ['debug_toolbar.panels.profiling.ProfilingPanel']
+    MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    INTERNAL_IPS = ('127.0.0.1', )
 
 ROOT_URLCONF = 'newsilkroad.urls'
 
