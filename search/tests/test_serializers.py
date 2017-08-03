@@ -1,10 +1,11 @@
-from search.documents import (
+from infrastructure.tests.factories import ProjectFactory
+from ..documents import (
     EntryDoc,
     ProjectDoc,
     PersonDoc,
     OrganizationDoc,
 )
-from search.serializers import (
+from ..serializers import (
     ProjectSerializer,
     EntrySerializer,
     PersonSerializer,
@@ -12,7 +13,6 @@ from search.serializers import (
 )
 from .base import BaseSearchTestCase
 from .factories import (
-    ProjectFactory,
     CountryFactory,
     EntryFactory,
     EntryCategoryFactory,
