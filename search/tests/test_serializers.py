@@ -1,4 +1,6 @@
+from facts.models import Organization
 from infrastructure.tests.factories import ProjectFactory
+from ..base import ModelSerializer
 from ..documents import (
     EntryDoc,
     ProjectDoc,
@@ -6,6 +8,7 @@ from ..documents import (
     OrganizationDoc,
 )
 from ..serializers import (
+    CountrySerializer,
     ProjectSerializer,
     EntrySerializer,
     PersonSerializer,
@@ -36,7 +39,8 @@ class SerializerTestCase(BaseSearchTestCase):
 class ProjectSerializerTestCase(BaseSearchTestCase):
 
     def test_project_serializer(self):
-        obj = ProjectFactory.create(name='Test title', countries=CountryFactory.create_batch(4), status=5)
+        obj = ProjectFactory.create(
+            name='Test title', countries=CountryFactory.create_batch(4), status=5)
         serializer = ProjectSerializer()
         doc = serializer.create_document(obj)
 
@@ -95,3 +99,187 @@ class OrganizationSerializerTestCase(BaseSearchTestCase):
 
         self.assertIsInstance(doc, OrganizationDoc)
         self.assertIsNotNone(doc.organization_types)
+
+
+class ModelSerializerTestCase(BaseSearchTestCase):
+
+    def test_meta_model(self):
+        """ModelSerializers are related to Django models."""
+
+        with self.subTest('Models are required'):
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = None
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+        with self.subTest('Models can be strings'):
+            class OrgSerializer(ModelSerializer):
+                class Meta:
+                    model = 'facts.Organization'
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            instance = OrgSerializer()
+            self.assertEqual(instance.model_class, Organization)
+
+        with self.subTest('Models can be explicit classes'):
+            class NewOrgSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            instance = NewOrgSerializer()
+            self.assertEqual(instance.model_class, Organization)
+
+        with self.subTest('Models must reference model classes'):
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = 'decimal.Decimal'
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = OrganizationDoc
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+    def test_meta_fields(self):
+        """ModelSerializers use a subset of the related model fields."""
+
+        with self.subTest('Fields are required'):
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = None
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+        with self.subTest('Unknown field name'):
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('doesnotexist', )
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+        with self.subTest('Custom lookup'):
+            class CustomFieldSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('newfield', )
+                    doc_type = OrganizationDoc
+
+                def get_newfield(self, obj):
+                    return 'newfield'
+
+            instance = CustomFieldSerializer()
+            self.assertIn('newfield', instance._attribute_field_map)
+
+        with self.subTest('Invalid lookup'):
+            # Lookup for get_<field_name> attributes must be callable
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('newfield', )
+                    doc_type = OrganizationDoc
+
+                get_newfield = 'newfield'
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+        with self.subTest('Related field'):
+            class RelatedSerializer(ModelSerializer):
+                countries = CountrySerializer()
+
+                class Meta:
+                    model = Organization
+                    fields = ('name', 'countries', )
+                    doc_type = OrganizationDoc
+
+            instance = RelatedSerializer()
+            self.assertIn('countries', instance._rel_field_names)
+
+        with self.subTest('Invalid related field'):
+            # Reference to the related serializer must be provided
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('name', 'countries', )
+                    doc_type = OrganizationDoc
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+    def test_meta_doc_type(self):
+        """Serializers are used to create documents."""
+
+        with self.subTest('Doc type is required'):
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('name', )
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+            class InvalidSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('name', )
+                    doc_type = None
+
+            with self.assertRaises(Exception):
+                InvalidSerializer()
+
+        with self.subTest('Doc types can be strings'):
+            class OrgSerializer(ModelSerializer):
+                class Meta:
+                    model = 'facts.Organization'
+                    fields = ('name', )
+                    doc_type = 'search.documents.OrganizationDoc'
+
+            instance = OrgSerializer()
+            self.assertEqual(instance.doc_type, OrganizationDoc)
+
+        with self.subTest('Doc types can be explicit classes'):
+            class NewOrgSerializer(ModelSerializer):
+                class Meta:
+                    model = Organization
+                    fields = ('name', )
+                    doc_type = OrganizationDoc
+
+            instance = NewOrgSerializer()
+            self.assertEqual(instance.doc_type, OrganizationDoc)
