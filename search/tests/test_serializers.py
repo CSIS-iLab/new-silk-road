@@ -1,6 +1,6 @@
 from facts.models import Organization
 from infrastructure.tests.factories import ProjectFactory
-from ..base import ModelSerializer
+from ..base import ModelSerializer, RelatedSerializer
 from ..documents import (
     EntryDoc,
     ProjectDoc,
@@ -221,7 +221,7 @@ class ModelSerializerTestCase(BaseSearchTestCase):
                 InvalidSerializer()
 
         with self.subTest('Related field'):
-            class RelatedSerializer(ModelSerializer):
+            class FKSerializer(ModelSerializer):
                 countries = CountrySerializer()
 
                 class Meta:
@@ -229,7 +229,7 @@ class ModelSerializerTestCase(BaseSearchTestCase):
                     fields = ('name', 'countries', )
                     doc_type = OrganizationDoc
 
-            instance = RelatedSerializer()
+            instance = FKSerializer()
             self.assertIn('countries', instance._rel_field_names)
 
         with self.subTest('Invalid related field'):
@@ -283,3 +283,17 @@ class ModelSerializerTestCase(BaseSearchTestCase):
 
             instance = NewOrgSerializer()
             self.assertEqual(instance.doc_type, OrganizationDoc)
+
+
+class RelatedSerializerTestCase(BaseSearchTestCase):
+
+    def test_mapping_class(self):
+        """Related serializer requires a ModelSerializer."""
+
+        with self.subTest('Invalid type'):
+            with self.assertRaises(TypeError):
+                RelatedSerializer(OrganizationDoc)
+
+        with self.subTest('Mapping instance'):
+            serializer = RelatedSerializer(OrganizationSerializer)
+            self.assertTrue(isinstance(serializer.serializer, OrganizationSerializer))
