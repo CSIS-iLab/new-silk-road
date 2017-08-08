@@ -97,25 +97,3 @@ class SiteSearchTestCase(SimpleTestCase):
         self.assertIn('title', s._s._highlight)
         self.assertIn('description', s._s._highlight)
         self.assertIn('content', s._s._highlight)
-
-    @unittest.expectedFailure
-    def test_can_filter_on_kind_aggregation(self):
-        """SiteSearch should let us filter on the 'kind' aggregation"""
-        self.fail()
-
-    @unittest.expectedFailure
-    def test_can_filter_on_infrastructure_type_aggregation(self):
-        """SiteSearch should let us filter on the 'infrastructure_type' aggregation"""
-        # FIXME: Since infrastructure_type.name is nested,
-        # we'd need to create nested queries for post_filter
-        search = SiteSearch()
-        aggs_dict = search._s.aggs.to_dict()
-        # import ipdb
-        # ipdb.set_trace()
-
-        self.fail()
-
-    @unittest.expectedFailure
-    def test_can_filter_on_countries_aggregation(self):
-        """SiteSearch should let us filter on the 'countries' aggregation"""
-        self.fail()
