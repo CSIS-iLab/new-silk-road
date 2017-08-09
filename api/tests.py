@@ -2,8 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
-
-import json
+from rest_framework.test import APITestCase
 
 from infrastructure.models import ProjectStatus, ProjectFunding
 from infrastructure.tests.factories import ProjectFactory, InitiativeFactory
@@ -13,11 +12,11 @@ from facts.tests.organization_factories import OrganizationFactory
 from facts.tests.person_factories import PersonFactory
 
 
-class TestProjectStatusListView(TestCase):
+class TestProjectStatusListView(APITestCase):
     def test_that_all_project_statuses_are_returned(self):
         url = reverse('api:project-status-list')
         response = self.client.get(url)
-        self.assertEqual(len(json.loads(response.content.decode())), len(ProjectStatus.STATUSES))
+        self.assertEqual(len(response.data), len(ProjectStatus.STATUSES))
 
 
 class TestGeometryStoreDetailView(TestCase):
@@ -109,7 +108,7 @@ class TestGeometryStoreDetailView(TestCase):
                 self.assertEqual(response.status_code, 200)
 
 
-class TestGeometryStoreCentroidViewSet(TestCase):
+class TestGeometryStoreCentroidViewSet(APITestCase):
 
     def setUp(self):
         self.geom_with_published_project = GeometryStore()
@@ -147,7 +146,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 response = self.client.get(self.list_url)
                 self.assertEqual(response.status_code, 200)
                 # Both geometries from setUp should be in the list, but not the one without a centroid.
-                data = json.loads(response.content.decode())
+                data = response.data
                 self.assertEqual(len(data['features']), 2)
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED'):
@@ -155,7 +154,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 response = self.client.get(self.list_url)
                 self.assertEqual(response.status_code, 200)
                 # Only the geometry with a published project should be included.
-                data = json.loads(response.content.decode())
+                data = response.data
                 self.assertEqual(len(data['features']), 1)
 
         with self.settings(PUBLISH_FILTER_ENABLED=False):
@@ -164,7 +163,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 response = self.client.get(self.list_url)
                 self.assertEqual(response.status_code, 200)
                 # Both geometries from setUp should be in the list, but not the one without a centroid.
-                data = json.loads(response.content.decode())
+                data = response.data
                 self.assertEqual(len(data['features']), 2)
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED == False'):
@@ -172,11 +171,11 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 response = self.client.get(self.list_url)
                 self.assertEqual(response.status_code, 200)
                 # Both geometries from setUp should be in the list, but not the one without a centroid.
-                data = json.loads(response.content.decode())
+                data = response.data
                 self.assertEqual(len(data['features']), 2)
 
 
-class TestOrganizationViewSet(TestCase):
+class TestOrganizationViewSet(APITestCase):
     def setUp(self):
         self.url = reverse('api:organization-list')
 
@@ -190,7 +189,7 @@ class TestOrganizationViewSet(TestCase):
 
         with self.subTest('no filters'):
             response = self.client.get(self.url)
-            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_orgs = [result['name'] for result in response.data['results']]
             self.assertIn(included_org.name, returned_orgs)
             self.assertIn(excluded_org.name, returned_orgs)
 
@@ -201,7 +200,7 @@ class TestOrganizationViewSet(TestCase):
                 'leaders': leader.id
             }
             response = self.client.get(self.url, params)
-            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_orgs = [result['name'] for result in response.data['results']]
             self.assertIn(included_org.name, returned_orgs)
             self.assertNotIn(excluded_org.name, returned_orgs)
 
@@ -213,7 +212,7 @@ class TestOrganizationViewSet(TestCase):
                 'parent': parent.id
             }
             response = self.client.get(self.url, params)
-            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_orgs = [result['name'] for result in response.data['results']]
             self.assertIn(included_org.name, returned_orgs)
             self.assertNotIn(excluded_org.name, returned_orgs)
 
@@ -225,7 +224,7 @@ class TestOrganizationViewSet(TestCase):
                 'country': country.id
             }
             response = self.client.get(self.url, params)
-            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_orgs = [result['name'] for result in response.data['results']]
             self.assertIn(included_org.name, returned_orgs)
             self.assertNotIn(excluded_org.name, returned_orgs)
 
@@ -239,7 +238,7 @@ class TestOrganizationViewSet(TestCase):
                 'countries': [country1.id, country2.id]
             }
             response = self.client.get(self.url, params)
-            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_orgs = [result['name'] for result in response.data['results']]
             self.assertIn(included_org.name, returned_orgs)
             self.assertIn(extra_included_org.name, returned_orgs)
             self.assertNotIn(excluded_org.name, returned_orgs)
@@ -250,12 +249,12 @@ class TestOrganizationViewSet(TestCase):
                 'principal_initiatives': principal_initiative.id
             }
             response = self.client.get(self.url, params)
-            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_orgs = [result['name'] for result in response.data['results']]
             self.assertIn(included_org.name, returned_orgs)
             self.assertNotIn(excluded_org.name, returned_orgs)
 
 
-class TestProjectViewSet(TestCase):
+class TestProjectViewSet(APITestCase):
     def setUp(self):
         self.url = reverse('api:project-list')
 
@@ -271,7 +270,7 @@ class TestProjectViewSet(TestCase):
 
         with self.subTest('no filters'):
             response = self.client.get(self.url)
-            returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_projects = [result['name'] for result in response.data['results']]
             self.assertIn(included_project.name, returned_projects)
             self.assertIn(excluded_project.name, returned_projects)
 
@@ -282,7 +281,7 @@ class TestProjectViewSet(TestCase):
                 'funding__amount__gte': '4'
             }
             response = self.client.get(self.url, params)
-            returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_projects = [result['name'] for result in response.data['results']]
             self.assertIn(included_project.name, returned_projects)
             self.assertNotIn(excluded_project.name, returned_projects)
 
@@ -293,12 +292,12 @@ class TestProjectViewSet(TestCase):
                 'funding__currency_amount__gte': '4 USD'
             }
             response = self.client.get(self.url, params)
-            returned_projects = [result['name'] for result in json.loads(response.content.decode())['results']]
+            returned_projects = [result['name'] for result in response.data['results']]
             self.assertIn(included_project.name, returned_projects)
             self.assertNotIn(excluded_project.name, returned_projects)
 
 
-class TestInitiativeViewSet(TestCase):
+class TestInitiativeViewSet(APITestCase):
     def setUp(self):
         self.url = reverse('api:initiative-list')
 
@@ -312,7 +311,7 @@ class TestInitiativeViewSet(TestCase):
             'fields': 'name,initiative_type,founding_month'
         }
         response = self.client.get(self.url, params)
-        data = json.loads(response.content.decode())
+        data = response.data
         self.assertIn('name', data['results'][0])
         self.assertIn('initiative_type', data['results'][0])
         self.assertIn('founding_month', data['results'][0])
