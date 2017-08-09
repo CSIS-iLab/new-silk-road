@@ -327,7 +327,7 @@ class TestProjectViewSet(APITestCase):
             self.assertNotIn(expensive_project.name, returned_projects)
             self.assertIn(cheap_project.name, returned_projects)
 
-        with self.subTest('currency amount <='):
+        with self.subTest('currency amount <'):
             params = {
                 'funding__currency_amount__lt': '1000000 USD'
             }
@@ -411,6 +411,81 @@ class TestProjectViewSet(APITestCase):
             self.assertIn(no_initiative_project.name, returned_projects)
             self.assertNotIn(single_initiative_project.name, returned_projects)
             self.assertNotIn(multi_initiative_project.name, returned_projects)
+
+    def test_total_count_filters(self):
+        expensive_project = ProjectFactory(published=True, total_cost=10000000)
+        cheap_project = ProjectFactory(published=True, total_cost=1000)
+        free_project = ProjectFactory(published=True, total_cost=0)
+
+        with self.subTest('exact amount'):
+            params = {
+                'total_cost_amount': '10000000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+            self.assertNotIn(free_project.name, returned_projects)
+
+        with self.subTest('>='):
+            params = {
+                'total_cost_amount__gte': '1000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(expensive_project.name, returned_projects)
+            self.assertIn(cheap_project.name, returned_projects)
+            self.assertNotIn(free_project.name, returned_projects)
+
+        with self.subTest('>'):
+            params = {
+                'total_cost_amount__gt': '1000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+            self.assertNotIn(free_project.name, returned_projects)
+
+        with self.subTest('<='):
+            params = {
+                'total_cost_amount__lte': '1000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertIn(cheap_project.name, returned_projects)
+            self.assertIn(free_project.name, returned_projects)
+
+        with self.subTest('<'):
+            params = {
+                'total_cost_amount__lt': '1000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+            self.assertIn(free_project.name, returned_projects)
+
+        with self.subTest('missing currency'):
+            params = {
+                'total_cost_amount': '10000000'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+            self.assertNotIn(free_project.name, returned_projects)
+
+        with self.subTest('missing amount'):
+            params = {
+                'total_cost_amount': 'USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+            self.assertNotIn(free_project.name, returned_projects)
 
 
 class TestInitiativeViewSet(APITestCase):
