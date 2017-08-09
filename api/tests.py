@@ -354,6 +354,64 @@ class TestProjectViewSet(APITestCase):
             self.assertNotIn(expensive_project.name, returned_projects)
             self.assertNotIn(cheap_project.name, returned_projects)
 
+    def test_initiatives_count_filters(self):
+        no_initiative_project = ProjectFactory(published=True)
+        single_initiative_project = ProjectFactory(published=True)
+        single_initiative_project.initiatives.add(InitiativeFactory())
+        multi_initiative_project = ProjectFactory(published=True)
+        multi_initiative_project.initiatives.add(InitiativeFactory())
+        multi_initiative_project.initiatives.add(InitiativeFactory())
+
+        with self.subTest('count exact'):
+            params = {
+                'initiatives__count': '1'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(no_initiative_project.name, returned_projects)
+            self.assertIn(single_initiative_project.name, returned_projects)
+            self.assertNotIn(multi_initiative_project.name, returned_projects)
+
+        with self.subTest('>='):
+            params = {
+                'initiatives__count__gte': '1'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(no_initiative_project.name, returned_projects)
+            self.assertIn(single_initiative_project.name, returned_projects)
+            self.assertIn(multi_initiative_project.name, returned_projects)
+
+        with self.subTest('>'):
+            params = {
+                'initiatives__count__gt': '1'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(no_initiative_project.name, returned_projects)
+            self.assertNotIn(single_initiative_project.name, returned_projects)
+            self.assertIn(multi_initiative_project.name, returned_projects)
+
+        with self.subTest('<='):
+            params = {
+                'initiatives__count__lte': '1'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(no_initiative_project.name, returned_projects)
+            self.assertIn(single_initiative_project.name, returned_projects)
+            self.assertNotIn(multi_initiative_project.name, returned_projects)
+
+        with self.subTest('<'):
+            params = {
+                'initiatives__count__lt': '1'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(no_initiative_project.name, returned_projects)
+            self.assertNotIn(single_initiative_project.name, returned_projects)
+            self.assertNotIn(multi_initiative_project.name, returned_projects)
+
 
 class TestInitiativeViewSet(APITestCase):
     def setUp(self):
