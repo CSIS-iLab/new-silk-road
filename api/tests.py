@@ -262,7 +262,7 @@ class TestProjectViewSet(APITestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_filters(self):
+    def test_basic_filters(self):
         included_project = ProjectFactory(published=True)
         included_project.save()
         excluded_project = ProjectFactory(published=True)
@@ -274,27 +274,85 @@ class TestProjectViewSet(APITestCase):
             self.assertIn(included_project.name, returned_projects)
             self.assertIn(excluded_project.name, returned_projects)
 
-        with self.subTest('filter by funding'):
-            funding = ProjectFunding(project=included_project, amount=5)
-            funding.save()
+        with self.subTest('name'):
             params = {
-                'funding__amount__gte': '4'
+                'name__iexact': included_project.name.lower(),
             }
             response = self.client.get(self.url, params)
             returned_projects = [result['name'] for result in response.data['results']]
             self.assertIn(included_project.name, returned_projects)
             self.assertNotIn(excluded_project.name, returned_projects)
 
-        with self.subTest('filter by funding - currency amount'):
-            funding = ProjectFunding(project=included_project, amount=5)
-            funding.save()
+    def test_funding_filters(self):
+        expensive_project = ProjectFactory(published=True)
+        expensive_project.save()
+        ProjectFunding.objects.create(project=expensive_project, amount=10000000)
+        cheap_project = ProjectFactory(published=True)
+        cheap_project.save()
+        ProjectFunding.objects.create(project=cheap_project, amount=1000)
+
+        with self.subTest('amount'):
             params = {
-                'funding__currency_amount__gte': '4 USD'
+                'funding__amount__gte': '10000'
             }
             response = self.client.get(self.url, params)
             returned_projects = [result['name'] for result in response.data['results']]
-            self.assertIn(included_project.name, returned_projects)
-            self.assertNotIn(excluded_project.name, returned_projects)
+            self.assertIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+
+        with self.subTest('currency amount >='):
+            params = {
+                'funding__currency_amount__gte': '1000000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+
+        with self.subTest('currency amount >'):
+            params = {
+                'funding__currency_amount__gt': '1000000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+
+        with self.subTest('currency amount <='):
+            params = {
+                'funding__currency_amount__lte': '1000000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertIn(cheap_project.name, returned_projects)
+
+        with self.subTest('currency amount <='):
+            params = {
+                'funding__currency_amount__lt': '1000000 USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertIn(cheap_project.name, returned_projects)
+
+        with self.subTest('missing currency'):
+            params = {
+                'funding__currency_amount': '10000000'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
+
+        with self.subTest('missing amount'):
+            params = {
+                'funding__currency_amount': 'USD'
+            }
+            response = self.client.get(self.url, params)
+            returned_projects = [result['name'] for result in response.data['results']]
+            self.assertNotIn(expensive_project.name, returned_projects)
+            self.assertNotIn(cheap_project.name, returned_projects)
 
 
 class TestInitiativeViewSet(APITestCase):
