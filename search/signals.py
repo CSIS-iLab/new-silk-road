@@ -1,6 +1,7 @@
 import logging
-from search.tasks import handle_model_post_save, handle_model_post_delete
 import django_rq
+
+from search.tasks import handle_model_post_save, handle_model_post_delete
 
 logger = logging.getLogger(__package__)
 
