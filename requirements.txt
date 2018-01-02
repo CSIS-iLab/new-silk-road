@@ -48,7 +48,7 @@ Markdown==2.6.8
 nameparser==0.3.16
 olefile==0.44
 Pillow==4.2.0
-psycopg2==2.6.1
+psycopg2==2.7.3.2
 pylibmc==1.5.1
 python-dateutil==2.6.0
 pytz==2016.4
