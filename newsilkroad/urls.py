@@ -23,8 +23,6 @@ from infrastructure.urls import adminpatterns
 admin.site.site_header = "New Silk Road Administration"
 admin.site.site_title = "NSR Admin"
 
-DEBUG = getattr(settings, 'DEBUG', False)
-
 urlpatterns = [
     url(r'^', include('website.urls')),
     url(r'^filer/', include('filer.urls')),
@@ -37,5 +35,11 @@ urlpatterns = [
     url(r'^admin-select2/', include('django_select2.urls')),
 ]
 
-if DEBUG:
+if getattr(settings, 'DEBUG', False):
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if getattr(settings, 'DEBUG_TOOLBAR', False):
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

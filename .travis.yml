@@ -5,10 +5,10 @@ sudo: false
 dist: trusty
 
 python:
-  - "3.5"
+  - '3.5'
 
 addons:
-  postgresql: "9.5"
+  postgresql: '9.5'
   apt:
     packages:
       - postgresql-9.5-postgis-2.3
@@ -19,8 +19,8 @@ services:
 
 cache:
   directories:
-    - $HOME/.cache/pip
-    - $HOME/.cache/venvs
+    - "$HOME/.cache/pip"
+    - "$HOME/.cache/venvs"
 
 before_script:
   - psql -d template1 -c "CREATE EXTENSION postgis;" -U postgres
@@ -34,7 +34,7 @@ install:
   - pip install -r dev-requirements.txt --no-deps
   - wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
   - tar -xzf elasticsearch-${ES_VERSION}.tar.gz
-  - ./elasticsearch-${ES_VERSION}/bin/elasticsearch &
+  - "./elasticsearch-${ES_VERSION}/bin/elasticsearch &"
   - sleep 10
 
 script:
@@ -43,9 +43,28 @@ script:
   - coverage report
 
 after_success:
+  - pkill -f elasticsearch
   - codecov
 
 branches:
   only:
     - master
     - staging
+
+deploy:
+  - provider: heroku
+    strategy: git
+    api_key:
+      secure: UVXjmii2d8zVB7guYehEtnUP2BpEqNPx0sYYSdmvOCopgucT4H3J/TiIKeEdbEEDUnnJPp1+BePfDSQ3t5P9VbodAbFDvKjH2Mc+fDfYB2zMWyJZeWnCPtnsMyVX5KpGlx75fEEAgIlFgdDX3Kci9706lDy+qXLARO9STgeLUtsWQv0rrmms3AGMfz86ZjjyXosH/5Zi9JR5UBm81UWaa3kgyFcyf0Y+ApItwJdGQ65nNqL6/NRumjGp71LMItzF53iIh9By3z/oF4w6zlHIdnrXZUfQdR1zg3ZmQcSPvtMNW93W9LmPzYZTdDpdnIMaEnrzLgEQkUvbYhxYSNJl2uqrZwH1v5nJE3b8mK1bFkEAXIT1yYlZiTojHjJkCOL9ElhgaX2fnaV5hC7qwUFvg1JOe8qW5jQjTMTqhq3432NAZUpMTMGrcGw/d6jVLIPhFhbhs56fiJGVCQAF0y4wwaJr8qJqjSCql6wBDuSvCy1YndpYcvkOkdENPGUOx/c6LUuw7M1tkCJZzirNteibsOUNae8t5XTA02LlvA53iuksEEnM8V8ZIk3TsZ2C/NZD7/f0wGJf83tvTAPd9o+E12h2Zui2rNz6PzzraA7SB0De123CMCNyBziRxd1Shkz+QjSHfp43ab0Mz6adAxtQpNJ10xGyztVae0P5iir7YA8=
+    app: csis-reconasia-bravo
+    run: restart
+    on:
+      branch: staging
+  - provider: heroku
+    strategy: git
+    api_key:
+      secure: UVXjmii2d8zVB7guYehEtnUP2BpEqNPx0sYYSdmvOCopgucT4H3J/TiIKeEdbEEDUnnJPp1+BePfDSQ3t5P9VbodAbFDvKjH2Mc+fDfYB2zMWyJZeWnCPtnsMyVX5KpGlx75fEEAgIlFgdDX3Kci9706lDy+qXLARO9STgeLUtsWQv0rrmms3AGMfz86ZjjyXosH/5Zi9JR5UBm81UWaa3kgyFcyf0Y+ApItwJdGQ65nNqL6/NRumjGp71LMItzF53iIh9By3z/oF4w6zlHIdnrXZUfQdR1zg3ZmQcSPvtMNW93W9LmPzYZTdDpdnIMaEnrzLgEQkUvbYhxYSNJl2uqrZwH1v5nJE3b8mK1bFkEAXIT1yYlZiTojHjJkCOL9ElhgaX2fnaV5hC7qwUFvg1JOe8qW5jQjTMTqhq3432NAZUpMTMGrcGw/d6jVLIPhFhbhs56fiJGVCQAF0y4wwaJr8qJqjSCql6wBDuSvCy1YndpYcvkOkdENPGUOx/c6LUuw7M1tkCJZzirNteibsOUNae8t5XTA02LlvA53iuksEEnM8V8ZIk3TsZ2C/NZD7/f0wGJf83tvTAPd9o+E12h2Zui2rNz6PzzraA7SB0De123CMCNyBziRxd1Shkz+QjSHfp43ab0Mz6adAxtQpNJ10xGyztVae0P5iir7YA8=
+    app: csis-reconasia-alfa
+    run: restart
+    on:
+      branch: master
