@@ -1,5 +1,6 @@
 from django.test import SimpleTestCase
-from .forms import (
+
+from ..forms import (
     ProjectForm,
     InitiativeForm,
     MonthField,

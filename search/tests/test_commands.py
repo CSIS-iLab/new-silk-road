@@ -1,12 +1,14 @@
-from django.test import TestCase, override_settings
-from django.core.management import call_command
-from django.core.management.base import CommandError
 import io
 from elasticsearch_dsl import Index
 from elasticsearch_dsl.connections import connections
+
+from django.test import TestCase, override_settings
+from django.core.management import call_command
+from django.core.management.base import CommandError
+
+from infrastructure.tests.factories import ProjectFactory
 from .factories import (
     EntryFactory,
-    ProjectFactory,
     PersonFactory,
     PositionFactory,
 )

@@ -1,10 +1,13 @@
-from django.test import TestCase, override_settings
 from elasticsearch_dsl.connections import connections
 from redis import Redis
 from rq import SimpleWorker, Queue
 from django_rq import get_worker
-from .base import BaseSearchTestCase
-from search.tasks import (
+
+from django.contrib.auth.models import User
+from django.test import TestCase, override_settings
+
+from infrastructure.tests.factories import ProjectFactory
+from ..tasks import (
     create_search_index,
     handle_model_post_save,
     save_to_search_index,
@@ -13,11 +16,9 @@ from search.tasks import (
     index_model,
     rebuild_indices,
 )
-from search.utils import calculate_doc_id
-from .factories import (
-    EntryFactory,
-    ProjectFactory,
-)
+from ..utils import calculate_doc_id
+from .base import BaseSearchTestCase
+from .factories import EntryFactory
 from .settings import TEST_SEARCH, TEST_RQ_QUEUES
 
 
@@ -45,6 +46,19 @@ class TasksTestCase(BaseSearchTestCase):
 
         self.assertEqual(job.status, 'finished')
         self.assertEqual(job.return_value, doc_id)
+
+    def test_save_unpublished(self):
+        entry = EntryFactory.create(published=False)
+        result = save_to_search_index('writings.Entry', entry.id)
+        self.assertIsNone(result)
+
+    def test_save_invalid_id(self):
+        result = save_to_search_index('writings.Entry', 999999)
+        self.assertIsNone(result)
+
+    def test_save_invalid_model(self):
+        result = save_to_search_index('total.nonsense', 1)
+        self.assertIsNone(result)
 
     def test_handle_model_post_delete(self):
         entry = EntryFactory.create(published=True)
@@ -78,6 +92,21 @@ class TasksTestCase(BaseSearchTestCase):
         self.assertEqual(job.status, 'finished')
         self.assertEqual(job.return_value, doc_id)
 
+    def test_remove_unknown_type(self):
+        user = User.objects.create(username='test')
+        result = remove_from_search_index('auth.User', user.pk)
+        self.assertIsNone(result)
+
+    def test_remove_unknown_pk(self):
+
+        with self.subTest('No Exception'):
+            result = remove_from_search_index('writings.Entry', 99999, raise_on_404=False)
+            self.assertIsNone(result)
+
+        with self.subTest('Reraise'):
+            with self.assertRaises(Exception):
+                remove_from_search_index('writings.Entry', 99999, raise_on_404=True)
+
     def test_index_model(self):
         EntryFactory.create_batch(30, published=True)
         EntryFactory.create_batch(5, published=False)
@@ -99,6 +128,10 @@ class TasksTestCase(BaseSearchTestCase):
     def test_index_model_fails_on_unregistered_model(self):
         with self.assertRaises(LookupError):
             job = self.queue.enqueue(index_model, 'auth.User')
+            self.assertEqual(job.status, 'failed')
+
+        with self.assertRaises(LookupError):
+            job = self.queue.enqueue(index_model, 'total.nonsense')
             self.assertEqual(job.status, 'failed')
 
     def test_index_model_multiple_models(self):
@@ -140,7 +173,8 @@ class CreateSearchIndexTestCase(TestCase):
         self.assertFalse(index.exists())
 
     def test_create_search_index_with_doctypes(self):
-        index = create_search_index('foo', doc_types=('search.tests.mocks.MockDocOne', 'search.tests.mocks.MockDocTwo'))
+        index = create_search_index(
+            'foo', doc_types=('search.tests.mocks.MockDocOne', 'search.tests.mocks.MockDocTwo'))
 
         self.assertIsNotNone(index)
 

@@ -1,10 +1,12 @@
-from django.test import TestCase, override_settings
-from elasticsearch_dsl.connections import connections
-from elasticsearch_dsl import DocType, Search, Index
-import django_rq
-from search import documents
-from .settings import TEST_SEARCH
 import inspect
+
+import django_rq
+from django.test import TestCase, override_settings
+from elasticsearch_dsl import DocType, Search, Index
+from elasticsearch_dsl.connections import connections
+
+from .. import documents
+from .settings import TEST_SEARCH
 
 
 @override_settings(SEARCH=TEST_SEARCH)

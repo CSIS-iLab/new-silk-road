@@ -1,19 +1,19 @@
-from django.apps import AppConfig
-from django.db.models.signals import post_save, post_delete
-from search.conf import SearchConf
-from django.conf import settings
 import logging
 
-logger = logging.getLogger(__package__)
+from django.apps import AppConfig
+from django.conf import settings
+from django.db.models.signals import post_save, post_delete
 
-SEARCH_SIGNALS = getattr(settings, 'SEARCH_SIGNALS', False)
+from search.conf import SearchConf
+
+logger = logging.getLogger(__package__)
 
 
 class SearchAppConfig(AppConfig):
     name = 'search'
 
     def ready(self):
-        if SEARCH_SIGNALS:
+        if getattr(settings, 'SEARCH_SIGNALS', False):
             from search.signals import run_post_save_search_tasks, run_post_delete_search_tasks  # noqa: F401
 
             search_conf = SearchConf(auto_setup=True)
