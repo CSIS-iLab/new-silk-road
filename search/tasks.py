@@ -67,8 +67,11 @@ def handle_model_post_delete(label, pk):
 
 
 def remove_from_search_index(label, pk, raise_on_404=False):
-    DocType = search_config.get_doctype_for_model(label)
-    if DocType:
+    try:
+        DocType = search_config.get_doctype_for_model(label)
+    except LookupError:
+        logger.error("Unable to find matching DocType for '{}'. Unable to remove from search index".format(label))
+    else:
         doc_id = calculate_doc_id(label, pk)
         try:
             doc_obj = DocType.get(doc_id)
@@ -78,9 +81,6 @@ def remove_from_search_index(label, pk, raise_on_404=False):
             logger.warn("Unable to find document with id='{}'. Unable to remove from search index".format(doc_id))
             if raise_on_404:
                 raise e
-    else:
-        logger.error("Unable to find matching DocType for '{}'. Unable to remove from search index".format(label))
-
     return None
 
 
@@ -99,20 +99,19 @@ def index_model(label):
         logger.error(e)
         raise e
 
-    if Model and SerializerClass:
-        serializer = SerializerClass()
-        conn = connections.get_connection()  # Get default connection
+    serializer = SerializerClass()
+    conn = connections.get_connection()  # Get default connection
 
-        queryset = Model.objects.all()
-        if hasattr(queryset, 'published'):
-            queryset = queryset.published()
-        if serializer.related_object_fields:
-            queryset = queryset.prefetch_related(*serializer.related_object_fields)
+    queryset = Model.objects.all()
+    if hasattr(queryset, 'published'):
+        queryset = queryset.published()
+    if serializer.related_object_fields:
+        queryset = queryset.prefetch_related(*serializer.related_object_fields)
 
-        model_docs = (serializer.create_document(item) for item in queryset)
-        doc_dicts = (doc.to_dict(include_meta=True) for doc in model_docs)
+    model_docs = (serializer.create_document(item) for item in queryset)
+    doc_dicts = (doc.to_dict(include_meta=True) for doc in model_docs)
 
-        return es_bulk(conn, doc_dicts)
+    return es_bulk(conn, doc_dicts)
 
 
 def rebuild_indices(indices_config, subtask_indexing=False, verbosity=0):

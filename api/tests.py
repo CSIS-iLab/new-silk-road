@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 import json
 
 from infrastructure.models import ProjectStatus, ProjectFunding
-from infrastructure.factories import ProjectFactory, InitiativeFactory
+from infrastructure.tests.factories import ProjectFactory, InitiativeFactory
 from locations.models import GeometryStore, PointGeometry
-from locations.factories import PointGeometryFactory, CountryFactory
+from locations.tests.factories import PointGeometryFactory, CountryFactory
 from facts.tests.organization_factories import OrganizationFactory
 from facts.tests.person_factories import PersonFactory
 

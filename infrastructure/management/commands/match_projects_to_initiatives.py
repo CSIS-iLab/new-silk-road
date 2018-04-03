@@ -1,13 +1,14 @@
-from django.core.management.base import BaseCommand
-from django.apps import apps
 import argparse
 import json
+
+from django.apps import apps
+from django.core.management.base import BaseCommand, CommandError
+
 from utilities.string import clean_string
 
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument('--dry-run', '-n', action='store_true', default=False)
         parser.add_argument(
             'matchfile', type=argparse.FileType('r'),
             help='A JSON array of objects with fields fo both project and initiative names'
@@ -23,7 +24,10 @@ class Command(BaseCommand):
         Project = apps.get_model("infrastructure", "Project")
         Initiative = apps.get_model("infrastructure", "Initiative")
 
-        data = json.load(filename)
+        try:
+            data = json.load(filename)
+        except json.decoder.JSONDecodeError as e:
+            raise CommandError(e)
 
         for item in data:
             proj_name = clean_string(item.get(project_field, None))

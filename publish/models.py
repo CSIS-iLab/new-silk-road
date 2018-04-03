@@ -1,13 +1,11 @@
 from django.db import models
 from django.conf import settings
 
-PUBLISH_FILTER_ENABLED = getattr(settings, 'PUBLISH_FILTER_ENABLED', True)
-
 
 class PublishableQuerySet(models.QuerySet):
 
     def published(self):
-        if not PUBLISH_FILTER_ENABLED:
+        if not settings.PUBLISH_FILTER_ENABLED:
             return self
         else:
             return self.filter(published=True)
