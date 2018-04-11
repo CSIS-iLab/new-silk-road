@@ -33,11 +33,11 @@ class GeometryStoreFilter(filters.FilterSet):
         fields = ('identifier', 'project')
 
 
-def filter_region_json(qs, value):
+def filter_region_json(qs, name, value):
     return qs.filter(attributes__region=int(value))
 
 
-def filter_json_has_key(qs, value):
+def filter_json_has_key(qs, name, value):
     return qs.filter(attributes__has_key=value)
 
 
@@ -47,7 +47,9 @@ class LocationGeometryFilterBase(GeoFilterSet):
 
     name = filters.CharFilter(name='attributes__name', lookup_expr='exact')
     layer = filters.CharFilter(name='attributes__layer', lookup_expr='exact')
-    region = filters.NumberFilter(name='attributes__region', action=filter_region_json)
+    region = filters.NumberFilter(name='attributes__region', method=filter_region_json)
+
+    # Note: the 'action' parameter has been deprecated, and 'method' should be used instead
     # FIXME: has_key/filter_json_has_key messes up all queries.
     # has_key = filters.CharFilter(name='attributes', action=filter_json_has_key)
 
