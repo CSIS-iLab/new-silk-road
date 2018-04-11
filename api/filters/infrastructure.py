@@ -89,6 +89,12 @@ class ProjectFundingFilter(filters.FilterSet):
 
     class Meta:
         model = ProjectFunding
+        fields = {
+            'currency_amount': ['gt', 'gte', 'lt', 'lte'],
+            'amount': ['iexact', 'lte', 'contains', 'lt', 'iendswith', 'gte', 'gt',
+                       'startswith', 'range', 'isnull', 'istartswith', 'endswith',
+                       'iregex', 'in', 'regex', 'icontains', 'search', 'contained_by']
+        }
 
 
 class ProjectFilter(filters.FilterSet):

@@ -43,7 +43,7 @@ def filter_json_has_key(qs, value):
 
 class LocationGeometryFilterBase(GeoFilterSet):
     label = filters.CharFilter(name='label', lookup_expr='iexact')
-    label__contains = filters.CharFilter(name='label', lookup_expr='icontains')
+    label_contains = filters.CharFilter(name='label', lookup_expr='icontains')
 
     name = filters.CharFilter(name='attributes__name', lookup_expr='exact')
     layer = filters.CharFilter(name='attributes__layer', lookup_expr='exact')
@@ -55,16 +55,20 @@ class LocationGeometryFilterBase(GeoFilterSet):
 class LineStringGeometryFilter(LocationGeometryFilterBase):
     class Meta:
         model = LineStringGeometry
+        fields = '__all__'
+        fields = ['label', 'label_contains', 'name', 'layer', 'region']
 
 
 class PointGeometryFilter(LocationGeometryFilterBase):
     class Meta:
         model = PointGeometry
+        fields = ['label', 'label_contains', 'name', 'layer', 'region']
 
 
 class PolygonGeometryFilter(LocationGeometryFilterBase):
     class Meta:
         model = PolygonGeometry
+        fields = ['label', 'label_contains', 'name', 'layer', 'region']
 
 
 class CountryFilter(filters.FilterSet):
