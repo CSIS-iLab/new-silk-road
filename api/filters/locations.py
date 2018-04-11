@@ -20,9 +20,9 @@ class GeometryStoreFilter(filters.FilterSet):
         name='project',
         distinct=True
     )
-    project_identifiers = filters.MethodFilter()
+    project_identifiers = filters.CharFilter(method='filter_project_identifiers')
 
-    def filter_project_identifiers(self, name, queryset, value):
+    def filter_project_identifiers(self, queryset, name, value):
         value_list = [v for v in value.split(',') if len(v) == 36 or len(v) == 32]
         if value_list:
             return queryset.filter(project__identifier__in=value_list)

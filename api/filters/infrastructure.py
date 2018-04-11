@@ -49,13 +49,13 @@ class ProjectFundingFilter(filters.FilterSet):
     )
     amount = filters.AllLookupsFilter(name='amount')
     currency = filters.CharFilter(name='currency', lookup_expr='iexact')
-    currency_amount = filters.MethodFilter()
-    currency_amount__gt = filters.MethodFilter()
-    currency_amount__gte = filters.MethodFilter()
-    currency_amount__lt = filters.MethodFilter()
-    currency_amount__lte = filters.MethodFilter()
+    currency_amount = filters.CharFilter(method='filter_currency_amount')
+    currency_amount__gt = filters.CharFilter(method='filter_currency_amount__gt')
+    currency_amount__gte = filters.CharFilter(method='filter_currency_amount__gte')
+    currency_amount__lt = filters.CharFilter(method='filter_currency_amount__lt')
+    currency_amount__lte = filters.CharFilter(method='filter_currency_amount__lte')
 
-    def __filter__currency_amount(self, name, queryset, value, modifier=None):
+    def __filter__currency_amount(self, queryset, name, value, modifier=None):
         currency_field = 'currency'
         amount_field = name.replace('currency_amount', 'amount')
         currency_field = name.replace('currency_amount', 'currency__iexact')
@@ -72,20 +72,20 @@ class ProjectFundingFilter(filters.FilterSet):
             return queryset.filter(**lookup)
         return queryset.none()
 
-    def filter_currency_amount(self, name, queryset, value):
-        return self.__filter__currency_amount(name, queryset, value)
+    def filter_currency_amount(self, queryset, name, value):
+        return self.__filter__currency_amount(queryset, name, value)
 
-    def filter_currency_amount__gt(self, name, queryset, value):
-        return self.__filter__currency_amount(name, queryset, value, modifier='gt')
+    def filter_currency_amount__gt(self, queryset, name, value):
+        return self.__filter__currency_amount(queryset, name, value, modifier='gt')
 
-    def filter_currency_amount__gte(self, name, queryset, value):
-        return self.__filter__currency_amount(name, queryset, value, modifier='gte')
+    def filter_currency_amount__gte(self, queryset, name, value):
+        return self.__filter__currency_amount(queryset, name, value, modifier='gte')
 
-    def filter_currency_amount__lt(self, name, queryset, value):
-        return self.__filter__currency_amount(name, queryset, value, modifier='lt')
+    def filter_currency_amount__lt(self, queryset, name, value):
+        return self.__filter__currency_amount(queryset, name, value, modifier='lt')
 
-    def filter_currency_amount__lte(self, name, queryset, value):
-        return self.__filter__currency_amount(name, queryset, value, modifier='lte')
+    def filter_currency_amount__lte(self, queryset, name, value):
+        return self.__filter__currency_amount(queryset, name, value, modifier='lte')
 
     class Meta:
         model = ProjectFunding
@@ -107,11 +107,11 @@ class ProjectFilter(filters.FilterSet):
     regions = filters.ModelMultipleChoiceFilter(queryset=Region.objects.all(), name='regions')
 
     initiatives = filters.RelatedFilter(InitiativeFilter, name='initiatives')
-    initiatives__count = filters.MethodFilter()
-    initiatives__count__gt = filters.MethodFilter()
-    initiatives__count__gte = filters.MethodFilter()
-    initiatives__count__lt = filters.MethodFilter()
-    initiatives__count__lte = filters.MethodFilter()
+    initiatives__count = filters.CharFilter()
+    initiatives__count__gt = filters.CharFilter(method='filter_initiatives__count__gt')
+    initiatives__count__gte = filters.CharFilter(method='filter_initiatives__count__gte')
+    initiatives__count__lt = filters.CharFilter(method='filter_initiatives__count__lt')
+    initiatives__count__lte = filters.CharFilter(method='filter_initiatives__count__lte')
 
     infrastructure_type = filters.ModelMultipleChoiceFilter(queryset=InfrastructureType.objects.all())
 
@@ -144,28 +144,28 @@ class ProjectFilter(filters.FilterSet):
             return queryset.annotate(num_initiatives=Count('initiatives')).filter(**lookup)
         return queryset
 
-    def filter_initiatives__count(self, name, queryset, value):
+    def filter_initiatives__count(self, queryset, name, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives')
 
-    def filter_initiatives__count__gt(self, name, queryset, value):
+    def filter_initiatives__count__gt(self, queryset, name, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__gt')
 
-    def filter_initiatives__count__gte(self, name, queryset, value):
+    def filter_initiatives__count__gte(self, queryset, name, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__gte')
 
-    def filter_initiatives__count__lt(self, name, queryset, value):
+    def filter_initiatives__count__lt(self, queryset, name, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__lt')
 
-    def filter_initiatives__count__lte(self, name, queryset, value):
+    def filter_initiatives__count__lte(self, queryset, name, value):
         return self._filter_initiatives_count(queryset, value, 'num_initiatives__lte')
 
-    total_cost_amount = filters.MethodFilter()
-    total_cost_amount__gt = filters.MethodFilter()
-    total_cost_amount__gte = filters.MethodFilter()
-    total_cost_amount__lt = filters.MethodFilter()
-    total_cost_amount__lte = filters.MethodFilter()
+    total_cost_amount = filters.CharFilter()
+    total_cost_amount__gt = filters.CharFilter(method='filter_total_cost_amount__gt')
+    total_cost_amount__gte = filters.CharFilter(method='filter_total_cost_amount__gte')
+    total_cost_amount__lt = filters.CharFilter(method='filter_total_cost_amount__lt')
+    total_cost_amount__lte = filters.CharFilter(method='filter_total_cost_amount__lte')
 
-    def __filter__total_cost_amount(self, name, queryset, value, modifier=None):
+    def __filter__total_cost_amount(self, queryset, name, value, modifier=None):
         currency_field = 'currency'
         amount_field = name.replace('total_cost_amount', 'total_cost')
         currency_field = name.replace('total_cost_amount', 'total_cost_currency__iexact')
@@ -182,20 +182,20 @@ class ProjectFilter(filters.FilterSet):
             return queryset.filter(**lookup)
         return queryset.none()
 
-    def filter_total_cost_amount(self, name, queryset, value):
-        return self.__filter__total_cost_amount(name, queryset, value)
+    def filter_total_cost_amount(self, queryset, name, value):
+        return self.__filter__total_cost_amount(queryset, name, value)
 
-    def filter_total_cost_amount__gt(self, name, queryset, value):
-        return self.__filter__total_cost_amount(name, queryset, value, modifier='gt')
+    def filter_total_cost_amount__gt(self, queryset, name, value):
+        return self.__filter__total_cost_amount(queryset, name, value, modifier='gt')
 
-    def filter_total_cost_amount__gte(self, name, queryset, value):
-        return self.__filter__total_cost_amount(name, queryset, value, modifier='gte')
+    def filter_total_cost_amount__gte(self, queryset, name, value):
+        return self.__filter__total_cost_amount(queryset, name, value, modifier='gte')
 
-    def filter_total_cost_amount__lt(self, name, queryset, value):
-        return self.__filter__total_cost_amount(name, queryset, value, modifier='lt')
+    def filter_total_cost_amount__lt(self, queryset, name, value):
+        return self.__filter__total_cost_amount(queryset, name, value, modifier='lt')
 
-    def filter_total_cost_amount__lte(self, name, queryset, value):
-        return self.__filter__total_cost_amount(name, queryset, value, modifier='lte')
+    def filter_total_cost_amount__lte(self, queryset, name, value):
+        return self.__filter__total_cost_amount(queryset, name, value, modifier='lte')
 
     class Meta:
         model = Project
