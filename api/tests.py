@@ -138,11 +138,11 @@ class TestGeometryStoreCentroidViewSet(TestCase):
     def test_centroid_list(self):
 
         # Make a GeometryStore object without points/lines/polygons/centroid
-        # This hould not appear in list
+        # This should not appear in list
         unlocated = GeometryStore()
         unlocated.save()
         # Single point store which doesn't have an associcated project
-        # This hould not appear in list
+        # This should not appear in list
         random_point = GeometryStore()
         random_point.save()
         point = PointGeometry(geom=Point(20, 30))
@@ -216,11 +216,11 @@ class TestGeometryStoreCentroidViewSet(TestCase):
         """Count the number of queries required to fetch the centroids."""
 
         # Make a GeometryStore object without points/lines/polygons/centroid
-        # This hould not appear in list
+        # This should not appear in list
         unlocated = GeometryStore()
         unlocated.save()
         # Single point store which doesn't have an associcated project
-        # This hould not appear in list
+        # This should not appear in list
         random_point = GeometryStore()
         random_point.save()
         point = PointGeometry(geom=Point(20, 30))
