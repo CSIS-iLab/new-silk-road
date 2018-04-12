@@ -30,7 +30,7 @@ django-suit==0.2.21
 django-taggit==0.21.2
 django-taggit-autosuggest==0.3.0
 django-taggit-helpers==0.1.4
-djangorestframework==3.6.4
+djangorestframework==3.8.2
 djangorestframework-filters==0.10.2
 djangorestframework-gis==0.11
 docutils==0.13.1
