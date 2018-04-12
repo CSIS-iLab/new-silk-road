@@ -137,9 +137,17 @@ class TestGeometryStoreCentroidViewSet(TestCase):
 
     def test_centroid_list(self):
 
-        # Make a GeometryStore object without points/lines/polygons/centroid; should not appear in list
+        # Make a GeometryStore object without points/lines/polygons/centroid
+        # This should not appear in list
         unlocated = GeometryStore()
         unlocated.save()
+        # Single point store which doesn't have an associcated project
+        # This should not appear in list
+        random_point = GeometryStore()
+        random_point.save()
+        point = PointGeometry(geom=Point(20, 30))
+        point.save()
+        random_point.points.add(point)
 
         with self.settings(PUBLISH_FILTER_ENABLED=True):
             with self.subTest('Authenticated and PUBLISH_FILTER_ENABLED'):
@@ -174,6 +182,69 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 # Both geometries from setUp should be in the list, but not the one without a centroid.
                 data = json.loads(response.content.decode())
                 self.assertEqual(len(data['features']), 2)
+
+    def test_response_format(self):
+        """Centroids should include related project information in their properties."""
+
+        with self.settings(PUBLISH_FILTER_ENABLED=True):
+            self.client.logout()
+            response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, 200)
+        # Only the geometry with a published project should be included.
+        data = json.loads(response.content.decode())
+        self.assertEqual(len(data['features']), 1)
+        feature = data['features'][0]
+        self.assertEqual(feature, {
+            'id': str(self.geom_with_published_project.identifier),
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [
+                    self.geom_with_published_project.centroid.x,
+                    self.geom_with_published_project.centroid.y,
+                ],
+            },
+            'properties': {
+                'label': self.published_project.name,
+                'geostore': str(self.geom_with_published_project.identifier),
+                'icon-image': 'dot',
+                'infrastructureType': self.published_project.infrastructure_type.name,
+            }
+        })
+
+    def test_performance(self):
+        """Count the number of queries required to fetch the centroids."""
+
+        # Make a GeometryStore object without points/lines/polygons/centroid
+        # This should not appear in list
+        unlocated = GeometryStore()
+        unlocated.save()
+        # Single point store which doesn't have an associcated project
+        # This should not appear in list
+        random_point = GeometryStore()
+        random_point.save()
+        point = PointGeometry(geom=Point(20, 30))
+        point.save()
+        random_point.points.add(point)
+        # Create 9 more (for a total of 10) random point projects for the map
+        for i in range(9):
+            geo = GeometryStore()
+            geo.save()
+            point = PointGeometry(geom=Point(20, 30))
+            point.save()
+            geo.points.add(point)
+            project = ProjectFactory(published=True)
+            project.geo = geo
+            project.save()
+
+        with self.settings(PUBLISH_FILTER_ENABLED=True):
+            self.client.logout()
+            with self.assertNumQueries(1):
+                # All response data should be fetched in a single query
+                response = self.client.get(self.list_url)
+                self.assertEqual(response.status_code, 200)
+            data = json.loads(response.content.decode())
+            self.assertEqual(len(data['features']), 10)
 
 
 class TestOrganizationViewSet(TestCase):
