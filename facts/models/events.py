@@ -11,7 +11,8 @@ from utilities.date import fuzzydate
 class EventType(MPTTModel):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=110, allow_unicode=True)
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             related_name='children', db_index=True)
 
     def __str__(self):
@@ -30,8 +31,8 @@ class Event(Publishable):
     """Describes an event, one which may have a start and end date"""
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=110, allow_unicode=True, unique=True)
-    event_type = models.ForeignKey('EventType', verbose_name='type',
-                                   on_delete=models.SET_NULL,
+    event_type = models.ForeignKey('EventType', models.SET_NULL,
+                                   verbose_name='type',
                                    blank=True, null=True)
     description = MarkdownField(blank=True)
     description_rendered = models.TextField(blank=True, editable=False)

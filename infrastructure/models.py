@@ -27,7 +27,7 @@ class InfrastructureType(models.Model):
 class ProjectFunding(Temporal):
     """ProjectFunding relates Organizations to projects they fund, with amounts"""
     sources = models.ManyToManyField('facts.Organization', blank=True)
-    project = models.ForeignKey('Project', related_name='funding')
+    project = models.ForeignKey('Project', models.CASCADE, related_name='funding')
     amount = models.BigIntegerField(
         blank=True, null=True,
         help_text="Values in whole units (dollars, etc.)"
@@ -254,7 +254,8 @@ class Initiative(MPTTModel, Publishable):
         'facts.Organization', models.SET_NULL, blank=True, null=True,
         related_name='principal_initiatives',
     )
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.SET_NULL,
+                            null=True, blank=True,
                             verbose_name='parent initiative',
                             related_name='children', db_index=True)
     related_initiatives = models.ManyToManyField('self', blank=True)
