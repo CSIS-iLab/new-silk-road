@@ -21,14 +21,14 @@ class InfrastructureTypeFilter(filters.FilterSet):
 
 
 class InitiativeFilter(filters.FilterSet):
-    name = filters.AllLookupsFilter(name='name')
+    name = filters.AllLookupsFilter(field_name='name')
 
     geographic_scope = filters.RelatedFilter(
-        'api.filters.locations.RegionFilter', name='geographic_scope'
+        'api.filters.locations.RegionFilter', field_name='geographic_scope'
     )
 
     principal_agent = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', name='principal_agent'
+        'api.filters.facts.OrganizationFilter', field_name='principal_agent'
     )
 
     class Meta:
@@ -42,13 +42,13 @@ class InitiativeFilter(filters.FilterSet):
 
 class ProjectFundingFilter(filters.FilterSet):
     sources = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', name='sources', distinct=True
+        'api.filters.facts.OrganizationFilter', field_name='sources', distinct=True
     )
     project = filters.RelatedFilter(
-        'api.filters.infrastructure.ProjectFilter', name='project'
+        'api.filters.infrastructure.ProjectFilter', field_name='project'
     )
-    amount = filters.AllLookupsFilter(name='amount')
-    currency = filters.CharFilter(name='currency', lookup_expr='iexact')
+    amount = filters.AllLookupsFilter(field_name='amount')
+    currency = filters.CharFilter(field_name='currency', lookup_expr='iexact')
     currency_amount = filters.CharFilter(method='filter_currency_amount')
     currency_amount__gt = filters.CharFilter(method='filter_currency_amount__gt')
     currency_amount__gte = filters.CharFilter(method='filter_currency_amount__gte')
@@ -98,46 +98,51 @@ class ProjectFundingFilter(filters.FilterSet):
 
 
 class ProjectFilter(filters.FilterSet):
-    name = filters.AllLookupsFilter(name='name')
+    name = filters.AllLookupsFilter(field_name='name')
     status = filters.MultipleChoiceFilter(choices=ProjectStatus.STATUSES)
     country = filters.RelatedFilter(
-        'api.filters.locations.CountryFilter', name='countries'
+        'api.filters.locations.CountryFilter', field_name='countries'
     )
-    countries = filters.ModelMultipleChoiceFilter(queryset=Country.objects.all(), name='countries')
+    countries = filters.ModelMultipleChoiceFilter(
+        queryset=Country.objects.all(),
+        field_name='countries'
+    )
 
-    geo__identifier = filters.CharFilter(name='geo__identifier')
+    geo__identifier = filters.CharFilter(field_name='geo__identifier')
 
     region = filters.RelatedFilter(
-        'api.filters.locations.RegionFilter', name='regions'
+        'api.filters.locations.RegionFilter', field_name='regions'
     )
-    regions = filters.ModelMultipleChoiceFilter(queryset=Region.objects.all(), name='regions')
+    regions = filters.ModelMultipleChoiceFilter(queryset=Region.objects.all(), field_name='regions')
 
-    initiatives = filters.RelatedFilter(InitiativeFilter, name='initiatives')
+    initiatives = filters.RelatedFilter(InitiativeFilter, field_name='initiatives')
     initiatives__count = filters.CharFilter()
     initiatives__count__gt = filters.CharFilter(method='filter_initiatives__count__gt')
     initiatives__count__gte = filters.CharFilter(method='filter_initiatives__count__gte')
     initiatives__count__lt = filters.CharFilter(method='filter_initiatives__count__lt')
     initiatives__count__lte = filters.CharFilter(method='filter_initiatives__count__lte')
 
-    infrastructure_type = filters.ModelMultipleChoiceFilter(queryset=InfrastructureType.objects.all())
+    infrastructure_type = filters.ModelMultipleChoiceFilter(
+        queryset=InfrastructureType.objects.all()
+    )
 
-    funding = filters.RelatedFilter(ProjectFundingFilter, name='funding', distinct=True)
+    funding = filters.RelatedFilter(ProjectFundingFilter, field_name='funding', distinct=True)
 
     contractors = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', name='contractors'
+        'api.filters.facts.OrganizationFilter', field_name='contractors'
     )
     consultants = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', name='consultants'
+        'api.filters.facts.OrganizationFilter', field_name='consultants'
     )
     implementers = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', name='implementers'
+        'api.filters.facts.OrganizationFilter', field_name='implementers'
     )
     operators = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', name='operators'
+        'api.filters.facts.OrganizationFilter', field_name='operators'
     )
 
     fieldbook_id = filters.CharFilter(
-        name='extra_data__dictionary__project_id', lookup_expr='exact', distinct=True
+        field_name='extra_data__dictionary__project_id', lookup_expr='exact', distinct=True
     )
 
     total_cost_currency = filters.ChoiceFilter(

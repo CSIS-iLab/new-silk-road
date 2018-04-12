@@ -20,33 +20,33 @@ class PersonFilter(filters.FilterSet):
 
 
 class OrganizationFilter(filters.FilterSet):
-    name = filters.AllLookupsFilter(name='name')
-    slug = filters.AllLookupsFilter(name='slug')
+    name = filters.AllLookupsFilter(field_name='name')
+    slug = filters.AllLookupsFilter(field_name='slug')
     leaders = filters.RelatedFilter(
         PersonFilter,
         queryset=Person.objects.all(),
-        name='leaders',
+        field_name='leaders',
         distinct=True
     )
     parent = filters.RelatedFilter(
         'api.filters.facts.OrganizationFilter',
         queryset=Organization.objects.all(),
-        name='parent'
+        field_name='parent'
     )
     country = filters.RelatedFilter(
         CountryFilter,
         queryset=Country.objects.all(),
-        name='countries',
+        field_name='countries',
         distinct=True
     )
     countries = filters.ModelMultipleChoiceFilter(
         queryset=Country.objects.all(),
-        name='countries'
+        field_name='countries'
     )
     principal_initiatives = filters.RelatedFilter(
         InitiativeFilter,
         queryset=Initiative.objects.all(),
-        name='principal_initiatives'
+        field_name='principal_initiatives'
     )
 
     class Meta:
