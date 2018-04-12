@@ -13,7 +13,7 @@ django-cachalot==1.2.1
 django-constance[database]==1.2
 django-extensions==1.7.9
 django-filer==1.2.7
-django-filter==1.0.0
+django-filter==1.1.0
 django-heroku-memcacheify==1.0.0
 django-leaflet==0.18.1
 django-maintenancemode==0.11.2
@@ -30,7 +30,7 @@ django-suit==0.2.21
 django-taggit==0.21.2
 django-taggit-autosuggest==0.3.0
 django-taggit-helpers==0.1.4
-djangorestframework==3.4.7
+djangorestframework==3.6.4
 djangorestframework-filters==0.10.2
 djangorestframework-gis==0.11
 docutils==0.13.1
