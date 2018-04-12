@@ -457,8 +457,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.ApiPagination',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
-        # TODO: uncomment when upgrading rest_framework_filters to 1.0
-        #'rest_framework_filters.backends.RestFrameworkFilterBackend',
+        # TODO: replace 'rest_framework_filters.backends.DjangoFilterBackend',
+        # with 'rest_framework_filters.backends.RestFrameworkFilterBackend',
+        # when upgrading rest_framework_filters to 1.0
     ),
 }
 
