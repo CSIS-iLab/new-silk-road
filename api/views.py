@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, F
 from django.conf import settings
 from rest_framework import viewsets, generics, filters
 from rest_framework.views import APIView
@@ -133,14 +133,20 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
 
     def get_queryset(self):
-        queryset = GeometryStore.objects\
-            .exclude(lines=None, points=None, polygons=None)\
-            .exclude(centroid__isnull=True)\
-            .annotate(num_projects=Count('projects'))\
-            .filter(num_projects__gt=0)
+        queryset = GeometryStore.objects.exclude(
+            lines=None, points=None, polygons=None
+        ).exclude(
+            centroid__isnull=True
+        ).filter(
+            projects__isnull=False
+        ).annotate(
+            project_alt_name=F('projects__alternate_name'),
+            project_name=F('projects__name'),
+            project_type=F('projects__infrastructure_type__name'),
+        ).distinct()
 
         if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
-            queryset = queryset.filter(projects__published=True).distinct()
+            queryset = queryset.filter(projects__published=True)
 
         return queryset
 
