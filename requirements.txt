@@ -16,7 +16,7 @@ django-filer==1.2.7
 django-filter==1.1.0
 django-heroku-memcacheify==1.0.0
 django-leaflet==0.18.1
-django-maintenancemode==0.11.2
+# django-maintenancemode==0.11.2
 git+https://github.com/CSIS-iLab/django-markymark.git@f11439f#egg=django_markymark[filer]
 django-mptt==0.8.7
 django-picklefield==0.3.2

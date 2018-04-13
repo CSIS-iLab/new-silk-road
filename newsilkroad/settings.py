@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 
     'raven.contrib.django.raven_compat',
 
-    'maintenancemode',
+    # 'maintenancemode',
     'cachalot',
     'constance',
     'constance.backends.database',
@@ -97,7 +97,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'maintenancemode.middleware.MaintenanceModeMiddleware',
+    # 'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
@@ -446,11 +446,11 @@ if DEBUG and os.getenv('DEBUG_STATIC', 'False') == 'True':
     MEDIA_URL = '/%s/' % MEDIAFILES_LOCATION
 
 
-# Setting this variable to ``True`` activates the maintenancemode middleware.
-MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
-MAINTENANCE_IGNORE_URLS = (
-    r'^/admin/.*',
-)
+# # Setting this variable to ``True`` activates the maintenancemode middleware.
+# MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
+# MAINTENANCE_IGNORE_URLS = (
+#     r'^/admin/.*',
+# )
 
 # Rest API
 REST_FRAMEWORK = {
