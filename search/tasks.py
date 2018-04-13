@@ -78,7 +78,7 @@ def remove_from_search_index(label, pk, raise_on_404=False):
             doc_obj.delete()
             return doc_id
         except Exception as e:
-            logger.warn("Unable to find document with id='{}'. Unable to remove from search index".format(doc_id))
+            logger.warning("Unable to find document with id='{}'. Unable to remove from search index".format(doc_id))
             if raise_on_404:
                 raise e
     return None
