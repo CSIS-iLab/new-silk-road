@@ -26,6 +26,9 @@ class EventType(MPTTModel):
     # def get_absolute_url(self):
     #     return reverse('facts:event-type-detail', args=[self.slug])
 
+    class Meta:
+        ordering = ['id']
+
 
 class Event(Publishable):
     """Describes an event, one which may have a start and end date"""
@@ -67,3 +70,6 @@ class Event(Publishable):
         if not self.slug or self.slug == '':
             self.slug = slugify(self.name, allow_unicode=True)
         super(Event, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['created_at']
