@@ -19,6 +19,7 @@ django-leaflet==0.23.0
 # django-maintenancemode==0.11.2
 git+https://github.com/CSIS-iLab/django-markymark.git@f11439f#egg=django_markymark[filer]
 django-mptt==0.9.0
+  django-js-asset==1.0.0
 django-picklefield==1.0.0
 django-polymorphic==2.0.2
 django-pylibmc==0.6.1
