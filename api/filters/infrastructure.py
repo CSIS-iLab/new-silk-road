@@ -1,5 +1,8 @@
-import rest_framework_filters as filters
 from django.db.models import Count
+
+import rest_framework_filters as filters
+
+from facts.models.organizations import Organization
 from infrastructure.models import (
     Project,
     ProjectStatus,
@@ -24,11 +27,15 @@ class InitiativeFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(field_name='name')
 
     geographic_scope = filters.RelatedFilter(
-        'api.filters.locations.RegionFilter', field_name='geographic_scope'
+        'api.filters.locations.RegionFilter',
+        queryset=Country.objects.all(),
+        field_name='geographic_scope'
     )
 
     principal_agent = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', field_name='principal_agent'
+        'api.filters.facts.OrganizationFilter',
+        queryset=Organization.objects.all(),
+        field_name='principal_agent'
     )
 
     class Meta:
@@ -101,7 +108,9 @@ class ProjectFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(field_name='name')
     status = filters.MultipleChoiceFilter(choices=ProjectStatus.STATUSES)
     country = filters.RelatedFilter(
-        'api.filters.locations.CountryFilter', field_name='countries'
+        'api.filters.locations.CountryFilter',
+        queryset=Country.objects.all(),
+        field_name='countries',
     )
     countries = filters.ModelMultipleChoiceFilter(
         queryset=Country.objects.all(),
@@ -111,11 +120,17 @@ class ProjectFilter(filters.FilterSet):
     geo__identifier = filters.CharFilter(field_name='geo__identifier')
 
     region = filters.RelatedFilter(
-        'api.filters.locations.RegionFilter', field_name='regions'
+        'api.filters.locations.RegionFilter',
+        queryset=Region.objects.all(),
+        field_name='regions'
     )
     regions = filters.ModelMultipleChoiceFilter(queryset=Region.objects.all(), field_name='regions')
 
-    initiatives = filters.RelatedFilter(InitiativeFilter, field_name='initiatives')
+    initiatives = filters.RelatedFilter(
+        InitiativeFilter,
+        queryset=Initiative.objects.all(),
+        field_name='initiatives'
+    )
     initiatives__count = filters.CharFilter()
     initiatives__count__gt = filters.CharFilter(method='filter_initiatives__count__gt')
     initiatives__count__gte = filters.CharFilter(method='filter_initiatives__count__gte')
@@ -126,19 +141,32 @@ class ProjectFilter(filters.FilterSet):
         queryset=InfrastructureType.objects.all()
     )
 
-    funding = filters.RelatedFilter(ProjectFundingFilter, field_name='funding', distinct=True)
+    funding = filters.RelatedFilter(
+        ProjectFundingFilter,
+        queryset=ProjectFunding.objects.all(),
+        field_name='funding',
+        distinct=True
+    )
 
     contractors = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', field_name='contractors'
+        'api.filters.facts.OrganizationFilter',
+        queryset=Organization.objects.all(),
+        field_name='contractors'
     )
     consultants = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', field_name='consultants'
+        'api.filters.facts.OrganizationFilter',
+        queryset=Organization.objects.all(),
+        field_name='consultants'
     )
     implementers = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', field_name='implementers'
+        'api.filters.facts.OrganizationFilter',
+        queryset=Organization.objects.all(),
+        field_name='implementers'
     )
     operators = filters.RelatedFilter(
-        'api.filters.facts.OrganizationFilter', field_name='operators'
+        'api.filters.facts.OrganizationFilter',
+        queryset=Organization.objects.all(),
+        field_name='operators'
     )
 
     fieldbook_id = filters.CharFilter(
