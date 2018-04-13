@@ -90,6 +90,8 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         model = GeometryStore
         geo_field = 'centroid'
         id_field = 'identifier'
+        fields = ('lines', 'points', 'polygons', 'label', 'attributes', 'identifier',
+                  'centroid', 'id')
 
     def get_properties(self, instance, fields):
         # This makes use of the project_name, project_type, and project_alt_name

@@ -13,16 +13,16 @@ from locations.models import (
 
 
 class GeometryStoreFilter(filters.FilterSet):
-    label = filters.AllLookupsFilter(name='label')
+    label = filters.AllLookupsFilter(field_name='label')
     identifier = UUIDFilter()
     project = filters.RelatedFilter(
         'api.filters.infrastructure.ProjectFilter',
-        name='project',
+        field_name='project',
         distinct=True
     )
-    project_identifiers = filters.MethodFilter()
+    project_identifiers = filters.CharFilter(method='filter_project_identifiers')
 
-    def filter_project_identifiers(self, name, queryset, value):
+    def filter_project_identifiers(self, queryset, name, value):
         value_list = [v for v in value.split(',') if len(v) == 36 or len(v) == 32]
         if value_list:
             return queryset.filter(project__identifier__in=value_list)
@@ -33,43 +33,49 @@ class GeometryStoreFilter(filters.FilterSet):
         fields = ('identifier', 'project')
 
 
-def filter_region_json(qs, value):
+def filter_region_json(qs, name, value):
     return qs.filter(attributes__region=int(value))
 
 
-def filter_json_has_key(qs, value):
+def filter_json_has_key(qs, name, value):
     return qs.filter(attributes__has_key=value)
 
 
 class LocationGeometryFilterBase(GeoFilterSet):
-    label = filters.CharFilter(name='label', lookup_expr='iexact')
-    label__contains = filters.CharFilter(name='label', lookup_expr='icontains')
+    label = filters.CharFilter(field_name='label', lookup_expr='iexact')
+    label_contains = filters.CharFilter(field_name='label', lookup_expr='icontains')
 
-    name = filters.CharFilter(name='attributes__name', lookup_expr='exact')
-    layer = filters.CharFilter(name='attributes__layer', lookup_expr='exact')
-    region = filters.NumberFilter(name='attributes__region', action=filter_region_json)
+    name = filters.CharFilter(field_name='attributes__name', lookup_expr='exact')
+    layer = filters.CharFilter(field_name='attributes__layer', lookup_expr='exact')
+    region = filters.NumberFilter(field_name='attributes__region', method=filter_region_json)
+
+    # Note: the 'action' parameter has been deprecated, and 'method' should be used instead
     # FIXME: has_key/filter_json_has_key messes up all queries.
-    # has_key = filters.CharFilter(name='attributes', action=filter_json_has_key)
+    # has_key = filters.CharFilter(field_name='attributes', action=filter_json_has_key)
 
 
 class LineStringGeometryFilter(LocationGeometryFilterBase):
     class Meta:
         model = LineStringGeometry
+        fields = '__all__'
+        fields = ['label', 'label_contains', 'name', 'layer', 'region']
 
 
 class PointGeometryFilter(LocationGeometryFilterBase):
     class Meta:
         model = PointGeometry
+        fields = ['label', 'label_contains', 'name', 'layer', 'region']
 
 
 class PolygonGeometryFilter(LocationGeometryFilterBase):
     class Meta:
         model = PolygonGeometry
+        fields = ['label', 'label_contains', 'name', 'layer', 'region']
 
 
 class CountryFilter(filters.FilterSet):
-    name = filters.AllLookupsFilter(name='name')
-    code = filters.AllLookupsFilter(name='alpha_3')
+    name = filters.AllLookupsFilter(field_name='name')
+    code = filters.AllLookupsFilter(field_name='alpha_3')
 
     class Meta:
         model = Country
@@ -77,7 +83,7 @@ class CountryFilter(filters.FilterSet):
 
 
 class RegionFilter(filters.FilterSet):
-    name = filters.AllLookupsFilter(name='name')
+    name = filters.AllLookupsFilter(field_name='name')
 
     class Meta:
         model = Region

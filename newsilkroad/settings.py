@@ -64,8 +64,10 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'storages',
+    'django_filters',
     'rest_framework',
     'rest_framework_gis',
+#    'rest_framework_filters',  # TODO: uncomment when upgrading rest_framework_filters to 1.0
 
     'sources',
     'facts',
@@ -455,6 +457,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.ApiPagination',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
+        # TODO: replace 'rest_framework_filters.backends.DjangoFilterBackend',
+        # with 'rest_framework_filters.backends.RestFrameworkFilterBackend',
+        # when upgrading rest_framework_filters to 1.0
     ),
 }
 
