@@ -1,5 +1,6 @@
 -r requirements.txt
 Faker==0.8.13
+  text-unidecode==1.2
 MarkupSafe==1.0
 Werkzeug==0.12.2
 asn1crypto==0.22.0
