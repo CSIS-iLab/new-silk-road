@@ -12,12 +12,12 @@ model_choices = models.Q(app_label='infrastructure', model__in=('project', 'init
 class CollectionItem(models.Model):
     content_type = models.ForeignKey(
         ContentType,
-        on_delete=models.CASCADE,
+        models.CASCADE,
         limit_choices_to=model_choices
     )
     object_id = models.PositiveIntegerField(help_text='Numeric id of the object.')
     content_object = GenericForeignKey('content_type', 'object_id')
-    collection = models.ForeignKey('website.Collection', related_name='items')
+    collection = models.ForeignKey('website.Collection', models.CASCADE, related_name='items')
     order = models.PositiveIntegerField(blank=True, null=True)
     description = MarkdownField(blank=True, help_text='Teaser/description. Keep it short.')
     description_rendered = models.TextField(blank=True, editable=False)

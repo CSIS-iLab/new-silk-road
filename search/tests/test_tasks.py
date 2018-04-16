@@ -36,7 +36,7 @@ class TasksTestCase(BaseSearchTestCase):
         job = self.queue.enqueue(handle_model_post_save, 'writings.Entry', entry.id)
         doc_id = calculate_doc_id('writings.Entry', entry.id)
 
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
         self.assertEqual(job.return_value, doc_id)
 
     def test_save_to_search_index(self):
@@ -44,7 +44,7 @@ class TasksTestCase(BaseSearchTestCase):
         job = self.queue.enqueue(save_to_search_index, 'writings.Entry', entry.id)
         doc_id = calculate_doc_id('writings.Entry', entry.id)
 
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
         self.assertEqual(job.return_value, doc_id)
 
     def test_save_unpublished(self):
@@ -67,13 +67,13 @@ class TasksTestCase(BaseSearchTestCase):
 
         save_job = self.queue.enqueue(save_to_search_index, 'writings.Entry', entry_id)
 
-        self.assertEqual(save_job.status, 'finished')
+        self.assertEqual(save_job.get_status(), 'finished')
         self.assertEqual(save_job.return_value, doc_id)
 
         entry.delete()
         job = self.queue.enqueue(handle_model_post_delete, 'writings.Entry', entry_id)
 
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
         self.assertEqual(job.return_value, doc_id)
 
     def test_remove_from_search_index(self):
@@ -83,13 +83,13 @@ class TasksTestCase(BaseSearchTestCase):
 
         save_job = self.queue.enqueue(save_to_search_index, 'writings.Entry', entry_id)
 
-        self.assertEqual(save_job.status, 'finished')
+        self.assertEqual(save_job.get_status(), 'finished')
         self.assertEqual(save_job.return_value, doc_id)
 
         entry.delete()
         job = self.queue.enqueue(remove_from_search_index, 'writings.Entry', entry_id)
 
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
         self.assertEqual(job.return_value, doc_id)
 
     def test_remove_unknown_type(self):
@@ -119,7 +119,7 @@ class TasksTestCase(BaseSearchTestCase):
         expected_model_index_count = 30 if PUBLISH_FILTER_ENABLED else 35
 
         self.assertEqual(job.result, (expected_model_index_count, []))
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
 
         self.index.refresh()
 
@@ -128,11 +128,11 @@ class TasksTestCase(BaseSearchTestCase):
     def test_index_model_fails_on_unregistered_model(self):
         with self.assertRaises(LookupError):
             job = self.queue.enqueue(index_model, 'auth.User')
-            self.assertEqual(job.status, 'failed')
+            self.assertEqual(job.get_status(), 'failed')
 
         with self.assertRaises(LookupError):
             job = self.queue.enqueue(index_model, 'total.nonsense')
-            self.assertEqual(job.status, 'failed')
+            self.assertEqual(job.get_status(), 'failed')
 
     def test_index_model_multiple_models(self):
         entry_objects = EntryFactory.create_batch(30, published=True)
@@ -141,12 +141,12 @@ class TasksTestCase(BaseSearchTestCase):
         job = self.queue.enqueue(index_model, EntryFactory._meta.model._meta.label)
 
         self.assertEqual(job.result, (30, []))
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
 
         job = self.queue.enqueue(index_model, ProjectFactory._meta.model._meta.label)
 
         self.assertEqual(job.result, (20, []))
-        self.assertEqual(job.status, 'finished')
+        self.assertEqual(job.get_status(), 'finished')
 
         self.index.refresh()
 

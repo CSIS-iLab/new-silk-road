@@ -120,7 +120,7 @@ class GeometryStoreDetailView(generics.RetrieveAPIView):
             .annotate(num_projects=Count('projects'))\
             .filter(num_projects__gt=0)
 
-        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
+        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
             queryset = queryset.filter(projects__published=True).distinct()
 
         return queryset
@@ -146,7 +146,7 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             project_type=F('projects__infrastructure_type__name'),
         ).distinct()
 
-        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated():
+        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
             queryset = queryset.filter(projects__published=True)
 
         return queryset

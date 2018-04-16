@@ -131,7 +131,7 @@ class GeometryStore(models.Model):
 class Region(models.Model):
     """A human-described region of geography or countries"""
     name = models.CharField(max_length=100)
-    geography = models.ForeignKey('PolygonGeometry', blank=True, null=True)
+    geography = models.ForeignKey('PolygonGeometry', models.SET_NULL, blank=True, null=True)
     countries = models.ManyToManyField('Country')
 
     def __str__(self):
@@ -142,8 +142,9 @@ class Place(models.Model):
     """Describes a place, broadly or specifically"""
     label = models.CharField(max_length=100)
     city = models.CharField(blank=True, max_length=100)
-    country = models.ForeignKey('Country')
-    location = models.ForeignKey('PointGeometry', blank=True, null=True,
+    country = models.ForeignKey('Country', models.CASCADE)
+    location = models.ForeignKey('PointGeometry', models.SET_NULL,
+                                 blank=True, null=True,
                                  verbose_name="geographic location")
 
     class Meta:

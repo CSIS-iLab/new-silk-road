@@ -129,12 +129,12 @@ class GeometryStoreTestCase(TestCase):
             self.store.points.add(point)
             self.store.points.add(other)
             self.store.refresh_from_db()
-            self.assertEqual(self.store.centroid, Point(0.5, 0.5))
+            self.assertEqual(self.store.centroid.coords, Point(0.5, 0.5).coords)
 
         with self.subTest('Removing Point'):
             self.store.points.remove(other)
             self.store.refresh_from_db()
-            self.assertEqual(self.store.centroid, Point(1, 1))
+            self.assertEqual(self.store.centroid.coords, Point(1, 1).coords)
             self.store.points.remove(point)
 
         with self.subTest('Adding Line'):
@@ -145,12 +145,15 @@ class GeometryStoreTestCase(TestCase):
             self.store.lines.add(line)
             self.store.lines.add(other)
             self.store.refresh_from_db()
-            self.assertEqual(self.store.centroid, Point(0.8333333333333333, 0.8333333333333333))
+            self.assertEqual(
+                self.store.centroid.coords,
+                Point(0.8333333333333333, 0.8333333333333333).coords
+            )
 
         with self.subTest('Removing Line'):
             self.store.lines.remove(other)
             self.store.refresh_from_db()
-            self.assertEqual(self.store.centroid, Point(0.5, 0.5))
+            self.assertEqual(self.store.centroid.coords, Point(0.5, 0.5).coords)
             self.store.lines.remove(line)
 
         with self.subTest('Adding Polygon'):
@@ -161,12 +164,12 @@ class GeometryStoreTestCase(TestCase):
             self.store.polygons.add(polygon)
             self.store.polygons.add(other)
             self.store.refresh_from_db()
-            self.assertEqual(self.store.centroid, Point(0, 0))
+            self.assertEqual(self.store.centroid.coords, Point(0, 0).coords)
 
         with self.subTest('Removing Polygon'):
             self.store.polygons.remove(other)
             self.store.refresh_from_db()
-            self.assertEqual(self.store.centroid, Point(-0.5, -0.5))
+            self.assertEqual(self.store.centroid.coords, Point(-0.5, -0.5).coords)
 
 
 class PlaceTestCase(TestCase):

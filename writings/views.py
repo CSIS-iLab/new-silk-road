@@ -116,7 +116,7 @@ class EntryDetailView(DetailView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             queryset = queryset.published().filter(publication_date__lte=timezone.now())
         return queryset
 
@@ -133,7 +133,7 @@ class EntryListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             queryset = queryset.filter(published=True, publication_date__lte=timezone.now())
         return queryset
 
