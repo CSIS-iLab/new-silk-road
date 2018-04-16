@@ -25,6 +25,7 @@ class InfrastructureTypeFilter(filters.FilterSet):
 
 class InitiativeFilter(filters.FilterSet):
     name = filters.AllLookupsFilter(field_name='name')
+    isnull = filters.BooleanFilter(field_name='pk', lookup_expr='isnull')
 
     geographic_scope = filters.RelatedFilter(
         'api.filters.locations.RegionFilter',

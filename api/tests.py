@@ -325,6 +325,15 @@ class TestOrganizationViewSet(TestCase):
             self.assertIn(included_org.name, returned_orgs)
             self.assertNotIn(excluded_org.name, returned_orgs)
 
+        with self.subTest('filter by principal initiative existance'):
+            params = {
+                'principal_initiatives__isnull': 'False'
+            }
+            response = self.client.get(self.url, params)
+            returned_orgs = [result['name'] for result in json.loads(response.content.decode())['results']]
+            self.assertIn(included_org.name, returned_orgs)
+            self.assertNotIn(excluded_org.name, returned_orgs)
+
 
 class TestProjectViewSet(TestCase):
     def setUp(self):
