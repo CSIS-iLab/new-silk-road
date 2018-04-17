@@ -5,7 +5,8 @@ from django_select2.forms import (
 )
 from locations.models import (
     Country,
-    Place
+    Place,
+    GeometryStore
 )
 
 
@@ -26,6 +27,7 @@ class GeometrySearchWidget(ModelSelect2Widget):
     search_fields = [
         'label__icontains',
     ]
+    model = GeometryStore
 
 
 class GeometrySearchField(forms.ModelChoiceField):
