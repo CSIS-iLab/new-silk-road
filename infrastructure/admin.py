@@ -40,7 +40,9 @@ class ProjectFundingInline(admin.StackedInline):
 class ProjectsInitiativeInline(admin.StackedInline):
     model = Project.initiatives.through
     formfield_overrides = {
-        models.ForeignKey: {'widget': NameSearchWidget(attrs={'style': 'width: 80%;'})},
+        # There is only one FK where this inline is used and it points to Project
+        models.ForeignKey: {'widget': NameSearchWidget(
+            model=Project, attrs={'style': 'width: 80%;'})},
     }
 
     class Media:
@@ -52,7 +54,9 @@ class ProjectsInitiativeInline(admin.StackedInline):
 class ProjectsDocumentsInline(admin.StackedInline):
     model = Project.documents.through
     formfield_overrides = {
-        models.ForeignKey: {'widget': NameSearchWidget(attrs={'style': 'width: 80%;'})},
+        # There is only one FK where this inline is used and it points to Project
+        models.ForeignKey: {'widget': NameSearchWidget(
+            model=Project, attrs={'style': 'width: 80%;'})},
     }
 
     class Media:

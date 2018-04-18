@@ -129,7 +129,7 @@ class PersonShareholderForm(ShareholderFormBase):
 class OrganizationDetailForm(forms.ModelForm):
     organization = forms.ModelChoiceField(
         queryset=Organization.objects.all(),
-        widget=NameSearchWidget,
+        widget=NameSearchWidget(model=Organization),
         required=False
     )
 

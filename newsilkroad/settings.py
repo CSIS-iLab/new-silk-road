@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.humanize',
+    'django.contrib.postgres',
 
     'raven.contrib.django.raven_compat',
 
@@ -66,8 +67,8 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'rest_framework_gis',
-#    'rest_framework_filters',  # TODO: uncomment when upgrading rest_framework_filters to 1.0
-
+    # TODO: uncomment when upgrading rest_framework_filters to 1.0
+    # 'rest_framework_filters',
     'sources',
     'facts',
     'locations',
