@@ -60,3 +60,4 @@ six==1.11.0
 Unidecode==0.4.21
 urllib3==1.22
 waitress==0.9.0
+webencodings==0.5.1
