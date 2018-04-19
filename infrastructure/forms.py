@@ -111,7 +111,7 @@ class ProjectFundingForm(forms.ModelForm):
     project = forms.ModelChoiceField(
         queryset=Project.objects.all(),
         widget=NameSearchWidget(model=Project),
-        required=False
+        required=True
     )
 
     class Meta:
