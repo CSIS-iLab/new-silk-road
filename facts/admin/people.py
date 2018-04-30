@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.db import models
 
-from facts.models.people import (Position)
+from facts.models.organizations import Organization
+from facts.models.people import Position
 from facts.admin.events import PersonEventInline
 from facts.admin.organizations import PersonShareholderInline
 from infrastructure.admin import PersonInitiativeInline
@@ -15,7 +16,7 @@ from facts.forms import (NameSearchWidget, PersonForm)
 class PositionInline(admin.TabularInline):
     model = Position
     formfield_overrides = {
-        models.ForeignKey: {'widget': NameSearchWidget()},
+        models.ForeignKey: {'widget': NameSearchWidget(model=Organization)},
     }
 
     class Media:

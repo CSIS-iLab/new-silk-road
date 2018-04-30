@@ -45,7 +45,7 @@ class PublicationMixinTestCase(TestCase):
 
         with self.subTest('Authenticated user and published queryset'):
             # If the user is authenticated, then queryset.published() will not be called.
-            self.assertTrue(self.test_view.request.user.is_authenticated())
+            self.assertTrue(self.test_view.request.user.is_authenticated)
 
             result = self.test_view.get_queryset()
 

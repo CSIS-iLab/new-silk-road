@@ -53,10 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.humanize',
+    'django.contrib.postgres',
 
     'raven.contrib.django.raven_compat',
 
-    'maintenancemode',
     'cachalot',
     'constance',
     'constance.backends.database',
@@ -64,9 +64,11 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'storages',
+    'django_filters',
     'rest_framework',
     'rest_framework_gis',
-
+    # TODO: uncomment when upgrading rest_framework_filters to 1.0
+    # 'rest_framework_filters',
     'sources',
     'facts',
     'locations',
@@ -86,7 +88,7 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
@@ -95,7 +97,6 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'maintenancemode.middleware.MaintenanceModeMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
@@ -109,7 +110,7 @@ if DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + ['cachalot.panels.CachalotPanel']
     if os.getenv("DEBUG_PROFILING", "False") == "True":
         DEBUG_TOOLBAR_PANELS += ['debug_toolbar.panels.profiling.ProfilingPanel']
-    MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = ('127.0.0.1', )
 
 ROOT_URLCONF = 'newsilkroad.urls'
@@ -444,17 +445,14 @@ if DEBUG and os.getenv('DEBUG_STATIC', 'False') == 'True':
     MEDIA_URL = '/%s/' % MEDIAFILES_LOCATION
 
 
-# Setting this variable to ``True`` activates the maintenancemode middleware.
-MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'False') == 'True'
-MAINTENANCE_IGNORE_URLS = (
-    r'^/admin/.*',
-)
-
 # Rest API
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.ApiPagination',
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
+        # TODO: replace 'rest_framework_filters.backends.DjangoFilterBackend',
+        # with 'rest_framework_filters.backends.RestFrameworkFilterBackend',
+        # when upgrading rest_framework_filters to 1.0
     ),
 }
 

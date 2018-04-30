@@ -90,13 +90,14 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         model = GeometryStore
         geo_field = 'centroid'
         id_field = 'identifier'
+        fields = ('lines', 'points', 'polygons', 'label', 'attributes', 'identifier',
+                  'centroid', 'id')
 
     def get_properties(self, instance, fields):
-        project = Project.objects.filter(geo=instance)\
-                         .select_related('infrastructure_type')\
-                         .only('name', 'alternate_name', 'infrastructure_type__name').first()
-        infra_name = project.infrastructure_type.name if project and project.infrastructure_type else None
-        proj_name = project.alternate_name or project.name if project else None
+        # This makes use of the project_name, project_type, and project_alt_name
+        # annotations provided by the view for performance
+        proj_name = getattr(instance, 'project_alt_name') or instance.project_name or None
+        infra_name = instance.project_type or None
         icon_type = ICON_MAP.get(infra_name.lower(), 'dot') if infra_name else None
         return {
             'label': proj_name,

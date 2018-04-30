@@ -60,8 +60,8 @@ class Person(Publishable):
 class Position(models.Model):
     """Describes a position a person holds/held at an organization"""
     title = models.CharField(max_length=100)
-    person = models.ForeignKey('Person')
-    organization = models.ForeignKey('Organization')
+    person = models.ForeignKey('Person', models.CASCADE)
+    organization = models.ForeignKey('Organization', models.CASCADE)
 
     start_year = models.PositiveSmallIntegerField(blank=True, null=True)
     start_month = models.PositiveSmallIntegerField(blank=True, null=True)

@@ -57,7 +57,8 @@ class Organization(MPTTModel, Publishable):
     def fuzzy_dissolution_date(self):
         return fuzzydate(self.dissolution_year, self.dissolution_month, self.dissolution_day)
 
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             verbose_name='parent organization',
                             related_name='children', db_index=True)
     staff_size = models.PositiveIntegerField("Staff/Personnel count",
@@ -125,22 +126,26 @@ class OrganizationTypeBase(models.Model):
 
 
 class CompanyType(MPTTModel, OrganizationTypeBase):
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             related_name='children', db_index=True)
 
 
 class FinancingType(MPTTModel, OrganizationTypeBase):
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             related_name='children', db_index=True)
 
 
 class MultilateralType(MPTTModel, OrganizationTypeBase):
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             related_name='children', db_index=True)
 
 
 class NGOType(MPTTModel, OrganizationTypeBase):
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             related_name='children', db_index=True)
 
     class Meta:
@@ -148,7 +153,8 @@ class NGOType(MPTTModel, OrganizationTypeBase):
 
 
 class PoliticalType(MPTTModel, OrganizationTypeBase):
-    parent = TreeForeignKey('self', null=True, blank=True,
+    parent = TreeForeignKey('self', models.CASCADE,
+                            null=True, blank=True,
                             related_name='children', db_index=True)
 
 
@@ -248,7 +254,8 @@ class FinancingOrganizationDetails(OrganizationDetails):
     scope_of_operations = models.ManyToManyField('locations.Place', blank=True)
     procurement = models.CharField(blank=True, max_length=100)
     org_type = models.ForeignKey('facts.FinancingType',
-                                 models.SET_NULL, blank=True, null=True,
+                                 models.SET_NULL,
+                                 blank=True, null=True,
                                  verbose_name='type')
     members = models.ManyToManyField(
         'Organization',
@@ -336,7 +343,7 @@ class PoliticalDetails(OrganizationDetails):
 class ShareholderBase(models.Model):
     investment = models.ForeignKey(
         'facts.FinancingOrganizationDetails',
-        on_delete=models.CASCADE
+        models.CASCADE
     )
     value = models.DecimalField('% Share', max_digits=5, decimal_places=2)
 
@@ -348,7 +355,7 @@ class ShareholderBase(models.Model):
 class OrganizationShareholder(ShareholderBase):
     shareholder = models.ForeignKey(
         'facts.Organization',
-        on_delete=models.CASCADE,
+        models.CASCADE,
     )
 
     def __str__(self):
@@ -358,7 +365,7 @@ class OrganizationShareholder(ShareholderBase):
 class PersonShareholder(ShareholderBase):
     shareholder = models.ForeignKey(
         'facts.Person',
-        on_delete=models.CASCADE,
+        models.CASCADE,
     )
 
     def __str__(self):
