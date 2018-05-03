@@ -72,11 +72,9 @@ class InitiativeForm(forms.ModelForm):
 
 
 class OrganizationSearchMultiField(forms.ModelMultipleChoiceField):
-    search_fields = [
-        'name__icontains',
-    ]
     widget = ModelSelect2MultipleWidget(
-        model=Organization, attrs={'style': 'width: 75%'})
+        model=Organization, attrs={'style': 'width: 75%'},
+        search_fields=('name__icontains', ))
 
     def __init__(self, *args, **kwargs):
         kwargs['queryset'] = Organization.objects.all()
@@ -101,7 +99,6 @@ class ProjectForm(forms.ModelForm):
     operators = OrganizationSearchMultiField(required=False)
 
     contacts = PersonSearchMultiField(required=False, queryset=Person.objects.all())
-    initiatives = ''
 
     start_month = MonthField(required=False)
     start_day = DayField(required=False)
