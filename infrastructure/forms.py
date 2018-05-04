@@ -1,15 +1,13 @@
 from django import forms
 from django_select2.forms import (
-    ModelSelect2Widget,
+    ModelSelect2Widget, ModelSelect2MultipleWidget
 )
 from infrastructure.models import (
     Project, Initiative, ProjectFunding
 )
-from facts.forms import (
-    NameSearchWidget,
-    NameSearchMultiField,
-)
+from facts.forms import NameSearchWidget, PersonSearchMultiField
 from facts.models.organizations import Organization
+from facts.models.people import Person
 from locations.forms import (
     GeometryStoreUploadForm,
     GeometrySearchField,
@@ -73,6 +71,17 @@ class InitiativeForm(forms.ModelForm):
         fields = '__all__'
 
 
+class OrganizationSearchMultiField(forms.ModelMultipleChoiceField):
+    widget = ModelSelect2MultipleWidget(
+        model=Organization, attrs={'style': 'width: 75%'},
+        search_fields=('name__icontains', ))
+
+    def __init__(self, *args, **kwargs):
+        kwargs['queryset'] = Organization.objects.all()
+        kwargs['help_text'] = 'Select field and begin typing to search'
+        super().__init__(*args, **kwargs)
+
+
 class ProjectForm(forms.ModelForm):
     countries = CountrySearchMultiField(
         required=False,
@@ -84,6 +93,12 @@ class ProjectForm(forms.ModelForm):
         queryset=GeometryStore.objects.all(),
         help_text=GeometrySearchField.help_text
     )
+    contractors = OrganizationSearchMultiField(required=False)
+    consultants = OrganizationSearchMultiField(required=False)
+    implementers = OrganizationSearchMultiField(required=False)
+    operators = OrganizationSearchMultiField(required=False)
+
+    contacts = PersonSearchMultiField(required=False, queryset=Person.objects.all())
 
     start_month = MonthField(required=False)
     start_day = DayField(required=False)
@@ -103,11 +118,7 @@ class ProjectForm(forms.ModelForm):
 
 
 class ProjectFundingForm(forms.ModelForm):
-    sources = NameSearchMultiField(
-        required=False,
-        queryset=Organization.objects.all()
-    )
-    sources.widget.model = Organization
+    sources = OrganizationSearchMultiField(required=False)
     project = forms.ModelChoiceField(
         queryset=Project.objects.all(),
         widget=NameSearchWidget(model=Project),

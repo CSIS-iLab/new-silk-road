@@ -27,9 +27,7 @@ class PersonInitiativeInline(admin.StackedInline):
 
 class ProjectFundingInline(admin.StackedInline):
     model = ProjectFunding
-    filter_horizontal = (
-        'sources',
-    )
+    form = ProjectFundingForm
 
     class Media:
         css = {
@@ -141,10 +139,6 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     )
     filter_horizontal = (
         'initiatives',
-        'contractors',
-        'consultants',
-        'implementers',
-        'operators',
         'documents',
         'regions',
     )
