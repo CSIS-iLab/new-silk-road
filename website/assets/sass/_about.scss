@@ -19,9 +19,9 @@
     header {
         margin: $small-spacing 0;
     }
-    h1{
+    h1 {
         text-align: center;
-        margin-bottom:0;
+        margin-bottom: 0;
     }
     h2 {
         font: $section-hedier-size $serif-font-family;
@@ -33,7 +33,7 @@
         padding: $tiny-spacing * 2;
         margin: 0;
     }
-    
+
 
     section:not(:first-child) {
         margin-top: $section-spacing;
@@ -46,29 +46,40 @@
 
     section.leadership>.profiles {
         @include display(flex);
-        @include flex-direction(column);
-        @include justify-content(flex-start);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+         @include flex-wrap(wrap);
 
         >figure {
-            display: block;
-            @include flex(1 1 25%);
-            max-width: none;
-            min-height: 170px;
+            display: block; //@include flex(1 1 25%);
+            max-width: calc(50% - 1rem);
+            min-height: 150px;
             margin-bottom: $medium-spacing;
+            @include media($medium-break) {
+                    max-width: 150px;
+                }
+                @include media($large-break) {
+                    max-width: 200px;
+                }
+
+            &:first-child {
+                margin-left: 0px;
+            }
+            &:last-child {
+                margin-right: 0px;
+            }
 
             img {
-                width: 80%;
-                max-width: 250px;
                 height: auto;
-                margin: 0 auto;
+                margin: 0;
+               
             }
 
             figcaption {
 
                 margin: $tiny-spacing auto 0;
-                text-align: center;
-                width: 80%;
-                max-width: 250px;
+                text-align: center; //width: 80%;
+               
 
                 .name {
                     text-transform: uppercase;
@@ -86,9 +97,37 @@
         @include media($medium-break) {
             @include flex-direction(row);
 
-            >figure {
-                max-width: 25%;
-                margin-bottom: 0;
+            
+        }
+    }
+
+    .partner-images {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        @include media($medium-break) {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+
+        img {
+            margin: 10px;
+            max-height: 75px;
+            max-width: 250px;
+        }
+
+        figure {
+
+
+            figure:first-child {
+                margin-left: 0px;
+            }
+            figure:last-child {
+                margin-right: 0px;
             }
         }
     }
@@ -152,9 +191,8 @@ nav#about-nav {
             display: none;
             margin-right: 20px;
             @include media($medium-break) {
-            display: block;
-
-        }
+                display: block;
+            }
         }
 
         ul {
