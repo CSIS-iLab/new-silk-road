@@ -155,10 +155,26 @@ $(document).ready(function() {
             var target = $(this.hash);
             target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
             if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top - offset
-                }, 1000);
+             
+                    var targetTo = target.offset().top - offset
+               smoothScroll($('html, body'), targetTo, 200);
                 return false;
+
+                function smoothScroll(el, to, duration) {
+                    if (duration < 0) {
+                        return;
+                    }
+                    var difference = to - $(window).scrollTop();
+                    var perTick = difference / duration * 10;
+                    this.scrollToTimerCache = setTimeout(function() {
+                        if (!isNaN(parseInt(perTick, 10))) {
+                            window.scrollTo(0, $(window).scrollTop() + perTick);
+                            smoothScroll(el, to, duration - 10);
+                        }
+                    }.bind(this), 10);
+                }
+                
+
             }
         }
     });
