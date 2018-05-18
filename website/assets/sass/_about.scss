@@ -5,65 +5,91 @@
 
 .about {
     .video-container {
-        background-color: $not-so-dark-night;
         position: relative;
-        @include widows-peak($light-blue-arrow-img, $main-arrow-width, $order: before, $adjust: 5px);
-        border-top: $thin-border-width solid $blue-steel;
+        margin: 2rem 0px;
 
-        > iframe {
-            width: 980px;
-            height: 551px;
+        >iframe {
+            height: 400px;
+            width: 650px;
+            margin: 0 auto;
+            display: block;
         }
     }
 
     header {
         margin: $small-spacing 0;
-
-        h2 {
-            font: $section-hedier-size $serif-font-family;
-            text-align: center;
-
-          
-            display: block;
-            line-height: 1;
-            padding: $tiny-spacing * 2;
-            margin: 0;
-        }
     }
+    h1 {
+        text-align: center;
+        margin-bottom: 0;
+    }
+    h2 {
+        font: $section-hedier-size $serif-font-family;
+        text-align: center;
+
+
+        display: block;
+        line-height: 1;
+        padding: $tiny-spacing * 2;
+        margin: 0;
+    }
+
 
     section:not(:first-child) {
         margin-top: $section-spacing;
+        margin-bottom: $section-spacing;
     }
 
-    section.leadership > .profiles {
-        @include display(flex);
-        @include flex-direction(column);
-        @include justify-content(flex-start);
+    section.featured {
+        margin-top: 10px;
+    }
 
-        > figure {
-            display: block;
-            @include flex(1 1 25%);
-            max-width: none;
-            min-height: 170px;
+    section.leadership>.profiles {
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+         @include flex-wrap(wrap);
+
+        >figure {
+            display: block; //@include flex(1 1 25%);
+            max-width: calc(50% - 1rem);
+            min-height: 150px;
             margin-bottom: $medium-spacing;
+            @include media($medium-break) {
+                    max-width: 150px;
+                }
+                @include media($large-break) {
+                    max-width: 200px;
+                }
+
+            &:first-child {
+                margin-left: 0px;
+            }
+            &:last-child {
+                margin-right: 0px;
+            }
 
             img {
-                max-width: 150px;
-                max-height: 225px;
-                margin: 0 auto;
+                height: auto;
+                margin: 0;
+               
             }
 
             figcaption {
-                max-width: 180px;
+
                 margin: $tiny-spacing auto 0;
-                text-align: center;
+                text-align: center; //width: 80%;
+               
 
                 .name {
                     text-transform: uppercase;
                     margin-bottom: $tiny-spacing;
+                    margin-top: 8px;
                 }
                 .position {
                     font-style: italic;
+                    line-height: 1.4;
+                    font-size: .8rem;
                 }
             }
         }
@@ -71,9 +97,37 @@
         @include media($medium-break) {
             @include flex-direction(row);
 
-            > figure {
-                max-width: 25%;
-                margin-bottom: 0;
+            
+        }
+    }
+
+    .partner-images {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        @include media($medium-break) {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+
+        img {
+            margin: 10px;
+            max-height: 75px;
+            max-width: 250px;
+        }
+
+        figure {
+
+
+            figure:first-child {
+                margin-left: 0px;
+            }
+            figure:last-child {
+                margin-right: 0px;
             }
         }
     }
@@ -91,6 +145,93 @@
                 font-style: italic;
                 font-weight: 200;
                 text-transform: none;
+            }
+        }
+    }
+}
+
+
+nav#about-nav {
+    background-color: #f1f2f4;
+    height: 45px;
+    position: fixed;
+    width: 100%;
+    top: 60px;
+    font-size: 90%;
+    z-index: 5;
+
+    &:before,
+    &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 100vw;
+        height: 45px;
+        background-color: #f1f2f4;
+    }
+
+
+    &:before {
+        right: calc(100% - 1px);
+    }
+
+    #about-nav-block {
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        z-index: 6;
+        flex-direction: row;
+
+
+        .on-this-page {
+            color: #3D8283;
+            display: none;
+            margin-right: 20px;
+            @include media($medium-break) {
+                display: block;
+            }
+        }
+
+        ul {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 0px;
+
+
+            li {
+                padding-right: 20px;
+                margin-bottom: 0px;
+
+                a {
+                    padding-right: 8px;
+                    color: black;
+
+                    &:hover {
+                        transition: padding .2s ease-in-out, color .2s ease-in-out;
+                        padding-right: 4px;
+                        color: #3D8283;
+                    }
+
+
+                    &:after {
+                        font-family: fontello;
+                        content: "\E804";
+                        color: #3D8283;
+                        font-size: .7rem;
+                        font-weight: 700;
+                        padding-left: 4px;
+                    }
+
+                    &:hover:after {
+                        transition: color .2s ease-in-out, padding .2s ease-in-out;
+                        padding-left: 8px;
+                        color: black;
+                    }
+                }
             }
         }
     }
