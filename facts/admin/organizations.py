@@ -76,19 +76,13 @@ class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
     search_fields = (
         'name',
         'parent__name',
-        'countries__name',
-        'leaders__given_name',
-        'leaders__family_name',
-        'initiatives__name',
-        'related_events__name',
-        'related_organizations__name',
-        'projects_consulted__name',
-        'projects_contracted__name',
-        'projectfunding__project__name',
-        'projects_implemented__name',
-        'projects_operated__name',
     )
-    list_display = ('name', 'founding_year', 'dissolution_year', 'staff_size') + TEMPORAL_FIELDS + ('published',)
+    list_display = (
+        'name',
+        'founding_year',
+        'dissolution_year',
+        'staff_size'
+    ) + TEMPORAL_FIELDS + ('published', )
     actions = [make_published, make_not_published]
     ordering = ['name', 'created_at', 'published']
     list_filter = (
