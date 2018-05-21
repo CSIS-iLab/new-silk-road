@@ -63,6 +63,17 @@ class PersonSearchMultiField(forms.ModelMultipleChoiceField):
     help_text = "Select field and begin typing a person's name to search"
 
 
+class OrganizationSearchMultiField(forms.ModelMultipleChoiceField):
+    widget = ModelSelect2MultipleWidget(
+        model=Organization, attrs={'style': 'width: 75%'},
+        search_fields=('name__icontains', ))
+
+    def __init__(self, *args, **kwargs):
+        kwargs['queryset'] = Organization.objects.all()
+        kwargs['help_text'] = 'Select field and begin typing to search'
+        super().__init__(*args, **kwargs)
+
+
 class OrganizationForm(forms.ModelForm):
     countries = CountrySearchMultiField(
         required=False,
@@ -74,6 +85,10 @@ class OrganizationForm(forms.ModelForm):
         queryset=Place.objects.all(),
         help_text=PlaceSearchField.help_text
     )
+    related_organizations = OrganizationSearchMultiField(required=False)
+    leaders = PersonSearchMultiField(required=False, queryset=Person.objects.all())
+    leaders.help_text = PersonSearchMultiField.help_text
+    leaders.widget.attrs = {'style': 'width: 75%'}
 
     class Meta:
         model = Organization

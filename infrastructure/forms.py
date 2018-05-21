@@ -1,11 +1,9 @@
 from django import forms
-from django_select2.forms import (
-    ModelSelect2Widget, ModelSelect2MultipleWidget
-)
+from django_select2.forms import ModelSelect2Widget
 from infrastructure.models import (
     Project, Initiative, ProjectFunding
 )
-from facts.forms import NameSearchWidget, PersonSearchMultiField
+from facts.forms import NameSearchWidget, PersonSearchMultiField, OrganizationSearchMultiField
 from facts.models.organizations import Organization
 from facts.models.people import Person
 from locations.forms import (
@@ -69,17 +67,6 @@ class InitiativeForm(forms.ModelForm):
     class Meta:
         model = Initiative
         fields = '__all__'
-
-
-class OrganizationSearchMultiField(forms.ModelMultipleChoiceField):
-    widget = ModelSelect2MultipleWidget(
-        model=Organization, attrs={'style': 'width: 75%'},
-        search_fields=('name__icontains', ))
-
-    def __init__(self, *args, **kwargs):
-        kwargs['queryset'] = Organization.objects.all()
-        kwargs['help_text'] = 'Select field and begin typing to search'
-        super().__init__(*args, **kwargs)
 
 
 class ProjectForm(forms.ModelForm):
