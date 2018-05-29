@@ -24,6 +24,7 @@ from facts.forms import (
     PoliticalDetailsForm,
 )
 from facts.forms import OrganizationForm
+from sources.models import Document
 
 
 class CompanySectorListFilter(admin.SimpleListFilter):
@@ -87,6 +88,11 @@ class OrganizationAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         'published',
     )
     prepopulated_fields = {"slug": ("name",)}
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == 'documents':
+            kwargs['queryset'] = Document.objects.select_related('source_file')
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 
 class OrganizationType(MPTTModelAdmin):
