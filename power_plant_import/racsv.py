@@ -24,8 +24,7 @@ for row_number, row in enumerate(ws2.rows):
         for cell_number, cell in enumerate(row):
             if cell_number != 0:
                 titles.append(cell.value)
-
-# 
+ 
 def get_capacity_value(row, plant_capacity_number, total_capacity_number):
     """ If there is a plant capacity get that value otherwise get the total capacity value """
     if row[plant_capacity_number].value:
@@ -33,6 +32,13 @@ def get_capacity_value(row, plant_capacity_number, total_capacity_number):
     if row[total_capacity_number].value:
         return row[total_capacity_number].value
     return None
+
+def italic_font(row, capex_number):
+    """ if the font inside of the cell is italic """
+    if row[capex_number].font.italic:
+        return True
+    else:
+        return False
 
 # Populate the csv file with the excel data.
 with open('test.csv', 'w') as csv_file:
@@ -105,10 +111,10 @@ with open('test.csv', 'w') as csv_file:
                     skip_row = True
             # Skip the capacity values that are less than 100.
             capacity_value = get_capacity_value(row, plant_capacity_number, total_capacity_number)
-            # import pdb; pdb.set_trace()
             if capacity_value and capacity_value < 100:
                 skip_row = True    
             if not skip_row:
+                # import pdb; pdb.set_trace()
                 # At this point we are iterating inside of the titles list that has the headers from the matrix sheet
                 for cell_number, cell in enumerate(titles):
                     if cell_number == titles.index('Power Plant Name'):
@@ -258,8 +264,13 @@ with open('test.csv', 'w') as csv_file:
                     elif cell_number == titles.index('Project Status'):
                         row_data.append(row[status_number].value)
                     elif cell_number == titles.index('Total Cost'):
-                        excel_cell_value = row[capex_number].value
-                        row_data.append(excel_cell_value)
+                        # Write an empty string if the font is italic calling the italic_font function.
+                        font_italic = italic_font(row, capex_number)
+                        if font_italic:
+                            row_data.append('')
+                        else:
+                            excel_cell_value = row[capex_number].value
+                            row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Total Cost Currency'):
                         row_data.append('USD')
                     elif cell_number == titles.index('Start Day'):
