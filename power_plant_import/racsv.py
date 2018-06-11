@@ -87,8 +87,16 @@ with open('test.csv', 'w') as csv_file:
         # If the country name in country keys, then write the row.
         if row[country_number].value in countries.keys():
             # if row[cell_number].font.italic == False:
+            skip_row = False
             # This will skip the headers
-            if row_number != 0:
+            if row_number == 0:
+                skip_row = True
+            elif row[deco_year_number].value:
+                # Skip decommisioning year before 2006
+                if row[deco_year_number].value < 2006:
+                    skip_row = True
+            if not skip_row:
+                # import pdb; pdb.set_trace()
                 # At this point we are iterating inside of the titles list that has the headers from the matrix sheet
                 for cell_number, cell in enumerate(titles):
                     if cell_number == titles.index('Power Plant Name'):
@@ -106,17 +114,17 @@ with open('test.csv', 'w') as csv_file:
                         excel_cell_value = row[status_number].value
                         row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Plant Day Online'):
-                        row_data.append('')
+                        row_data.append('') # This will have to be an int value
                     elif cell_number == titles.index('Plant Month Online'):
                         excel_cell_value = row[month_number].value
-                        row_data.append(excel_cell_value)
+                        row_data.append(excel_cell_value) # This will have to be an int 
                     elif cell_number == titles.index('Plant Year Online'):
                         excel_cell_value = row[year_number].value
                         row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Decommissioning Day'):
-                        row_data.append('')
+                        row_data.append('') # int value, but there is no value added from any sheet
                     elif cell_number == titles.index('Decommissioning Month'):
-                        row_data.append('')
+                        row_data.append('') # int value, but there is no value added from any sheet
                     elif cell_number == titles.index('Decommissioning Year'):
                         excel_cell_value = row[deco_year_number].value
                         row_data.append(excel_cell_value)
@@ -125,11 +133,11 @@ with open('test.csv', 'w') as csv_file:
                         row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Owner 1 Stake'):
                         excel_cell_value = row[owner_stake_number].value
-                        row_data.append(excel_cell_value)
+                        row_data.append(excel_cell_value) # This should be a float value
                     elif cell_number == titles.index('Owner 2'):
                         row_data.append('')
                     elif cell_number == titles.index('Owner 2 Stake'):
-                        row_data.append('')
+                        row_data.append('') # This should be a float value
                     elif cell_number == titles.index('Plant Fuel 1'):
                         row_data.append('Solar')
                     elif cell_number == titles.index('Plant Fuel 2'):
@@ -158,13 +166,10 @@ with open('test.csv', 'w') as csv_file:
                     elif cell_number == titles.index('Project Capacity'):
                         excel_cell_value = row[active_capacity_number].value
                         if excel_cell_value in ['', None]:
-                            pipeline_capacity_value = row[pipeline_capacity_number].value
-                            row_data.append(pipeline_capacity_value)
-                        elif pipeline_capacity_value in ['', None]:
-                            discon_capacity_value = row[discon_capacity_number].value
-                            row_data.append(discon_capacity_value)
-                        else:
-                            row_data.append(excel_cell_value)
+                            excel_cell_value = row[pipeline_capacity_number].value
+                        elif excel_cell_value in ['', None]:
+                            excel_cell_value = row[discon_capacity_number].value
+                        row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Project Capacity Unit'):
                         row_data.append('MW')
                     elif cell_number == titles.index('Plant Output'):
