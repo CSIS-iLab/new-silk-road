@@ -25,6 +25,15 @@ for row_number, row in enumerate(ws2.rows):
             if cell_number != 0:
                 titles.append(cell.value)
 
+# 
+def get_capacity_value(row, plant_capacity_number, total_capacity_number):
+    """ If there is a plant capacity get that value otherwise get the total capacity value """
+    if row[plant_capacity_number].value:
+        return row[plant_capacity_number].value
+    if row[total_capacity_number].value:
+        return row[total_capacity_number].value
+    return None
+
 # Populate the csv file with the excel data.
 with open('test.csv', 'w') as csv_file:
     writer = csv.writer(csv_file)  
@@ -86,17 +95,20 @@ with open('test.csv', 'w') as csv_file:
         
         # If the country name in country keys, then write the row.
         if row[country_number].value in countries.keys():
-            # if row[cell_number].font.italic == False:
             skip_row = False
             # This will skip the headers
             if row_number == 0:
                 skip_row = True
             elif row[deco_year_number].value:
                 # Skip decommisioning year before 2006
-                if row[deco_year_number].value < 2006:
+                if row[deco_year_number].value <= 2006:
                     skip_row = True
+            # Skip the capacity values that are less than 100.
+            capacity_value = get_capacity_value(row, plant_capacity_number, total_capacity_number)
+            # import pdb; pdb.set_trace()
+            if capacity_value and capacity_value < 100:
+                skip_row = True    
             if not skip_row:
-                # import pdb; pdb.set_trace()
                 # At this point we are iterating inside of the titles list that has the headers from the matrix sheet
                 for cell_number, cell in enumerate(titles):
                     if cell_number == titles.index('Power Plant Name'):
@@ -154,13 +166,11 @@ with open('test.csv', 'w') as csv_file:
                         row_data.append('')
                     elif cell_number == titles.index('Project Fuel 4'):
                         row_data.append('')
-                    elif cell_number == titles.index('Plant Capacity'):
+                    elif cell_number == titles.index('Plant Capacity'): # Skip values that are < 100
                         excel_cell_value = row[plant_capacity_number].value
                         if excel_cell_value in ['', None]:
-                            total_capacity_value = row[total_capacity_number].value
-                            row_data.append(total_capacity_value)
-                        else:
-                            row_data.append(excel_cell_value)
+                            excel_cell_value = row[total_capacity_number].value
+                        row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Plant Capacity Unit'):
                         row_data.append('MW')
                     elif cell_number == titles.index('Project Capacity'):
