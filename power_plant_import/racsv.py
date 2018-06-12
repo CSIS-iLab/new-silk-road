@@ -24,6 +24,9 @@ for row_number, row in enumerate(ws2.rows):
         for cell_number, cell in enumerate(row):
             if cell_number != 0:
                 titles.append(cell.value)
+
+# This dic is to be able to write the months as integer values in the csv file.
+months = {'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11, 'Dec':12}
  
 def get_capacity_value(row, plant_capacity_number, total_capacity_number):
     """ If there is a plant capacity get that value otherwise get the total capacity value """
@@ -33,16 +36,16 @@ def get_capacity_value(row, plant_capacity_number, total_capacity_number):
         return row[total_capacity_number].value
     return None
 
-def italic_font(row, capex_number):
+def italic_font(row, number):
     """ if the font inside of the cell is italic """
-    if row[capex_number].font.italic:
+    if row[number].font.italic:
         return True
     else:
         return False
 
 # Populate the csv file with the excel data.
 with open('test.csv', 'w') as csv_file:
-    writer = csv.writer(csv_file)  
+    writer = csv.writer(csv_file) 
     # Iterate trough the entire row getting the row number and row value
     for row_number,row in enumerate(ws.rows):
         row_data = []
@@ -114,7 +117,6 @@ with open('test.csv', 'w') as csv_file:
             if capacity_value and capacity_value < 100:
                 skip_row = True    
             if not skip_row:
-                # import pdb; pdb.set_trace()
                 # At this point we are iterating inside of the titles list that has the headers from the matrix sheet
                 for cell_number, cell in enumerate(titles):
                     if cell_number == titles.index('Power Plant Name'):
@@ -132,13 +134,32 @@ with open('test.csv', 'w') as csv_file:
                         excel_cell_value = row[status_number].value
                         row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Plant Day Online'):
+                        # No day online data to validate.
+                        # font_italic = italic_font(row, month_number) 
+                        # if font_italic:
+                        #     row_data.append('')
+                        # else:
+                        #     row_data.append(excel_cell_value)
                         row_data.append('') # This will have to be an int value
                     elif cell_number == titles.index('Plant Month Online'):
                         excel_cell_value = row[month_number].value
-                        row_data.append(excel_cell_value) # This will have to be an int 
+                        # Validating if month is in months dic, set the number of the month.
+                        if excel_cell_value in months:
+                            excel_cell_value = months[excel_cell_value]
+                        # Italic validate function.
+                        font_italic = italic_font(row, month_number)
+                        if font_italic:
+                            row_data.append('')
+                        else:
+                            row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Plant Year Online'):
-                        excel_cell_value = row[year_number].value
-                        row_data.append(excel_cell_value)
+                        # Write an empty string if the font is italic calling the italic_font function.
+                        font_italic = italic_font(row, year_number)
+                        if font_italic:
+                            row_data.append('')
+                        else:
+                            excel_cell_value = row[year_number].value
+                            row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Decommissioning Day'):
                         row_data.append('') # int value, but there is no value added from any sheet
                     elif cell_number == titles.index('Decommissioning Month'):
@@ -200,16 +221,13 @@ with open('test.csv', 'w') as csv_file:
                             row_data.append(excel_cell_value)
                         else:
                             unit_array_value = excel_cell_value.split(' ')
-                            unit_value = unit_array_value[0]
-                            row_data.append(unit_value)
+                            if unit_array_value[1] == 'MWh/annum' or unit_array_value[1] == 'Mwh/annum':
+                                row_data.append(unit_array_value[0])
+                            else:
+                                unit_value = float(unit_array_value[0]) * 1000
+                                row_data.append(unit_value)
                     elif cell_number == titles.index('Estimated Plant Output Unit'):
-                        excel_cell_value = row[average_output_number].value
-                        if excel_cell_value in ['', None]:
-                            row_data.append(excel_cell_value)
-                        else:
-                            unit_array_value = excel_cell_value.split(' ')
-                            unit_value = unit_array_value[1]
-                            row_data.append(unit_value)
+                        row_data.append('MWh')
                     elif cell_number == titles.index('Project Output'):
                         row_data.append('')
                     elif cell_number == titles.index('Project Output Unit'):
@@ -217,21 +235,19 @@ with open('test.csv', 'w') as csv_file:
                     elif cell_number == titles.index('Project Output Year'):
                         row_data.append('')
                     elif cell_number == titles.index('Estimated Project Output'):
+                        # import pdb; pdb.set_trace()
                         excel_cell_value = row[average_output_number].value
                         if excel_cell_value in ['', None]:
                             row_data.append(excel_cell_value)
                         else:
                             unit_array_value = excel_cell_value.split(' ')
-                            unit_value = unit_array_value[0]
-                            row_data.append(unit_value)
+                            if unit_array_value[1] == 'MWh/annum' or unit_array_value[1] == 'Mwh/annum':
+                                row_data.append(unit_array_value[0])
+                            else:
+                                unit_value = float(unit_array_value[0]) * 1000
+                                row_data.append(unit_value)
                     elif cell_number == titles.index('Estimated Project Output Unit'):
-                        excel_cell_value = row[average_output_number].value
-                        if excel_cell_value in ['', None]:
-                            row_data.append(excel_cell_value)
-                        else:
-                            unit_array_value = excel_cell_value.split(' ')
-                            unit_value = unit_array_value[1]
-                            row_data.append(unit_value)
+                        row_data.append('MWh')
                     elif cell_number == titles.index('Plant CO2 Emissions'):
                         excel_cell_value = row[co2_number].value
                         row_data.append(excel_cell_value)
@@ -289,6 +305,8 @@ with open('test.csv', 'w') as csv_file:
                         row_data.append('')
                     elif cell_number == titles.index('Completion Month'):
                         excel_cell_value = row[month_number].value
+                        if excel_cell_value in months:
+                            excel_cell_value = months[excel_cell_value]
                         row_data.append(excel_cell_value)
                     elif cell_number == titles.index('Completion Year'):
                         excel_cell_value = row[year_number].value
