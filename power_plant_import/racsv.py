@@ -17,363 +17,177 @@ for row_number,row in enumerate(ws1.rows):
     if row_number != 0:
         countries[row[1].value]=row[0].value
 
-# We used Source Matrix File to populate titles names as a list from the source variables matrix 
-titles =[]
-for row_number, row in enumerate(ws2.rows):
-    if row_number == 0:
-        for cell_number, cell in enumerate(row):
-            if cell_number != 0:
-                titles.append(cell.value)
+def clean_data_values(row_number, column_number):
+    return ws.cell(row=row_number + 1, column=column_number + 1).value
+
+# def region_data_values(row_number, column_number, countries):
+#     return "At least something"
+    
+
+def clean_infr_name(row_number, column_number):
+    return "Power Plant"
+
+def clean_fuel_name(row_number, column_number):
+    return "Solar"
+
+def clean_pfuel_name(row_number, column_number):
+    return "Solar CPV"
+
+def plant_capacity_unit(row_number, column_number):
+    return "MW"
+
+def co2_unit(row_number, column_number):
+    return "Tons per annum"
+
+def currency_code(row_number, column_number):
+    return "USD"
+
+def bool_case(row_number, column_number):
+    return "TRUE"
+
+# This is for values that needs to be empty
+def clean_empty_name(row_number, column_number):
+    return ""
+
+def need_filter(row_number, column_number):
+    return "need some filtering"
+
+def skip_row(row, excel_header):
+    country_number = excel_header.index('Country')
+    deco_year_number = excel_header.index('Decommissioning Year')
+    bool_value = False
+    if row[country_number].value not in countries.keys():
+        # import ipdb; ipdb.set_trace()
+        bool_value = True
+
+    if row[deco_year_number].value and row[deco_year_number].value <= 2006: 
+        bool_value = True
+
+    return bool_value
+
+headers = (
+    ("Power Plant Name","Power Plant Name",clean_data_values),
+    ("Infrastructure Type","",clean_infr_name),
+    ("Country","Country",clean_data_values),
+    ("Region","Region", clean_data_values),
+    ("Plant Status","Status",clean_data_values),
+    ("Plant Day Online","", clean_empty_name),
+    ("Plant Month Online","Month Online",clean_data_values),
+    ("Plant Year Online","Year Online", clean_data_values),
+    ("Decommissioning Day","", clean_empty_name),
+    ("Decommissioning Month","", clean_empty_name),
+    ("Decommissioning Year","Decommissioning Year", clean_data_values),
+    ("Owner 1","Owner", clean_data_values),
+    ("Owner 1 Stake","Owner Stake", clean_data_values),
+    ("Owner 2","", clean_empty_name),
+    ("Owner 2 Stake","", clean_empty_name),
+    ("Plant Fuel 1","", clean_fuel_name),
+    ("Plant Fuel 2","", clean_empty_name),
+    ("Plant Fuel 3","", clean_empty_name),
+    ("Plant Fuel 4","", clean_empty_name),
+    ("Project Fuel 1","", clean_pfuel_name),
+    ("Project Fuel 2","", clean_empty_name),
+    ("Project Fuel 3","", clean_empty_name),
+    ("Project Fuel 4","", clean_empty_name),
+    ("Plant Capacity","", need_filter),
+    ("Plant Capacity Unit","", plant_capacity_unit),
+    ("Project Capacity","", need_filter),
+    ("Project Capacity Unit","", plant_capacity_unit),
+    ("Plant Output","", clean_empty_name),
+    ("Plant Output Unit","", clean_empty_name),
+    ("Plant Output Year","", clean_empty_name),
+    ("Estimated Plant Output","Average Output", clean_data_values),
+    ("Estimated Plant Output Unit","", need_filter),
+    ("Project Output","", clean_empty_name),
+    ("Project Output Unit","", clean_empty_name),
+    ("Project Output Year","", clean_empty_name),
+    ("Estimated Project Output","Average Output", clean_data_values),
+    ("Estimated Project Output Unit","", need_filter),
+    ("Plant CO2 Emissions","CO2 Emissions (Tonnes per annum)", clean_data_values),
+    ("Plant CO2 Emissions Unit","", co2_unit),
+    ("Project CO2 Emissions","CO2 Emissions (Tonnes per annum)", clean_data_values),
+    ("Project CO2 Emissions Unit","", co2_unit),
+    ("Grid Connected","", clean_empty_name),
+    ("Manufacturer 1","", clean_empty_name),
+    ("Manufacturer 2","", clean_empty_name),
+    ("Manufacturer 3","", clean_empty_name),
+    ("Manufacturer 4","", clean_empty_name),
+    ("Manufacturer 5","", clean_empty_name),
+    ("SOx Reduction System","", clean_empty_name),
+    ("NOx Reduction System","", clean_empty_name),
+    ("Project Name","Subsidiary Asset Name", clean_data_values),
+    ("Project Status","Status", clean_data_values),
+    ("Total Cost","Capex USD", clean_data_values),
+    ("Total Cost Currency","", currency_code),
+    ("Start Day","", clean_empty_name),
+    ("Start Month","", clean_empty_name),
+    ("Start Year","", clean_empty_name),
+    ("Construction Start Day","", clean_empty_name),
+    ("Construction Start Month","", clean_empty_name),
+    ("Construction Start Year","", clean_empty_name),
+    ("Completion Day","", clean_empty_name),
+    ("Completion Month","Month Online", clean_data_values),
+    ("Completion Year","Year Online", clean_data_values),
+    ("New Construction","", bool_case),
+    ("Latitude","Latitude", clean_data_values),
+    ("Longitude","Longitude", clean_data_values),
+    ("Initiative","", clean_empty_name),
+    ("Contractor 1","EPC Contractor", clean_data_values),
+    ("Contractor 2","", need_filter),
+    ("Contractor 3","", need_filter),
+    ("Contractor 4","", need_filter),
+    ("Contractor 5","", need_filter),
+    ("Contractor 6","", need_filter),
+    ("Contractor 7","", need_filter),
+    ("Contractor 8","", need_filter),
+    ("Contractor 9","", need_filter),
+    ("Contractor 10","", need_filter),
+    ("Contractor 11","", need_filter),
+    ("Contractor 12","", need_filter),
+    ("Consultant","", clean_empty_name),
+    ("Implementing Agency","", clean_empty_name),
+    ("Operator 1","Operator", clean_data_values),
+    ("Operator 2","", clean_empty_name),
+    ("Funder 1","",clean_empty_name),
+    ("Funding Amount 1","", clean_empty_name),
+    ("Funding Currency 1","", clean_empty_name),
+    ("Funder 2","", clean_empty_name),
+    ("Funding Amount 2","", clean_empty_name),
+    ("Funding Currency 2","", clean_empty_name),
+    ("Sources","", clean_empty_name),
+    ("Notes","Asset Notes", clean_data_values)
+)
+
+# A list with the output headers retrieved from the header tuple.
+titles = [header[0] for header in headers]
 
 # This dic is to be able to write the months as integer values in the csv file.
 months = {'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11, 'Dec':12}
- 
-def get_capacity_value(row, plant_capacity_number, total_capacity_number):
-    """ If there is a plant capacity get that value otherwise get the total capacity value """
-    if row[plant_capacity_number].value:
-        return row[plant_capacity_number].value
-    if row[total_capacity_number].value:
-        return row[total_capacity_number].value
-    return None
-
-def italic_font(row, number):
-    """ if the font inside of the cell is italic """
-    if row[number].font.italic:
-        return True
-    else:
-        return False
 
 # Populate the csv file with the excel data.
-with open('test.csv', 'w') as csv_file:
-    writer = csv.writer(csv_file) 
+with open('test_tuple.csv', 'w') as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=titles)
+    writer.writeheader()
+
+
     # Iterate trough the entire row getting the row number and row value
     for row_number,row in enumerate(ws.rows):
-        row_data = []
-        # Getting the number for the cell from the excel's header row.
+        row_data = {}
         if row_number == 0:
-            for cell_number, cell in enumerate(row):
-                if cell.value == 'Power Plant Name':
-                    plant_number = cell_number
-                elif cell.value == 'Region':
-                    region_number = cell_number
-                elif cell.value == 'Country':
-                    country_number = cell_number
-                elif cell.value == 'Status':
-                    status_number = cell_number
-                elif cell.value == 'Month Online':
-                    month_number = cell_number
-                elif cell.value == 'Year Online':
-                    year_number = cell_number
-                elif cell.value == 'Decommissioning Year':
-                    deco_year_number = cell_number
-                elif cell.value == 'Owner':
-                    owner_number = cell_number
-                elif cell.value == 'Owner Stake':
-                    owner_stake_number = cell_number
-                elif cell.value == 'Plant Capacity (MW)':
-                    plant_capacity_number = cell_number
-                elif cell.value == 'Total Capacity (MW)':
-                    total_capacity_number = cell_number
-                elif cell.value == 'Active Capacity (MW)':
-                    active_capacity_number = cell_number
-                elif cell.value == 'Pipeline Capacity (MW)':
-                    pipeline_capacity_number = cell_number
-                elif cell.value == 'Discontinued Capacity (MW)':
-                    discon_capacity_number = cell_number
-                elif cell.value == 'Average Output':
-                    average_output_number = cell_number
-                elif cell.value == 'CO2 Emissions (Tonnes per annum)':
-                    co2_number = cell_number
-                elif cell.value == 'Subsidiary Asset Name':
-                    project_name_value = cell_number
-                elif cell.value == 'Capex USD':
-                    capex_number = cell_number
-                elif cell.value == 'Latitude':
-                    latitude_number = cell_number
-                elif cell.value == 'Longitude':
-                    longitude_number = cell_number
-                elif cell.value == 'EPC Contractor':
-                    contractor_one_number = cell_number
-                elif cell.value == 'Operator':
-                    operator_number = cell_number
-                elif cell.value == 'Asset Notes':
-                    asset_number = cell_number
-                
-            writer.writerow(titles)
+            excel_header = [cell.value for cell_number, cell in enumerate(row)]
+        # Skip the rows that are not in the countries dic.
+        if row_number > 0 and not skip_row(row, excel_header):
+            for title, excel_title, clean_up_function in headers:
+                column_number = 0
+                # if clean_up_function(row_number, column_number) in countries.keys():
+                if excel_title:
+                    column_number = excel_header.index(excel_title)
+                row_data[title] = clean_up_function(row_number, column_number)
+            writer.writerow(row_data)
 
-        
-        # If the country name in country keys, then write the row.
-        if row[country_number].value in countries.keys():
-            skip_row = False
-            # This will skip the headers
-            if row_number == 0:
-                skip_row = True
-            elif row[deco_year_number].value:
-                # Skip decommisioning year before 2006
-                if row[deco_year_number].value <= 2006:
-                    skip_row = True
-            # Skip the capacity values that are less than 100.
-            capacity_value = get_capacity_value(row, plant_capacity_number, total_capacity_number)
-            if capacity_value and capacity_value < 100:
-                skip_row = True    
-            if not skip_row:
-                # At this point we are iterating inside of the titles list that has the headers from the matrix sheet
-                for cell_number, cell in enumerate(titles):
-                    if cell_number == titles.index('Power Plant Name'):
-                        excel_cell_value = row[plant_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Infrastructure Type'):
-                        row_data.append('Power Plant')
-                    elif cell_number == titles.index('Country'):
-                        excel_cell_value = row[country_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Region'):
-                        excel_cell_value = countries.get(row[country_number].value)
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Plant Status'):
-                        excel_cell_value = row[status_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Plant Day Online'):
-                        # No day online data to validate.
-                        # font_italic = italic_font(row, month_number) 
-                        # if font_italic:
-                        #     row_data.append('')
-                        # else:
-                        #     row_data.append(excel_cell_value)
-                        row_data.append('') # This will have to be an int value
-                    elif cell_number == titles.index('Plant Month Online'):
-                        excel_cell_value = row[month_number].value
-                        # Validating if month is in months dic, set the number of the month.
-                        if excel_cell_value in months:
-                            excel_cell_value = months[excel_cell_value]
-                        # Italic validate function.
-                        font_italic = italic_font(row, month_number)
-                        if font_italic:
-                            row_data.append('')
-                        else:
-                            row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Plant Year Online'):
-                        # Write an empty string if the font is italic calling the italic_font function.
-                        font_italic = italic_font(row, year_number)
-                        if font_italic:
-                            row_data.append('')
-                        else:
-                            excel_cell_value = row[year_number].value
-                            row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Decommissioning Day'):
-                        row_data.append('') # int value, but there is no value added from any sheet
-                    elif cell_number == titles.index('Decommissioning Month'):
-                        row_data.append('') # int value, but there is no value added from any sheet
-                    elif cell_number == titles.index('Decommissioning Year'):
-                        excel_cell_value = row[deco_year_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Owner 1'):
-                        excel_cell_value = row[owner_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Owner 1 Stake'):
-                        excel_cell_value = row[owner_stake_number].value
-                        row_data.append(excel_cell_value) # This should be a float value
-                    elif cell_number == titles.index('Owner 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Owner 2 Stake'):
-                        row_data.append('') # This should be a float value
-                    elif cell_number == titles.index('Plant Fuel 1'):
-                        row_data.append('Solar')
-                    elif cell_number == titles.index('Plant Fuel 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Plant Fuel 3'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Plant Fuel 4'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Project Fuel 1'):
-                        row_data.append('Solar CPV')
-                    elif cell_number == titles.index('Project Fuel 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Project Fuel 3'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Project Fuel 4'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Plant Capacity'): # Skip values that are < 100
-                        excel_cell_value = row[plant_capacity_number].value
-                        if excel_cell_value in ['', None]:
-                            excel_cell_value = row[total_capacity_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Plant Capacity Unit'):
-                        row_data.append('MW')
-                    elif cell_number == titles.index('Project Capacity'):
-                        excel_cell_value = row[active_capacity_number].value
-                        if excel_cell_value in ['', None]:
-                            excel_cell_value = row[pipeline_capacity_number].value
-                        elif excel_cell_value in ['', None]:
-                            excel_cell_value = row[discon_capacity_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Project Capacity Unit'):
-                        row_data.append('MW')
-                    elif cell_number == titles.index('Plant Output'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Plant Output Unit'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Plant Output Year'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Estimated Plant Output'):
-                        excel_cell_value = row[average_output_number].value
-                        if excel_cell_value in ['', None]:
-                            row_data.append(excel_cell_value)
-                        else:
-                            unit_array_value = excel_cell_value.split(' ')
-                            if unit_array_value[1] == 'MWh/annum' or unit_array_value[1] == 'Mwh/annum':
-                                row_data.append(unit_array_value[0])
-                            else:
-                                unit_value = float(unit_array_value[0]) * 1000
-                                row_data.append(unit_value)
-                    elif cell_number == titles.index('Estimated Plant Output Unit'):
-                        row_data.append('MWh')
-                    elif cell_number == titles.index('Project Output'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Project Output Unit'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Project Output Year'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Estimated Project Output'):
-                        # import pdb; pdb.set_trace()
-                        excel_cell_value = row[average_output_number].value
-                        if excel_cell_value in ['', None]:
-                            row_data.append(excel_cell_value)
-                        else:
-                            unit_array_value = excel_cell_value.split(' ')
-                            if unit_array_value[1] == 'MWh/annum' or unit_array_value[1] == 'Mwh/annum':
-                                row_data.append(unit_array_value[0])
-                            else:
-                                unit_value = float(unit_array_value[0]) * 1000
-                                row_data.append(unit_value)
-                    elif cell_number == titles.index('Estimated Project Output Unit'):
-                        row_data.append('MWh')
-                    elif cell_number == titles.index('Plant CO2 Emissions'):
-                        excel_cell_value = row[co2_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Plant CO2 Emissions Unit'):
-                        row_data.append('Tons per annum')
-                    elif cell_number == titles.index('Project CO2 Emissions'):
-                        excel_cell_value = row[co2_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Project CO2 Emissions Unit'):
-                        row_data.append('Tons per annum')
-                    elif cell_number == titles.index('Grid Connected'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Manufacturer 1'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Manufacturer 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Manufacturer 3'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Manufacturer 4'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Manufacturer 5'):
-                        row_data.append('')
-                    elif cell_number == titles.index('SOx Reduction System'):
-                        row_data.append('')
-                    elif cell_number == titles.index('NOx Reduction System'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Project Name'):
-                        excel_cell_value = row[project_name_value].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Project Status'):
-                        row_data.append(row[status_number].value)
-                    elif cell_number == titles.index('Total Cost'):
-                        # Write an empty string if the font is italic calling the italic_font function.
-                        font_italic = italic_font(row, capex_number)
-                        if font_italic:
-                            row_data.append('')
-                        else:
-                            excel_cell_value = row[capex_number].value
-                            row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Total Cost Currency'):
-                        row_data.append('USD')
-                    elif cell_number == titles.index('Start Day'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Start Month'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Start Year'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Construction Start Day'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Construction Start Month'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Construction Start Year'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Completion Day'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Completion Month'):
-                        excel_cell_value = row[month_number].value
-                        if excel_cell_value in months:
-                            excel_cell_value = months[excel_cell_value]
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Completion Year'):
-                        excel_cell_value = row[year_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('New Construction'):
-                        row_data.append('TRUE')
-                    elif cell_number == titles.index('Latitude'):
-                        excel_cell_value = row[latitude_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Longitude'):
-                        excel_cell_value = row[longitude_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Initiative'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 1'):
-                        excel_cell_value = row[contractor_one_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Contractor 2'):
-                        excel_cell_value = row[contractor_one_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Contractor 3'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 4'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 5'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 6'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 7'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 8'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 9'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 10'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 11'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Contractor 12'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Consultant'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Implementing Agency'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Operator 1'):
-                        excel_cell_value = row[operator_number].value
-                        row_data.append(excel_cell_value)
-                    elif cell_number == titles.index('Operator 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Funder 1'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Funding Amount 1'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Funding Currency 1'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Funder 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Funding Amount 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Funding Currency 2'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Sources'):
-                        row_data.append('')
-                    elif cell_number == titles.index('Notes'):
-                        excel_cell_value = row[asset_number].value
-                        if excel_cell_value in ['', None]:
-                            row_data.append('')
-                        else:
-                            row_data.append(str(excel_cell_value).replace('\n', ''))
-                writer.writerow(row_data)
+        #     # Skip the capacity values that are less than 100.
+        #     capacity_value = get_capacity_value(row, plant_capacity_number, total_capacity_number)
+        #     if capacity_value and capacity_value < 100:
+        #         skip_row = True    
+        #     if not skip_row:
+    
