@@ -23,6 +23,7 @@ for row_number,row in enumerate(ws1.rows):
 # This dic is to be able to write the months as integer values in the csv file.
 months = {'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11, 'Dec':12}
 
+# ---Beginning of the functions that return the values to write in the csv file.---
 # this def will write most of the rows
 def clean_data_values(row, row_number, column_number):
     return ws.cell(row=row_number + 1, column=column_number + 1).value
@@ -44,7 +45,9 @@ def clean_month_value(row, row_number, column_number):
 def clean_region_value(row, row_number, column_number):
     regions_value = get_regions_values(row, excel_header)
     return regions_value
+# --- End ---
 
+# --- Beginning of the function that return defautl values. ---
 # The ones that are returning just a string without any other logic are values that were added by default.
 def clean_infr_name(row, row_number, column_number):
     return "Power Plant"
@@ -73,6 +76,10 @@ def output_unit(row, row_number, column_number):
 # This is for values that needs to be empty or N/A in the matrix sheet
 def clean_empty_name(row, row_number, column_number):
     return ""
+
+# --- End of the functions that return default values ---
+
+# ---- Beginning of logic functions that retrieve the values and do some logic with those. ---
 
 def get_plant_capacity_value(row, excel_header):
     plant_capacity_number = excel_header.index('Plant Capacity (MW)')
@@ -111,6 +118,9 @@ def get_regions_values(row, excel_header):
     country_number = excel_header.index('Country')
     region_value = countries.get(row[country_number].value)
     return region_value
+
+# --- End of the logic functions ---
+
 
 # Function that let us skip the entire row if some conditions are true.
 def skip_row(row, excel_header):
