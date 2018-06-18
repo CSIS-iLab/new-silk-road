@@ -145,7 +145,7 @@ headers = (
     ("Power Plant Name","Power Plant Name",clean_data_values),
     ("Infrastructure Type","",clean_infr_name),
     ("Country","Country",clean_data_values),
-    ("Region","", clean_region_value), # This should be those that are in the countries dic.
+    ("Region","", clean_region_value), 
     ("Plant Status","Status",clean_data_values), # This will need something to set the final status.
     ("Plant Day Online","", clean_empty_name), # Remove italiziced values
     ("Plant Month Online","",clean_month_value),
