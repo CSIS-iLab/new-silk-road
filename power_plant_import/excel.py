@@ -78,8 +78,8 @@ if __name__=='__main__':
         keys = json.load(f)
     for filename in sys.argv[1:]:
         filekey = '_'.join(os.path.basename(filename).split('_')[:2])
-        primary_key = keys[filekey]
-        print('\n== SOURCE:', os.path.basename(filename), '==\n  Primary Key (?) =', primary_key)
+        primary_key = tuple(keys[filekey])
+        print('\n== SOURCE:', os.path.basename(filename), '==\n Primary Key =', primary_key)
         try:
             wbdata = load_workbook_data(filename)
             title = list(wbdata.keys())[0]
