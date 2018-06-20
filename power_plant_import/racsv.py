@@ -1,12 +1,18 @@
+import os
 import openpyxl
 import csv
+import sys
 
-wb = openpyxl.load_workbook('../../../ragd/PowerPlantSourceData/GlobalData_Solar_CPV_180427.xlsx')
+field_matrix_filepath = sys.argv[1]
+source_filepath = sys.argv[2]
+csv_filepath = os.path.splitext(source_filepath)[0]+'.csv'
+
+wb = openpyxl.load_workbook(source_filepath)
 # Get the active sheet
 ws = wb.active  
 
 # Retrieving the country-region lookup values as a key-value pair
-wb1 = openpyxl.load_workbook('../../../ragd/PowerPlantDataFields-Source Matrix_Final.xlsx')
+wb1 = openpyxl.load_workbook(field_matrix_filepath)
 ws1 = wb1["Country-Region Lookup"]
 # Retrieving the source-variables titles as a list of data.
 ws2 = wb1["Source - Variables Matrix"]
@@ -238,7 +244,7 @@ headers = (
 titles = [header[0] for header in headers]
 
 # Populate the csv file with the excel data.
-with open('test_tuple.csv', 'w') as csv_file:
+with open(csv_filepath, 'w') as csv_file:
     writer = csv.DictWriter(csv_file, fieldnames=titles)
     writer.writeheader()
 
