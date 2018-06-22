@@ -259,8 +259,45 @@ def project_capacity(records, **params):
             else:
                 record[key] = record[source_key]
             record[key + " Unit"] = "MW" if record[key] is not None else None
-            if record[key] is not None: 
-                print(f"{dataset} {key} = {record[key]}")
+    return records
+
+
+def plant_output_w_unit(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Plant Output"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if dataset == "WRI":
+                record[key] = (
+                    record["generation_gwh_2016"]
+                    or record["generation_gwh_2015"]
+                    or record["generation_gwh_2014"]
+                    or record["generation_gwh_2013"]
+                )
+                record[key + " Unit"] = "GWh" if record[key] is not None else None
+            elif source_key in [None, "NA"]:
+                record[key] = None
+                record[key + " Unit"] = None
+            elif "annual output" in source_key.lower():
+                if record[source_variables[dataset]["Power Plant Name"]] == record.get(
+                    source_variables[dataset].get("Project Name")
+                ):
+                    record[key] = record["Annual Output"]
+                    record[key + " Unit"] = (
+                        record["Annual Output Unit"].split("/")[0]
+                        if record[key] is not None
+                        else None
+                    )
+                else:
+                    record[key] = None
+                    record[key + " Unit"] = None
+            else:
+                record[key] = record[source_key]
+                record[key + " Unit"] = re.sub(
+                    r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
+                ).strip()
     return records
 
 
