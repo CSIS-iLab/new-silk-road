@@ -57,11 +57,11 @@ def worksheet_dict(worksheet_data, primary_key, merge=True):
     """
     data = OrderedDict()
     for record in worksheet_data:
-        # key can either be tuple or string
+        # key can either be tuple or string, normalize it (no whitespace)
         if isinstance(primary_key, str):
-            key = record.get(primary_key)
+            key = record.get(primary_key).strip()
         else:
-            key = tuple([record.get(key) for key in primary_key])
+            key = tuple([str(record.get(key)).strip() for key in primary_key])
         if key not in data:
             data[key] = record
         elif merge != True:
