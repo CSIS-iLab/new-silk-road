@@ -484,7 +484,7 @@ def grid_connected(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_var = source_variables[dataset][key]
-            if record.get((source_var or '').split('(')[0].strip()) is not None: 
+            if record.get((source_var or "").split("(")[0].strip()) is not None:
                 record[key] = True
             else:
                 record[key] = None
@@ -492,15 +492,43 @@ def grid_connected(records, **params):
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
+
+def manufacturer(records, **params):
+    source_variables = params["source_variables"]
+    keys = [
+        "Manufacturer 1",
+        "Manufacturer 2",
+        "Manufacturer 3",
+        "Manufacturer 4",
+        "Manufacturer 5",
+    ]
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            record[key] = None
+            if "from" in source_var.lower() and "matching plant" in source_var.lower():
+                if plant_name == project_name:
+                    source_key = source_var.split("from")[0].strip()
+                    record[key] = record[source_key]
+            elif source_var not in [None, "NA"]:
+                record[key] = record[source_var]
+            if record[key] is not None:
+                log.info(f"{dataset}: {key}: {record[key]}")
+    return records
+
+
 def template(records, **params):
     source_variables = params["source_variables"]
     keys = []
     for record in records:
         dataset = record["Dataset"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
         for key in keys:
             source_var = source_variables[dataset][key]
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record.get(source_variables[dataset].get("Project Name"))
             if source_var in [None, "NA"]:
                 record[key] = None
             elif True:
@@ -510,8 +538,9 @@ def template(records, **params):
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             if record[key] is not None:
-                log.debug(f"{dataset}: {key}: {record[key]}")
+                log.info(f"{dataset}: {key}: {record[key]}")
     return records
+
 
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
