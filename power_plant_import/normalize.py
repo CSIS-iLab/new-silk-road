@@ -262,7 +262,7 @@ def project_capacity(records, **params):
     return records
 
 
-def plant_output_w_unit(records, **params):
+def plant_output_w_unit_year(records, **params):
     source_variables = params["source_variables"]
     keys = ["Plant Output"]
     for record in records:
@@ -275,11 +275,20 @@ def plant_output_w_unit(records, **params):
                     or record["generation_gwh_2015"]
                     or record["generation_gwh_2014"]
                     or record["generation_gwh_2013"]
+                    or None
                 )
                 record[key + " Unit"] = "GWh" if record[key] is not None else None
+                record[key + " Year"] = (
+                    (record["generation_gwh_2016"] and 2016)
+                    or (record["generation_gwh_2015"] and 2015)
+                    or (record["generation_gwh_2014"] and 2014)
+                    or (record["generation_gwh_2013"] and 2013)
+                    or None
+                )
             elif source_key in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
+                record[key + " Year"] = None
             elif "annual output" in source_key.lower():
                 if record[source_variables[dataset]["Power Plant Name"]] == record.get(
                     source_variables[dataset].get("Project Name")
@@ -290,14 +299,17 @@ def plant_output_w_unit(records, **params):
                         if record[key] is not None
                         else None
                     )
+                    record[key + " Year"] = record["Generation Year"]
                 else:
                     record[key] = None
                     record[key + " Unit"] = None
+                    record[key + " Year"] = None
             else:
                 record[key] = record[source_key]
                 record[key + " Unit"] = re.sub(
                     r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
                 ).strip()
+                record[key + " Year"] = None
     return records
 
 
