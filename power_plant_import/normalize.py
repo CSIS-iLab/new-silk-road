@@ -61,6 +61,13 @@ def field_names_from_matrix(records, **params):
             "Implementing Agency",
             "Sources",
             "Notes",
+            "Funder 1",
+            "Funding Amount 1",
+            "Funding Currency 1",
+            "Funder 2",
+            "Funding Amount 2",
+            "Funding Currency 2",
+            "Project Fuel 1", "Project Fuel 2", "Project Fuel 3", "Project Fuel 4",
         ]:
             source_key = source_variables[dataset][key]
             # "all cases": the value to use is given in source_key before the parens
@@ -194,13 +201,27 @@ def plant_fuels(records, **params):
     return records
 
 
+def operator(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Operator 1", "Operator 2"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+            else:
+                record[key] = record["Operator"]
+    return records
+
+
 def template(records, **params):
     source_variables = params["source_variables"]
     keys = []
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            pass
+            source_key = source_variables[dataset][key]
     return records
 
 
