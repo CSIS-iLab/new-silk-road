@@ -227,20 +227,40 @@ def plant_capacity_w_unit(records, **params):
             source_key = source_variables[dataset][key]
             if source_key in [None, "NA"]:
                 record[key] = None
-                record[key + " Unit"] = None
             elif "Plant Capacity from row" in source_key:
                 source_key = "Plant Capacity (MW)"
                 if record[source_variables[dataset]["Power Plant Name"]] == record.get(
                     source_variables[dataset].get("Project Name")
                 ):
                     record[key] = record[source_key]
-                    record[key + " Unit"] = "MW"
                 else:
                     record[key] = None
-                    record[key + " Unit"] = None
             else:
                 record[key] = record[source_key]
-                record[key + " Unit"] = "MW"
+            record[key + " Unit"] = "MW" if record[key] is not None else None
+    return records
+
+
+def project_capacity(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Project Capacity"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+            elif "active capacity" in source_key.lower():
+                record[key] = (
+                    record["Active Capacity (MW)"]
+                    or record["Pipeline Capacity (MW)"]
+                    or record["Discontinued Capacity (MW)"]
+                )
+            else:
+                record[key] = record[source_key]
+            record[key + " Unit"] = "MW" if record[key] is not None else None
+            if record[key] is not None: 
+                print(f"{dataset} {key} = {record[key]}")
     return records
 
 
