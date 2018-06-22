@@ -1,5 +1,5 @@
 
-import openpyxl
+import openpyxl, re
 from collections import OrderedDict
 
 
@@ -77,6 +77,19 @@ def worksheet_dict(worksheet_data, primary_key, merge=True):
                         print(f"    val1: {data[key][attr]}")
                         print(f"    val2: {val}")
     return data
+
+
+def value_to_float(value):
+    """convert a value as given to a float"""
+    md = re.search(r"([\d\.,]+)", value or "", flags=re.I)
+    if md is None: 
+        return
+    else:
+        number = float(md.group(0).replace(',',''))
+        if "million" in value.lower():
+            number *= 1e6
+        return number
+
 
 if __name__=='__main__':
     import os, sys, json

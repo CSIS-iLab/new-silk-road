@@ -3,6 +3,7 @@ Normalize power_plant_data records using information in the Source Variables Mat
 (filtering and merging happen elsewhere / later.)
 """
 import logging
+from . import excel
 
 log = logging.getLogger(__name__)
 
@@ -76,19 +77,19 @@ def field_names_from_matrix(records, **params):
             "Project Fuel 3",
             "Project Fuel 4",
         ]:
-            source_key = source_variables[dataset][key]
-            # "all cases": the value to use is given in source_key before the parens
+            source_var = source_variables[dataset][key]
+            # "all cases": the value to use is given in source_var before the parens
             if (
-                isinstance(source_key, str)
-                and re.search(r"\(.*?all cases\)", source_key, flags=re.I) is not None
+                isinstance(source_var, str)
+                and re.search(r"\(.*?all cases\)", source_var, flags=re.I) is not None
             ):
-                record[key] = re.sub(r"\(.*?all cases.*?\)", "", source_key, flags=re.I).strip()
+                record[key] = re.sub(r"\(.*?all cases.*?\)", "", source_var, flags=re.I).strip()
             # null values
-            elif source_key in ["NA", None] or source_key not in record:
+            elif source_var in ["NA", None] or source_var not in record:
                 record[key] = None
-            # otherwise, the value is in the record under the source_key
+            # otherwise, the value is in the record under the source_var
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
         if record[key] is not None:
             log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -146,19 +147,20 @@ def plant_date_online(records, **params):
     }
     for record in records:
         dataset = record["Dataset"]
-        for key, source_key in keys.items():
+        for key, source_var in keys.items():
+            plant_name = record[source_variables[dataset]["Power Plant Name"]]
+            project_name = record.get(source_variables[dataset].get("Project Name"))
             if (
                 source_variables[dataset][key] in [None, "NA"]
-                or record.get(source_key) is None
-                or record[source_variables[dataset]["Power Plant Name"]]
-                != record.get(source_variables[dataset].get("Project Name"))
+                or record.get(source_var) is None
+                or plant_name != project_name
             ):
                 record[key] = None
             else:
                 if "Month" in key:
-                    record[key] = months[record[source_key]]
+                    record[key] = months[record[source_var]]
                 else:
-                    record[key] = record[source_key]
+                    record[key] = record[source_var]
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -169,21 +171,22 @@ def decommissioning_year(records, **params):
     key = "Decommissioning Year"
     for record in records:
         dataset = record["Dataset"]
-        source_key = re.sub(
+        source_var = re.sub(
             r"^.*(Decommission\w+ Year).*$",
             r"\1",
             source_variables[dataset].get(key) or "",
             flags=re.I,
         )
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
         if (
-            source_key in [None, "NA"]
-            or record.get(source_key) is None
-            or record[source_variables[dataset]["Power Plant Name"]]
-            != record.get(source_variables[dataset].get("Project Name"))
+            source_var in [None, "NA"]
+            or record.get(source_var) is None
+            or plant_name != project_name
         ):
             record[key] = None
         else:
-            record[key] = record[source_key]
+            record[key] = record[source_var]
         if record[key] is not None:
             log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -195,11 +198,11 @@ def owner_and_stake(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
                 record[key] = None
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -211,17 +214,17 @@ def plant_fuels(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
                 record[key] = None
-            elif "all cases" in source_key.lower():
-                record[key] = re.sub(r"\([^\(\)]+\)", "", source_key).strip()
-            elif "fuel used category" in source_key.lower():
+            elif "all cases" in source_var.lower():
+                record[key] = re.sub(r"\([^\(\)]+\)", "", source_var).strip()
+            elif "fuel used category" in source_var.lower():
                 record[key] = record["Fuel Used Category"]
-            elif "primary fuel" in source_key.lower():
+            elif "primary fuel" in source_var.lower():
                 record[key] = record["Primary Fuel"]
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -233,8 +236,8 @@ def operator(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
                 record[key] = None
             else:
                 record[key] = record["Operator"]
@@ -249,19 +252,19 @@ def plant_capacity_w_unit(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            plant_name = record[source_variables[dataset]["Power Plant Name"]]
+            project_name = record.get(source_variables[dataset].get("Project Name"))
+            if source_var in [None, "NA"]:
                 record[key] = None
-            elif "Plant Capacity from row" in source_key:
-                source_key = "Plant Capacity (MW)"
-                if record[source_variables[dataset]["Power Plant Name"]] == record.get(
-                    source_variables[dataset].get("Project Name")
-                ):
-                    record[key] = record[source_key]
+            elif "Plant Capacity from row" in source_var:
+                source_var = "Plant Capacity (MW)"
+                if plant_name == project_name:
+                    record[key] = record[source_var]
                 else:
                     record[key] = None
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
             record[key + " Unit"] = "MW" if record[key] is not None else None
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
@@ -274,17 +277,17 @@ def project_capacity(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
                 record[key] = None
-            elif "active capacity" in source_key.lower():
+            elif "active capacity" in source_var.lower():
                 record[key] = (
                     record["Active Capacity (MW)"]
                     or record["Pipeline Capacity (MW)"]
                     or record["Discontinued Capacity (MW)"]
                 )
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
             record[key + " Unit"] = "MW" if record[key] is not None else None
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
@@ -297,7 +300,7 @@ def plant_output_w_unit_year(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
+            source_var = source_variables[dataset][key]
             plant_name = record[source_variables[dataset]["Power Plant Name"]]
             project_name = record[source_variables[dataset].get("Power Plant Name")]
             if dataset == "WRI":
@@ -316,11 +319,11 @@ def plant_output_w_unit_year(records, **params):
                     or (record["generation_gwh_2013"] and 2013)
                     or None
                 )
-            elif source_key in [None, "NA"]:
+            elif source_var in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
-            elif "annual output" in source_key.lower():
+            elif "annual output" in source_var.lower():
                 if plant_name == project_name:
                     record[key] = record["Annual Output"]
                     record[key + " Unit"] = (
@@ -334,7 +337,7 @@ def plant_output_w_unit_year(records, **params):
                     record[key + " Unit"] = None
                     record[key + " Year"] = None
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
                 record[key + " Unit"] = re.sub(
                     r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
                 ).strip()
@@ -352,10 +355,10 @@ def project_output_w_unit_year(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
+            source_var = source_variables[dataset][key]
             plant_name = record[source_variables[dataset]["Power Plant Name"]]
             project_name = record.get(source_variables[dataset].get("Project Name"))
-            if source_key in [None, "NA"] or plant_name == project_name:
+            if source_var in [None, "NA"] or plant_name == project_name:
                 record[key] = None
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
@@ -378,11 +381,11 @@ def estimated_plant_output_w_unit(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
-            elif "average output" in source_key.lower():
+            elif "average output" in source_var.lower():
                 if record["Average Output"] is not None:
                     # format is "NNN.NN XWh/annum"
                     record[key] = float(record["Average Output"].split(" ")[0])
@@ -391,7 +394,7 @@ def estimated_plant_output_w_unit(records, **params):
                     record[key] = None
                     record[key + " Unit"] = None
             else:
-                record[key] = record[source_key]
+                record[key] = record[source_var]
                 record[key + " Unit"] = "GWh"
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
@@ -404,23 +407,73 @@ def estimated_project_output(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
-            if source_key in [None, "NA"]:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
-            elif source_key == "Average Output":
-                if record[source_key] is not None:
-                    record[key] = float(record[source_key].split(" ")[0])
-                    record[key + " Unit"] = record[source_key].split(" ")[-1].split("/")[0]
+            elif source_var == "Average Output":
+                if record[source_var] is not None:
+                    record[key] = float(record[source_var].split(" ")[0])
+                    record[key + " Unit"] = record[source_var].split(" ")[-1].split("/")[0]
                 else:
                     record[key] = None
-                    record[key + " Unit"] = None                    
+                    record[key + " Unit"] = None
             else:
                 raise ValueError(
-                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_key}"'
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
+    return records
+
+
+def project_co2_emissions(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Project CO2 Emissions"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
+                record[key] = None
+                record[key + " Unit"] = None
+            elif source_var == "CO2 Emissions (Tonnes per annum)":
+                record[key] = excel.value_to_float(record[source_var])
+                record[key + " Unit"] = "Tonnes per annum"
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+                )
+            if record[key] is not None:
+                log.info(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
+    return records
+
+
+def plant_co2_emmissions(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Plant CO2 Emissions"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            plant_name = record[source_variables[dataset]["Power Plant Name"]]
+            project_name = record.get(source_variables[dataset].get("Project Name"))
+            if source_var in [None, "NA"]:
+                record[key] = None
+                record[key + " Unit"] = None
+            elif "CO2 Emissions (Tonnes per annum)" in source_var:
+                if plant_name == project_name:
+                    record[key] = excel.value_to_float(record["CO2 Emissions (Tonnes per annum)"])
+                    record[key + " Unit"] = "Tonnes per annum" if record[key] is not None else None
+                else:
+                    record[key] = None
+                    record[key + " Unit"] = None
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+                )
+            if record[key] is not None:
+                log.info(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
 
@@ -430,9 +483,20 @@ def template(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
-            source_key = source_variables[dataset][key]
+            source_var = source_variables[dataset][key]
+            plant_name = record[source_variables[dataset]["Power Plant Name"]]
+            project_name = record.get(source_variables[dataset].get("Project Name"))
+            if source_var in [None, "NA"]:
+                record[key] = None
+            elif True:
+                pass
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+                )
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
-
 
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
