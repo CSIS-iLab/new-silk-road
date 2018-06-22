@@ -2,6 +2,9 @@
 Normalize power_plant_data records using information in the Source Variables Matrix worksheet.
 (filtering and merging happen elsewhere / later.)
 """
+import logging
+
+log = logging.getLogger(__name__)
 
 months = {
     "Jan": 1,
@@ -86,17 +89,22 @@ def field_names_from_matrix(records, **params):
             # otherwise, the value is in the record under the source_key
             else:
                 record[key] = record[source_key]
+        if record[key] is not None:
+            log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
 def region_from_country(records, **params):
     """use the Countries Regions Lookup to set the region value"""
     countries_regions = params["countries_regions"]
+    key = "Region"
     for record in records:
         if record.get("Country") is None or countries_regions.get(record["Country"]) is None:
-            record["Region"] = None
+            record[key] = None
         else:
-            record["Region"] = countries_regions[record["Country"]]["Regions"]
+            record[key] = countries_regions[record["Country"]]["Regions"]
+        if record[key] is not None:
+            log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
@@ -119,6 +127,11 @@ def plant_project_status(records, **params):
                 record["Plant Status"] = record["Project Status"]
             else:
                 record["Plant Status"] = None
+        if record["Plant Status"] is not None or record["Project Status"] is not None:
+            log.debug(
+                f'{dataset}: "Plant Status": "{record["Plant Status"]}"'
+                + f' "Project Status": {record["Project Status"]}'
+            )
     return records
 
 
@@ -145,6 +158,8 @@ def plant_date_online(records, **params):
                     record[key] = months[record[source_key]]
                 else:
                     record[key] = record[source_key]
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
@@ -168,6 +183,8 @@ def decommissioning_year(records, **params):
             record[key] = None
         else:
             record[key] = record[source_key]
+        if record[key] is not None:
+            log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
@@ -182,6 +199,8 @@ def owner_and_stake(records, **params):
                 record[key] = None
             else:
                 record[key] = record[source_key]
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
@@ -202,6 +221,8 @@ def plant_fuels(records, **params):
                 record[key] = record["Primary Fuel"]
             else:
                 record[key] = record[source_key]
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
@@ -216,6 +237,8 @@ def operator(records, **params):
                 record[key] = None
             else:
                 record[key] = record["Operator"]
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
@@ -239,6 +262,8 @@ def plant_capacity_w_unit(records, **params):
             else:
                 record[key] = record[source_key]
             record[key + " Unit"] = "MW" if record[key] is not None else None
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
 
@@ -260,6 +285,8 @@ def project_capacity(records, **params):
             else:
                 record[key] = record[source_key]
             record[key + " Unit"] = "MW" if record[key] is not None else None
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
 
@@ -270,6 +297,8 @@ def plant_output_w_unit_year(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_key = source_variables[dataset][key]
+            plant_name = record[source_variables[dataset]["Power Plant Name"]]
+            project_name = record[source_variables[dataset].get("Power Plant Name")]
             if dataset == "WRI":
                 record[key] = (
                     record["generation_gwh_2016"]
@@ -291,9 +320,7 @@ def plant_output_w_unit_year(records, **params):
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
             elif "annual output" in source_key.lower():
-                if record[source_variables[dataset]["Power Plant Name"]] == record.get(
-                    source_variables[dataset].get("Project Name")
-                ):
+                if plant_name == project_name:
                     record[key] = record["Annual Output"]
                     record[key + " Unit"] = (
                         record["Annual Output Unit"].split("/")[0]
@@ -311,6 +338,36 @@ def plant_output_w_unit_year(records, **params):
                     r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
                 ).strip()
                 record[key + " Year"] = None
+        if record[key] is not None:
+            log.debug(
+                f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
+            )
+    return records
+
+
+def project_output_w_unit_year(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Project Output"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            plant_name = record[source_variables[dataset]["Power Plant Name"]]
+            project_name = record.get(source_variables[dataset].get("Project Name"))
+            if source_key in [None, "NA"] or plant_name == project_name:
+                record[key] = None
+                record[key + " Unit"] = None
+                record[key + " Year"] = None
+            else:
+                record[key] = record["Annual Output"]
+                record[key + " Unit"] = (
+                    record["Annual Output Unit"].split("/")[0] if record[key] is not None else None
+                )
+                record[key + " Year"] = record["Generation Year"]
+        if record[key] is not None:
+            log.debug(
+                f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
+            )
     return records
 
 
@@ -323,20 +380,20 @@ def estimated_plant_output_w_unit(records, **params):
             source_key = source_variables[dataset][key]
             if source_key in [None, "NA"]:
                 record[key] = None
-                record[key+" Unit"] = None
+                record[key + " Unit"] = None
             elif "average output" in source_key.lower():
                 if record["Average Output"] is not None:
                     # format is "NNN.NN XWh/annum"
-                    record[key] = float(record["Average Output"].split(' ')[0])
-                    record[key+" Unit"] = record["Average Output"].split(' ')[-1].split('/')[0]
-                    print(f"{dataset} {key} = {record[key]} {record[key+' Unit']}")
+                    record[key] = float(record["Average Output"].split(" ")[0])
+                    record[key + " Unit"] = record["Average Output"].split(" ")[-1].split("/")[0]
                 else:
                     record[key] = None
-                    record[key+" Unit"] = None
+                    record[key + " Unit"] = None
             else:
                 record[key] = record[source_key]
-                record[key+" Unit"] = "GWh"
-                print(f"{dataset} {key} = {record[key]} {record[key+' Unit']}")
+                record[key + " Unit"] = "GWh"
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
 
@@ -356,6 +413,8 @@ if __name__ == "__main__":
     from datetime import datetime
     from collections import OrderedDict
     from . import csv, excel
+
+    logging.basicConfig(level=20)
 
     this = importlib.import_module("power_plant_import.normalize")
     functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
