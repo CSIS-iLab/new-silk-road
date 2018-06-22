@@ -62,19 +62,19 @@ def field_names_from_matrix(records, **params):
             "Sources",
             "Notes",
         ]:
-            source_key = source_variables[dataset].get(key)
+            source_key = source_variables[dataset][key]
             # "all cases": the value to use is given in source_key before the parens
             if (
                 isinstance(source_key, str)
                 and re.search(r"\(.*?all cases\)", source_key, flags=re.I) is not None
             ):
-                record[key] = re.sub(r"\(.*?all cases\)", "", source_key, flags=re.I).strip()
+                record[key] = re.sub(r"\(.*?all cases.*?\)", "", source_key, flags=re.I).strip()
             # null values
             elif source_key in ["NA", None] or source_key not in record:
                 record[key] = None
             # otherwise, the value is in the record under the source_key
             else:
-                record[key] = record.get(source_key)
+                record[key] = record[source_key]
     return records
 
 
@@ -97,8 +97,8 @@ def plant_project_status(records, **params):
     for record in records:
         dataset = record["Dataset"]
         status_key = source_variables[dataset]["Project Status"]
-        plant_key = source_variables[dataset].get("Power Plant Name")
-        project_key = source_variables[dataset].get("Project Name")
+        plant_key = source_variables[dataset]["Power Plant Name"]
+        project_key = source_variables[dataset]["Project Name"]
         if status_key in [None, "NA"]:
             record["Plant Status"] = None
             record["Project Status"] = None
@@ -160,6 +160,50 @@ def decommissioning_year(records, **params):
     return records
 
 
+def owner_and_stake(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Owner 1", "Owner 1 Stake"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+            else:
+                record[key] = record[source_key]
+    return records
+
+
+def plant_fuels(records, **params):
+    source_variables = params["source_variables"]
+    keys = [f"Plant Fuel {n}" for n in range(1, 5)]  # 1..4
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+            elif "all cases" in source_key.lower():
+                record[key] = re.sub(r"\([^\(\)]+\)", "", source_key).strip()
+            elif "fuel used category" in source_key.lower():
+                record[key] = record["Fuel Used Category"]
+            elif "primary fuel" in source_key.lower():
+                record[key] = record["Primary Fuel"]
+            else:
+                record[key] = record[source_key]
+    return records
+
+
+def template(records, **params):
+    source_variables = params["source_variables"]
+    keys = []
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            pass
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
@@ -171,19 +215,23 @@ if __name__ == "__main__":
     functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
 
     source_matrix_filename = os.path.abspath(sys.argv[1])
-    json_filename = os.path.abspath(sys.argv[2])
+    fuel_categories_filename = os.path.abspath(sys.argv[2])
+    json_filename = os.path.abspath(sys.argv[3])
+
     source_matrix = excel.load_workbook_data(source_matrix_filename)
-    source_variables = excel.worksheet_dict(source_matrix["Source - Variables Matrix"], "Dataset")
-    countries_regions = excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries")
+    # fuel_categories = excel.load_workbook_data(fuel_categories_filename)
+    params = dict(
+        source_variables=excel.worksheet_dict(
+            source_matrix["Source - Variables Matrix"], "Dataset"
+        ),
+        countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
+        # fuel_types=excel.worksheet_dict(fuel_categories["Fuel Types"], "Current Fuel Type List"),
+    )
+
     with open(json_filename, "r") as f:
         power_plant_data = json.load(f, object_pairs_hook=OrderedDict)
 
-    power_plant_data = csv.reduce_power_plant_data(
-        power_plant_data,
-        *functions,
-        source_variables=source_variables,
-        countries_regions=countries_regions,
-    )
+    power_plant_data = csv.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
