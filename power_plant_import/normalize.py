@@ -99,6 +99,7 @@ def region_from_country(records, **params):
     countries_regions = params["countries_regions"]
     key = "Region"
     for record in records:
+        dataset = record["Dataset"]
         if record.get("Country") is None or countries_regions.get(record["Country"]) is None:
             record[key] = None
         else:
@@ -392,6 +393,32 @@ def estimated_plant_output_w_unit(records, **params):
             else:
                 record[key] = record[source_key]
                 record[key + " Unit"] = "GWh"
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
+    return records
+
+
+def estimated_project_output(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Estimated Project Output"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+                record[key + " Unit"] = None
+            elif source_key == "Average Output":
+                if record[source_key] is not None:
+                    record[key] = float(record[source_key].split(" ")[0])
+                    record[key + " Unit"] = record[source_key].split(" ")[-1].split("/")[0]
+                else:
+                    record[key] = None
+                    record[key + " Unit"] = None                    
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_key}"'
+                )
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
