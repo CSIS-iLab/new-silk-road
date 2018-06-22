@@ -1,5 +1,6 @@
 """
-reduce functions that normalize power_plant_data recordsets
+Normalize power_plant_data records using information in the Source Variables Matrix worksheet.
+(filtering and merging happen elsewhere / later.)
 """
 
 months = {
@@ -310,6 +311,32 @@ def plant_output_w_unit_year(records, **params):
                     r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
                 ).strip()
                 record[key + " Year"] = None
+    return records
+
+
+def estimated_plant_output_w_unit(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Estimated Plant Output"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+                record[key+" Unit"] = None
+            elif "average output" in source_key.lower():
+                if record["Average Output"] is not None:
+                    # format is "NNN.NN XWh/annum"
+                    record[key] = float(record["Average Output"].split(' ')[0])
+                    record[key+" Unit"] = record["Average Output"].split(' ')[-1].split('/')[0]
+                    print(f"{dataset} {key} = {record[key]} {record[key+' Unit']}")
+                else:
+                    record[key] = None
+                    record[key+" Unit"] = None
+            else:
+                record[key] = record[source_key]
+                record[key+" Unit"] = "GWh"
+                print(f"{dataset} {key} = {record[key]} {record[key+' Unit']}")
     return records
 
 
