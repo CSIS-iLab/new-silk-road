@@ -92,7 +92,7 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
     (Use both for filtering and for merging)
 
     * power_plant_data: as created by collect_power_plant_data(), an OrderedDict of lists of records
-    * reduce_functions: functions to apply to the power_plant_data
+    * reduce_functions: functions to apply to the power_plant_data, takes a list of records
     * **params: keyword arguments to pass to all the filter functions. source matrix data, for example
 
     returns the reduced power plant data
@@ -102,7 +102,7 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
             power_plant_data[key] = reduce_function(power_plant_data[key], **params)
     return power_plant_data
 
-def write_json(json_filepath, power_plant_data):
+def write_power_plant_json(json_filepath, power_plant_data):
     """our own json writer for readability: one data record per line
     """
     if not os.path.exists(os.path.dirname(json_filepath)):
@@ -156,5 +156,7 @@ if __name__ == "__main__":
         os.path.dirname(os.path.abspath(source_matrix_filename)),
         f"Power Plant Data/{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
     )
-    write_json(json_filepath, power_plant_data)
+    with open(json_filepath, 'w') as f:
+        json.dump(power_plant_data, f, indent=2)
+    # write_power_plant_json(json_filepath, power_plant_data)
     LOG.debug(f"wrote data: {json_filepath}")
