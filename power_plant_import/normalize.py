@@ -67,7 +67,10 @@ def field_names_from_matrix(records, **params):
             "Funder 2",
             "Funding Amount 2",
             "Funding Currency 2",
-            "Project Fuel 1", "Project Fuel 2", "Project Fuel 3", "Project Fuel 4",
+            "Project Fuel 1",
+            "Project Fuel 2",
+            "Project Fuel 3",
+            "Project Fuel 4",
         ]:
             source_key = source_variables[dataset][key]
             # "all cases": the value to use is given in source_key before the parens
@@ -212,6 +215,32 @@ def operator(records, **params):
                 record[key] = None
             else:
                 record[key] = record["Operator"]
+    return records
+
+
+def plant_capacity_w_unit(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Plant Capacity"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_key = source_variables[dataset][key]
+            if source_key in [None, "NA"]:
+                record[key] = None
+                record[key + " Unit"] = None
+            elif "Plant Capacity from row" in source_key:
+                source_key = "Plant Capacity (MW)"
+                if record[source_variables[dataset]["Power Plant Name"]] == record.get(
+                    source_variables[dataset].get("Project Name")
+                ):
+                    record[key] = record[source_key]
+                    record[key + " Unit"] = "MW"
+                else:
+                    record[key] = None
+                    record[key + " Unit"] = None
+            else:
+                record[key] = record[source_key]
+                record[key + " Unit"] = "MW"
     return records
 
 
