@@ -445,7 +445,7 @@ def project_co2_emissions(records, **params):
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             if record[key] is not None:
-                log.info(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
+                log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
 
@@ -473,9 +473,24 @@ def plant_co2_emmissions(records, **params):
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             if record[key] is not None:
-                log.info(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
+                log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
+
+def grid_connected(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["Grid Connected"]
+    for record in records:
+        dataset = record["Dataset"]
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            if record.get((source_var or '').split('(')[0].strip()) is not None: 
+                record[key] = True
+            else:
+                record[key] = None
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
+    return records
 
 def template(records, **params):
     source_variables = params["source_variables"]
