@@ -137,6 +137,29 @@ def plant_date_online(records, **params):
     return records
 
 
+def decommissioning_year(records, **params):
+    source_variables = params["source_variables"]
+    key = "Decommissioning Year"
+    for record in records:
+        dataset = record["Dataset"]
+        source_key = re.sub(
+            r"^.*(Decommission\w+ Year).*$",
+            r"\1",
+            source_variables[dataset].get(key) or "",
+            flags=re.I,
+        )
+        if (
+            source_key in [None, "NA"]
+            or record.get(source_key) is None
+            or record[source_variables[dataset]["Power Plant Name"]]
+            != record.get(source_variables[dataset].get("Project Name"))
+        ):
+            record[key] = None
+        else:
+            record[key] = record[source_key]
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
