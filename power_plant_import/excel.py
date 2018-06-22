@@ -23,7 +23,7 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
             value = row[i].value
             if row[i].font.italic==True:
                 value = f"<i>{value}</i>"
-            record[keys[i]] = value
+            record[str(keys[i]).strip()] = value
         return record
     workbook = openpyxl.load_workbook(filepath)
     data = OrderedDict()
