@@ -4,8 +4,7 @@ from glob import glob
 from collections import OrderedDict
 from . import excel
 
-LOG = logging.getLogger(__name__)
-
+log = logging.getLogger(__name__)
 
 def load_source_data(source_filenames, source_variables):
     """given a list of source filenames and a source_variables mapping, load all source_data.
@@ -23,7 +22,7 @@ def load_source_data(source_filenames, source_variables):
         workbook_data = excel.load_workbook_data(source_filename)
         sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
         worksheet_data = workbook_data[sheet_title]
-        LOG.debug(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
+        log.debug(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
         for record in worksheet_data:
             # prepend "Dataset" to record
             record["Dataset"] = dataset
@@ -36,7 +35,7 @@ def load_source_data(source_filenames, source_variables):
         if record["Dataset"] in ["ENI", "WRI"]:
             source_data.append(source_data.pop(i))
 
-    LOG.debug(f"{len(source_data)} source records")
+    log.debug(f"{len(source_data)} source records")
 
     return source_data
 
@@ -97,8 +96,9 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
 
     returns the reduced power plant data
     """
-    for key in power_plant_data:
-        for reduce_function in reduce_functions:
+    for reduce_function in reduce_functions:
+        log.info(f"reduce_function: {reduce_function.__name__}")
+        for key in power_plant_data:
             power_plant_data[key] = reduce_function(power_plant_data[key], **params)
     return power_plant_data
 
@@ -146,7 +146,7 @@ if __name__ == "__main__":
 
     # collect all data for each Power Plant
     power_plant_data = collect_power_plant_data(source_data, source_variables)
-    LOG.debug(f"{len(power_plant_data)} power_plant recordsets in power_plant_data")
+    log.debug(f"{len(power_plant_data)} power_plant recordsets in power_plant_data")
 
     # filter and merge power plant data, so that there is one record per power plant
     # ** TODO: use reduce_power_plant_data(...) **
@@ -159,4 +159,4 @@ if __name__ == "__main__":
     with open(json_filepath, 'w') as f:
         json.dump(power_plant_data, f, indent=2)
     # write_power_plant_json(json_filepath, power_plant_data)
-    LOG.debug(f"wrote data: {json_filepath}")
+    log.debug(f"wrote data: {json_filepath}")
