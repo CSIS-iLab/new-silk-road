@@ -124,7 +124,7 @@ def plant_project_status(records, **params):
             record["Plant Status"] = None
             record["Project Status"] = None
         else:
-            record["Project Status"] = record.get(status_key)
+            record["Project Status"] = record[status_key]
             if project_key is not None and record.get(plant_key) == record.get(project_key):
                 record["Plant Status"] = record["Project Status"]
             else:
@@ -597,7 +597,7 @@ def nox_reduction_system(records, **params):
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             if record[key] is not None:
-                log.info(f"{dataset}: {key}: {record[key]}")
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
