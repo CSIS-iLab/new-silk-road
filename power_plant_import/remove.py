@@ -80,6 +80,21 @@ def remove_italicized_values(records, **params):
     return records
 
 
+def remove_estimated_plant_project_output(records, **params):
+    """remove estimated values if non-estimated values are present"""
+    keys = ["Estimated Plant Output", "Estimated Project Output"]
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record["Power Plant Name"]
+        project_name = record["Project Name"]
+        for key in keys:
+            non_est_key = key.replace("Estimated ", "")
+            if record.get(non_est_key) is not None:
+                record[key] = None
+                record[key + " Unit"] = None
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
