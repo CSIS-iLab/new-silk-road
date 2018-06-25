@@ -549,26 +549,26 @@ def contractors(records, **params):
     return records
 
 
-def template(records, **params):
-    source_variables = params["source_variables"]
-    keys = []
-    for record in records:
-        dataset = record["Dataset"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
-        for key in keys:
-            source_var = source_variables[dataset][key]
-            if source_var in [None, "NA"]:
-                record[key] = None
-            elif True:
-                pass
-            else:
-                raise ValueError(
-                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
-                )
-            if record[key] is not None:
-                log.info(f"{dataset}: {key}: {record[key]}")
-    return records
+# def template(records, **params):
+#     source_variables = params["source_variables"]
+#     keys = []
+#     for record in records:
+#         dataset = record["Dataset"]
+#         plant_name = record[source_variables[dataset]["Power Plant Name"]]
+#         project_name = record.get(source_variables[dataset].get("Project Name"))
+#         for key in keys:
+#             source_var = source_variables[dataset][key]
+#             if source_var in [None, "NA"]:
+#                 record[key] = None
+#             elif True:
+#                 pass
+#             else:
+#                 raise ValueError(
+#                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+#                 )
+#             if record[key] is not None:
+#                 log.info(f"{dataset}: {key}: {record[key]}")
+#     return records
 
 
 if __name__ == "__main__":
@@ -588,13 +588,12 @@ if __name__ == "__main__":
     json_filename = os.path.abspath(sys.argv[3])
 
     source_matrix = excel.load_workbook_data(source_matrix_filename)
-    # fuel_categories = excel.load_workbook_data(fuel_categories_filename)
+
     params = dict(
         source_variables=excel.worksheet_dict(
             source_matrix["Source - Variables Matrix"], "Dataset"
         ),
         countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
-        # fuel_types=excel.worksheet_dict(fuel_categories["Fuel Types"], "Current Fuel Type List"),
     )
 
     with open(json_filename, "r") as f:
