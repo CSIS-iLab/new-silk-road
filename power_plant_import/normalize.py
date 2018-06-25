@@ -549,6 +549,58 @@ def contractors(records, **params):
     return records
 
 
+def sox_reduction_system(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["SOx Reduction System"]
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
+                record[key] = None
+            elif "sox ctrl system" in source_var.lower():
+                if (record["SOx Ctrl System"] is not None or record["FGP Ctrl System"] is not None):
+                    record[key] = True
+                elif (record["SOx Ctrl System"]==False and record["FGP Ctrl System"]==False):
+                    record[key] = False
+                else:
+                    record[key] = None
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+                )
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
+    return records
+
+
+def nox_reduction_system(records, **params):
+    source_variables = params["source_variables"]
+    keys = ["NOx Reduction System"]
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
+                record[key] = None
+            elif "nox ctrl system" in source_var.lower():
+                if record["NOx Ctrl System"] is None:
+                    record[key] = True
+                else:
+                    record[key] = False
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+                )
+            if record[key] is not None:
+                log.info(f"{dataset}: {key}: {record[key]}")
+    return records
+
+
 # def template(records, **params):
 #     source_variables = params["source_variables"]
 #     keys = []
