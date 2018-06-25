@@ -522,7 +522,7 @@ def manufacturers(records, **params):
 
 def contractors(records, **params):
     source_variables = params["source_variables"]
-    keys = [f"Contractor {n}" for n in range(1, 13)]    # 1..12
+    keys = [f"Contractor {n}" for n in range(1, 13)]  # 1..12
     for record in records:
         dataset = record["Dataset"]
         plant_name = record[source_variables[dataset]["Power Plant Name"]]
@@ -532,7 +532,7 @@ def contractors(records, **params):
             if source_var in [None, "NA"]:
                 record[key] = None
             elif "EPC Contractor from row" in source_var:
-                if plant_name==project_name:
+                if plant_name == project_name:
                     record[key] = record["EPC Contractor"]
                 else:
                     record[key] = None
@@ -561,9 +561,9 @@ def sox_reduction_system(records, **params):
             if source_var in [None, "NA"]:
                 record[key] = None
             elif "sox ctrl system" in source_var.lower():
-                if (record["SOx Ctrl System"] is not None or record["FGP Ctrl System"] is not None):
+                if record["SOx Ctrl System"] is not None or record["FGP Ctrl System"] is not None:
                     record[key] = True
-                elif (record["SOx Ctrl System"]==False and record["FGP Ctrl System"]==False):
+                elif record["SOx Ctrl System"] == False and record["FGP Ctrl System"] == False:
                     record[key] = False
                 else:
                     record[key] = None
@@ -598,6 +598,41 @@ def nox_reduction_system(records, **params):
                 )
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
+    return records
+
+
+def total_cost_w_currency(records, **params):
+    source_variables = params["source_variables"]
+    key = "Total Cost"
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
+        source_var = (source_variables[dataset][key] or "NA").strip()
+        if source_var in [None, "NA"]:
+            record[key] = None
+        elif source_var == "CAPEX (USD) where data is not italicized":
+            if record["CAPEX (USD)"] is not None and "<i>" not in str(record["CAPEX (USD)"]):
+                record[key] = excel.value_to_float(record["CAPEX (USD)"])
+            else:
+                record[key] = None
+        elif source_var == "Capex USD when Capex Estimated = Actual, otherwise NULL":
+            record[key] = excel.value_to_float(record["Capex USD"])
+            if record[key] is not None:
+                log.warn(
+                    f'{dataset}/{plant_name}/{project_name}\n\t"{key}"={record[key]} — No Capex Estimated or Actual value exists'
+                )
+        elif source_var in record:
+            record[key] = excel.value_to_float(record[source_var])
+        else:
+            raise ValueError(
+                f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
+            )
+        if record[key] is not None:
+            record[key + " Currency"] = "USD"
+            log.debug(f"{dataset}: {key}: {record[key]}")
+        else:
+            record[key + " Currency"] = None
     return records
 
 
