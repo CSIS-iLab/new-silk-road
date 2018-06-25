@@ -388,7 +388,7 @@ def estimated_plant_output_w_unit(records, **params):
             elif "average output" in source_var.lower():
                 if record["Average Output"] is not None:
                     # format is "NNN.NN XWh/annum"
-                    record[key] = float(record["Average Output"].split(" ")[0])
+                    record[key] = excel.value_to_float(record["Average Output"].split(" ")[0])
                     record[key + " Unit"] = record["Average Output"].split(" ")[-1].split("/")[0]
                 else:
                     record[key] = None
@@ -396,6 +396,10 @@ def estimated_plant_output_w_unit(records, **params):
             else:
                 record[key] = record[source_var]
                 record[key + " Unit"] = "GWh"
+            # convert GWh => MWh
+            if record[key] is not None and record[key+ " Unit"] == "GWh":
+                record[key] *= 1000
+                record[key + " Unit"] = "MWh"
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
@@ -413,7 +417,7 @@ def estimated_project_output(records, **params):
                 record[key + " Unit"] = None
             elif source_var == "Average Output":
                 if record[source_var] is not None:
-                    record[key] = float(record[source_var].split(" ")[0])
+                    record[key] = excel.value_to_float(record[source_var].split(" ")[0])
                     record[key + " Unit"] = record[source_var].split(" ")[-1].split("/")[0]
                 else:
                     record[key] = None
@@ -422,6 +426,10 @@ def estimated_project_output(records, **params):
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
+            # convert GWh => MWh
+            if record[key] is not None and record[key+ " Unit"] == "GWh":
+                record[key] *= 1000
+                record[key + " Unit"] = "MWh"
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
