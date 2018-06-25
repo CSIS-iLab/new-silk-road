@@ -63,7 +63,20 @@ def remove_plant_capacity_lt_100_mw(records, **params):
                 val *= 1000
             if val < 100:
                 records.pop(records.index(record))
-                log.info(f"{dataset}:{plant_name}:{project_name}: {key}={val} {unit}")
+                log.debug(f"{dataset}:{plant_name}:{project_name}: {key}={val} {unit}")
+    return records
+
+
+def remove_italicized_values(records, **params):
+    keys = ["Plant Day Online", "Plant Month Online", "Plant Year Online", "Total Cost"]
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record["Power Plant Name"]
+        project_name = record["Project Name"]
+        for key in keys:
+            if record[key] is not None and "<i>" in str(record[key]):
+                log.info(f"{dataset}:{plant_name}:{project_name}: {key}={record[key]}")
+                record[key] = None
     return records
 
 
@@ -76,7 +89,7 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=20)
 
-    this = importlib.import_module("power_plant_import.remove_records")
+    this = importlib.import_module("power_plant_import.remove")
     functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
 
     source_matrix_filename = os.path.abspath(sys.argv[1])
@@ -86,7 +99,7 @@ if __name__ == "__main__":
     source_matrix = excel.load_workbook_data(source_matrix_filename)
 
     params = dict(
-        countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
+        countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries")
     )
 
     with open(json_filename, "r") as f:
