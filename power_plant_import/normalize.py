@@ -118,22 +118,21 @@ def plant_project_status(records, **params):
     for record in records:
         dataset = record["Dataset"]
         status_key = source_variables[dataset]["Project Status"]
-        plant_key = source_variables[dataset]["Power Plant Name"]
-        project_key = source_variables[dataset]["Project Name"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset]["Project Name"])
         if status_key in [None, "NA"]:
             record["Plant Status"] = None
             record["Project Status"] = None
         else:
             record["Project Status"] = record[status_key]
-            if project_key is not None and record.get(plant_key) == record.get(project_key):
+            if project_name is not None and plant_name==project_name:
                 record["Plant Status"] = record["Project Status"]
             else:
                 record["Plant Status"] = None
-        if record["Plant Status"] is not None or record["Project Status"] is not None:
-            log.debug(
-                f'{dataset}: "Plant Status": "{record["Plant Status"]}"'
-                + f' "Project Status": {record["Project Status"]}'
-            )
+        if record["Plant Status"] is not None: 
+            log.debug(f'{dataset}:{plant_name}: "Plant Status"="{record["Plant Status"]}"')
+        elif record["Project Status"] is not None:
+            log.debug(f'{dataset}:{plant_name}:{project_name}: "Project Status"="{record["Project Status"]}"')
     return records
 
 
