@@ -75,7 +75,7 @@ def remove_italicized_values(records, **params):
         project_name = record["Project Name"]
         for key in keys:
             if record[key] is not None and "<i>" in str(record[key]):
-                log.info(f"{dataset}:{plant_name}:{project_name}: {key}={record[key]}")
+                log.debug(f"{dataset}:{plant_name}:{project_name}: {key}={record[key]}")
                 record[key] = None
     return records
 
@@ -93,8 +93,7 @@ if __name__ == "__main__":
     functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
 
     source_matrix_filename = os.path.abspath(sys.argv[1])
-    fuel_categories_filename = os.path.abspath(sys.argv[2])
-    json_filename = os.path.abspath(sys.argv[3])
+    json_filename = os.path.abspath(sys.argv[2])
 
     source_matrix = excel.load_workbook_data(source_matrix_filename)
 

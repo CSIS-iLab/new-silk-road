@@ -691,8 +691,7 @@ if __name__ == "__main__":
     functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
 
     source_matrix_filename = os.path.abspath(sys.argv[1])
-    fuel_categories_filename = os.path.abspath(sys.argv[2])
-    json_filename = os.path.abspath(sys.argv[3])
+    json_filename = os.path.abspath(sys.argv[2])
 
     source_matrix = excel.load_workbook_data(source_matrix_filename)
 
