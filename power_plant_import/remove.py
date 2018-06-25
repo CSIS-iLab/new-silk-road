@@ -17,8 +17,7 @@ def remove_no_global_data(records, **params):
 
 def remove_country_not_in_lookup(records, **params):
     """if the Country is not in countries_regions, remove the record"""
-    source_variables = params['source_variables']
-    countries_regions = params['countries_regions']
+    countries_regions = params["countries_regions"]
     key = "Country"
     for record in reversed(records):
         dataset = record["Dataset"]
@@ -34,7 +33,7 @@ def remove_country_not_in_lookup(records, **params):
 def remove_years_lt_2006(records, **params):
     """if one of the key years is < 2006, remove the record"""
     from math import floor
-    source_variables = params['source_variables']
+
     for key in ["Completion Year", "Decommissioning Year"]:
         for record in reversed(records):
             dataset = record["Dataset"]
@@ -51,7 +50,7 @@ def remove_years_lt_2006(records, **params):
 def remove_plant_capacity_lt_100_mw(records, **params):
     """if the "Plant Capacity" is < 100 MW, remove the record"""
     from math import floor
-    source_variables = params['source_variables']
+
     key = "Plant Capacity"
     for record in reversed(records):
         dataset = record["Dataset"]
@@ -59,7 +58,7 @@ def remove_plant_capacity_lt_100_mw(records, **params):
         project_name = record["Project Name"]
         if record[key] is not None:
             val = floor(float(str(record[key]).strip("</i>")))
-            unit = record[key+ " Unit"]
+            unit = record[key + " Unit"]
             if unit == "GW":
                 val *= 1000
             if val < 100:
@@ -87,9 +86,6 @@ if __name__ == "__main__":
     source_matrix = excel.load_workbook_data(source_matrix_filename)
 
     params = dict(
-        source_variables=excel.worksheet_dict(
-            source_matrix["Source - Variables Matrix"], "Dataset"
-        ),
         countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
     )
 
