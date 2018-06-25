@@ -26,12 +26,11 @@ Each column belongs either to a plant or a project.
 		* [x] "Plant Year Online"
 		* [x] "Total Cost"
 	* [] other italicized values?
-		* [] "Capex USD", "CAPEX (USD)"
-		* [] "Decommissioning Year"
+		* [] "Capex USD", "CAPEX (USD)"?
+		* [] "Decommissioning Year", "Planned Decommissioning Year" (GD Thermal)?
 		* [] "Year Online"
 		* [] "Completion Year"
 		* [] "Commercial Year"
-		* [] "Planned Decommissioning Year"
 	* [] estimated data (not null) (don't want estimated data)
 		* [] "Estimated Plant Output" if "Plant Output" is not null
 		* [] "Estimated Plant Output Unit" if "Plant Output" is not null

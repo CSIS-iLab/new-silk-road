@@ -342,10 +342,14 @@ def plant_output_w_unit_year(records, **params):
                     r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
                 ).strip()
                 record[key + " Year"] = None
-        if record[key] is not None:
-            log.debug(
-                f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
-            )
+            # convert GWh => MWh
+            if record[key] is not None and record[key + " Unit"] == "GWh":
+                record[key] *= 1000
+                record[key + " Unit"] = "MWh"
+            if record[key] is not None:
+                log.debug(
+                    f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
+                )
     return records
 
 
@@ -368,10 +372,14 @@ def project_output_w_unit_year(records, **params):
                     record["Annual Output Unit"].split("/")[0] if record[key] is not None else None
                 )
                 record[key + " Year"] = record["Generation Year"]
-        if record[key] is not None:
-            log.debug(
-                f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
-            )
+            # convert GWh => MWh
+            if record[key] is not None and record[key + " Unit"] == "GWh":
+                record[key] *= 1000
+                record[key + " Unit"] = "MWh"
+            if record[key] is not None:
+                log.debug(
+                    f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
+                )
     return records
 
 
@@ -397,7 +405,7 @@ def estimated_plant_output_w_unit(records, **params):
                 record[key] = record[source_var]
                 record[key + " Unit"] = "GWh"
             # convert GWh => MWh
-            if record[key] is not None and record[key+ " Unit"] == "GWh":
+            if record[key] is not None and record[key + " Unit"] == "GWh":
                 record[key] *= 1000
                 record[key + " Unit"] = "MWh"
             if record[key] is not None:
@@ -427,7 +435,7 @@ def estimated_project_output(records, **params):
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             # convert GWh => MWh
-            if record[key] is not None and record[key+ " Unit"] == "GWh":
+            if record[key] is not None and record[key + " Unit"] == "GWh":
                 record[key] *= 1000
                 record[key + " Unit"] = "MWh"
             if record[key] is not None:
@@ -444,14 +452,16 @@ def project_co2_emissions(records, **params):
             source_var = source_variables[dataset][key]
             if source_var in [None, "NA"]:
                 record[key] = None
-                record[key + " Unit"] = None
             elif source_var == "CO2 Emissions (Tonnes per annum)":
                 record[key] = excel.value_to_float(record[source_var])
-                record[key + " Unit"] = "Tonnes per annum"
             else:
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
+            if record[key] is not None:
+                record[key + " Unit"] = "Tonnes per annum"
+            else:
+                record[key + " Unit"] = None
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
@@ -472,14 +482,16 @@ def plant_co2_emmissions(records, **params):
             elif "CO2 Emissions (Tonnes per annum)" in source_var:
                 if plant_name == project_name:
                     record[key] = excel.value_to_float(record["CO2 Emissions (Tonnes per annum)"])
-                    record[key + " Unit"] = "Tonnes per annum" if record[key] is not None else None
                 else:
                     record[key] = None
-                    record[key + " Unit"] = None
             else:
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
+            if record[key] is not None:
+                record[key + " Unit"] = "Tonnes per annum"
+            else:
+                record[key + " Unit"] = None
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
@@ -637,7 +649,7 @@ def total_cost_w_currency(records, **params):
                 f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
             )
         if record[key] is not None:
-            record[key] = int(round(record[key], 0))    # convert to integer
+            record[key] = int(round(record[key], 0))  # convert to integer
             record[key + " Currency"] = "USD"
             log.debug(f"{dataset}: {key}: {record[key]}")
         else:
