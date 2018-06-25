@@ -6,6 +6,7 @@ from . import excel
 
 log = logging.getLogger(__name__)
 
+
 def load_source_data(source_filenames, source_variables):
     """given a list of source filenames and a source_variables mapping, load all source_data.
     Returns a list of source data records, with the source Dataset as the first column.
@@ -22,7 +23,7 @@ def load_source_data(source_filenames, source_variables):
         workbook_data = excel.load_workbook_data(source_filename)
         sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
         worksheet_data = workbook_data[sheet_title]
-        log.debug(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
+        log.info(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
         for record in worksheet_data:
             # prepend "Dataset" to record
             record["Dataset"] = dataset
@@ -35,7 +36,7 @@ def load_source_data(source_filenames, source_variables):
         if record["Dataset"] in ["ENI", "WRI"]:
             source_data.append(source_data.pop(i))
 
-    log.debug(f"{len(source_data)} source records")
+    log.info(f"{len(source_data)} source records")
 
     return source_data
 
@@ -102,6 +103,7 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
             power_plant_data[key] = reduce_function(power_plant_data[key], **params)
     return power_plant_data
 
+
 def write_power_plant_json(json_filepath, power_plant_data):
     """our own json writer for readability: one data record per line
     """
@@ -127,16 +129,12 @@ if __name__ == "__main__":
     * sys.argv[1] == source matrix filepath
     * sys.argv[2:] == source filenames, or all .xlsx in "Power Plant Source Data"
     """
-    logging.basicConfig(level=10)
+    logging.basicConfig(level=20)
 
     # load source matrix (field names, etc.)
     source_matrix_filename = os.path.abspath(sys.argv[1])
     source_matrix = excel.load_workbook_data(source_matrix_filename)
-    countries_regions = excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries")
     source_variables = excel.worksheet_dict(source_matrix["Source - Variables Matrix"], "Dataset")
-    tasks_notes = excel.worksheet_dict(source_matrix["Tasks & Notes"], "Field Name")
-    status_conversions = excel.worksheet_dict(source_matrix["Status Conversions "], "Listed Status")
-    organizations = excel.worksheet_dict(source_matrix["Organizations List"], "id")
 
     # load source data
     source_filenames = [
@@ -146,17 +144,14 @@ if __name__ == "__main__":
 
     # collect all data for each Power Plant
     power_plant_data = collect_power_plant_data(source_data, source_variables)
-    log.debug(f"{len(power_plant_data)} power_plant recordsets in power_plant_data")
-
-    # filter and merge power plant data, so that there is one record per power plant
-    # ** TODO: use reduce_power_plant_data(...) **
+    log.info(f"{len(power_plant_data)} power_plant recordsets in power_plant_data")
 
     # write the results — json output for now
     json_filepath = os.path.join(
         os.path.dirname(os.path.abspath(source_matrix_filename)),
-        f"Power Plant Data/{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
+        f"Power Plant Data/01-collate-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
     )
-    with open(json_filepath, 'w') as f:
+    with open(json_filepath, "w") as f:
         json.dump(power_plant_data, f, indent=2)
     # write_power_plant_json(json_filepath, power_plant_data)
-    log.debug(f"wrote data: {json_filepath}")
+    log.info(f"wrote data: {json_filepath}")
