@@ -493,7 +493,7 @@ def grid_connected(records, **params):
     return records
 
 
-def manufacturer(records, **params):
+def manufacturers(records, **params):
     source_variables = params["source_variables"]
     keys = [
         "Manufacturer 1",
@@ -516,7 +516,36 @@ def manufacturer(records, **params):
             elif source_var not in [None, "NA"]:
                 record[key] = record[source_var]
             if record[key] is not None:
-                log.info(f"{dataset}: {key}: {record[key]}")
+                log.debug(f"{dataset}: {key}: {record[key]}")
+    return records
+
+
+def contractors(records, **params):
+    source_variables = params["source_variables"]
+    keys = [f"Contractor {n}" for n in range(1, 13)]    # 1..12
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            if source_var in [None, "NA"]:
+                record[key] = None
+            elif "EPC Contractor from row" in source_var:
+                if plant_name==project_name:
+                    record[key] = record["EPC Contractor"]
+                else:
+                    record[key] = None
+            elif "See Contractor 1" in source_var:
+                record[key] = None
+            elif source_var in record:
+                record[key] = record[source_var]
+            else:
+                raise ValueError(
+                    f'invalid source variable: dataset="{dataset}" key="{key}" val="{source_var}"'
+                )
+            if record[key] is not None:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
