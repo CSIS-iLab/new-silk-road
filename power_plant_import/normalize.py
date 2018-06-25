@@ -629,6 +629,7 @@ def total_cost_w_currency(records, **params):
                 f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
             )
         if record[key] is not None:
+            record[key] = int(round(record[key], 0))    # convert to integer
             record[key + " Currency"] = "USD"
             log.debug(f"{dataset}: {key}: {record[key]}")
         else:
