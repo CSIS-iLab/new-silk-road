@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
-    ProjectFunding,
+    ProjectFunding, PowerPlant,
     Initiative, InitiativeType,
 )
 from publish.admin import (
@@ -227,6 +227,10 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
             pass
         return queryset, use_distinct
 
+
+@admin.register(PowerPlant)
+class PowerPlantAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):

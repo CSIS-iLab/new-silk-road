@@ -225,6 +225,72 @@ class Project(Publishable):
         )
 
 
+class PowerPlant(Publishable):
+    """Describes a Power Plant"""
+
+    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    name = models.CharField(max_length=140)
+    slug = models.SlugField(max_length=150, allow_unicode=True)
+    infrastructure_type = models.ForeignKey(
+        InfrastructureType,
+        models.SET_NULL, blank=True, null=True,
+        help_text='Select or create named insfrastructure types.'
+    )
+    countries = models.ManyToManyField('locations.Country', blank=True)
+    regions = models.ManyToManyField(
+        'locations.Region',
+        blank=True,
+        help_text='Select or create geographic region names.'
+    )
+    status = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectStatus.STATUSES
+    )
+    plant_year_online = models.PositiveSmallIntegerField(blank=True, null=True)
+    plant_month_online = models.PositiveSmallIntegerField(blank=True, null=True)
+    plant_day_online = models.PositiveSmallIntegerField(blank=True, null=True)
+    
+    @property
+    def fuzzy_plant_online_date(self):
+        return fuzzydate(self.plant_year_online, self.plant_month_online, self.plant_day_online)
+    
+    decommissioning_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    decommissioning_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    decommissioning_day = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    @property 
+    def fuzzy_decommissioning_date(self):
+        return fuzzydate(self.decommissioning_year, self.decommissioning_month, self.decommissioning_day)
+
+    plant_capacity = models.BigIntegerField(
+        blank=True, null=True,
+        help_text="MW"
+    )
+    plant_output = models.BigIntegerField(
+        blank=True, null=True,
+    )
+
+    # Plant_output_unit
+
+    plant_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    estimated_plant_output = models.BigIntegerField(
+        blank=True, null=True
+    )
+    # estimated_plant_output_unit
+
+    plant_CO2_emissions = models.BigIntegerField(
+        blank=True, null=True
+    )
+
+    # plant_CO2_emissions_unit
+
+    grid_connected = models.NullBooleanField('Grid connected?')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+    # Operators
+
+
 class InitiativeType(models.Model):
     """Defines a type of initiative"""
     name = models.CharField(max_length=100, unique=True)
@@ -242,7 +308,7 @@ class InitiativeType(models.Model):
         super(InitiativeType, self).save(*args, **kwargs)
 
 
-class Initiative(MPTTModel, Publishable):
+class Initiative(MPTTModel, Publishable): # Similar to this model.
     """Describes an initiative"""
 
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
@@ -309,7 +375,6 @@ class Initiative(MPTTModel, Publishable):
                 'identifier': str(self.identifier)
             }
         )
-
 
 class ProjectDocument(models.Model):
     DOCUMENT_TYPES = (
