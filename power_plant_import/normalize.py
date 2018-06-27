@@ -157,7 +157,11 @@ def plant_date_online(records, **params):
                 record[key] = None
             else:
                 if "Month" in key:
-                    record[key] = months[record[source_var]]
+                    source_val = record[source_var]
+                    if source_val in [None, 'NA']:
+                        record[key] = None
+                    else:
+                        record[key] = months[source_val]
                 else:
                     record[key] = record[source_var]
             if record[key] is not None:
