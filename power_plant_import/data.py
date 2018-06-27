@@ -20,9 +20,15 @@ def load_source_data(source_filenames, source_variables):
             .strip()
         )
         assert dataset in source_variables.keys(), f"Dataset not in source_variables: {dataset}"
-        workbook_data = excel.load_workbook_data(source_filename)
-        sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
-        worksheet_data = workbook_data[sheet_title]
+        ext = os.path.splitext(source_filename)[-1].lower()
+        if ext=='.xslx':
+            workbook_data = excel.load_workbook_data(source_filename)
+            sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
+            worksheet_data = workbook_data[sheet_title]
+        elif ext='.csv':
+            worksheet_data = excel.load_csv(source_filename)
+        else:
+            raise ValueError(f"Unknown source file type: {ext}")
         log.info(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
         for record in worksheet_data:
             # prepend "Dataset" to record
@@ -104,26 +110,6 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
     return power_plant_data
 
 
-def write_power_plant_json(json_filepath, power_plant_data):
-    """our own json writer for readabilityP: one data record per line
-    """
-    if not os.path.exists(os.path.dirname(json_filepath)):
-        os.makedirs(os.path.dirname(json_filepath))
-    with open(json_filepath, "w") as jf:
-        # I want one record per line, so the built-in JSON output doesn't do.
-        jf.write("{\n")
-        keys = list(power_plant_data.keys())
-        for data_key in keys:
-            jf.write(f"""  "{data_key}": [\n""")
-            records = power_plant_data[data_key]
-            for record in records:
-                jf.write(
-                    f"""    {json.dumps(record)}{records.index(record)<len(records)-1 and ',' or ''}\n"""
-                )
-            jf.write(f"""  ]{keys.index(data_key)<len(keys)-1 and "," or ""}\n""")
-        jf.write("}\n")
-
-
 def read_json(filename):
     """our own json reader: Uses OrderedDict for dict
     """
@@ -161,5 +147,4 @@ if __name__ == "__main__":
     )
     with open(json_filepath, "w") as f:
         json.dump(power_plant_data, f, indent=2)
-    # write_power_plant_json(json_filepath, power_plant_data)
     log.info(f"wrote data: {json_filepath}")
