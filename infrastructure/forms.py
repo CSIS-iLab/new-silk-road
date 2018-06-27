@@ -98,7 +98,7 @@ class ProjectForm(forms.ModelForm):
     planned_completion_day = DayField(required=False)
 
     construction_start_month = MonthField(required=False)
-    construction_start_dat = DayField(required=False)
+    construction_start_day = DayField(required=False)
 
     class Meta:
         model = Project
