@@ -11,7 +11,7 @@ if __name__ == "__main__":
     import json, os, re, sys, openpyxl, importlib
     from datetime import datetime
     from collections import OrderedDict
-    from . import csv, excel
+    from . import data, excel
 
     logging.basicConfig(level=20)
 
@@ -29,12 +29,11 @@ if __name__ == "__main__":
             source_matrix["Source - Variables Matrix"], "Dataset"
         ),
         countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
+        status_conversions=excel.worksheet_dict(source_matrix["Status Conversions"], "Listed Status")
     )
 
-    with open(json_filename, "r") as f:
-        power_plant_data = json.load(f, object_pairs_hook=OrderedDict)
-
-    power_plant_data = csv.reduce_power_plant_data(power_plant_data, *functions, **params)
+    power_plant_data = data.read_json(json_filename)
+    power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"04-reduce-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )

@@ -105,7 +105,7 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
 
 
 def write_power_plant_json(json_filepath, power_plant_data):
-    """our own json writer for readability: one data record per line
+    """our own json writer for readabilityP: one data record per line
     """
     if not os.path.exists(os.path.dirname(json_filepath)):
         os.makedirs(os.path.dirname(json_filepath))
@@ -123,6 +123,14 @@ def write_power_plant_json(json_filepath, power_plant_data):
             jf.write(f"""  ]{keys.index(data_key)<len(keys)-1 and "," or ""}\n""")
         jf.write("}\n")
 
+
+def read_json(filename):
+    """our own json reader: Uses OrderedDict for dict
+    """
+    with open(filename, "r") as f:
+        json_data = json.load(f, object_pairs_hook=OrderedDict)
+    return json_data
+    
 
 if __name__ == "__main__":
     """load source matrix and source data, group records into power_plant_data, then filter & merge
