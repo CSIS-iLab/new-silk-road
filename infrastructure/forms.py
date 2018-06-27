@@ -81,6 +81,7 @@ class ProjectForm(forms.ModelForm):
         help_text=GeometrySearchField.help_text
     )
     contractors = OrganizationSearchMultiField(required=False)
+    manufacturers = OrganizationSearchMultiField(required=False)
     consultants = OrganizationSearchMultiField(required=False)
     implementers = OrganizationSearchMultiField(required=False)
     operators = OrganizationSearchMultiField(required=False)
@@ -95,6 +96,9 @@ class ProjectForm(forms.ModelForm):
 
     planned_completion_month = MonthField(required=False)
     planned_completion_day = DayField(required=False)
+
+    construction_start_month = MonthField(required=False)
+    construction_start_dat = DayField(required=False)
 
     class Meta:
         model = Project
