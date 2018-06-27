@@ -28,9 +28,9 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
         return record
 
     workbook = openpyxl.load_workbook(filepath)
-    data = OrderedDict()
+    wbdata = OrderedDict()
     for sheet in workbook._sheets:
-        data[sheet.title] = []
+        wbdata[sheet.title] = []
         rows = sheet.rows.__iter__()  # sheet.rows doesn't behave as a normal generator, so force it
         row = rows.__next__()  # <= this consumes the row
         if headers == True:
@@ -38,13 +38,13 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
         else:
             keys = [excel_key(i) for i in range(len(row))]
             record = make_record(keys, row)
-            data[sheet.title].append(record)
+            wbdata[sheet.title].append(record)
         for row in rows:
             record = make_record(keys, row)
             if break_on_blank == True and set(record.values()) == {None}:
                 break
-            data[sheet.title].append(record)
-    return data
+            wbdata[sheet.title].append(record)
+    return wbdata
 
 
 def load_csv(filename, dialect="excel", encoding=None, headings=True):
@@ -55,7 +55,7 @@ def load_csv(filename, dialect="excel", encoding=None, headings=True):
         encoding = chardet.detect(fd)["encoding"]
     txt = fd.decode(encoding)
     reader = csv.reader(io.StringIO(txt), dialect=dialect)
-    data = []
+    csvdata = []
     if headings == True:
         # the first row is the keys
         keys = reader.__next__()
@@ -66,13 +66,13 @@ def load_csv(filename, dialect="excel", encoding=None, headings=True):
         d = OrderedDict(
             **{keys[i].strip(): re.sub(r"\s+", " ", row[i].strip()) for i in range(len(row))}
         )
-        data.append(d)
+        csvdata.append(d)
     for row in reader:
         d = OrderedDict(
             **{keys[i].strip(): re.sub(r"\s+", " ", row[i].strip()) for i in range(len(row))}
         )
-        data.append(d)
-    return data
+        csvdata.append(d)
+    return csvdata
 
 
 def excel_key(index):
@@ -87,28 +87,28 @@ def worksheet_dict(worksheet_data, primary_key, merge=True):
     Returns an OrderedDict.
     raises a ValueError if a duplicate primary key is found
     """
-    data = OrderedDict()
+    wsdict = OrderedDict()
     for record in worksheet_data:
         # key can either be tuple or string, normalize it (no whitespace)
         if isinstance(primary_key, str):
             key = record.get(primary_key).strip()
         else:
             key = tuple([str(record.get(key)).strip() for key in primary_key])
-        if key not in data:
-            data[key] = record
+        if key not in wsdict:
+            wsdict[key] = record
         elif merge != True:
             print(f"Duplicate key: {key}")
         else:
             print(f"Duplicate key: {key}")
             for attr, val in record.items():
                 if val is not None:
-                    if data[key][attr] is None:
-                        data[key][attr] = val
-                    elif data[key][attr] != val:
+                    if wsdict[key][attr] is None:
+                        wsdict[key][attr] = val
+                    elif wsdict[key][attr] != val:
                         print(f'  CONFLICT: key="{attr}":')
-                        print(f"    val1: {data[key][attr]}")
+                        print(f"    val1: {wsdict[key][attr]}")
                         print(f"    val2: {val}")
-    return data
+    return wsdict
 
 
 def value_to_float(value):
@@ -131,11 +131,18 @@ if __name__ == "__main__":
     print(len(filenames), "files")
     for filename in filenames:
         print(filenames.index(filename) + 1, filename)
+        ext = os.path.splitext(filename)[-1].lower()
         try:
-            wbdata = load_workbook_data(filename)
-            worksheet_title = list(wbdata.keys())[0]
-            worksheet_data = wbdata[worksheet_title]
-            with open(f"{os.path.splitext(filename)[0]}_{worksheet_title}.json", "w") as f:
-                f.write(json.dumps(worksheet_data, indent=2))
+            if ext=='.xslx':
+                wbdata = load_workbook_data(filename)
+                worksheets = {title:wbdata[title] for title in wbdata.keys()}
+            elif ext=='.csv':
+                title = os.path.splitext(os.path.basename(filename))[0]
+                worksheet_data = load_csv(filename)
+                worksheets = {title:worksheet_data}
+            for title in worksheets.keys():
+                worksheet_data = worksheets[title]
+                with open(f"{os.path.splitext(filename)[0]}_{title}.json", "w") as f:
+                    f.write(json.dumps(worksheet_data, indent=2))
         except:
             print(os.path.basename(filename), ":", sys.exc_info()[1])
