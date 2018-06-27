@@ -140,6 +140,42 @@ class Project(Publishable):
     def fuzzy_planned_completion_date(self):
         return fuzzydate(self.planned_completion_year, self.planned_completion_month, self.planned_completion_day)
 
+    construction_start_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    construction_start_month = models.PositiveSmallIntegerField(blank=True, null=True)
+    construction_start_day = models.PositiveSmallIntegerField(blank=True, null=True)
+    
+    @property
+    def fuzzy_construction_date(self):
+        return fuzzydate(self.construction_start_year, self.construction_start_month, self.construction_start_day)
+    
+    project_output = models.BigIntegerField(
+        blank=True, null=True,
+    )
+    # project_output_unit
+    project_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
+    @property
+    def fuzzy_output_date(self):
+        return fuzzydate(self.project_output_year)
+        
+    estimated_project_output = models.BigIntegerField(
+        blank=True, null=True,
+    )
+    # estimated_project_output_unit
+    project_capacity = models.BigIntegerField(
+        blank=True, null=True,
+        help_text="MW"
+    )
+    project_CO2_emissions = models.BigIntegerField(
+        blank=True, null=True,
+    )
+    # project_CO2_emissions_unit
+    nOx_reduction_system = models.NullBooleanField('NOx Reduction System?')
+    sOx_reudction_system = models.NullBooleanField('SOx Reduction System?')
+
+
+    implementing_agency = models.CharField(blank=True, null=True, max_length=140)
+
+
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
@@ -157,12 +193,18 @@ class Project(Publishable):
         help_text='Enter URLs separated by commas.'
     )
     notes = MarkdownField(blank=True)
-    
+
     # Organization relations
     contractors = models.ManyToManyField(
         'facts.Organization',
         verbose_name='Contractors',
         related_name='projects_contracted',
+        blank=True
+    )
+    manufacturers = models.ManyToManyField(
+        'facts.Organization',
+        verbose_name='Manufacturers',
+        related_name='projects_manufactured',
         blank=True
     )
     consultants = models.ManyToManyField(
@@ -290,6 +332,7 @@ class PowerPlant(Publishable):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
+    # Organization relations
     owners = models.ManyToManyField(
         'facts.Organization',
         verbose_name='Owners',
