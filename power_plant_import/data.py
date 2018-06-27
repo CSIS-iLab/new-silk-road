@@ -123,7 +123,8 @@ if __name__ == "__main__":
     * sys.argv[1] == source matrix filepath
     * sys.argv[2:] == source filenames, or all .xlsx in "Power Plant Source Data"
     """
-    logging.basicConfig(level=20)
+    from . import LOGGING
+    logging.basicConfig(**LOGGING)
 
     # load source matrix (field names, etc.)
     source_matrix_filename = os.path.abspath(sys.argv[1])

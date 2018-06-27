@@ -13,7 +13,8 @@ if __name__ == "__main__":
     from collections import OrderedDict
     from . import data, excel
 
-    logging.basicConfig(level=20)
+    from . import LOGGING
+    logging.basicConfig(**LOGGING)
 
     this = importlib.import_module("power_plant_import.normalize")
     functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
