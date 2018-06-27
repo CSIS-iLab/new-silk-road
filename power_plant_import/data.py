@@ -25,16 +25,28 @@ def load_source_data(source_filenames, source_variables):
             workbook_data = excel.load_workbook_data(source_filename)
             sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
             worksheet_data = workbook_data[sheet_title]
-        elif ext='.csv':
+        elif ext=='.csv':
             worksheet_data = excel.load_csv(source_filename)
+            sheet_title = os.path.splitext(os.path.basename(source_filename))[0]
         else:
             raise ValueError(f"Unknown source file type: {ext}")
         log.info(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
         for record in worksheet_data:
+            # prepend "Type" to record: either "Plant" or "Project"
+            plant_name = record[source_variables["Power Plant Name"]]
+            project_name = record.get(source_variables.get("Project Name"))
+            if project_name is not None and project_name.strip()==plant_name.strip():
+                record["Type"] = "Project"
+            else:
+                record["Type"] = "Plant"
+            record.move_to_end("Dataset", last=False)
+
             # prepend "Dataset" to record
             record["Dataset"] = dataset
             record.move_to_end("Dataset", last=False)
+
             source_data.append(record)
+
 
     # put ENI and WRI at end for lowest precedence (source_data is an OrderedDict)
     for i in range(len(source_data)):
