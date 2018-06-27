@@ -1,7 +1,7 @@
 from django import forms
 from django_select2.forms import ModelSelect2Widget
 from infrastructure.models import (
-    Project, Initiative, ProjectFunding
+    Project, Initiative, ProjectFunding, PowerPlant
 )
 from facts.forms import NameSearchWidget, PersonSearchMultiField, OrganizationSearchMultiField
 from facts.models.organizations import Organization
@@ -103,6 +103,22 @@ class ProjectForm(forms.ModelForm):
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
         }
 
+class PowerPlantForm(forms.ModelForm):
+    countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+    owners = OrganizationSearchMultiField(required=False)
+    operators = OrganizationSearchMultiField(required=False)
+    plant_month_online = MonthField(required=False)
+    plant_day_online = DayField(required=False)
+    decommissioning_month = MonthField(required=False)
+    decommissioning_day = DayField(required=False)
+
+    class Meta:
+        model = PowerPlant
+        fields = '__all__'
 
 class ProjectFundingForm(forms.ModelForm):
     sources = OrganizationSearchMultiField(required=False)

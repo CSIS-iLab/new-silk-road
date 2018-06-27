@@ -157,6 +157,7 @@ class Project(Publishable):
         help_text='Enter URLs separated by commas.'
     )
     notes = MarkdownField(blank=True)
+    
     # Organization relations
     contractors = models.ManyToManyField(
         'facts.Organization',
@@ -288,8 +289,16 @@ class PowerPlant(Publishable):
     grid_connected = models.NullBooleanField('Grid connected?')
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+    owners = models.ManyToManyField(
+        'facts.Organization',
+        verbose_name='Owners',
+        related_name='plants_contracted',
+        blank=True
+    )
     operators = models.ManyToManyField(
         'facts.Organization',
+        verbose_name = 'Operators',
         related_name='plants_operated',
         blank=True,
     )

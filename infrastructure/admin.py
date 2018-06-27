@@ -15,7 +15,8 @@ from publish.admin import (
 from infrastructure.forms import (
     InitiativeForm,
     ProjectForm,
-    ProjectFundingForm
+    ProjectFundingForm,
+    PowerPlantForm
 )
 from facts.forms import NameSearchWidget
 from utilities.admin import PhraseSearchAdminMixin
@@ -231,12 +232,16 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
 @admin.register(PowerPlant)
 class PowerPlantAdmin(admin.ModelAdmin):
     save_on_top = True
+    form = PowerPlantForm
     prepopulated_fields = {"slug":("name",)}
     list_display = (
         'name',
         'infrastructure_type',
         'status',
         'published',
+    )
+    filter_horizontal = (
+    'regions',
     )
     actions = [make_published, make_not_published]
 
