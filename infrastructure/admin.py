@@ -230,7 +230,19 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
 
 @admin.register(PowerPlant)
 class PowerPlantAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
+    prepopulated_fields = {"slug":("name",)}
+    list_display = (
+        'name',
+        'infrastructure_type',
+        'status',
+        'published',
+    )
+    actions = [make_published, make_not_published]
+
+    class Meta:
+        model = PowerPlant
+    
 
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):

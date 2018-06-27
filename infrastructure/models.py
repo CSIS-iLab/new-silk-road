@@ -146,6 +146,7 @@ class Project(Publishable):
     )
     new = models.NullBooleanField('New Construction?')
     initiatives = models.ManyToManyField('Initiative', blank=True)
+    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
     sources = ArrayField(
         models.CharField(max_length=1000, validators=[URLLikeValidator]),
@@ -287,8 +288,17 @@ class PowerPlant(Publishable):
     grid_connected = models.NullBooleanField('Grid connected?')
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    operators = models.ManyToManyField(
+        'facts.Organization',
+        related_name='plants_operated',
+        blank=True,
+    )
 
-    # Operators
+    class Meta:
+        ordering = ['name',]
+    
+    def __str__(self):
+        return self.name
 
 
 class InitiativeType(models.Model):
