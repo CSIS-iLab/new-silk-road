@@ -14,9 +14,8 @@ def remove_no_global_data(records, **params):
     else:
         return records
 
-
 def remove_country_not_in_lookup(records, **params):
-    """if the Country is not in countries_regions, remove the record"""
+    """if the Country is not in countries_regions, remove the record and log a warning"""
     countries_regions = params["countries_regions"]
     key = "Country"
     for record in reversed(records):
@@ -26,7 +25,7 @@ def remove_country_not_in_lookup(records, **params):
         val = record[key]
         if val is None or val not in countries_regions:
             records.pop(records.index(record))
-            log.debug(f"{dataset}:{plant_name}:{project_name}: {key}='{val}'")
+            log.error(f"{dataset}:{plant_name}:{project_name}: {key}='{val}'")
     return records
 
 
@@ -39,7 +38,7 @@ def remove_years_lt_2006(records, **params):
             dataset = record["Dataset"]
             plant_name = record["Power Plant Name"]
             project_name = record["Project Name"]
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 val = floor(float(str(record[key]).strip("</i>")))
                 if val < 2006:
                     records.pop(records.index(record))
@@ -56,7 +55,7 @@ def remove_plant_capacity_lt_100_mw(records, **params):
         dataset = record["Dataset"]
         plant_name = record["Power Plant Name"]
         project_name = record["Project Name"]
-        if record[key] is not None:
+        if record[key] not in [None, "NA"]:
             val = floor(float(str(record[key]).strip("</i>")))
             unit = record[key + " Unit"]
             if unit == "GW":
@@ -124,3 +123,4 @@ if __name__ == "__main__":
     )
     with open(output_filename, "w") as f:
         json.dump(power_plant_data, f, indent=2)
+    log.info(f"wrote {output_filename}")
