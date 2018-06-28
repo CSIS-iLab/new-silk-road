@@ -45,7 +45,6 @@ def field_names_from_matrix(records, **params):
             "Power Plant Name",
             "Infrastructure Type",
             "Country",
-            "Project Name",
             "Project Status",
             "Decommissioning Day",
             "Decommissioning Month",
@@ -95,6 +94,18 @@ def field_names_from_matrix(records, **params):
     return records
 
 
+def project_name(records, **params):
+    """if this is not a project, Project Name = Power Plant Name"""
+    source_variables = params["source_variables"]
+    for record in records:
+        dataset = record["Dataset"]
+        plant_name = record[source_variables["Power Plant Name"]]
+        project_name = record.get(source_variables.get("Project Name"))
+        if record["Type"] == "Project" or plant_name == project_name or project_name in [None, ""]:
+            record["Project Name"] = plant_name
+    return records
+
+
 def region_from_country(records, **params):
     """use the Countries Regions Lookup to set the region value"""
     countries_regions = params["countries_regions"]
@@ -125,14 +136,16 @@ def plant_project_status(records, **params):
             record["Project Status"] = None
         else:
             record["Project Status"] = record[status_key]
-            if project_name is not None and plant_name==project_name:
+            if project_name is not None and plant_name == project_name:
                 record["Plant Status"] = record["Project Status"]
             else:
                 record["Plant Status"] = None
-        if record["Plant Status"] is not None: 
+        if record["Plant Status"] is not None:
             log.debug(f'{dataset}:{plant_name}: "Plant Status"="{record["Plant Status"]}"')
         elif record["Project Status"] is not None:
-            log.debug(f'{dataset}:{plant_name}:{project_name}: "Project Status"="{record["Project Status"]}"')
+            log.debug(
+                f'{dataset}:{plant_name}:{project_name}: "Project Status"="{record["Project Status"]}"'
+            )
     return records
 
 
@@ -158,7 +171,7 @@ def plant_date_online(records, **params):
             else:
                 if "Month" in key:
                     source_val = record[source_var]
-                    if source_val in [None, 'NA']:
+                    if source_val in [None, "NA"]:
                         record[key] = None
                     else:
                         record[key] = months[source_val]
@@ -690,6 +703,7 @@ if __name__ == "__main__":
     from . import data, excel
 
     from . import LOGGING
+
     logging.basicConfig(**LOGGING)
 
     this = importlib.import_module("power_plant_import.normalize")
