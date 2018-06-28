@@ -42,7 +42,6 @@ def field_names_from_matrix(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key in [
-            "Power Plant Name",
             "Infrastructure Type",
             "Country",
             "Project Status",
@@ -94,15 +93,34 @@ def field_names_from_matrix(records, **params):
     return records
 
 
-def project_name(records, **params):
-    """if this is not a project, Project Name = Power Plant Name"""
+def _00_plant_project_name(records, **params):
+    """Set the Power Plant Name and the Project Name.
+    (This is the first function to be run in this set)
+    Power Plant Name for all records in the set = the one that has the highest count in records.
+    If this is not a project, Project Name = Power Plant Name.
+    """
+    from collections import Counter
+
     source_variables = params["source_variables"]
+    names = Counter(
+        [record[source_variables[record["Dataset"]]["Power Plant Name"]] for record in records]
+    )
+    plant_name = max(names, key=names.get)
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record[source_variables["Power Plant Name"]]
-        project_name = record.get(source_variables.get("Project Name"))
-        if record["Type"] == "Project" or plant_name == project_name or project_name in [None, ""]:
+        record["Power Plant Name"] = plant_name
+        record_plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        project_name = record.get(source_variables[dataset].get("Project Name"))
+        if (
+            record["Type"] == "Project"
+            or plant_name == project_name
+            or record_plant_name == project_name
+            or project_name in [None, ""]
+        ):
             record["Project Name"] = plant_name
+            record["Type"] = "Project"
+        else:
+            record["Type"] = "Plant"
     return records
 
 
@@ -129,14 +147,12 @@ def plant_project_status(records, **params):
     for record in records:
         dataset = record["Dataset"]
         status_key = source_variables[dataset]["Project Status"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset]["Project Name"])
         if status_key in [None, "NA"]:
             record["Plant Status"] = None
             record["Project Status"] = None
         else:
             record["Project Status"] = record[status_key]
-            if project_name is not None and plant_name == project_name:
+            if record["Type"]=="Plant":
                 record["Plant Status"] = record["Project Status"]
             else:
                 record["Plant Status"] = None
@@ -160,12 +176,10 @@ def plant_date_online(records, **params):
     for record in records:
         dataset = record["Dataset"]
         for key, source_var in keys.items():
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record.get(source_variables[dataset].get("Project Name"))
             if (
-                source_variables[dataset][key] in [None, "NA"]
+                record["Type"]=="Project"
+                or source_variables[dataset][key] in [None, "NA"]
                 or record.get(source_var) is None
-                or plant_name != project_name
             ):
                 record[key] = None
             else:
@@ -193,12 +207,10 @@ def decommissioning_year(records, **params):
             source_variables[dataset].get(key) or "",
             flags=re.I,
         )
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
         if (
-            source_var in [None, "NA"]
+            record["Type"]=="Project"
+            or source_var in [None, "NA"]
             or record.get(source_var) is None
-            or plant_name != project_name
         ):
             record[key] = None
         else:
@@ -269,13 +281,11 @@ def plant_capacity_w_unit(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_var = source_variables[dataset][key]
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record.get(source_variables[dataset].get("Project Name"))
             if source_var in [None, "NA"]:
                 record[key] = None
             elif "Plant Capacity from row" in source_var:
                 source_var = "Plant Capacity (MW)"
-                if plant_name == project_name:
+                if record["Type"]=="Plant":
                     record[key] = record[source_var]
                 else:
                     record[key] = None
@@ -317,8 +327,6 @@ def plant_output_w_unit_year(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_var = source_variables[dataset][key]
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record[source_variables[dataset].get("Power Plant Name")]
             if dataset == "WRI":
                 record[key] = (
                     record["generation_gwh_2016"]
@@ -340,7 +348,7 @@ def plant_output_w_unit_year(records, **params):
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
             elif "annual output" in source_var.lower():
-                if plant_name == project_name:
+                if record["Type"]=="Plant":
                     record[key] = record["Annual Output"]
                     record[key + " Unit"] = (
                         record["Annual Output Unit"].split("/")[0]
@@ -376,9 +384,7 @@ def project_output_w_unit_year(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_var = source_variables[dataset][key]
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record.get(source_variables[dataset].get("Project Name"))
-            if source_var in [None, "NA"] or plant_name == project_name:
+            if record["Type"]=="Plant" or source_var in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
@@ -490,13 +496,11 @@ def plant_co2_emmissions(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_var = source_variables[dataset][key]
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record.get(source_variables[dataset].get("Project Name"))
             if source_var in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
             elif "CO2 Emissions (Tonnes per annum)" in source_var:
-                if plant_name == project_name:
+                if record["Type"]=="Plant":
                     record[key] = excel.value_to_float(record["CO2 Emissions (Tonnes per annum)"])
                 else:
                     record[key] = None
@@ -540,13 +544,11 @@ def manufacturers(records, **params):
     ]
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
         for key in keys:
             source_var = source_variables[dataset][key]
             record[key] = None
             if "from" in source_var.lower() and "matching plant" in source_var.lower():
-                if plant_name == project_name:
+                if record["Type"]=="Plant":
                     source_key = source_var.split("from")[0].strip()
                     record[key] = record[source_key]
             elif source_var not in [None, "NA"]:
@@ -561,14 +563,12 @@ def contractors(records, **params):
     keys = [f"Contractor {n}" for n in range(1, 13)]  # 1..12
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
         for key in keys:
             source_var = source_variables[dataset][key]
             if source_var in [None, "NA"]:
                 record[key] = None
             elif "EPC Contractor from row" in source_var:
-                if plant_name == project_name:
+                if record["Type"]=="Plant":
                     record[key] = record["EPC Contractor"]
                 else:
                     record[key] = None
@@ -590,8 +590,6 @@ def sox_reduction_system(records, **params):
     keys = ["SOx Reduction System"]
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
         for key in keys:
             source_var = source_variables[dataset][key]
             if source_var in [None, "NA"]:
@@ -617,8 +615,6 @@ def nox_reduction_system(records, **params):
     keys = ["NOx Reduction System"]
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
         for key in keys:
             source_var = source_variables[dataset][key]
             if source_var in [None, "NA"]:
@@ -707,7 +703,10 @@ if __name__ == "__main__":
     logging.basicConfig(**LOGGING)
 
     this = importlib.import_module("power_plant_import.normalize")
-    functions = [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)]
+    functions = sorted(
+        [f for f in [eval(f) for f in dir(this) if "__" not in f] if "function" in str(f)],
+        key=lambda f: str(f),
+    )
 
     source_matrix_filename = os.path.abspath(sys.argv[1])
     json_filename = os.path.abspath(sys.argv[2])
