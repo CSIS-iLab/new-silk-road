@@ -30,7 +30,8 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
     workbook = openpyxl.load_workbook(filepath)
     wbdata = OrderedDict()
     for sheet in workbook._sheets:
-        wbdata[sheet.title] = []
+        title = sheet.title.strip()
+        wbdata[title] = []
         rows = sheet.rows.__iter__()  # sheet.rows doesn't behave as a normal generator, so force it
         row = rows.__next__()  # <= this consumes the row
         if headers == True:
@@ -38,12 +39,12 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
         else:
             keys = [excel_key(i) for i in range(len(row))]
             record = make_record(keys, row)
-            wbdata[sheet.title].append(record)
+            wbdata[title].append(record)
         for row in rows:
             record = make_record(keys, row)
             if break_on_blank == True and set(record.values()) == {None}:
                 break
-            wbdata[sheet.title].append(record)
+            wbdata[title].append(record)
     return wbdata
 
 
