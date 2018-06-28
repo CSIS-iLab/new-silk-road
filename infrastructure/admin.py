@@ -7,6 +7,7 @@ from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
     ProjectFunding, PowerPlant,
     Initiative, InitiativeType,
+    Fuel, FuelCategory,
 )
 from publish.admin import (
     make_published,
@@ -121,6 +122,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
         'status',
         'infrastructure_type',
         'initiatives',
+        'power_plant',
         'countries__name',
         'regions',
         HasGeoListFilter,
@@ -236,18 +238,30 @@ class PowerPlantAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug":("name",)}
     list_display = (
         'name',
+        'plant_capacity',
         'infrastructure_type',
         'status',
         'published',
     )
-    filter_horizontal = (
-    'regions',
+    list_filter = (
+        'plant_capacity',
+        'status', 
+        'countries__name'
     )
+    search_fields = ('name', 'plant_capacity')
     actions = [make_published, make_not_published]
 
     class Meta:
         model = PowerPlant
     
+
+@admin.register(Fuel)
+class FuelAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(FuelCategory)
+class FuelCategoryAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):

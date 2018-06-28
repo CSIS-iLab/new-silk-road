@@ -105,6 +105,8 @@ class Project(Publishable):
         models.SET_NULL, blank=True, null=True,
         help_text='Select or create named infrastructure types.'
     )
+    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
+    fuel = models.ForeignKey('Fuel', models.CASCADE, blank=True, null=True)
     total_cost = models.BigIntegerField(
         blank=True, null=True,
         help_text="Values in whole units (dollars, etc.)"
@@ -156,7 +158,7 @@ class Project(Publishable):
     @property
     def fuzzy_output_date(self):
         return fuzzydate(self.project_output_year)
-        
+
     estimated_project_output = models.BigIntegerField(
         blank=True, null=True,
     )
@@ -182,7 +184,6 @@ class Project(Publishable):
     )
     new = models.NullBooleanField('New Construction?')
     initiatives = models.ManyToManyField('Initiative', blank=True)
-    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
     sources = ArrayField(
         models.CharField(max_length=1000, validators=[URLLikeValidator]),
@@ -267,6 +268,20 @@ class Project(Publishable):
                 'identifier': str(self.identifier)
             }
         )
+
+class Fuel(Publishable):
+    name = models.CharField(max_length=140)
+    fuel_category = models.ForeignKey(
+        'FuelCategory',
+        blank=True, null=True,
+        help_text='Select or create named fuel categories.'
+    )
+
+class FuelCategory(Publishable):
+    name = models.CharField(max_length=140)
+
+    class Meta:
+        verbose_name_plural = 'fuel categories'
 
 
 class PowerPlant(Publishable):
