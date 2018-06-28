@@ -286,8 +286,6 @@ class FuelCategory(Publishable):
 
 class PowerPlant(Publishable):
     """Describes a Power Plant"""
-
-    identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=150, allow_unicode=True)
     infrastructure_type = models.ForeignKey(
