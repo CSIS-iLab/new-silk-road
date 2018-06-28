@@ -25,12 +25,12 @@ Each column belongs either to a plant or a project.
 		* [x] "Plant Month Online"
 		* [x] "Plant Year Online"
 		* [x] "Total Cost"
-	* [] other italicized values?
-		* [] "Capex USD", "CAPEX (USD)"?
-		* [] "Decommissioning Year", "Planned Decommissioning Year" (GD Thermal)?
-		* [] "Year Online"
-		* [] "Completion Year"
-		* [] "Commercial Year"
+	* [o] other italicized values? IGNORE
+		* [o] "Capex USD", "CAPEX (USD)"?
+		* [o] "Decommissioning Year", "Planned Decommissioning Year" (GD Thermal)?
+		* [o] "Year Online"
+		* [o] "Completion Year"
+		* [o] "Commercial Year"
 	* [] estimated data (not null) (don't want estimated data)
 		* [] "Estimated Plant Output" if "Plant Output" is not null
 		* [] "Estimated Plant Output Unit" if "Plant Output" is not null
@@ -39,16 +39,15 @@ Each column belongs either to a plant or a project.
 
 * [] Merge data:
 	* [] "Plant/Project Output": keep the value with the most recent "Plant/Project Output Year"
-	* [] "Operator 1..M": collect all values 
 	* [] "Status" based on rules in "Status Conversions" worksheet
-	* [] duplicates in:
-		* [] Contractor 1..12
-		* [] Manufacturer 1..5
-		* [] Operator 1..2
-		* [] Plant Fuel 1..4
+	* [] merge and remove duplicates in:
+		* [x] Contractor 1..N
+		* [x] Manufacturer 1..N
+		* [x] Operator 1..N
+		* [] Plant Fuel 1..N
+		* [] Owner 1..N: semicolon-separated list
 
 * [] Combine:
 	* [] "Technology Combination" indicates what other spreadsheet to combine with
 		(Power Plant Name might not be an exact match)
 	* [] Statuses: rules in the "Status Conversions" worksheet.
-	* [] Owners: semicolon-separated list
