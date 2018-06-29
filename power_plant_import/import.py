@@ -50,13 +50,14 @@ if __name__ == "__main__":
         if os.path.splitext(fn)[-1].lower() in [".xslx", ".csv"]
         and os.path.basename(fn)[0] not in ["~", "#", "$"]  # no temp files
     ]
+    log.info("0 collate")
     source_data = data.load_source_data(source_filenames, params["source_variables"])
     log.info(f"{len(source_data)} records in source_data")
 
     power_plant_data = data.collect_power_plant_data(source_data, params["source_variables"])
     log.info(f"{len(power_plant_data)} recordsets in power_plant_data")
     json_filename = os.path.join(
-        output_path, f"0-collate-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        output_path, f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-0-collate.json"
     )
     with open(json_filename, "w") as f:
         json.dump(power_plant_data, f, indent=2)
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     mod_names = list(function_sets.keys())
     for mod_name, function_set in function_sets.items():
         log.info(f"{mod_names.index(mod_name)+1} {mod_name}")
-        power_plant_data = data.reduce_power_plant_data(power_plant_data, **params)
+        power_plant_data = data.reduce_power_plant_data(power_plant_data, *function_set, **params)
         json_filename = os.path.join(
             output_path,
             f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{mod_names.index(mod_name)+1}-{mod_name}.json",
