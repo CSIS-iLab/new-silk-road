@@ -2,7 +2,7 @@
 Normalize power_plant_data records using information in the Source Variables Matrix worksheet.
 (filtering and merging happen elsewhere / later.)
 """
-import logging
+import logging, re
 from . import excel
 
 log = logging.getLogger(__name__)
@@ -687,7 +687,7 @@ def total_cost_w_currency(records, **params):
             else:
                 record[key] = None
         elif source_var.startswith("Capex USD"):
-            if and record["Capex USD"] is not None:
+            if record["Capex USD"] is not None:
                 record[key] = excel.value_to_float(record["Capex USD"])
             else:
                 record[key] = None

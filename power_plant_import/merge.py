@@ -86,7 +86,7 @@ if __name__ == "__main__":
     power_plant_data = data.read_json(json_filename)
     power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
-        os.path.dirname(json_filename), f"04-reduce-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+        os.path.dirname(json_filename), f"04-merge-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
     with open(output_filename, "w") as f:
         json.dump(power_plant_data, f, indent=2)

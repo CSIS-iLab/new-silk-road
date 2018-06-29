@@ -1,5 +1,5 @@
 
-import openpyxl, re, csv, chardet, io
+import openpyxl, re, csv, cchardet, io
 from collections import OrderedDict
 
 
@@ -53,7 +53,7 @@ def load_csv(filename, dialect="excel", encoding=None, headings=True):
     with open(filename, "rb") as f:
         fd = f.read()
     if encoding is None:
-        encoding = chardet.detect(fd)["encoding"]
+        encoding = cchardet.detect(fd)["encoding"]
     txt = fd.decode(encoding)
     reader = csv.reader(io.StringIO(txt), dialect=dialect)
     csvdata = []
