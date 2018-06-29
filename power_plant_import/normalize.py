@@ -166,11 +166,33 @@ def region_from_country(records, **params):
     return records
 
 
+def __plant_status(status, status_conversions):
+    if status in status_conversions:
+        converted_status = status_conversions[status][
+            "Plant Status (If Single/ Universal Project Status)"
+        ].strip("*")
+        if converted_status == "NULL":
+            converted_status = None
+        return converted_status
+    elif status not in [None, "NA"]:
+        return status
+
+
+def __project_status(status, status_conversions):
+    if status in status_conversions:
+        converted_status = status_conversions[status]["Recon Equivalent Project Status"].strip("*")
+        if converted_status == "NULL":
+            converted_status = None
+        return converted_status
+    elif status not in [None, "NA"]:
+        return status
+
+
 def plant_project_status(records, **params):
-    """provide Plant and Project Status according to Source Variables matrix.
-    (no Status Conversions at this point – that's a merge step)
+    """provide Plant and Project Status according to Source Variables matrix and Status Conversions.
     """
     source_variables = params["source_variables"]
+    status_conversions = params["status_conversions"]
     for record in records:
         dataset = record["Dataset"]
         status_key = source_variables[dataset]["Project Status"]
@@ -178,16 +200,14 @@ def plant_project_status(records, **params):
             record["Plant Status"] = None
             record["Project Status"] = None
         else:
-            record["Project Status"] = record[status_key]
-            if record["Type"] == "Plant":
-                record["Plant Status"] = record["Project Status"]
-            else:
-                record["Plant Status"] = None
-        if record["Plant Status"] is not None:
-            log.debug(f'{dataset}:{plant_name}: "Plant Status"="{record["Plant Status"]}"')
-        elif record["Project Status"] is not None:
+            record["Plant Status"] = __plant_status(record[status_key], status_conversions)
+            record["Project Status"] = __project_status(record[status_key], status_conversions)
+
             log.debug(
-                f'{dataset}:{plant_name}:{project_name}: "Project Status"="{record["Project Status"]}"'
+                f'{dataset}:{record["Power Plant Name"]}: "Plant Status"="{record["Plant Status"]}"'
+            )
+            log.debug(
+                f'{dataset}:{record["Power Plant Name"]}:{record["Project Name"]}: "Project Status"="{record["Project Status"]}"'
             )
     return records
 
@@ -260,7 +280,7 @@ def owner_and_stake(records, **params):
             else:
                 record[key] = record[source_var]
             # normalize the org name to (an) existing org(s)
-            if key=='Owner 1' and record[key] is not None:
+            if key == "Owner 1" and record[key] is not None:
                 record[key] = __match_org_name(record[key], org_match_index)
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
@@ -278,16 +298,10 @@ def plant_fuels(records, **params):
                 record[key] = None
             elif "all cases" in source_var.lower():
                 record[key] = re.sub(r"\([^\(\)]+\)", "", source_var).strip()
-            elif sourcevar.startswith("Fuel Used Category"):
-                if record["Type"]=="Plant":
-                    record[key] = record["Fuel Used Category"]
-                else:
-                    record[key] = None
+            elif source_var.startswith("Fuel Used Category"):
+                record[key] = record["Fuel Used Category"]
             elif source_var.startswith("Primary Fuel"):
-                if record["Type"]=="Plant":
-                    record[key] = record["Primary Fuel"]
-                else:
-                    record[key] = None
+                record[key] = record["Primary Fuel"]
             else:
                 record[key] = record[source_var]
             if record[key] is not None:
@@ -297,6 +311,7 @@ def plant_fuels(records, **params):
 
 def operator(records, **params):
     source_variables = params["source_variables"]
+    org_match_index = params["org_match_index"]
     keys = ["Operator 1", "Operator 2"]
     for record in records:
         dataset = record["Dataset"]
@@ -686,8 +701,6 @@ def total_cost_w_currency(records, **params):
     key = "Total Cost"
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
-        project_name = record.get(source_variables[dataset].get("Project Name"))
         source_var = (source_variables[dataset][key] or "NA").strip()
         if source_var in [None, "NA"]:
             record[key] = None
@@ -721,8 +734,6 @@ def total_cost_w_currency(records, **params):
 #     keys = []
 #     for record in records:
 #         dataset = record["Dataset"]
-#         plant_name = record[source_variables[dataset]["Power Plant Name"]]
-#         project_name = record.get(source_variables[dataset].get("Project Name"))
 #         for key in keys:
 #             source_var = source_variables[dataset][key]
 #             if source_var in [None, "NA"]:
@@ -763,6 +774,9 @@ if __name__ == "__main__":
     params = dict(
         source_variables=excel.worksheet_dict(
             source_matrix["Source - Variables Matrix"], "Dataset"
+        ),
+        status_conversions=excel.worksheet_dict(
+            source_matrix["Status Conversions"], "Listed Status"
         ),
         countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
         org_match_index={
