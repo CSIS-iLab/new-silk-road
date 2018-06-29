@@ -2,6 +2,7 @@
 Reduce power_plant_data records to one record per power plant
 """
 import logging, re
+from collections import OrderedDict
 from . import excel
 
 log = logging.getLogger(__name__)
@@ -76,6 +77,27 @@ def __merge_owners_stakes(records, **params):
     for i, name in enumerate(owners.keys()):
         record[f"Owner {i+1}"] = name
         record[f"Owner {i+1} Stake"] = ";".join(owners[name])
+    return records
+
+
+def merge_plant_fuels(records, **params):
+    # collect all Plant Fuel N values from all records
+    plant_fuels = []
+    for record in records:
+        for field in [field for field in record.keys() if re.match(r"^Plant Fuel \d+$", field)]:
+            plant_fuels += [record[field]]
+            record[field] = None  # reduce
+    plant_fuels = list(set(plant_fuels))
+
+    # put all values in the first record of "Type"=="Plant"
+    try:
+        record = [record for record in records if record["Type"] == "Plant"][0]
+    except:
+        print(records)
+        raise
+    for i, fuel in enumerate(plant_fuels):
+        record[f"Plant Fuel {i+1}"] = fuel
+
     return records
 
 
