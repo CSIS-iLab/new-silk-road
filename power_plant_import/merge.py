@@ -125,6 +125,17 @@ def merge_project_fuels(records, **params):
     return records
 
 
+def merge_plant_output(records, **params):
+    """Remove values with the lowest associated year (only keep the most recent available year's data)
+    """
+    plant_records = [record for record in records if record["Type"] == "Plant"]
+    for record in plant_records:
+        if record["Plant Output Year"] > plant_records[0]["Plant Output Year"]:
+            for key in ["Plant Output", "Plant Output Unit", "Plant Output Year"]:
+                plant_records[0][key], record[key] = record[key], None
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
