@@ -276,10 +276,16 @@ def plant_fuels(records, **params):
                 record[key] = None
             elif "all cases" in source_var.lower():
                 record[key] = re.sub(r"\([^\(\)]+\)", "", source_var).strip()
-            elif "fuel used category" in source_var.lower():
-                record[key] = record["Fuel Used Category"]
-            elif "primary fuel" in source_var.lower():
-                record[key] = record["Primary Fuel"]
+            elif sourcevar.startswith("Fuel Used Category"):
+                if record["Type"]=="Plant":
+                    record[key] = record["Fuel Used Category"]
+                else:
+                    record[key] = None
+            elif source_var.startswith("Primary Fuel"):
+                if record["Type"]=="Plant":
+                    record[key] = record["Primary Fuel"]
+                else:
+                    record[key] = None
             else:
                 record[key] = record[source_var]
             if record[key] is not None:
