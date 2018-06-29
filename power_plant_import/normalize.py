@@ -33,6 +33,31 @@ months = {
     "December": 12,
 }
 
+# == Helper Functions ==
+
+
+def __match_org_name(name, org_match_index):
+    """given an organization name, try to match it to an organization in the org list 
+    using the org_match_index (key: normalized org name, value: canonical org name).
+    split values on ';' for matching, then rejoin.
+    """
+    match_names = [
+        name for name in [name.strip() for name in __norm_match_name(name).split(";")] if name != ""
+    ]
+    for i, match_name in enumerate(match_names):
+        if match_name in org_match_index:
+            match_names[i] = org_match_index[match_name]
+    return ";".join(match_names)
+
+
+def __norm_match_name(name):
+    """given an org name, normalize it for matching purposes
+    """
+    return re.sub(r"[\W]+", " ", name).strip().lower()
+
+
+# == Reduce Functions ==
+
 
 def field_names_from_matrix(records, **params):
     """for fields where the field name is variable among sources,
@@ -152,7 +177,7 @@ def plant_project_status(records, **params):
             record["Project Status"] = None
         else:
             record["Project Status"] = record[status_key]
-            if record["Type"]=="Plant":
+            if record["Type"] == "Plant":
                 record["Plant Status"] = record["Project Status"]
             else:
                 record["Plant Status"] = None
@@ -177,7 +202,7 @@ def plant_date_online(records, **params):
         dataset = record["Dataset"]
         for key, source_var in keys.items():
             if (
-                record["Type"]=="Project"
+                record["Type"] == "Project"
                 or source_variables[dataset][key] in [None, "NA"]
                 or record.get(source_var) is None
             ):
@@ -208,7 +233,7 @@ def decommissioning_year(records, **params):
             flags=re.I,
         )
         if (
-            record["Type"]=="Project"
+            record["Type"] == "Project"
             or source_var in [None, "NA"]
             or record.get(source_var) is None
         ):
@@ -231,6 +256,9 @@ def owner_and_stake(records, **params):
                 record[key] = None
             else:
                 record[key] = record[source_var]
+            # normalize the org name to (an) existing org(s)
+            if key=='Owner 1' and record[key] is not None:
+                record[key] = __match_org_name(record[key], org_match_index)
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -269,6 +297,9 @@ def operator(records, **params):
                 record[key] = None
             else:
                 record[key] = record["Operator"]
+            # normalize the org name to (an) existing org(s)
+            if record[key] is not None:
+                record[key] = __match_org_name(record[key], org_match_index)
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -285,7 +316,7 @@ def plant_capacity_w_unit(records, **params):
                 record[key] = None
             elif "Plant Capacity from row" in source_var:
                 source_var = "Plant Capacity (MW)"
-                if record["Type"]=="Plant":
+                if record["Type"] == "Plant":
                     record[key] = record[source_var]
                 else:
                     record[key] = None
@@ -348,7 +379,7 @@ def plant_output_w_unit_year(records, **params):
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
             elif "annual output" in source_var.lower():
-                if record["Type"]=="Plant":
+                if record["Type"] == "Plant":
                     record[key] = record["Annual Output"]
                     record[key + " Unit"] = (
                         record["Annual Output Unit"].split("/")[0]
@@ -384,7 +415,7 @@ def project_output_w_unit_year(records, **params):
         dataset = record["Dataset"]
         for key in keys:
             source_var = source_variables[dataset][key]
-            if record["Type"]=="Plant" or source_var in [None, "NA"]:
+            if record["Type"] == "Plant" or source_var in [None, "NA"]:
                 record[key] = None
                 record[key + " Unit"] = None
                 record[key + " Year"] = None
@@ -500,7 +531,7 @@ def plant_co2_emmissions(records, **params):
                 record[key] = None
                 record[key + " Unit"] = None
             elif "CO2 Emissions (Tonnes per annum)" in source_var:
-                if record["Type"]=="Plant":
+                if record["Type"] == "Plant":
                     record[key] = excel.value_to_float(record["CO2 Emissions (Tonnes per annum)"])
                 else:
                     record[key] = None
@@ -548,11 +579,14 @@ def manufacturers(records, **params):
             source_var = source_variables[dataset][key]
             record[key] = None
             if "from" in source_var.lower() and "matching plant" in source_var.lower():
-                if record["Type"]=="Plant":
+                if record["Type"] == "Plant":
                     source_key = source_var.split("from")[0].strip()
                     record[key] = record[source_key]
             elif source_var not in [None, "NA"]:
                 record[key] = record[source_var]
+            # normalize the org name to (an) existing org(s)
+            if record[key] is not None:
+                record[key] = __match_org_name(record[key], org_match_index)
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -560,6 +594,7 @@ def manufacturers(records, **params):
 
 def contractors(records, **params):
     source_variables = params["source_variables"]
+    org_match_index = params["org_match_index"]
     keys = [f"Contractor {n}" for n in range(1, 13)]  # 1..12
     for record in records:
         dataset = record["Dataset"]
@@ -568,7 +603,7 @@ def contractors(records, **params):
             if source_var in [None, "NA"]:
                 record[key] = None
             elif "EPC Contractor from row" in source_var:
-                if record["Type"]=="Plant":
+                if record["Type"] == "Plant":
                     record[key] = record["EPC Contractor"]
                 else:
                     record[key] = None
@@ -580,6 +615,9 @@ def contractors(records, **params):
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}" key="{key}" val="{source_var}"'
                 )
+            # normalize the org name to (an) existing org(s)
+            if record[key] is not None:
+                record[key] = __match_org_name(record[key], org_match_index)
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -718,6 +756,12 @@ if __name__ == "__main__":
             source_matrix["Source - Variables Matrix"], "Dataset"
         ),
         countries_regions=excel.worksheet_dict(source_matrix["Country-Region Lookup"], "Countries"),
+        org_match_index={
+            __norm_match_name(name): name
+            for name in excel.worksheet_dict(
+                source_matrix["Organizations List"], "Organization Name"
+            ).keys()
+        },
     )
 
     power_plant_data = data.read_json(json_filename)

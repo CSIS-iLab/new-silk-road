@@ -12,54 +12,39 @@ def merge_organizations(records, **params):
     For each set of keys that refer to organizations
     ("Contractor", "Manufacturer", "Operator"),
     separate delimited names, then remove duplicates, 
-    and place all values one per column (e.g., Contractors 1..N).
-    Match organization names to the Organizations List only on "word" characters 
-    (not whitespace or punctuation), and use case-insensitive matching.
+    and place all values one per column (e.g., Contractors 1..N)
+    in the first record that has the same (Plant, Project) values
     """
-
-    def name_to_match(name):
-        return re.sub(r"[\W]+", " ", name).strip().lower()
-
     base_keys = ["Contractor", "Manufacturer", "Operator"]
-    org_names = list(params["organizations"].keys())
-    org_match_names = [name_to_match(name) for name in org_names]
-    projects_organizations = {}
+    projects = {}
     # 1. collate all the values for each (Plant, Project) for each base_key into one list
     for record in records:
         project_key = (record["Power Plant Name"], record["Project Name"])
-        if project_key not in projects_organizations:
-            projects_organizations[project_key] = {}
+        if project_key not in projects:
+            projects[project_key] = {}
             for base_key in base_keys:
-                if base_key not in projects_organizations[project_key]:
-                    projects_organizations[project_key][base_key] = []
-                    # use the fields that match this base_key
-                    for field in [
-                        field for field in record.keys() if re.match(r"%s \d+" % base_key, field)
-                    ]:
-                        if record.get(field) is not None:
-                            # set the record[field] to None – this is reducing!
-                            val, record[field] = record[field], None
-                            # split the val on semicolons
-                            for name in [name.strip() for name in val.split(";")]:
-                                match_name = name_to_match(name)
-                                # if the name doesn't match but match_name does, normalize with warning
-                                if name not in org_names and match_name in org_match_names:
-                                    org_name = org_names[org_match_names.index(match_name)]
-                                    log.warn(f'{project_key}: {field}: "{name}" => "{org_name}"')
-                                else:
-                                    org_name = name
-                                # add new org_name to the list
-                                if org_name not in projects_organizations[project_key][base_key]:
-                                    projects_organizations[project_key][base_key].append(org_name)
-    # 2. put all the values for a given project_key, base_key into the first record with that project_key
-    for project_key in projects_organizations.keys():
+                if base_key not in projects[project_key]:
+                    projects[project_key][base_key] = []
+                # use the fields that match this base_key
+                for field in [
+                    field for field in record.keys() if re.match(r"%s \d+" % base_key, field)
+                ]:
+                    if record[field] is not None:
+                        val, record[field] = record[field], None    # moves values to one record 
+                        for org_name in val.split(";"):  # names are normalized
+                            if org_name not in projects[project_key][base_key]:
+                                projects[project_key][base_key].append(org_name)
+    # 2. put all the values for a given project into the first record with that project_key
+    for project_key in projects.keys():
+        # put the values in the first record with the given project_key
         record = [
             record
             for record in records
             if (record["Power Plant Name"], record["Project Name"]) == project_key
         ][0]
-        for base_key in projects_organizations[project_key].keys():
-            vals = projects_organizations[project_key][base_key]
+        for base_key in projects[project_key].keys():
+            vals = projects[project_key][base_key]
+            # the values go, one per field, in fields numbered 1..N
             for i, val in enumerate(vals):
                 record[f"{base_key} {i+1}"] = val
     return records
