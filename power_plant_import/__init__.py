@@ -1,5 +1,5 @@
 
 LOGGING = dict(
     level=20, 
-    format="%(name)s:%(lineno)s: %(levelname)s: %(message)s"
+    format="[%(asctime)s] %(name)s:%(lineno)s: %(levelname)s: %(message)s"
 )
