@@ -150,6 +150,24 @@ def merge_project_outputs(records, **params):
     return records
 
 
+def merge_plant_status(records, **params):
+    """
+    * 'Active' if all records are 'Active'
+    * 'Partially Active' if 1+ are 'Active' or 'Partially Active' and 0 are 'NULL'
+    * 'Inactive' 
+    * 'NULL' == None
+    """
+    plant_statuses == list(set([record["Plant Status"] for record in records]))
+    record0 = [record for record in records if record["Type"] == "Plant"][0]
+    if 'NULL' in plant_statuses or None in plant_statuses:
+        record0["Plant Status"] = None
+    elif plant_statuses == ['Active']:
+        record0['Plant Status'] = 'Active'
+    elif 'Active' in plant_statuses or 'Partially Active' in plant_statuses:
+        record0['Plant Status'] = 'Partially Active'
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
