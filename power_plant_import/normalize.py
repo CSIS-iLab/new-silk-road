@@ -681,17 +681,16 @@ def total_cost_w_currency(records, **params):
         source_var = (source_variables[dataset][key] or "NA").strip()
         if source_var in [None, "NA"]:
             record[key] = None
-        elif source_var == "CAPEX (USD) where data is not italicized":
-            if record["CAPEX (USD)"] is not None and "<i>" not in str(record["CAPEX (USD)"]):
+        elif source_var.startswith("CAPEX (USD)"):
+            if record["CAPEX (USD)"] is not None:
                 record[key] = excel.value_to_float(record["CAPEX (USD)"])
             else:
                 record[key] = None
-        elif source_var == "Capex USD when Capex Estimated = Actual, otherwise NULL":
-            record[key] = excel.value_to_float(record["Capex USD"])
-            if record[key] is not None:
-                log.warn(
-                    f'{dataset}/{plant_name}/{project_name}\n\t"{key}"={record[key]} — No Capex Estimated or Actual value exists'
-                )
+        elif source_var.startswith("Capex USD"):
+            if and record["Capex USD"] is not None:
+                record[key] = excel.value_to_float(record["Capex USD"])
+            else:
+                record[key] = None
         elif source_var in record:
             record[key] = excel.value_to_float(record[source_var])
         else:

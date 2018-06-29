@@ -22,8 +22,8 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
         record = OrderedDict()
         for i in range(len(row)):
             value = row[i].value
-            if row[i].font.italic == True:
-                value = f"<i>{value}</i>"
+            if type(value)==str:
+                value = value.strip()
             record[str(keys[i]).strip()] = value
         return record
 

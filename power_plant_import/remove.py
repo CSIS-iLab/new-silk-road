@@ -14,6 +14,7 @@ def remove_no_global_data(records, **params):
     else:
         return records
 
+
 def remove_country_not_in_lookup(records, **params):
     """if the Country is not in countries_regions, remove the record and log a warning"""
     countries_regions = params["countries_regions"]
@@ -39,7 +40,7 @@ def remove_years_lt_2006(records, **params):
             plant_name = record["Power Plant Name"]
             project_name = record["Project Name"]
             if record[key] not in [None, "NA"]:
-                val = floor(float(str(record[key]).strip("</i>")))
+                val = floor(float(str(record[key])))
                 if val < 2006:
                     records.pop(records.index(record))
                     log.debug(f"{dataset}:{plant_name}:{project_name}: {key}={val}")
@@ -56,7 +57,7 @@ def remove_plant_capacity_lt_100_mw(records, **params):
         plant_name = record["Power Plant Name"]
         project_name = record["Project Name"]
         if record[key] not in [None, "NA"]:
-            val = floor(float(str(record[key]).strip("</i>")))
+            val = floor(float(str(record[key])))
             unit = record[key + " Unit"]
             if unit == "GW":
                 val *= 1000
@@ -67,15 +68,20 @@ def remove_plant_capacity_lt_100_mw(records, **params):
 
 
 def remove_italicized_values(records, **params):
-    keys = ["Plant Day Online", "Plant Month Online", "Plant Year Online", "Total Cost"]
+    field_italics = {
+        "Plant Day Online": "Date.Online.Italics",
+        "Plant Month Online": "Month.Online.Italics",
+        "Plant Year Online": "Year.Online.Italics",
+        "Total Cost": "Capex.Italics",
+    }
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record["Power Plant Name"]
-        project_name = record["Project Name"]
-        for key in keys:
-            if record[key] is not None and "<i>" in str(record[key]):
-                log.debug(f"{dataset}:{plant_name}:{project_name}: {key}={record[key]}")
+        for key in [key for key in field_keys if key in record.keys()]:
+            italic_key = italic_keys[field_keys.index(key)]
+            if record[key] is not None and (record.get(italic_key) or "").upper() == "TRUE":
                 record[key] = None
+                project_name = f'{record["Power Plant Name"]}:{record["Project Name"]}'
+                log.debug(f"{dataset}:{project_name}: {key}={record[key]} italic=TRUE (removed)")
     return records
 
 
@@ -102,6 +108,7 @@ if __name__ == "__main__":
     from . import data, excel
 
     from . import LOGGING
+
     logging.basicConfig(**LOGGING)
 
     this = importlib.import_module("power_plant_import.remove")
