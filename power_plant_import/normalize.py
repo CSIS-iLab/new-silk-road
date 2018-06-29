@@ -247,6 +247,7 @@ def decommissioning_year(records, **params):
 
 def owner_and_stake(records, **params):
     source_variables = params["source_variables"]
+    org_match_index = params["org_match_index"]
     keys = ["Owner 1", "Owner 1 Stake"]
     for record in records:
         dataset = record["Dataset"]
@@ -566,6 +567,7 @@ def grid_connected(records, **params):
 
 def manufacturers(records, **params):
     source_variables = params["source_variables"]
+    org_match_index = params["org_match_index"]
     keys = [
         "Manufacturer 1",
         "Manufacturer 2",
