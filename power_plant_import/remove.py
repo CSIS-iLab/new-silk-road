@@ -21,12 +21,11 @@ def remove_country_not_in_lookup(records, **params):
     key = "Country"
     for record in reversed(records):
         dataset = record["Dataset"]
-        plant_name = record["Power Plant Name"]
-        project_name = record["Project Name"]
         val = record[key]
         if val is None or val not in countries_regions:
             records.pop(records.index(record))
-            log.error(f"{dataset}:{plant_name}:{project_name}: {key}='{val}'")
+            plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
+            log.error(f"{dataset}:{plant_project}: {key}='{val}'")
     return records
 
 
@@ -37,13 +36,12 @@ def remove_years_lt_2006(records, **params):
     for key in ["Completion Year", "Decommissioning Year"]:
         for record in reversed(records):
             dataset = record["Dataset"]
-            plant_name = record["Power Plant Name"]
-            project_name = record["Project Name"]
             if record[key] not in [None, "NA"]:
                 val = floor(float(str(record[key])))
                 if val < 2006:
                     records.pop(records.index(record))
-                    log.debug(f"{dataset}:{plant_name}:{project_name}: {key}={val}")
+                    plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
+                    log.debug(f"{dataset}:{plant_project}: {key}={val}")
     return records
 
 
@@ -54,8 +52,6 @@ def remove_plant_capacity_lt_100_mw(records, **params):
     key = "Plant Capacity"
     for record in reversed(records):
         dataset = record["Dataset"]
-        plant_name = record["Power Plant Name"]
-        project_name = record["Project Name"]
         if record[key] not in [None, "NA"]:
             val = floor(float(str(record[key])))
             unit = record[key + " Unit"]
@@ -63,7 +59,8 @@ def remove_plant_capacity_lt_100_mw(records, **params):
                 val *= 1000
             if val < 100:
                 records.pop(records.index(record))
-                log.debug(f"{dataset}:{plant_name}:{project_name}: {key}={val} {unit}")
+                plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
+                log.debug(f"{dataset}:{plant_project}: {key}={val} {unit}")
     return records
 
 
@@ -74,14 +71,15 @@ def remove_italicized_values(records, **params):
         "Plant Year Online": "Year.Online.Italics",
         "Total Cost": "Capex.Italics",
     }
+    field_keys = list(field_italics.keys())
     for record in records:
         dataset = record["Dataset"]
         for key in [key for key in field_keys if key in record.keys()]:
-            italic_key = italic_keys[field_keys.index(key)]
+            italic_key = field_italics[key]
             if record[key] is not None and (record.get(italic_key) or "").upper() == "TRUE":
                 record[key] = None
-                project_name = f'{record["Power Plant Name"]}:{record["Project Name"]}'
-                log.debug(f"{dataset}:{project_name}: {key}={record[key]} italic=TRUE (removed)")
+                plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
+                log.debug(f"{dataset}:{plant_project}: {key}={record[key]} italic=TRUE (removed)")
     return records
 
 
@@ -90,8 +88,6 @@ def remove_estimated_plant_project_output(records, **params):
     keys = ["Estimated Plant Output", "Estimated Project Output"]
     for record in records:
         dataset = record["Dataset"]
-        plant_name = record["Power Plant Name"]
-        project_name = record["Project Name"]
         for key in keys:
             non_est_key = key.replace("Estimated ", "")
             if record.get(non_est_key) is not None:
