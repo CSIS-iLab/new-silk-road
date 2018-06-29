@@ -16,8 +16,9 @@ def merge_organizations(records, **params):
     in the first record that has the same (Plant, Project) values
     """
     base_keys = ["Contractor", "Manufacturer", "Operator"]
-    projects = {}
+
     # 1. collate all the values for each (Plant, Project) for each base_key into one list
+    projects = {}
     for record in records:
         project_key = (record["Power Plant Name"], record["Project Name"])
         if project_key not in projects:
@@ -30,10 +31,11 @@ def merge_organizations(records, **params):
                     field for field in record.keys() if re.match(r"%s \d+" % base_key, field)
                 ]:
                     if record[field] is not None:
-                        val, record[field] = record[field], None    # moves values to one record 
+                        val, record[field] = record[field], None  # moves values to one record
                         for org_name in val.split(";"):  # names are normalized
                             if org_name not in projects[project_key][base_key]:
                                 projects[project_key][base_key].append(org_name)
+
     # 2. put all the values for a given project into the first record with that project_key
     for project_key in projects.keys():
         # put the values in the first record with the given project_key
@@ -47,6 +49,33 @@ def merge_organizations(records, **params):
             # the values go, one per field, in fields numbered 1..N
             for i, val in enumerate(vals):
                 record[f"{base_key} {i+1}"] = val
+    return records
+
+
+def __merge_owners_stakes(records, **params):
+    """Merge the values of Owner 1..N to the first "Plant" record.
+    Each Owner N value should have its Owner Stake N value put in a corresponding field
+    """
+    # 1. collect all owners and their stakes for this recordset
+    owners = OrderedDict()  # owner name as key, list of stakes as value
+    for record in records:
+        owner_fields = [
+            field for field in record.keys() if re.match(r"^Owner \d+$", field) is not None
+        ]
+        for field in [field for field in owner_fields if record[field] not in [None, "", "NA"]]:
+            stake = record.get(f"{field} Stake")
+            for name in [name.strip() for name in record[field].split(";") if name.strip() != ""]:
+                if name not in owners:
+                    owners[name] = []
+                if stake not in owners[name]:
+                    owners[name].append(stake)
+            record[field] = None  # reducing
+
+    # 2. put all values in the first "Plant" record
+    record = [record for record in records if record["Type"] == "Plant"][0]
+    for i, name in enumerate(owners.keys()):
+        record[f"Owner {i+1}"] = name
+        record[f"Owner {i+1} Stake"] = ";".join(owners[name])
     return records
 
 
