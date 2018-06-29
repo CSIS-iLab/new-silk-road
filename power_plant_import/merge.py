@@ -136,6 +136,20 @@ def merge_plant_output(records, **params):
     return records
 
 
+def merge_project_outputs(records, **params):
+    """Remove values with the lowest associated year (only keep the most recent available year's data)
+    """
+    project_records = {}
+    for record in [record for record in records if record["Type"] == "Project"]:
+        project_name = record["Project Name"]
+        if project_name not in project_records:
+            project_records[project_name] = record
+        if record["Project Output Year"] > project_records[project_name]["Project Output Year"]:
+            for key in ["Project Output", "Project Output Unit", "Project Output Year"]:
+                project_records[project_name][key], record[key] = record[key], None
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
