@@ -118,7 +118,7 @@ def field_names_from_matrix(records, **params):
     return records
 
 
-def _00_plant_project_name(records, **params):
+def _00_plant_project_name_type(records, **params):
     """Set the Power Plant Name and the Project Name.
     (This is the first function to be run in this set)
     Power Plant Name for all records in the set = the one that has the highest count in records.
@@ -130,22 +130,24 @@ def _00_plant_project_name(records, **params):
     names = Counter(
         [record[source_variables[record["Dataset"]]["Power Plant Name"]] for record in records]
     )
-    plant_name = max(names, key=names.get)
+    plant_name = max(names, key=names.get).strip()
     for record in records:
         dataset = record["Dataset"]
         record["Power Plant Name"] = plant_name
-        record_plant_name = record[source_variables[dataset]["Power Plant Name"]]
+
+        # set "Project Name" and "Type"
         project_name = record.get(source_variables[dataset].get("Project Name"))
-        if (
-            record["Type"] == "Project"
-            or plant_name == project_name
-            or record_plant_name == project_name
-            or project_name in [None, ""]
-        ):
-            record["Project Name"] = plant_name
+        if project_name is not None and project_name.strip() not in ["", plant_name]:
             record["Type"] = "Project"
+            record["Project Name"] = project_name.strip()
         else:
             record["Type"] = "Plant"
+            record["Project Name"] = plant_name
+
+        record.move_to_end("Type", last=False)
+        record.move_to_end("Project Name", last=False)
+        record.move_to_end("Power Plant Name", last=False)
+
     return records
 
 

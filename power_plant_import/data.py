@@ -32,15 +32,6 @@ def load_source_data(source_filenames, source_variables):
             raise ValueError(f"Unknown source file type: {ext}")
         log.info(f"{dataset}: {sheet_title}: {len(worksheet_data)} records")
         for record in worksheet_data:
-            # prepend "Type" to record: either "Plant" or "Project"
-            plant_name = record[source_variables[dataset]["Power Plant Name"]]
-            project_name = record.get(source_variables[dataset].get("Project Name"))
-            if project_name is not None and project_name.strip()==plant_name.strip():
-                record["Type"] = "Project"
-            else:
-                record["Type"] = "Plant"
-            record.move_to_end("Type", last=False)
-
             # prepend "Dataset" to record
             record["Dataset"] = dataset
             record.move_to_end("Dataset", last=False)
