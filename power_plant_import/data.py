@@ -109,7 +109,11 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
     for reduce_function in reduce_functions:
         log.info(f"reduce_function: {reduce_function.__name__}")
         for key in power_plant_data:
-            power_plant_data[key] = reduce_function(power_plant_data[key], **params)
+            records = reduce_function(power_plant_data[key], **params)
+            if len(records) > 0:
+                power_plant_data[key] = records
+            else:
+                power_plant_data.pop(key)
     return power_plant_data
 
 
