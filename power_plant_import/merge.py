@@ -101,6 +101,30 @@ def merge_plant_fuels(records, **params):
     return records
 
 
+def merge_project_fuels(records, **params):
+    # collect all Project Fuel N values from all "Project" records
+    project_fuels = {}
+    for record in [record for record in records if record["Type"] == "Project"]:
+        project_key = (record["Power Plant Name"], record["Project Name"])
+        if project_key not in project_fuels:
+            project_fuels[project_key] = []
+        for field in [field for field in record.keys() if re.match(r"^Project Fuel \d+$", field)]:
+            project_fuels[project_key].append(record[field])
+            record[field] = None  # reduce
+
+    # put all values for each project key in the first record with the same project key
+    for project_key in project_fuels:
+        record = [
+            record
+            for record in records
+            if (record["Power Plant Name"], record["Project Name"]) == project_key
+        ][0]
+        for i, fuel in enumerate(list(set(project_fuels[project_key]))):
+            record[f"Project Fuel {i+1}"] = fuel
+
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
