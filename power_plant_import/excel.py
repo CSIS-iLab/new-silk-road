@@ -82,7 +82,7 @@ def excel_key(index):
     return X(int(index))
 
 
-def worksheet_dict(worksheet_data, primary_key, merge=True):
+def worksheet_dict(worksheet_data, primary_key, merge=True, report=True):
     """convert a worksheet_data list into a dict, 
     using the primary_key (str key or tuple of record keys) to create dict keys.
     Returns an OrderedDict.
@@ -97,15 +97,16 @@ def worksheet_dict(worksheet_data, primary_key, merge=True):
             key = tuple([str(record.get(key)).strip() for key in primary_key])
         if key not in wsdict:
             wsdict[key] = record
-        elif merge != True:
+        elif merge != True and report==True:
             print(f"Duplicate key: {key}")
         else:
-            print(f"Duplicate key: {key}")
+            if report==True:
+                print(f"Duplicate key: {key}")
             for attr, val in record.items():
                 if val is not None:
                     if wsdict[key][attr] is None:
                         wsdict[key][attr] = val
-                    elif wsdict[key][attr] != val:
+                    elif wsdict[key][attr] != val and report==True:
                         print(f'  CONFLICT: key="{attr}":')
                         print(f"    val1: {wsdict[key][attr]}")
                         print(f"    val2: {val}")
