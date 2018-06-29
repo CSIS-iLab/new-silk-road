@@ -52,16 +52,16 @@ if __name__ == "__main__":
                     field
                     for field in record.keys()
                     if re.match(r"^%s \d+$" % base_key, field) is not None
+                    and record[field] not in [None, 'NA']
                 ]:
-                    if record[field] is not None and record[field] != "NA":
-                        for org_name in [
-                            name.strip() for name in record[field].split(";") if name.strip() != ""
-                        ]:
-                            if org_name not in org_list and org_name not in missing_orgs:
+                    for org_name in [
+                        name.strip() for name in record[field].split(";") if name.strip() != ""
+                    ]:
+                        if org_name not in org_list and org_name not in missing_orgs:
 
-                                missing_org = match_org(org_name, org_match_index)
-                                print({**missing_org})
-                                missing_orgs[org_name] = missing_org
+                            missing_org = match_org(org_name, org_match_index)
+                            print({**missing_org})
+                            missing_orgs[org_name] = missing_org
 
     orgs_report_filename = os.path.join(os.path.dirname(sys.argv[1]), "orgs_matches.txt")
     with open(orgs_report_filename, "wb") as f:
