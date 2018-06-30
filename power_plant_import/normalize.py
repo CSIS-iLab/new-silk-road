@@ -41,13 +41,14 @@ def __match_org_name(name, org_match_index):
     using the org_match_index (key: normalized org name, value: canonical org name).
     split values on ';' for matching, then rejoin.
     """
-    match_names = [
-        name for name in [name.strip() for name in __norm_match_name(name).split(";")] if name != ""
+    names = [
+        name for name in [name.strip() for name in name.split(";")] if name != ""
     ]
+    match_names = [__norm_match_name(name) for name in names]
     for i, match_name in enumerate(match_names):
         if match_name in org_match_index:
-            match_names[i] = org_match_index[match_name]
-    return ";".join(match_names)
+            names[i] = org_match_index[match_name]
+    return ";".join(names)
 
 
 def __norm_match_name(name):
