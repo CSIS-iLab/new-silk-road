@@ -6,10 +6,15 @@ import logging
 log = logging.getLogger(__name__)
 
 
+def remove_plant_name_na(records, **params):
+    """remove all records for which Power Plant Name in [None,'NA']"""
+    return [r for r in records if r["Power Plant Name"] not in [None, "NA"]]
+
+
 def remove_no_global_data(records, **params):
     """remove all records if none of them are global data (GD in dataset)"""
-    gd_datasets = [ds for ds in [record["Dataset"] for record in records] if "GD" in ds]
-    if len(gd_datasets) == 0:
+    gd_plant_records = [r for r in records if "GD" in r["Dataset"] and r["Type"]=="Plant"]
+    if len(gd_plant_records) == 0:
         return []
     else:
         return records
