@@ -102,15 +102,14 @@ def worksheet_dict(worksheet_data, primary_key, merge=True, report=True):
             print(f"Duplicate key: {key}")
         else:
             if report==True:
-                print(f"Duplicate key: {key}")
-            for attr, val in record.items():
+                print(f"Duplicate for {primary_key} = {key}:")
+            for field, val in record.items():
                 if val is not None:
-                    if wsdict[key][attr] is None:
-                        wsdict[key][attr] = val
-                    elif wsdict[key][attr] != val and report==True:
-                        print(f'  CONFLICT: key="{attr}":')
-                        print(f"    val1: {wsdict[key][attr]}")
-                        print(f"    val2: {val}")
+                    if wsdict[key][field] is None:
+                        wsdict[key][field] = val
+                    elif wsdict[key][field] != val and report==True:
+                        print(f'  CONFLICT: {field} = {wsdict[key][field]}')
+                        print(f'            {field} = {val}')
     return wsdict
 
 
