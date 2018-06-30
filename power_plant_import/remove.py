@@ -13,8 +13,7 @@ def remove_plant_name_na(records, **params):
 
 def remove_no_global_data(records, **params):
     """remove all records if none of them are global data (GD in dataset)"""
-    gd_plant_records = [r for r in records if "GD" in r["Dataset"] and r["Type"]=="Plant"]
-    if len(gd_plant_records) == 0:
+    if len([r for r in records if "GD" in r["Dataset"]]) == 0:
         return []
     else:
         return records
