@@ -25,10 +25,6 @@ if __name__ == "__main__":
     source_matrix = excel.load_workbook_data(source_matrix_filename)
     log.info(f"loaded source matrix: {os.path.relpath(source_matrix_filename, parent_path)}")
 
-    fuel_categories_filename = os.path.join(schema_path, "Fuel Categories_Final.xlsx")
-    fuel_categories = excel.load_workbook_data(fuel_categories_filename)
-    log.info(f"loaded fuel categories: {os.path.relpath(fuel_categories_filename, parent_path)}")
-
     params = dict(
         source_variables=excel.worksheet_dict(
             source_matrix["Source - Variables Matrix"], "Dataset", report=False
@@ -49,7 +45,7 @@ if __name__ == "__main__":
             source_matrix["Status Conversions"], "Listed Status", report=False
         ),
         fuel_types=excel.worksheet_dict(
-            fuel_categories["Fuel Types"], "Current Fuel Type List", report=False
+            source_matrix["Fuel Types"], "Current Fuel Type List", report=False
         ),
     )
 
