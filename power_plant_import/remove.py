@@ -26,7 +26,10 @@ def remove_country_not_in_lookup(records, **params):
             records.pop(records.index(record))
             plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
             log.error(f"{dataset}:{plant_project}: {key}='{val}'")
-    return records
+    if list(set(record["Type"] for record in records))==['Project']:
+        return []
+    else:
+        return records
 
 
 def remove_years_lt_2006(records, **params):
@@ -42,6 +45,10 @@ def remove_years_lt_2006(records, **params):
                     records.pop(records.index(record))
                     plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
                     log.debug(f"{dataset}:{plant_project}: {key}={val}")
+    if list(set(record["Type"] for record in records))==['Project']:
+        return []
+    else:
+        return records
     return records
 
 
@@ -61,6 +68,10 @@ def remove_plant_capacity_lt_100_mw(records, **params):
                 records.pop(records.index(record))
                 plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
                 log.debug(f"{dataset}:{plant_project}: {key}={val} {unit}")
+    if list(set(record["Type"] for record in records))==['Project']:
+        return []
+    else:
+        return records
     return records
 
 
@@ -80,6 +91,10 @@ def remove_italicized_values(records, **params):
                 record[key] = None
                 plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
                 log.debug(f"{dataset}:{plant_project}: {key}={record[key]} italic=TRUE (removed)")
+    if list(set(record["Type"] for record in records))==['Project']:
+        return []
+    else:
+        return records
     return records
 
 
@@ -93,6 +108,10 @@ def remove_estimated_plant_project_output(records, **params):
             if record.get(non_est_key) is not None:
                 record[key] = None
                 record[key + " Unit"] = None
+    if list(set(record["Type"] for record in records))==['Project']:
+        return []
+    else:
+        return records
     return records
 
 
@@ -122,7 +141,7 @@ if __name__ == "__main__":
     power_plant_data = data.read_json(json_filename)
     power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
-        os.path.dirname(json_filename), f"03-remove-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+        os.path.dirname(json_filename), f"2-remove-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
     with open(output_filename, "w") as f:
         json.dump(power_plant_data, f, indent=2)
