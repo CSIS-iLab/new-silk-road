@@ -95,10 +95,6 @@ def field_names_from_matrix(records, **params):
             "Funder 2",
             "Funding Amount 2",
             "Funding Currency 2",
-            "Project Fuel 1",
-            "Project Fuel 2",
-            "Project Fuel 3",
-            "Project Fuel 4",
         ]:
             source_var = source_variables[dataset][key]
             # "all cases": the value to use is given in source_var before the parens
@@ -287,9 +283,14 @@ def owner_and_stake(records, **params):
     return records
 
 
-def plant_fuels(records, **params):
+def plant_project_fuels(records, **params):
     source_variables = params["source_variables"]
-    keys = [f"Plant Fuel {n}" for n in range(1, 5)]  # 1..4
+    fuel_types = params["fuel_types"]
+    # normalize the fuel type keys
+    for key in list(fuel_types.keys()):
+        norm_key = re.sub(r"\W+", " ", key).strip().lower()
+        fuel_types[norm_key] = fuel_types.pop(key)
+    keys = [f"Plant Fuel {n}" for n in range(1, 5)] + [f"Project Fuel {n}" for n in range(1, 5)]
     for record in records:
         dataset = record["Dataset"]
         for key in keys:
@@ -304,6 +305,20 @@ def plant_fuels(records, **params):
                 record[key] = record["Primary Fuel"]
             else:
                 record[key] = record[source_var]
+
+            # normalize the value using the fuel_types data, and add " Category" values
+            if record[key] not in [None, "NA"]:
+                vals = [[v.strip(), ""] for v in re.split(r"[,/;]", record[key]) if v.strip() != ""]
+                for val in vals:
+                    fuel_type = re.sub(r"\W+", " ", val[0]).strip().lower()
+                    if fuel_type in fuel_types:
+                        val[0] = fuel_types[fuel_type]["Fuel"]
+                        val[1] = fuel_types[fuel_type]["Fuel Category"]
+                    else:
+                        log.error(f"{dataset}: not in Fuel Types: '{fuel_type}' ({record[key]})")
+                record[key] = ";".join(val[0] for val in vals)
+                record[key + " Category"] = ";".join(val[1] for val in vals)  # parallel structure
+
             if record[key] is not None:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
@@ -785,12 +800,15 @@ if __name__ == "__main__":
                 source_matrix["Organizations List"], "Organization Name"
             ).keys()
         },
+        fuel_types=excel.worksheet_dict(
+            source_matrix["Fuel Types"], "Current Fuel Type List", report=False
+        ),
     )
 
     power_plant_data = data.read_json(json_filename)
     power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
-        os.path.dirname(json_filename), f"02-norm-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+        os.path.dirname(json_filename), f"2-normalize-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
     with open(output_filename, "w") as f:
         json.dump(power_plant_data, f, indent=2)
