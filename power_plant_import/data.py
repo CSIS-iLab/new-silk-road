@@ -147,9 +147,12 @@ if __name__ == "__main__":
 
     # write the results — json output for now
     json_filepath = os.path.join(
-        os.path.dirname(os.path.abspath(source_matrix_filename)),
-        f"Power Plant Data/01-collate-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
+        os.path.dirname(os.path.dirname(os.path.abspath(source_matrix_filename))),
+        f"Power Plant Data/0-collate-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
     )
+    if not os.path.exists(os.path.dirname(json_filepath)):
+        os.makedirs(os.path.dirname(json_filepath))
+        log.info(f"created directory: {os.path.dirname(json_filepath)}")
     with open(json_filepath, "w") as f:
         json.dump(power_plant_data, f, indent=2)
     log.info(f"wrote data: {json_filepath}")
