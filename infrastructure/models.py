@@ -105,8 +105,14 @@ class Project(Publishable):
         models.SET_NULL, blank=True, null=True,
         help_text='Select or create named infrastructure types.'
     )
-    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
-    fuel = models.ForeignKey('Fuel', models.CASCADE, blank=True, null=True)
+    power_plant = models.ManyToManyField(
+        'PowerPlant', 
+        blank=True, 
+    )
+    fuel = models.ManyToManyField(
+        'Fuel', 
+        blank=True, 
+    )
     total_cost = models.BigIntegerField(
         blank=True, null=True,
         help_text="Values in whole units (dollars, etc.)"
@@ -171,12 +177,8 @@ class Project(Publishable):
         blank=True, null=True,
     )
     # project_CO2_emissions_unit
-    nOx_reduction_system = models.NullBooleanField('NOx Reduction System?')
-    sOx_reudction_system = models.NullBooleanField('SOx Reduction System?')
-
-
-    implementing_agency = models.CharField(blank=True, null=True, max_length=140)
-
+    nox_reduction_system = models.NullBooleanField('NOx Reduction System?')
+    sox_reudction_system = models.NullBooleanField('SOx Reduction System?')
 
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
@@ -293,6 +295,10 @@ class PowerPlant(Publishable):
         models.SET_NULL, blank=True, null=True,
         help_text='Select or create named insfrastructure types.'
     )
+    fuel = models.ManyToManyField(
+        'Fuel', 
+        blank=True, 
+    )
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
         'locations.Region',
@@ -383,7 +389,7 @@ class InitiativeType(models.Model):
         super(InitiativeType, self).save(*args, **kwargs)
 
 
-class Initiative(MPTTModel, Publishable): # Similar to this model.
+class Initiative(MPTTModel, Publishable):
     """Describes an initiative"""
 
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
