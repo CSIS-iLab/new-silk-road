@@ -154,6 +154,7 @@ def _04_merge_plant_status(records, **params):
         record0["Plant Status"] = "Active"
     elif "Active" in plant_statuses or "Partially Active" in plant_statuses:
         record0["Plant Status"] = "Partially Active"
+    # else there's also a possibility of "Inactive"
     return records
 
 
@@ -246,6 +247,5 @@ if __name__ == "__main__":
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"3-merge-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
-    with open(output_filename, "w") as f:
-        json.dump(power_plant_data, f, indent=2)
+    data.write_json(output_filename, power_plant_data)
     log.info(f"wrote {output_filename}")

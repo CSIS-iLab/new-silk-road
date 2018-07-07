@@ -64,8 +64,7 @@ if __name__ == "__main__":
     json_filename = os.path.join(
         output_path, f"0-collate-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
-    with open(json_filename, "w") as f:
-        json.dump(power_plant_data, f, indent=2)
+    data.write_json(json_filename, power_plant_data)
     log.info(f"wrote {os.path.relpath(json_filename, parent_path)}")
 
     function_sets = OrderedDict()
@@ -86,6 +85,5 @@ if __name__ == "__main__":
             output_path,
             f"{mod_names.index(mod_name)+1}-{mod_name}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
         )
-        with open(json_filename, "w") as f:
-            json.dump(power_plant_data, f, indent=2)
+        data.write_json(json_filename, power_plant_data)
         log.info(f"wrote {os.path.relpath(json_filename, parent_path)}")

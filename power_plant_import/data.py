@@ -21,11 +21,11 @@ def load_source_data(source_filenames, source_variables):
         )
         assert dataset in source_variables.keys(), f"Dataset not in source_variables: {dataset}"
         ext = os.path.splitext(source_filename)[-1].lower()
-        if ext=='.xslx':
+        if ext == '.xslx':
             workbook_data = excel.load_workbook_data(source_filename)
             sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
             worksheet_data = workbook_data[sheet_title]
-        elif ext=='.csv':
+        elif ext == '.csv':
             worksheet_data = excel.load_csv(source_filename)
             sheet_title = os.path.splitext(os.path.basename(source_filename))[0]
         else:
@@ -37,7 +37,6 @@ def load_source_data(source_filenames, source_variables):
             record.move_to_end("Dataset", last=False)
 
             source_data.append(record)
-
 
     # put ENI and WRI at end for lowest precedence (source_data is an OrderedDict)
     for i in range(len(source_data)):
@@ -120,7 +119,14 @@ def read_json(filename):
     with open(filename, "r") as f:
         json_data = json.load(f, object_pairs_hook=OrderedDict)
     return json_data
-    
+
+
+def write_json(json_filepath, power_plant_data):
+    if not os.path.exists(os.path.dirname(json_filepath)):
+        os.makedirs(os.path.dirname(json_filepath))
+    with open(json_filepath, "w") as jf:
+        json.dump(power_plant_data, jf, indent=2)
+
 
 if __name__ == "__main__":
     """load source matrix and source data, group records into power_plant_data, then filter & merge
@@ -128,6 +134,7 @@ if __name__ == "__main__":
     * sys.argv[2:] == source filenames, or all .xlsx in "Power Plant Source Data"
     """
     from . import LOGGING
+
     logging.basicConfig(**LOGGING)
 
     # load source matrix (field names, etc.)
@@ -153,6 +160,5 @@ if __name__ == "__main__":
     if not os.path.exists(os.path.dirname(json_filepath)):
         os.makedirs(os.path.dirname(json_filepath))
         log.info(f"created directory: {os.path.dirname(json_filepath)}")
-    with open(json_filepath, "w") as f:
-        json.dump(power_plant_data, f, indent=2)
+    write_json(json_filename, power_plant_data)
     log.info(f"wrote data: {json_filepath}")

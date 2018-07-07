@@ -147,6 +147,5 @@ if __name__ == "__main__":
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"2-remove-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
-    with open(output_filename, "w") as f:
-        json.dump(power_plant_data, f, indent=2)
+    data.write_json(output_filename, power_plant_data)
     log.info(f"wrote {output_filename}")
