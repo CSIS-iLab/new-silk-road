@@ -110,7 +110,7 @@ def field_names_from_matrix(records, **params):
             # otherwise, the value is in the record under the source_var
             else:
                 record[key] = record[source_var]
-        if record[key] is not None:
+        if record[key] not in [None, "NA"]:
             log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -158,7 +158,7 @@ def region_from_country(records, **params):
             record[key] = None
         else:
             record[key] = countries_regions[record["Country"]]["Regions"]
-        if record[key] is not None:
+        if record[key] not in [None, "NA"]:
             log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -235,7 +235,7 @@ def plant_date_online(records, **params):
                         record[key] = months[source_val]
                 else:
                     record[key] = record[source_var]
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -259,7 +259,7 @@ def decommissioning_year(records, **params):
             record[key] = None
         else:
             record[key] = record[source_var]
-        if record[key] is not None:
+        if record[key] not in [None, "NA"]:
             log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -274,12 +274,14 @@ def owner_and_stake(records, **params):
             source_var = source_variables[dataset][key]
             if source_var in [None, "NA"]:
                 record[key] = None
-            else:
+            elif record[source_var] not in [None, "NA"]:
                 record[key] = record[source_var]
+            else:
+                record[key] = None
             # normalize the org name to (an) existing org(s)
             if key == "Owner 1" and record[key] is not None:
                 record[key] = __match_org_name(record[key], org_match_index)
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -319,8 +321,10 @@ def plant_project_fuels(records, **params):
                         log.error(f"{dataset}: not in Fuel Types: '{fuel_type}' ({record[key]})")
                 record[key] = ";".join(val[0] for val in vals)
                 record[key + " Category"] = ";".join(val[1] for val in vals)  # parallel structure
+            else:
+                record[key] = None
 
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -338,9 +342,11 @@ def operator(records, **params):
             else:
                 record[key] = record["Operator"]
             # normalize the org name to (an) existing org(s)
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 record[key] = __match_org_name(record[key], org_match_index)
-            if record[key] is not None:
+            else:
+                record[key] = None
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -360,10 +366,18 @@ def plant_capacity_w_unit(records, **params):
                     record[key] = record[source_var]
                 else:
                     record[key] = None
-            else:
+            elif record[source_var] not in [None, "NA"]:
                 record[key] = record[source_var]
-            record[key + " Unit"] = "MW" if record[key] is not None else None
-            if record[key] is not None:
+            else:
+                record[key] = None
+
+            if record[key] not in [None, "NA"]:
+                record[key] = excel.value_to_float(record[key])
+            else:
+                record[key] = None
+
+            record[key + " Unit"] = "MW" if record[key] not in [None, "NA"] else None
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
@@ -383,10 +397,18 @@ def project_capacity(records, **params):
                     or record["Pipeline Capacity (MW)"]
                     or record["Discontinued Capacity (MW)"]
                 )
-            else:
+            elif record[source_var] not in [None, "NA"]:
                 record[key] = record[source_var]
-            record[key + " Unit"] = "MW" if record[key] is not None else None
-            if record[key] is not None:
+            else:
+                record[key] = None
+
+            if record[key] not in [None, "NA"]:
+                record[key] = excel.value_to_float(record[key])
+            else:
+                record[key] = None
+
+            record[key + " Unit"] = "MW" if record[key] not in [None, "NA"] else None
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
@@ -406,7 +428,7 @@ def plant_output_w_unit_year(records, **params):
                     or record["generation_gwh_2013"]
                     or None
                 )
-                record[key + " Unit"] = "GWh" if record[key] is not None else None
+                record[key + " Unit"] = "GWh" if record[key] not in [None, "NA"] else None
                 record[key + " Year"] = (
                     (record["generation_gwh_2016"] and 2016)
                     or (record["generation_gwh_2015"] and 2015)
@@ -423,7 +445,7 @@ def plant_output_w_unit_year(records, **params):
                     record[key] = record["Annual Output"]
                     record[key + " Unit"] = (
                         record["Annual Output Unit"].split("/")[0]
-                        if record[key] is not None
+                        if record[key] not in [None, "NA"]
                         else None
                     )
                     record[key + " Year"] = record["Generation Year"]
@@ -437,11 +459,17 @@ def plant_output_w_unit_year(records, **params):
                     r"\([^\(\)]*\)", r"", source_variables[dataset][key + " Unit"], flags=re.I
                 ).strip()
                 record[key + " Year"] = None
+
             # convert GWh => MWh
-            if record[key] is not None and record[key + " Unit"] == "GWh":
-                record[key] *= 1000
+            if record[key] not in [None, "NA"]:
+                record[key] = excel.value_to_float(record[key])
+                if record[key + " Unit"] == "GWh":
+                    record[key] *= 1000
                 record[key + " Unit"] = "MWh"
-            if record[key] is not None:
+            else:
+                record[key] = None
+
+            if record[key] not in [None, "NA"]:
                 log.debug(
                     f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
                 )
@@ -462,14 +490,18 @@ def project_output_w_unit_year(records, **params):
             else:
                 record[key] = record["Annual Output"]
                 record[key + " Unit"] = (
-                    record["Annual Output Unit"].split("/")[0] if record[key] is not None else None
+                    record["Annual Output Unit"].split("/")[0] if record[key] not in [None, "NA"] else None
                 )
                 record[key + " Year"] = record["Generation Year"]
+            
             # convert GWh => MWh
-            if record[key] is not None and record[key + " Unit"] == "GWh":
-                record[key] *= 1000
+            if record[key] not in [None, "NA"]:
+                record[key] = excel.value_to_float(record[key])
+                if record[key + " Unit"] == "GWh":
+                    record[key] *= 1000
                 record[key + " Unit"] = "MWh"
-            if record[key] is not None:
+
+            if record[key] not in [None, "NA"]:
                 log.debug(
                     f"{dataset}: {key}: {record[key]} {record[key+' Unit']} {record[key+' Year']}"
                 )
@@ -487,9 +519,9 @@ def estimated_plant_output_w_unit(records, **params):
                 record[key] = None
                 record[key + " Unit"] = None
             elif "average output" in source_var.lower():
-                if record["Average Output"] is not None:
+                if record["Average Output"] not in [None, "NA"]:
                     # format is "NNN.NN XWh/annum"
-                    record[key] = excel.value_to_float(record["Average Output"].split(" ")[0])
+                    record[key] = record["Average Output"].split(" ")[0]
                     record[key + " Unit"] = record["Average Output"].split(" ")[-1].split("/")[0]
                 else:
                     record[key] = None
@@ -497,11 +529,15 @@ def estimated_plant_output_w_unit(records, **params):
             else:
                 record[key] = record[source_var]
                 record[key + " Unit"] = "GWh"
+            
             # convert GWh => MWh
-            if record[key] is not None and record[key + " Unit"] == "GWh":
-                record[key] *= 1000
+            if record[key] not in [None, "NA"]:
+                record[key] = excel.value_to_float(record[key])
+                if record[key + " Unit"] == "GWh":
+                    record[key] *= 1000
                 record[key + " Unit"] = "MWh"
-            if record[key] is not None:
+            
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
@@ -518,7 +554,7 @@ def estimated_project_output(records, **params):
                 record[key + " Unit"] = None
             elif source_var == "Average Output":
                 if record[source_var] is not None:
-                    record[key] = excel.value_to_float(record[source_var].split(" ")[0])
+                    record[key] = record[source_var].split(" ")[0]
                     record[key + " Unit"] = record[source_var].split(" ")[-1].split("/")[0]
                 else:
                     record[key] = None
@@ -528,10 +564,12 @@ def estimated_project_output(records, **params):
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
             # convert GWh => MWh
-            if record[key] is not None and record[key + " Unit"] == "GWh":
-                record[key] *= 1000
+            if record[key] not in [None, "NA"]:
+                record[key] = excel.value_to_float(record[key])
+                if record[key + " Unit"] == "GWh":
+                    record[key] *= 1000
                 record[key + " Unit"] = "MWh"
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
@@ -551,11 +589,11 @@ def project_co2_emissions(records, **params):
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 record[key + " Unit"] = "Tonnes per annum"
             else:
                 record[key + " Unit"] = None
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
@@ -579,11 +617,11 @@ def plant_co2_emmissions(records, **params):
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 record[key + " Unit"] = "Tonnes per annum"
             else:
                 record[key + " Unit"] = None
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
 
@@ -599,7 +637,7 @@ def grid_connected(records, **params):
                 record[key] = True
             else:
                 record[key] = None
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -626,9 +664,9 @@ def manufacturers(records, **params):
             elif source_var not in [None, "NA"]:
                 record[key] = record[source_var]
             # normalize the org name to (an) existing org(s)
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 record[key] = __match_org_name(record[key], org_match_index)
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -657,9 +695,9 @@ def contractors(records, **params):
                     f'invalid source variable: dataset="{dataset}" key="{key}" val="{source_var}"'
                 )
             # normalize the org name to (an) existing org(s)
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 record[key] = __match_org_name(record[key], org_match_index)
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -684,7 +722,7 @@ def sox_reduction_system(records, **params):
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -707,7 +745,7 @@ def nox_reduction_system(records, **params):
                 raise ValueError(
                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
                 )
-            if record[key] is not None:
+            if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
@@ -722,22 +760,22 @@ def total_cost_w_currency(records, **params):
             record[key] = None
         elif source_var.startswith("CAPEX (USD)"):
             if record["CAPEX (USD)"] is not None:
-                record[key] = excel.value_to_float(record["CAPEX (USD)"])
+                record[key] = record["CAPEX (USD)"]
             else:
                 record[key] = None
         elif source_var.startswith("Capex USD"):
             if record["Capex USD"] is not None:
-                record[key] = excel.value_to_float(record["Capex USD"])
+                record[key] = record["Capex USD"]
             else:
                 record[key] = None
         elif source_var in record:
-            record[key] = excel.value_to_float(record[source_var])
+            record[key] = record[source_var]
         else:
             raise ValueError(
                 f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
             )
-        if record[key] is not None:
-            record[key] = int(round(record[key], 0))  # convert to integer
+        if record[key] not in [None, "NA"]:
+            record[key] = int(round(excel.value_to_float(record[key]), 0))  # convert to integer
             record[key + " Currency"] = "USD"
             log.debug(f"{dataset}: {key}: {record[key]}")
         else:
@@ -760,7 +798,7 @@ def total_cost_w_currency(records, **params):
 #                 raise ValueError(
 #                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
 #                 )
-#             if record[key] is not None:
+#             if record[key] not in [None, "NA"]:
 #                 log.info(f"{dataset}: {key}: {record[key]}")
 #     return records
 
@@ -811,5 +849,4 @@ if __name__ == "__main__":
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"1-normalize-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
     )
-    with open(output_filename, "w") as f:
-        json.dump(power_plant_data, f, indent=2)
+    data.write_json(output_filename, power_plant_data)
