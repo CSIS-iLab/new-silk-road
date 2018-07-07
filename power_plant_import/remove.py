@@ -2,6 +2,7 @@
 Implement the rules in the "Remove Clause" field of the "Tasks & Notes" worksheet
 """
 import logging
+from power_plant_import.fields import FIELDS
 
 log = logging.getLogger(__name__)
 
@@ -116,6 +117,21 @@ def remove_estimated_plant_project_output(records, **params):
         return []
     else:
         return records
+    return records
+
+
+def remove_fields_not_in_FIELDS(records, **params):
+    for record in records:
+        for field in [field for field in list(record.keys()) if field not in FIELDS]:
+            val = record.pop(field)
+            log.debug(f"REMOVED {field}={val} ({record['Dataset']}:{record['Power Plant Name']}:{record['Project Name']})")
+    return records
+
+
+def remove_NA_to_None(records, **params):
+    for record in records:
+        for field in [field for field in list(record.keys()) if record[field]=="NA"]:
+            record[field] = None
     return records
 
 
