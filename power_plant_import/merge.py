@@ -23,7 +23,7 @@ def _00_merge_owners_stakes(records, **params):
         ]
         for field in [field for field in owner_fields if record[field] not in [None, "", "NA"]]:
             if record["Type"] == "Plant":
-            stake = record.get(f"{field} Stake")
+                stake = record.get(f"{field} Stake")
                 for name in [
                     name.strip() for name in record[field].split(";") if name.strip() != ""
                 ]:
@@ -31,9 +31,9 @@ def _00_merge_owners_stakes(records, **params):
                         owners[key][name] = []
                     if stake not in owners[key][name] and stake not in [None, "NA"]:
                         owners[key][name].append(stake)
-            record[field] = None  # reducing
-            if record.get(field + " Stake") is not None:
-                record[field + " Stake"] = None
+                record[field] = None  # reducing
+                if record.get(field + " Stake") is not None:
+                    record[field + " Stake"] = None
             else:  # drop Owner values for
                 record[field] = None
 
@@ -43,9 +43,9 @@ def _00_merge_owners_stakes(records, **params):
             record
             for record in records
             if (record["Power Plant Name"], record["Project Name"]) == key
-        ]
+        ][0]
         for i, name in enumerate(owners[key].keys()):
-        record[f"Owner {i+1}"] = name
+            record[f"Owner {i+1}"] = name
             record[f"Owner {i+1} Stake"] = ";".join(owners[key][name])
     return records
 
@@ -81,7 +81,7 @@ def _01_merge_plant_project_fuels(records, **params):
                 record[field] = None  # reduce
                 record[field + " Category"] = None
 
-        else:  # Type=="Plant"
+        elif key[0] == key[1]:  # Type=="Plant"
             for field in [
                 field
                 for field in record.keys()
@@ -136,7 +136,7 @@ def _03_merge_project_outputs(records, **params):
         if project_name not in project_records:
             project_records[project_name] = record
 
-        if record["Project Output Year"] in [None, "NA"]:
+        if record.get("Project Output Year") in [None, "NA"]:
             continue
         elif (
             project_records[project_name]["Project Output Year"] in [None, "NA"]
@@ -156,17 +156,19 @@ def _04_merge_plant_status(records, **params):
     * 'Active' if all records are 'Active'
     * 'Partially Active' if 1+ are 'Active' or 'Partially Active' and 0 are 'NULL'
     * 'Inactive' 
-    * 'NULL' == None
+    * 'NULL'
     """
     plant_statuses = list(set([record["Plant Status"] for record in records]))
     record0 = [record for record in records if record["Type"] == "Plant"][0]
-    if "NULL" in plant_statuses or None in plant_statuses:
-        record0["Plant Status"] = None
+    if "NULL" in plant_statuses:
+        record0["Plant Status"] = "NULL"
     elif plant_statuses == ["Active"]:
         record0["Plant Status"] = "Active"
     elif "Active" in plant_statuses or "Partially Active" in plant_statuses:
         record0["Plant Status"] = "Partially Active"
     # else there's also a possibility of "Inactive"
+    for record in [record for record in records if record != record0]:
+        record["Plant Status"] = None
     return records
 
 
@@ -178,40 +180,40 @@ def _05_merge_organizations(records, **params):
     and place all values one per column (e.g., Contractors 1..N)
     in the first record that has the same (Plant, Project) values
     """
-    base_keys = ["Contractor", "Manufacturer", "Operator"]
+    base_fields = ["Contractor", "Manufacturer", "Operator"]
 
-    # 1. collate all the values for each (Plant, Project) for each base_key into one list
+    # 1. collate all the values for each (Plant, Project) for each base_field into one list
     projects = OrderedDict()
     for record in records:
-        project_key = (record["Power Plant Name"], record["Project Name"])
-        if project_key not in projects:
-            projects[project_key] = OrderedDict()
-            for base_key in base_keys:
-                if base_key not in projects[project_key]:
-                    projects[project_key][base_key] = []
-                # use the fields that match this base_key
-                for field in [
-                    field for field in record.keys() if re.match(r"%s \d+" % base_key, field)
-                ]:
-                    if record[field] is not None:
-                        val, record[field] = record[field], None  # moves values to one record
-                        for org_name in val.split(";"):  # names are normalized
-                            if org_name not in projects[project_key][base_key]:
-                                projects[project_key][base_key].append(org_name)
+        key = (record["Power Plant Name"], record["Project Name"])
+        if key not in projects:
+            projects[key] = OrderedDict()
+        for base_field in base_fields:
+            if base_field not in projects[key]:
+                projects[key][base_field] = []
+            # use the fields that match this base_field
+            for field in [
+                field for field in record.keys() if re.match(r"^%s \d+$" % base_field, field)
+            ]:
+                if record[field] is not None:
+                    val, record[field] = record[field], None  # moves values to one record
+                    for org_name in val.split(";"):  # names are normalized
+                        if org_name not in projects[key][base_field]:
+                            projects[key][base_field].append(org_name)
 
     # 2. put all the values for a given project into the first record with that project_key
-    for project_key in projects.keys():
-        # put the values in the first record with the given project_key
+    for key in projects.keys():
+        # put the values in the first record with the given projct key
         record = [
             record
             for record in records
-            if (record["Power Plant Name"], record["Project Name"]) == project_key
+            if (record["Power Plant Name"], record["Project Name"]) == key
         ][0]
-        for base_key in projects[project_key].keys():
-            vals = projects[project_key][base_key]
+        for field in projects[key].keys():
+            vals = projects[key][field]
             # the values go, one per field, in fields numbered 1..N
             for i, val in enumerate(vals):
-                record[f"{base_key} {i+1}"] = val
+                record[f"{field} {i+1}"] = val
     return records
 
 
@@ -233,8 +235,10 @@ def _99_final_merge(records, **params):
                     elif record[field] != projects[key][field]:
                         print(
                             f'FIELD CONFLICT in "{field}" for {key}:'
-                            + f'\n\t"{field}"="{projects[key][field]}" ({projects[key]["Dataset"]})'
-                            + f'\n\t"{field}"="{record[field]}" ({record["Dataset"]})'
+                            + f'\n\t"{field}"="{projects[key][field]}"'
+                            + f' ({projects[key]["Dataset"]}:{projects[key]["Source Plant Name"]})'
+                            + f'\n\t"{field}"="{record[field]}"'
+                            + f' ({record["Dataset"]}:{record["Source Plant Name"]})'
                         )
             # merge Datasets -- semicolon-delimited string
             if record["Dataset"] not in projects[key]["Dataset"]:
