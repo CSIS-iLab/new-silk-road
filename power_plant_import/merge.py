@@ -2,6 +2,7 @@
 Reduce power_plant_data records to one record per power plant
 """
 import logging, re, json
+from datetime import datetime
 from collections import OrderedDict
 from . import excel
 
@@ -217,6 +218,15 @@ def _05_merge_organizations(records, **params):
     return records
 
 
+def __print_field_conflict(project, record, key, field):
+    print(
+        f'{key[0]}\t{key[1]}\t{field}'
+        + f'\t{project[field]}\t{record[field]}'
+        + f'\t{project["Dataset"]}\t{project["Source Plant Name"]}'
+        + f'\t{record["Dataset"]}\t{record["Source Plant Name"]}'
+    )
+
+
 def _99_final_merge(records, **params):
     """the final merge:
     * merge values from later records if the first record value is None
@@ -232,14 +242,14 @@ def _99_final_merge(records, **params):
                 if record[field] not in [None, "NA"]:
                     if projects[key].get(field) in [None, "NA"]:
                         projects[key][field] = record[field]
+                    elif field == "Source Plant Name":
+                        if record[field].lower() != projects[key][field].lower():   # norm case
+                            __print_field_conflict(projects[key], record, key, field)
+                    elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
+                        if round(float(record[field]), 2) != round(float(projects[key][field]), 2):
+                            __print_field_conflict(projects[key], record, key, field)
                     elif record[field] != projects[key][field]:
-                        print(
-                            f'FIELD CONFLICT in "{field}" for {key}:'
-                            + f'\n\t"{field}"="{projects[key][field]}"'
-                            + f' ({projects[key]["Dataset"]}:{projects[key]["Source Plant Name"]})'
-                            + f'\n\t"{field}"="{record[field]}"'
-                            + f' ({record["Dataset"]}:{record["Source Plant Name"]})'
-                        )
+                        __print_field_conflict(projects[key], record, key, field)
             # merge Datasets -- semicolon-delimited string
             if record["Dataset"] not in projects[key]["Dataset"]:
                 projects[key]["Dataset"] += ";" + record["Dataset"]
@@ -268,6 +278,10 @@ if __name__ == "__main__":
     params = dict()
 
     power_plant_data = data.read_json(json_filename)
+    print(
+        "Power Plant Name\tProject Name\tConflict Field\tValue1\tValue2"
+        + "\tDataset1\tSource Plant Name1\tDataset2\tSource Plant Name2"
+    )
     power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"3-merge-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
