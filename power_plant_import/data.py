@@ -72,21 +72,21 @@ def collect_power_plant_data(source_data, source_variables):
             record[source_variables[dataset]["Latitude"]],
             record[source_variables[dataset]["Longitude"]],
         )
-        if plant_id not in [None, "NA", ""] and plant_id in plant_id_index:
-            data_key = plant_id_index[plant_id]
+        if plant_id not in [None, "NA", ""] and (dataset, plant_id) in plant_id_index:
+            data_key = plant_id_index[(dataset, plant_id)]
         elif plant_name not in [None, "NA", ""] and plant_name in plant_name_index:
             data_key = plant_name_index[plant_name]
         elif plant_loc not in [None, "NA", ""] and plant_loc in plant_loc_index:
             data_key = plant_loc_index[plant_loc]
         else:
-            data_key = str((plant_name, plant_id, plant_loc))
+            data_key = str((plant_name, (dataset, plant_id), plant_loc))
         if data_key not in power_plant_data:
             power_plant_data[data_key] = []
         power_plant_data[data_key].append(record)
 
         # update the indexes with the values in the current record if the values are not empty
         if plant_id not in [None, "NA", ""] and plant_id not in plant_id_index:
-            plant_id_index[plant_id] = data_key
+            plant_id_index[(dataset, plant_id)] = data_key
         if plant_name not in [None, "NA", ""] and plant_name not in plant_name_index:
             plant_name_index[plant_name] = data_key
         if (
