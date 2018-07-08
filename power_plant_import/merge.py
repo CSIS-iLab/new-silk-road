@@ -115,7 +115,8 @@ def _02_merge_plant_output(records, **params):
     plant_records = [record for record in records if record["Type"] == "Plant"]
     for record in plant_records:
         if record["Plant Output Year"] in [None, "NA"]:
-            continue
+            for key in ["Plant Output", "Plant Output Unit", "Plant Output Year"]:
+                record[key] = None
         elif (
             plant_records[0]["Plant Output Year"] in [None, "NA"]
             or record["Plant Output Year"] > plant_records[0]["Plant Output Year"]
