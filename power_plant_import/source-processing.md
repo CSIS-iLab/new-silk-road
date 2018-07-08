@@ -8,11 +8,11 @@ Each column belongs either to a plant or a project.
 	* [x] "Latitude"+"Longitude"
 * [x] GlobalData takes precedence over AllPowerPlants (ENI and WRI).
 
-* [] Normalize fields: 
+* [x] Normalize fields: 
 	* [x] based on "Source - Variables Matrix" worksheet
-	* [] "Convert" column in "Tasks & Notes" worksheet
+	* [x] "Convert" column in "Tasks & Notes" worksheet
 
-* [] Filter out records:
+* [x] Filter out records:
 	* [x] "Completion Year" < 2006
 	* [x] "Decommissioning Year" < 2006
 	* [x] "Country" is not in the "Country-Region Lookup" worksheet.
@@ -37,17 +37,17 @@ Each column belongs either to a plant or a project.
 		* [] "Estimated Project Output" if "Project Output" is not null
 		* [] "Estimated Project Output Unit" if "Project Output" is not null
 
-* [] Merge data:
-	* [] "Plant/Project Output": keep the value with the most recent "Plant/Project Output Year"
-	* [] "Status" based on rules in "Status Conversions" worksheet
-	* [] merge and remove duplicates in:
+* [x] Merge data:
+	* [x] "Plant/Project Output": keep the value with the most recent "Plant/Project Output Year"
+	* [x] "Status" based on rules in "Status Conversions" worksheet
+	* [x] merge and remove duplicates in:
 		* [x] Contractor 1..N
 		* [x] Manufacturer 1..N
 		* [x] Operator 1..N
-		* [] Plant Fuel 1..N
-		* [] Owner 1..N: semicolon-separated list
+		* [x] Plant Fuel 1..N
+		* [x] Owner 1..N: semicolon-separated list
 
-* [] Combine:
-	* [] "Technology Combination" indicates what other spreadsheet to combine with
+* [x] Combine:
+	* [o] "Technology Combination" indicates what other spreadsheet to combine with
 		(Power Plant Name might not be an exact match)
-	* [] Statuses: rules in the "Status Conversions" worksheet.
+	* [x] Statuses: rules in the "Status Conversions" worksheet.
