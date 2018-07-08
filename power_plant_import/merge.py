@@ -13,28 +13,40 @@ def _00_merge_owners_stakes(records, **params):
     Each Owner N value should have its Owner Stake N value put in a corresponding field
     """
     # 1. collect all owners and their stakes for this recordset
-    owners = OrderedDict()  # owner name as key, list of stakes as value
+    owners = OrderedDict()  # project as key, ordered dict of
     for record in records:
+        key = (record["Power Plant Name"], record["Project Name"])
+        if key not in owners:
+            owners[key] = OrderedDict()  #  owners names as keys, list of stakes as values
         owner_fields = [
             field for field in record.keys() if re.match(r"^Owner \d+$", field) is not None
         ]
         for field in [field for field in owner_fields if record[field] not in [None, "", "NA"]]:
+            if record["Type"] == "Plant":
             stake = record.get(f"{field} Stake")
-            for name in [name.strip() for name in record[field].split(";") if name.strip() != ""]:
-                if name not in owners:
-                    owners[name] = []
-                if stake not in owners[name] and stake not in [None, "NA"]:
-                    owners[name].append(stake)
+                for name in [
+                    name.strip() for name in record[field].split(";") if name.strip() != ""
+                ]:
+                    if name not in owners[key]:
+                        owners[key][name] = []
+                    if stake not in owners[key][name] and stake not in [None, "NA"]:
+                        owners[key][name].append(stake)
             record[field] = None  # reducing
             if record.get(field + " Stake") is not None:
                 record[field + " Stake"] = None
+            else:  # drop Owner values for
+                record[field] = None
 
-    # 2. put all values in the first "Plant" record
-    plant_records = [record for record in records if record["Type"] == "Plant"]
-    record = plant_records[0]
-    for i, name in enumerate(owners.keys()):
+    # 2. put all values for each plant/project in the first record for that plant/project
+    for key in owners.keys():
+        record = [
+            record
+            for record in records
+            if (record["Power Plant Name"], record["Project Name"]) == key
+        ]
+        for i, name in enumerate(owners[key].keys()):
         record[f"Owner {i+1}"] = name
-        record[f"Owner {i+1} Stake"] = ";".join(owners[name])
+            record[f"Owner {i+1} Stake"] = ";".join(owners[key][name])
     return records
 
 
