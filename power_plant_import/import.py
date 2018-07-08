@@ -5,7 +5,7 @@ import logging, os, sys, json
 from datetime import datetime
 from glob import glob
 from collections import OrderedDict
-from . import excel, data, normalize, remove, merge, LOGGING
+from . import excel, data, normalize, remove, merge, csv_out, LOGGING
 
 log = logging.getLogger("import")
 
@@ -87,3 +87,6 @@ if __name__ == "__main__":
         )
         data.write_json(json_filename, power_plant_data)
         log.info(f"wrote {os.path.relpath(json_filename, parent_path)}")
+
+    tab_filename = csv_out.write_tab_delimited(power_plant_data, output_path)
+    print('wrote', tab_filename)
