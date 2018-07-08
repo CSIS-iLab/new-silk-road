@@ -225,12 +225,21 @@ def _99_final_merge(records, **params):
         if key not in projects:
             projects[key] = record
         else:
-            for field in [field for field in record]:
-                if record[field] not in [None, "NA"] and projects[key].get(field) in [None, "NA"]:
-                    projects[key][field], record[field] = record[field], None  # merge
-                else:
-                    record[field] = None
-    return records
+            # merge everything except the Dataset
+            for field in [field for field in record if field != 'Dataset']:
+                if record[field] not in [None, "NA"]:
+                    if projects[key].get(field) in [None, "NA"]:
+                        projects[key][field] = record[field]
+                    elif record[field] != projects[key][field]:
+                        print(
+                            f'FIELD CONFLICT in "{field}" for {key}:'
+                            + f'\n\t"{field}"="{projects[key][field]}" ({projects[key]["Dataset"]})'
+                            + f'\n\t"{field}"="{record[field]}" ({record["Dataset"]})'
+                        )
+            # merge Datasets -- semicolon-delimited string
+            if record["Dataset"] not in projects[key]["Dataset"]:
+                projects[key]["Dataset"] += ";" + record["Dataset"]
+    return list(projects.values())
 
 
 if __name__ == "__main__":
