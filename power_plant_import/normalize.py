@@ -130,6 +130,7 @@ def _00_plant_project_name_type(records, **params):
     plant_name = max(names, key=names.get).strip()
     for record in records:
         dataset = record["Dataset"]
+        record["Source Plant Name"] = record[source_variables[dataset]["Power Plant Name"]]
         record["Power Plant Name"] = plant_name
 
         # set "Project Name" and "Type"
