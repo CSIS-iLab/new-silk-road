@@ -4,6 +4,7 @@ list of fields that are included in the output data
 FIELDS = [
     "Dataset",
     "Type",
+    "Source Plant Name",
     "Power Plant Name",
     "Project Name",
 
