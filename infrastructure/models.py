@@ -23,6 +23,22 @@ class InfrastructureType(models.Model):
     def __str__(self):
         return self.name
 
+class OwnerStake(models.Model):
+    """ Percentage that owners own and also relation with PowerPlant and Organization """
+    power_plant = models.ForeignKey(
+        'PowerPlant',
+        models.CASCADE,
+        related_name = 'owner_stake'
+    )
+    owners = models.ForeignKey(
+        'facts.Organization',
+        models.CASCADE,
+        related_name = 'owners_stakes'
+    )
+    percent_owned = models.FloatField(blank=True, null=True)
+
+    def __str__(self):
+        return self.owners
 
 class ProjectFunding(Temporal):
     """ProjectFunding relates Organizations to projects they fund, with amounts"""
@@ -50,22 +66,40 @@ class ProjectFunding(Temporal):
 
 
 class ProjectStatus:
+    NULL = 0
     ANNOUNCED = 1
     PREPATORY = 2
     STARTED = 3
     UNDER_CONSTRUCTION = 4
     COMPLETED = 5
     CANCELLED = 6
+    ACTIVE = 7
+    PARTIALLY_ACTIVE = 8
+    INACTIVE = 9
 
     STATUSES = (
+        (NULL, 'Null'),
         (ANNOUNCED, 'Announced/Under Negotiation'),
         (PREPATORY, 'Preparatory Works'),
         (STARTED, 'Started'),
+        (ACTIVE, 'Active'),
+        (PARTIALLY_ACTIVE, 'Partially Active'),
+        (INACTIVE, 'Inactive'),
         (UNDER_CONSTRUCTION, 'Under Construction'),
         (COMPLETED, 'Completed'),
         (CANCELLED, 'Cancelled'),
     )
 
+class ProjectPlantUnits:
+    MEGAWATTHOUR = 0
+    MEGAWATT = 1
+    TONSPERANNUM = 2
+
+    UNITS = (
+        (MEGAWATTHOUR, 'MWh'),
+        (MEGAWATT, 'MW'),
+        (TONSPERANNUM, 'Tons per annum')
+    )
 
 class CollectionStage(object):
     IDENTIFIED = 1
@@ -105,11 +139,8 @@ class Project(Publishable):
         models.SET_NULL, blank=True, null=True,
         help_text='Select or create named infrastructure types.'
     )
-    power_plant = models.ManyToManyField(
-        'PowerPlant', 
-        blank=True, 
-    )
-    fuel = models.ManyToManyField(
+    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
+    fuels = models.ManyToManyField(
         'Fuel', 
         blank=True, 
     )
@@ -168,7 +199,10 @@ class Project(Publishable):
     estimated_project_output = models.BigIntegerField(
         blank=True, null=True,
     )
-    # estimated_project_output_unit
+    estimated_project_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
     project_capacity = models.BigIntegerField(
         blank=True, null=True,
         help_text="MW"
@@ -176,7 +210,12 @@ class Project(Publishable):
     project_CO2_emissions = models.BigIntegerField(
         blank=True, null=True,
     )
-    # project_CO2_emissions_unit
+    
+    project_CO2_emissions_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
+
     nox_reduction_system = models.NullBooleanField('NOx Reduction System?')
     sox_reudction_system = models.NullBooleanField('SOx Reduction System?')
 
@@ -278,12 +317,17 @@ class Fuel(Publishable):
         blank=True, null=True,
         help_text='Select or create named fuel categories.'
     )
+    def __str__(self):
+        return self.name
 
 class FuelCategory(Publishable):
     name = models.CharField(max_length=140)
 
     class Meta:
         verbose_name_plural = 'fuel categories'
+
+    def __str__(self):
+        return self.name
 
 
 class PowerPlant(Publishable):
@@ -327,25 +371,33 @@ class PowerPlant(Publishable):
 
     plant_capacity = models.BigIntegerField(
         blank=True, null=True,
-        help_text="MW"
     )
     plant_output = models.BigIntegerField(
         blank=True, null=True,
     )
 
-    # Plant_output_unit
+    plant_output_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
 
     plant_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
     estimated_plant_output = models.BigIntegerField(
         blank=True, null=True
     )
-    # estimated_plant_output_unit
+    estimated_plant_output_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
 
     plant_CO2_emissions = models.BigIntegerField(
         blank=True, null=True
     )
 
-    # plant_CO2_emissions_unit
+    plant_CO2_emissions_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
 
     grid_connected = models.NullBooleanField('Grid connected?')
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
@@ -370,6 +422,9 @@ class PowerPlant(Publishable):
     
     def __str__(self):
         return self.name
+
+    # Project Inline
+    # Owners Inline
 
 
 class InitiativeType(models.Model):

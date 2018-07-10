@@ -7,7 +7,7 @@ from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
     ProjectFunding, PowerPlant,
     Initiative, InitiativeType,
-    Fuel, FuelCategory,
+    Fuel, FuelCategory, OwnerStake,
 )
 from publish.admin import (
     make_published,
@@ -17,7 +17,8 @@ from infrastructure.forms import (
     InitiativeForm,
     ProjectForm,
     ProjectFundingForm,
-    PowerPlantForm
+    PowerPlantForm,
+    ProjectOwnerStakeForm
 )
 from facts.forms import NameSearchWidget
 from utilities.admin import PhraseSearchAdminMixin
@@ -50,6 +51,13 @@ class ProjectsInitiativeInline(admin.StackedInline):
             "all": ("admin/css/adminfixes.css",)
         }
 
+class ProjectsOwnersInline(admin.StackedInline):
+    model = OwnerStake
+    form = ProjectOwnerStakeForm 
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
 
 class ProjectsDocumentsInline(admin.StackedInline):
     model = Project.documents.through
@@ -261,6 +269,10 @@ class FuelAdmin(admin.ModelAdmin):
 
 @admin.register(FuelCategory)
 class FuelCategoryAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(OwnerStake)
+class OwnerStakeAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(InfrastructureType)
