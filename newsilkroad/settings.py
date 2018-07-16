@@ -203,6 +203,10 @@ LOGGING = {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
+        'power_plant_import': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     }
 }
 
