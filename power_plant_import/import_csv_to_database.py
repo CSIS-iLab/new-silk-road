@@ -9,7 +9,8 @@ import sys
 sys.path.append(os.environ['PWD'])
 os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
-from infrastructure.models import Fuel, FuelCategory, Organization
+from infrastructure.models import Fuel, FuelCategory, Organization, OwnerStake
+from locations.models import Country, Region
 
 # Set the logging
 logger = logging.getLogger('power_plant_import')
@@ -84,6 +85,23 @@ def get_owner_stakes(row):
     return owner_stakes
 
 
+def get_countries_and_regions(row):
+    """Get or create the Country and Region objects for this row."""
+    countries = []
+    if row.get('Country'):
+        countries.append(Country.objects.get_or_create(name=row.get('Country')))
+
+    regions = []
+    if row.get('Region'):
+        region = Region.objects.get_or_create(name=row.get('Region'))
+        for country in countries:
+            if country not in regions.countries.all():
+                region.countries.add(country)
+        regions.append(region)
+
+    return countries, regions
+
+
 def import_csv_to_database(*args, **kwargs):
     """
     Import the contents of the CSV file into the database.
@@ -127,6 +145,9 @@ def import_csv_to_database(*args, **kwargs):
 
             # Get the owner stakes for the row
             owner_stakes = get_owner_stakes(row)
+
+            # Get the Countries and Regions for the row
+            countries, regions = get_countries_and_regions(row)
 
             num_successful_imports += 1
 
