@@ -9,7 +9,7 @@ import sys
 sys.path.append(os.environ['PWD'])
 os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
-from infrastructure.models import Fuel, FuelCategory
+from infrastructure.models import Fuel, FuelCategory, Organization
 
 # Set the logging
 logger = logging.getLogger('power_plant_import')
@@ -28,6 +28,48 @@ def get_or_create_fuels(row):
             fuels.append(fuel)
 
     return fuels
+
+
+def get_or_create_organizations(row):
+    """
+    Get or create the Organization related to this row.
+
+    This includes: contractors, manufacturers, consultants, implementers, and operators.
+    """
+    contractors = []
+    for i in range(1, 11):
+        if row.get('Contractor {}'.format(i)):
+            contractor_name = row.get('Contractor {}'.format(i))
+            contractor = Organization.objects.get_or_create(name=contractor_name)
+            contractors.append(contractor)
+
+    manufacturers = []
+    for i in range(1, 6):
+        if row.get('Manufacturer {}'.format(i)):
+            manufacturer_name = row.get('Manufacturer {}'.format(i))
+            manufacturer = Organization.objects.get_or_create(name=manufacturer_name)
+            manufacturers.append(manufacturer)
+
+    consultants = []
+    if row.get('Consultant'):
+        consultant_name = row.get('Consultant')
+        consultant = Organization.objects.get_or_create(name=consultant_name)
+        consultants.append(consultant)
+
+    implementers = []
+    if row.get('Implementing Agency'):
+        implementer_name = row.get('Implementing Agency')
+        implementer = Organization.objects.get_or_create(name=implementer_name)
+        implementers.append(implementer)
+
+    operators = []
+    for i in range(1, 5):
+        if row.get('Operator {}'.format(i)):
+            operator_name = row.get('Operator {}'.format(i))
+            operator = Organization.objects.get_or_create(name=operator_name)
+            operators.append(operator)
+
+    return contractors, manufacturers, consultants, implementers, operators
 
 
 def import_csv_to_database(*args, **kwargs):
@@ -64,6 +106,12 @@ def import_csv_to_database(*args, **kwargs):
 
             # Get the Fuel(s) for the row
             fuels = get_or_create_fuels(row)
+
+            # Get the contractors, manufacturers, consultants, implementers, and
+            # operators for the row
+            (
+                contractors, manufacturers, consultants, implementers, operators
+            ) = get_or_create_organizations(row)
 
             num_successful_imports += 1
 
