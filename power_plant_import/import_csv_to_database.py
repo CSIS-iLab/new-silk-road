@@ -72,6 +72,18 @@ def get_or_create_organizations(row):
     return contractors, manufacturers, consultants, implementers, operators
 
 
+def get_owner_stakes(row):
+    """Get or create the Owners and OwnerStakes for this row."""
+    owner_stakes = []
+    for i in range(1, 11):
+        if row.get('Owner {}'.format(i)):
+            owner_name = row.get('Owner {}'.format(i))
+            owner = Organization.objects.get_or_create(name=owner_name)
+            owner_stake = OwnerStake(owner=owner, stake=row.get('Owner {} Stake'.format(i)))
+            owner_stakes.append(owner)
+    return owner_stakes
+
+
 def import_csv_to_database(*args, **kwargs):
     """
     Import the contents of the CSV file into the database.
@@ -112,6 +124,9 @@ def import_csv_to_database(*args, **kwargs):
             (
                 contractors, manufacturers, consultants, implementers, operators
             ) = get_or_create_organizations(row)
+
+            # Get the owner stakes for the row
+            owner_stakes = get_owner_stakes(row)
 
             num_successful_imports += 1
 
