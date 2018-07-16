@@ -9,7 +9,9 @@ import sys
 sys.path.append(os.environ['PWD'])
 os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
-from infrastructure.models import Fuel, FuelCategory, Organization, OwnerStake
+from infrastructure.models import (
+    Fuel, FuelCategory, Initiative, Organization, OwnerStake
+)
 from locations.models import Country, Region
 
 # Set the logging
@@ -102,6 +104,14 @@ def get_countries_and_regions(row):
     return countries, regions
 
 
+def get_initiatives(row):
+    """Get or create the Initiatives for this row."""
+    initiatives = []
+    if row.get('Initiative'):
+        initiatives.append(Initiative.objects.get_or_create(name=row.get('Initiative')))
+    return initiatives
+
+
 def import_csv_to_database(*args, **kwargs):
     """
     Import the contents of the CSV file into the database.
@@ -148,6 +158,9 @@ def import_csv_to_database(*args, **kwargs):
 
             # Get the Countries and Regions for the row
             countries, regions = get_countries_and_regions(row)
+
+            # Get the Initiatives for the row
+            initiatives = get_initiatives(row)
 
             num_successful_imports += 1
 
