@@ -190,7 +190,12 @@ class Project(Publishable):
     project_output = models.BigIntegerField(
         blank=True, null=True,
     )
-    # project_output_unit
+
+    project_output_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
+
     project_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
     @property
     def fuzzy_output_date(self):
