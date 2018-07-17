@@ -11,7 +11,7 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
 from infrastructure.models import (
     Fuel, FuelCategory, InfrastructureType, Initiative, Organization, OwnerStake,
-    PowerPlant, Project
+    PowerPlant, Project, ProjectFunding
 )
 from locations.models import Country, Region
 
@@ -111,6 +111,16 @@ def get_initiatives(row):
     if row.get('Initiative'):
         initiatives.append(Initiative.objects.get_or_create(name=row.get('Initiative')))
     return initiatives
+
+
+def add_funders(row, project):
+    """Create ProjectFunding objects for the Project."""
+    for i in range(1, 3):
+        if row.get('Funder {}'.format(i)):
+            funder = ProjectFunding.objects.get_or_create(project=project)
+            funder.amount = row.get('Funding Amount {}'.format(i))
+            funder.currency = row.get('Funding Currency {}'.format(i))
+            funder.save()
 
 
 def import_csv_to_database(*args, **kwargs):
@@ -241,6 +251,8 @@ def import_csv_to_database(*args, **kwargs):
                 # Add any manufacturers to the new Project
                 for manufacturer in manufacturers:
                     new_object.manufacturers.add(manufacturer)
+                # Add the funders for the new Project
+                add_funders(row, new_object)
 
             # Add the Countries and Regions to the new_object
             for country in countries:
