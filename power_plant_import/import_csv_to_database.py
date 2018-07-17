@@ -10,7 +10,8 @@ sys.path.append(os.environ['PWD'])
 os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
 from infrastructure.models import (
-    Fuel, FuelCategory, Initiative, Organization, OwnerStake
+    Fuel, FuelCategory, InfrastructureType, Initiative, Organization, OwnerStake,
+    PowerPlant, Project
 )
 from locations.models import Country, Region
 
@@ -83,7 +84,7 @@ def get_owner_stakes(row):
             owner_name = row.get('Owner {}'.format(i))
             owner = Organization.objects.get_or_create(name=owner_name)
             owner_stake = OwnerStake(owner=owner, stake=row.get('Owner {} Stake'.format(i)))
-            owner_stakes.append(owner)
+            owner_stakes.append(owner_stake)
     return owner_stakes
 
 
@@ -161,6 +162,94 @@ def import_csv_to_database(*args, **kwargs):
 
             # Get the Initiatives for the row
             initiatives = get_initiatives(row)
+
+            # We will need an InfrastructureType of 'Power Plant', so either get
+            # or create one
+            infrastructure_type_power_plant = InfrastructureType.objects.get_or_create(
+                name='Power Plant',
+                slug='power-plant'
+            )
+
+            # Create the object
+            if object_type == 'Plant':
+                new_object = PowerPlant(
+                    name=row.get('Power Plant Name'),
+                    infrastructure_type=infrastructure_type_power_plant,
+                    latitude=row.get('Latitude'),
+                    longitude=row.get('Longitude'),
+                    status=row.get('Plant Status'),
+                    plant_day_online=row.get('Plant Day Online'),
+                    plant_month_online=row.get('Plant Month Online'),
+                    plant_year_online=row.get('Plant Year Online'),
+                    decommissioning_day=row.get('Decommissioning Day'),
+                    decommissioning_month=row.get('Decommissioning Month'),
+                    decommissioning_year=row.get('Decommissioning Year'),
+                    plant_capacity=row.get('Plant Capacity'),
+                    plant_output=row.get('Plant Output'),
+                    plant_output_year=row.get('Plant Output Year'),
+                    estimated_plant_output=row.get('Estimated Plant Output'),
+                    plant_CO2_emissions=row.get('Plant CO2 Emissions'),
+                    grid_connected=row.get('Grid Connected'),
+                )
+                # Add any OwnerStakes to the new Power Plant
+                for owner_stake in owner_stakes:
+                    new_object.owner_stakes.add(owner_stake)
+                # Add any operators to the new Power Plant
+                for operator in operators:
+                    new_object.operators.add(operator)
+
+            else:
+                new_object = Project(
+                    name=row.get('Project Name'),
+                    infrastructure_type=infrastructure_type_power_plant,
+                    status=row.get('Project Status'),
+                    project_capacity=row.get('Project Capacity'),
+                    project_output=row.get('Project Output'),
+                    estimated_project_output=row.get('Estimated Project Output'),
+                    project_CO2_emissions=row.get('Project CO2 Emissions'),
+                    nox_reduction_system=row.get('NOx Reduction System'),
+                    sox_reduction_system=row.get('SOx Reduction System'),
+                    total_cost=row.get('Total Cost'),
+                    total_cost_currency=row.get('Total Cost Currency'),
+                    start_day=row.get('Start Day'),
+                    start_month=row.get('Start Month'),
+                    start_year=row.get('Start Year'),
+                    construction_start_day=row.get('Construction Start Day'),
+                    construction_start_month=row.get('Construction Start Month'),
+                    construction_start_year=row.get('Construction Start Year'),
+                    planned_completion_day=row.get('Completion Day'),
+                    planned_completion_month=row.get('Completion Month'),
+                    planned_completion_year=row.get('Completion Year'),
+                    new=row.get('New Construction'),
+
+                )
+                # Add any Initiatives to the new Project
+                for initiative in initiatives:
+                    new_object.initiatives.add(initiative)
+                # Add the contractors to the new_object
+                for contractor in contractors:
+                    new_object.contractors.add(contractor)
+                # Add any consultants to the new Project
+                for consultant in consultants:
+                    new_object.consultants.add(consultant)
+                # Add any implementers to the new Project
+                for implementer in implementers:
+                    new_object.implementers.add(implementer)
+                # Add any manufacturers to the new Project
+                for manufacturer in manufacturers:
+                    new_object.manufacturers.add(manufacturer)
+                # Add any manufacturers to the new Project
+                for manufacturer in manufacturers:
+                    new_object.manufacturers.add(manufacturer)
+
+            # Add the Countries and Regions to the new_object
+            for country in countries:
+                new_object.countries.add(country)
+            for region in regions:
+                new_object.regions.add(country)
+            # Add the Fuels to the new_object
+            for fuel in fuels:
+                new_object.fuels.add(fuel)
 
             num_successful_imports += 1
 
