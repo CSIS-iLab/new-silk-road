@@ -1,7 +1,7 @@
 from django import forms
 from django_select2.forms import ModelSelect2Widget
 from infrastructure.models import (
-    Project, Initiative, ProjectFunding
+    Project, Initiative, ProjectFunding, PowerPlant, OwnerStake,
 )
 from facts.forms import NameSearchWidget, PersonSearchMultiField, OrganizationSearchMultiField
 from facts.models.organizations import Organization
@@ -81,6 +81,7 @@ class ProjectForm(forms.ModelForm):
         help_text=GeometrySearchField.help_text
     )
     contractors = OrganizationSearchMultiField(required=False)
+    manufacturers = OrganizationSearchMultiField(required=False)
     consultants = OrganizationSearchMultiField(required=False)
     implementers = OrganizationSearchMultiField(required=False)
     operators = OrganizationSearchMultiField(required=False)
@@ -96,6 +97,9 @@ class ProjectForm(forms.ModelForm):
     planned_completion_month = MonthField(required=False)
     planned_completion_day = DayField(required=False)
 
+    construction_start_month = MonthField(required=False)
+    construction_start_day = DayField(required=False)
+
     class Meta:
         model = Project
         fields = '__all__'
@@ -103,6 +107,22 @@ class ProjectForm(forms.ModelForm):
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
         }
 
+class PowerPlantForm(forms.ModelForm):
+    countries = CountrySearchMultiField(
+        required=False,
+        queryset=Country.objects.all(),
+        help_text=CountrySearchMultiField.help_text
+    )
+    owners = OrganizationSearchMultiField(required=False)
+    operators = OrganizationSearchMultiField(required=False)
+    plant_month_online = MonthField(required=False)
+    plant_day_online = DayField(required=False)
+    decommissioning_month = MonthField(required=False)
+    decommissioning_day = DayField(required=False)
+
+    class Meta:
+        model = PowerPlant
+        fields = '__all__'
 
 class ProjectFundingForm(forms.ModelForm):
     sources = OrganizationSearchMultiField(required=False)
@@ -116,6 +136,17 @@ class ProjectFundingForm(forms.ModelForm):
         model = ProjectFunding
         fields = '__all__'
 
+class ProjectOwnerStakeForm(forms.ModelForm):
+    owners = OrganizationSearchMultiField(required=False)
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        widget=NameSearchWidget(model=Project),
+        required=True
+    )
+
+    class Meta:
+        model = OwnerStake
+        fields = '__all__'
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
     project = forms.ModelChoiceField(
