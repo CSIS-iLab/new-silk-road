@@ -1,11 +1,17 @@
+from decimal import Decimal
+import iso3166
+
 from django.test import TestCase
 
+from facts.models import Organization
+from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.models import (
-    Country, Fuel, FuelCategory, Initiative, InfrastructureType, Organization,
-    OwnerStake, PowerPlant, Project, ProjectFunding, Region
+    Fuel, FuelCategory, Initiative, InfrastructureType, OwnerStake, PowerPlant,
+    Project, ProjectFunding, ProjectStatus
 )
-from infrastructure.tests.factories import OrganizationFactory, ProjectFundingFactory
-from location.tests.factories import CountryFactory, RegionFactory
+from infrastructure.tests.factories import ProjectFundingFactory
+from locations.models import Country, Region
+from locations.tests.factories import CountryFactory, RegionFactory
 from .. import import_csv_to_database
 
 
@@ -87,7 +93,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
     def test_contractors_created(self):
         """Contractors (Organizations) are created correctly for Projects."""
         # Currently, there is just 1 Organization in the database, the org_existing
-        OrganizationFactory.objects.create(name='Existing Organization')
+        OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
         import_csv_to_database.import_csv_to_database(
@@ -102,7 +108,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         contractor2 = Organization.objects.get(name='Contractor Two')
         self.assertEqual(set(project_ouessant1.contractors.all()), set([contractor1]))
         self.assertEqual(
-            set(project_ouessant1.contractors.all()),
+            set(project_ouessant2.contractors.all()),
             set([contractor1, contractor2])
         )
         self.assertEqual(project_liaoning.contractors.count(), 0)
@@ -110,7 +116,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
     def test_manufacturers_created(self):
         """Manufacturers (Organizations) are created correctly for Projects."""
         # Currently, there is just 1 Organization in the database, the org_existing
-        org_existing = OrganizationFactory.objects.create(name='Existing Organization')
+        org_existing = OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
         import_csv_to_database.import_csv_to_database(
@@ -128,12 +134,12 @@ class ImportCSVToDatabaseTestCase(TestCase):
             set(project_liaoning.manufacturers.all()),
             set([manufacturer1, manufacturer_vestas])
         )
-        self.assertEqual(project_ouessant2.contractors.count(), 0)
+        self.assertEqual(project_ouessant2.manufacturers.count(), 0)
 
     def test_consultants_created(self):
         """Consultants (Organizations) are created correctly for Projects."""
         # Currently, there is just 1 Organization in the database, the org_existing
-        org_existing = OrganizationFactory.objects.create(name='Existing Organization')
+        org_existing = OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
         import_csv_to_database.import_csv_to_database(
@@ -143,7 +149,6 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
         # The CSV file mentions 1 consultant for the project_liaoning
-        self.assertEqual(Organization.objects.count(), 1)
         self.assertEqual(set(project_liaoning.consultants.all()), set([org_existing]))
         for project in [project_ouessant1, project_ouessant2]:
             self.assertEqual(project.consultants.count(), 0)
@@ -151,7 +156,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
     def test_implementers_created(self):
         """Implementers (Organizations) are created correctly for Projects."""
         # Currently, there is just 1 Organization in the database, the org_existing
-        OrganizationFactory.objects.create(name='Existing Organization')
+        OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
         import_csv_to_database.import_csv_to_database(
@@ -161,16 +166,15 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
         # The CSV file mentions 1 implementer for the project_liaoning
-        self.assertEqual(Organization.objects.count(), 2)
         implmenter1 = Organization.objects.get(name='Implementer One')
-        self.assertEqual(set(project_liaoning.implmenters.all()), set([implmenter1]))
+        self.assertEqual(set(project_liaoning.implementers.all()), set([implmenter1]))
         for project in [project_ouessant1, project_ouessant2]:
-            self.assertEqual(project.implmenters.count(), 0)
+            self.assertEqual(project.implementers.count(), 0)
 
     def test_operators_created(self):
         """Implementers (Organizations) are created correctly for PowerPlants."""
         # Currently, there is just 1 Organization in the database, the org_existing
-        org_existing = OrganizationFactory.objects.create(name='Existing Organization')
+        org_existing = OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
         import_csv_to_database.import_csv_to_database(
@@ -187,7 +191,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
 
     def test_owners_ownerstakes_created(self):
         """Owners and OwnerStakes are created correctly for PowerPlants."""
-        org_existing = OrganizationFactory.objects.create(name='Existing Organization')
+        org_existing = OrganizationFactory(name='Existing Organization')
         # Currently, there is 1 owner (Organization) and 0 OwnerStakes objects
         # in the database
         self.assertEqual(Organization.objects.count(), 1)
@@ -207,22 +211,22 @@ class ImportCSVToDatabaseTestCase(TestCase):
             owner=owner_sabella,
             power_plant=powerplant_ouessant
         )
-        self.assertEqual(owner_stake_ouessant1.stake, 50)
+        self.assertEqual(owner_stake_ouessant1.percent_owned, 50)
         owner_stake_ouessant2 = OwnerStake.objects.get(
             owner=org_existing,
             power_plant=powerplant_ouessant
         )
-        self.assertEqual(owner_stake_ouessant2.stake, 30)
+        self.assertEqual(owner_stake_ouessant2.percent_owned, 30)
         owner_stake_ilarionas1 = OwnerStake.objects.get(
             owner=owner_ppc,
             power_plant=powerplant_ilarionas
         )
-        self.assertIsNone(owner_stake_ilarionas1.stake)
+        self.assertIsNone(owner_stake_ilarionas1.percent_owned)
         owner_stake_ilarionas2 = OwnerStake.objects.get(
             owner=org_existing,
             power_plant=powerplant_ilarionas
         )
-        self.assertIsNone(owner_stake_ilarionas2.stake)
+        self.assertIsNone(owner_stake_ilarionas2.percent_owned)
         self.assertEqual(
             set(powerplant_ouessant.owner_stakes.all()),
             set([owner_stake_ouessant1, owner_stake_ouessant2])
@@ -245,6 +249,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
         # The CSV file mentions 1 initiative for the project_liaoning
+        self.assertEqual(Initiative.objects.count(), 1)
         initiative1 = Initiative.objects.get(name='Initiative One')
         self.assertEqual(set(project_liaoning.initiatives.all()), set([initiative1]))
         for project in [project_ouessant1, project_ouessant2]:
@@ -252,8 +257,12 @@ class ImportCSVToDatabaseTestCase(TestCase):
 
     def test_countries_regions_created(self):
         """Countries and Regions are created correctly."""
-        country_existing = CountryFactory.objects.create(name='Existing Country')
-        region_existing = RegionFactory.objects.create(name='Existing Region')
+        country_existing = CountryFactory(
+            name=iso3166.countries.get('France').name,
+            numeric=iso3166.countries.get('France').numeric,
+            alpha_3=iso3166.countries.get('France').alpha3,
+        )
+        region_existing = RegionFactory(name='Existing Region')
 
         import_csv_to_database.import_csv_to_database(
             '--filename=power_plant_import/tests/data/six_rows.csv',
@@ -286,9 +295,10 @@ class ImportCSVToDatabaseTestCase(TestCase):
 
     def test_funders_created(self):
         """Funders are created correctly for Projects."""
-        # Currently, there is 1 PowerPlantFunding and 1 ProjectFunding object in
-        # the database
-        funder_existing = ProjectFundingFactory(name='Funder Existing')
+        # Currently, there is 1 ProjectFunding object in the database
+        org_existing = OrganizationFactory(name='Existing Organization')
+        funder_existing = ProjectFundingFactory()
+        funder_existing.sources.add(org_existing)
         self.assertEqual(ProjectFunding.objects.count(), 1)
 
         import_csv_to_database.import_csv_to_database(
@@ -297,14 +307,39 @@ class ImportCSVToDatabaseTestCase(TestCase):
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
-        self.assertEqual(ProjectFunding.objects.count(), 2)
-        funder_new = ProjectFunding.objects.get(name='Funder New')
+        # The project_ouessant1 has 2 funders, and the project_ouessant2 has 1 funder.
+        # The funder_existing also still exists.
+        self.assertEqual(ProjectFunding.objects.count(), 4)
+        self.assertEqual(project_ouessant1.funding.count(), 2)
         self.assertEqual(
-            set(project_ouessant1.funding.all()),
-            set([funder_existing, funder_new])
+            ProjectFunding.objects.filter(
+                project=project_ouessant1,
+                amount=100,
+                currency='USD',
+            ).count(),
+            1
         )
-        self.assertEqual(set(project_ouessant2.funding.all()), set([funder_existing]))
+        self.assertEqual(
+            ProjectFunding.objects.filter(
+                project=project_ouessant1,
+                amount=200,
+                currency='RUB',
+            ).count(),
+            1
+        )
+        self.assertEqual(project_ouessant2.funding.count(), 1)
+        self.assertEqual(
+            ProjectFunding.objects.filter(
+                project=project_ouessant2,
+                amount=None,
+                currency=None,
+            ).count(),
+            1
+        )
         self.assertEqual(project_liaoning.funding.count(), 0)
+        # The org_existing is funding 3 Projects: the one for the funder_existing,
+        # the project_ouessant1 and the project_ouessant2
+        self.assertEqual(org_existing.projectfunding_set.count(), 3)
 
     def test_powerplants_projects_created(self):
         """
@@ -317,7 +352,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(PowerPlant.objects.count(), 0)
         self.assertEqual(Project.objects.count(), 0)
         # There are no InfrastructureType objects in the database
-        self.assertEqual(InfrastructureType.objects.count(), 1)
+        self.assertEqual(InfrastructureType.objects.count(), 0)
 
         import_csv_to_database.import_csv_to_database(
             '--filename=power_plant_import/tests/data/six_rows.csv',
@@ -338,13 +373,16 @@ class ImportCSVToDatabaseTestCase(TestCase):
         )
         # Verify the fields for project_ouessant1
         self.assertEqual(project_ouessant1.infrastructure_type, infrastructure_type_power_plant)
-        self.assertEqual(project_ouessant1.status, 'Suspended')
-        self.assertEqual(project_ouessant1.project_capacity, '')
-        self.assertEqual(project_ouessant1.project_output, '')
-        self.assertEqual(project_ouessant1.estimated_project_output, '')
-        self.assertEqual(project_ouessant1.project_CO2_emissions, '')
-        self.assertEqual(project_ouessant1.nox_reduction_system, 'system2')
-        self.assertEqual(project_ouessant1.sox_reduction_system, 'system1')
+        self.assertEqual(
+            project_ouessant1.status,
+            {value: key for key, value in ProjectStatus.STATUSES}['Suspended']
+        )
+        self.assertEqual(project_ouessant1.project_capacity, None)
+        self.assertEqual(project_ouessant1.project_output, None)
+        self.assertEqual(project_ouessant1.estimated_project_output, None)
+        self.assertEqual(project_ouessant1.project_CO2_emissions, None)
+        self.assertEqual(project_ouessant1.nox_reduction_system, False)
+        self.assertEqual(project_ouessant1.sox_reduction_system, True)
         self.assertEqual(project_ouessant1.total_cost, 1)
         self.assertEqual(project_ouessant1.total_cost_currency, 'RUB')
         self.assertEqual(project_ouessant1.start_day, 1)
@@ -359,18 +397,29 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(project_ouessant1.new, True)
         # Verify the fields for powerplant_ilarionas
         self.assertEqual(powerplant_ilarionas.infrastructure_type, infrastructure_type_power_plant)
-        self.assertEqual(powerplant_ilarionas.latitude, 40.0966)
-        self.assertEqual(powerplant_ilarionas.longitude, 21.8039)
-        self.assertEqual(powerplant_ilarionas.status, 'Partially Active')
-        self.assertEqual(powerplant_ilarionas.plant_day_online, '')
-        self.assertEqual(powerplant_ilarionas.plant_month_online, '')
+        self.assertAlmostEqual(
+            powerplant_ilarionas.latitude,
+            Decimal(40.0966),
+            places=(-1 * powerplant_ilarionas.latitude.as_tuple().exponent)
+        )
+        self.assertAlmostEqual(
+            powerplant_ilarionas.longitude,
+            Decimal(21.8039),
+            places=(-1 * powerplant_ilarionas.longitude.as_tuple().exponent)
+        )
+        self.assertEqual(
+            powerplant_ilarionas.status,
+            {value: key for key, value in ProjectStatus.STATUSES}['Partially Active']
+        )
+        self.assertEqual(powerplant_ilarionas.plant_day_online, None)
+        self.assertEqual(powerplant_ilarionas.plant_month_online, None)
         self.assertEqual(powerplant_ilarionas.plant_year_online, 2014)
-        self.assertEqual(powerplant_ilarionas.decommissioning_day, '')
-        self.assertEqual(powerplant_ilarionas.decommissioning_month, '')
+        self.assertEqual(powerplant_ilarionas.decommissioning_day, None)
+        self.assertEqual(powerplant_ilarionas.decommissioning_month, None)
         self.assertEqual(powerplant_ilarionas.decommissioning_year, 2064)
         self.assertEqual(powerplant_ilarionas.plant_capacity, 154)
-        self.assertEqual(powerplant_ilarionas.plant_output, '')
-        self.assertEqual(powerplant_ilarionas.plant_output_year, '')
-        self.assertEqual(powerplant_ilarionas.estimated_plant_output, '')
+        self.assertEqual(powerplant_ilarionas.plant_output, None)
+        self.assertEqual(powerplant_ilarionas.plant_output_year, 2016)
+        self.assertEqual(powerplant_ilarionas.estimated_plant_output, 330000)
         self.assertEqual(powerplant_ilarionas.plant_CO2_emissions, 1)
         self.assertEqual(powerplant_ilarionas.grid_connected, None)

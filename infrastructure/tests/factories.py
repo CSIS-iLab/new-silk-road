@@ -1,7 +1,10 @@
 import factory
+import random
 
 from django.utils.text import slugify
 from django.db.models import signals
+
+from finance.currency import CURRENCY_CHOICES
 
 
 class InitiativeFactory(factory.django.DjangoModelFactory):
@@ -46,3 +49,12 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'infrastructure.Project'
+
+
+class ProjectFundingFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.ProjectFunding'
+
+    project = factory.SubFactory(ProjectFactory)
+    amount = random.randint(0, 1000000)
+    currency = random.choice(CURRENCY_CHOICES)[0]
