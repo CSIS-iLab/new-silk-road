@@ -99,12 +99,12 @@ class ProjectStatus:
 class ProjectPlantUnits:
     MEGAWATTHOUR = 0
     MEGAWATT = 1
-    TONSPERANNUM = 2
+    TONNESPERANNUM = 2
 
     UNITS = (
         (MEGAWATTHOUR, 'MWh'),
         (MEGAWATT, 'MW'),
-        (TONSPERANNUM, 'Tons per annum')
+        (TONNESPERANNUM, 'Tonnes per annum')
     )
 
 class CollectionStage(object):
@@ -423,8 +423,14 @@ class PowerPlant(Publishable):
     )
 
     grid_connected = models.NullBooleanField('Grid connected?')
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    latitude = models.DecimalField(
+        max_digits=9, decimal_places=6,
+        blank=True, null=True
+    )
+    longitude = models.DecimalField(
+        max_digits=9, decimal_places=6,
+        blank=True, null=True
+    )
 
     # Organization relations
     owners = models.ManyToManyField(
