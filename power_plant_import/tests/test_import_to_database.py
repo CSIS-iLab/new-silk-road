@@ -406,3 +406,65 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(powerplant_ilarionas.estimated_plant_output, 330000)
         self.assertEqual(powerplant_ilarionas.plant_CO2_emissions, 1)
         self.assertEqual(powerplant_ilarionas.grid_connected, None)
+
+    def test_multiple_import(self):
+        """A user can run the import multiple times without errors or duplicate objects."""
+        # Currently, there are no PowerPlant or Project objects in the database
+        self.assertEqual(PowerPlant.objects.count(), 0)
+        self.assertEqual(Project.objects.count(), 0)
+        # There are no InfrastructureType objects in the database
+        self.assertEqual(InfrastructureType.objects.count(), 0)
+        # There are no Fuel or FuelCategory objects in the database
+        self.assertEqual(Fuel.objects.count(), 0)
+        self.assertEqual(FuelCategory.objects.count(), 0)
+        # There are no Countries or Regions in the database
+        self.assertEqual(Country.objects.count(), 0)
+        self.assertEqual(Region.objects.count(), 0)
+        # There are no OwnerStakes in the database
+        self.assertEqual(OwnerStake.objects.count(), 0)
+        # There are no Initiatives in the database
+        self.assertEqual(Initiative.objects.count(), 0)
+        # There are no ProjectFunding objects in the database
+        self.assertEqual(ProjectFunding.objects.count(), 0)
+
+        # Run the import
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
+
+        # The file has 3 'Plant' rows and 3 'Project' rows
+        self.assertEqual(PowerPlant.objects.count(), 3)
+        self.assertEqual(Project.objects.count(), 3)
+        # There is now 1 InfrastructureType object in the database
+        self.assertEqual(InfrastructureType.objects.count(), 1)
+        # There are now 4 Fuel and 3 FuelCategory objects in the database
+        self.assertEqual(Fuel.objects.count(), 4)
+        self.assertEqual(FuelCategory.objects.count(), 3)
+        # There are now 4 Countries and 3 Regions in the database
+        self.assertEqual(Country.objects.count(), 4)
+        self.assertEqual(Region.objects.count(), 3)
+        # There are now 4 OwnerStakes in the database
+        self.assertEqual(OwnerStake.objects.count(), 4)
+        # There is now Initiative in the database
+        self.assertEqual(Initiative.objects.count(), 1)
+        # There are now 3 ProjectFunding objects in the database
+        self.assertEqual(ProjectFunding.objects.count(), 3)
+
+        # Run the import again
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
+
+        # There are still 3 PowerPlant and 3 Project objects in the database
+        self.assertEqual(PowerPlant.objects.count(), 3)
+        self.assertEqual(Project.objects.count(), 3)
+        # There is still 1 InfrastructureType object in the database
+        self.assertEqual(InfrastructureType.objects.count(), 1)
+        # There are still 4 Fuel and 3 FuelCategory objects in the database
+        self.assertEqual(Fuel.objects.count(), 4)
+        self.assertEqual(FuelCategory.objects.count(), 3)
+        # There are still 4 Countries and 3 Regions in the database
+        self.assertEqual(Country.objects.count(), 4)
+        self.assertEqual(Region.objects.count(), 3)
+        # There are still 4 OwnerStakes in the database
+        self.assertEqual(OwnerStake.objects.count(), 4)
+        # There is still Initiative in the database
+        self.assertEqual(Initiative.objects.count(), 1)
+        # There are still 3 ProjectFunding objects in the database
+        self.assertEqual(ProjectFunding.objects.count(), 3)

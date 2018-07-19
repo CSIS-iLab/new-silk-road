@@ -85,11 +85,12 @@ def add_owner_stakes(row, power_plant):
         if value_or_none(row.get('Owner {}'.format(i))):
             owner_name = row.get('Owner {}'.format(i))
             owner, _ = Organization.objects.get_or_create(name=owner_name)
-            OwnerStake.objects.create(
+            owner_stake, _ = OwnerStake.objects.get_or_create(
                 owner=owner,
                 power_plant=power_plant,
-                percent_owned=value_or_none(row.get('Owner {} Stake'.format(i)))
             )
+            owner_stake.percent_owned = value_or_none(row.get('Owner {} Stake'.format(i)))
+            owner_stake.save()
 
 
 def get_countries_and_regions(row):
@@ -223,25 +224,27 @@ def import_csv_to_database(*args, **kwargs):
 
             # Create the object
             if object_type == 'Plant':
-                new_object = PowerPlant.objects.create(
+                new_object, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Power Plant Name'),
-                    infrastructure_type=infrastructure_type_power_plant,
                     latitude=row.get('Latitude'),
                     longitude=row.get('Longitude'),
-                    status=get_status_integer_from_string(row.get('Plant Status')),
-                    plant_day_online=value_or_none(row.get('Plant Day Online')),
-                    plant_month_online=value_or_none(row.get('Plant Month Online')),
-                    plant_year_online=value_or_none(row.get('Plant Year Online')),
-                    decommissioning_day=value_or_none(row.get('Decommissioning Day')),
-                    decommissioning_month=value_or_none(row.get('Decommissioning Month')),
-                    decommissioning_year=value_or_none(row.get('Decommissioning Year')),
-                    plant_capacity=value_or_none(row.get('Plant Capacity')),
-                    plant_output=value_or_none(row.get('Plant Output')),
-                    plant_output_year=value_or_none(row.get('Plant Output Year')),
-                    estimated_plant_output=value_or_none(row.get('Estimated Plant Output')),
-                    plant_CO2_emissions=value_or_none(row.get('Plant CO2 Emissions')),
-                    grid_connected=boolean_or_none(row.get('Grid Connected')),
                 )
+                new_object.infrastructure_type = infrastructure_type_power_plant
+                new_object.status = get_status_integer_from_string(row.get('Plant Status'))
+                new_object.plant_day_online = value_or_none(row.get('Plant Day Online'))
+                new_object.plant_month_online = value_or_none(row.get('Plant Month Online'))
+                new_object.plant_year_online = value_or_none(row.get('Plant Year Online'))
+                new_object.decommissioning_day = value_or_none(row.get('Decommissioning Day'))
+                new_object.decommissioning_month = value_or_none(row.get('Decommissioning Month'))
+                new_object.decommissioning_year = value_or_none(row.get('Decommissioning Year'))
+                new_object.plant_capacity = value_or_none(row.get('Plant Capacity'))
+                new_object.plant_output = value_or_none(row.get('Plant Output'))
+                new_object.plant_output_year = value_or_none(row.get('Plant Output Year'))
+                new_object.estimated_plant_output = value_or_none(row.get('Estimated Plant Output'))
+                new_object.plant_CO2_emissions = value_or_none(row.get('Plant CO2 Emissions'))
+                new_object.grid_connected = boolean_or_none(row.get('Grid Connected'))
+                new_object.save()
+
                 # Add the owner stakes for the PowerPlant
                 add_owner_stakes(row, new_object)
 
@@ -250,29 +253,36 @@ def import_csv_to_database(*args, **kwargs):
                     new_object.operators.add(operator)
 
             else:
-                new_object = Project.objects.create(
+                new_object, _ = Project.objects.get_or_create(
                     name=row.get('Project Name'),
-                    infrastructure_type=infrastructure_type_power_plant,
-                    status=get_status_integer_from_string(row.get('Project Status')),
-                    project_capacity=value_or_none(row.get('Project Capacity')),
-                    project_output=value_or_none(row.get('Project Output')),
-                    estimated_project_output=value_or_none(row.get('Estimated Project Output')),
-                    project_CO2_emissions=value_or_none(row.get('Project CO2 Emissions')),
-                    nox_reduction_system=boolean_or_none(row.get('NOx Reduction System')),
-                    sox_reduction_system=boolean_or_none(row.get('SOx Reduction System')),
-                    total_cost=value_or_none(row.get('Total Cost')),
-                    total_cost_currency=value_or_none(row.get('Total Cost Currency')),
-                    start_day=value_or_none(row.get('Start Day')),
-                    start_month=value_or_none(row.get('Start Month')),
-                    start_year=value_or_none(row.get('Start Year')),
-                    construction_start_day=value_or_none(row.get('Construction Start Day')),
-                    construction_start_month=value_or_none(row.get('Construction Start Month')),
-                    construction_start_year=value_or_none(row.get('Construction Start Year')),
-                    planned_completion_day=value_or_none(row.get('Completion Day')),
-                    planned_completion_month=value_or_none(row.get('Completion Month')),
-                    planned_completion_year=value_or_none(row.get('Completion Year')),
-                    new=boolean_or_none(row.get('New Construction')),
                 )
+                new_object.infrastructure_type = infrastructure_type_power_plant
+                new_object.status = get_status_integer_from_string(row.get('Project Status'))
+                new_object.project_capacity = value_or_none(row.get('Project Capacity'))
+                new_object.project_output = value_or_none(row.get('Project Output'))
+                new_object.estimated_project_output = value_or_none(
+                    row.get('Estimated Project Output')
+                )
+                new_object.project_CO2_emissions = value_or_none(row.get('Project CO2 Emissions'))
+                new_object.nox_reduction_system = boolean_or_none(row.get('NOx Reduction System'))
+                new_object.sox_reduction_system = boolean_or_none(row.get('SOx Reduction System'))
+                new_object.total_cost = value_or_none(row.get('Total Cost'))
+                new_object.total_cost_currency = value_or_none(row.get('Total Cost Currency'))
+                new_object.start_day = value_or_none(row.get('Start Day'))
+                new_object.start_month = value_or_none(row.get('Start Month'))
+                new_object.start_year = value_or_none(row.get('Start Year'))
+                new_object.construction_start_day = value_or_none(row.get('Construction Start Day'))
+                new_object.construction_start_month = value_or_none(
+                    row.get('Construction Start Month')
+                )
+                new_object.construction_start_year = value_or_none(
+                    row.get('Construction Start Year')
+                )
+                new_object.planned_completion_day = value_or_none(row.get('Completion Day'))
+                new_object.planned_completion_month = value_or_none(row.get('Completion Month'))
+                new_object.planned_completion_year = value_or_none(row.get('Completion Year'))
+                new_object.new = boolean_or_none(row.get('New Construction'))
+                new_object.save()
 
                 # Add any Initiatives to the new Project
                 for initiative in initiatives:
