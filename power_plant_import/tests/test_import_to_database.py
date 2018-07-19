@@ -418,10 +418,13 @@ class ImportCSVToDatabaseTestCase(TestCase):
             powerplant_ilarionas.plant_capacity_unit,
             {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MW']
         )
-        self.assertEqual(powerplant_ilarionas.plant_output, None)
-        self.assertEqual(powerplant_ilarionas.plant_output_unit, None)
+        self.assertEqual(powerplant_ilarionas.plant_output, 1.2)
+        self.assertEqual(
+            powerplant_ilarionas.plant_output_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MW']
+        )
         self.assertEqual(powerplant_ilarionas.plant_output_year, 2016)
-        self.assertEqual(powerplant_ilarionas.estimated_plant_output, 330000)
+        self.assertEqual(powerplant_ilarionas.estimated_plant_output, 330000.5)
         self.assertEqual(
             powerplant_ilarionas.estimated_plant_output_unit,
             {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MWH']

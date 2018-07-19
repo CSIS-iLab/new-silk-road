@@ -1,4 +1,5 @@
 import argparse
+import calendar
 import csv
 from distutils.util import strtobool
 import django
@@ -139,6 +140,12 @@ def get_unit_integer_from_string_or_none(unit_str):
         return {value.upper(): key for key, value in ProjectPlantUnits.UNITS}[unit_str.upper()]
 
 
+def get_month_integer_from_string_or_none(month_str):
+    """Convert a month name string into an integer that gets stored in the database."""
+    if value_or_none(month_str):
+        return {value: key for key, value in enumerate(calendar.month_abbr)}[month_str]
+
+
 def add_funders(row, project):
     """Create ProjectFunding objects for the Project."""
     for i in range(1, 3):
@@ -246,10 +253,13 @@ def import_csv_to_database(*args, **kwargs):
                         'infrastructure_type': infrastructure_type_power_plant.id,
                         'status': get_status_integer_from_string(row.get('Plant Status')),
                         'plant_day_online': value_or_none(row.get('Plant Day Online')),
-                        'plant_month_online': value_or_none(row.get('Plant Month Online')),
+                        'plant_month_online': get_month_integer_from_string_or_none(
+                            row.get('Plant Month Online')
+                        ),
                         'plant_year_online': value_or_none(row.get('Plant Year Online')),
                         'decommissioning_day': value_or_none(row.get('Decommissioning Day')),
-                        'decommissioning_month': value_or_none(row.get('Decommissioning Month')),
+                        'decommissioning_month': get_month_integer_from_string_or_none(
+                            row.get('Decommissioning Month')),
                         'decommissioning_year': value_or_none(row.get('Decommissioning Year')),
                         'plant_capacity': value_or_none(row.get('Plant Capacity')),
                         'plant_capacity_unit': get_unit_integer_from_string_or_none(
@@ -322,17 +332,21 @@ def import_csv_to_database(*args, **kwargs):
                         'total_cost': value_or_none(row.get('Total Cost')),
                         'total_cost_currency': value_or_none(row.get('Total Cost Currency')),
                         'start_day': value_or_none(row.get('Start Day')),
-                        'start_month': value_or_none(row.get('Start Month')),
+                        'start_month': get_month_integer_from_string_or_none(
+                            row.get('Start Month')
+                        ),
                         'start_year': value_or_none(row.get('Start Year')),
                         'construction_start_day': value_or_none(row.get('Construction Start Day')),
-                        'construction_start_month': value_or_none(
+                        'construction_start_month': get_month_integer_from_string_or_none(
                             row.get('Construction Start Month')
                         ),
                         'construction_start_year': value_or_none(
                             row.get('Construction Start Year')
                         ),
                         'planned_completion_day': value_or_none(row.get('Completion Day')),
-                        'planned_completion_month': value_or_none(row.get('Completion Month')),
+                        'planned_completion_month': get_month_integer_from_string_or_none(
+                            row.get('Completion Month')
+                        ),
                         'planned_completion_year': value_or_none(row.get('Completion Year')),
                         'new': boolean_or_none(row.get('New Construction')),
                     }
