@@ -14,7 +14,7 @@ django.setup()
 from facts.models import Organization
 from infrastructure.models import (
     Fuel, FuelCategory, InfrastructureType, Initiative, OwnerStake, PowerPlant,
-    Project, ProjectFunding, ProjectStatus
+    Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from locations.models import Country, Region
 
@@ -130,6 +130,14 @@ def get_status_integer_from_string(status_str):
     return {value: key for key, value in ProjectStatus.STATUSES}[status_str]
 
 
+def get_unit_integer_from_string_or_none(unit_str):
+    """Convert a unit string into the integer that gets stored in the database."""
+    if value_or_none(unit_str):
+        # Compare each of the values in uppercase, so that 'MWh', 'MWH', and 'MwH'
+        # all match the same choice.
+        return {value.upper(): key for key, value in ProjectPlantUnits.UNITS}[unit_str.upper()]
+
+
 def add_funders(row, project):
     """Create ProjectFunding objects for the Project."""
     for i in range(1, 3):
@@ -238,10 +246,22 @@ def import_csv_to_database(*args, **kwargs):
                 new_object.decommissioning_month = value_or_none(row.get('Decommissioning Month'))
                 new_object.decommissioning_year = value_or_none(row.get('Decommissioning Year'))
                 new_object.plant_capacity = value_or_none(row.get('Plant Capacity'))
+                new_object.plant_capacity_unit = get_unit_integer_from_string_or_none(
+                    row.get('Plant Capacity Unit')
+                )
                 new_object.plant_output = value_or_none(row.get('Plant Output'))
+                new_object.plant_output_unit = get_unit_integer_from_string_or_none(
+                    row.get('Plant Output Unit')
+                )
                 new_object.plant_output_year = value_or_none(row.get('Plant Output Year'))
                 new_object.estimated_plant_output = value_or_none(row.get('Estimated Plant Output'))
+                new_object.estimated_plant_output_unit = get_unit_integer_from_string_or_none(
+                    row.get('Estimated Plant Output Unit')
+                )
                 new_object.plant_CO2_emissions = value_or_none(row.get('Plant CO2 Emissions'))
+                new_object.plant_CO2_emissions_unit = get_unit_integer_from_string_or_none(
+                    row.get('Plant CO2 Emissions Unit')
+                )
                 new_object.grid_connected = boolean_or_none(row.get('Grid Connected'))
                 new_object.save()
 
@@ -259,11 +279,23 @@ def import_csv_to_database(*args, **kwargs):
                 new_object.infrastructure_type = infrastructure_type_power_plant
                 new_object.status = get_status_integer_from_string(row.get('Project Status'))
                 new_object.project_capacity = value_or_none(row.get('Project Capacity'))
+                new_object.project_capacity_unit = get_unit_integer_from_string_or_none(
+                    row.get('Project Capacity Unit')
+                )
                 new_object.project_output = value_or_none(row.get('Project Output'))
+                new_object.project_output_unit = get_unit_integer_from_string_or_none(
+                    row.get('Project Output Unit')
+                )
                 new_object.estimated_project_output = value_or_none(
                     row.get('Estimated Project Output')
                 )
+                new_object.estimated_project_output_unit = get_unit_integer_from_string_or_none(
+                    row.get('Estimated Project Output Unit')
+                )
                 new_object.project_CO2_emissions = value_or_none(row.get('Project CO2 Emissions'))
+                new_object.project_CO2_emissions_unit = get_unit_integer_from_string_or_none(
+                    row.get('Project CO2 Emissions Unit')
+                )
                 new_object.nox_reduction_system = boolean_or_none(row.get('NOx Reduction System'))
                 new_object.sox_reduction_system = boolean_or_none(row.get('SOx Reduction System'))
                 new_object.total_cost = value_or_none(row.get('Total Cost'))

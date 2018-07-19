@@ -7,7 +7,7 @@ from facts.models import Organization
 from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.models import (
     Fuel, FuelCategory, Initiative, InfrastructureType, OwnerStake, PowerPlant,
-    Project, ProjectFunding, ProjectStatus
+    Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from infrastructure.tests.factories import ProjectFundingFactory
 from locations.models import Country, Region
@@ -360,10 +360,23 @@ class ImportCSVToDatabaseTestCase(TestCase):
             project_ouessant1.status,
             {value: key for key, value in ProjectStatus.STATUSES}['Suspended']
         )
-        self.assertEqual(project_ouessant1.project_capacity, None)
-        self.assertEqual(project_ouessant1.project_output, None)
+        self.assertEqual(project_ouessant1.project_capacity, 0.5)
+        self.assertEqual(
+            project_ouessant1.project_capacity_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MW']
+        )
+        self.assertEqual(project_ouessant1.project_output, 200)
+        self.assertEqual(
+            project_ouessant1.project_output_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MWH']
+        )
         self.assertEqual(project_ouessant1.estimated_project_output, None)
-        self.assertEqual(project_ouessant1.project_CO2_emissions, None)
+        self.assertEqual(project_ouessant1.estimated_project_output_unit, None)
+        self.assertEqual(project_ouessant1.project_CO2_emissions, 1000000)
+        self.assertEqual(
+            project_ouessant1.project_CO2_emissions_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['TONNES PER ANNUM']
+        )
         self.assertEqual(project_ouessant1.nox_reduction_system, False)
         self.assertEqual(project_ouessant1.sox_reduction_system, True)
         self.assertEqual(project_ouessant1.total_cost, 1)
@@ -401,10 +414,23 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(powerplant_ilarionas.decommissioning_month, None)
         self.assertEqual(powerplant_ilarionas.decommissioning_year, 2064)
         self.assertEqual(powerplant_ilarionas.plant_capacity, 154)
+        self.assertEqual(
+            powerplant_ilarionas.plant_capacity_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MW']
+        )
         self.assertEqual(powerplant_ilarionas.plant_output, None)
+        self.assertEqual(powerplant_ilarionas.plant_output_unit, None)
         self.assertEqual(powerplant_ilarionas.plant_output_year, 2016)
         self.assertEqual(powerplant_ilarionas.estimated_plant_output, 330000)
+        self.assertEqual(
+            powerplant_ilarionas.estimated_plant_output_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MWH']
+        )
         self.assertEqual(powerplant_ilarionas.plant_CO2_emissions, 1)
+        self.assertEqual(
+            powerplant_ilarionas.plant_CO2_emissions_unit,
+            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['TONNES PER ANNUM']
+        )
         self.assertEqual(powerplant_ilarionas.grid_connected, None)
 
     def test_multiple_import(self):
