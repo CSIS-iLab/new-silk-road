@@ -408,7 +408,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
             {value: key for key, value in ProjectStatus.STATUSES}['Partially Active']
         )
         self.assertEqual(powerplant_ilarionas.plant_day_online, None)
-        self.assertEqual(powerplant_ilarionas.plant_month_online, None)
+        self.assertEqual(powerplant_ilarionas.plant_month_online, 5)
         self.assertEqual(powerplant_ilarionas.plant_year_online, 2014)
         self.assertEqual(powerplant_ilarionas.decommissioning_day, None)
         self.assertEqual(powerplant_ilarionas.decommissioning_month, None)
