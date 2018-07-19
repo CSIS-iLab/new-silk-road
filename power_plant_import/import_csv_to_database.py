@@ -163,13 +163,17 @@ def import_csv_to_database(*args, **kwargs):
     Import the contents of the CSV file into the database.
 
     Note: this function assumes the CSV file has the same columns as
-    power_plant_import/test_csv.csv.
+    power_plant_import/tests/data/six_rows.csv.
     """
     # Get the arguments passed into the function
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Parser')
     parser.add_argument('--filename', type=str, nargs='+', help='The file to process')
+    parser.add_argument('--no_output', type=str, nargs='+', help='Set to "True" to disable logging')
     parsed_args = parser.parse_args(args)
     filename = parsed_args.filename[0]
+    use_logger = True
+    if boolean_or_none(parsed_args.no_output[0]) is True:
+        use_logger = False
 
     # Statistics logged to the user in the future
     num_successful_imports = 0
@@ -300,19 +304,20 @@ def import_csv_to_database(*args, **kwargs):
             num_successful_imports += 1
 
     # Print the summary to the user
-    logger.info(
-        "\n-------------------------\n"
-        "Results of import:\n"
-        "{} rows successfully imported\n"
-        "{} rows had an error\n"
-        "-------------------------\n".format(num_successful_imports, len(error_rows))
-    )
-    if error_rows:
-        logger.info("Error rows: {}".format(error_rows))
-    if completed_but_with_warnings:
-        logger.info("The following rows were loaded, but with warnings:")
-        for key, value in completed_but_with_warnings.items():
-            logger.info('{}: {}'.format(key, value))
+    if use_logger:
+        logger.info(
+            "\n-------------------------\n"
+            "Results of import:\n"
+            "{} rows successfully imported\n"
+            "{} rows had an error\n"
+            "-------------------------\n".format(num_successful_imports, len(error_rows))
+        )
+        if error_rows:
+            logger.info("Error rows: {}".format(error_rows))
+        if completed_but_with_warnings:
+            logger.info("The following rows were loaded, but with warnings:")
+            for key, value in completed_but_with_warnings.items():
+                logger.info('{}: {}'.format(key, value))
 
 
 if __name__ == '__main__':

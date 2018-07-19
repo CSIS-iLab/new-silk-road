@@ -18,6 +18,13 @@ from .. import import_csv_to_database
 class ImportCSVToDatabaseTestCase(TestCase):
     """Test case for the import_csv_to_database() function."""
 
+    def call_command(self, filename):
+        """Call the import_csv_to_database command, with no_output set to True."""
+        import_csv_to_database.import_csv_to_database(
+            '--filename={}'.format(filename),
+            '--no_output=True'
+        )
+
     def get_created_plants(self):
         """Get the PowerPlant objects that are created during the import."""
         powerplant_ouessant = PowerPlant.objects.get(name='Ouessant Tidal Power Project')
@@ -36,10 +43,8 @@ class ImportCSVToDatabaseTestCase(TestCase):
 
     def test_invalid_type(self):
         """Having an invalid PowerPlant/Project 'Type' throws an error."""
+        self.call_command(filename='power_plant_import/tests/data/invalid_type.csv')
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/invalid_type.csv',
-        )
         # No PowerPlants or Projects were created during the test
         self.assertEqual(PowerPlant.objects.count(), 0)
         self.assertEqual(Project.objects.count(), 0)
@@ -50,9 +55,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(Fuel.objects.count(), 0)
         self.assertEqual(FuelCategory.objects.count(), 0)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # The file has the following fuels in the following fuel categories:
         #   'Ocean' category: 'Tidal', 'Wave'
@@ -96,9 +99,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
@@ -119,9 +120,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         org_existing = OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
@@ -142,9 +141,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         org_existing = OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
@@ -159,9 +156,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
@@ -177,9 +172,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         org_existing = OrganizationFactory(name='Existing Organization')
         self.assertEqual(Organization.objects.count(), 1)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the PowerPlants that were created during the import
         (powerplant_ouessant, powerplant_ilarionas, powerplant_tonstad) = self.get_created_plants()
@@ -197,9 +190,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(Organization.objects.count(), 1)
         self.assertEqual(OwnerStake.objects.count(), 0)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the PowerPlants that were created during the import
         (powerplant_ouessant, powerplant_ilarionas, powerplant_tonstad) = self.get_created_plants()
@@ -242,9 +233,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Currently, there are not Initiatives in the database, the org_existing
         self.assertEqual(Initiative.objects.count(), 0)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
@@ -264,9 +253,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         )
         region_existing = RegionFactory(name='Existing Region')
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the PowerPlants that were created during the import
         (powerplant_ouessant, powerplant_ilarionas, powerplant_tonstad) = self.get_created_plants()
@@ -301,9 +288,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         funder_existing.sources.add(org_existing)
         self.assertEqual(ProjectFunding.objects.count(), 1)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
@@ -354,9 +339,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # There are no InfrastructureType objects in the database
         self.assertEqual(InfrastructureType.objects.count(), 0)
 
-        import_csv_to_database.import_csv_to_database(
-            '--filename=power_plant_import/tests/data/six_rows.csv',
-        )
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # The file has 3 'Plant' rows and 3 'Project' rows
         self.assertEqual(PowerPlant.objects.count(), 3)
