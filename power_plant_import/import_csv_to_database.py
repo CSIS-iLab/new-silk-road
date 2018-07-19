@@ -12,6 +12,7 @@ sys.path.append(os.environ['PWD'])
 os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
 from facts.models import Organization
+from infrastructure.forms import PowerPlantForm, ProjectForm
 from infrastructure.models import (
     Fuel, FuelCategory, InfrastructureType, Initiative, OwnerStake, PowerPlant,
     Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
@@ -186,7 +187,7 @@ def import_csv_to_database(*args, **kwargs):
 
     # Statistics logged to the user in the future
     num_successful_imports = 0
-    error_rows = []
+    error_rows = {}
     completed_but_with_warnings = {}
 
     with open(filename, 'r') as csv_file:
@@ -201,7 +202,7 @@ def import_csv_to_database(*args, **kwargs):
             # add the row to error_rows, and move on to the next row
             object_type = row.get('Type')
             if object_type not in ['Plant', 'Project']:
-                error_rows.append(perceived_row_number)
+                error_rows[perceived_row_number] = 'Invalid type of object: {}'.format(object_type)
                 continue
 
             # Get the Fuel(s) for the row
@@ -234,36 +235,51 @@ def import_csv_to_database(*args, **kwargs):
             if object_type == 'Plant':
                 new_object, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Power Plant Name'),
-                    latitude=row.get('Latitude'),
-                    longitude=row.get('Longitude'),
                 )
-                new_object.infrastructure_type = infrastructure_type_power_plant
-                new_object.status = get_status_integer_from_string(row.get('Plant Status'))
-                new_object.plant_day_online = value_or_none(row.get('Plant Day Online'))
-                new_object.plant_month_online = value_or_none(row.get('Plant Month Online'))
-                new_object.plant_year_online = value_or_none(row.get('Plant Year Online'))
-                new_object.decommissioning_day = value_or_none(row.get('Decommissioning Day'))
-                new_object.decommissioning_month = value_or_none(row.get('Decommissioning Month'))
-                new_object.decommissioning_year = value_or_none(row.get('Decommissioning Year'))
-                new_object.plant_capacity = value_or_none(row.get('Plant Capacity'))
-                new_object.plant_capacity_unit = get_unit_integer_from_string_or_none(
-                    row.get('Plant Capacity Unit')
-                )
-                new_object.plant_output = value_or_none(row.get('Plant Output'))
-                new_object.plant_output_unit = get_unit_integer_from_string_or_none(
-                    row.get('Plant Output Unit')
-                )
-                new_object.plant_output_year = value_or_none(row.get('Plant Output Year'))
-                new_object.estimated_plant_output = value_or_none(row.get('Estimated Plant Output'))
-                new_object.estimated_plant_output_unit = get_unit_integer_from_string_or_none(
-                    row.get('Estimated Plant Output Unit')
-                )
-                new_object.plant_CO2_emissions = value_or_none(row.get('Plant CO2 Emissions'))
-                new_object.plant_CO2_emissions_unit = get_unit_integer_from_string_or_none(
-                    row.get('Plant CO2 Emissions Unit')
-                )
-                new_object.grid_connected = boolean_or_none(row.get('Grid Connected'))
-                new_object.save()
+
+                try:
+                    data = {
+                        'name': new_object.name,
+                        'slug': django.utils.text.slugify(new_object.name),
+                        'latitude': value_or_none(row.get('Latitude')),
+                        'longitude': value_or_none(row.get('Longitude')),
+                        'infrastructure_type': infrastructure_type_power_plant.id,
+                        'status': get_status_integer_from_string(row.get('Plant Status')),
+                        'plant_day_online': value_or_none(row.get('Plant Day Online')),
+                        'plant_month_online': value_or_none(row.get('Plant Month Online')),
+                        'plant_year_online': value_or_none(row.get('Plant Year Online')),
+                        'decommissioning_day': value_or_none(row.get('Decommissioning Day')),
+                        'decommissioning_month': value_or_none(row.get('Decommissioning Month')),
+                        'decommissioning_year': value_or_none(row.get('Decommissioning Year')),
+                        'plant_capacity': value_or_none(row.get('Plant Capacity')),
+                        'plant_capacity_unit': get_unit_integer_from_string_or_none(
+                            row.get('Plant Capacity Unit')
+                        ),
+                        'plant_output': value_or_none(row.get('Plant Output')),
+                        'plant_output_unit': get_unit_integer_from_string_or_none(
+                            row.get('Plant Output Unit')
+                        ),
+                        'plant_output_year': value_or_none(row.get('Plant Output Year')),
+                        'estimated_plant_output': value_or_none(row.get('Estimated Plant Output')),
+                        'estimated_plant_output_unit': get_unit_integer_from_string_or_none(
+                            row.get('Estimated Plant Output Unit')
+                        ),
+                        'plant_CO2_emissions': value_or_none(row.get('Plant CO2 Emissions')),
+                        'plant_CO2_emissions_unit': get_unit_integer_from_string_or_none(
+                            row.get('Plant CO2 Emissions Unit')
+                        ),
+                        'grid_connected': boolean_or_none(row.get('Grid Connected')),
+                    }
+
+                    form = PowerPlantForm(data, instance=new_object)
+
+                    if form.is_valid():
+                        new_object = form.save()
+                    else:
+                        error_rows[perceived_row_number] = form.errors.as_data()
+                except KeyError as error:
+                    error_rows[perceived_row_number] = [error]
+                    continue
 
                 # Add the owner stakes for the PowerPlant
                 add_owner_stakes(row, new_object)
@@ -276,45 +292,58 @@ def import_csv_to_database(*args, **kwargs):
                 new_object, _ = Project.objects.get_or_create(
                     name=row.get('Project Name'),
                 )
-                new_object.infrastructure_type = infrastructure_type_power_plant
-                new_object.status = get_status_integer_from_string(row.get('Project Status'))
-                new_object.project_capacity = value_or_none(row.get('Project Capacity'))
-                new_object.project_capacity_unit = get_unit_integer_from_string_or_none(
-                    row.get('Project Capacity Unit')
-                )
-                new_object.project_output = value_or_none(row.get('Project Output'))
-                new_object.project_output_unit = get_unit_integer_from_string_or_none(
-                    row.get('Project Output Unit')
-                )
-                new_object.estimated_project_output = value_or_none(
-                    row.get('Estimated Project Output')
-                )
-                new_object.estimated_project_output_unit = get_unit_integer_from_string_or_none(
-                    row.get('Estimated Project Output Unit')
-                )
-                new_object.project_CO2_emissions = value_or_none(row.get('Project CO2 Emissions'))
-                new_object.project_CO2_emissions_unit = get_unit_integer_from_string_or_none(
-                    row.get('Project CO2 Emissions Unit')
-                )
-                new_object.nox_reduction_system = boolean_or_none(row.get('NOx Reduction System'))
-                new_object.sox_reduction_system = boolean_or_none(row.get('SOx Reduction System'))
-                new_object.total_cost = value_or_none(row.get('Total Cost'))
-                new_object.total_cost_currency = value_or_none(row.get('Total Cost Currency'))
-                new_object.start_day = value_or_none(row.get('Start Day'))
-                new_object.start_month = value_or_none(row.get('Start Month'))
-                new_object.start_year = value_or_none(row.get('Start Year'))
-                new_object.construction_start_day = value_or_none(row.get('Construction Start Day'))
-                new_object.construction_start_month = value_or_none(
-                    row.get('Construction Start Month')
-                )
-                new_object.construction_start_year = value_or_none(
-                    row.get('Construction Start Year')
-                )
-                new_object.planned_completion_day = value_or_none(row.get('Completion Day'))
-                new_object.planned_completion_month = value_or_none(row.get('Completion Month'))
-                new_object.planned_completion_year = value_or_none(row.get('Completion Year'))
-                new_object.new = boolean_or_none(row.get('New Construction'))
-                new_object.save()
+
+                try:
+                    data = {
+                        'name': new_object.name,
+                        'slug': django.utils.text.slugify(new_object.name),
+                        'infrastructure_type': infrastructure_type_power_plant.id,
+                        'status': get_status_integer_from_string(row.get('Project Status')),
+                        'project_capacity': value_or_none(row.get('Project Capacity')),
+                        'project_capacity_unit': get_unit_integer_from_string_or_none(
+                            row.get('Project Capacity Unit')
+                        ),
+                        'project_output': value_or_none(row.get('Project Output')),
+                        'project_output_unit': get_unit_integer_from_string_or_none(
+                            row.get('Project Output Unit')
+                        ),
+                        'estimated_project_output': value_or_none(
+                            row.get('Estimated Project Output')
+                        ),
+                        'estimated_project_output_unit': get_unit_integer_from_string_or_none(
+                            row.get('Estimated Project Output Unit')
+                        ),
+                        'project_CO2_emissions': value_or_none(row.get('Project CO2 Emissions')),
+                        'project_CO2_emissions_unit': get_unit_integer_from_string_or_none(
+                            row.get('Project CO2 Emissions Unit')
+                        ),
+                        'nox_reduction_system': boolean_or_none(row.get('NOx Reduction System')),
+                        'sox_reduction_system': boolean_or_none(row.get('SOx Reduction System')),
+                        'total_cost': value_or_none(row.get('Total Cost')),
+                        'total_cost_currency': value_or_none(row.get('Total Cost Currency')),
+                        'start_day': value_or_none(row.get('Start Day')),
+                        'start_month': value_or_none(row.get('Start Month')),
+                        'start_year': value_or_none(row.get('Start Year')),
+                        'construction_start_day': value_or_none(row.get('Construction Start Day')),
+                        'construction_start_month': value_or_none(
+                            row.get('Construction Start Month')
+                        ),
+                        'construction_start_year': value_or_none(
+                            row.get('Construction Start Year')
+                        ),
+                        'planned_completion_day': value_or_none(row.get('Completion Day')),
+                        'planned_completion_month': value_or_none(row.get('Completion Month')),
+                        'planned_completion_year': value_or_none(row.get('Completion Year')),
+                        'new': boolean_or_none(row.get('New Construction')),
+                    }
+                    form = ProjectForm(data, instance=new_object)
+                    if form.is_valid():
+                        new_object = form.save()
+                    else:
+                        error_rows[perceived_row_number] = form.errors.as_data()
+                except KeyError as error:
+                    error_rows[perceived_row_number] = [error]
+                    continue
 
                 # Add any Initiatives to the new Project
                 for initiative in initiatives:
@@ -355,11 +384,13 @@ def import_csv_to_database(*args, **kwargs):
             "-------------------------\n".format(num_successful_imports, len(error_rows))
         )
         if error_rows:
-            logger.info("Error rows: {}\n".format(error_rows))
+            logger.info("Error rows:\n")
+            for row_number, errors in error_rows.items():
+                logger.info("    line {}: {}".format(row_number, errors))
         if completed_but_with_warnings:
             logger.info("The following rows were loaded, but with warnings:")
             for key, value in completed_but_with_warnings.items():
-                logger.info('{}: {}'.format(key, value))
+                logger.info('    line {}: {}'.format(key, value))
             logger.info("\n")
 
 
