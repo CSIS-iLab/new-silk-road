@@ -168,12 +168,12 @@ def import_csv_to_database(*args, **kwargs):
     """
     # Get the arguments passed into the function
     parser = argparse.ArgumentParser(description='Parser')
-    parser.add_argument('--filename', type=str, nargs='+', help='The file to process')
+    parser.add_argument('filename', type=str, nargs='+', help='The file to process')
     parser.add_argument('--no_output', type=str, nargs='+', help='Set to "True" to disable logging')
     parsed_args = parser.parse_args(args)
-    filename = parsed_args.filename[0]
+    filename = parsed_args.filename[0].split('=')[1]
     use_logger = True
-    if boolean_or_none(parsed_args.no_output[0]) is True:
+    if parsed_args.no_output and boolean_or_none(parsed_args.no_output[0]) is True:
         use_logger = False
 
     # Statistics logged to the user in the future

@@ -21,7 +21,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
     def call_command(self, filename):
         """Call the import_csv_to_database command, with no_output set to True."""
         import_csv_to_database.import_csv_to_database(
-            '--filename={}'.format(filename),
+            'filename={}'.format(filename),
             '--no_output=True'
         )
 
