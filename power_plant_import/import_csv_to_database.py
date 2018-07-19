@@ -323,11 +323,12 @@ def import_csv_to_database(*args, **kwargs):
             "-------------------------\n".format(num_successful_imports, len(error_rows))
         )
         if error_rows:
-            logger.info("Error rows: {}".format(error_rows))
+            logger.info("Error rows: {}\n".format(error_rows))
         if completed_but_with_warnings:
             logger.info("The following rows were loaded, but with warnings:")
             for key, value in completed_but_with_warnings.items():
                 logger.info('{}: {}'.format(key, value))
+            logger.info("\n")
 
 
 if __name__ == '__main__':
