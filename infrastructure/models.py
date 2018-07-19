@@ -28,9 +28,9 @@ class OwnerStake(models.Model):
     power_plant = models.ForeignKey(
         'PowerPlant',
         models.CASCADE,
-        related_name = 'owner_stake'
+        related_name = 'owner_stakes'
     )
-    owners = models.ForeignKey(
+    owner = models.ForeignKey(
         'facts.Organization',
         models.CASCADE,
         related_name = 'owners_stakes'
@@ -64,30 +64,36 @@ class ProjectFunding(Temporal):
             self.amount or None, self.currency
         )
 
+class PowerPlantStatus:
+    ACTIVE = 1
+    PARTIALLY_ACTIVE = 2
+    INACTIVE = 3
+
+    STATUSES = (
+        (ACTIVE, 'Active'),
+        (PARTIALLY_ACTIVE, 'Partially Active'),
+        (INACTIVE, 'Inactive')
+    )
 
 class ProjectStatus:
-    NULL = 0
     ANNOUNCED = 1
     PREPATORY = 2
     STARTED = 3
     UNDER_CONSTRUCTION = 4
     COMPLETED = 5
     CANCELLED = 6
-    ACTIVE = 7
-    PARTIALLY_ACTIVE = 8
-    INACTIVE = 9
+    DECOMMISSIONED = 7
+    SUSPENDED = 8
 
     STATUSES = (
-        (NULL, 'Null'),
         (ANNOUNCED, 'Announced/Under Negotiation'),
         (PREPATORY, 'Preparatory Works'),
         (STARTED, 'Started'),
-        (ACTIVE, 'Active'),
-        (PARTIALLY_ACTIVE, 'Partially Active'),
-        (INACTIVE, 'Inactive'),
         (UNDER_CONSTRUCTION, 'Under Construction'),
         (COMPLETED, 'Completed'),
         (CANCELLED, 'Cancelled'),
+        (DECOMMISSIONED, 'Decommissioned'),
+        (SUSPENDED, 'Suspended')
     )
 
 class ProjectPlantUnits:
@@ -204,14 +210,20 @@ class Project(Publishable):
     estimated_project_output = models.BigIntegerField(
         blank=True, null=True,
     )
-    estimated_project_unit = models.PositiveSmallIntegerField(
+    estimated_project_output_unit = models.PositiveSmallIntegerField(
         blank=True, null=True,
         choices=ProjectPlantUnits.UNITS
     )
-    project_capacity = models.BigIntegerField(
+    project_capacity = models.FloatField(
         blank=True, null=True,
         help_text="MW"
     )
+
+    project_capacity_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
+
     project_CO2_emissions = models.BigIntegerField(
         blank=True, null=True,
     )
@@ -222,7 +234,7 @@ class Project(Publishable):
     )
 
     nox_reduction_system = models.NullBooleanField('NOx Reduction System?')
-    sox_reudction_system = models.NullBooleanField('SOx Reduction System?')
+    sox_reduction_system = models.NullBooleanField('SOx Reduction System?')
 
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
@@ -344,7 +356,7 @@ class PowerPlant(Publishable):
         models.SET_NULL, blank=True, null=True,
         help_text='Select or create named insfrastructure types.'
     )
-    fuel = models.ManyToManyField(
+    fuels = models.ManyToManyField(
         'Fuel', 
         blank=True, 
     )
@@ -356,7 +368,7 @@ class PowerPlant(Publishable):
     )
     status = models.PositiveSmallIntegerField(
         blank=True, null=True,
-        choices=ProjectStatus.STATUSES
+        choices=PowerPlantStatus.STATUSES
     )
     plant_year_online = models.PositiveSmallIntegerField(blank=True, null=True)
     plant_month_online = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -374,9 +386,15 @@ class PowerPlant(Publishable):
     def fuzzy_decommissioning_date(self):
         return fuzzydate(self.decommissioning_year, self.decommissioning_month, self.decommissioning_day)
 
-    plant_capacity = models.BigIntegerField(
+    plant_capacity = models.FloatField(
         blank=True, null=True,
     )
+
+    plant_capacity_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True,
+        choices=ProjectPlantUnits.UNITS
+    )
+
     plant_output = models.BigIntegerField(
         blank=True, null=True,
     )
