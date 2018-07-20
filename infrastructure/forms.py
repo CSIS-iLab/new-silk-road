@@ -137,7 +137,6 @@ class ProjectFundingForm(forms.ModelForm):
         fields = '__all__'
 
 class ProjectOwnerStakeForm(forms.ModelForm):
-    owners = OrganizationSearchMultiField(required=False)
     project = forms.ModelChoiceField(
         queryset=Project.objects.all(),
         widget=NameSearchWidget(model=Project),

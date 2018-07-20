@@ -258,6 +258,9 @@ class PowerPlantAdmin(admin.ModelAdmin):
     )
     search_fields = ('name', 'plant_capacity')
     actions = [make_published, make_not_published]
+    inlines = [
+        ProjectsOwnersInline
+    ]
 
     class Meta:
         model = PowerPlant
