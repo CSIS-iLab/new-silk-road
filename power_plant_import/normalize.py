@@ -345,8 +345,8 @@ def plant_project_fuels(records, **params):
                         val[0] = val[1] = fuel_categories[fuel_type]
                     else:
                         print(f"VAL NOT IN FUEL TYPES\t{dataset}\t{record[key]}")
-                record[key] = "|".join(str(val[0]) for val in vals)
-                record[key + " Category"] = "|".join(str(val[1]) for val in vals)
+                record[key] = ";".join(str(val[0]) for val in vals)
+                record[key + " Category"] = ";".join(str(val[1]) for val in vals)
             else:
                 record[key] = None
 
