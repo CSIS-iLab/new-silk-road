@@ -320,15 +320,22 @@ def plant_project_fuels(records, **params):
             # normalize the value using the fuel_types data, and add " Category" values
             if record[key] not in [None, "NA"]:
                 if record[key] in fuel_types:
+                    # the delimiter is in the "Split" field
                     delimiter = (fuel_types[record[key]]["Split"] or '').strip()
-                else:
-                    delimiter = ''
-                if delimiter in ['FALSE', '', None]:
-                    vals = [[record[key], ""]]
-                else:
+                    if delimiter not in ['', 'FALSE']:
+                        vals = [
+                            [v.strip(), ""] for v in record[key].split(delimiter) if v.strip() != ""
+                        ]
+                    else:
+                        vals = [[record[key], ""]]
+                elif re.search(r"[,/;]", record[key]) is not None:
+                    # try splitting on common delimiters: ; , /
+                    print(f"COMMON SPLIT (, ; /)\t{dataset}\t{record[key]}")
                     vals = [
-                        [v.strip(), ""] for v in record[key].split(delimiter) if v.strip() != ""
+                        [v.strip(), ""] for v in re.split(r"[,/;]", record[key]) if v.strip() != ""
                     ]
+                else:
+                    vals = [[record[key], ""]]
                 for val in vals:
                     fuel_type = re.sub(r"\W+", " ", val[0]).strip().lower()
                     if fuel_type in fuel_types:
@@ -337,9 +344,9 @@ def plant_project_fuels(records, **params):
                     elif fuel_type in fuel_categories:
                         val[0] = val[1] = fuel_categories[fuel_type]
                     else:
-                        log.error(f"{dataset}: NOT IN FUEL TYPES: '{fuel_type}' ({record[key]})")
-                record[key] = ";".join(str(val[0]) for val in vals)
-                record[key + " Category"] = ";".join(str(val[1]) for val in vals)
+                        print(f"VAL NOT IN FUEL TYPES\t{dataset}\t{record[key]}")
+                record[key] = "|".join(str(val[0]) for val in vals)
+                record[key + " Category"] = "|".join(str(val[1]) for val in vals)
             else:
                 record[key] = None
 
