@@ -454,8 +454,6 @@ class PowerPlant(Publishable):
     def __str__(self):
         return self.name
 
-    # Project Inline
-
 
 class InitiativeType(models.Model):
     """Defines a type of initiative"""
