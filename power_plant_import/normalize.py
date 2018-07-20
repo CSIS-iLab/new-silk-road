@@ -41,9 +41,7 @@ def __match_org_name(name, org_match_index):
     using the org_match_index (key: normalized org name, value: canonical org name).
     split values on ';' for matching, then rejoin.
     """
-    names = [
-        name for name in [name.strip() for name in name.split(";")] if name != ""
-    ]
+    names = [name for name in [name.strip() for name in name.split(";")] if name != ""]
     match_names = [__norm_match_name(name) for name in names]
     for i, match_name in enumerate(match_names):
         if match_name in org_match_index:
@@ -290,6 +288,15 @@ def owner_and_stake(records, **params):
 def plant_project_fuels(records, **params):
     source_variables = params["source_variables"]
     fuel_types = params["fuel_types"]
+    fuel_categories = {
+        # normalized keys to match normalized fuel_type values later
+        re.sub(r"\W+", " ", ft).strip().lower(): ft
+        for ft in [
+            fuel_types[key]["Fuel Category"]
+            for key in fuel_types
+            if fuel_types[key]["Fuel Category"] not in [None, '', 'NA']
+        ]
+    }
     # normalize the fuel type keys
     for key in list(fuel_types.keys()):
         norm_key = re.sub(r"\W+", " ", key).strip().lower()
@@ -312,16 +319,27 @@ def plant_project_fuels(records, **params):
 
             # normalize the value using the fuel_types data, and add " Category" values
             if record[key] not in [None, "NA"]:
-                vals = [[v.strip(), ""] for v in re.split(r"[,/;]", record[key]) if v.strip() != ""]
+                if record[key] in fuel_types:
+                    delimiter = (fuel_types[record[key]]["Split"] or '').strip()
+                else:
+                    delimiter = ''
+                if delimiter in ['FALSE', '', None]:
+                    vals = [[record[key], ""]]
+                else:
+                    vals = [
+                        [v.strip(), ""] for v in record[key].split(delimiter) if v.strip() != ""
+                    ]
                 for val in vals:
                     fuel_type = re.sub(r"\W+", " ", val[0]).strip().lower()
                     if fuel_type in fuel_types:
                         val[0] = fuel_types[fuel_type]["Fuel"]
                         val[1] = fuel_types[fuel_type]["Fuel Category"]
+                    elif fuel_type in fuel_categories:
+                        val[0] = val[1] = fuel_categories[fuel_type]
                     else:
-                        log.error(f"{dataset}: not in Fuel Types: '{fuel_type}' ({record[key]})")
-                record[key] = ";".join(val[0] for val in vals)
-                record[key + " Category"] = ";".join(val[1] for val in vals)  # parallel structure
+                        log.error(f"{dataset}: NOT IN FUEL TYPES: '{fuel_type}' ({record[key]})")
+                record[key] = ";".join(str(val[0]) for val in vals)
+                record[key + " Category"] = ";".join(str(val[1]) for val in vals)
             else:
                 record[key] = None
 
@@ -491,10 +509,12 @@ def project_output_w_unit_year(records, **params):
             else:
                 record[key] = record["Annual Output"]
                 record[key + " Unit"] = (
-                    record["Annual Output Unit"].split("/")[0] if record[key] not in [None, "NA"] else None
+                    record["Annual Output Unit"].split("/")[0]
+                    if record[key] not in [None, "NA"]
+                    else None
                 )
                 record[key + " Year"] = record["Generation Year"]
-            
+
             # convert GWh => MWh
             if record[key] not in [None, "NA"]:
                 record[key] = excel.value_to_float(record[key])
@@ -530,14 +550,14 @@ def estimated_plant_output_w_unit(records, **params):
             else:
                 record[key] = record[source_var]
                 record[key + " Unit"] = "GWh"
-            
+
             # convert GWh => MWh
             if record[key] not in [None, "NA"]:
                 record[key] = excel.value_to_float(record[key])
                 if record[key + " Unit"] == "GWh":
                     record[key] *= 1000
                 record[key + " Unit"] = "MWh"
-            
+
             if record[key] not in [None, "NA"]:
                 log.debug(f"{dataset}: {key}: {record[key]} {record[key+' Unit']}")
     return records
@@ -848,6 +868,7 @@ if __name__ == "__main__":
     power_plant_data = data.read_json(json_filename)
     power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
-        os.path.dirname(json_filename), f"1-normalize-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+        os.path.dirname(json_filename),
+        f"1-normalize-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json",
     )
     data.write_json(output_filename, power_plant_data)
