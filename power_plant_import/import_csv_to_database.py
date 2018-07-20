@@ -145,9 +145,10 @@ def get_initiatives(row):
     return initiatives
 
 
-def get_status_integer_from_string(status_str):
+def get_status_integer_from_string_or_none(status_str):
     """Convert a status string into the integer that gets stored in the database."""
-    return {value: key for key, value in ProjectStatus.STATUSES}[status_str]
+    if value_or_none(status_str):
+        return {value: key for key, value in ProjectStatus.STATUSES}[status_str]
 
 
 def get_unit_integer_from_string_or_none(unit_str):
@@ -275,7 +276,7 @@ def import_csv_to_database(*args, **kwargs):
                         'latitude': value_or_none(row.get('Latitude')),
                         'longitude': value_or_none(row.get('Longitude')),
                         'infrastructure_type': infrastructure_type_power_plant.id,
-                        'status': get_status_integer_from_string(row.get('Plant Status')),
+                        'status': get_status_integer_from_string_or_none(row.get('Plant Status')),
                         'plant_day_online': value_or_none(row.get('Plant Day Online')),
                         'plant_month_online': get_month_integer_from_input_or_none(
                             row.get('Plant Month Online')
@@ -332,7 +333,7 @@ def import_csv_to_database(*args, **kwargs):
                         'name': new_object.name,
                         'slug': django.utils.text.slugify(new_object.name),
                         'infrastructure_type': infrastructure_type_power_plant.id,
-                        'status': get_status_integer_from_string(row.get('Project Status')),
+                        'status': get_status_integer_from_string_or_none(row.get('Project Status')),
                         'project_capacity': value_or_none(row.get('Project Capacity')),
                         'project_capacity_unit': get_unit_integer_from_string_or_none(
                             row.get('Project Capacity Unit')
