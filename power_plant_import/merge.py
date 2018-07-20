@@ -249,6 +249,16 @@ def _99_final_merge(records, **params):
                     elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
                         if round(float(record[field]), 2) != round(float(projects[key][field]), 2):
                             __print_field_conflict(projects[key], record, key, field)
+                    elif field in ["Estimated Plant Output", "Estimated Project Output"]:
+                        # prioritize GD values over non-GD values
+                        if "GD" not in projects[key]["Dataset"] and "GD" in record["Dataset"]:
+                            projects[key][field] = record[field]
+                        elif ("GD" in projects[key]["Dataset"] and "GD" in record["Dataset"]) or (
+                            "GD" not in projects[key]["Dataset"] and "GD" not in record["Dataset"]
+                        ):
+                            __print_field_conflict(projects[key], record, key, field)
+                        else:  # "GD" in project[key]["Dataset"] and not in record["Dataset"]
+                            pass
                     elif record[field] != projects[key][field]:
                         __print_field_conflict(projects[key], record, key, field)
             # merge Datasets -- semicolon-delimited string
