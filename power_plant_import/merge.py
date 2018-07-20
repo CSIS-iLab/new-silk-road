@@ -32,10 +32,10 @@ def _00_merge_owners_stakes(records, **params):
                         owners[project_key][name] = []
                     if stake not in owners[project_key][name] and stake not in [None, "NA"]:
                         owners[project_key][name].append(stake)
-            else:  # drop Owner values for Projects
-                record[field] = None
-                if record.get(field + " Stake") is not None:
-                    record[field + " Stake"] = None
+            # reducing
+            record[field] = None
+            if record.get(field + " Stake") is not None:
+                record[field + " Stake"] = None
 
     # 2. put all values for each plant/project in the first record for that plant/project
     for project_key in owners.keys():
@@ -69,7 +69,7 @@ def _01_merge_plant_project_fuels(records, **params):
 
             for field in [
                 field
-                for field in record.keys()
+                for field in record
                 if re.match(r"^Project Fuel \d+$", field) and record[field] not in [None, "NA"]
             ]:
                 fuel_vals = record[field].split(";")
@@ -81,18 +81,34 @@ def _01_merge_plant_project_fuels(records, **params):
                 record[field] = None  # reduce
                 record[field + " Category"] = None
 
+            # remove "Plant Fuel" values from Projects
+            for field in [
+                field for field in record if re.match(r"^Plant Fuel \d+( Category)?$", field)
+            ]:
+                record[field] = None
+
         elif key[0] == key[1]:  # Type=="Plant"
             for field in [
                 field
-                for field in record.keys()
+                for field in record
                 if re.match(r"^Plant Fuel \d+$", field) and record[field] not in [None, "NA"]
             ]:
                 fuel_vals = record[field].split(";")
                 category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
+                try:
                     for i in range(len(fuel_vals)):
                         fuels[key].append((fuel_vals[i], category_vals[i]))
+                except:
+                    print(fuel_vals, '\n\n', category_vals)
+                    raise
                 record[field] = None  # reduce
                 record[field + " Category"] = None
+
+            # remove "Project Fuel" values from Plants
+            for field in [
+                field for field in record if re.match(r"^Project Fuel \d+( Category)?$", field)
+            ]:
+                record[field] = None
 
     # for each key, put all values in the first record with the same key
     for key in fuels:
