@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 
 def _00_merge_owners_stakes(records, **params):
-    """Merge the values of Owner 1..N to the first "Plant" record.
+    """Merge the values of Owner 1..N to the first project record.
     Each Owner N value should have its Owner Stake N value put in a corresponding field
     """
     # 1. collect all owners and their stakes for this recordset
@@ -23,15 +23,14 @@ def _00_merge_owners_stakes(records, **params):
             field for field in record.keys() if re.match(r"^Owner \d+$", field) is not None
         ]
         for field in [field for field in owner_fields if record[field] not in [None, "", "NA"]]:
-            if record["Type"] == "Plant":
-                stake = record.get(f"{field} Stake")
-                for name in [
-                    name.strip() for name in record[field].split(";") if name.strip() != ""
-                ]:
-                    if name not in owners[project_key]:
-                        owners[project_key][name] = []
-                    if stake not in owners[project_key][name] and stake not in [None, "NA"]:
-                        owners[project_key][name].append(stake)
+            stake = record.get(f"{field} Stake")
+            for name in [
+                name.strip() for name in record[field].split(";") if name.strip() != ""
+            ]:
+                if name not in owners[project_key]:
+                    owners[project_key][name] = []
+                if stake not in owners[project_key][name] and stake not in [None, "NA"]:
+                    owners[project_key][name].append(stake)
             # reducing
             record[field] = None
             if record.get(field + " Stake") is not None:
