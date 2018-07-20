@@ -341,8 +341,9 @@ class ImportCSVToDatabaseTestCase(TestCase):
 
         self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
-        # The file has 3 'Plant' rows and 3 'Project' rows
-        self.assertEqual(PowerPlant.objects.count(), 3)
+        # The file has 3 'Plant' rows and 3 'Project' rows, but the project_liaoning
+        # also gets a parent PowerPlant created for it
+        self.assertEqual(PowerPlant.objects.count(), 4)
         self.assertEqual(Project.objects.count(), 3)
         # Get the PowerPlants that were created during the import
         (powerplant_ouessant, powerplant_ilarionas, powerplant_tonstad) = self.get_created_plants()
@@ -355,6 +356,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
             slug='power-plant'
         )
         # Verify the fields for project_ouessant1
+        self.assertEqual(project_ouessant1.power_plant, powerplant_ouessant)
         self.assertEqual(project_ouessant1.infrastructure_type, infrastructure_type_power_plant)
         self.assertEqual(
             project_ouessant1.status,
@@ -459,8 +461,9 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Run the import
         self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
-        # The file has 3 'Plant' rows and 3 'Project' rows
-        self.assertEqual(PowerPlant.objects.count(), 3)
+        # The file has 3 'Plant' rows and 3 'Project' rows, but the project_liaoning
+        # also gets a parent PowerPlant created for it
+        self.assertEqual(PowerPlant.objects.count(), 4)
         self.assertEqual(Project.objects.count(), 3)
         # There is now 1 InfrastructureType object in the database
         self.assertEqual(InfrastructureType.objects.count(), 1)
@@ -480,8 +483,8 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Run the import again
         self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
-        # There are still 3 PowerPlant and 3 Project objects in the database
-        self.assertEqual(PowerPlant.objects.count(), 3)
+        # There are still 4 PowerPlant and 3 Project objects in the database
+        self.assertEqual(PowerPlant.objects.count(), 4)
         self.assertEqual(Project.objects.count(), 3)
         # There is still 1 InfrastructureType object in the database
         self.assertEqual(InfrastructureType.objects.count(), 1)

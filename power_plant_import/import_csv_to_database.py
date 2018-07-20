@@ -283,10 +283,11 @@ def import_csv_to_database(*args, **kwargs):
 
             # Create the object
             if object_type == 'Plant':
+                # Get or create the PowerPlant
                 new_object, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Power Plant Name'),
                 )
-
+                # Get the rest of the fields for the new_object
                 try:
                     data = {
                         'name': new_object.name,
@@ -342,14 +343,20 @@ def import_csv_to_database(*args, **kwargs):
                     new_object.operators.add(operator)
 
             else:
+                # Get or create the Project
                 new_object, _ = Project.objects.get_or_create(
                     name=row.get('Project Name'),
                 )
-
+                # Get the PowerPlant for this Project
+                power_plant, _ = PowerPlant.objects.get_or_create(
+                    name=row.get('Source Plant Name'),
+                )
+                # Get the rest of the fields for the new_object
                 try:
                     data = {
                         'name': new_object.name,
                         'slug': django.utils.text.slugify(new_object.name),
+                        'power_plant': power_plant.id,
                         'infrastructure_type': infrastructure_type_power_plant.id,
                         'status': get_status_integer_from_string_or_none(row.get('Project Status')),
                         'project_capacity': value_or_none(row.get('Project Capacity')),
