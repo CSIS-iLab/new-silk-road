@@ -235,11 +235,15 @@ def import_csv_to_database(*args, **kwargs):
     parser = argparse.ArgumentParser(description='Parser')
     parser.add_argument('filename', type=str, nargs='+', help='The file to process')
     parser.add_argument('--no_output', type=str, nargs='+', help='Set to "True" to disable logging')
+    parser.add_argument('--row_min', type=int, nargs='+', help='The first row to import')
+    parser.add_argument('--row_max', type=int, nargs='+', help='The last row to import')
     parsed_args = parser.parse_args(args)
     filename = parsed_args.filename[0].split('=')[1]
     use_logger = True
     if parsed_args.no_output and boolean_or_none(parsed_args.no_output[0]) is True:
         use_logger = False
+    row_min = parsed_args.row_min[0] if parsed_args.row_min else 0
+    row_max = parsed_args.row_max[0] if parsed_args.row_max else None
 
     # Statistics logged to the user in the future
     num_successful_imports = 0
@@ -253,6 +257,11 @@ def import_csv_to_database(*args, **kwargs):
             # actually row 2 (row 1 is the header row). Use the perceived_row_number
             # when giving the user output
             perceived_row_number = row_number + 2
+            # If the user passed in specific rows, then only import those rows
+            if perceived_row_number < row_min:
+                continue
+            if row_max and perceived_row_number > row_max:
+                break
 
             # Get the object type. If this is neither a 'Plant' nor 'Project', then
             # add the row to error_rows, and move on to the next row
