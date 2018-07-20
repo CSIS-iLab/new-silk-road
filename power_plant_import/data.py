@@ -68,18 +68,19 @@ def collect_power_plant_data(source_data, source_variables):
         # use indexes to match/create a data_key in power_plant_data, and append
         plant_id = record.get("Plant ID")  # not in source_variables, not in all datasets
         plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        country = record.get("Country")
         plant_loc = (
             record[source_variables[dataset]["Latitude"]],
             record[source_variables[dataset]["Longitude"]],
         )
         if plant_id not in [None, "NA", ""] and (dataset, plant_id) in plant_id_index:
             data_key = plant_id_index[(dataset, plant_id)]
-        elif plant_name not in [None, "NA", ""] and plant_name in plant_name_index:
-            data_key = plant_name_index[plant_name]
+        elif plant_name not in [None, "NA", ""] and (plant_name, country) in plant_name_index:
+            data_key = plant_name_index[(plant_name, country)]
         elif plant_loc not in [None, "NA", ""] and plant_loc in plant_loc_index:
             data_key = plant_loc_index[plant_loc]
         else:
-            data_key = str((plant_name, (dataset, plant_id), plant_loc))
+            data_key = str(((plant_name, country), (dataset, plant_id), plant_loc))
         if data_key not in power_plant_data:
             power_plant_data[data_key] = []
         power_plant_data[data_key].append(record)
@@ -87,8 +88,8 @@ def collect_power_plant_data(source_data, source_variables):
         # update the indexes with the values in the current record if the values are not empty
         if plant_id not in [None, "NA", ""] and plant_id not in plant_id_index:
             plant_id_index[(dataset, plant_id)] = data_key
-        if plant_name not in [None, "NA", ""] and plant_name not in plant_name_index:
-            plant_name_index[plant_name] = data_key
+        if plant_name not in [None, "NA", ""] and (plant_name, country) not in plant_name_index:
+            plant_name_index[(plant_name, country)] = data_key
         if (
             (plant_loc[0] is not None and plant_loc[0].strip() not in ["NA", ""])
             and (plant_loc[1] is not None and plant_loc[1].strip() not in ["NA", ""])
