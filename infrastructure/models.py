@@ -193,7 +193,7 @@ class Project(Publishable):
     def fuzzy_construction_date(self):
         return fuzzydate(self.construction_start_year, self.construction_start_month, self.construction_start_day)
     
-    project_output = models.BigIntegerField(
+    project_output = models.FloatField(
         blank=True, null=True,
     )
 
@@ -207,7 +207,7 @@ class Project(Publishable):
     def fuzzy_output_date(self):
         return fuzzydate(self.project_output_year)
 
-    estimated_project_output = models.BigIntegerField(
+    estimated_project_output = models.FloatField(
         blank=True, null=True,
     )
     estimated_project_output_unit = models.PositiveSmallIntegerField(
@@ -224,7 +224,7 @@ class Project(Publishable):
         choices=ProjectPlantUnits.UNITS
     )
 
-    project_CO2_emissions = models.BigIntegerField(
+    project_CO2_emissions = models.FloatField(
         blank=True, null=True,
     )
     
@@ -395,7 +395,7 @@ class PowerPlant(Publishable):
         choices=ProjectPlantUnits.UNITS
     )
 
-    plant_output = models.BigIntegerField(
+    plant_output = models.FloatField(
         blank=True, null=True,
     )
 
@@ -405,7 +405,8 @@ class PowerPlant(Publishable):
     )
 
     plant_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
-    estimated_plant_output = models.BigIntegerField(
+
+    estimated_plant_output = models.FloatField(
         blank=True, null=True
     )
     estimated_plant_output_unit = models.PositiveSmallIntegerField(
@@ -413,7 +414,7 @@ class PowerPlant(Publishable):
         choices=ProjectPlantUnits.UNITS
     )
 
-    plant_CO2_emissions = models.BigIntegerField(
+    plant_CO2_emissions = models.FloatField(
         blank=True, null=True
     )
 
@@ -423,6 +424,7 @@ class PowerPlant(Publishable):
     )
 
     grid_connected = models.NullBooleanField('Grid connected?')
+
     latitude = models.DecimalField(
         max_digits=9, decimal_places=6,
         blank=True, null=True
@@ -453,7 +455,6 @@ class PowerPlant(Publishable):
         return self.name
 
     # Project Inline
-    # Owners Inline
 
 
 class InitiativeType(models.Model):
