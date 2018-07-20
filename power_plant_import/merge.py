@@ -14,11 +14,11 @@ def _00_merge_owners_stakes(records, **params):
     Each Owner N value should have its Owner Stake N value put in a corresponding field
     """
     # 1. collect all owners and their stakes for this recordset
-    owners = OrderedDict()  # project as key, ordered dict of
+    owners = OrderedDict()  # project as key, ordered dict of owner: stake
     for record in records:
-        key = (record["Power Plant Name"], record["Project Name"])
-        if key not in owners:
-            owners[key] = OrderedDict()  #  owners names as keys, list of stakes as values
+        project_key = (record["Power Plant Name"], record["Project Name"])
+        if project_key not in owners:
+            owners[project_key] = OrderedDict()  #  owners names as keys, list of stakes as values
         owner_fields = [
             field for field in record.keys() if re.match(r"^Owner \d+$", field) is not None
         ]
@@ -28,26 +28,25 @@ def _00_merge_owners_stakes(records, **params):
                 for name in [
                     name.strip() for name in record[field].split(";") if name.strip() != ""
                 ]:
-                    if name not in owners[key]:
-                        owners[key][name] = []
-                    if stake not in owners[key][name] and stake not in [None, "NA"]:
-                        owners[key][name].append(stake)
-                record[field] = None  # reducing
+                    if name not in owners[project_key]:
+                        owners[project_key][name] = []
+                    if stake not in owners[project_key][name] and stake not in [None, "NA"]:
+                        owners[project_key][name].append(stake)
+            else:  # drop Owner values for Projects
+                record[field] = None
                 if record.get(field + " Stake") is not None:
                     record[field + " Stake"] = None
-            else:  # drop Owner values for
-                record[field] = None
 
     # 2. put all values for each plant/project in the first record for that plant/project
-    for key in owners.keys():
+    for project_key in owners.keys():
         record = [
             record
             for record in records
-            if (record["Power Plant Name"], record["Project Name"]) == key
+            if (record["Power Plant Name"], record["Project Name"]) == project_key
         ][0]
-        for i, name in enumerate(owners[key].keys()):
+        for i, name in enumerate(owners[project_key].keys()):
             record[f"Owner {i+1}"] = name
-            record[f"Owner {i+1} Stake"] = ";".join(owners[key][name])
+            record[f"Owner {i+1} Stake"] = ";".join(owners[project_key][name])
     return records
 
 
@@ -90,8 +89,8 @@ def _01_merge_plant_project_fuels(records, **params):
             ]:
                 fuel_vals = record[field].split(";")
                 category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
-                for i in range(len(fuel_vals)):
-                    fuels[key].append((fuel_vals[i], category_vals[i]))
+                    for i in range(len(fuel_vals)):
+                        fuels[key].append((fuel_vals[i], category_vals[i]))
                 record[field] = None  # reduce
                 record[field + " Category"] = None
 
@@ -244,7 +243,7 @@ def _99_final_merge(records, **params):
                     if projects[key].get(field) in [None, "NA"]:
                         projects[key][field] = record[field]
                     elif field == "Source Plant Name":
-                        if record[field].lower() != projects[key][field].lower():   # norm case
+                        if record[field].lower() != projects[key][field].lower():  # norm case
                             __print_field_conflict(projects[key], record, key, field)
                     elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
                         if round(float(record[field]), 2) != round(float(projects[key][field]), 2):
