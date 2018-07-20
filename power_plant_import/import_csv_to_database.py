@@ -16,7 +16,7 @@ from facts.models import Organization
 from infrastructure.forms import PowerPlantForm, ProjectForm
 from infrastructure.models import (
     Fuel, FuelCategory, InfrastructureType, Initiative, OwnerStake, PowerPlant,
-    Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
+    PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from locations.models import Country, Region
 
@@ -160,9 +160,11 @@ def get_initiatives(row):
     return initiatives
 
 
-def get_status_integer_from_string_or_none(status_str):
+def get_status_integer_from_string_or_none(status_str, object_type):
     """Convert a status string into the integer that gets stored in the database."""
     if value_or_none(status_str):
+        if object_type == 'Plant':
+            return {value: key for key, value in PowerPlantStatus.STATUSES}[status_str]
         return {value: key for key, value in ProjectStatus.STATUSES}[status_str]
 
 
@@ -295,7 +297,10 @@ def import_csv_to_database(*args, **kwargs):
                         'latitude': value_or_none(row.get('Latitude')),
                         'longitude': value_or_none(row.get('Longitude')),
                         'infrastructure_type': infrastructure_type_power_plant.id,
-                        'status': get_status_integer_from_string_or_none(row.get('Plant Status')),
+                        'status': get_status_integer_from_string_or_none(
+                            row.get('Plant Status'),
+                            object_type
+                        ),
                         'plant_day_online': value_or_none(row.get('Plant Day Online')),
                         'plant_month_online': get_month_integer_from_input_or_none(
                             row.get('Plant Month Online')
@@ -358,7 +363,10 @@ def import_csv_to_database(*args, **kwargs):
                         'slug': django.utils.text.slugify(new_object.name),
                         'power_plant': power_plant.id,
                         'infrastructure_type': infrastructure_type_power_plant.id,
-                        'status': get_status_integer_from_string_or_none(row.get('Project Status')),
+                        'status': get_status_integer_from_string_or_none(
+                            row.get('Project Status'),
+                            object_type
+                        ),
                         'project_capacity': value_or_none(row.get('Project Capacity')),
                         'project_capacity_unit': get_unit_integer_from_string_or_none(
                             row.get('Project Capacity Unit')

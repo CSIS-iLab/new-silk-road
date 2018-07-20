@@ -7,7 +7,7 @@ from facts.models import Organization
 from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.models import (
     Fuel, FuelCategory, Initiative, InfrastructureType, OwnerStake, PowerPlant,
-    Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
+    PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from infrastructure.tests.factories import ProjectFundingFactory
 from locations.models import Country, Region
@@ -407,7 +407,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         )
         self.assertEqual(
             powerplant_ilarionas.status,
-            {value: key for key, value in ProjectStatus.STATUSES}['Partially Active']
+            {value: key for key, value in PowerPlantStatus.STATUSES}['Partially Active']
         )
         self.assertEqual(powerplant_ilarionas.plant_day_online, None)
         self.assertEqual(powerplant_ilarionas.plant_month_online, 5)
