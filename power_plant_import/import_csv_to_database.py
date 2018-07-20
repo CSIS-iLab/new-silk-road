@@ -98,10 +98,16 @@ def add_owner_stakes(row, power_plant):
 def convert_country_name_to_iso_3166_name(country_name):
     """Convert country name into its ISO 3166 form."""
     conversion_dict = {
+        "Czech Republic": "Czechia",
+        "Iran": "Iran, Islamic Republic of",
+        "Korea, North": "Korea, Democratic People's Republic of",
         "Korea, South": "Korea, Republic of",
-        "Russia": "Russian Federation",
-        "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
         "Laos": "Lao People's Democratic Republic",
+        "Macedonia": "Macedonia, the former Yugoslav Republic of",
+        "Russia": "Russian Federation",
+        "Syria": "Syrian Arab Republic",
+        "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
+        "Vietnam": "Viet Nam",
     }
     if country_name in conversion_dict:
         return conversion_dict[country_name]
@@ -116,6 +122,15 @@ def get_countries_and_regions(row):
         iso_3166_country_name = convert_country_name_to_iso_3166_name(row.get('Country'))
         # Get the ISO 3166 record for this country
         iso_record = iso3166.countries.get(iso_3166_country_name)
+        # Kosovo is not in the iso3166 library
+        if not iso_record and iso_3166_country_name == 'Kosovo':
+            iso_record = iso3166.Country(
+                name='Kosovo',
+                alpha2='XK',
+                alpha3='XK',
+                numeric=142,
+                apolitical_name='Kosovo'
+            )
         # Get or create the country. Note: use the country name from the spreadsheet,
         # and not the ISO 3166 country name.
         country, _ = Country.objects.get_or_create(
