@@ -24,6 +24,22 @@ from locations.models import Country, Region
 logger = logging.getLogger('power_plant_import')
 
 
+# A dictionary of country names that are found in Reconnecting Asia documents,
+# and their ISO3166 corresponding names
+iso_3166_country_name_conversion_dict = {
+    "Czech Republic": "Czechia",
+    "Iran": "Iran, Islamic Republic of",
+    "Korea, North": "Korea, Democratic People's Republic of",
+    "Korea, South": "Korea, Republic of",
+    "Laos": "Lao People's Democratic Republic",
+    "Macedonia": "Macedonia, the former Yugoslav Republic of",
+    "Russia": "Russian Federation",
+    "Syria": "Syrian Arab Republic",
+    "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
+    "Vietnam": "Viet Nam",
+}
+
+
 def get_or_create_fuels(row):
     """Get or create the Fuels and FuelCategories for this row."""
     object_type = row.get('Type')
@@ -97,20 +113,8 @@ def add_owner_stakes(row, power_plant):
 
 def convert_country_name_to_iso_3166_name(country_name):
     """Convert country name into its ISO 3166 form."""
-    conversion_dict = {
-        "Czech Republic": "Czechia",
-        "Iran": "Iran, Islamic Republic of",
-        "Korea, North": "Korea, Democratic People's Republic of",
-        "Korea, South": "Korea, Republic of",
-        "Laos": "Lao People's Democratic Republic",
-        "Macedonia": "Macedonia, the former Yugoslav Republic of",
-        "Russia": "Russian Federation",
-        "Syria": "Syrian Arab Republic",
-        "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
-        "Vietnam": "Viet Nam",
-    }
-    if country_name in conversion_dict:
-        return conversion_dict[country_name]
+    if country_name in iso_3166_country_name_conversion_dict:
+        return iso_3166_country_name_conversion_dict[country_name]
     return country_name
 
 
