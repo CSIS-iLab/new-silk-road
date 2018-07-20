@@ -181,9 +181,12 @@ def get_month_integer_from_input_or_none(month_value):
         try:
             return int(month_value)
         except ValueError:
-            # The month_value is not an integer, so we assume it is a month
-            # abbreviation. Try to get the month integer for the value.
-            return {value: key for key, value in enumerate(calendar.month_abbr)}[month_value]
+            # The month_value is not an integer, so try to get the month integer
+            # for the value.
+            if month_value in calendar.month_abbr:
+                return {value: key for key, value in enumerate(calendar.month_abbr)}[month_value]
+            elif month_value in calendar.month_name:
+                return {value: key for key, value in enumerate(calendar.month_name)}[month_value]
 
 
 def add_funders(row, project):
