@@ -224,6 +224,88 @@ def boolean_or_none(value):
     return None
 
 
+def get_power_plant_data_for_form(power_plant_obj, row, infrastructure_type):
+    """Return a dictionary of fields for a form, based on the row."""
+    return {
+        'name': power_plant_obj.name,
+        'slug': django.utils.text.slugify(power_plant_obj.name),
+        'latitude': value_or_none(row.get('Latitude')),
+        'longitude': value_or_none(row.get('Longitude')),
+        'infrastructure_type': infrastructure_type.id,
+        'status': get_status_integer_from_string_or_none(row.get('Plant Status'), 'Plant'),
+        'plant_day_online': value_or_none(row.get('Plant Day Online')),
+        'plant_month_online': get_month_integer_from_input_or_none(
+            row.get('Plant Month Online')
+        ),
+        'plant_year_online': value_or_none(row.get('Plant Year Online')),
+        'decommissioning_day': value_or_none(row.get('Decommissioning Day')),
+        'decommissioning_month': get_month_integer_from_input_or_none(
+            row.get('Decommissioning Month')),
+        'decommissioning_year': value_or_none(row.get('Decommissioning Year')),
+        'plant_capacity': value_or_none(row.get('Plant Capacity')),
+        'plant_capacity_unit': get_unit_integer_from_string_or_none(
+            row.get('Plant Capacity Unit')
+        ),
+        'plant_output': value_or_none(row.get('Plant Output')),
+        'plant_output_unit': get_unit_integer_from_string_or_none(
+            row.get('Plant Output Unit')
+        ),
+        'plant_output_year': value_or_none(row.get('Plant Output Year')),
+        'estimated_plant_output': value_or_none(row.get('Estimated Plant Output')),
+        'estimated_plant_output_unit': get_unit_integer_from_string_or_none(
+            row.get('Estimated Plant Output Unit')
+        ),
+        'plant_CO2_emissions': value_or_none(row.get('Plant CO2 Emissions')),
+        'plant_CO2_emissions_unit': get_unit_integer_from_string_or_none(
+            row.get('Plant CO2 Emissions Unit')
+        ),
+        'grid_connected': boolean_or_none(row.get('Grid Connected')),
+    }
+
+
+def get_project_data_for_form(project, power_plant, row, infrastructure_type):
+    """Return a dictionary of fields for a form, based on the row."""
+    return {
+        'name': project.name,
+        'slug': django.utils.text.slugify(project.name),
+        'power_plant': power_plant.id,
+        'infrastructure_type': infrastructure_type.id,
+        'status': get_status_integer_from_string_or_none(row.get('Project Status'), 'Project'),
+        'project_capacity': value_or_none(row.get('Project Capacity')),
+        'project_capacity_unit': get_unit_integer_from_string_or_none(
+            row.get('Project Capacity Unit')
+        ),
+        'project_output': value_or_none(row.get('Project Output')),
+        'project_output_unit': get_unit_integer_from_string_or_none(row.get('Project Output Unit')),
+        'estimated_project_output': value_or_none(row.get('Estimated Project Output')),
+        'estimated_project_output_unit': get_unit_integer_from_string_or_none(
+            row.get('Estimated Project Output Unit')
+        ),
+        'project_CO2_emissions': value_or_none(row.get('Project CO2 Emissions')),
+        'project_CO2_emissions_unit': get_unit_integer_from_string_or_none(
+            row.get('Project CO2 Emissions Unit')
+        ),
+        'nox_reduction_system': boolean_or_none(row.get('NOx Reduction System')),
+        'sox_reduction_system': boolean_or_none(row.get('SOx Reduction System')),
+        'total_cost': value_or_none(row.get('Total Cost')),
+        'total_cost_currency': value_or_none(row.get('Total Cost Currency')),
+        'start_day': value_or_none(row.get('Start Day')),
+        'start_month': get_month_integer_from_input_or_none(row.get('Start Month')),
+        'start_year': value_or_none(row.get('Start Year')),
+        'construction_start_day': value_or_none(row.get('Construction Start Day')),
+        'construction_start_month': get_month_integer_from_input_or_none(
+            row.get('Construction Start Month')
+        ),
+        'construction_start_year': value_or_none(row.get('Construction Start Year')),
+        'planned_completion_day': value_or_none(row.get('Completion Day')),
+        'planned_completion_month': get_month_integer_from_input_or_none(
+            row.get('Completion Month')
+        ),
+        'planned_completion_year': value_or_none(row.get('Completion Year')),
+        'new': boolean_or_none(row.get('New Construction')),
+    }
+
+
 def import_csv_to_database(*args, **kwargs):
     """
     Import the contents of the CSV file into the database.
@@ -304,44 +386,11 @@ def import_csv_to_database(*args, **kwargs):
                 )
                 # Get the rest of the fields for the new_object
                 try:
-                    data = {
-                        'name': new_object.name,
-                        'slug': django.utils.text.slugify(new_object.name),
-                        'latitude': value_or_none(row.get('Latitude')),
-                        'longitude': value_or_none(row.get('Longitude')),
-                        'infrastructure_type': infrastructure_type_power_plant.id,
-                        'status': get_status_integer_from_string_or_none(
-                            row.get('Plant Status'),
-                            object_type
-                        ),
-                        'plant_day_online': value_or_none(row.get('Plant Day Online')),
-                        'plant_month_online': get_month_integer_from_input_or_none(
-                            row.get('Plant Month Online')
-                        ),
-                        'plant_year_online': value_or_none(row.get('Plant Year Online')),
-                        'decommissioning_day': value_or_none(row.get('Decommissioning Day')),
-                        'decommissioning_month': get_month_integer_from_input_or_none(
-                            row.get('Decommissioning Month')),
-                        'decommissioning_year': value_or_none(row.get('Decommissioning Year')),
-                        'plant_capacity': value_or_none(row.get('Plant Capacity')),
-                        'plant_capacity_unit': get_unit_integer_from_string_or_none(
-                            row.get('Plant Capacity Unit')
-                        ),
-                        'plant_output': value_or_none(row.get('Plant Output')),
-                        'plant_output_unit': get_unit_integer_from_string_or_none(
-                            row.get('Plant Output Unit')
-                        ),
-                        'plant_output_year': value_or_none(row.get('Plant Output Year')),
-                        'estimated_plant_output': value_or_none(row.get('Estimated Plant Output')),
-                        'estimated_plant_output_unit': get_unit_integer_from_string_or_none(
-                            row.get('Estimated Plant Output Unit')
-                        ),
-                        'plant_CO2_emissions': value_or_none(row.get('Plant CO2 Emissions')),
-                        'plant_CO2_emissions_unit': get_unit_integer_from_string_or_none(
-                            row.get('Plant CO2 Emissions Unit')
-                        ),
-                        'grid_connected': boolean_or_none(row.get('Grid Connected')),
-                    }
+                    data = get_power_plant_data_for_form(
+                        new_object,
+                        row,
+                        infrastructure_type_power_plant
+                    )
 
                     form = PowerPlantForm(data, instance=new_object)
 
@@ -371,56 +420,12 @@ def import_csv_to_database(*args, **kwargs):
                 )
                 # Get the rest of the fields for the new_object
                 try:
-                    data = {
-                        'name': new_object.name,
-                        'slug': django.utils.text.slugify(new_object.name),
-                        'power_plant': power_plant.id,
-                        'infrastructure_type': infrastructure_type_power_plant.id,
-                        'status': get_status_integer_from_string_or_none(
-                            row.get('Project Status'),
-                            object_type
-                        ),
-                        'project_capacity': value_or_none(row.get('Project Capacity')),
-                        'project_capacity_unit': get_unit_integer_from_string_or_none(
-                            row.get('Project Capacity Unit')
-                        ),
-                        'project_output': value_or_none(row.get('Project Output')),
-                        'project_output_unit': get_unit_integer_from_string_or_none(
-                            row.get('Project Output Unit')
-                        ),
-                        'estimated_project_output': value_or_none(
-                            row.get('Estimated Project Output')
-                        ),
-                        'estimated_project_output_unit': get_unit_integer_from_string_or_none(
-                            row.get('Estimated Project Output Unit')
-                        ),
-                        'project_CO2_emissions': value_or_none(row.get('Project CO2 Emissions')),
-                        'project_CO2_emissions_unit': get_unit_integer_from_string_or_none(
-                            row.get('Project CO2 Emissions Unit')
-                        ),
-                        'nox_reduction_system': boolean_or_none(row.get('NOx Reduction System')),
-                        'sox_reduction_system': boolean_or_none(row.get('SOx Reduction System')),
-                        'total_cost': value_or_none(row.get('Total Cost')),
-                        'total_cost_currency': value_or_none(row.get('Total Cost Currency')),
-                        'start_day': value_or_none(row.get('Start Day')),
-                        'start_month': get_month_integer_from_input_or_none(
-                            row.get('Start Month')
-                        ),
-                        'start_year': value_or_none(row.get('Start Year')),
-                        'construction_start_day': value_or_none(row.get('Construction Start Day')),
-                        'construction_start_month': get_month_integer_from_input_or_none(
-                            row.get('Construction Start Month')
-                        ),
-                        'construction_start_year': value_or_none(
-                            row.get('Construction Start Year')
-                        ),
-                        'planned_completion_day': value_or_none(row.get('Completion Day')),
-                        'planned_completion_month': get_month_integer_from_input_or_none(
-                            row.get('Completion Month')
-                        ),
-                        'planned_completion_year': value_or_none(row.get('Completion Year')),
-                        'new': boolean_or_none(row.get('New Construction')),
-                    }
+                    data = get_project_data_for_form(
+                        new_object,
+                        power_plant,
+                        row,
+                        infrastructure_type_power_plant
+                    )
                     form = ProjectForm(data, instance=new_object)
                     if form.is_valid():
                         new_object = form.save()
