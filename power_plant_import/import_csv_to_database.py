@@ -366,6 +366,7 @@ def import_csv_to_database(*args, **kwargs):
                 countries, regions = get_countries_and_regions(row)
             except KeyError:
                 # The row doesn't have a valid country
+                countries, regions = [], []
                 completed_but_with_warnings[perceived_row_number] = 'Invalid country'
 
             # Get the Initiatives for the row

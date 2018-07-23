@@ -280,6 +280,19 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(set(powerplant_tonstad.countries.all()), set([norway]))
         self.assertEqual(set(powerplant_tonstad.regions.all()), set([region_existing]))
 
+    def test_unknown_countries(self):
+        """Having unknown (by the iso3166 library) countries creates new ones."""
+        # Currently, there are no Countries or Regions
+        self.assertEqual(Country.objects.count(), 0)
+        self.assertEqual(Region.objects.count(), 0)
+
+        # Call the command with countries that are not recognized by the iso3166 library
+        self.call_command(filename='power_plant_import/tests/data/unknown_countries.csv')
+
+        # No Countries or Regions were created during the test
+        self.assertEqual(Country.objects.count(), 0)
+        self.assertEqual(Region.objects.count(), 0)
+
     def test_funders_created(self):
         """Funders are created correctly for Projects."""
         # Currently, there is 1 ProjectFunding object in the database
@@ -500,3 +513,20 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(Initiative.objects.count(), 1)
         # There are still 3 ProjectFunding objects in the database
         self.assertEqual(ProjectFunding.objects.count(), 3)
+
+    def test_invlaid_data(self):
+        """Rows with invalid data do not create PowerPlants or Projects."""
+        # Currently, there are no PowerPlant or Project objects in the database
+        self.assertEqual(PowerPlant.objects.count(), 0)
+        self.assertEqual(Project.objects.count(), 0)
+
+        # Call the command with invalid data.
+        # The first row is for a power plant, but it has an invalid latitude.
+        # The second row is for a project, but it has an invalid project capacity.
+        # The third row is for a project, but it has an invalid project capacity unit.
+        # The fourth row is for a power plant, but  has an invalid status.
+        self.call_command(filename='power_plant_import/tests/data/invalid_data.csv')
+
+        # Each of the objects were created, though the invalid data was not saved.
+        self.assertEqual(PowerPlant.objects.count(), 3)
+        self.assertEqual(Project.objects.count(), 2)
