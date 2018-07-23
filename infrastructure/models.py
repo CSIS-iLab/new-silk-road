@@ -23,22 +23,24 @@ class InfrastructureType(models.Model):
     def __str__(self):
         return self.name
 
+
 class OwnerStake(models.Model):
     """ Percentage that owners own and also relation with PowerPlant and Organization """
     power_plant = models.ForeignKey(
         'PowerPlant',
         models.CASCADE,
-        related_name = 'owner_stakes'
+        related_name='owner_stakes'
     )
     owner = models.ForeignKey(
         'facts.Organization',
         models.CASCADE,
-        related_name = 'owners_stakes'
+        related_name='owners_stakes'
     )
     percent_owned = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.owners
+
 
 class ProjectFunding(Temporal):
     """ProjectFunding relates Organizations to projects they fund, with amounts"""
@@ -64,6 +66,7 @@ class ProjectFunding(Temporal):
             self.amount or None, self.currency
         )
 
+
 class PowerPlantStatus:
     ACTIVE = 1
     PARTIALLY_ACTIVE = 2
@@ -74,6 +77,7 @@ class PowerPlantStatus:
         (PARTIALLY_ACTIVE, 'Partially Active'),
         (INACTIVE, 'Inactive')
     )
+
 
 class ProjectStatus:
     ANNOUNCED = 1
@@ -96,6 +100,7 @@ class ProjectStatus:
         (SUSPENDED, 'Suspended')
     )
 
+
 class ProjectPlantUnits:
     MEGAWATTHOUR = 0
     MEGAWATT = 1
@@ -106,6 +111,7 @@ class ProjectPlantUnits:
         (MEGAWATT, 'MW'),
         (TONNESPERANNUM, 'Tonnes per annum')
     )
+
 
 class CollectionStage(object):
     IDENTIFIED = 1
@@ -147,8 +153,8 @@ class Project(Publishable):
     )
     power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
     fuels = models.ManyToManyField(
-        'Fuel', 
-        blank=True, 
+        'Fuel',
+        blank=True,
     )
     total_cost = models.BigIntegerField(
         blank=True, null=True,
@@ -169,9 +175,21 @@ class Project(Publishable):
     def fuzzy_start_date(self):
         return fuzzydate(self.start_year, self.start_month, self.start_day)
 
-    commencement_year = models.PositiveSmallIntegerField('Year of commencement of works', blank=True, null=True)
-    commencement_month = models.PositiveSmallIntegerField('Month of commencement of works', blank=True, null=True)
-    commencement_day = models.PositiveSmallIntegerField('Day of commencement of works', blank=True, null=True)
+    commencement_year = models.PositiveSmallIntegerField(
+        'Year of commencement of works',
+        blank=True,
+        null=True
+    )
+    commencement_month = models.PositiveSmallIntegerField(
+        'Month of commencement of works',
+        blank=True,
+        null=True
+    )
+    commencement_day = models.PositiveSmallIntegerField(
+        'Day of commencement of works',
+        blank=True,
+        null=True
+    )
 
     @property
     def fuzzy_commencement_date(self):
@@ -183,16 +201,24 @@ class Project(Publishable):
 
     @property
     def fuzzy_planned_completion_date(self):
-        return fuzzydate(self.planned_completion_year, self.planned_completion_month, self.planned_completion_day)
+        return fuzzydate(
+            self.planned_completion_year,
+            self.planned_completion_month,
+            self.planned_completion_day
+        )
 
     construction_start_year = models.PositiveSmallIntegerField(blank=True, null=True)
     construction_start_month = models.PositiveSmallIntegerField(blank=True, null=True)
     construction_start_day = models.PositiveSmallIntegerField(blank=True, null=True)
-    
+
     @property
     def fuzzy_construction_date(self):
-        return fuzzydate(self.construction_start_year, self.construction_start_month, self.construction_start_day)
-    
+        return fuzzydate(
+            self.construction_start_year,
+            self.construction_start_month,
+            self.construction_start_day
+        )
+
     project_output = models.FloatField(
         blank=True, null=True,
     )
@@ -203,6 +229,7 @@ class Project(Publishable):
     )
 
     project_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
+
     @property
     def fuzzy_output_date(self):
         return fuzzydate(self.project_output_year)
@@ -227,7 +254,7 @@ class Project(Publishable):
     project_CO2_emissions = models.FloatField(
         blank=True, null=True,
     )
-    
+
     project_CO2_emissions_unit = models.PositiveSmallIntegerField(
         blank=True, null=True,
         choices=ProjectPlantUnits.UNITS
@@ -327,6 +354,7 @@ class Project(Publishable):
             }
         )
 
+
 class Fuel(Publishable):
     name = models.CharField(max_length=140)
     fuel_category = models.ForeignKey(
@@ -334,8 +362,10 @@ class Fuel(Publishable):
         blank=True, null=True,
         help_text='Select or create named fuel categories.'
     )
+
     def __str__(self):
         return self.name
+
 
 class FuelCategory(Publishable):
     name = models.CharField(max_length=140)
@@ -357,8 +387,8 @@ class PowerPlant(Publishable):
         help_text='Select or create named insfrastructure types.'
     )
     fuels = models.ManyToManyField(
-        'Fuel', 
-        blank=True, 
+        'Fuel',
+        blank=True,
     )
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
@@ -373,18 +403,22 @@ class PowerPlant(Publishable):
     plant_year_online = models.PositiveSmallIntegerField(blank=True, null=True)
     plant_month_online = models.PositiveSmallIntegerField(blank=True, null=True)
     plant_day_online = models.PositiveSmallIntegerField(blank=True, null=True)
-    
+
     @property
     def fuzzy_plant_online_date(self):
         return fuzzydate(self.plant_year_online, self.plant_month_online, self.plant_day_online)
-    
+
     decommissioning_year = models.PositiveSmallIntegerField(blank=True, null=True)
     decommissioning_month = models.PositiveSmallIntegerField(blank=True, null=True)
     decommissioning_day = models.PositiveSmallIntegerField(blank=True, null=True)
 
-    @property 
+    @property
     def fuzzy_decommissioning_date(self):
-        return fuzzydate(self.decommissioning_year, self.decommissioning_month, self.decommissioning_day)
+        return fuzzydate(
+            self.decommissioning_year,
+            self.decommissioning_month,
+            self.decommissioning_day
+        )
 
     plant_capacity = models.FloatField(
         blank=True, null=True,
@@ -443,14 +477,14 @@ class PowerPlant(Publishable):
     )
     operators = models.ManyToManyField(
         'facts.Organization',
-        verbose_name = 'Operators',
+        verbose_name='Operators',
         related_name='plants_operated',
         blank=True,
     )
 
     class Meta:
-        ordering = ['name',]
-    
+        ordering = ['name', ]
+
     def __str__(self):
         return self.name
 
@@ -492,9 +526,21 @@ class Initiative(MPTTModel, Publishable):
 
     documents = models.ManyToManyField('sources.Document', blank=True)
 
-    founding_year = models.PositiveSmallIntegerField('Founding/Signing Year', blank=True, null=True)
-    founding_month = models.PositiveSmallIntegerField('Founding/Signing Month', blank=True, null=True)
-    founding_day = models.PositiveSmallIntegerField('Founding/Signing Day', blank=True, null=True)
+    founding_year = models.PositiveSmallIntegerField(
+        'Founding/Signing Year',
+        blank=True,
+        null=True
+    )
+    founding_month = models.PositiveSmallIntegerField(
+        'Founding/Signing Month',
+        blank=True,
+        null=True
+    )
+    founding_day = models.PositiveSmallIntegerField(
+        'Founding/Signing Day',
+        blank=True,
+        null=True
+    )
 
     @property
     def fuzzy_founding_date(self):
@@ -539,6 +585,7 @@ class Initiative(MPTTModel, Publishable):
                 'identifier': str(self.identifier)
             }
         )
+
 
 class ProjectDocument(models.Model):
     DOCUMENT_TYPES = (

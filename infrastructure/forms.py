@@ -76,11 +76,12 @@ class ProjectSearchMultiField(forms.ModelMultipleChoiceField):
     widget = ModelSelect2MultipleWidget(
         model=Project, attrs={'style': 'width: 75%'},
         search_fields=('name__icontains', ))
-    
+
     def __init__(self, *args, **kwargs):
         kwargs['queryset'] = Project.objects.all()
         kwargs['help_text'] = 'Select field and begin typing to search'
         super().__init__(*args, **kwargs)
+
 
 class ProjectForm(forms.ModelForm):
     countries = CountrySearchMultiField(
@@ -120,6 +121,7 @@ class ProjectForm(forms.ModelForm):
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
         }
 
+
 class PowerPlantForm(forms.ModelForm):
     countries = CountrySearchMultiField(
         required=False,
@@ -138,6 +140,7 @@ class PowerPlantForm(forms.ModelForm):
         model = PowerPlant
         fields = '__all__'
 
+
 class ProjectFundingForm(forms.ModelForm):
     sources = OrganizationSearchMultiField(required=False)
     project = forms.ModelChoiceField(
@@ -150,10 +153,12 @@ class ProjectFundingForm(forms.ModelForm):
         model = ProjectFunding
         fields = '__all__'
 
+
 class ProjectOwnerStakeForm(forms.ModelForm):
     class Meta:
         model = OwnerStake
         fields = '__all__'
+
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
     project = forms.ModelChoiceField(

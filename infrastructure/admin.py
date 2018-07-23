@@ -51,13 +51,16 @@ class ProjectsInitiativeInline(admin.StackedInline):
             "all": ("admin/css/adminfixes.css",)
         }
 
+
 class ProjectsOwnersInline(admin.StackedInline):
     model = OwnerStake
-    form = ProjectOwnerStakeForm 
+    form = ProjectOwnerStakeForm
+
     class Media:
         css = {
             "all": ("admin/css/adminfixes.css",)
         }
+
 
 class ProjectsDocumentsInline(admin.StackedInline):
     model = Project.documents.through
@@ -243,7 +246,7 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
 class PowerPlantAdmin(admin.ModelAdmin):
     save_on_top = True
     form = PowerPlantForm
-    prepopulated_fields = {"slug":("name",)}
+    prepopulated_fields = {"slug": ("name",)}
     list_display = (
         'name',
         'plant_capacity',
@@ -253,7 +256,7 @@ class PowerPlantAdmin(admin.ModelAdmin):
     )
     list_filter = (
         'plant_capacity',
-        'status', 
+        'status',
         'countries__name'
     )
     search_fields = ('name', 'plant_capacity')
@@ -264,19 +267,22 @@ class PowerPlantAdmin(admin.ModelAdmin):
 
     class Meta:
         model = PowerPlant
-    
+
 
 @admin.register(Fuel)
 class FuelAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(FuelCategory)
 class FuelCategoryAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(OwnerStake)
 class OwnerStakeAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):
