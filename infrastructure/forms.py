@@ -1,5 +1,8 @@
 from django import forms
-from django_select2.forms import ModelSelect2Widget
+from django_select2.forms import (
+    ModelSelect2Widget,
+    ModelSelect2MultipleWidget,
+)
 from infrastructure.models import (
     Project, Initiative, ProjectFunding, PowerPlant, OwnerStake,
 )
@@ -69,6 +72,17 @@ class InitiativeForm(forms.ModelForm):
         fields = '__all__'
 
 
+class ProjectSearchMultiField(forms.ModelMultipleChoiceField):
+    widget = ModelSelect2MultipleWidget(
+        model=Project, attrs={'style': 'width: 75%'},
+        search_fields=('name__icontains', ))
+
+    def __init__(self, *args, **kwargs):
+        kwargs['queryset'] = Project.objects.all()
+        kwargs['help_text'] = 'Select field and begin typing to search'
+        super().__init__(*args, **kwargs)
+
+
 class ProjectForm(forms.ModelForm):
     countries = CountrySearchMultiField(
         required=False,
@@ -107,6 +121,7 @@ class ProjectForm(forms.ModelForm):
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
         }
 
+
 class PowerPlantForm(forms.ModelForm):
     countries = CountrySearchMultiField(
         required=False,
@@ -115,6 +130,7 @@ class PowerPlantForm(forms.ModelForm):
     )
     owners = OrganizationSearchMultiField(required=False)
     operators = OrganizationSearchMultiField(required=False)
+    projects = ProjectSearchMultiField(required=False)
     plant_month_online = MonthField(required=False)
     plant_day_online = DayField(required=False)
     decommissioning_month = MonthField(required=False)
@@ -123,6 +139,7 @@ class PowerPlantForm(forms.ModelForm):
     class Meta:
         model = PowerPlant
         fields = '__all__'
+
 
 class ProjectFundingForm(forms.ModelForm):
     sources = OrganizationSearchMultiField(required=False)
@@ -136,16 +153,12 @@ class ProjectFundingForm(forms.ModelForm):
         model = ProjectFunding
         fields = '__all__'
 
-class ProjectOwnerStakeForm(forms.ModelForm):
-    project = forms.ModelChoiceField(
-        queryset=Project.objects.all(),
-        widget=NameSearchWidget(model=Project),
-        required=True
-    )
 
+class ProjectOwnerStakeForm(forms.ModelForm):
     class Meta:
         model = OwnerStake
         fields = '__all__'
+
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
     project = forms.ModelChoiceField(
