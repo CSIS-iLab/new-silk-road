@@ -39,7 +39,7 @@ class OwnerStake(models.Model):
     percent_owned = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        return "{} stake in {}".format(self.owners, self.power_plant)
+        return "{} stake in {}".format(self.owner, self.power_plant)
 
 
 class ProjectFunding(Temporal):
