@@ -1,11 +1,14 @@
-from django.test import SimpleTestCase
+from django.http import QueryDict
+from django.test import SimpleTestCase, TestCase
 
 from ..forms import (
+    PowerPlantForm,
     ProjectForm,
     InitiativeForm,
     MonthField,
     DayField,
 )
+from .factories import PowerPlantFactory, ProjectFactory
 
 
 class FormFieldTestCase(SimpleTestCase):
@@ -147,3 +150,71 @@ class InitiativeFormTestCase(SimpleTestCase):
         self.assertListEqual(form.errors['founding_day'], ['Ensure this value is less than or equal to 31.'])
         self.assertIn('appeared_day', form.errors)
         self.assertListEqual(form.errors['appeared_day'], ['Ensure this value is less than or equal to 31.'])
+
+
+class PowerPlantFormTestCase(TestCase):
+
+    def test_powerplant_form_only_requires_name_and_slug(self):
+        '''PowerPlantForm only requires name and slug values.'''
+        data = {
+            'name': 'Test Initiative Name',
+            'slug': 'test-initiative-name',
+        }
+        form = PowerPlantForm(data)
+        self.assertTrue(form.is_valid())
+
+    def test_initial_projects(self):
+        '''PowerPlantForm shows initial projects.'''
+        with self.subTest('unsaved PowerPlant has no Projects'):
+            data = {'name': 'Test PowerPlant Name', 'slug': 'test-powerplant-name'}
+            form = PowerPlantForm(data)
+            self.assertIsNone(form.initial.get('projects'))
+
+        with self.subTest('saved PowerPlant with no Projects'):
+            power_plant = PowerPlantFactory()
+            form = PowerPlantForm(instance=power_plant)
+            self.assertEqual(form.initial['projects'].count(), 0)
+
+        with self.subTest('saved PowerPlant with Projects'):
+            project1 = ProjectFactory()
+            project2 = ProjectFactory()
+            power_plant.project_set.add(project1, project2)
+            form = PowerPlantForm(
+                instance=power_plant,
+                data={'name': power_plant.name, 'slug': power_plant.slug}
+            )
+            self.assertTrue(form.is_valid())
+            self.assertEqual(
+                set(form.initial['projects']),
+                set([project1, project2])
+            )
+
+    def test_save_projects(self):
+        '''PowerPlantForm correctly saves a PowerPlant's Projects.'''
+        power_plant = PowerPlantFactory()
+        project1 = ProjectFactory()
+        project2 = ProjectFactory()
+
+        with self.subTest('Adding projects'):
+            data = QueryDict(mutable=True)
+            data.update({'name': power_plant.name, 'slug': power_plant.slug})
+            data.update(projects=project1.id)
+            data.update(projects=project2.id)
+            form = PowerPlantForm(instance=power_plant, data=data)
+            self.assertTrue(form.is_valid())
+            updated_powerplant = form.save()
+
+            self.assertEqual(
+                set(updated_powerplant.project_set.all()),
+                set([project1, project2])
+            )
+
+        with self.subTest('Removing Projects'):
+            data = QueryDict(mutable=True)
+            data.update({'name': power_plant.name, 'slug': power_plant.slug})
+            data.update(projects=project1.id)
+            form = PowerPlantForm(instance=power_plant, data=data)
+            self.assertTrue(form.is_valid())
+            updated_powerplant = form.save()
+
+            self.assertEqual(set(updated_powerplant.project_set.all()), set([project1]))
