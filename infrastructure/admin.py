@@ -271,12 +271,25 @@ class PowerPlantAdmin(admin.ModelAdmin):
 
 @admin.register(Fuel)
 class FuelAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
+    list_display = (
+        'name',
+        'fuel_category'
+    )
+    list_filter = (
+        'name',
+        'fuel_category'
+    )
+    search_fields = ('name', 'fuel_category__name')
 
 
 @admin.register(FuelCategory)
 class FuelCategoryAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
+    list_filter = (
+        'name',
+    )
+    search_fields = ('name',)
 
 
 @admin.register(OwnerStake)
