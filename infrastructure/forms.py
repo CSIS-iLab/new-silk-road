@@ -141,6 +141,27 @@ class PowerPlantForm(forms.ModelForm):
         fields = '__all__'
 
 
+    def __init__(self, *args, **kwargs):
+        """Display all of the PowerPlant's current projects as initial data."""
+        if kwargs.get('instance'):
+            kwargs.update(initial={'projects': kwargs['instance'].project_set.all()})
+        super().__init__(*args, **kwargs)
+
+    def _save_m2m(self, *args, **kwargs):
+        """
+        Save the PowerPlant's Projects.
+
+        All of the other uses of Django-Select2 are for Many-To-Many fields, but
+        since the projects field is a Many-To-One field (a ForeignKey), it doesn't
+        get handled the same way by Django and Django-Select2.
+        """
+        super()._save_m2m(*args, **kwargs)
+        for project in Project.objects.filter(id__in=self.data.getlist('projects')):
+            self.instance.project_set.add(project)
+        for project in self.instance.project_set.exclude(id__in=self.data.getlist('projects')):
+            self.instance.project_set.remove(project)
+
+
 class ProjectFundingForm(forms.ModelForm):
     sources = OrganizationSearchMultiField(required=False)
     project = forms.ModelChoiceField(
