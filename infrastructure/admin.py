@@ -297,6 +297,7 @@ class OwnerStakeAdmin(admin.ModelAdmin):
     save_on_top = True
     form = ProjectOwnerStakeForm
     list_display = (
+        'id',
         'owner',
         'percent_owned',
         'power_plant',
