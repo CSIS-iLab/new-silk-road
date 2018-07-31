@@ -62,12 +62,22 @@ def collect_power_plant_data(source_data, source_variables):
     plant_id_index = {}
     plant_name_index = {}
     plant_loc_index = {}
+    previous_record = None
     for record in source_data:
+        # normalize to strings (so that it works the same for both CSV and Excel sources)
+        for field in record.keys():
+            if record[field] is not None:
+                record[field] = str(record[field])
+
         dataset = record["Dataset"]
 
         # use indexes to match/create a data_key in power_plant_data, and append
         plant_id = record.get("Plant ID")  # not in source_variables, not in all datasets
-        plant_name = record[source_variables[dataset]["Power Plant Name"]]
+        plant_name_key = source_variables[dataset]["Power Plant Name"]
+        plant_name = record[plant_name_key]
+        # sometimes the dataset only lists the plant name in the first record in a group
+        if plant_name is None or plant_name.strip() == '':
+            plant_name = record[plant_name_key] = previous_record[plant_name_key]
         country = record.get("Country")
         plant_loc = (
             record[source_variables[dataset]["Latitude"]],
@@ -96,6 +106,8 @@ def collect_power_plant_data(source_data, source_variables):
             and (plant_loc not in plant_loc_index)
         ):
             plant_loc_index[plant_loc] = data_key
+
+        previous_record = record
 
     return power_plant_data
 
