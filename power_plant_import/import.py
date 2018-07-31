@@ -88,5 +88,5 @@ if __name__ == "__main__":
         data.write_json(json_filename, power_plant_data)
         log.info(f"wrote {os.path.relpath(json_filename, parent_path)}")
 
-    tab_filename = csv_out.write_tab_delimited(power_plant_data, output_path)
-    print('wrote', tab_filename)
+    csv_filename = csv_out.write_pipe_delimited(power_plant_data, output_path)
+    print('wrote', csv_filename)

@@ -65,6 +65,6 @@ if __name__ == "__main__":
 
     orgs_report_filename = os.path.join(os.path.dirname(sys.argv[1]), "orgs_matches.txt")
     with open(orgs_report_filename, "wb") as f:
-        f.write(b"Source Name\tMatch %\tMatch Name\n")
+        f.write(b"Source Name|Match %|Match Name\n")
         for org in sorted(missing_orgs.values(), key=lambda org: org["Match %"], reverse=True):
-            f.write("{Source Name}\t{Match %}\t{Match Name}\n".format(**org).encode("UTF-8"))
+            f.write("{Source Name}|{Match %}|{Match Name}\n".format(**org).encode("UTF-8"))

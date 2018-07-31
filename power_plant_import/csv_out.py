@@ -7,23 +7,23 @@ from . import data
 from .fields import FIELDS
 
 
-def tab_delimited_data_lines(power_plant_data, fields=FIELDS):
-    """produce tab_delimited data, including a header row, from the power_plant_data
+def pipe_delimited_data_lines(power_plant_data, fields=FIELDS):
+    """produce pipe_delimited data, including a header row, from the power_plant_data
     """
-    yield '\t'.join(fields)+'\n'  # header row
+    yield '|'.join(fields)+'\n'  # header row
     for key in power_plant_data:
         for record in [r for r in power_plant_data[key] if r["Type"] == "Plant"]:
-            yield "\t".join([str(record.get(field) or '') for field in fields])+'\n'
+            yield "|".join([str(record.get(field) or '') for field in fields])+'\n'
         for record in [r for r in power_plant_data[key] if r["Type"] == "Project"]:
-            yield "\t".join([str(record.get(field) or '') for field in fields])+'\n'
+            yield "|".join([str(record.get(field) or '') for field in fields])+'\n'
 
 
-def write_tab_delimited(power_plant_data, output_path):
+def write_pipe_delimited(power_plant_data, output_path):
     output_filename = os.path.join(
         output_path, f"Plants_and_Projects-{datetime.now().strftime('%Y%m%d-%H%M%S')}.txt"
     )
     with open(output_filename, 'wb') as f:
-        for line in tab_delimited_data_lines(power_plant_data):
+        for line in pipe_delimited_data_lines(power_plant_data):
             f.write(line.encode('utf-8'))
     return output_filename
 
@@ -31,5 +31,5 @@ def write_tab_delimited(power_plant_data, output_path):
 if __name__ == '__main__':
     json_filename = os.path.abspath(sys.argv[1])
     power_plant_data = data.read_json(json_filename)
-    output_filename = write_tab_delimited(power_plant_data, os.path.dirname(json_filename))
+    output_filename = write_pipe_delimited(power_plant_data, os.path.dirname(json_filename))
     print('wrote', output_filename)

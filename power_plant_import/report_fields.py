@@ -18,6 +18,6 @@ if __name__ == '__main__':
                     fields.append(field)
                     print(
                         fields[-1],
-                        '\t',
+                        '|',
                         (record["Dataset"], record["Power Plant Name"], record["Project Name"]),
                     )

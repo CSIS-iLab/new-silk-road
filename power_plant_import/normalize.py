@@ -330,7 +330,7 @@ def plant_project_fuels(records, **params):
                         vals = [[record[key], ""]]
                 elif re.search(r"[,/;]", record[key]) is not None:
                     # try splitting on common delimiters: ; , /
-                    print(f"COMMON SPLIT (, ; /)\t{dataset}\t{record[key]}")
+                    print(f"COMMON SPLIT (, ; /) | {dataset} | {record[key]}")
                     vals = [
                         [v.strip(), ""] for v in re.split(r"[,/;]", record[key]) if v.strip() != ""
                     ]
@@ -344,7 +344,7 @@ def plant_project_fuels(records, **params):
                     elif fuel_type in fuel_categories:
                         val[0] = val[1] = fuel_categories[fuel_type]
                     else:
-                        print(f"VAL NOT IN FUEL TYPES\t{dataset}\t{record[key]}")
+                        print(f"VAL NOT IN FUEL TYPES | {dataset} | {record[key]}")
                 record[key] = ";".join(str(val[0]) for val in vals)
                 record[key + " Category"] = ";".join(str(val[1]) for val in vals)
             else:
