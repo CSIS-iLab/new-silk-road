@@ -256,6 +256,9 @@ def _99_final_merge(records, **params):
                 if record[field] not in [None, "NA"]:
                     if projects[key].get(field) in [None, "NA"]:
                         projects[key][field] = record[field]
+                    # GD takes precedence over WRI always
+                    elif 'WRI' in record['Dataset'] and 'GD' in projects[key]['Dataset']:
+                        pass
                     elif field == "Source Plant Name":
                         if record[field].lower() != projects[key][field].lower():  # norm case
                             __print_field_conflict(projects[key], record, field)
