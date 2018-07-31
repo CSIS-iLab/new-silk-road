@@ -21,7 +21,7 @@ def load_source_data(source_filenames, source_variables):
         )
         assert dataset in source_variables.keys(), f"Dataset not in source_variables: {dataset}"
         ext = os.path.splitext(source_filename)[-1].lower()
-        if ext == '.xslx':
+        if ext == '.xlsx':
             workbook_data = excel.load_workbook_data(source_filename)
             sheet_title = list(workbook_data.keys())[0]  # first worksheet has source data
             worksheet_data = workbook_data[sheet_title]

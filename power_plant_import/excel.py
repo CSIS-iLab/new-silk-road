@@ -40,7 +40,7 @@ def load_workbook_data(filepath, headers=True, break_on_blank=True):
             keys = [excel_key(i) for i in range(len(row))]
             record = make_record(keys, row)
             wbdata[title].append(record)
-        keys = [re.sub(r"\s+", " ", key).strip() for key in keys]
+        keys = [re.sub(r"\s+", " ", key or '').strip() for key in keys]
         for row in rows:
             record = make_record(keys, row)
             if break_on_blank == True and set(record.values()) == {None}:

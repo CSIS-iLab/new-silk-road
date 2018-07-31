@@ -52,7 +52,7 @@ if __name__ == "__main__":
     source_filenames = [
         fn
         for fn in glob(os.path.join(source_path, "*.*"))
-        if os.path.splitext(fn)[-1].lower() in [".xslx", ".csv"]
+        if os.path.splitext(fn)[-1].lower() in [".xlsx", ".csv"]
         and os.path.basename(fn)[0] not in ["~", "#", "$"]  # no temp files
     ]
     log.info(f"0 collate {len(source_filenames)} source files in {source_path}")
