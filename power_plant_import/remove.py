@@ -30,7 +30,7 @@ def remove_country_not_in_lookup(records, **params):
         if val is None or val not in countries_regions:
             records.pop(records.index(record))
             plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
-            log.error(f"{dataset}:{plant_project}: {key}='{val}'")
+            log.debug(f"{dataset}:{plant_project}: {key}='{val}'")
     if list(set(record["Type"] for record in records))==['Project']:
         return []
     else:
