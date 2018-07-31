@@ -24,9 +24,7 @@ def _00_merge_owners_stakes(records, **params):
         ]
         for field in [field for field in owner_fields if record[field] not in [None, "", "NA"]]:
             stake = record.get(f"{field} Stake")
-            for name in [
-                name.strip() for name in record[field].split(";") if name.strip() != ""
-            ]:
+            for name in [name.strip() for name in record[field].split(";") if name.strip() != ""]:
                 if name not in owners[project_key]:
                     owners[project_key][name] = []
                 if stake not in owners[project_key][name] and stake not in [None, "NA"]:
@@ -233,12 +231,13 @@ def _05_merge_organizations(records, **params):
     return records
 
 
-def __print_field_conflict(project, record, key, field):
+def __print_field_conflict(project, record, field):
     print(
-        f'{key[0]}\t{key[1]}\t{field}'
-        + f'\t{project[field]}\t{record[field]}'
-        + f'\t{project["Dataset"]}\t{project["Source Plant Name"]}'
-        + f'\t{record["Dataset"]}\t{record["Source Plant Name"]}'
+        '|'.join(
+            [project["Power Plant Name"], project["Project Name"]]
+            + [field, str(project[field]), str(record[field])]
+            + [project['Dataset'], record['Dataset']]
+        )
     )
 
 
@@ -259,10 +258,10 @@ def _99_final_merge(records, **params):
                         projects[key][field] = record[field]
                     elif field == "Source Plant Name":
                         if record[field].lower() != projects[key][field].lower():  # norm case
-                            __print_field_conflict(projects[key], record, key, field)
+                            __print_field_conflict(projects[key], record, field)
                     elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
                         if round(float(record[field]), 2) != round(float(projects[key][field]), 2):
-                            __print_field_conflict(projects[key], record, key, field)
+                            __print_field_conflict(projects[key], record, field)
                     elif field in ["Estimated Plant Output", "Estimated Project Output"]:
                         # prioritize GD values over non-GD values
                         if "GD" not in projects[key]["Dataset"] and "GD" in record["Dataset"]:
@@ -270,11 +269,11 @@ def _99_final_merge(records, **params):
                         elif ("GD" in projects[key]["Dataset"] and "GD" in record["Dataset"]) or (
                             "GD" not in projects[key]["Dataset"] and "GD" not in record["Dataset"]
                         ):
-                            __print_field_conflict(projects[key], record, key, field)
+                            __print_field_conflict(projects[key], record, field)
                         else:  # "GD" in project[key]["Dataset"] and not in record["Dataset"]
                             pass
                     elif record[field] != projects[key][field]:
-                        __print_field_conflict(projects[key], record, key, field)
+                        __print_field_conflict(projects[key], record, field)
             # merge Datasets -- semicolon-delimited string
             if record["Dataset"] not in projects[key]["Dataset"]:
                 projects[key]["Dataset"] += ";" + record["Dataset"]
@@ -303,10 +302,7 @@ if __name__ == "__main__":
     params = dict()
 
     power_plant_data = data.read_json(json_filename)
-    print(
-        "Power Plant Name\tProject Name\tConflict Field\tValue1\tValue2"
-        + "\tDataset1\tSource Plant Name1\tDataset2\tSource Plant Name2"
-    )
+    print("Power Plant Name|Project Name|Conflict Field|Value1|Value2|Dataset1|Dataset2")
     power_plant_data = data.reduce_power_plant_data(power_plant_data, *functions, **params)
     output_filename = os.path.join(
         os.path.dirname(json_filename), f"3-merge-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
