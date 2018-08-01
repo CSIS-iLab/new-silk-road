@@ -140,7 +140,6 @@ class PowerPlantForm(forms.ModelForm):
         model = PowerPlant
         fields = '__all__'
 
-
     def __init__(self, *args, **kwargs):
         """Display all of the PowerPlant's current projects as initial data."""
         if kwargs.get('instance'):
@@ -156,9 +155,18 @@ class PowerPlantForm(forms.ModelForm):
         get handled the same way by Django and Django-Select2.
         """
         super()._save_m2m(*args, **kwargs)
-        for project in Project.objects.filter(id__in=self.data.getlist('projects')):
+        # Get the project ids from either the QueryDict or the dictionary
+        project_ids = []
+        if hasattr(self.data, 'getlist'):
+            project_ids = self.data.getlist('projects')
+        elif self.data.get('projects'):
+            project_ids = [project.id for project in self.data.get('projects')]
+
+        # Add Projects whose ids are in the project_ids list
+        for project in Project.objects.filter(id__in=project_ids):
             self.instance.project_set.add(project)
-        for project in self.instance.project_set.exclude(id__in=self.data.getlist('projects')):
+        # Remove any Projects whose ids are not in the project_ids list
+        for project in self.instance.project_set.exclude(id__in=project_ids):
             self.instance.project_set.remove(project)
 
 

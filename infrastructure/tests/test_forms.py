@@ -195,7 +195,7 @@ class PowerPlantFormTestCase(TestCase):
         project1 = ProjectFactory()
         project2 = ProjectFactory()
 
-        with self.subTest('Adding projects'):
+        with self.subTest('Adding projects with a QueryDict'):
             data = QueryDict(mutable=True)
             data.update({'name': power_plant.name, 'slug': power_plant.slug})
             data.update(projects=project1.id)
@@ -209,10 +209,33 @@ class PowerPlantFormTestCase(TestCase):
                 set([project1, project2])
             )
 
-        with self.subTest('Removing Projects'):
+        with self.subTest('Removing Projects with a QueryDict'):
             data = QueryDict(mutable=True)
             data.update({'name': power_plant.name, 'slug': power_plant.slug})
             data.update(projects=project1.id)
+            form = PowerPlantForm(instance=power_plant, data=data)
+            self.assertTrue(form.is_valid())
+            updated_powerplant = form.save()
+
+            self.assertEqual(set(updated_powerplant.project_set.all()), set([project1]))
+
+        with self.subTest('Adding projects with a dictionary'):
+            data = {
+                'name': power_plant.name,
+                'slug': power_plant.slug,
+                'projects': [project1, project2]
+            }
+            form = PowerPlantForm(instance=power_plant, data=data)
+            self.assertTrue(form.is_valid())
+            updated_powerplant = form.save()
+
+            self.assertEqual(
+                set(updated_powerplant.project_set.all()),
+                set([project1, project2])
+            )
+
+        with self.subTest('Removing Projects with a dictionary'):
+            data['projects'] = [project1]
             form = PowerPlantForm(instance=power_plant, data=data)
             self.assertTrue(form.is_valid())
             updated_powerplant = form.save()
