@@ -18,7 +18,7 @@ from infrastructure.models import (
     Fuel, FuelCategory, InfrastructureType, Initiative, OwnerStake, PowerPlant,
     PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
-from locations.models import Country, Region
+from locations.models import Country, GeometryStore, PointGeometry, Region
 
 # Set the logging
 logger = logging.getLogger('power_plant_import')
@@ -208,6 +208,33 @@ def add_funders(row, project):
                 currency=value_or_none(row.get('Funding Currency {}'.format(i))),
             )
             funder.sources.add(funding_organization)
+
+
+def add_geo_data(row, object):
+    """Add a relation to a GeometryStore object for the PowerPlant or Project."""
+    # If the row has latitude and longitude values, then use them
+    if row.get('Latitude') and row.get('Longitude'):
+        point, _ = PointGeometry.objects.get_or_create(
+            geom=django.contrib.gis.geos.Point(
+                float(row.get('Latitude')),
+                float(row.get('Longitude'))
+            )
+        )
+        geometry_store, _ = GeometryStore.objects.get_or_create(
+            label=row.get('Source Plant Name'),
+            attributes={}
+        )
+        geometry_store.points.add(point)
+    elif row.get('Type') == 'Project':
+        # The row does not have latitude and longitude values. If the row is for
+        # a Project, then try to get the GeometryStore from its PowerPlant
+        geometry_store = getattr(object.power_plant, 'geo')
+    else:
+        geometry_store = None
+
+    if geometry_store:
+        object.geo = geometry_store
+        object.save()
 
 
 def value_or_none(value):
@@ -405,10 +432,11 @@ def import_csv_to_database(*args, **kwargs):
 
                 # Add the owner stakes for the PowerPlant
                 add_owner_stakes(row, new_object)
-
                 # Add any operators to the new Power Plant
                 for operator in operators:
                     new_object.operators.add(operator)
+                # Add geo data to the Power Plant
+                add_geo_data(row, new_object)
 
             else:
                 # Get or create the Project
@@ -453,6 +481,8 @@ def import_csv_to_database(*args, **kwargs):
                     new_object.manufacturers.add(manufacturer)
                 # Add the funders for the new Project
                 add_funders(row, new_object)
+                # Add geo data for the new Project
+                add_geo_data(row, new_object)
 
             # Add the Countries and Regions to the new_object
             for country in countries:
