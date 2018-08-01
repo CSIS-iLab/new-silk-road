@@ -1,4 +1,3 @@
-from decimal import Decimal
 import iso3166
 
 from django.test import TestCase
@@ -10,7 +9,7 @@ from infrastructure.models import (
     PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from infrastructure.tests.factories import ProjectFundingFactory
-from locations.models import Country, Region
+from locations.models import Country, GeometryStore, PointGeometry, Region
 from locations.tests.factories import CountryFactory, RegionFactory
 from .. import import_csv_to_database
 
@@ -339,6 +338,57 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # the project_ouessant1 and the project_ouessant2
         self.assertEqual(org_existing.projectfunding_set.count(), 3)
 
+    def test_geo_data_created(self):
+        """GeometryStore objects are created correctly for Projects."""
+        # Currently, there are no GeometryStore or PointGeometry objects in the database
+        self.assertEqual(GeometryStore.objects.count(), 0)
+        self.assertEqual(PointGeometry.objects.count(), 0)
+
+        self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
+
+        # Get the PowerPlants that were created during the import
+        (powerplant_ouessant, powerplant_ilarionas, powerplant_tonstad) = self.get_created_plants()
+        # Get the Projects that were created during the import
+        (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
+
+        # GeometryStore objects were created for:
+        #  - powerplant_ouessant
+        #  - powerplant_ilarionas
+        #  - project_liaoning
+        # The project_ouessant1 and project_ouessant2 should use
+        # powerplant_ouessant's GeometryStore
+        self.assertEqual(GeometryStore.objects.count(), 3)
+        # PointGeometry objects were created for:
+        #  - powerplant_ouessant
+        #  - powerplant_ilarionas
+        #  - project_liaoning
+        # The project_ouessant1 and project_ouessant2 should use
+        # powerplant_ouessant's PointGeometry
+        self.assertEqual(PointGeometry.objects.count(), 3)
+        # The powerplant_ouessant point is correct
+        powerplant_ouessant_points = powerplant_ouessant.geo.points.all()
+        self.assertEqual(powerplant_ouessant_points.count(), 1)
+        self.assertEqual(powerplant_ouessant_points.first().geom.x, 48.43754)
+        self.assertEqual(powerplant_ouessant_points.first().geom.y, -5.11121)
+        # The powerplant_ilarionas point is correct
+        powerplant_ilarionas_points = powerplant_ilarionas.geo.points.all()
+        self.assertEqual(powerplant_ilarionas_points.count(), 1)
+        self.assertEqual(powerplant_ilarionas_points.first().geom.x, 40.0966)
+        self.assertEqual(powerplant_ilarionas_points.first().geom.y, 21.8039)
+        # The project_liaoning gets its geodata from its latitude and longitude
+        # cells
+        project_liaoning_points = project_liaoning.geo.points.all()
+        self.assertEqual(project_liaoning_points.count(), 1)
+        self.assertEqual(project_liaoning_points.first().geom.x, 41.16469)
+        self.assertEqual(project_liaoning_points.first().geom.y, 121.38065)
+        # For the project_ouessant1 and project_ouessant2, the latitude and
+        # longitude cells are blank, so they get their geodata from their
+        # parent PowerPlant (powerplant_ouessant).
+        self.assertEqual(project_ouessant1.geo, project_ouessant1.power_plant.geo)
+        self.assertEqual(project_ouessant2.geo, project_ouessant2.power_plant.geo)
+        # The powerplant_tonstad has no geo data
+        self.assertIsNone(powerplant_tonstad.geo)
+
     def test_powerplants_projects_created(self):
         """
         PowerPlants and Projects are created correctly.
@@ -408,16 +458,6 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(project_ouessant1.new, True)
         # Verify the fields for powerplant_ilarionas
         self.assertEqual(powerplant_ilarionas.infrastructure_type, infrastructure_type_power_plant)
-        self.assertAlmostEqual(
-            powerplant_ilarionas.latitude,
-            Decimal(40.0966),
-            places=(-1 * powerplant_ilarionas.latitude.as_tuple().exponent)
-        )
-        self.assertAlmostEqual(
-            powerplant_ilarionas.longitude,
-            Decimal(21.8039),
-            places=(-1 * powerplant_ilarionas.longitude.as_tuple().exponent)
-        )
         self.assertEqual(
             powerplant_ilarionas.status,
             {value: key for key, value in PowerPlantStatus.STATUSES}['Partially Active']
