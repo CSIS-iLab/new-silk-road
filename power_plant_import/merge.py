@@ -55,12 +55,12 @@ def _01_merge_plant_project_fuels(records, **params):
     """
     fuels = OrderedDict()
     for record in records:
-        key = (record["Power Plant Name"], record["Project Name"])
-        if key not in fuels:
-            fuels[key] = []
+        project_key = (record["Power Plant Name"], record["Project Name"])
+        if project_key not in fuels:
+            fuels[project_key] = []
         if record["Type"] == "Project":
             # put Project Fuel values also in the Plant Fuel columns for the parent plant
-            plant_key = (key[0], key[0])
+            plant_key = (project_key[0], project_key[0])
             if plant_key not in fuels:
                 fuels[plant_key] = []
 
@@ -73,7 +73,7 @@ def _01_merge_plant_project_fuels(records, **params):
                 category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
                 plant_field = field.replace("Project", "Plant")  # duplicate to Plant
                 for i in range(len(fuel_vals)):
-                    fuels[key].append((fuel_vals[i], category_vals[i]))
+                    fuels[project_key].append((fuel_vals[i], category_vals[i]))
                     fuels[plant_key].append((fuel_vals[i], category_vals[i]))
                 record[field] = None  # reduce
                 record[field + " Category"] = None
@@ -84,7 +84,7 @@ def _01_merge_plant_project_fuels(records, **params):
             ]:
                 record[field] = None
 
-        elif key[0] == key[1]:  # Type=="Plant"
+        elif project_key[0] == project_key[1]:  # Type=="Plant"
             for field in [
                 field
                 for field in record
@@ -94,7 +94,7 @@ def _01_merge_plant_project_fuels(records, **params):
                 category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
                 try:
                     for i in range(len(fuel_vals)):
-                        fuels[key].append((fuel_vals[i], category_vals[i]))
+                        fuels[project_key].append((fuel_vals[i], category_vals[i]))
                 except:
                     print(fuel_vals, '\n\n', category_vals)
                     raise
@@ -107,59 +107,42 @@ def _01_merge_plant_project_fuels(records, **params):
             ]:
                 record[field] = None
 
-    # for each key, put all values in the first record with the same key
-    for key in fuels:
-        record = [
+    # for each project_key, put all values in the first record with the same project_key
+    for project_key in fuels:
+        project_records = [
             record
             for record in records
-            if (record["Power Plant Name"], record["Project Name"]) == key
-        ][0]
-        for i, fuel in enumerate(list(set(fuels[key]))):
-            record[f"{record['Type']} Fuel {i+1}"] = fuel[0]
-            record[f"{record['Type']} Fuel {i+1} Category"] = fuel[1]
+            if (record["Power Plant Name"], record["Project Name"]) == project_key
+        ]
+        if len(project_records) > 0:
+            project_record = project_records[0]
+            for i, fuel in enumerate(list(set(fuels[project_key]))):
+                project_record[f"{project_record['Type']} Fuel {i+1}"] = fuel[0]
+                project_record[f"{project_record['Type']} Fuel {i+1} Category"] = fuel[1]
 
     return records
 
 
-def _02_merge_plant_output(records, **params):
+def _02_merge_plant_project_outputs(records, **params):
     """Remove values with the lowest associated year (only keep the most recent available year's data)
     """
-    plant_records = [record for record in records if record["Type"] == "Plant"]
-    for record in plant_records:
-        if record["Plant Output Year"] in [None, "NA"]:
-            for key in ["Plant Output", "Plant Output Unit", "Plant Output Year"]:
-                record[key] = None
-        elif (
-            plant_records[0]["Plant Output Year"] in [None, "NA"]
-            or record["Plant Output Year"] > plant_records[0]["Plant Output Year"]
-        ):
-            for key in ["Plant Output", "Plant Output Unit", "Plant Output Year"]:
-                plant_records[0][key], record[key] = record[key], None
-        else:
-            for key in ["Plant Output", "Plant Output Unit", "Plant Output Year"]:
-                record[key] = None  # reduce
-    return records
+    output_records = OrderedDict()
+    for record in records:
+        project_key = (record["Power Plant Name"], record["Project Name"])
+        if project_key not in output_records:
+            output_records[project_key] = record
 
-
-def _03_merge_project_outputs(records, **params):
-    """Remove values with the lowest associated year (only keep the most recent available year's data)
-    """
-    project_records = OrderedDict()
-    for record in [record for record in records if record["Type"] == "Project"]:
-        project_name = record["Project Name"]
-        if project_name not in project_records:
-            project_records[project_name] = record
-
-        if record.get("Project Output Year") in [None, "NA"]:
+        base_field = f"{record['Type']} Output"
+        if record.get(f"{base_field} Year") in [None, "NA"]:
             continue
         elif (
-            project_records[project_name]["Project Output Year"] in [None, "NA"]
-            or record["Project Output Year"] > project_records[project_name]["Project Output Year"]
+            output_records[project_key][f"{base_field} Year"] in [None, "NA"]
+            or record[f"{base_field} Year"] > output_records[project_key][f"{base_field} Year"]
         ):
-            for key in ["Project Output", "Project Output Unit", "Project Output Year"]:
-                project_records[project_name][key], record[key] = record[key], None
+            for key in [f"{base_field}", f"{base_field} Unit", f"{base_field} Year"]:
+                output_records[project_key][key], record[key] = record[key], None
         else:
-            for key in ["Project Output", "Project Output Unit", "Project Output Year"]:
+            for key in [f"{base_field}", f"{base_field} Unit", f"{base_field} Year"]:
                 record[key] = None  # reduce
 
     return records
@@ -172,17 +155,20 @@ def _04_merge_plant_status(records, **params):
     * 'Inactive' 
     * 'NULL'
     """
-    plant_statuses = list(set([record["Plant Status"] for record in records]))
-    record0 = [record for record in records if record["Type"] == "Plant"][0]
-    if "NULL" in plant_statuses:
-        record0["Plant Status"] = "NULL"
-    elif plant_statuses == ["Active"]:
-        record0["Plant Status"] = "Active"
-    elif "Active" in plant_statuses or "Partially Active" in plant_statuses:
-        record0["Plant Status"] = "Partially Active"
-    # else there's also a possibility of "Inactive"
-    for record in [record for record in records if record != record0]:
-        record["Plant Status"] = None
+    plant_names = list(set([record["Power Plant Name"] for record in records]))
+    for plant_name in plant_names:
+        plant_records = [record for record in records if record["Power Plant Name"]==plant_name]
+        plant_statuses = list(set([record["Plant Status"] for record in plant_records]))
+        record0 = [record for record in plant_records][0]
+        if "NULL" in plant_statuses:
+            record0["Plant Status"] = "NULL"
+        elif plant_statuses == ["Active"]:
+            record0["Plant Status"] = "Active"
+        elif "Active" in plant_statuses or "Partially Active" in plant_statuses:
+            record0["Plant Status"] = "Partially Active"
+        # else there's also a possibility of "Inactive"
+        for record in [record for record in records if record != record0]:
+            record["Plant Status"] = None
     return records
 
 
@@ -217,7 +203,7 @@ def _05_merge_organizations(records, **params):
 
     # 2. put all the values for a given project into the first record with that project_key
     for key in projects.keys():
-        # put the values in the first record with the given projct key
+        # put the values in the first record with the given project key
         record = [
             record
             for record in records
