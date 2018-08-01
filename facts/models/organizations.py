@@ -28,8 +28,8 @@ class Organization(MPTTModel, Publishable):
     """Abstract base model for organizations"""
 
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
-    name = models.CharField(max_length=120)
-    slug = models.SlugField(max_length=130, allow_unicode=True)
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=110, allow_unicode=True)
     countries = models.ManyToManyField('locations.Country', blank=True)
     leaders = models.ManyToManyField('Person', blank=True,
                                      related_name='organizations_led')
