@@ -271,17 +271,46 @@ class PowerPlantAdmin(admin.ModelAdmin):
 
 @admin.register(Fuel)
 class FuelAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
+    list_display = (
+        'name',
+        'fuel_category'
+    )
+    list_filter = (
+        'name',
+        'fuel_category'
+    )
+    search_fields = ('name', 'fuel_category__name')
 
 
 @admin.register(FuelCategory)
 class FuelCategoryAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
+    list_filter = (
+        'name',
+    )
+    search_fields = ('name',)
 
 
 @admin.register(OwnerStake)
 class OwnerStakeAdmin(admin.ModelAdmin):
-    pass
+    save_on_top = True
+    form = ProjectOwnerStakeForm
+    list_display = (
+        'id',
+        'owner',
+        'percent_owned',
+        'power_plant',
+    )
+    list_filter = (
+        'owner',
+        'power_plant'
+    )
+    actions = [make_published, make_not_published]
+    search_fields = ('owner__name', 'power_plant__name')
+
+    class Meta:
+        model = OwnerStake
 
 
 @admin.register(InfrastructureType)
