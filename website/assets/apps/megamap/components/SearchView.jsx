@@ -252,6 +252,10 @@ export default class SearchView extends Component {
         </header>
         <div className="inner">
           <div className="searchWidget">
+            <InfrastructureResult
+                infrastructureOnClick={this.handleQueryUpdate}
+                onSubmit={this.handleSubmit}
+            />
             <form onSubmit={this.handleSubmit}>
               <div className="searchBar" id="primarySearch">
                 <input
@@ -281,26 +285,6 @@ export default class SearchView extends Component {
                 title="Projects"
                 ref={(el) => { this.projectsPanel = el; }}
               >
-                <div className="sectionRow">
-                  <InfrastructureResult
-                    infrastructureOnClick={this.handleQueryUpdate}
-                  />
-                </div>
-                <div className="sectionRow">
-                  <Select
-                    value={this.state.query.infrastructure_type}
-                    name="infrastructure_type"
-                    placeholder="Infrastructure Type"
-                    options={this.state.options.infrastructure_type}
-                    onChange={selections => this.handleQueryUpdate(
-                        { infrastructure_type: selections.map(s => s.value) },
-                      )
-                    }
-                    isLoading={this.state.options.infrastructure_type.length === 0}
-                    multi
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
                 <div className="sectionRow">
                   <Select
                     value={this.state.query.status}

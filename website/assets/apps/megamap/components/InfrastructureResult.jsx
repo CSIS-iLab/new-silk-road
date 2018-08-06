@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import SearchActions from '../actions/SearchActions';
 
 export default class InfrastructureResult extends Component {
   constructor(props){
@@ -12,7 +13,8 @@ export default class InfrastructureResult extends Component {
     this.setState({
       infrastructure_type: [1]
     }, () => {
-      this.props.infrastructureOnClick(this.state)
+      this.props.infrastructureOnClick(this.state),
+      SearchActions.search(this.state)
     });
   }
 
@@ -20,7 +22,8 @@ export default class InfrastructureResult extends Component {
     this.setState({
       infrastructure_type: [2]
     }, () => {
-      this.props.infrastructureOnClick(this.state)
+      this.props.infrastructureOnClick(this.state),
+      SearchActions.search(this.state)
     })
   }
 
@@ -28,7 +31,8 @@ export default class InfrastructureResult extends Component {
     this.setState({
       infrastructure_type: [3]
     }, () => {
-      this.props.infrastructureOnClick(this.state)
+      this.props.infrastructureOnClick(this.state),
+      SearchActions.search(this.state)
     })
   }
 
@@ -36,7 +40,8 @@ export default class InfrastructureResult extends Component {
     this.setState({
       infrastructure_type: [4]
     }, () => {
-      this.props.infrastructureOnClick(this.state)
+      this.props.infrastructureOnClick(this.state),
+      SearchActions.search(this.state)
     })
   }
 
@@ -44,7 +49,8 @@ export default class InfrastructureResult extends Component {
     this.setState({
       infrastructure_type: [6]
     }, () => {
-      this.props.infrastructureOnClick(this.state)
+      this.props.infrastructureOnClick(this.state),
+      SearchActions.search(this.state)
     })
   }
 
