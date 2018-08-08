@@ -56,12 +56,24 @@ export default class InfrastructureResult extends Component {
 
   render() {
     return (
-      <div className="btn-group">
-        <a href="#" onClick={this.handleRoad.bind(this)}><i className="fas fa-road"></i></a>
-        <a href="#" onClick={this.handleRail.bind(this)}><i className="fas fa-train"></i></a> 
-        <a href="#" onClick={this.handleSeaport.bind(this)}><i className="fas fa-anchor"></i></a> 
-        <a href="#" onClick={this.handleDryport.bind(this)}><i className="fas fa-industry"></i></a>
-        <a href="#" onClick={this.handlePowerPlant.bind(this)}><i className="fas fa-plane"></i></a> 
+      <div>
+        <ul>
+            <li>
+                <a href="#" onClick={this.handleRoad.bind(this)}>Road</a>
+            </li>
+            <li>
+                <a href="#" onClick={this.handleRail.bind(this)}>Railroad</a>
+            </li>
+            <li>
+                <a href="#" onClick={this.handleSeaport.bind(this)}>Seaport</a>
+            </li>
+            <li>
+                <a href="#" onClick={this.handleDryport.bind(this)}>Dryport</a>
+            </li>
+            <li>
+              <a href="#" onClick={this.handlePowerPlant.bind(this)}>Powerplant</a>
+            </li>
+        </ul>
       </div>
     )
   }

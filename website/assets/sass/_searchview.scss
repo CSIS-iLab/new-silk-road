@@ -49,33 +49,6 @@ $scroll-max-height: $results-view-max-height - 46;
         }
     }
 
-    .icon-bar {
-        width: 90px;
-        background-color: #555;
-
-        @include display(flex);
-        @include flex-direction(column);
-        @include justify-content(flex-start);
-
-        a {
-            display: block;
-            text-align: center;
-            padding: 16px;
-            transition: all 0.3s ease;
-            color: white;
-            font-size: 36px;
-        }
-
-        a:hover {
-            background-color: #000
-        }
-
-        a.active {
-            background-color: #4CAF50
-        }
-
-    }
-
     .inner {
         width: 260px;
         height: $search-inner-height;
@@ -89,6 +62,7 @@ $scroll-max-height: $results-view-max-height - 46;
             padding: $tiny-spacing;
         }
     }
+
     section {
         margin-top: $tiny-spacing;
         padding-bottom: $tiny-spacing;
