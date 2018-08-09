@@ -14,7 +14,7 @@ export default class InfrastructureResult extends Component {
 
   handleClickIcon(e){
     var options = this.state.infrastructure_type
-    if (e in options){
+    if (options.indexOf(e) !== -1){
       var index = options.indexOf(e)
       if (index > -1) {
         options.splice(index, 1)
