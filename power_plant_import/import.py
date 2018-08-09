@@ -13,15 +13,16 @@ if __name__ == "__main__":
     LOGGING["format"] = "[%(asctime)s] %(levelname)s: %(message)s"
     logging.basicConfig(**LOGGING)
 
-    project_path = os.path.abspath(sys.argv[1])
+    project_path = os.path.abspath(sys.argv[1])  # path to the project as the first arg
+
     parent_path = os.path.dirname(project_path)
     schema_path = os.path.join(project_path, "Schema")
     source_path = os.path.join(project_path, "Source Data")
     output_path = os.path.join(project_path, "Power Plant Data")
 
-    source_matrix_filename = os.path.join(
-        schema_path, "Power Plant Data Fields- Source Matrix_Final.xlsx"
-    )
+    source_matrix_filenames = glob(os.path.join(schema_path, '*Source Matrix*.xlsx'))
+    assert len(source_matrix_filenames) > 0, f"no Source Matrix .xlsx file found in {schema_path}"
+    source_matrix_filename = source_matrix_filenames[-1]  # use the latest dated version
     source_matrix = excel.load_workbook_data(source_matrix_filename)
     log.info(f"loaded source matrix: {os.path.relpath(source_matrix_filename, parent_path)}")
 
