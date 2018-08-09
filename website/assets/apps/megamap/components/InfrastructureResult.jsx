@@ -6,22 +6,28 @@ export default class InfrastructureResult extends Component {
   constructor(props){
     super(props);
     this.handleClickIcon = this.handleClickIcon.bind(this);
+    this.handleIconState = this.handleIconState.bind(this);
     this.state = {
       infrastructure_type: [1,2,3,4,6],
     }
   }
 
   handleClickIcon(e){
-    if (e in this.state.infrastructure_type){
-      var options = this.state.infrastructure_type
+    var options = this.state.infrastructure_type
+    if (e in options){
       var index = options.indexOf(e)
-      options.splice(index, 1)
+      if (index > -1) {
+        options.splice(index, 1)
+      }
     } else {
-      var options = this.state.infrastructure_type
       options.push(e)
     }
+    this.handleIconState(options)
+  }
+
+  handleIconState(opt){
     this.setState({
-      infrastructure_type: options
+      infrastructure_type: opt
     }, () => {
       this.props.infrastructureOnClick(this.state),
       SearchActions.search(this.state)
