@@ -135,7 +135,7 @@ if __name__ == "__main__":
         print(filenames.index(filename) + 1, filename)
         ext = os.path.splitext(filename)[-1].lower()
         try:
-            if ext=='.xslx':
+            if ext=='.xlsx':
                 wbdata = load_workbook_data(filename)
                 worksheets = {title:wbdata[title] for title in wbdata.keys()}
             elif ext=='.csv':
