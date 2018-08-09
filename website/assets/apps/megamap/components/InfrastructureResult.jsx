@@ -7,17 +7,25 @@ export default class InfrastructureResult extends Component {
     super(props);
     this.handleClickIcon = this.handleClickIcon.bind(this);
     this.state = {
-      infrastructure_type: null,
+      infrastructure_type: [1,2,3,4,6],
     }
   }
 
   handleClickIcon(e){
+    if (e in this.state.infrastructure_type){
+      var options = this.state.infrastructure_type
+      var index = options.indexOf(e)
+      options.splice(index, 1)
+    } else {
+      var options = this.state.infrastructure_type
+      options.push(e)
+    }
     this.setState({
-      infrastructure_type: e
-    },() => {
-      this.props.infrastructureOnClick(this.state.infrastructure_type),
-      SearchActions.search(this.state.infrastructure_type)
-    })
+      infrastructure_type: options
+    }, () => {
+      this.props.infrastructureOnClick(this.state),
+      SearchActions.search(this.state)
+    });
   }
 
   render() {

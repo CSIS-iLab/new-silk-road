@@ -1,18 +1,9 @@
 import React, { Component } from 'react'
 
 export default class InfrastructureIcon extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			ids: [1,2,3,4,6],
-		}
-	}
 
 	handleClick(){
-		var values = this.state.ids
-		var index = values.indexOf(this.props.id);
-		var newValues = values.splice(index, 1);
-		this.props.icon(newValues)
+		this.props.icon(this.props.id)
 	}
 
   render() {
