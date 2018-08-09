@@ -1,4 +1,4 @@
-import os, sys, json, logging
+import os, re, sys, json, logging
 from datetime import datetime
 from glob import glob
 from collections import OrderedDict
@@ -13,12 +13,7 @@ def load_source_data(source_filenames, source_variables):
     """
     source_data = []
     for source_filename in source_filenames:
-        dataset = (
-            " ".join(os.path.basename(source_filename).split("_")[:-1])
-            .replace("GlobalData", "GD")
-            .replace("AllPowerPlants", "")
-            .strip()
-        )
+        dataset = dataset_from_filename(source_filename)
         assert dataset in source_variables.keys(), f"Dataset not in source_variables: {dataset}"
         ext = os.path.splitext(source_filename)[-1].lower()
         if ext == '.xlsx':
@@ -47,6 +42,26 @@ def load_source_data(source_filenames, source_variables):
     log.info(f"{len(source_data)} source records")
 
     return source_data
+
+
+def dataset_from_filename(filename):
+    basename = (
+        os.path.basename(os.path.splitext(filename)[0])
+        .replace("_", " ")
+        .replace("GlobalData", "GD")
+        .replace("Clean", "")
+        .replace("AllPowerPlants", "")
+        .strip()
+    )
+    dataset = (
+        re.search(
+            r"(ENI|WRI|GD (?:Bio|Geothermal|Hydro|Nuclear|Ocean|Solar (?:CPV|PV|Thermal)|Thermal|Wind))",
+            basename,
+        )
+        .group(1)
+        .replace('Bio', 'Biopower')
+    )
+    return dataset
 
 
 def collect_power_plant_data(source_data, source_variables):
