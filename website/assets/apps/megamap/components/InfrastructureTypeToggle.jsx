@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import SearchActions from '../actions/SearchActions';
 import InfrastructureIcon from './InfrastructureIcon';
 
-export default class InfrastructureResult extends Component {
+export default class InfrastructureTypeToggle extends Component {
   constructor(props){
     super(props);
     this.handleClickIcon = this.handleClickIcon.bind(this);

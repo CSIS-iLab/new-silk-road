@@ -3,7 +3,7 @@ import Select from 'react-select';
 import Panel from './Panel';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
-import InfrastructureResult from './InfrastructureResult';
+import InfrastructureTypeToggle from './InfrastructureTypeToggle';
 import StatusStore from '../stores/StatusStore';
 import StatusActions from '../actions/StatusActions';
 import RegionStore from '../stores/RegionStore';
@@ -252,10 +252,10 @@ export default class SearchView extends Component {
         </header>
         <div className="inner">
           <div className="searchWidget">
-            <InfrastructureResult
+            <InfrastructureTypeToggle
               infrastructureOnClick={this.handleQueryUpdate}
               onSubmit={this.handleSubmit}
-              options={this.state.options.infrastructure_type}
+              infrastructureTypes={this.state.options.infrastructure_type}
             />
             <form onSubmit={this.handleSubmit}>
               <div className="searchBar" id="primarySearch">
