@@ -12,22 +12,28 @@ export default class InfrastructureTypeToggle extends Component {
     }
   }
 
-  handleClickIcon(e){
-    var options = this.state.infrastructure_type
-    if (options.indexOf(e) !== -1){
-      var index = options.indexOf(e)
-      if (index > -1) {
-        options.splice(index, 1)
-      }
+  handleClickIcon(infrastructureTypeId){
+    /* Take the infrastructureTypeId and either add it to, or subtract it from, the state */
+
+    // A copy of the current state
+    var selectedInfrastructureTypes = [...this.state.infrastructure_type];
+    // If the infrastructureTypeId is already in the selectedInfrastructureTypes,
+    // then remove it from selectedInfrastructureTypes.
+    var index = selectedInfrastructureTypes.indexOf(infrastructureTypeId);
+    if (index !== -1) {
+      selectedInfrastructureTypes.splice(index, 1);
     } else {
-      options.push(e)
+      // The infrastructureTypeId is not in the selectedInfrastructureTypes,
+      // so add it to selectedInfrastructureTypes.
+      selectedInfrastructureTypes.push(infrastructureTypeId);
     }
-    this.handleIconState(options)
+    this.handleIconState(selectedInfrastructureTypes)
   }
 
-  handleIconState(opt){
+  handleIconState(infrastructureTypes){
+    /* Set the current state, and submit the search to the backend by calling SearchActions.search(). */
     this.setState({
-      infrastructure_type: opt
+      infrastructure_type: infrastructureTypes
     }, () => {
       this.props.infrastructureOnClick(this.state),
       SearchActions.search(this.state)
@@ -35,13 +41,14 @@ export default class InfrastructureTypeToggle extends Component {
   }
 
   render() {
+    /* Render an InfrastructureIcon component for each id in the state. */
     return (
       <div>
-        <InfrastructureIcon options={this.props.options} icon={this.handleClickIcon} id={1} />
-        <InfrastructureIcon options={this.props.options} icon={this.handleClickIcon} id={2} />
-        <InfrastructureIcon options={this.props.options} icon={this.handleClickIcon} id={3} />
-        <InfrastructureIcon options={this.props.options} icon={this.handleClickIcon} id={4} />
-        <InfrastructureIcon options={this.props.options} icon={this.handleClickIcon} id={6} />
+        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={1} />
+        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={2} />
+        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={3} />
+        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={4} />
+        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={6} />
       </div>
     )
   }

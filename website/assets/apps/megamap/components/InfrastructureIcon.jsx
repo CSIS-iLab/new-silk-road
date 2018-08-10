@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 export default class InfrastructureIcon extends Component {
 
 	handleClick(){
-		this.props.icon(this.props.id)
+		/* Return the element's id attribute. */
+		this.props.returnIdOnClick(this.props.id);
 	}
 
   render() {
