@@ -148,7 +148,7 @@ def _02_merge_plant_project_outputs(records, **params):
     return records
 
 
-def _04_merge_plant_status(records, **params):
+def _03_merge_plant_status(records, **params):
     """
     * 'Active' if all records are 'Active'
     * 'Partially Active' if 1+ are 'Active' or 'Partially Active' and 0 are 'NULL'
@@ -172,7 +172,7 @@ def _04_merge_plant_status(records, **params):
     return records
 
 
-def _05_merge_organizations(records, **params):
+def _04_merge_organizations(records, **params):
     """
     For each set of keys that refer to organizations
     ("Contractor", "Manufacturer", "Operator"),
