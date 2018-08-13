@@ -6,7 +6,6 @@ export default class InfrastructureTypeToggle extends Component {
   constructor(props){
     super(props);
     this.handleClickIcon = this.handleClickIcon.bind(this);
-    this.handleIconState = this.handleIconState.bind(this);
     // Initally, set the state to have null infrastructure_type. When the component
     // receives the props later, we update the state to store the initial value
     // of the props' infrastructureTypes.
@@ -40,13 +39,8 @@ export default class InfrastructureTypeToggle extends Component {
       // so add it to selectedInfrastructureTypes.
       selectedInfrastructureTypes.push(infrastructureTypeId);
     }
-    this.handleIconState(selectedInfrastructureTypes)
-  }
-
-  handleIconState(infrastructureTypes){
-    /* Set the current state, and submit the search to the backend by calling SearchActions.search(). */
     this.setState({
-      infrastructure_type: infrastructureTypes
+      infrastructure_type: selectedInfrastructureTypes
     }, () => {
       this.props.infrastructureOnClick(this.state),
       SearchActions.search(this.state)
