@@ -58,6 +58,43 @@ def __norm_match_name(name):
 # == Reduce Functions ==
 
 
+def _00_plant_project_name_type(records, **params):
+    """Set the Power Plant Name and the Project Name.
+    (This is the first function to be run in this set)
+    Power Plant Name for all records in the set = the one that has the highest count in records.
+    If this is not a project, Project Name = Power Plant Name.
+    """
+    from collections import Counter
+
+    source_variables = params["source_variables"]
+    names = Counter(
+        [record[source_variables[record["Dataset"]]["Power Plant Name"]] for record in records]
+    )
+    plant_name = max(names, key=names.get).strip()
+    for record in records:
+        dataset = record["Dataset"]
+        record["Source Plant Name"] = record[source_variables[dataset]["Power Plant Name"]]
+        if 'GD' in record['Dataset']:
+            record["Power Plant Name"] = record['Source Plant Name']
+        else:
+            record["Power Plant Name"] = plant_name
+
+        # set "Project Name" and "Type"
+        project_name = (record.get(source_variables[dataset].get("Project Name")) or '').strip()
+        if project_name not in ["", record["Power Plant Name"]]:
+            record["Type"] = "Project"
+            record["Project Name"] = project_name
+        else:
+            record["Type"] = "Plant"
+            record["Project Name"] = plant_name
+
+        record.move_to_end("Type", last=False)
+        record.move_to_end("Project Name", last=False)
+        record.move_to_end("Power Plant Name", last=False)
+
+    return records
+
+
 def field_names_from_matrix(records, **params):
     """for fields where the field name is variable among sources,
     set the record field based on the source matrix (key mapping by dataset))
@@ -110,43 +147,6 @@ def field_names_from_matrix(records, **params):
                 record[key] = record[source_var]
         if record[key] not in [None, "NA"]:
             log.debug(f"{dataset}: {key}: {record[key]}")
-    return records
-
-
-def _00_plant_project_name_type(records, **params):
-    """Set the Power Plant Name and the Project Name.
-    (This is the first function to be run in this set)
-    Power Plant Name for all records in the set = the one that has the highest count in records.
-    If this is not a project, Project Name = Power Plant Name.
-    """
-    from collections import Counter
-
-    source_variables = params["source_variables"]
-    names = Counter(
-        [record[source_variables[record["Dataset"]]["Power Plant Name"]] for record in records]
-    )
-    plant_name = max(names, key=names.get).strip()
-    for record in records:
-        dataset = record["Dataset"]
-        record["Source Plant Name"] = record[source_variables[dataset]["Power Plant Name"]]
-        if 'GD' in record['Dataset']:
-            record["Power Plant Name"] = record['Source Plant Name']
-        else:
-            record["Power Plant Name"] = plant_name
-
-        # set "Project Name" and "Type"
-        project_name = (record.get(source_variables[dataset].get("Project Name")) or '').strip()
-        if project_name not in ["", record["Power Plant Name"]]:
-            record["Type"] = "Project"
-            record["Project Name"] = project_name
-        else:
-            record["Type"] = "Plant"
-            record["Project Name"] = plant_name
-
-        record.move_to_end("Type", last=False)
-        record.move_to_end("Project Name", last=False)
-        record.move_to_end("Power Plant Name", last=False)
-
     return records
 
 
