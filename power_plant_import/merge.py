@@ -54,71 +54,51 @@ def _01_merge_plant_project_fuels(records, **params):
     for any entries sharing the same lat, long or identical plant titles")
     """
     fuels = OrderedDict()
+    categories = OrderedDict()
     for record in records:
         project_key = (record["Power Plant Name"], record["Project Name"])
+        plant_key = (project_key[0], project_key[0])
         if project_key not in fuels:
             fuels[project_key] = []
-        if record["Type"] == "Project":
-            # put Project Fuel values also in the Plant Fuel columns for the parent plant
-            plant_key = (project_key[0], project_key[0])
-            if plant_key not in fuels:
-                fuels[plant_key] = []
+            categories[project_key] = []
+        if plant_key not in fuels:
+            fuels[plant_key] = []
+            categories[plant_key] = []
 
-            for field in [
-                field
-                for field in record
-                if re.match(r"^Project Fuel \d+$", field) and record[field] not in [None, "NA"]
-            ]:
-                fuel_vals = record[field].split(";")
-                category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
-                plant_field = field.replace("Project", "Plant")  # duplicate to Plant
-                for i in range(len(fuel_vals)):
-                    fuels[project_key].append((fuel_vals[i], category_vals[i]))
-                    fuels[plant_key].append((fuel_vals[i], category_vals[i]))
-                record[field] = None  # reduce
-                record[field + " Category"] = None
+        for field in [
+            field
+            for field in record
+            if re.match(r"^(Plant|Project) Fuel \d+$", field) and record[field] not in [None, "NA"]
+        ]:
+            fuel_vals = record[field].split(";")
+            category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
+            for val in fuel_vals:
+                if "Project" in field and val not in fuels[project_key]:
+                    fuels[project_key].append(val)
+                    categories[project_key].append(category_vals[fuel_vals.index(val)])
+                # also put all fuel values into the Plant record
+                if val not in fuels[plant_key]:
+                    fuels[plant_key].append(val)
+                    categories[plant_key].append(category_vals[fuel_vals.index(val)])
 
-            # remove "Plant Fuel" values from Projects
-            for field in [
-                field for field in record if re.match(r"^Plant Fuel \d+( Category)?$", field)
-            ]:
-                record[field] = None
+            # reduce
+            record[field] = None
+            record[field + " Category"] = None
 
-        elif project_key[0] == project_key[1]:  # Type=="Plant"
-            for field in [
-                field
-                for field in record
-                if re.match(r"^Plant Fuel \d+$", field) and record[field] not in [None, "NA"]
-            ]:
-                fuel_vals = record[field].split(";")
-                category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
-                try:
-                    for i in range(len(fuel_vals)):
-                        fuels[project_key].append((fuel_vals[i], category_vals[i]))
-                except:
-                    print(fuel_vals, '\n\n', category_vals)
-                    raise
-                record[field] = None  # reduce
-                record[field + " Category"] = None
-
-            # remove "Project Fuel" values from Plants
-            for field in [
-                field for field in record if re.match(r"^Project Fuel \d+( Category)?$", field)
-            ]:
-                record[field] = None
-
-    # for each project_key, put all values in the first record with the same project_key
-    for project_key in fuels:
+    # for each key in fuels, put all values in the first record with the same key
+    for key in fuels:
         project_records = [
             record
             for record in records
-            if (record["Power Plant Name"], record["Project Name"]) == project_key
+            if (record["Power Plant Name"], record["Project Name"]) == key
         ]
         if len(project_records) > 0:
             project_record = project_records[0]
-            for i, fuel in enumerate(list(set(fuels[project_key]))):
+            for i, fuel in enumerate(list(set(fuels[key]))):
                 project_record[f"{project_record['Type']} Fuel {i+1}"] = fuel[0]
                 project_record[f"{project_record['Type']} Fuel {i+1} Category"] = fuel[1]
+        else:
+            log.error("KEY NOT FOUND: %r" % key)
 
     return records
 
@@ -157,7 +137,7 @@ def _03_merge_plant_status(records, **params):
     """
     plant_names = list(set([record["Power Plant Name"] for record in records]))
     for plant_name in plant_names:
-        plant_records = [record for record in records if record["Power Plant Name"]==plant_name]
+        plant_records = [record for record in records if record["Power Plant Name"] == plant_name]
         plant_statuses = list(set([record["Plant Status"] for record in plant_records]))
         record0 = [record for record in plant_records][0]
         if "NULL" in plant_statuses:
@@ -244,27 +224,27 @@ def _99_final_merge(records, **params):
                         projects[key][field] = record[field]
                     project = projects[key]
                     if record[field] != project[field]:
-                    # GD takes precedence over WRI always
+                        # GD takes precedence over WRI always
                         if 'WRI' in record['Dataset'] and 'GD' in project['Dataset']:
-                        pass
+                            pass
                         elif 'GD' in record['Dataset'] and 'WRI' in project['Dataset']:
                             project[field] = record[field]
-                    elif field == "Source Plant Name":
+                        elif field == "Source Plant Name":
                             if record[field].lower() != project[field].lower():  # norm case
                                 __print_field_conflict(project, record, field)
-                    elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
+                        elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
                             if round(float(record[field]), 2) != round(float(project[field]), 2):
                                 __print_field_conflict(project, record, field)
-                    elif field in ["Estimated Plant Output", "Estimated Project Output"]:
-                        # prioritize GD values over non-GD values
+                        elif field in ["Estimated Plant Output", "Estimated Project Output"]:
+                            # prioritize GD values over non-GD values
                             if "GD" not in project["Dataset"] and "GD" in record["Dataset"]:
                                 project[field] = record[field]
                             elif ("GD" in project["Dataset"] and "GD" in record["Dataset"]) or (
                                 "GD" not in project["Dataset"] and "GD" not in record["Dataset"]
-                        ):
+                            ):
                                 __print_field_conflict(project, record, field)
-                        else:  # "GD" in project[key]["Dataset"] and not in record["Dataset"]
-                            pass
+                            else:  # "GD" in project[key]["Dataset"] and not in record["Dataset"]
+                                pass
                         else:
                             __print_field_conflict(project, record, field)
             # merge Datasets -- semicolon-delimited string
