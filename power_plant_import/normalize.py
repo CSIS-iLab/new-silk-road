@@ -90,8 +90,8 @@ def _00_plant_project_name_type(records, **params):
         record.move_to_end("Power Plant Name", last=False)
 
     # if there are no "Project" records for each "Plant" record, then create one
-    for record in [record for record in records if record["Type"] == "Plant"]:
-        plant_name = record["Power Plant Name"]
+    for plant_record in [record for record in records if record["Type"] == "Plant"]:
+        plant_name = plant_record["Power Plant Name"]
         project_records = [
             project_record
             for project_record in records
@@ -99,9 +99,9 @@ def _00_plant_project_name_type(records, **params):
             and project_record["Power Plant Name"] == plant_name
         ]
         if len(project_records) == 0:
-            project_record = copy.deepcopy(record)
+            project_record = copy.deepcopy(plant_record)
             project_record["Type"] = "Project"
-            print(project_record["Power Plant Name"])
+            project_record["Project Name"] = "(Project)"
             records.append(project_record)
 
     return records
