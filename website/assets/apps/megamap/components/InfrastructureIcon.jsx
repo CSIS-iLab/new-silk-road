@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 
 export default class InfrastructureIcon extends Component {
 
-	handleClick(){
-      /* Return the element's id attribute. */
-      this.props.returnIdOnClick(this.props.properties.value);
-	}
+  handleClick(){
+    /* Return the element's id value. */
+    this.props.returnIdOnClick(this.props.properties.value);
+  }
 
-	getIconSource(iconLabel) {
+  getIconSource(iconLabel) {
     /* Return the icon source URL for an icon label */
     if (iconLabel === "Road") {
       return "/static/img/database-icons/Road.svg";
@@ -22,17 +22,17 @@ export default class InfrastructureIcon extends Component {
     }
   }
 
-	getAltText(iconLabel) {
-      return "Image representing visual display of a " + iconLabel.toLowerCase() + " on a map";
-	}
+  getAltText(iconLabel) {
+    return "Image representing visual display of a " + iconLabel.toLowerCase() + " on a map";
+  }
 
-    render() {
-      var iconSource = this.getIconSource(this.props.properties.label);
-      var altText = this.getAltText(this.props.properties.label);
-      return (
-        <span>
-          <img width={40} height={40} onClick={this.handleClick.bind(this)} src={iconSource} alt={altText} />
-        </span>
-      )
-    }
+  render() {
+    var iconSource = this.getIconSource(this.props.properties.label);
+    var altText = this.getAltText(this.props.properties.label);
+    return (
+      <span>
+        <img width={40} height={40} onClick={this.handleClick.bind(this)} src={iconSource} alt={altText} />
+      </span>
+    )
+  }
 }
