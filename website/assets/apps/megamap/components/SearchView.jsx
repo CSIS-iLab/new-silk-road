@@ -288,21 +288,6 @@ export default class SearchView extends Component {
               >
                 <div className="sectionRow">
                   <Select
-                    value={this.state.query.infrastructure_type}
-                    name="infrastructure_type"
-                    placeholder="Infrastructure Type"
-                    options={this.state.options.infrastructure_type}
-                    onChange={selections => this.handleQueryUpdate(
-                        { infrastructure_type: selections.map(s => s.value) },
-                      )
-                    }
-                    isLoading={this.state.options.infrastructure_type.length === 0}
-                    multi
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
-                <div className="sectionRow">
-                  <Select
                     value={this.state.query.status}
                     name="status"
                     placeholder="Status"
