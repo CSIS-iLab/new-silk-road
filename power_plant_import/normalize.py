@@ -333,7 +333,6 @@ def plant_project_fuels(records, **params):
                         vals = [[record[key], ""]]
                 elif re.search(r"[,/;]", record[key]) is not None:
                     # try splitting on common delimiters: ; , /
-                    print(f"COMMON SPLIT (, ; /) | {dataset} | {record[key]}")
                     vals = [
                         [v.strip(), ""] for v in re.split(r"[,/;]", record[key]) if v.strip() != ""
                     ]
@@ -684,21 +683,21 @@ def manufacturers(records, **params):
         "Manufacturer 5",
     ]
     for record in records:
-        dataset = record["Dataset"]
-        for key in keys:
-            source_var = source_variables[dataset][key]
-            record[key] = None
-            if "from" in source_var.lower() and "matching plant" in source_var.lower():
-                if record["Type"] == "Plant":
-                    source_key = source_var.split("from")[0].strip()
-                    record[key] = record[source_key]
-            elif source_var not in [None, "NA"]:
-                record[key] = record[source_var]
-            # normalize the org name to (an) existing org(s)
-            if record[key] not in [None, "NA"]:
-                record[key] = __match_org_name(record[key], org_match_index)
-            if record[key] not in [None, "NA"]:
-                log.debug(f"{dataset}: {key}: {record[key]}")
+            dataset = record["Dataset"]
+            for key in keys:
+                source_var = source_variables[dataset][key]
+                record[key] = None
+                if "from" in source_var.lower() and "matching plant" in source_var.lower():
+                    if record["Type"] == "Plant":
+                        source_key = source_var.split("from")[0].strip()
+                        record[key] = record[source_key]
+                elif source_var not in [None, "NA"]:
+                    record[key] = record[source_var]
+                # normalize the org name to (an) existing org(s)
+                if record[key] not in [None, "NA"]:
+                    record[key] = __match_org_name(record[key], org_match_index)
+                if record[key] not in [None, "NA"]:
+                    log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
