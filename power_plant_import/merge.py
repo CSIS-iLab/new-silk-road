@@ -242,30 +242,34 @@ def _99_final_merge(records, **params):
                 if record[field] not in [None, "NA"]:
                     if projects[key].get(field) in [None, "NA"]:
                         projects[key][field] = record[field]
+                    project = projects[key]
+                    if record[field] != project[field]:
                     # GD takes precedence over WRI always
-                    elif 'WRI' in record['Dataset'] and 'GD' in projects[key]['Dataset']:
+                        if 'WRI' in record['Dataset'] and 'GD' in project['Dataset']:
                         pass
+                        elif 'GD' in record['Dataset'] and 'WRI' in project['Dataset']:
+                            project[field] = record[field]
                     elif field == "Source Plant Name":
-                        if record[field].lower() != projects[key][field].lower():  # norm case
-                            __print_field_conflict(projects[key], record, field)
+                            if record[field].lower() != project[field].lower():  # norm case
+                                __print_field_conflict(project, record, field)
                     elif field in ["Latitude", "Longitude"]:  # fuzzy match: 2 decimal places
-                        if round(float(record[field]), 2) != round(float(projects[key][field]), 2):
-                            __print_field_conflict(projects[key], record, field)
+                            if round(float(record[field]), 2) != round(float(project[field]), 2):
+                                __print_field_conflict(project, record, field)
                     elif field in ["Estimated Plant Output", "Estimated Project Output"]:
                         # prioritize GD values over non-GD values
-                        if "GD" not in projects[key]["Dataset"] and "GD" in record["Dataset"]:
-                            projects[key][field] = record[field]
-                        elif ("GD" in projects[key]["Dataset"] and "GD" in record["Dataset"]) or (
-                            "GD" not in projects[key]["Dataset"] and "GD" not in record["Dataset"]
+                            if "GD" not in project["Dataset"] and "GD" in record["Dataset"]:
+                                project[field] = record[field]
+                            elif ("GD" in project["Dataset"] and "GD" in record["Dataset"]) or (
+                                "GD" not in project["Dataset"] and "GD" not in record["Dataset"]
                         ):
-                            __print_field_conflict(projects[key], record, field)
+                                __print_field_conflict(project, record, field)
                         else:  # "GD" in project[key]["Dataset"] and not in record["Dataset"]
                             pass
-                    elif record[field] != projects[key][field]:
-                        __print_field_conflict(projects[key], record, field)
+                        else:
+                            __print_field_conflict(project, record, field)
             # merge Datasets -- semicolon-delimited string
-            if record["Dataset"] not in projects[key]["Dataset"]:
-                projects[key]["Dataset"] += ";" + record["Dataset"]
+            if record["Dataset"] not in project["Dataset"]:
+                project["Dataset"] += ";" + record["Dataset"]
     return list(projects.values())
 
 
