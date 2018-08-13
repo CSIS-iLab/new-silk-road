@@ -7,8 +7,21 @@ export default class InfrastructureTypeToggle extends Component {
     super(props);
     this.handleClickIcon = this.handleClickIcon.bind(this);
     this.handleIconState = this.handleIconState.bind(this);
+    // Initally, set the state to have null infrastructure_type. When the component
+    // receives the props later, we update the state to store the initial value
+    // of the props' infrastructureTypes.
     this.state = {
-      infrastructure_type: [1,2,3,4,6],
+      infrastructure_type: null,
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // If this is the first time that the component is receiving props, then
+    // update the state from the props.
+    if (this.state.infrastructure_type === null && this.props.infrastructureTypes.length > 0) {
+      this.setState({
+        infrastructure_type: this.props.infrastructureTypes.map(x => x.__proto__.value)
+      })
     }
   }
 
@@ -42,13 +55,18 @@ export default class InfrastructureTypeToggle extends Component {
 
   render() {
     /* Render an InfrastructureIcon component for each id in the state. */
+    var infrastructureTypeIcons = [];
+    if (this.state.infrastructure_type !== null) {
+      // Loop over the infrastructure types in the props (all of the infrastructure types
+      // that were passed in from the parent component), and add an InfrastructureIcon
+      // component for each.
+      for (let i=0; i<this.props.infrastructureTypes.length; i++) {
+        infrastructureTypeIcons.push(<InfrastructureIcon returnIdOnClick={this.handleClickIcon} id={this.props.infrastructureTypes[i].value} key={this.props.infrastructureTypes[i].value} />)
+      }
+    }
     return (
       <div>
-        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={1} />
-        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={2} />
-        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={3} />
-        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={4} />
-        <InfrastructureIcon infrastructureTypes={this.props.infrastructureTypes} returnIdOnClick={this.handleClickIcon} id={6} />
+        {infrastructureTypeIcons}
       </div>
     )
   }
