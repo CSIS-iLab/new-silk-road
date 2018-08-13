@@ -74,7 +74,10 @@ def _00_plant_project_name_type(records, **params):
     for record in records:
         dataset = record["Dataset"]
         record["Source Plant Name"] = record[source_variables[dataset]["Power Plant Name"]]
-        record["Power Plant Name"] = name
+        if 'GD' in record['Dataset']:
+            record["Power Plant Name"] = record['Source Plant Name']
+        else:
+            record["Power Plant Name"] = plant_name
 
         # set "Project Name" and "Type"
         project_name = (record.get(source_variables[dataset].get("Project Name")) or '').strip()
