@@ -2,7 +2,7 @@
 Normalize power_plant_data records using information in the Source Variables Matrix worksheet.
 (filtering and merging happen elsewhere / later.)
 """
-import logging, re
+import logging, re, copy
 from . import excel
 
 log = logging.getLogger(__name__)
@@ -91,6 +91,21 @@ def _00_plant_project_name_type(records, **params):
         record.move_to_end("Type", last=False)
         record.move_to_end("Project Name", last=False)
         record.move_to_end("Power Plant Name", last=False)
+
+    # if there are no "Project" records for each "Plant" record, then create one
+    for record in [record for record in records if record["Type"] == "Plant"]:
+        plant_name = record["Power Plant Name"]
+        project_records = [
+            project_record
+            for project_record in records
+            if project_record["Type"] == "Project"
+            and project_record["Power Plant Name"] == plant_name
+        ]
+        if len(project_records) == 0:
+            project_record = copy.deepcopy(record)
+            project_record["Type"] = "Project"
+            print(project_record["Power Plant Name"])
+            records.append(project_record)
 
     return records
 
@@ -683,21 +698,21 @@ def manufacturers(records, **params):
         "Manufacturer 5",
     ]
     for record in records:
-            dataset = record["Dataset"]
-            for key in keys:
-                source_var = source_variables[dataset][key]
-                record[key] = None
-                if "from" in source_var.lower() and "matching plant" in source_var.lower():
-                    if record["Type"] == "Plant":
-                        source_key = source_var.split("from")[0].strip()
-                        record[key] = record[source_key]
-                elif source_var not in [None, "NA"]:
-                    record[key] = record[source_var]
-                # normalize the org name to (an) existing org(s)
-                if record[key] not in [None, "NA"]:
-                    record[key] = __match_org_name(record[key], org_match_index)
-                if record[key] not in [None, "NA"]:
-                    log.debug(f"{dataset}: {key}: {record[key]}")
+        dataset = record["Dataset"]
+        for key in keys:
+            source_var = source_variables[dataset][key]
+            record[key] = None
+            if "from" in source_var.lower() and "matching plant" in source_var.lower():
+                if record["Type"] == "Plant":
+                    source_key = source_var.split("from")[0].strip()
+                    record[key] = record[source_key]
+            elif source_var not in [None, "NA"]:
+                record[key] = record[source_var]
+            # normalize the org name to (an) existing org(s)
+            if record[key] not in [None, "NA"]:
+                record[key] = __match_org_name(record[key], org_match_index)
+            if record[key] not in [None, "NA"]:
+                log.debug(f"{dataset}: {key}: {record[key]}")
     return records
 
 
