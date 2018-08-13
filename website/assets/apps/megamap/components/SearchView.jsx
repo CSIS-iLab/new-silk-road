@@ -252,11 +252,6 @@ export default class SearchView extends Component {
         </header>
         <div className="inner">
           <div className="searchWidget">
-            <InfrastructureTypeToggle
-              infrastructureOnClick={this.handleQueryUpdate}
-              onSubmit={this.handleSubmit}
-              infrastructureTypes={this.state.options.infrastructure_type}
-            />
             <form onSubmit={this.handleSubmit}>
               <div className="searchBar" id="primarySearch">
                 <input
@@ -420,6 +415,11 @@ export default class SearchView extends Component {
               </Panel>
             </form>
           </div>
+          <InfrastructureTypeToggle
+            infrastructureOnClick={this.handleQueryUpdate}
+            onSubmit={this.handleSubmit}
+            infrastructureTypes={this.state.options.infrastructure_type}
+          />
           {(() => {
             if (searchCount > 0 &&
             !isSearching &&
