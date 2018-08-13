@@ -98,7 +98,7 @@ def _01_merge_plant_project_fuels(records, **params):
                 project_record[f"{project_record['Type']} Fuel {i+1}"] = fuel[0]
                 project_record[f"{project_record['Type']} Fuel {i+1} Category"] = fuel[1]
         else:
-            log.error("KEY NOT FOUND: %r" % key)
+            log.error("KEY NOT FOUND: %r" % (key,))
 
     return records
 
