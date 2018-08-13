@@ -57,7 +57,16 @@ def _01_merge_plant_project_fuels(records, **params):
     categories = OrderedDict()
     for record in records:
         project_key = (record["Power Plant Name"], record["Project Name"])
-        plant_key = (project_key[0], project_key[0])
+        plant_keys = [
+            (r["Power Plant Name"], r["Project Name"])
+            for r in records
+            if r["Type"] == "Plant" and r["Power Plant Name"] == record["Power Plant Name"]
+        ]
+        if len(plant_keys) == 0:
+            plant_keys = [
+                (r["Power Plant Name"], r["Project Name"]) for r in records if r["Type"] == "Plant"
+            ]
+        plant_key = plant_keys[0]
         if project_key not in fuels:
             fuels[project_key] = []
             categories[project_key] = []
