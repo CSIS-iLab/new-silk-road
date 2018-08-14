@@ -1,10 +1,20 @@
 """
 Implement the rules in the "Remove Clause" field of the "Tasks & Notes" worksheet
 """
-import logging
+import logging, math
 from power_plant_import.fields import FIELDS
 
 log = logging.getLogger(__name__)
+
+
+def __remove_record_data(record):
+    for field in [
+        field
+        for field in record.keys()
+        if field not in ['Dataset', 'Power Plant Name', 'Project Name', 'Type']
+    ]:
+        record[field] = None
+    return record
 
 
 def remove_plant_name_na(records, **params):
@@ -28,55 +38,40 @@ def remove_country_not_in_lookup(records, **params):
         dataset = record["Dataset"]
         val = record[key]
         if val is None or val not in countries_regions:
-            records.pop(records.index(record))
+            record = __remove_record_data(record)
             plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
             log.debug(f"{dataset}:{plant_project}: {key}='{val}'")
-    if list(set(record["Type"] for record in records))==['Project']:
-        return []
-    else:
-        return records
+    return records
 
 
 def remove_years_lt_2006(records, **params):
     """if one of the key years is < 2006, remove the record"""
-    from math import floor
-
     for key in ["Completion Year", "Decommissioning Year"]:
         for record in reversed(records):
             dataset = record["Dataset"]
             if record[key] not in [None, "NA"]:
-                val = floor(float(str(record[key])))
+                val = math.floor(float(str(record[key])))
                 if val < 2006:
-                    records.pop(records.index(record))
+                    record = __remove_record_data(record)
                     plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
                     log.debug(f"{dataset}:{plant_project}: {key}={val}")
-    if list(set(record["Type"] for record in records))==['Project']:
-        return []
-    else:
-        return records
     return records
 
 
 def remove_plant_capacity_lt_100_mw(records, **params):
     """if the "Plant Capacity" is < 100 MW, remove the record"""
-    from math import floor
-
     key = "Plant Capacity"
     for record in reversed(records):
         dataset = record["Dataset"]
         if record[key] not in [None, "NA"]:
-            val = floor(float(str(record[key])))
+            val = math.floor(float(str(record[key])))
             unit = record[key + " Unit"]
             if unit == "GW":
                 val *= 1000
             if val < 100:
-                records.pop(records.index(record))
+                record = __remove_record_data(record)
                 plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
                 log.debug(f"{dataset}:{plant_project}: {key}={val} {unit}")
-    if list(set(record["Type"] for record in records))==['Project']:
-        return []
-    else:
-        return records
     return records
 
 
@@ -96,10 +91,6 @@ def remove_italicized_values(records, **params):
                 record[key] = None
                 plant_project = f'{record["Power Plant Name"]}:{record["Project Name"]}'
                 log.debug(f"{dataset}:{plant_project}: {key}={record[key]} italic=TRUE (removed)")
-    if list(set(record["Type"] for record in records))==['Project']:
-        return []
-    else:
-        return records
     return records
 
 
@@ -113,10 +104,6 @@ def remove_estimated_plant_project_output(records, **params):
             if record.get(non_est_key) is not None:
                 record[key] = None
                 record[key + " Unit"] = None
-    if list(set(record["Type"] for record in records))==['Project']:
-        return []
-    else:
-        return records
     return records
 
 
@@ -124,13 +111,15 @@ def remove_fields_not_in_FIELDS(records, **params):
     for record in records:
         for field in [field for field in list(record.keys()) if field not in FIELDS]:
             val = record.pop(field)
-            log.debug(f"REMOVED {field}={val} ({record['Dataset']}:{record['Power Plant Name']}:{record['Project Name']})")
+            log.debug(
+                f"REMOVED {field}={val} ({record['Dataset']}:{record['Power Plant Name']}:{record['Project Name']})"
+            )
     return records
 
 
 def remove_NA_to_None(records, **params):
     for record in records:
-        for field in [field for field in list(record.keys()) if record[field]=="NA"]:
+        for field in [field for field in list(record.keys()) if record[field] == "NA"]:
             record[field] = None
     return records
 
