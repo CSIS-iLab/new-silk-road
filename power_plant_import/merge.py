@@ -54,7 +54,6 @@ def _01_merge_plant_project_fuels(records, **params):
     for any entries sharing the same lat, long or identical plant titles")
     """
     fuels = OrderedDict()
-    categories = OrderedDict()
     for record in records:
         project_key = (record["Power Plant Name"], record["Project Name"])
         plant_keys = [
@@ -69,10 +68,8 @@ def _01_merge_plant_project_fuels(records, **params):
         plant_key = plant_keys[0]
         if project_key not in fuels:
             fuels[project_key] = []
-            categories[project_key] = []
         if plant_key not in fuels:
             fuels[plant_key] = []
-            categories[plant_key] = []
 
         for field in [
             field
@@ -81,14 +78,13 @@ def _01_merge_plant_project_fuels(records, **params):
         ]:
             fuel_vals = record[field].split(";")
             category_vals = record[field + " Category"].split(";")  # parallel (see normalize)
-            for val in fuel_vals:
-                if "Project" in field and val not in fuels[project_key]:
-                    fuels[project_key].append(val)
-                    categories[project_key].append(category_vals[fuel_vals.index(val)])
+            for fuel_val in fuel_vals:
+                category_val = category_vals[fuel_vals.index(fuel_val)]
+                if "Project" in field and (fuel_val, category_val) not in fuels[project_key]:
+                    fuels[project_key].append((fuel_val, category_val))
                 # also put all fuel values into the Plant record
-                if val not in fuels[plant_key]:
-                    fuels[plant_key].append(val)
-                    categories[plant_key].append(category_vals[fuel_vals.index(val)])
+                if (fuel_val, category_val) not in fuels[plant_key]:
+                    fuels[plant_key].append((fuel_val, category_val))
 
             # reduce
             record[field] = None
