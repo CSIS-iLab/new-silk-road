@@ -216,7 +216,7 @@ def __print_field_conflict(project, record, field):
     )
 
 
-def _99_final_merge(records, **params):
+def _90_final_merge(records, **params):
     """the final merge:
     * merge values from later records if the first record value is None
     """
@@ -260,6 +260,26 @@ def _99_final_merge(records, **params):
             if record["Dataset"] not in project["Dataset"]:
                 project["Dataset"] += ";" + record["Dataset"]
     return list(projects.values())
+
+
+def _91_render_plant_data_to_projects(records, **params):
+    """plant-level data should be included in all relevant projects
+    """
+    for plant_record in [record for record in records if record["Type"] == "Plant"]:
+        key = (plant_record["Power Plant Name"], plant_record["Project Name"])
+        project_records = [
+            record
+            for record in records
+            if record["Type"] == "Project"
+            and record["Power Plant Name"] == plant_record["Power Plant Name"]
+        ]
+        if len(project_records) == 0:
+            log.error("NO PROJECT RECORDS FOR %s" % (key,))
+        for project_record in project_records:
+            for field in plant_record.keys():
+                if project_record.get(field) in [None, '']:
+                    project_record[field] = plant_record[field]
+    return records
 
 
 if __name__ == "__main__":
