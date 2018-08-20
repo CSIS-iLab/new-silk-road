@@ -278,6 +278,13 @@ def _91_render_plant_data_to_projects(records, **params):
     return records
 
 
+def _92_remove_empty_records(records, **params):
+    for record in reversed(records):
+        if not record["Source Plant Name"]:
+            records.pop(records.index(record))
+    return records
+
+
 if __name__ == "__main__":
     """assume that we're getting a JSON file and producing a JSON file"""
     import json, os, re, sys, openpyxl, importlib
