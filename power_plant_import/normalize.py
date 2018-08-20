@@ -812,6 +812,7 @@ def total_cost_w_currency(records, **params):
     key = "Total Cost"
     for record in records:
         dataset = record["Dataset"]
+        project_key = (record["Power Plant Name"], record["Project Name"])
         source_var = (source_variables[dataset][key] or "NA").strip()
         if source_var in [None, "NA"]:
             record[key] = None
@@ -832,32 +833,14 @@ def total_cost_w_currency(records, **params):
                 f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
             )
         if record[key] not in [None, "NA"]:
+            initial_value = record[key]
             record[key] = int(round(excel.value_to_float(record[key]), 0))  # convert to integer
             record[key + " Currency"] = "USD"
-            log.debug(f"{dataset}: {key}: {record[key]}")
+            if record[key] < 1e5:
+                log.warn(f"{key}: {record[key]} ({initial_value}) [{dataset} {project_key}]")
         else:
             record[key + " Currency"] = None
     return records
-
-
-# def template(records, **params):
-#     source_variables = params["source_variables"]
-#     keys = []
-#     for record in records:
-#         dataset = record["Dataset"]
-#         for key in keys:
-#             source_var = source_variables[dataset][key]
-#             if source_var in [None, "NA"]:
-#                 record[key] = None
-#             elif True:
-#                 pass
-#             else:
-#                 raise ValueError(
-#                     f'invalid source variable: dataset="{dataset}", key="{key}", val="{source_var}"'
-#                 )
-#             if record[key] not in [None, "NA"]:
-#                 log.info(f"{dataset}: {key}: {record[key]}")
-#     return records
 
 
 if __name__ == "__main__":
