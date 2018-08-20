@@ -138,7 +138,7 @@ def reduce_power_plant_data(power_plant_data, *reduce_functions, **params):
     returns the reduced power plant data
     """
     for reduce_function in reduce_functions:
-        log.info(f"reduce_function: {reduce_function.__name__}")
+        log.info(f"{reduce_function.__name__}")
         for key in power_plant_data:
             if len(power_plant_data[key]) > 0:
                 power_plant_data[key] = reduce_function(power_plant_data[key], **params)
