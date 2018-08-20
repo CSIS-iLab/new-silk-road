@@ -80,13 +80,12 @@ def _00_plant_project_name_type(records, **params):
             record["Power Plant Name"] = plant_name
 
         # set "Project Name" and "Type"
-        project_name = (record.get(source_variables[dataset].get("Project Name")) or '').strip()
-        if project_name not in ["", record["Power Plant Name"]]:
+        record["Project Name"] = (record.get(source_variables[dataset].get("Project Name")) or '').strip()
+        if record["Project Name"] not in ["", record["Power Plant Name"]]:
             record["Type"] = "Project"
-            record["Project Name"] = project_name
         else:
             record["Type"] = "Plant"
-            record["Project Name"] = plant_name
+            record["Project Name"] = record["Power Plant Name"]
 
         record.move_to_end("Type", last=False)
         record.move_to_end("Project Name", last=False)
