@@ -122,6 +122,8 @@ def value_to_float(value):
         number = float(md.group(0).replace(",", ""))
         if "million" in value.lower():
             number *= 1e6
+        elif "billion" in value.lower():
+            number *= 1e9
         return number
 
 
