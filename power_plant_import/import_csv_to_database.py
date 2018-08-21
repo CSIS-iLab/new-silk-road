@@ -441,9 +441,13 @@ def import_csv_to_database(*args, **kwargs):
 
             else:
                 # Get or create the Project
-                new_object, _ = Project.objects.get_or_create(
-                    name=row.get('Project Name'),
-                )
+                project_name = row.get('Project Name')
+                # If the CSV sheet has a project name of '(Project)', then get
+                # the project's name from the 'Source Plant Name' field
+                if project_name == '(Project)':
+                    project_name = row.get('Source Plant Name')
+
+                new_object, _ = Project.objects.get_or_create(name=project_name)
                 # Get the PowerPlant for this Project
                 power_plant, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Source Plant Name'),

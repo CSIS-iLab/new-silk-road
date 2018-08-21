@@ -36,7 +36,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         project_ouessant1 = Project.objects.get(name='Ouessant Tidal Power Phase I')
         project_ouessant2 = Project.objects.get(name='Ouessant Tidal Power Phase II')
         project_liaoning = Project.objects.get(
-            name='Liaoning Linghai China Resource Power Wind Power Wind Farm IC'
+            name='Liaoning Linghai China Resource Power Wind Power Wind Farm'
         )
         return [project_ouessant1, project_ouessant2, project_liaoning]
 
@@ -77,19 +77,11 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Get the Projects that were created during the import
         (project_ouessant1, project_ouessant2, project_liaoning) = self.get_created_projects()
         # The Fuels have been assigned to the correct PowerPlants and Projects
-        powerplant_ouessant = PowerPlant.objects.get(name='Ouessant Tidal Power Project')
         self.assertEqual(set(powerplant_ouessant.fuels.all()), set([fuel_tidal]))
-        project_ouessant1 = Project.objects.get(name='Ouessant Tidal Power Phase I')
         self.assertEqual(set(project_ouessant1.fuels.all()), set([fuel_tidal]))
-        project_ouessant2 = Project.objects.get(name='Ouessant Tidal Power Phase II')
         self.assertEqual(set(project_ouessant2.fuels.all()), set([fuel_wave]))
-        powerplant_ilarionas = PowerPlant.objects.get(name='Ilarionas')
         self.assertEqual(set(powerplant_ilarionas.fuels.all()), set([fuel_hydro]))
-        project_liaoning = Project.objects.get(
-            name='Liaoning Linghai China Resource Power Wind Power Wind Farm IC'
-        )
         self.assertEqual(set(project_liaoning.fuels.all()), set([fuel_wind]))
-        powerplant_tonstad = PowerPlant.objects.get(name='Tonstad')
         self.assertEqual(set(powerplant_tonstad.fuels.all()), set([fuel_wind, fuel_hydro]))
 
     def test_contractors_created(self):
@@ -419,6 +411,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
             slug='power-plant'
         )
         # Verify the fields for project_ouessant1
+        self.assertEqual(project_ouessant1.name, 'Ouessant Tidal Power Phase I')
         self.assertEqual(project_ouessant1.power_plant, powerplant_ouessant)
         self.assertEqual(project_ouessant1.infrastructure_type, infrastructure_type_power_plant)
         self.assertEqual(
@@ -457,6 +450,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(project_ouessant1.planned_completion_year, 2010)
         self.assertEqual(project_ouessant1.new, True)
         # Verify the fields for powerplant_ilarionas
+        self.assertEqual(powerplant_ilarionas.name, 'Ilarionas')
         self.assertEqual(powerplant_ilarionas.infrastructure_type, infrastructure_type_power_plant)
         self.assertEqual(
             powerplant_ilarionas.status,
@@ -490,6 +484,13 @@ class ImportCSVToDatabaseTestCase(TestCase):
             {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['TONNES PER ANNUM']
         )
         self.assertEqual(powerplant_ilarionas.grid_connected, None)
+        # The project_liaoning has a value of '(Project)' in the 'Project Name'
+        # field in the CSV, so project_liaoning should get its name from the
+        # 'Source Plant Name' field instead.
+        self.assertEqual(
+            project_liaoning.name,
+            'Liaoning Linghai China Resource Power Wind Power Wind Farm'
+        )
 
     def test_multiple_import(self):
         """A user can run the import multiple times without errors or duplicate objects."""
