@@ -37,7 +37,7 @@ Next in that list is `postgresql` and `postgis`. PostgreSQL is a database progra
 Without the packages listed below, you will not be able all parts of the website, such as the search engine. You may not need to work with those parts, but if you do, you'll need to install additional software:
 
 ```sh
-$ brew install redis elasticsearch memcached libmemcached
+$ brew install redis elasticsearch@2.4 memcached libmemcached
 ```
 
 `elasticsearch` is software for a search database. Basically, information gets copied from the PostgreSQL database and transformed into a format optimized for searchability.
