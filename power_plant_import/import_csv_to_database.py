@@ -35,6 +35,7 @@ iso_3166_country_name_conversion_dict = {
     "Macedonia": "Macedonia, the former Yugoslav Republic of",
     "Russia": "Russian Federation",
     "Syria": "Syrian Arab Republic",
+    "Taiwan": "Taiwan, Province of China",
     "United Kingdom": "United Kingdom of Great Britain and Northern Ireland",
     "Vietnam": "Viet Nam",
 }
@@ -125,7 +126,7 @@ def get_countries_and_regions(row):
         # Get the ISO 3166 name for this country
         iso_3166_country_name = convert_country_name_to_iso_3166_name(row.get('Country'))
         # Get the ISO 3166 record for this country
-        iso_record = iso3166.countries.get(iso_3166_country_name)
+        iso_record = iso3166.countries_by_name.get(iso_3166_country_name.upper())
         # Kosovo is not in the iso3166 library
         if not iso_record and iso_3166_country_name == 'Kosovo':
             iso_record = iso3166.Country(
@@ -391,7 +392,7 @@ def import_csv_to_database(*args, **kwargs):
             # Get the Countries and Regions for the row
             try:
                 countries, regions = get_countries_and_regions(row)
-            except KeyError:
+            except AttributeError:
                 # The row doesn't have a valid country
                 countries, regions = [], []
                 completed_but_with_warnings[perceived_row_number] = 'Invalid country'
