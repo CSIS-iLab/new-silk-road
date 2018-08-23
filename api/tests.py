@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 import json
 
 from infrastructure.models import ProjectStatus, ProjectFunding
-from infrastructure.tests.factories import ProjectFactory, InitiativeFactory
+from infrastructure.tests.factories import ProjectFactory, InitiativeFactory, CuratedProjectFactory
 from locations.models import GeometryStore, PointGeometry
 from locations.tests.factories import PointGeometryFactory, CountryFactory
 from facts.tests.organization_factories import OrganizationFactory
@@ -440,3 +440,50 @@ class TestInfrastructureTypeList(TestCase):
         url = reverse('api:infrastructure-type-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class CuratedProjectListViewTestCase(TestCase):
+    """List curated projects from the database."""
+
+    def setUp(self):
+        super().setUp()
+        self.project = ProjectFactory(published=True)
+        self.other_project = ProjectFactory(published=True)
+        self.curated_project = CuratedProjectFactory(
+            published=True,
+        )
+        self.curated_project.projects.add(self.project, self.other_project)
+        self.url = reverse('api:curated-projects-list')
+
+    def test_get_listing(self):
+        """Render the list of curated projects."""
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.curated_project.name)
+
+    def test_unpublished_curated_project(self):
+        """Unpublished curated projects shouldn't be listed."""
+
+        self.curated_project.published = False
+        self.curated_project.save()
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.curated_project.name)
+
+    def test_unpublished_projects_in_curated_project(self):
+        """
+        Curated projects shouldn't be listed if they are only related to unpublished projects
+        """
+        with self.settings(PUBLISH_FILTER_ENABLED=True):
+            self.client.logout()
+
+            for project in [self.project, self.other_project]:
+                project.published = False
+                project.save()
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertNotContains(response, self.curated_project.name)
+

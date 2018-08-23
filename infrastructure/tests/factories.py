@@ -46,3 +46,21 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'infrastructure.Project'
+
+
+class CuratedProjectFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.CuratedProject'
+
+    @factory.post_generation
+    def projects(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for project in projects:
+                self.projects.add(project)
+
+    name = factory.Sequence(lambda n: 'CuratedProject %d' % n)
+
