@@ -1,7 +1,11 @@
 import factory
+import random
 
 from django.utils.text import slugify
 from django.db.models import signals
+
+from facts.tests.organization_factories import OrganizationFactory
+from finance.currency import CURRENCY_CHOICES
 
 
 class InitiativeFactory(factory.django.DjangoModelFactory):
@@ -64,3 +68,51 @@ class CuratedProjectFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'CuratedProject %d' % n)
 
+
+class InitiativeTypeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.InitiativeType'
+
+    name = factory.Sequence(lambda n: 'Initiative Type %d' % n)
+    slug = factory.Sequence(lambda n: 'initiative-type-%d' % n)
+
+
+class ProjectFundingFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.ProjectFunding'
+
+    project = factory.SubFactory(ProjectFactory)
+    amount = random.randint(0, 1000)
+    currency = random.choice(CURRENCY_CHOICES)[0]
+
+
+class PowerPlantFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.PowerPlant'
+
+    name = factory.Sequence(lambda n: 'Power Plant %d' % n)
+    slug = factory.Sequence(lambda n: 'power-plant-%d' % n)
+
+
+class OwnerStakeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.OwnerStake'
+
+    power_plant = factory.SubFactory(PowerPlantFactory)
+    owner = factory.SubFactory(OrganizationFactory)
+    percent_owned = random.randint(0, 100)
+
+
+class FuelCategoryFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.FuelCategory'
+
+    name = factory.Sequence(lambda n: 'FuelCategory %d' % n)
+
+
+class FuelFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.Fuel'
+
+    name = factory.Sequence(lambda n: 'Power Plant %d' % n)
+    fuel_category = factory.SubFactory(FuelCategoryFactory)
