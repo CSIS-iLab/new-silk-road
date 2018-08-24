@@ -18,7 +18,7 @@ export default class InfrastructureIcon extends Component {
     } else if (iconLabel === "Intermodal") {
       return "/static/img/database-icons/Dryport.svg";
     } else if (iconLabel === "Power Plant") {
-      return "/static/img/database-icons/PowerPlant.png";
+      return "/static/img/database-icons/Powerplant.svg";
     }
   }
 
