@@ -117,7 +117,11 @@ class TestGeometryStoreCentroidViewSet(TestCase):
         point = PointGeometry(geom=Point(20, 30))
         point.save()
         self.geom_with_published_project.points.add(point)
-        self.published_project = ProjectFactory(published=True)
+        self.published_project = ProjectFactory(
+            published=True,
+            countries=[CountryFactory(), CountryFactory()],
+            total_cost=1250000
+        )
         self.published_project.geo = self.geom_with_published_project
         self.published_project.save()
 
@@ -209,6 +213,13 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 'geostore': str(self.geom_with_published_project.identifier),
                 'icon-image': 'dot',
                 'infrastructureType': self.published_project.infrastructure_type.name,
+                "locations": ','.join(
+                    self.geom_with_published_project.projects.values_list(
+                        'countries__name',
+                        flat=True
+                    )
+                ),
+                "total_cost": "1.25 million {}".format(self.published_project.total_cost_currency),
             }
         })
 
