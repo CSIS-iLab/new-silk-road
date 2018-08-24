@@ -120,7 +120,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
         self.published_project = ProjectFactory(
             published=True,
             countries=[CountryFactory(), CountryFactory()],
-            total_cost=1250000
+            total_cost=1200000
         )
         self.published_project.geo = self.geom_with_published_project
         self.published_project.save()
@@ -219,7 +219,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                         flat=True
                     )
                 ),
-                "total_cost": "1.25 million {}".format(self.published_project.total_cost_currency),
+                "total_cost": "1.2 million {}".format(self.published_project.total_cost_currency),
             }
         })
 
