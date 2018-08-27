@@ -29,7 +29,7 @@ class TestGeometryStoreDetailView(TestCase):
         self.geometry_store.points.add(point)
         self.url = reverse('api:geometrystore-detail', args=[self.geometry_store.identifier])
         # View ignores GeometryStores without projects, so add one
-        self.project = ProjectFactory()
+        self.project = ProjectFactory(countries=[CountryFactory(), CountryFactory()])
         self.project.geo = self.geometry_store
         self.project.save()
 
@@ -65,22 +65,42 @@ class TestGeometryStoreDetailView(TestCase):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED'):
                 self.client.logout()
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
         with self.settings(PUBLISH_FILTER_ENABLED=False):
             with self.subTest('Authenticated and PUBLISH_FILTER_ENABLED == False'):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED == False'):
                 self.client.logout()
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
     def test_unpublished_project(self):
         self.project.published = False
@@ -91,6 +111,11 @@ class TestGeometryStoreDetailView(TestCase):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED'):
                 self.client.logout()
@@ -102,11 +127,21 @@ class TestGeometryStoreDetailView(TestCase):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED == False'):
                 self.client.logout()
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
 
 class TestGeometryStoreCentroidViewSet(TestCase):
