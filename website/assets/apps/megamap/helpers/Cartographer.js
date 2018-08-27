@@ -229,13 +229,54 @@ export default class Cartographer {
 
       const popup = new Popup();
 
-      const itemsListHTML = projects.map(project => `<li><h4>${project.name}</h4>
-      <p><a class='button' href='${project.page_url}' target='_blank'>Open detail page</a></p></li>`)
-        .join('');
+      // Get the HTML of the popup
+      const popupHTML = projects.map(project => {
+        // Get the total cost, round it to have 1 decimal point, and add a word
+        // for the total cost unit, like "million" or "billion".
+        var totalCost;
+        if (project.total_cost === null) {
+          totalCost = "Unknown"
+        } else {
+          if (project.total_cost > 10**12) {
+            var totalCostDividend = (project.total_cost / 10**12).toFixed(1);
+            var totalCostUnit = " trillion ";
+          } else if (project.total_cost > 10**9) {
+            var totalCostDividend = (project.total_cost / 10**9).toFixed(1);
+            var totalCostUnit = " billion ";
+          } else if (project.total_cost > 10**6) {
+            var totalCostDividend = (project.total_cost / 10**6).toFixed(1);
+            var totalCostUnit = " million ";
+          } else if (project.total_cost > 10**3) {
+            var totalCostDividend = (project.total_cost / 10**3).toFixed(1);
+            var totalCostUnit = " thousand";
+          } else {
+            var totalCostDividend = project.total_cost.toFixed(1);
+            var totalCostUnit = " ";
+          }
+          totalCost = totalCostDividend + totalCostUnit
+          if (project.total_cost_currency !== null) {
+            totalCost += project.total_cost_currency;
+          }
+        }
+        // Return the HTML of the popup
+        return `<div>
+            <h4>${project.name}</h4>
+            <div>LOCATIONS</div>
+            <div>${project.locations}</div>
+            <div>TYPE</div>
+            <div>${project.infrastructure_type}</div>
+            <div>TOTAL REPORTED COST</div>
+            <div>${totalCost}</div>
+            <p>
+              <a class='button' href='${project.page_url}' target='_blank'>VIEW PROJECT PAGE</a>
+            </p>
+          </div>`
+      })
+      .join('');
 
       popup.setLngLat(lngLat)
         .setHTML(`<div class='${popContentClass}'>
-           <ul class='clean'>${itemsListHTML}</ul>
+           <div class='clean'>${popupHTML}</div>
            </div>`);
 
       this.addPopup(popup);
