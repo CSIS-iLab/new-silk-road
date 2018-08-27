@@ -237,7 +237,11 @@ export default class Cartographer {
         if (project.total_cost === null) {
           totalCost = "Unknown"
         } else {
-          if (project.total_cost > 10**12) {
+          if (project.total_cost > 10**15) {
+            var totalCostDividend = (project.total_cost / 10**15).toFixed(1);
+            var totalCostUnit = " quadrillion ";
+          }
+          else if (project.total_cost > 10**12) {
             var totalCostDividend = (project.total_cost / 10**12).toFixed(1);
             var totalCostUnit = " trillion ";
           } else if (project.total_cost > 10**9) {

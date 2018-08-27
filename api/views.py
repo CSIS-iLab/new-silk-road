@@ -160,6 +160,13 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
         ).annotate(
             total_cost_dividend=Case(  # Divide total_cost_exact, to get a number between 1 and 999
                 When(
+                    Q(total_cost_exact__gte=10**15),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact') / Decimal(1.0*10**15),
+                        output_field=FloatField()
+                    ),
+                ),
+                When(
                     Q(total_cost_exact__gte=10**12) & Q(total_cost_exact__lt=10**15),
                     then=ExpressionWrapper(
                         F('total_cost_exact') / Decimal(1.0*10**12),
@@ -198,6 +205,10 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             )
         ).annotate(
             total_cost_unit=Case(
+                When(
+                    Q(total_cost_exact__gte=10**15),
+                    then=Value('quadrillion')
+                ),
                 When(
                     Q(total_cost_exact__gte=10**12) & Q(total_cost_exact__lt=10**15),
                     then=Value('trillion')
