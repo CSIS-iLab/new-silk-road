@@ -121,43 +121,52 @@ export default class Cartographer {
   }
 
   handleDidGetGeoStore(geostore) {
-    this.removePopup();
     const {
       identifier,
       extent,
       projects,
     } = geostore;
-    const [{ infrastructure_type }] = projects;
-    this.geostoreQueue.resolveGeoStore(identifier);
-    if (!this.geoManager.hasGeo(identifier)) {
-      const geoTypes = ['lines', 'points', 'polygons'];
-      const identifiers = [];
-      geoTypes.forEach((t) => {
-        const data = geostore[t];
-        if (data.features.length) {
-          const layerId = `${identifier}${identiferSep}${t}`;
-          identifiers.push(layerId);
-          const source = {
-            data,
-            type: 'geojson',
-          };
-          const layer = Object.assign({
-            source: layerId,
-            id: layerId,
-            metadata: {
-              identifier,
-              projects,
-              infrastructureType: infrastructure_type,
-            },
-          }, this.styles.getStyleFor(t, infrastructure_type));
-          this.setSource(layer.source, source, false);
-          this.addLayer(layer);
-        }
-      });
-      this.geoManager.addGeoRecord(identifier, identifiers, extent);
-    }
-    if (this.geoManager.selectedGeoStore === identifier && extent) {
-      this.zoomToExtent(extent);
+
+    // If the geostore's identifier has a button in the DOM, then add set the href
+    // attribute of that button to the first project's detail page URL. Otherwise,
+    // handle showing the geoTypes on the map.
+    var identifierButton = document.getElementById('button_' + geostore.identifier);
+    if (identifierButton !== null) {
+      identifierButton.setAttribute('href', projects[0].page_url);
+    } else {
+      this.removePopup();
+      const [{ infrastructure_type }] = projects;
+      this.geostoreQueue.resolveGeoStore(identifier);
+      if (!this.geoManager.hasGeo(identifier)) {
+        const geoTypes = ['lines', 'points', 'polygons'];
+        const identifiers = [];
+        geoTypes.forEach((t) => {
+          const data = geostore[t];
+          if (data.features.length) {
+            const layerId = `${identifier}${identiferSep}${t}`;
+            identifiers.push(layerId);
+            const source = {
+              data,
+              type: 'geojson',
+            };
+            const layer = Object.assign({
+              source: layerId,
+              id: layerId,
+              metadata: {
+                identifier,
+                projects,
+                infrastructureType: infrastructure_type,
+              },
+            }, this.styles.getStyleFor(t, infrastructure_type));
+            this.setSource(layer.source, source, false);
+            this.addLayer(layer);
+          }
+        });
+        this.geoManager.addGeoRecord(identifier, identifiers, extent);
+      }
+      if (this.geoManager.selectedGeoStore === identifier && extent) {
+        this.zoomToExtent(extent);
+      }
     }
   }
 
@@ -365,9 +374,12 @@ export default class Cartographer {
       totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
       const totalCostDataDiv = document.createElement('div');
       totalCostDataDiv.appendChild(document.createTextNode(feat.properties.total_cost));
-      const button = document.createElement('button');
+      const button = document.createElement('a');
+      button.setAttribute('id', 'button_' + feat.properties.geostore);
+      button.setAttribute('class', 'button');
+      button.setAttribute('target', '_blank');
       button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
-      button.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(feat.properties.geostore));
+
       popupContainer.appendChild(header);
       popupContainer.appendChild(locationsLabelDiv);
       popupContainer.appendChild(locationsDataDiv);
@@ -380,6 +392,11 @@ export default class Cartographer {
            .setDOMContent(popupContainer);
 
       this.addPopup(popup);
+
+      // Now that the popup has been added, get the geostore data for this point.
+      // Note: when the data returns from the backend, .handleDidGetGeoStore()
+      // will set the button's href to this point's project's detail page URL.
+      GeoStoreActions.getGeoStore(feat.properties.geostore);
     }
   }
 
