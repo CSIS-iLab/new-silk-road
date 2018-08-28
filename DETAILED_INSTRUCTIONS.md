@@ -26,6 +26,8 @@ There are a lot of software packages used in developing websites: the following 
 $ brew install python3 node postgresql postgis heroku
 ```
 
+*Note: this project assumes that you are using `node` version 5, which is no longer supported. The front-end libraries should be updated, so the project can work with a supported version of node.*
+
 What is all that, you ask? Well, `brew install` was telling Homebrew we want to install some things, and everything after that is a software package. `python3` and `node` are for running code Python and JavaScript code on your computer. Python runs the server-side code that interacts with the database, generates HTML pages, etc. Node is used to compile CSS files from Sass and JavaScript from, well, other JavaScript.
 
 Next in that list is `postgresql` and `postgis`. PostgreSQL is a database program, and PostGIS adds geospatial capabilities to PostgreSQL. We'll use those to run a local copy of the database.
