@@ -202,6 +202,46 @@ export default class Cartographer {
     }
   }
 
+  getPopupWithContainer(name, locations, infrastructureType, totalCost, buttonId, detailPageURL) {
+    /* Return a popupContainer element with the DOM elements for a (project) popup on the map. */
+    name = name || '';
+    locations = locations || 'Not Specified';
+    detailPageURL = detailPageURL || '';
+
+    const popupContainer = document.createElement('div');
+    popupContainer.className = popContentClass;
+    const header = document.createElement('h4');
+    header.appendChild(document.createTextNode(name));
+    const locationsLabelDiv = document.createElement('div');
+    locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
+    const locationsDataDiv = document.createElement('div');
+    locationsDataDiv.appendChild(document.createTextNode(locations));
+    const typeLabelDiv = document.createElement('div');
+    typeLabelDiv.appendChild(document.createTextNode('Type'.toUpperCase()));
+    const typeDataDiv = document.createElement('div');
+    typeDataDiv.appendChild(document.createTextNode(infrastructureType));
+    const totalCostLabelDiv = document.createElement('div');
+    totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
+    const totalCostDataDiv = document.createElement('div');
+    totalCostDataDiv.appendChild(document.createTextNode(totalCost));
+    const button = document.createElement('a');
+    button.setAttribute('id', buttonId);
+    button.setAttribute('href', detailPageURL);
+    button.setAttribute('target', '_blank');
+    button.setAttribute('class', 'button');
+    button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
+    popupContainer.appendChild(header);
+    popupContainer.appendChild(locationsLabelDiv);
+    popupContainer.appendChild(locationsDataDiv);
+    popupContainer.appendChild(typeLabelDiv);
+    popupContainer.appendChild(typeDataDiv);
+    popupContainer.appendChild(totalCostLabelDiv);
+    popupContainer.appendChild(totalCostDataDiv);
+    popupContainer.appendChild(button);
+
+    return popupContainer;
+  }
+
   handleMapClick(event) {
     const {
       point,
@@ -230,7 +270,7 @@ export default class Cartographer {
       const popup = new Popup();
 
       // Get the HTML of the popup
-      const popupHTML = projects.map(project => {
+      const popupContainers = projects.map(project => {
         // Get the total cost, round it to have 1 decimal point, and add a word
         // for the total cost unit, like "million" or "billion".
         var totalCost;
@@ -262,26 +302,19 @@ export default class Cartographer {
             totalCost += project.total_cost_currency;
           }
         }
-        // Return the HTML of the popup
-        return `<div>
-            <h4>${project.name}</h4>
-            <div>LOCATIONS</div>
-            <div>${project.locations}</div>
-            <div>TYPE</div>
-            <div>${project.infrastructure_type}</div>
-            <div>TOTAL REPORTED COST</div>
-            <div>${totalCost}</div>
-            <p>
-              <a class='button' href='${project.page_url}' target='_blank'>VIEW PROJECT PAGE</a>
-            </p>
-          </div>`
+        var buttonId = 'button_' + project.identifier;
+
+        // Return the DOM element for the popup
+        return this.getPopupWithContainer(project.name, project.locations, project.infrastructure_type, totalCost, buttonId, project.page_url);
       })
-      .join('');
+
+      const parentPopupContainer = document.createElement('div');
+      popupContainers.forEach((popupContainer) => {
+        parentPopupContainer.appendChild(popupContainer);
+      });
 
       popup.setLngLat(lngLat)
-        .setHTML(`<div class='${popContentClass}'>
-           <div class='clean'>${popupHTML}</div>
-           </div>`);
+           .setDOMContent(parentPopupContainer);
 
       this.addPopup(popup);
     }
@@ -402,37 +435,9 @@ export default class Cartographer {
       const feat = features[0];
       const popup = new Popup();
 
-      // Create popup HTML, the hard way. (So we can easily add the event listener to that button)
-      const popupContainer = document.createElement('div');
-      popupContainer.className = popContentClass;
-      const header = document.createElement('h4');
-      header.appendChild(document.createTextNode(feat.properties.label || ''));
-      const locationsLabelDiv = document.createElement('div');
-      locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
-      const locationsDataDiv = document.createElement('div');
-      locationsDataDiv.appendChild(document.createTextNode(feat.properties.locations));
-      const typeLabelDiv = document.createElement('div');
-      typeLabelDiv.appendChild(document.createTextNode('Type'.toUpperCase()));
-      const typeDataDiv = document.createElement('div');
-      typeDataDiv.appendChild(document.createTextNode(feat.properties.infrastructureType));
-      const totalCostLabelDiv = document.createElement('div');
-      totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
-      const totalCostDataDiv = document.createElement('div');
-      totalCostDataDiv.appendChild(document.createTextNode(feat.properties.total_cost));
-      const button = document.createElement('a');
-      button.setAttribute('id', 'button_' + feat.properties.geostore);
-      button.setAttribute('class', 'button');
-      button.setAttribute('target', '_blank');
-      button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
-
-      popupContainer.appendChild(header);
-      popupContainer.appendChild(locationsLabelDiv);
-      popupContainer.appendChild(locationsDataDiv);
-      popupContainer.appendChild(typeLabelDiv);
-      popupContainer.appendChild(typeDataDiv);
-      popupContainer.appendChild(totalCostLabelDiv);
-      popupContainer.appendChild(totalCostDataDiv);
-      popupContainer.appendChild(button);
+      // Get the DOM element for the (project) popup
+      var buttonId = 'button_' + feat.properties.geostore;
+      var popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '');
       popup.setLngLat(feat.geometry.coordinates)
            .setDOMContent(popupContainer);
 
