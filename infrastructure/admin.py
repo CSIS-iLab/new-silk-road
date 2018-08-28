@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
-    ProjectFunding, PowerPlant, CuratedProject,
+    ProjectFunding, PowerPlant, CuratedProjectCollection,
     Initiative, InitiativeType,
     Fuel, FuelCategory, OwnerStake,
 )
@@ -362,8 +362,8 @@ class ProjectFundingAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(CuratedProject)
-class CuratedProjectAdmin(admin.ModelAdmin):
+@admin.register(CuratedProjectCollection)
+class CuratedProjectCollectionAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'published',

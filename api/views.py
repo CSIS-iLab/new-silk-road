@@ -31,7 +31,7 @@ from api.filters.locations import (
 
 )
 from infrastructure.models import (
-    CuratedProject,
+    CuratedProjectCollection,
     Project,
     ProjectStatus,
     Initiative,
@@ -41,7 +41,7 @@ from facts.models import (
     Organization
 )
 from api.serializers.infrastructure import (
-    CuratedProjectSerializer,
+    CuratedProjectCollectionSerializer,
     ProjectSerializer,
     InitiativeSerializer,
     InfrastructureTypeSerializer
@@ -170,12 +170,12 @@ class CountryListView(generics.ListAPIView):
     pagination_class = None
 
 
-class CuratedProjectListView(generics.ListAPIView):
-    serializer_class = CuratedProjectSerializer
+class CuratedProjectCollectionListView(generics.ListAPIView):
+    serializer_class = CuratedProjectCollectionSerializer
     pagination_class = None
 
     def get_queryset(self):
-        queryset = CuratedProject.objects.distinct()
+        queryset = CuratedProjectCollection.objects.distinct()
         if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
             queryset = queryset.published().filter(projects__published=True)
 

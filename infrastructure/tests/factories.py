@@ -52,9 +52,9 @@ class ProjectFactory(factory.django.DjangoModelFactory):
         model = 'infrastructure.Project'
 
 
-class CuratedProjectFactory(factory.django.DjangoModelFactory):
+class CuratedProjectCollectionFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'infrastructure.CuratedProject'
+        model = 'infrastructure.CuratedProjectCollection'
 
     @factory.post_generation
     def projects(self, create, extracted, **kwargs):
@@ -66,7 +66,7 @@ class CuratedProjectFactory(factory.django.DjangoModelFactory):
             for project in projects:
                 self.projects.add(project)
 
-    name = factory.Sequence(lambda n: 'CuratedProject %d' % n)
+    name = factory.Sequence(lambda n: 'CuratedProjectCollection %d' % n)
 
 
 class InitiativeTypeFactory(factory.django.DjangoModelFactory):

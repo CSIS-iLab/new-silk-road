@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from infrastructure.models import (CuratedProject, Project, ProjectFunding, Initiative,
+from infrastructure.models import (CuratedProjectCollection, Project, ProjectFunding, Initiative,
     InfrastructureType)
 from api.serializers.facts import OrganizationBasicSerializer
 from api.fields import DynamicFieldsMixin
@@ -129,10 +129,10 @@ class InfrastructureTypeSerializer(serializers.ModelSerializer):
         )
 
 
-class CuratedProjectSerializer(serializers.ModelSerializer):
+class CuratedProjectCollectionSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CuratedProject
+        model = CuratedProjectCollection
         fields = (
             'name',
             'projects',

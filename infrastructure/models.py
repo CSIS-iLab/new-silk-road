@@ -658,7 +658,7 @@ class ProjectDocument(models.Model):
         return self.source_url.split('/')[-1] or None
 
 
-class CuratedProject(Publishable):
+class CuratedProjectCollection(Publishable):
     """A collection of projects for the megamap"""
     name = models.CharField(max_length=256)
     projects = models.ManyToManyField('Project', blank=False)
