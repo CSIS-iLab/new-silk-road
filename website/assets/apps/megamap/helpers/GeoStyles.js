@@ -53,7 +53,12 @@ export default class GeoStyles {
         }),
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Rail',
+            'icon-image': {
+              stops: [
+                [0, 'Rail'],
+                [6, 'RailIcon'],
+              ],
+            },
           },
         }),
       },
@@ -65,14 +70,24 @@ export default class GeoStyles {
         }),
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Road',
+            'icon-image': {
+              stops: [
+                [0, 'Road'],
+                [6, 'RoadIcon'],
+              ],
+            },
           },
         }),
       },
       seaport: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Seaport',
+            'icon-image': {
+              stops: [
+                [0, 'Seaport'],
+                [6, 'SeaportIcon'],
+              ],
+            },
           },
         }),
       },
@@ -93,21 +108,36 @@ export default class GeoStyles {
       dryport: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Dryport',
+            'icon-image': {
+              stops: [
+                [0, 'Dryport'],
+                [6, 'DryportIcon'],
+              ],
+            },
           },
         }),
       },
       multimodal: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Dryport',
+            'icon-image': {
+              stops: [
+                [0, 'Dryport'],
+                [6, 'DryportIcon'],
+              ],
+            },
           },
         }),
       },
       intermodal: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Dryport',
+            'icon-image': {
+              stops: [
+                [0, 'Dryport'],
+                [6, 'DryportIcon'],
+              ],
+            },
           },
         }),
       },
