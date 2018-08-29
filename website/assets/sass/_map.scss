@@ -46,6 +46,15 @@ $creamer-str: str-slice("#{$creamer}", 2);
 .mapboxgl-popup {
     max-width: 400px;
     font: $compact-text-size/rem(20) 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+    .popup-button {
+        background-color: $green-2018;
+        color: white;
+        font-weight: bolder;
+        &:hover {
+            background-color: $greyish-teal;
+        }
+    }
 }
 
 @each $aside, $bside in (top, bottom), (right, left), (bottom, top), (left, right) {
@@ -56,10 +65,16 @@ $creamer-str: str-slice("#{$creamer}", 2);
     }
 }
 .mapboxgl-popup-content {
-    background-color: $pale-green;
+    background-color: white;
 }
 .mapboxgl-popup-close-button {
-    color: $serious-green;
+    width: 36px;
+    height: 36px;
+    color: white;
+    font-size: 32px;
+    &:hover {
+        background-color: $warm-grey;
+    }
 }
 .marker-title {
     font-weight: 700;
@@ -84,9 +99,48 @@ $creamer-str: str-slice("#{$creamer}", 2);
     }
 }
 
+.popup-header {
+    background-color: black;
+    color: white;
+    margin: -10px -20px 10px -20px;
+}
+
+.popup-header-zoomicon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    transform: scale(0.66667);
+}
+
+.popup-header-button {
+    background-color: transparent;
+    padding: 8px;
+    &:hover {
+        background-color: $warm-grey;
+    }
+}
+
+.popup-header-text {
+    vertical-align: super;
+}
+
+.popup-row {
+    margin-bottom: 4px;
+}
+
+.popup-row-data {
+    margin-top: -4px;
+}
+
+.popup-buttonholder {
+    text-align: center;
+    margin-top: 8px;
+}
+
 .popup-content-inner {
     width: 220px;
     padding: 0 10px;
+    font-weight: 500;
 
     p {
         margin-bottom: 4px;
@@ -104,6 +158,11 @@ $creamer-str: str-slice("#{$creamer}", 2);
                 border-bottom: none;
             }
         }
+    }
+    .zoom-magnifying-glass {
+        background-image: url($zoom-magnifying-glass-img);
+        background-color: transparent;
+        padding: 6px;
     }
 }
 

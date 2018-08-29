@@ -208,36 +208,73 @@ export default class Cartographer {
     locations = locations || 'Not Specified';
     detailPageURL = detailPageURL || '';
 
+    // The popup container
     const popupContainer = document.createElement('div');
     popupContainer.className = popContentClass;
-    const header = document.createElement('h4');
-    header.appendChild(document.createTextNode(name));
+    // Header row
+    const header = document.createElement('div');
+    header.setAttribute('class', 'popup-header');
+    const headerZoomButton = document.createElement('button');
+    headerZoomButton.setAttribute('class', 'popup-header-button');
+    const headerZoomButtonIcon = document.createElement('span');
+    headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
+    headerZoomButton.appendChild(headerZoomButtonIcon);
+    header.appendChild(headerZoomButton);
+    const headerText = document.createElement('span');
+    headerText.setAttribute('class', 'popup-header-text');
+    headerText.appendChild(document.createTextNode('zoom'.toUpperCase()));
+    header.appendChild(headerText);
+    // Project name element
+    const nameElement = document.createElement('h3');
+    nameElement.appendChild(document.createTextNode(name));
+    // Project locations row
+    const locationsRow = document.createElement('div');
+    locationsRow.setAttribute('class', 'popup-row');
     const locationsLabelDiv = document.createElement('div');
     locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
     const locationsDataDiv = document.createElement('div');
+    locationsDataDiv.setAttribute('class', 'popup-row-data');
     locationsDataDiv.appendChild(document.createTextNode(locations));
+    locationsRow.appendChild(locationsLabelDiv);
+    locationsRow.appendChild(locationsDataDiv);
+    // Project type row
+    const typeRow = document.createElement('div');
+    typeRow.setAttribute('class', 'popup-row');
     const typeLabelDiv = document.createElement('div');
     typeLabelDiv.appendChild(document.createTextNode('Type'.toUpperCase()));
     const typeDataDiv = document.createElement('div');
+    typeDataDiv.setAttribute('class', 'popup-row-data');
     typeDataDiv.appendChild(document.createTextNode(infrastructureType));
+    typeRow.appendChild(typeLabelDiv);
+    typeRow.appendChild(typeDataDiv);
+    // Total cost row
+    const totalCostRow = document.createElement('div');
+    totalCostRow.setAttribute('class', 'popup-row');
     const totalCostLabelDiv = document.createElement('div');
     totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
     const totalCostDataDiv = document.createElement('div');
+    totalCostDataDiv.setAttribute('class', 'popup-row-data');
     totalCostDataDiv.appendChild(document.createTextNode(totalCost));
+    totalCostRow.appendChild(totalCostLabelDiv);
+    totalCostRow.appendChild(totalCostDataDiv);
+    // Button row
+    const buttonHolderRow = document.createElement('div');
+    buttonHolderRow.setAttribute('class', 'popup-row popup-buttonholder');
     const button = document.createElement('a');
     button.setAttribute('id', buttonId);
     button.setAttribute('href', detailPageURL);
     button.setAttribute('target', '_blank');
-    button.setAttribute('class', 'button');
+    button.setAttribute('class', 'button popup-button');
     button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
+    buttonHolderRow.appendChild(button);
+
+    // Append each of the rows of the popup to the popupContainer
     popupContainer.appendChild(header);
-    popupContainer.appendChild(locationsLabelDiv);
-    popupContainer.appendChild(locationsDataDiv);
-    popupContainer.appendChild(typeLabelDiv);
-    popupContainer.appendChild(typeDataDiv);
-    popupContainer.appendChild(totalCostLabelDiv);
-    popupContainer.appendChild(totalCostDataDiv);
-    popupContainer.appendChild(button);
+    popupContainer.appendChild(nameElement);
+    popupContainer.appendChild(locationsRow);
+    popupContainer.appendChild(typeRow);
+    popupContainer.appendChild(totalCostRow);
+    popupContainer.appendChild(buttonHolderRow);
 
     return popupContainer;
   }
