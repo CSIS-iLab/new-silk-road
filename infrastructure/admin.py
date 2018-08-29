@@ -368,4 +368,5 @@ class CuratedProjectCollectionAdmin(admin.ModelAdmin):
         'name',
         'published',
     )
+    filter_horizontal = ('projects', )
 
