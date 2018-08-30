@@ -148,7 +148,7 @@ export default class Cartographer {
     // If the geostore's identifier has a button in the DOM without an href, then
     // set the href attribute of that button to the first project's detail page
     // URL. Otherwise, handle showing the geoTypes on the map.
-    var identifierButton = document.getElementById('button_' + geostore.identifier);
+    const identifierButton = document.getElementById(`button_${geostore.identifier}`);
     if (identifierButton !== null && identifierButton.hasAttribute('href') && identifierButton.getAttribute('href') === '') {
       identifierButton.setAttribute('href', projects[0].page_url);
     } else {
@@ -220,11 +220,12 @@ export default class Cartographer {
     }
   }
 
-  getPopupWithContainer(name, locations, infrastructureType, totalCost, buttonId, detailPageURL, zoomEnabled, geoIdentifier) {
+  getPopupWithContainer(name, locations, infrastructureType, totalCost, buttonId,
+    detailPageURL, zoomEnabled, geoIdentifier,
+  ) {
     /* Return a popupContainer element with the DOM elements for a (project) popup on the map. */
-    name = name || '';
-    locations = locations || 'Not Specified';
-    detailPageURL = detailPageURL || '';
+    const projectName = name || '';
+    const projectLocations = locations || 'Not Specified';
 
     // The popup container
     const popupContainer = document.createElement('div');
@@ -246,7 +247,7 @@ export default class Cartographer {
     if (zoomEnabled) {
       headerZoomButton.setAttribute('class', 'popup-header-button');
       headerZoomButton.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(geoIdentifier));
-      headerZoomButton.addEventListener('click', () => {this.removePopup();});
+      headerZoomButton.addEventListener('click', () => { this.removePopup(); });
       headerText.setAttribute('class', 'popup-header-text');
     } else {
       headerZoomButton.setAttribute('class', 'popup-header-button-disabled');
@@ -257,7 +258,7 @@ export default class Cartographer {
 
     // Project name element
     const nameElement = document.createElement('h3');
-    nameElement.appendChild(document.createTextNode(name));
+    nameElement.appendChild(document.createTextNode(projectName));
 
     // Project locations row
     const locationsRow = document.createElement('div');
@@ -266,7 +267,7 @@ export default class Cartographer {
     locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
     const locationsDataDiv = document.createElement('div');
     locationsDataDiv.setAttribute('class', 'popup-row-data');
-    locationsDataDiv.appendChild(document.createTextNode(locations));
+    locationsDataDiv.appendChild(document.createTextNode(projectLocations));
     locationsRow.appendChild(locationsLabelDiv);
     locationsRow.appendChild(locationsDataDiv);
 
@@ -348,41 +349,45 @@ export default class Cartographer {
       const popupContainers = projects.map((project) => {
         // Get the total cost, round it to have 1 decimal point, and add a word
         // for the total cost unit, like "million" or "billion".
-        var totalCost;
+        let totalCost;
         if (project.total_cost === null) {
-          totalCost = "Unknown"
+          totalCost = 'Unknown';
         } else {
-          if (project.total_cost > 10**15) {
-            var totalCostDividend = (project.total_cost / 10**15).toFixed(1);
-            var totalCostUnit = " quadrillion ";
-          }
-          else if (project.total_cost > 10**12) {
-            var totalCostDividend = (project.total_cost / 10**12).toFixed(1);
-            var totalCostUnit = " trillion ";
-          } else if (project.total_cost > 10**9) {
-            var totalCostDividend = (project.total_cost / 10**9).toFixed(1);
-            var totalCostUnit = " billion ";
-          } else if (project.total_cost > 10**6) {
-            var totalCostDividend = (project.total_cost / 10**6).toFixed(1);
-            var totalCostUnit = " million ";
-          } else if (project.total_cost > 10**3) {
-            var totalCostDividend = (project.total_cost / 10**3).toFixed(1);
-            var totalCostUnit = " thousand";
+          let totalCostDividend;
+          let totalCostUnit;
+          if (project.total_cost > 10 ** 15) {
+            totalCostDividend = (project.total_cost / (10 ** 15)).toFixed(1);
+            totalCostUnit = ' quadrillion ';
+          } else if (project.total_cost > 10 ** 12) {
+            totalCostDividend = (project.total_cost / (10 ** 12)).toFixed(1);
+            totalCostUnit = ' trillion ';
+          } else if (project.total_cost > 10 ** 9) {
+            totalCostDividend = (project.total_cost / (10 ** 9)).toFixed(1);
+            totalCostUnit = ' billion ';
+          } else if (project.total_cost > 10 ** 6) {
+            totalCostDividend = (project.total_cost / (10 ** 6)).toFixed(1);
+            totalCostUnit = ' million ';
+          } else if (project.total_cost > 10 ** 3) {
+            totalCostDividend = (project.total_cost / (10 ** 3)).toFixed(1);
+            totalCostUnit = ' thousand';
           } else {
-            var totalCostDividend = project.total_cost.toFixed(1);
-            var totalCostUnit = " ";
+            totalCostDividend = project.total_cost.toFixed(1);
+            totalCostUnit = ' ';
           }
-          totalCost = totalCostDividend + totalCostUnit
+          totalCost = totalCostDividend + totalCostUnit;
           if (project.total_cost_currency !== null) {
             totalCost += project.total_cost_currency;
           }
         }
-        var buttonId = 'button_' + project.identifier;
+        const buttonId = `button_${project.identifier}`;
         const geoIdentifier = feat.layer.metadata.identifier;
 
         // Return the DOM element for the popup
-        return this.getPopupWithContainer(project.name, project.locations, project.infrastructure_type, totalCost, buttonId, project.page_url, zoomEnabled, geoIdentifier);
-      })
+        return this.getPopupWithContainer(project.name, project.locations,
+          project.infrastructure_type, totalCost, buttonId, project.page_url,
+          zoomEnabled, geoIdentifier,
+        );
+      });
 
       const parentPopupContainer = document.createElement('div');
       popupContainers.forEach((popupContainer) => {
@@ -511,13 +516,13 @@ export default class Cartographer {
       const feat = features[0];
       const popup = new Popup();
 
-      var buttonId = 'button_' + feat.properties.geostore;
-      let geoIdentifier = feat.properties.geostore;
+      const buttonId = `button_${feat.properties.geostore}`;
+      const geoIdentifier = feat.properties.geostore;
       // Determine if zooming should be enabled for the popup
       const zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.source);
 
       // Get the DOM elements for the (project) popup
-      var popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
+      const popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
       popup.setLngLat(feat.geometry.coordinates)
            .setDOMContent(popupContainer);
 
