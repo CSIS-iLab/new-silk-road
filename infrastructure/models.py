@@ -656,3 +656,14 @@ class ProjectDocument(models.Model):
 
     def get_source_url_tail(self):
         return self.source_url.split('/')[-1] or None
+
+
+class CuratedProjectCollection(Publishable):
+    """A collection of projects for the megamap"""
+    name = models.CharField(max_length=256)
+    projects = models.ManyToManyField('Project', blank=False)
+
+
+    def __str__(self):
+        return self.name
+

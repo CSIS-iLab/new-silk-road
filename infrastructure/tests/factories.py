@@ -54,6 +54,23 @@ class ProjectFactory(factory.django.DjangoModelFactory):
         model = 'infrastructure.Project'
 
 
+class CuratedProjectCollectionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.CuratedProjectCollection'
+
+    @factory.post_generation
+    def projects(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for project in projects:
+                self.projects.add(project)
+
+    name = factory.Sequence(lambda n: 'CuratedProjectCollection %d' % n)
+
+
 class InitiativeTypeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'infrastructure.InitiativeType'
