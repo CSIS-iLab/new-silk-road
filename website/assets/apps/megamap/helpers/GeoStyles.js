@@ -56,7 +56,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Rail'],
-                [6, 'RailIcon'],
+                [minDetailZoom, 'RailIcon'],
               ],
             },
           },
@@ -73,7 +73,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Road'],
-                [6, 'RoadIcon'],
+                [minDetailZoom, 'RoadIcon'],
               ],
             },
           },
@@ -85,7 +85,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Seaport'],
-                [6, 'SeaportIcon'],
+                [minDetailZoom, 'SeaportIcon'],
               ],
             },
           },
@@ -111,7 +111,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Dryport'],
-                [6, 'DryportIcon'],
+                [minDetailZoom, 'DryportIcon'],
               ],
             },
           },
@@ -123,7 +123,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Dryport'],
-                [6, 'DryportIcon'],
+                [minDetailZoom, 'DryportIcon'],
               ],
             },
           },
@@ -135,7 +135,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Dryport'],
-                [6, 'DryportIcon'],
+                [minDetailZoom, 'DryportIcon'],
               ],
             },
           },
