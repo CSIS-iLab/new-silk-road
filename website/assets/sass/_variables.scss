@@ -1,6 +1,6 @@
 @import "lib/bourbon/bourbon", "lib/neat/neat";
 
-     
+
 // Sizes
 $xlarge: 1500px;
 $large: 1000px;
@@ -61,7 +61,7 @@ $article-content: #f0f1f4;
 $search-content: #3c8283;
 
 
-//New colors 2017
+// New colors 2017
 $green: #3D8283;
 $light-green: #B3CFCF;
 $blue-steel: #788ca8;
@@ -74,10 +74,13 @@ $cloudy-blue: #b4d0d0;
 $dark-grey-blue: #2c6565;
 $greyish-teal-two: #6ca4a5;
 
-
-
-
-
+// Infastructure Colors
+$road-color: #f68b3f;
+$rail-color: #c34242;
+$seaport-color: #008cc4;
+$powerplant-color: #0faa91;
+$dryport-color: #4c417d;
+$intermodal-color: #4c417d;
 
 // Image URLs
 $img-url-base: '/static/img/';
@@ -108,6 +111,15 @@ $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 $facebook-img: $img-url-base + 'facebook.svg';
 $twitter-img: $img-url-base + 'twitter.svg';
+$help-circle: $img-url-base + 'help.svg';
+$help-sprite: $img-url-base + 'help_sprite.svg';
+$filter-sprite: $img-url-base + 'filter_sprite.svg';
+$filter: $img-url-base + 'sliders.svg';
+$close-white: $img-url-base + 'close_white.svg';
+$arrow-left: $img-url-base + 'arrow_left.svg';
+$arrow-right: $img-url-base + 'arrow_right.svg';
+$plus: $img-url-base + 'plus.svg';
+$update: $img-url-base + 'update-circle.svg';
 
 $search-gray: $img-url-base + 'redesign/search-icon-gray.svg';
 $search-gray-close: $img-url-base + 'redesign/search-icon-gray-close.svg';
@@ -172,6 +184,7 @@ $mobile-margins-left: -($mobile-margins);
 $mobile-margins-right: -$mobile-margins * 2;
 // Grid
 $grid-columns: 12;
+$side-bar-width: 290px;
 
 $img-url-base: '/static/img/';
 //Fonts
@@ -184,7 +197,7 @@ $img-url-base: '/static/img/';
            url('/static/fonts/fontello/font/fontello.svg?98478670#fontello') format('svg');
       font-weight: normal;
       font-style: normal;
-    
 
-    
+
+
 }

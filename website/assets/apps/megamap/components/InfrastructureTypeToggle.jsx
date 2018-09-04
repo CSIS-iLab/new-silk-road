@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import SearchActions from '../actions/SearchActions';
+import SearchStore from '../stores/SearchStore';
 import InfrastructureIcon from './InfrastructureIcon';
 
 export default class InfrastructureTypeToggle extends Component {
   constructor(props){
     super(props);
+
+    this.props = props;
     this.handleClickIcon = this.handleClickIcon.bind(this);
     // Initally, set the state to have null infrastructure_type. When the component
     // receives the props later, we update the state to store the initial value
@@ -29,19 +32,49 @@ export default class InfrastructureTypeToggle extends Component {
 
     // A copy of the current state
     var selectedInfrastructureTypes = [...this.state.infrastructure_type];
+
     // If the infrastructureTypeId is already in the selectedInfrastructureTypes,
     // then remove it from selectedInfrastructureTypes.
     var index = selectedInfrastructureTypes.indexOf(infrastructureTypeId);
     if (index !== -1) {
       selectedInfrastructureTypes.splice(index, 1);
+
+      // If the array is empty add a dummy value of 0 to filter on
+      // to return empty results
+      if (selectedInfrastructureTypes.length === 0) {
+        selectedInfrastructureTypes.push(0)
+      }
     } else {
       // The infrastructureTypeId is not in the selectedInfrastructureTypes,
       // so add it to selectedInfrastructureTypes.
       selectedInfrastructureTypes.push(infrastructureTypeId);
+
+      //
+      var index = selectedInfrastructureTypes.indexOf(0);
+      if (index !== -1) {
+        selectedInfrastructureTypes.splice(index, 1)
+      }
     }
-    this.setState({
-      infrastructure_type: selectedInfrastructureTypes
-    }, () => {
+
+    // get any other query parameters from SearceStore if they happen to exist
+    // and put into state before search
+    // console.log(this.props)
+
+    const storeObj = this.props.theState.query;
+    const queryParams = {};
+    if (storeObj) {
+      Object.keys(storeObj).map((key) => {
+        if (key !== 'infrastructure_type' && storeObj[key] && storeObj[key].length !== 0 && Object.keys(storeObj[key]).length) {
+          queryParams[key] = storeObj[key]
+        }
+      });
+    }
+    const options = Object.assign(
+          {},
+          queryParams,
+          { infrastructure_type: selectedInfrastructureTypes },
+        );
+    this.setState(options, () => {
       this.props.infrastructureOnClick(this.state),
       SearchActions.search(this.state)
     });
@@ -59,7 +92,7 @@ export default class InfrastructureTypeToggle extends Component {
       }
     }
     return (
-      <div>
+      <div id="infrastructureToggle">
         {infrastructureTypeIcons}
       </div>
     )

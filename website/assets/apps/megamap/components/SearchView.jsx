@@ -74,6 +74,7 @@ export default class SearchView extends Component {
         initiatives__principal_agent__slug: [],
       },
       query: emptyQueryState(),
+      total: null,
       results: [],
       nextURL: null,
       previousURL: null,
@@ -82,12 +83,16 @@ export default class SearchView extends Component {
       expanded: false,
       isSearching: false,
       searchCount: 0,
+      showFilters: '',
+      showHelp: '',
     };
     this.resetQueryState = this.resetQueryState.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSearchResults = this.onSearchResults.bind(this);
+    this.toggleFilters = this.toggleFilters.bind(this);
+    this.toggleHelp = this.toggleHelp.bind(this);
   }
 
   componentDidMount() {
@@ -169,9 +174,28 @@ export default class SearchView extends Component {
     CurrencyActions.fetch();
   }
 
-  onSearchResults(data) {
-    const { results, next, previous, error, isSearching, searchCount } = data;
+  toggleFilters(e){
+    if (e) {
+      e.preventDefault();
+    }
+    const filtersState = this.state.showFilters ? '' : 'showFilters';
     this.setState({
+      showFilters: filtersState,
+    });
+  }
+
+  toggleHelp(e){
+    e.preventDefault();
+    const helpState = this.state.showHelp ? '' : 'showHelp';
+    this.setState({
+      showHelp: helpState,
+    });
+  }
+
+  onSearchResults(data) {
+    const { total, results, next, previous, error, isSearching, searchCount } = data;
+    this.setState({
+      total,
       results,
       nextURL: next,
       previousURL: previous,
@@ -179,13 +203,6 @@ export default class SearchView extends Component {
       isSearching,
       searchCount,
     });
-    this.collapsePanels();
-  }
-
-  collapsePanels() {
-    this.projectsPanel.collapse();
-    this.initiativesPanel.collapse();
-    this.fundersPanel.collapse();
   }
 
   resetQueryState() {
@@ -212,6 +229,7 @@ export default class SearchView extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
+
     if (Object.keys(this.state.query).length > 0) {
       let searchParams = Object.assign({}, this.state.query);
       if ({}.hasOwnProperty.call(searchParams, 'cost')) {
@@ -237,6 +255,7 @@ export default class SearchView extends Component {
           delete searchParams[key];
         }
       });
+      this.toggleFilters();
       SearchActions.search(searchParams);
     }
   }
@@ -247,105 +266,107 @@ export default class SearchView extends Component {
       (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
     return (
       <div className="searchView">
-        <header>
-          <h2>Search for Projects</h2>
-        </header>
-        <div className="inner">
+        <InfrastructureTypeToggle
+          infrastructureOnClick={this.handleQueryUpdate}
+          onSubmit={this.handleSubmit}
+          infrastructureTypes={this.state.options.infrastructure_type}
+          theState={this.state}
+        />
+        <div className={`inner ${this.state.showFilters} ${this.state.showHelp}`}>
           <div className="searchWidget">
+            <header>
+              <a href="#" onClick={this.toggleFilters}>
+                <h2>FILTER</h2>
+              </a>
+              <a href="#" onClick={this.resetQueryState}>
+                RESET
+              </a>
+            </header>
             <form onSubmit={this.handleSubmit}>
-              <div className="searchBar" id="primarySearch">
-                <input
-                  type="text"
-                  value={this.state.query.name__icontains}
-                  onChange={this.handleChange}
-                  name="name__icontains"
-                  placeholder="Project Title"
-                />
-                <button
-                  type="submit"
-                  title="Search"
-                  disabled={!this.state.searchEnabled}
-                >Search
-                </button>
-                <button
-                  className="reset"
-                  type="reset"
-                  title="Clear"
-                  disabled={!this.state.searchEnabled}
-                  onClick={this.resetQueryState}
+              <div className="filterScroll">
+                <Panel
+                  title="Projects"
+                  ref={(el) => { this.projectsPanel = el; }}
                 >
-                  Clear
-                </button>
-              </div>
-              <Panel
-                title="Projects"
-                ref={(el) => { this.projectsPanel = el; }}
-              >
-                <div className="sectionRow">
-                  <Select
-                    value={this.state.query.status}
-                    name="status"
-                    placeholder="Status"
-                    options={this.state.options.status}
-                    onChange={selections => this.handleQueryUpdate(
-                        { status: selections.map(s => s.value) },
-                      )
-                    }
-                    isLoading={this.state.options.status.length === 0}
-                    multi
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
-                <div className="sectionRow">
-                  <Select
-                    value={this.state.query.region}
-                    name="region"
-                    placeholder="Region"
-                    options={this.state.options.region}
-                    onChange={selections => this.handleQueryUpdate(
-                        { region: selections.map(s => s.value) },
-                      )
-                    }
-                    isLoading={this.state.options.region.length === 0}
-                    multi
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
-                <div className="sectionRow">
-                  <Select
-                    value={this.state.query.countries}
-                    name="countries"
-                    placeholder="Country"
-                    options={this.state.options.countries}
-                    onChange={selections => this.handleQueryUpdate(
-                        { countries: selections.map(s => s.value) },
-                      )
-                    }
-                    isLoading={this.state.options.countries.length === 0}
-                    multi
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
-                <div className="sectionRow">
-                  <DateRangeSelect
-                    labelName="Filter by Year..."
-                    dateLookupOptions={yearLookupOptions}
-                    lowerBoundLabel="Year"
-                    upperBoundLabel="Year"
-                    onChange={value => this.handleQueryUpdate(
-                        { dateRange: Object.assign({}, this.state.query.dateRange, value) },
-                      )
-                    }
-                    value={this.state.query.dateRange}
-                  />
-                </div>
-              </Panel>
-              <Panel
-                title="Initiatives"
-                ref={(el) => { this.initiativesPanel = el; }}
-              >
-                <div className="sectionRow">
-                  <div className="searchBar">
+                  <div className="sectionRow">
+                    <label>Project Title</label>
+                    <input
+                      type="text"
+                      value={this.state.query.name__icontains}
+                      onChange={this.handleChange}
+                      name="name__icontains"
+                      placeholder="Project Title"
+                    />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Status<span></span></label>
+                    <Select
+                      value={this.state.query.status}
+                      name="status"
+                      placeholder="Status"
+                      options={this.state.options.status}
+                      onChange={selections => this.handleQueryUpdate(
+                          { status: selections.map(s => s.value) },
+                        )
+                      }
+                      isLoading={this.state.options.status.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Region<span></span></label>
+                    <Select
+                      value={this.state.query.region}
+                      name="region"
+                      placeholder="Region"
+                      options={this.state.options.region}
+                      onChange={selections => this.handleQueryUpdate(
+                          { region: selections.map(s => s.value) },
+                        )
+                      }
+                      isLoading={this.state.options.region.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Country<span></span></label>
+                    <Select
+                      value={this.state.query.countries}
+                      name="countries"
+                      placeholder="Country"
+                      options={this.state.options.countries}
+                      onChange={selections => this.handleQueryUpdate(
+                          { countries: selections.map(s => s.value) },
+                        )
+                      }
+                      isLoading={this.state.options.countries.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Milestone<span></span></label>
+                    <DateRangeSelect
+                      labelName="Filter by Year..."
+                      dateLookupOptions={yearLookupOptions}
+                      lowerBoundLabel="YEAR"
+                      upperBoundLabel="YEAR"
+                      onChange={value => this.handleQueryUpdate(
+                          { dateRange: Object.assign({}, this.state.query.dateRange, value) },
+                        )
+                      }
+                      value={this.state.query.dateRange}
+                    />
+                  </div>
+                </Panel>
+                <Panel
+                  title="Initiatives"
+                  ref={(el) => { this.initiativesPanel = el; }}
+                >
+                  <div className="sectionRow">
+                    <label>Initiative Title</label>
                     <input
                       type="text"
                       value={this.state.query.initiatives__name__icontains}
@@ -354,72 +375,78 @@ export default class SearchView extends Component {
                       placeholder="Initiative Title"
                     />
                   </div>
-                </div>
-                <div className="sectionRow">
-                  <Select
-                    value={this.state.query.initiatives__principal_agent__slug}
-                    name="initiatives__principal_agent__slug"
-                    placeholder="Principal Agent"
-                    options={this.state.options.initiatives__principal_agent__slug}
-                    onChange={option => this.handleQueryUpdate(
-                        { initiatives__principal_agent__slug: option ? option.value : '' },
-                      )
-                    }
-                    isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
-              </Panel>
-              <Panel
-                title="Funders"
-                ref={(el) => { this.fundersPanel = el; }}
-              >
-                <div className="sectionRow">
-                  <div className="searchBar">
-                    <input
-                      type="text"
-                      value={this.state.query.funding__sources__name__icontains}
-                      onChange={this.handleChange}
-                      name="funding__sources__name__icontains"
-                      placeholder="Funder Name"
+                  <div className="sectionRow">
+                    <label>Principal Agent<span></span></label>
+                    <Select
+                      value={this.state.query.initiatives__principal_agent__slug}
+                      name="initiatives__principal_agent__slug"
+                      placeholder="Principal Agent"
+                      options={this.state.options.initiatives__principal_agent__slug}
+                      onChange={option => this.handleQueryUpdate(
+                          { initiatives__principal_agent__slug: option ? option.value : '' },
+                        )
+                      }
+                      isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
+                      backspaceToRemoveMessage=""
                     />
                   </div>
-                </div>
-                <div className="sectionRow">
-                  <CurrencyRangeSelect
-                    name="cost"
-                    placeholder="Cost"
-                    clear={Object.keys(this.state.query.cost).length === 0}
-                    onChange={value =>
-                      this.handleQueryUpdate(
-                        { cost: value },
-                      )
-                    }
-                  />
-                </div>
-                <div className="sectionRow">
-                  <Select
-                    value={this.state.query.funding__sources__countries}
-                    name="funding__sources__countries"
-                    placeholder="Country"
-                    options={this.state.options.funding__sources__countries}
-                    onChange={selections => this.handleQueryUpdate(
-                        { funding__sources__countries: selections.map(s => s.value) },
-                      )
-                    }
-                    isLoading={this.state.options.funding__sources__countries.length === 0}
-                    multi
-                    backspaceToRemoveMessage=""
-                  />
-                </div>
-              </Panel>
+                </Panel>
+                <Panel
+                  title="Funders"
+                  ref={(el) => { this.fundersPanel = el; }}
+                >
+                  <div className="sectionRow">
+                      <label>Funder Name</label>
+                      <input
+                        type="text"
+                        value={this.state.query.funding__sources__name__icontains}
+                        onChange={this.handleChange}
+                        name="funding__sources__name__icontains"
+                        placeholder="Funder Name"
+                      />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Cost<span></span></label>
+                    <CurrencyRangeSelect
+                      name="cost"
+                      placeholder="Cost"
+                      clear={Object.keys(this.state.query.cost).length === 0}
+                      onChange={value =>
+                        this.handleQueryUpdate(
+                          { cost: value },
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Country<span></span></label>
+                    <Select
+                      value={this.state.query.funding__sources__countries}
+                      name="funding__sources__countries"
+                      placeholder="Country"
+                      options={this.state.options.funding__sources__countries}
+                      onChange={selections => this.handleQueryUpdate(
+                          { funding__sources__countries: selections.map(s => s.value) },
+                        )
+                      }
+                      isLoading={this.state.options.funding__sources__countries.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                </Panel>
+            </div>
+            <header>
+              <button
+                type="submit"
+                title="Search"
+                disabled={!this.state.searchEnabled}
+              >UPDATE RESULTS
+              </button>
+              <span></span>
+            </header>
             </form>
           </div>
-          <InfrastructureTypeToggle
-            infrastructureOnClick={this.handleQueryUpdate}
-            onSubmit={this.handleSubmit}
-            infrastructureTypes={this.state.options.infrastructure_type}
-          />
           {(() => {
             if (searchCount > 0 &&
             !isSearching &&
@@ -433,7 +460,11 @@ export default class SearchView extends Component {
             }
             return '';
           })()}
-          <div className={`resultsViewWrapper ${results.length === 0 ? 'no-results' : 'results'}`}>
+          <div className="resultsViewWrapper">
+            <header>
+              <a href="#" onClick={this.toggleFilters}><h2>FILTER</h2></a>
+              <a href="#" onClick={this.toggleHelp}></a>
+            </header>
             <ResultsView
               results={results}
               onNextClick={SearchView.handleResultsNavClick}
@@ -442,21 +473,44 @@ export default class SearchView extends Component {
               previousURL={previousURL}
             />
           </div>
-
+          <div className="helpView">
+            <header>
+              <a href="#" onClick={this.toggleHelp}>
+                <h2>HELP</h2>
+              </a>
+            </header>
+            <div className="textWrap">
+              <section>
+                <h2>How to search the map</h2>
+                <p>For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
+              </section>
+              <section>
+                <h2>Project Filters</h2>
+                <p>
+                  <b>Project Title:</b> Searches project titles, which do not include all attributes of a given project. For example, there may be projects in the city of Karachi without “Karachi” in their title.
+                </p>
+                <p>
+                  <b>Infrastructure Type:</b> Limits search to a specific infrastructure type (ex. “rail”).
+                </p>
+                <p>
+                  <b>Status:</b> Limits search to projects in a specific stage of implementation (ex. “announced or under negotiation”).
+                </p>
+                <p>
+                  <b>Region:</b> Limits search to projects within a certain geographic area (ex. “Gulf and Mediterranean”).
+                </p>
+                <p>
+                  <b>Country:</b> Limits search to projects within a designated country (ex. “China”).
+                </p>
+                <p>
+                  <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year
+                </p>
+              </section>
+            </div>
+          </div>
           {errorView}
         </div>
         <footer>
-          <p>
-            <a
-              href="/map/help/"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="button help"
-              title="Help"
-            >
-              Help
-            </a>
-          </p>
+
         </footer>
       </div>
     );

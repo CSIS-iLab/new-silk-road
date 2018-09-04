@@ -11,29 +11,103 @@ $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
 .searchView {
-    width: 290px;
-    max-height: 572px;
-    background-color: transparent;
-    position: absolute;
-    display: none;
+    width: $side-bar-width;
     font-size: $search-text-size;
-    top: 5px;
-    right: 10px;
     z-index: 10;
-
-
+    position: relative;
+    top: 0px;
+    right: 0px;
+    width: $side-bar-width;
+    height: 100%;
 
     @include media($megamap-break) {
         display: block;
+    }
+    header{
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        padding: $base-line-height $small-spacing;;
+        background-color: $pale-grey;
+        a {
+            display: block;
+            height: $base-line-height;
+            width: $base-line-height;
+            opacity: 0.6;
+        }
+        a:hover {
+            opacity: 1;
+        }
+        h2 {
+            padding-left: $base-line-height;
+        }
+
+    }
+
+    .searchWidget {
+        width: $side-bar-width;
+        height: 100%;
+        background: #fff;
+        position: absolute;
+        top: 0;
+        z-index: 10;
+        transform: translateX(-290px);
+        transition: transform 0.3s;
+        >header {
+            background-color: $callout-color;
+            h2 {
+                color: #fff;
+            }
+            a:first-child {
+                background: url($close-white) no-repeat center/70% 70%;
+            }
+            a:last-child {
+                width: 50%;
+                text-align: right;
+                color: #fff;
+            }
+        }
+        .filterScroll {
+            height: calc(100% - 140px);
+            overflow: auto;
+        }
+
+        /* Submit button */
+        form {
+            height: 100%;
+            header {
+                @include justify-content(center);
+                background-color: $callout-color;
+                button {
+                    background: none;
+                    color: #fff;
+                    line-height: $base-line-height;
+                }
+                span {
+                    height: $base-line-height;
+                    width: $base-line-height;
+                    background: url($update) no-repeat center/70% 70%;
+                }
+                button[disabled] {
+                    opacity: 0.4;
+                }
+                button[disabled] + span {
+                    opacity: 0.4;
+                }
+            }
+        }
+    }
+    .inner.showFilters {
+        .searchWidget {
+            transform: translateX(0px);
+        }
     }
 
     h2 {
         font: $minor-text-size $sans-font-family;
         font-weight: bold;
-        color: $slate-grey;
-        text-shadow: 0 0 1px $pale-green;
-        margin-left: $tiny-spacing;
-        margin-bottom: $tiny-spacing/2;
+        color: $callout-color;
+        margin-bottom: $tiny-spacing;
     }
 
     footer {
@@ -50,158 +124,102 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 
     .inner {
-        width: 260px;
+        width: $side-bar-width;
         height: $search-inner-height;
 
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(flex-start);
 
-        > div {
-            background-color: $pale-green;
-            padding: $tiny-spacing;
-        }
+        // > div {
+        //     padding: $tiny-spacing;
+        // }
     }
 
     section {
         margin-top: $tiny-spacing;
         padding-bottom: $tiny-spacing;
-        border-bottom: 1px solid $slate-grey;
-        header {
-            @include display(flex);
-            @include flex-direction(row);
-            @include justify-content(space-between);
-            @include align-items(center);
-            button {
-                @include flex(0 0 auto);
-                padding: 0 $tiny-spacing;
-            }
-            h4 {
-                display: inline-block;
-                @include flex(1 0 auto);
-                color: $callout-color;
-                font-size: $search-text-size;
-                font-weight: normal;
-                margin: 0;
-            }
+        border-bottom: 2px solid $pale-grey;
+        padding: $small-spacing;
+
+        h4 {
+            display: inline-block;
+            // @include flex(1 0 auto);
+            color: $greyish-teal;
+            font-size: $search-text-size;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
         }
+
+    }
+    section:last-child {
+        border: none;
     }
 
-    .searchBar {
-        background-color: $dark-night;
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-
-        button {
-            @include flex(0 1 auto);
-            min-width: $search-btn-width;
-            padding: 0;
-        }
-
-        input,
-        label {
-            @include flex(1 1 auto);
-        }
-
-
-
-        > button[type='submit'] {
-            @include hide-text;
-            border-left: 1px solid $blue-steel;
-            width:1.5rem;
-
-            &::after {
-                display: block;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                text-indent: 0;
-                font: normal 130% "fontello";
-                vertical-align: middle;
-                content: "\E800";
-                width: 1.5rem;
-                height: 100%;
-                padding-left: 3px;
-                 top: 23%;
-
-       
-
-    
-
-            }
-           
-            &[disabled]::after  {
-               display: block;
-                text-align: center;
-                bottom: 0;
-                text-indent: 0;
-                font: normal 130% "fontello";
-                vertical-align: middle;
-                content: "\E800";
-                width: 1.5rem;
-                padding: 0;
-                height: 100%;
-                padding-left: 3px;
-                top: 23%;
-            }
-        
-
-            
-        }
-
-        > button[type='reset'] {
-            @include hide-text;
-            width: 1.6rem;
-            border-left: 1px solid $blue-steel;
-
-            &::after {
-                display: block;
-                position: absolute;
-                text-align: center;
-                bottom: 0;
-                text-indent: 0;
-                font: normal 100% "fontello";
-                vertical-align: middle;
-                content: "\E801";
-                padding: auto 3px;
-                min-width: $search-btn-width;
-                padding: 0;
-                height: 100%;
-                top: 30%;
-            }
-
-            &:hover {
-                &::after {
-                    font-weight: bold;
-                }
-            }
-        }
+    section.projectResult {
+        border: none;
     }
+
     .sectionRow {
         display: block;
         clear: both;
         margin-bottom: $tiny-spacing;
-    }
-    button,
-    input,
-    label {
-        display: inline-block;
-        font-size: $compact-text-size;
-    }
-    label {
-        width: 90px;
-        margin-right: 3px;
-        text-align: right;
-    }
-    input {
-        overflow: hidden;
-    }
-    select {
-        max-width: 240px;
-        margin-right: 6px;
-        &:last-of-type {
-            margin-right: 0;
+        label {
+            display: inline-block;
+            font-size: $base-font-size;
+            font-weight: bold;
+            padding-top: $tiny-spacing;
+
+            span {
+                background: url($plus) no-repeat center/70% 70%;
+                display:inline-block;
+                height: 16px;
+                margin-bottom: -2px;
+                width: $base-line-height;
+            }
+        }
+
+        input {
+            width: calc(100% - 1em);
+            margin-left: $small-spacing;
+        }
+        >input {
+            border: 2px solid $pale-grey;
+
+        }
+        input::placeholder {
+            font-size: $compact-text-size;
+            color: gray;
+            line-height: 24px;
+            top: 2px;
+            font-style: normal;
+        }
+
+        /* WARNING: This is nasty. Styling the .Select with margin-top
+        so that we can click on the label. TODO: change this in React
+        */
+        .Select{
+            background: none;
+            margin-top: -26px;
+            .Select-control {
+                background: none;
+                cursor: pointer;
+                input {
+                    height: 0px;
+                    padding: 0px;
+                }
+            }
+        }
+        .Select.has-value{
+            outline: 0;
+            outline: none !important;
+            border: none;
+            margin-top: 0px;
+            .Select-control {
+                margin-left: $small-spacing;
+            }
+
         }
     }
 
@@ -214,14 +232,14 @@ $scroll-max-height: $results-view-max-height - 46;
             }
         }
         .sectionBody {
-            margin: 4px 20px 4px 10px;
+            margin: $tiny-spacing $small-spacing $tiny-spacing 0;
         }
         button.toggle {
             background-color: transparent;
               width: 20px;
               color: transparent;
 
-        
+
         &.collapsed:before {
             @include hide-text;
             padding: 0;
@@ -242,6 +260,44 @@ $scroll-max-height: $results-view-max-height - 46;
             width: $expand-collapse-btn-width;
             }
         }
+    }
+}
+
+#infrastructureToggle {
+    background: #fff;
+    position: absolute;
+    z-index: 10;
+    right: -50px;
+    top: 70px;
+
+    span {
+        display: block;
+        height: 50px;
+        width: 50px;
+        cursor: pointer;
+
+        img{
+            margin: 5px;
+        }
+    }
+
+    .rail-color {
+        background-color: $rail-color;
+    }
+    .road-color {
+        background-color: $road-color;
+    }
+    .seaport-color {
+        background-color: $seaport-color;
+    }
+    .intermodal-color {
+        background-color: $intermodal-color;
+    }
+    .powerplant-color {
+        background-color: $powerplant-color;
+    }
+    span.selected {
+        background-color: $warm-grey;
     }
 }
 
@@ -300,6 +356,7 @@ $scroll-max-height: $results-view-max-height - 46;
 .searchWidget {
     @include flex(0 0 auto);
     @include order(0);
+
 }
 
 .buttonBar {
@@ -338,9 +395,36 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 
-
 .resultsViewWrapper {
     display: block;
+    position: relative;
+    z-index: 0;
+    height: 100%;
+
+    >header {
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        a {
+            display: block;
+            height: $base-line-height;
+            width: $base-line-height;
+            opacity: 0.8;
+        }
+        a:first-child {
+            background: url($filter) no-repeat center/90% 90%;
+        }
+        a:last-child {
+            background: url($help-circle) no-repeat center/90% 90%;
+        }
+        a:hover {
+            opacity: 1;
+        }
+        h2 {
+            flex: 1;
+            color: $callout-color;
+        }
+    }
 
     &.no-results {
         display: none;
@@ -349,18 +433,14 @@ $scroll-max-height: $results-view-max-height - 46;
 
 .resultsView {
     padding-top: 0;
-    max-height: $results-view-max-height;
+    height: calc(100% - 18px);
     @include display(flex);
     @include flex-direction(column);
     @include justify-content(space-between);
 
     .scrollWrap {
-        max-height: $scroll-max-height;
+        height: calc(100% - 18px);
         -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
-
-    section {
-        border: none;
     }
 
     > div {
@@ -368,77 +448,56 @@ $scroll-max-height: $results-view-max-height - 46;
         position: relative;
     }
 
-    .resultsNav {
-        margin: $tiny-spacing 0;
-        min-height: 30px;
+    /* for the two links in the Curated results section. */
+    .scrollContent {
+        >section {
+            a {
+                display: block;
+                padding-top: $small-spacing;
+            }
+        }
+    }
 
+    .resultsNav {
         @include display(flex);
         @include flex-direction(row);
         @include justify-content(space-between);
         @include align-content(stretch);
 
-        > *, > .button-wrap {
-            @include flex(0 1 33%);
-            min-width: 80px;
-            max-width: 40%;
-            max-height: 36px;
-            display: block;
+        padding: $base-line-height $base-line-height/1.5;
+        background-color: $pale-grey;
 
-            $arr-width: 12px;
-            $arr-color: darken($green, 10%);
-            $height: 30px;
-            $vector: $height/2;
-            $arr-margin: $arr-width * 1.5;
+        .buttonWrap {
+            display: block;
+            background-color: transparent;
 
             button {
                 width: 100%;
-                height: $height;
-                background-color: $green;
                 position: relative;
-
+                height: $base-line-height;
+                width: $base-line-height;
+                transform: scale(1, 1);
+                &:hover {
+                    transform: scale(1.3, 1.3);
+                }
                 &:disabled {
-                    color: lighten($green, 25%);
+                    opacity: 0.3;
+                    transform: scale(1, 1);
                 }
             }
-
-            &:first-child {
-                margin-left: $arr-margin;
-                button::before {
-                    display: block;
-                    position: absolute;
-                    left: -$arr-width;
-                    top: 0;
-                    content: " ";
-                    width: $arr-width;
-                    height: $height;
-                    border-top: $vector solid transparent;
-                    border-right: $arr-width solid $green;
-                    border-bottom: $vector solid transparent;
-                }
+            &:first-child button{
+                background: url($arrow-left) no-repeat center/70% 70%;
             }
-            &:last-child {
-                margin-right: $arr-margin;
-                button::after {
-                    display: block;
-                    position: absolute;
-                    right: -$arr-width;
-                    top: 0;
-                    content: " ";
-                    width: $arr-width;
-                    height: $height;
-                    border-top: $vector solid transparent;
-                    border-left: $arr-width solid $green;
-                    border-bottom: $vector solid transparent;
-                }
+            &:last-child button{
+                background: url($arrow-right) no-repeat center/70% 70%;
             }
-
-    
-        }
-
-        button {
-            display: block;
+            .pagination {
+                flex: 1;
+                line-height: $base-line-height;
+            }
         }
     }
+
     ul.searchResults {
         list-style: none;
         padding: 0;
@@ -495,8 +554,7 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 
-
-.dateRangeSelect {
+.searchView .sectionRow .dateRangeSelect, .searchView .sectionRow .CurrencyRangeSelect {
     @include display(flex);
     @include flex-direction(row);
     @include flex-wrap(wrap);
@@ -515,10 +573,20 @@ $scroll-max-height: $results-view-max-height - 46;
     .Select-menu-outer {
         width: auto;
     }
+    .Select-value {
+        line-height: 2em;
+    }
     input {
-        padding: 2px 10px;
         @include flex(0.5 1 auto);
+        padding: 2px 10px;
+        margin: 4px;
         overflow: hidden;
+        border: 2px solid $pale-grey;
+        width: 50px;
+    }
+    input:nth-child(1) {
+        border: none;
+        width: auto;
     }
 }
 
@@ -526,20 +594,27 @@ $scroll-max-height: $results-view-max-height - 46;
 .Select {
     font-family: $sans-font-family;
     font-size: $compact-text-size;
+    width: calc(100% - 1em);
     .Select-input  {
         height: 24px;
-        input {
+        width: 100% !important;
+        >input {
             padding: 4px 0 6px;
+            width: 100% !important;
         }
     }
     .Select-control {
         color: black;
-        background-color: $pale-grey;
+        border: none;
         border-radius: 0;
         height: auto;
 
         .Select-value {
             font-size: $compact-text-size;
+            border: 1px solid $pale-grey;
+        }
+        .Select-value-icon {
+            border-right: 1px solid $pale-grey;
         }
         .Select-value-label, .Select-clear-zone {
             color: black;
@@ -549,39 +624,40 @@ $scroll-max-height: $results-view-max-height - 46;
         }
     }
     .Select-placeholder {
-        font-size: $compact-text-size;
-        color: gray;
-        line-height: 24px;
-        top: 2px;
-    }
-    .Select-arrow-zone{
-        &:hover {
-            .Select-arrow {
-                border-color: $dark-night transparent transparent;
-            }
-        }
+        display: none;
     }
     .Select-arrow {
-        border-color: $blue-steel transparent transparent;
+        display: none;
+    }
+    .Select-arrow-zone {
+        display: none;
+    }
+    .Select-clear-zone {
+        vertical-align: top;
     }
 
     .Select-menu-outer {
-        background-color: $slate-grey;
+        background-color: $pale-grey;
         width: 100%;
+        margin-left: $small-spacing;
     }
     .Select-option {
         color: black;
-        background-color: $med-gray;
+        background-color: $pale-grey;
         padding: 4px 6px;
 
         &:hover {
-            background-color: $dark-grey-blue;
-            color: white;
+            background-color: $med-gray;
         }
         &:last-child {
             border-bottom-right-radius: 0;
             border-bottom-left-radius: 0;
         }
+    }
+    /* This is an attempt to remove the light blue halo surrounding the .Select elemnt.
+    the issue is that it is likely a style added to the element, hence this is broke. */
+    .is-open, .is-focused {
+        border: none;
     }
 }
 .has-value.Select > .Select-control > .Select-value .Select-value-label,
@@ -596,12 +672,56 @@ $scroll-max-height: $results-view-max-height - 46;
 .Select--multi {
     .Select-value {
         margin: 3px 0 3px 3px;
-        background-color: rgba(#000, 0.2);
+        background-color: $pale-grey;
         color: $blue-steel;
-        border-color: $blue-steel;
         font-size: $compact-text-size;
     }
     .Select-value-icon {
         border-right-color: $blue-steel;
+    }
+}
+.Select--single {
+    .Select-value {
+        // margin: 3px 0 3px 3px;
+        background-color: $pale-grey;
+        color: $blue-steel;
+        font-size: $compact-text-size;
+    }
+}
+
+.helpView {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: $side-bar-width;
+    z-index: 10;
+    transform: translateX(-290px);
+    transition: transform 0.3s;
+    background: #fff;
+
+    >header {
+        background-color: $callout-color;
+        h2{
+            color: #fff;
+        }
+        a {
+            background: url($close-white) no-repeat center/70% 70%;
+        }
+    }
+    .textWrap {
+        height: calc(100% - 70px);
+        overflow: auto;
+
+        h4 {
+            text-transform: none;
+            color: $callout-color;
+
+        }
+    }
+}
+
+.inner.showHelp {
+    .helpView {
+        transform: translateX(0px);
     }
 }
