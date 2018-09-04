@@ -334,6 +334,26 @@ def get_project_data_for_form(project, power_plant, row, infrastructure_type):
     }
 
 
+def remove_undesired_projects(project_id_list):
+    """
+    Remove Projects without completion date if PowerPlant has old or non-existent year online.
+
+    Filter Projects that have ids in the project_id_list for those that have:
+      - no completion date and a power plant without a plant_year_online, or
+      - no completion date and a plant_year_online prior to 2006
+    """
+    Project.objects.filter(
+        id__in=project_id_list
+    ).filter(
+        planned_completion_year=None,
+        planned_completion_month=None,
+        planned_completion_day=None,
+    ).filter(
+        django.db.models.Q(power_plant__plant_year_online=None) |
+        django.db.models.Q(power_plant__plant_year_online__lt=2006)
+    ).delete()
+
+
 def import_csv_to_database(*args, **kwargs):
     """
     Import the contents of the CSV file into the database.
@@ -347,6 +367,11 @@ def import_csv_to_database(*args, **kwargs):
     parser.add_argument('--no_output', type=str, nargs='+', help='Set to "True" to disable logging')
     parser.add_argument('--row_min', type=int, nargs='+', help='The first row to import')
     parser.add_argument('--row_max', type=int, nargs='+', help='The last row to import')
+    parser.add_argument(
+        '--remove_undesired_objects',
+        action='store_true',
+        help='Remove undesired power plants and proejcts from the import'
+    )
     parsed_args = parser.parse_args(args)
     filename = parsed_args.filename[0].split('=')[1]
     use_logger = True
@@ -354,11 +379,13 @@ def import_csv_to_database(*args, **kwargs):
         use_logger = False
     row_min = parsed_args.row_min[0] if parsed_args.row_min else 0
     row_max = parsed_args.row_max[0] if parsed_args.row_max else None
+    remove_undesired_objects = parsed_args.remove_undesired_objects
 
     # Statistics logged to the user in the future
     num_successful_imports = 0
     error_rows = {}
     completed_but_with_warnings = {}
+    project_ids_imported = []
 
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
@@ -463,6 +490,7 @@ def import_csv_to_database(*args, **kwargs):
                     form = ProjectForm(data, instance=new_object)
                     if form.is_valid():
                         new_object = form.save()
+                        project_ids_imported.append(new_object.id)
                     else:
                         error_rows[perceived_row_number] = form.errors.as_data()
                 except KeyError as error:
@@ -499,6 +527,13 @@ def import_csv_to_database(*args, **kwargs):
                 new_object.fuels.add(fuel)
 
             num_successful_imports += 1
+
+    # Originally, this code was written with the assumption that the CSV would
+    # be a sanitized list of Projects and PowerPlants to be imported into the
+    # database. However, some of the rows in the CSV should not end up in the
+    # database, so the following functions remove them from the database.
+    if remove_undesired_objects:
+        remove_undesired_projects(project_ids_imported)
 
     # Print the summary to the user
     if use_logger:

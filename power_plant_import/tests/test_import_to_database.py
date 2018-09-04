@@ -571,3 +571,40 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Each of the objects were created, though the invalid data was not saved.
         self.assertEqual(PowerPlant.objects.count(), 3)
         self.assertEqual(Project.objects.count(), 2)
+
+    def test_remove_undesired_objects(self):
+        """
+        Undesired objects are removed, if argument is specified.
+
+        Projects are removed in either of the following cases:
+         - If a Project has no completion date (no planned_completion_day,
+           planned_completion_month, or planned_completion_year) and the associated
+           PowerPlant has no plant_year_online.
+         - If a Project has no completion date (no planned_completion_day,
+           planned_completion_month, or planned_completion_year) and the associated
+           PowerPlant has a plant_year_online prior to 2006.
+        """
+        with self.subTest('argument not specified'):
+            # Calling the command without the --remove_undesired_objects argument
+            # creates a Project for each of the project rows in the CSV.
+            self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
+            # There are now 3 Projects in the database
+            self.assertEqual(Project.objects.count(), 3)
+
+        with self.subTest('argument specified'):
+            # Calling the command with the --remove_undesired_objects argument
+            # means only those Projects that meet the conditions defined above
+            # end up in the database.
+            import_csv_to_database.import_csv_to_database(
+                'filename=power_plant_import/tests/data/six_rows.csv',
+                '--no_output=True',
+                '--remove_undesired_objects',
+            )
+            # There is now 1 Project in the database. There are 3 project rows
+            # in the CSV file, but:
+            #   - the project_liaoning has no completion date, and a power plant
+            #     with no plant_year_online, and
+            #   - the project_ouessant2 has no completion date, and a power plant
+            #     with a plant_year_online from before 2006
+            self.assertEqual(Project.objects.count(), 1)
+            self.assertEqual(Project.objects.first().name, 'Ouessant Tidal Power Phase I')
