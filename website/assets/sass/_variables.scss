@@ -74,6 +74,10 @@ $cloudy-blue: #b4d0d0;
 $dark-grey-blue: #2c6565;
 $greyish-teal-two: #6ca4a5;
 
+// New colors 2018
+$green-2018: #3C8183;
+
+
 // Infastructure Colors
 $road-color: #f68b3f;
 $rail-color: #c34242;
@@ -81,6 +85,7 @@ $seaport-color: #008cc4;
 $powerplant-color: #0faa91;
 $dryport-color: #4c417d;
 $intermodal-color: #4c417d;
+
 
 // Image URLs
 $img-url-base: '/static/img/';
@@ -107,6 +112,8 @@ $search-btn-active-img: $img-url-base + 'redesign/Search_icon_light.svg';
 $search-btn-width: 25px;
 $zoom-in-btn-img: $img-url-base + 'Zoom-In.svg';
 $zoom-out-btn-img: $img-url-base + 'Zoom-Out.svg';
+$zoom-magnifying-glass-img: $img-url-base + 'zoom-magnifying-glass.svg';
+$zoom-magnifying-glass-img-grey: $img-url-base + 'zoom-magnifying-glass-grey.svg';
 $help-btn-img: $img-url-base + 'Questionmark.svg';
 $search-btn-width: 25px;
 $facebook-img: $img-url-base + 'facebook.svg';
@@ -197,7 +204,4 @@ $img-url-base: '/static/img/';
            url('/static/fonts/fontello/font/fontello.svg?98478670#fontello') format('svg');
       font-weight: normal;
       font-style: normal;
-
-
-
 }

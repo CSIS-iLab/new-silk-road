@@ -24,6 +24,12 @@ class InitiativeBasicSerializer(serializers.ModelSerializer):
 class ProjectNestableSerializer(serializers.ModelSerializer):
     infrastructure_type = serializers.SlugRelatedField(slug_field='name', read_only=True)
     page_url = serializers.CharField(source='get_absolute_url', read_only=True)
+    locations = serializers.SlugRelatedField(
+        source='countries',
+        slug_field='name',
+        many=True,
+        read_only=True,
+    )
 
     class Meta:
         model = Project
@@ -34,6 +40,7 @@ class ProjectNestableSerializer(serializers.ModelSerializer):
             'total_cost',
             'total_cost_currency',
             'page_url',
+            'locations',
         )
 
 
