@@ -526,6 +526,9 @@ $img in $icons {
             }
         }
     }
+    span.#{$name} {
+        background-image: url($img);
+    }
 }
 
 body > footer#page-footer {
