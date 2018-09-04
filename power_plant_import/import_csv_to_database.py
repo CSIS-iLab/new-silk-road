@@ -342,7 +342,7 @@ def remove_undesired_projects(project_id_list):
       - no completion date and a power plant without a plant_year_online, or
       - no completion date and a plant_year_online prior to 2006
     """
-    Project.objects.filter(
+    return Project.objects.filter(
         id__in=project_id_list
     ).filter(
         planned_completion_year=None,
@@ -351,18 +351,18 @@ def remove_undesired_projects(project_id_list):
     ).filter(
         django.db.models.Q(power_plant__plant_year_online=None) |
         django.db.models.Q(power_plant__plant_year_online__lt=2006)
-    ).delete()
+    ).delete()[1]['infrastructure.Project']
 
 
 def remove_undesired_powerplants(power_plant_id_list):
     """Remove PowerPlant objects from the power_plant_id_list that have no Projects."""
-    PowerPlant.objects.filter(
+    return PowerPlant.objects.filter(
         id__in=power_plant_id_list
     ).annotate(
         num_projects=django.db.models.Count('project')
     ).filter(
         num_projects=0
-    ).delete()
+    ).delete()[1]['infrastructure.PowerPlant']
 
 
 def import_csv_to_database(*args, **kwargs):
@@ -397,8 +397,8 @@ def import_csv_to_database(*args, **kwargs):
     error_rows = {}
     completed_but_with_warnings = {}
     # Statistics that can be used for removing objects after the import
-    project_ids_imported = []
-    power_plant_ids_imported = []
+    project_ids_imported = set()
+    power_plant_ids_imported = set()
 
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
@@ -453,7 +453,7 @@ def import_csv_to_database(*args, **kwargs):
                 new_object, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Power Plant Name'),
                 )
-                power_plant_ids_imported.append(new_object.id)
+                power_plant_ids_imported.add(new_object.id)
 
                 # Get the rest of the fields for the new_object
                 try:
@@ -490,12 +490,12 @@ def import_csv_to_database(*args, **kwargs):
                     project_name = row.get('Source Plant Name')
 
                 new_object, _ = Project.objects.get_or_create(name=project_name)
-                project_ids_imported.append(new_object.id)
+                project_ids_imported.add(new_object.id)
                 # Get the PowerPlant for this Project
                 power_plant, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Source Plant Name'),
                 )
-                power_plant_ids_imported.append(power_plant.id)
+                power_plant_ids_imported.add(power_plant.id)
 
                 # Get the rest of the fields for the new_object
                 try:
@@ -549,9 +549,12 @@ def import_csv_to_database(*args, **kwargs):
     # be a sanitized list of Projects and PowerPlants to be imported into the
     # database. However, some of the rows in the CSV should not end up in the
     # database, so the following functions remove them from the database.
+    num_projects_removed = num_powerplants_removed = 0
     if remove_undesired_objects:
-        remove_undesired_projects(project_ids_imported)
-        remove_undesired_powerplants(power_plant_ids_imported)
+        num_projects_removed = remove_undesired_projects(project_ids_imported)
+        num_powerplants_removed = remove_undesired_powerplants(power_plant_ids_imported)
+    num_projects_created = len(project_ids_imported) - num_projects_removed
+    num_powerplants_created = len(power_plant_ids_imported) - num_powerplants_removed
 
     # Print the summary to the user
     if use_logger:
@@ -560,7 +563,15 @@ def import_csv_to_database(*args, **kwargs):
             "Results of import:\n"
             "{} rows successfully imported\n"
             "{} rows had an error\n"
-            "-------------------------\n".format(num_successful_imports, len(error_rows))
+            "{} Project objects created\n"
+            "{} PowerPlant objects created\n"
+
+            "-------------------------\n".format(
+                num_successful_imports,
+                len(error_rows),
+                num_projects_created,
+                num_powerplants_created,
+            )
         )
         if error_rows:
             logger.info("Error rows:\n")
