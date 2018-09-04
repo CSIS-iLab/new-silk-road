@@ -32,6 +32,8 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     infrastructure_type = factory.SubFactory(InfrastructureTypeFactory)
     created_at = factory.Faker('date_time')
     updated_at = factory.Faker('date_time')
+    total_cost = random.randint(0, 1000000)
+    total_cost_currency = random.choice(CURRENCY_CHOICES)[0]
 
     @factory.lazy_attribute
     def description(self):

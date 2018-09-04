@@ -85,6 +85,24 @@ export default class Cartographer {
     this.beginPeriodicUpdates();
   }
 
+  geoStoreShouldBeZoomedMore(sourceLayer) {
+    /* Determine if zooming should be enabled for this geo coordinate:
+     *  - Points may be zoomed to further if the current zoom is less than maxFitZoom
+     *  - Lines may be zoomed to further if the current zoom is less than minDetailZoom
+     *  - Centroids may be zoomed to further if the current zoom is less than minDetailZoom
+     *  - Other types may not be zoomed
+     */
+    if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < maxFitZoom) {
+      return true;
+    } else if (sourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < minDetailZoom) {
+      return true;
+    } else if (sourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < minDetailZoom) {
+      return true;
+    }
+    return false;
+  }
+
+
   // Handlers
 
   handleCentroidsFail(error) {
@@ -121,43 +139,52 @@ export default class Cartographer {
   }
 
   handleDidGetGeoStore(geostore) {
-    this.removePopup();
     const {
       identifier,
       extent,
       projects,
     } = geostore;
-    const [{ infrastructure_type }] = projects;
-    this.geostoreQueue.resolveGeoStore(identifier);
-    if (!this.geoManager.hasGeo(identifier)) {
-      const geoTypes = ['lines', 'points', 'polygons'];
-      const identifiers = [];
-      geoTypes.forEach((t) => {
-        const data = geostore[t];
-        if (data.features.length) {
-          const layerId = `${identifier}${identiferSep}${t}`;
-          identifiers.push(layerId);
-          const source = {
-            data,
-            type: 'geojson',
-          };
-          const layer = Object.assign({
-            source: layerId,
-            id: layerId,
-            metadata: {
-              identifier,
-              projects,
-              infrastructureType: infrastructure_type,
-            },
-          }, this.styles.getStyleFor(t, infrastructure_type));
-          this.setSource(layer.source, source, false);
-          this.addLayer(layer);
-        }
-      });
-      this.geoManager.addGeoRecord(identifier, identifiers, extent);
-    }
-    if (this.geoManager.selectedGeoStore === identifier && extent) {
-      this.zoomToExtent(extent);
+
+    // If the geostore's identifier has a button in the DOM without an href, then
+    // set the href attribute of that button to the first project's detail page
+    // URL. Otherwise, handle showing the geoTypes on the map.
+    const identifierButton = document.getElementById(`button_${geostore.identifier}`);
+    if (identifierButton !== null && identifierButton.hasAttribute('href') && identifierButton.getAttribute('href') === '') {
+      identifierButton.setAttribute('href', projects[0].page_url);
+    } else {
+      this.removePopup();
+      const [{ infrastructure_type }] = projects;
+      this.geostoreQueue.resolveGeoStore(identifier);
+      if (!this.geoManager.hasGeo(identifier)) {
+        const geoTypes = ['lines', 'points', 'polygons'];
+        const identifiers = [];
+        geoTypes.forEach((t) => {
+          const data = geostore[t];
+          if (data.features.length) {
+            const layerId = `${identifier}${identiferSep}${t}`;
+            identifiers.push(layerId);
+            const source = {
+              data,
+              type: 'geojson',
+            };
+            const layer = Object.assign({
+              source: layerId,
+              id: layerId,
+              metadata: {
+                identifier,
+                projects,
+                infrastructureType: infrastructure_type,
+              },
+            }, this.styles.getStyleFor(t, infrastructure_type));
+            this.setSource(layer.source, source, false);
+            this.addLayer(layer);
+          }
+        });
+        this.geoManager.addGeoRecord(identifier, identifiers, extent);
+      }
+      if (this.geoManager.selectedGeoStore === identifier && extent) {
+        this.zoomToExtent(extent);
+      }
     }
   }
 
@@ -193,6 +220,101 @@ export default class Cartographer {
     }
   }
 
+  getPopupWithContainer(name, locations, infrastructureType, totalCost, buttonId,
+    detailPageURL, zoomEnabled, geoIdentifier,
+  ) {
+    /* Return a popupContainer element with the DOM elements for a (project) popup on the map. */
+    const projectName = name || '';
+    const projectLocations = locations || 'Not Specified';
+
+    // The popup container
+    const popupContainer = document.createElement('div');
+    popupContainer.className = popContentClass;
+
+    // Header row
+    const header = document.createElement('div');
+    header.setAttribute('class', 'popup-header');
+    const headerZoomButton = document.createElement('button');
+    const headerZoomButtonIcon = document.createElement('span');
+    headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
+    headerZoomButton.appendChild(headerZoomButtonIcon);
+    const headerText = document.createElement('span');
+    headerText.appendChild(document.createTextNode('zoom'.toUpperCase()));
+    // If the header's zoom button should be enabled, then give it the appropriate
+    // CSS class, and add an event listener for when the zoom button is clicked.
+    // Clicking the header's zoom button should get the geostore data, which in turn
+    // will zoom in to the icon at the appropriate zoom (in this.handleGeoStoreSelect()).
+    if (zoomEnabled) {
+      headerZoomButton.setAttribute('class', 'popup-header-button');
+      headerZoomButton.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(geoIdentifier));
+      headerZoomButton.addEventListener('click', () => { this.removePopup(); });
+      headerText.setAttribute('class', 'popup-header-text');
+    } else {
+      headerZoomButton.setAttribute('class', 'popup-header-button-disabled');
+      headerText.setAttribute('class', 'popup-header-text-disabled');
+    }
+    header.appendChild(headerZoomButton);
+    header.appendChild(headerText);
+
+    // Project name element
+    const nameElement = document.createElement('h3');
+    nameElement.appendChild(document.createTextNode(projectName));
+
+    // Project locations row
+    const locationsRow = document.createElement('div');
+    locationsRow.setAttribute('class', 'popup-row');
+    const locationsLabelDiv = document.createElement('div');
+    locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
+    const locationsDataDiv = document.createElement('div');
+    locationsDataDiv.setAttribute('class', 'popup-row-data');
+    locationsDataDiv.appendChild(document.createTextNode(projectLocations));
+    locationsRow.appendChild(locationsLabelDiv);
+    locationsRow.appendChild(locationsDataDiv);
+
+    // Project type row
+    const typeRow = document.createElement('div');
+    typeRow.setAttribute('class', 'popup-row');
+    const typeLabelDiv = document.createElement('div');
+    typeLabelDiv.appendChild(document.createTextNode('Type'.toUpperCase()));
+    const typeDataDiv = document.createElement('div');
+    typeDataDiv.setAttribute('class', 'popup-row-data');
+    typeDataDiv.appendChild(document.createTextNode(infrastructureType));
+    typeRow.appendChild(typeLabelDiv);
+    typeRow.appendChild(typeDataDiv);
+
+    // Total cost row
+    const totalCostRow = document.createElement('div');
+    totalCostRow.setAttribute('class', 'popup-row');
+    const totalCostLabelDiv = document.createElement('div');
+    totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
+    const totalCostDataDiv = document.createElement('div');
+    totalCostDataDiv.setAttribute('class', 'popup-row-data');
+    totalCostDataDiv.appendChild(document.createTextNode(totalCost));
+    totalCostRow.appendChild(totalCostLabelDiv);
+    totalCostRow.appendChild(totalCostDataDiv);
+
+    // Button row
+    const buttonHolderRow = document.createElement('div');
+    buttonHolderRow.setAttribute('class', 'popup-row popup-buttonholder');
+    const button = document.createElement('a');
+    button.setAttribute('id', buttonId);
+    button.setAttribute('href', detailPageURL);
+    button.setAttribute('target', '_blank');
+    button.setAttribute('class', 'button popup-button');
+    button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
+    buttonHolderRow.appendChild(button);
+
+    // Append each of the rows of the popup to the popupContainer
+    popupContainer.appendChild(header);
+    popupContainer.appendChild(nameElement);
+    popupContainer.appendChild(locationsRow);
+    popupContainer.appendChild(typeRow);
+    popupContainer.appendChild(totalCostRow);
+    popupContainer.appendChild(buttonHolderRow);
+
+    return popupContainer;
+  }
+
   handleMapClick(event) {
     const {
       point,
@@ -217,17 +339,63 @@ export default class Cartographer {
         projects,
       } = feat.layer.metadata;
 
+      // Determine if zooming should be enabled for the popup
+      const zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.layer.source);
 
+      // Create the popup
       const popup = new Popup();
 
-      const itemsListHTML = projects.map(project => `<li><h4>${project.name}</h4>
-      <p><a class='button' href='${project.page_url}' target='_blank'>Open detail page</a></p></li>`)
-        .join('');
+      // Get the DOM elements of the popup
+      const popupContainers = projects.map((project) => {
+        // Get the total cost, round it to have 1 decimal point, and add a word
+        // for the total cost unit, like "million" or "billion".
+        let totalCost;
+        if (project.total_cost === null) {
+          totalCost = 'Unknown';
+        } else {
+          let totalCostDividend;
+          let totalCostUnit;
+          if (project.total_cost > 10 ** 15) {
+            totalCostDividend = (project.total_cost / (10 ** 15)).toFixed(1);
+            totalCostUnit = ' quadrillion ';
+          } else if (project.total_cost > 10 ** 12) {
+            totalCostDividend = (project.total_cost / (10 ** 12)).toFixed(1);
+            totalCostUnit = ' trillion ';
+          } else if (project.total_cost > 10 ** 9) {
+            totalCostDividend = (project.total_cost / (10 ** 9)).toFixed(1);
+            totalCostUnit = ' billion ';
+          } else if (project.total_cost > 10 ** 6) {
+            totalCostDividend = (project.total_cost / (10 ** 6)).toFixed(1);
+            totalCostUnit = ' million ';
+          } else if (project.total_cost > 10 ** 3) {
+            totalCostDividend = (project.total_cost / (10 ** 3)).toFixed(1);
+            totalCostUnit = ' thousand';
+          } else {
+            totalCostDividend = project.total_cost.toFixed(1);
+            totalCostUnit = ' ';
+          }
+          totalCost = totalCostDividend + totalCostUnit;
+          if (project.total_cost_currency !== null) {
+            totalCost += project.total_cost_currency;
+          }
+        }
+        const buttonId = `button_${project.identifier}`;
+        const geoIdentifier = feat.layer.metadata.identifier;
+
+        // Return the DOM element for the popup
+        return this.getPopupWithContainer(project.name, project.locations,
+          project.infrastructure_type, totalCost, buttonId, project.page_url,
+          zoomEnabled, geoIdentifier,
+        );
+      });
+
+      const parentPopupContainer = document.createElement('div');
+      popupContainers.forEach((popupContainer) => {
+        parentPopupContainer.appendChild(popupContainer);
+      });
 
       popup.setLngLat(lngLat)
-        .setHTML(`<div class='${popContentClass}'>
-           <ul class='clean'>${itemsListHTML}</ul>
-           </div>`);
+           .setDOMContent(parentPopupContainer);
 
       this.addPopup(popup);
     }
@@ -348,20 +516,22 @@ export default class Cartographer {
       const feat = features[0];
       const popup = new Popup();
 
-      // Create popup HTML, the hard way. (So we can easily add the event listener to that button)
-      const popupContainer = document.createElement('div');
-      popupContainer.className = popContentClass;
-      const header = document.createElement('h4');
-      header.appendChild(document.createTextNode(feat.properties.label || ''));
-      const button = document.createElement('button');
-      button.appendChild(document.createTextNode('Zoom to Detail'));
-      button.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(feat.properties.geostore));
-      popupContainer.appendChild(header);
-      popupContainer.appendChild(button);
+      const buttonId = `button_${feat.properties.geostore}`;
+      const geoIdentifier = feat.properties.geostore;
+      // Determine if zooming should be enabled for the popup
+      const zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.source);
+
+      // Get the DOM elements for the (project) popup
+      const popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
       popup.setLngLat(feat.geometry.coordinates)
            .setDOMContent(popupContainer);
 
       this.addPopup(popup);
+
+      // Now that the popup has been added, get the geostore data for this point.
+      // Note: when the data returns from the backend, .handleDidGetGeoStore()
+      // will set the button's href to this point's project's detail page URL.
+      GeoStoreActions.getGeoStore(feat.properties.geostore);
     }
   }
 

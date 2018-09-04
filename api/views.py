@@ -1,5 +1,12 @@
-from django.db.models import Count, F
+from decimal import Decimal
+
 from django.conf import settings
+from django.contrib.postgres.aggregates import StringAgg
+from django.db.models import (
+    Case, CharField, Count, ExpressionWrapper, F, FloatField, Q, Value, When
+)
+from django.db.models.functions import Cast
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.views import APIView
@@ -150,6 +157,80 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             project_alt_name=F('projects__alternate_name'),
             project_name=F('projects__name'),
             project_type=F('projects__infrastructure_type__name'),
+            locations=StringAgg('projects__countries__name', ',', distinct=True),
+            currency=F('projects__total_cost_currency')
+        ).annotate(
+            total_cost_exact=Cast('projects__total_cost', FloatField()),  # The exact total cost
+        ).annotate(
+            total_cost_dividend=Case(  # Divide total_cost_exact, to get a number between 1 and 999
+                When(
+                    Q(total_cost_exact__gte=10**15),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact') / Decimal(1.0*10**15),
+                        output_field=FloatField()
+                    ),
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**12) & Q(total_cost_exact__lt=10**15),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact') / Decimal(1.0*10**12),
+                        output_field=FloatField()
+                    ),
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**9) & Q(total_cost_exact__lt=10**12),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact') / Decimal(1.0*10**9),
+                        output_field=FloatField()
+                    ),
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**6) & Q(total_cost_exact__lt=10**9),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact') / Decimal(1.0*10**6),
+                        output_field=FloatField()
+                    ),
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**3) & Q(total_cost_exact__lt=10**6),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact') / Decimal(1.0*10**3),
+                        output_field=FloatField()
+                    ),
+                ),
+                When(
+                    Q(total_cost_exact__gte=0) & Q(total_cost_exact__lt=10**3),
+                    then=ExpressionWrapper(
+                        F('total_cost_exact'),
+                        output_field=FloatField()
+                    ),
+                ),
+                output_field=FloatField(),
+            )
+        ).annotate(
+            total_cost_unit=Case(
+                When(
+                    Q(total_cost_exact__gte=10**15),
+                    then=Value('quadrillion')
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**12) & Q(total_cost_exact__lt=10**15),
+                    then=Value('trillion')
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**9) & Q(total_cost_exact__lt=10**12),
+                    then=Value('billion')
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**6) & Q(total_cost_exact__lt=10**9),
+                    then=Value('million')
+                ),
+                When(
+                    Q(total_cost_exact__gte=10**3) & Q(total_cost_exact__lt=10**6),
+                    then=Value('thousand')
+                ),
+                output_field=CharField(),
+            )
         ).distinct()
 
         if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
