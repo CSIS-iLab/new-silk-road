@@ -18,13 +18,13 @@ const containerStyle = {
 
 ReactDOM.render(
   <StyleRoot style={{ height: appHeight }}>
+    <SearchView />
     <MapContainer
       accessToken={token}
       containerStyle={containerStyle}
       mapStyle={mapStyle}
       center={defaultCenter}
     />
-    <SearchView />
   </StyleRoot>,
   document.getElementById('app'),
 );
