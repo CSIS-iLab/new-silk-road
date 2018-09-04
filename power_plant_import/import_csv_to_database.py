@@ -354,6 +354,17 @@ def remove_undesired_projects(project_id_list):
     ).delete()
 
 
+def remove_undesired_powerplants(power_plant_id_list):
+    """Remove PowerPlant objects from the power_plant_id_list that have no Projects."""
+    PowerPlant.objects.filter(
+        id__in=power_plant_id_list
+    ).annotate(
+        num_projects=django.db.models.Count('project')
+    ).filter(
+        num_projects=0
+    ).delete()
+
+
 def import_csv_to_database(*args, **kwargs):
     """
     Import the contents of the CSV file into the database.
@@ -385,7 +396,9 @@ def import_csv_to_database(*args, **kwargs):
     num_successful_imports = 0
     error_rows = {}
     completed_but_with_warnings = {}
+    # Statistics that can be used for removing objects after the import
     project_ids_imported = []
+    power_plant_ids_imported = []
 
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
@@ -440,6 +453,8 @@ def import_csv_to_database(*args, **kwargs):
                 new_object, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Power Plant Name'),
                 )
+                power_plant_ids_imported.append(new_object.id)
+
                 # Get the rest of the fields for the new_object
                 try:
                     data = get_power_plant_data_for_form(
@@ -475,10 +490,13 @@ def import_csv_to_database(*args, **kwargs):
                     project_name = row.get('Source Plant Name')
 
                 new_object, _ = Project.objects.get_or_create(name=project_name)
+                project_ids_imported.append(new_object.id)
                 # Get the PowerPlant for this Project
                 power_plant, _ = PowerPlant.objects.get_or_create(
                     name=row.get('Source Plant Name'),
                 )
+                power_plant_ids_imported.append(power_plant.id)
+
                 # Get the rest of the fields for the new_object
                 try:
                     data = get_project_data_for_form(
@@ -490,7 +508,6 @@ def import_csv_to_database(*args, **kwargs):
                     form = ProjectForm(data, instance=new_object)
                     if form.is_valid():
                         new_object = form.save()
-                        project_ids_imported.append(new_object.id)
                     else:
                         error_rows[perceived_row_number] = form.errors.as_data()
                 except KeyError as error:
@@ -534,6 +551,7 @@ def import_csv_to_database(*args, **kwargs):
     # database, so the following functions remove them from the database.
     if remove_undesired_objects:
         remove_undesired_projects(project_ids_imported)
+        remove_undesired_powerplants(power_plant_ids_imported)
 
     # Print the summary to the user
     if use_logger:

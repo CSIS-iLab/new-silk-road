@@ -586,10 +586,14 @@ class ImportCSVToDatabaseTestCase(TestCase):
         """
         with self.subTest('argument not specified'):
             # Calling the command without the --remove_undesired_objects argument
-            # creates a Project for each of the project rows in the CSV.
+            # creates a Project for each of the project rows in the CSV, and a
+            # PowerPlant for each of the power plant rows in the CSV, as well as
+            # a PowerPlant for the project_liaoning, which didn't have a power plant
+            # row in the CSV file associated with it.
             self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
-            # There are now 3 Projects in the database
+            # There are now 3 Projects and 4 PowerPlants in the database
             self.assertEqual(Project.objects.count(), 3)
+            self.assertEqual(PowerPlant.objects.count(), 4)
 
         with self.subTest('argument specified'):
             # Calling the command with the --remove_undesired_objects argument
@@ -608,3 +612,12 @@ class ImportCSVToDatabaseTestCase(TestCase):
             #     with a plant_year_online from before 2006
             self.assertEqual(Project.objects.count(), 1)
             self.assertEqual(Project.objects.first().name, 'Ouessant Tidal Power Phase I')
+            # There is now 1 PowerPlant in the database. There are 3 power plant
+            # rows in the CSV file, and 1 more PowerPlant is needed for the
+            # project_liaoning (for a total of 4 PowerPlants), but:
+            #   - the powerplant_ilarionas has no associated Project in the CSV
+            #   - the powerplant for the project_liaoning has not associated Project
+            #     because the project_liaoning was removed above
+            #   - the powerplant_tonstad has no associated Project in the CSV
+            self.assertEqual(PowerPlant.objects.count(), 1)
+            self.assertEqual(PowerPlant.objects.first().name, 'Ouessant Tidal Power Project')
