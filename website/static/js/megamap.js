@@ -26731,23 +26731,6 @@
 	  }
 	
 	  _createClass(InfrastructureIcon, [{
-	    key: 'getIconSource',
-	    value: function getIconSource() {
-	      /* Return the icon source URL for an icon label */
-	      if (this.label === 'Road') {
-	        return '/static/img/database-icons/Road_white.svg';
-	      } else if (this.label === 'Seaport') {
-	        return '/static/img/database-icons/Seaport_white.svg';
-	      } else if (this.label === 'Rail') {
-	        return '/static/img/database-icons/Rail_white.svg';
-	      } else if (this.label === 'Intermodal') {
-	        return '/static/img/database-icons/Dryport_white.svg';
-	      } else if (this.label === 'Power Plant') {
-	        return '/static/img/database-icons/Powerplant_white.svg';
-	      }
-	      return '';
-	    }
-	  }, {
 	    key: 'getAltText',
 	    value: function getAltText() {
 	      return 'Image representing visual display of a ' + this.label.toLowerCase() + ' on a map';
@@ -26755,7 +26738,12 @@
 	  }, {
 	    key: 'getSpanColorClass',
 	    value: function getSpanColorClass() {
-	      return this.label.toLowerCase() + '-color';
+	      return this.label.replace(/ /g, '').toLowerCase() + '-color';
+	    }
+	  }, {
+	    key: 'getSpanIconClass',
+	    value: function getSpanIconClass() {
+	      return this.label.replace(/ /g, '').toLowerCase() + '_white';
 	    }
 	  }, {
 	    key: 'handleClick',
@@ -26771,7 +26759,7 @@
 	      return _react2.default.createElement(
 	        'span',
 	        { className: this.getSpanColorClass() + ' ' + this.state.selected, onClick: this.handleClick.bind(this) },
-	        _react2.default.createElement('img', { width: 40, height: 40, src: this.getIconSource(), alt: this.getAltText() })
+	        _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText() })
 	      );
 	    }
 	  }]);
