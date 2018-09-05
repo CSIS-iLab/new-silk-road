@@ -27593,11 +27593,68 @@
 	      }
 	    }
 	  }, {
+	    key: 'getPageNumbersFromURL',
+	    value: function getPageNumbersFromURL(previousURL, nextURL, totalNumResults) {
+	      /* Return current page number & total number of pages based on previousURL and nextURL */
+	      var currentPage = void 0;
+	      var numPages = void 0;
+	      var keyAndValue = void 0;
+	
+	      if (nextURL !== null) {
+	        // There is a nextURL, so use it to find the currentPage and numPages
+	        var numLastResult = void 0;
+	        var pageSize = void 0;
+	        var parameters = this.props.nextURL.slice(this.props.nextURL.indexOf('?') + 1).split('&');
+	        for (var i = 0; i < parameters.length; i++) {
+	          keyAndValue = parameters[i].split('=');
+	          var key = keyAndValue[0];
+	          var value = keyAndValue[1];
+	          if (key === 'offset') {
+	            numLastResult = parseInt(value);
+	          }
+	          if (key === 'limit') {
+	            pageSize = parseInt(value);
+	          }
+	        }
+	        currentPage = Math.ceil(numLastResult / pageSize);
+	        numPages = Math.ceil(totalNumResults / pageSize);
+	      } else if (previousURL !== null) {
+	        // There is no nextURL, but there is a previousURL, so this must be the last page
+	        var _pageSize = void 0;
+	        var _parameters = this.props.previousURL.slice(this.props.previousURL.indexOf('?') + 1).split('&');
+	        for (var _i = 0; _i < _parameters.length; _i++) {
+	          keyAndValue = _parameters[_i].split('=');
+	          var _key = keyAndValue[0];
+	          var _value = keyAndValue[1];
+	          if (_key === 'limit') {
+	            _pageSize = parseInt(_value);
+	          }
+	        }
+	        numPages = Math.ceil(totalNumResults / _pageSize);
+	        currentPage = numPages;
+	      } else {
+	        // There is no previousURL or nextURL. This must be page 1 of 1
+	        currentPage = 1;
+	        numPages = 1;
+	      }
+	
+	      return [currentPage, numPages];
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
 	      var noResults = this.props.results.length === 0;
+	      var currentPage = void 0;
+	      var numPages = void 0;
+	
+	      if (!noResults) {
+	        var pageNumbers = this.getPageNumbersFromURL(this.props.previousURL, this.props.nextURL, this.props.totalCount);
+	        currentPage = pageNumbers[0];
+	        numPages = pageNumbers[1];
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'resultsView', style: this.props.style },
@@ -27680,7 +27737,10 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'pagination' },
-	            'Page 1 of 9'
+	            'Page ',
+	            currentPage,
+	            ' of ',
+	            numPages
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -28409,7 +28469,8 @@
 	              onNextClick: SearchView.handleResultsNavClick,
 	              nextURL: nextURL,
 	              onPreviousClick: SearchView.handleResultsNavClick,
-	              previousURL: previousURL
+	              previousURL: previousURL,
+	              totalCount: this.state.total
 	            })
 	          ),
 	          _react2.default.createElement(

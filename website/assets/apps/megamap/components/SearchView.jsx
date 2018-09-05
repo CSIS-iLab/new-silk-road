@@ -471,6 +471,7 @@ export default class SearchView extends Component {
               nextURL={nextURL}
               onPreviousClick={SearchView.handleResultsNavClick}
               previousURL={previousURL}
+              totalCount={this.state.total}
             />
           </div>
           <div className="helpView">
