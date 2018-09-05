@@ -32,6 +32,8 @@ class ProjectFactory(factory.django.DjangoModelFactory):
     infrastructure_type = factory.SubFactory(InfrastructureTypeFactory)
     created_at = factory.Faker('date_time')
     updated_at = factory.Faker('date_time')
+    total_cost = random.randint(0, 1000000)
+    total_cost_currency = random.choice(CURRENCY_CHOICES)[0]
 
     @factory.lazy_attribute
     def description(self):
@@ -50,6 +52,23 @@ class ProjectFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'infrastructure.Project'
+
+
+class CuratedProjectCollectionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.CuratedProjectCollection'
+
+    @factory.post_generation
+    def projects(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for project in projects:
+                self.projects.add(project)
+
+    name = factory.Sequence(lambda n: 'CuratedProjectCollection %d' % n)
 
 
 class InitiativeTypeFactory(factory.django.DjangoModelFactory):
