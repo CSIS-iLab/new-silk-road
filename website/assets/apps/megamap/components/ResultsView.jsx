@@ -124,6 +124,20 @@ class ResultsView extends Component {
       numPages = pageNumbers[1];
     }
 
+    let curatedProjectCollectionsElements = [];
+    if (this.props.curatedProjectCollections !== undefined && this.props.curatedProjectCollections.length > 0) {
+      for (let i=0; i<this.props.curatedProjectCollections.length; i++) {
+        curatedProjectCollectionsElements.push(
+          <a id={this.props.curatedProjectCollections[i].__proto__.value}
+             key={this.props.curatedProjectCollections[i].__proto__.value}
+             onClick={this.searchForCuratedResults}
+          >
+            {this.props.curatedProjectCollections[i].__proto__.label}
+          </a>
+        );
+      }
+    }
+
     return (
       <div className="resultsView" style={this.props.style}>
         <div
@@ -157,8 +171,7 @@ class ResultsView extends Component {
               <h2>Curated Results</h2>
               <p>
                 This list of results illustrate some of the projects and strategies our team is following.
-                <a id={1} onClick={this.searchForCuratedResults}>Projects funded by the World Bank</a>
-                <a id={2} onClick={this.searchForCuratedResults}>Projects in India that were announced in 2018</a>
+                {curatedProjectCollectionsElements}
               </p>
             </section>
           </div>

@@ -22,6 +22,7 @@ const RegionSource = createApiSource('/api/regions/');
 const StatusSource = createApiSource('/api/project-statuses/');
 const SearchSource = createApiSource('/api/projects/');
 const GeoCentroidSource = createApiSource('/api/geostore-centroids/');
+const CuratedProjectCollectionSource = createApiSource('/api/curated-projects/');
 
 export {
   createApiSource,
@@ -32,4 +33,5 @@ export {
   StatusSource,
   SearchSource,
   GeoCentroidSource,
+  CuratedProjectCollectionSource,
 };
