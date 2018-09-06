@@ -4,6 +4,7 @@ import rest_framework_filters as filters
 
 from facts.models.organizations import Organization
 from infrastructure.models import (
+    CuratedProjectCollection,
     Project,
     ProjectStatus,
     ProjectFunding,
@@ -112,6 +113,10 @@ class ProjectFilter(filters.FilterSet):
         'api.filters.locations.CountryFilter',
         queryset=Country.objects.all(),
         field_name='countries',
+    )
+    curated_project_collections = filters.ModelMultipleChoiceFilter(
+        queryset=CuratedProjectCollection.objects.all(),
+        field_name='curatedprojectcollection'
     )
     countries = filters.ModelMultipleChoiceFilter(
         queryset=Country.objects.all(),
