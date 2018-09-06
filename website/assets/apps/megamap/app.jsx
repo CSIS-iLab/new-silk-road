@@ -7,7 +7,7 @@ import SearchView from './components/SearchView';
 import { defaultCenter } from './helpers/map-constants';
 
 const token = 'pk.eyJ1IjoiaWxhYm1lZGlhIiwiYSI6ImNpbHYycXZ2bTAxajZ1c2tzdWU1b3gydnYifQ.AHxl8pPZsjsqoz95-604nw';
-const mapStyle = 'mapbox://styles/ilabmedia/cinm5o9pu001tbom67ql6snhg';
+const mapStyle = 'mapbox://styles/ilabmedia/cjldtfvvu21jk2qqh0jh8drn1';
 
 const appHeight = 600;
 const containerStyle = {
@@ -18,13 +18,13 @@ const containerStyle = {
 
 ReactDOM.render(
   <StyleRoot style={{ height: appHeight }}>
+    <SearchView />
     <MapContainer
       accessToken={token}
       containerStyle={containerStyle}
       mapStyle={mapStyle}
       center={defaultCenter}
     />
-    <SearchView />
   </StyleRoot>,
   document.getElementById('app'),
 );

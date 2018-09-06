@@ -16,6 +16,7 @@ class SearchActionsBase {
       SearchSource.fetch(query)
       .then(response => response.json())
       .then((json) => {
+        json['query'] = query;
         this.update(json);
       })
       .catch((error) => {

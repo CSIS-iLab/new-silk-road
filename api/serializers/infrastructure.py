@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from infrastructure.models import Project, ProjectFunding, Initiative, InfrastructureType
+from infrastructure.models import (CuratedProjectCollection, Project, ProjectFunding, Initiative,
+    InfrastructureType)
 from api.serializers.facts import OrganizationBasicSerializer
 from api.fields import DynamicFieldsMixin
 
@@ -23,6 +24,12 @@ class InitiativeBasicSerializer(serializers.ModelSerializer):
 class ProjectNestableSerializer(serializers.ModelSerializer):
     infrastructure_type = serializers.SlugRelatedField(slug_field='name', read_only=True)
     page_url = serializers.CharField(source='get_absolute_url', read_only=True)
+    locations = serializers.SlugRelatedField(
+        source='countries',
+        slug_field='name',
+        many=True,
+        read_only=True,
+    )
 
     class Meta:
         model = Project
@@ -33,6 +40,7 @@ class ProjectNestableSerializer(serializers.ModelSerializer):
             'total_cost',
             'total_cost_currency',
             'page_url',
+            'locations',
         )
 
 
@@ -125,4 +133,14 @@ class InfrastructureTypeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+        )
+
+
+class CuratedProjectCollectionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CuratedProjectCollection
+        fields = (
+            'name',
+            'projects',
         )

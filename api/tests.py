@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 import json
 
 from infrastructure.models import ProjectStatus, ProjectFunding
-from infrastructure.tests.factories import ProjectFactory, InitiativeFactory
+from infrastructure.tests.factories import ProjectFactory, InitiativeFactory, CuratedProjectCollectionFactory
 from locations.models import GeometryStore, PointGeometry
 from locations.tests.factories import PointGeometryFactory, CountryFactory
 from facts.tests.organization_factories import OrganizationFactory
@@ -29,7 +29,7 @@ class TestGeometryStoreDetailView(TestCase):
         self.geometry_store.points.add(point)
         self.url = reverse('api:geometrystore-detail', args=[self.geometry_store.identifier])
         # View ignores GeometryStores without projects, so add one
-        self.project = ProjectFactory()
+        self.project = ProjectFactory(countries=[CountryFactory(), CountryFactory()])
         self.project.geo = self.geometry_store
         self.project.save()
 
@@ -65,22 +65,42 @@ class TestGeometryStoreDetailView(TestCase):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED'):
                 self.client.logout()
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
         with self.settings(PUBLISH_FILTER_ENABLED=False):
             with self.subTest('Authenticated and PUBLISH_FILTER_ENABLED == False'):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED == False'):
                 self.client.logout()
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
     def test_unpublished_project(self):
         self.project.published = False
@@ -91,6 +111,11 @@ class TestGeometryStoreDetailView(TestCase):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED'):
                 self.client.logout()
@@ -102,11 +127,21 @@ class TestGeometryStoreDetailView(TestCase):
                 self.client.force_login(self.user)
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
             with self.subTest('Not authenticated, PUBLISH_FILTER_ENABLED == False'):
                 self.client.logout()
                 response = self.client.get(self.url)
                 self.assertEqual(response.status_code, 200)
+                response_locations = [proj['locations'] for proj in response.data['projects']][0]
+                self.assertEqual(
+                    set(response_locations),
+                    set(self.project.countries.values_list('name', flat=True))
+                )
 
 
 class TestGeometryStoreCentroidViewSet(TestCase):
@@ -117,7 +152,11 @@ class TestGeometryStoreCentroidViewSet(TestCase):
         point = PointGeometry(geom=Point(20, 30))
         point.save()
         self.geom_with_published_project.points.add(point)
-        self.published_project = ProjectFactory(published=True)
+        self.published_project = ProjectFactory(
+            published=True,
+            countries=[CountryFactory(), CountryFactory()],
+            total_cost=1200000
+        )
         self.published_project.geo = self.geom_with_published_project
         self.published_project.save()
 
@@ -209,6 +248,13 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 'geostore': str(self.geom_with_published_project.identifier),
                 'icon-image': 'dot',
                 'infrastructureType': self.published_project.infrastructure_type.name,
+                "locations": ','.join(
+                    self.geom_with_published_project.projects.values_list(
+                        'countries__name',
+                        flat=True
+                    )
+                ),
+                "total_cost": "1.2 million {}".format(self.published_project.total_cost_currency),
             }
         })
 
@@ -440,3 +486,49 @@ class TestInfrastructureTypeList(TestCase):
         url = reverse('api:infrastructure-type-list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class CuratedProjectCollectionListViewTestCase(TestCase):
+    """List curated projects from the database."""
+
+    def setUp(self):
+        super().setUp()
+        self.project = ProjectFactory(published=True)
+        self.other_project = ProjectFactory(published=True)
+        self.curated_project_collection = CuratedProjectCollectionFactory(
+            published=True,
+        )
+        self.curated_project_collection.projects.add(self.project, self.other_project)
+        self.url = reverse('api:curated-projects-list')
+
+    def test_get_listing(self):
+        """Render the list of curated project collectionss."""
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.curated_project_collection.name)
+
+    def test_unpublished_curated_project_collection(self):
+        """Unpublished curated project collections shouldn't be listed."""
+
+        self.curated_project_collection.published = False
+        self.curated_project_collection.save()
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.curated_project_collection.name)
+
+    def test_unpublished_projects_in_project_collection(self):
+        """
+        Curated project collections shouldn't be listed if they are only related to unpublished projects
+        """
+        with self.settings(PUBLISH_FILTER_ENABLED=True):
+            self.client.logout()
+
+            for project in [self.project, self.other_project]:
+                project.published = False
+                project.save()
+
+            response = self.client.get(self.url)
+            self.assertEqual(response.status_code, 200)
+            self.assertNotContains(response, self.curated_project_collection.name)

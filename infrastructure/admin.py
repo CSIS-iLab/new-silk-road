@@ -5,8 +5,9 @@ from django.core.urlresolvers import reverse
 from mptt.admin import MPTTModelAdmin
 from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
-    ProjectFunding,
+    ProjectFunding, PowerPlant, CuratedProjectCollection,
     Initiative, InitiativeType,
+    Fuel, FuelCategory, OwnerStake,
 )
 from publish.admin import (
     make_published,
@@ -15,7 +16,9 @@ from publish.admin import (
 from infrastructure.forms import (
     InitiativeForm,
     ProjectForm,
-    ProjectFundingForm
+    ProjectFundingForm,
+    PowerPlantForm,
+    ProjectOwnerStakeForm
 )
 from facts.forms import NameSearchWidget
 from utilities.admin import PhraseSearchAdminMixin
@@ -42,6 +45,16 @@ class ProjectsInitiativeInline(admin.StackedInline):
         models.ForeignKey: {'widget': NameSearchWidget(
             model=Project, attrs={'style': 'width: 80%;'})},
     }
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
+
+
+class ProjectsOwnersInline(admin.StackedInline):
+    model = OwnerStake
+    form = ProjectOwnerStakeForm
 
     class Media:
         css = {
@@ -120,6 +133,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
         'status',
         'infrastructure_type',
         'initiatives',
+        'power_plant',
         'countries__name',
         'regions',
         HasGeoListFilter,
@@ -228,6 +242,77 @@ class InitiativeAdmin(PhraseSearchAdminMixin, MPTTModelAdmin):
         return queryset, use_distinct
 
 
+@admin.register(PowerPlant)
+class PowerPlantAdmin(admin.ModelAdmin):
+    save_on_top = True
+    form = PowerPlantForm
+    prepopulated_fields = {"slug": ("name",)}
+    list_display = (
+        'name',
+        'plant_capacity',
+        'infrastructure_type',
+        'status',
+        'published',
+    )
+    list_filter = (
+        'plant_capacity',
+        'status',
+        'countries__name'
+    )
+    search_fields = ('name', 'plant_capacity')
+    actions = [make_published, make_not_published]
+    inlines = [
+        ProjectsOwnersInline
+    ]
+
+    class Meta:
+        model = PowerPlant
+
+
+@admin.register(Fuel)
+class FuelAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_display = (
+        'name',
+        'fuel_category'
+    )
+    list_filter = (
+        'name',
+        'fuel_category'
+    )
+    search_fields = ('name', 'fuel_category__name')
+
+
+@admin.register(FuelCategory)
+class FuelCategoryAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_filter = (
+        'name',
+    )
+    search_fields = ('name',)
+
+
+@admin.register(OwnerStake)
+class OwnerStakeAdmin(admin.ModelAdmin):
+    save_on_top = True
+    form = ProjectOwnerStakeForm
+    list_display = (
+        'id',
+        'owner',
+        'percent_owned',
+        'power_plant',
+    )
+    list_filter = (
+        'owner',
+        'power_plant'
+    )
+    actions = [make_published, make_not_published]
+    search_fields = ('owner__name', 'power_plant__name')
+
+    class Meta:
+        model = OwnerStake
+
+
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
@@ -275,3 +360,13 @@ class ProjectFundingAdmin(admin.ModelAdmin):
         'sources__name',
         'project__name',
     )
+
+
+@admin.register(CuratedProjectCollection)
+class CuratedProjectCollectionAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'published',
+    )
+    filter_horizontal = ('projects', )
+
