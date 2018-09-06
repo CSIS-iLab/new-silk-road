@@ -27609,7 +27609,7 @@
 	        // There is a nextURL, so use it to find the currentPage and numPages
 	        var numLastResult = void 0;
 	        var pageSize = void 0;
-	        var parameters = this.props.nextURL.slice(this.props.nextURL.indexOf('?') + 1).split('&');
+	        var parameters = nextURL.slice(nextURL.indexOf('?') + 1).split('&');
 	        for (var i = 0; i < parameters.length; i++) {
 	          keyAndValue = parameters[i].split('=');
 	          var key = keyAndValue[0];
@@ -27626,7 +27626,7 @@
 	      } else if (previousURL !== null) {
 	        // There is no nextURL, but there is a previousURL, so this must be the last page
 	        var _pageSize = void 0;
-	        var _parameters = this.props.previousURL.slice(this.props.previousURL.indexOf('?') + 1).split('&');
+	        var _parameters = previousURL.slice(previousURL.indexOf('?') + 1).split('&');
 	        for (var _i = 0; _i < _parameters.length; _i++) {
 	          keyAndValue = _parameters[_i].split('=');
 	          var _key = keyAndValue[0];

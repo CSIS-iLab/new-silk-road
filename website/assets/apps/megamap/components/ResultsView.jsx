@@ -60,7 +60,7 @@ class ResultsView extends Component {
       // There is a nextURL, so use it to find the currentPage and numPages
       let numLastResult;
       let pageSize;
-      const parameters = this.props.nextURL.slice(this.props.nextURL.indexOf('?') + 1).split('&');
+      const parameters = nextURL.slice(nextURL.indexOf('?') + 1).split('&');
       for (let i = 0; i < parameters.length; i++) {
         keyAndValue = parameters[i].split('=');
         const key = keyAndValue[0];
@@ -77,7 +77,7 @@ class ResultsView extends Component {
     } else if (previousURL !== null) {
       // There is no nextURL, but there is a previousURL, so this must be the last page
       let pageSize;
-      const parameters = this.props.previousURL.slice(this.props.previousURL.indexOf('?') + 1).split('&');
+      const parameters = previousURL.slice(previousURL.indexOf('?') + 1).split('&');
       for (let i = 0; i < parameters.length; i++) {
         keyAndValue = parameters[i].split('=');
         const key = keyAndValue[0];
