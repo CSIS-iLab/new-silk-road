@@ -52,7 +52,7 @@
 	
 	__webpack_require__(119);
 	
-	var _mapboxGl = __webpack_require__(163);
+	var _mapboxGl = __webpack_require__(164);
 	
 	var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 	
@@ -4293,7 +4293,8 @@
 /* 160 */,
 /* 161 */,
 /* 162 */,
-/* 163 */
+/* 163 */,
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* Mapbox GL JS is licensed under the 3-Clause BSD License. Full text of license: https://github.com/mapbox/mapbox-gl-js/blob/v0.47.0/LICENSE.txt */
@@ -4339,7 +4340,6 @@
 
 
 /***/ }),
-/* 164 */,
 /* 165 */,
 /* 166 */,
 /* 167 */,

@@ -2642,7 +2642,7 @@
 	var PooledClass = __webpack_require__(111);
 	var ReactFeatureFlags = __webpack_require__(438);
 	var ReactReconciler = __webpack_require__(114);
-	var Transaction = __webpack_require__(167);
+	var Transaction = __webpack_require__(168);
 	
 	var invariant = __webpack_require__(12);
 	
@@ -5001,7 +5001,7 @@
 	var ReactCurrentOwner = __webpack_require__(62);
 	
 	var warning = __webpack_require__(118);
-	var canDefineProperty = __webpack_require__(171);
+	var canDefineProperty = __webpack_require__(172);
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	
 	var REACT_ELEMENT_TYPE = __webpack_require__(466);
@@ -5341,7 +5341,7 @@
 	'use strict';
 	
 	var DOMNamespaces = __webpack_require__(390);
-	var setInnerHTML = __webpack_require__(169);
+	var setInnerHTML = __webpack_require__(170);
 	
 	var createMicrosoftUnsafeLocalFunction = __webpack_require__(397);
 	var setTextContent = __webpack_require__(452);
@@ -5647,7 +5647,7 @@
 	
 	if (process.env.NODE_ENV !== 'production') {
 	  var lowPriorityWarning = __webpack_require__(408);
-	  var canDefineProperty = __webpack_require__(171);
+	  var canDefineProperty = __webpack_require__(172);
 	  var ReactElementValidator = __webpack_require__(467);
 	  var didWarnPropTypesDeprecated = false;
 	  createElement = ReactElementValidator.createElement;
@@ -7415,7 +7415,7 @@
 	
 	var _prodInvariant = __webpack_require__(14);
 	
-	var EventPluginRegistry = __webpack_require__(164);
+	var EventPluginRegistry = __webpack_require__(165);
 	var EventPluginUtils = __webpack_require__(391);
 	var ReactErrorUtils = __webpack_require__(395);
 	
@@ -7924,6 +7924,135 @@
 
 /***/ }),
 /* 160 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable class-methods-use-this */
+	
+	__webpack_require__(119);
+	
+	var _alt = __webpack_require__(37);
+	
+	var _alt2 = _interopRequireDefault(_alt);
+	
+	var _apisources = __webpack_require__(84);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var SearchActionsBase = function () {
+	  function SearchActionsBase() {
+	    _classCallCheck(this, SearchActionsBase);
+	  }
+	
+	  _createClass(SearchActionsBase, [{
+	    key: 'update',
+	    value: function update(data) {
+	      return data;
+	    }
+	  }, {
+	    key: 'search',
+	    value: function search(query) {
+	      var _this = this;
+	
+	      return function (dispatch) {
+	        dispatch();
+	        _apisources.SearchSource.fetch(query).then(function (response) {
+	          return response.json();
+	        }).then(function (json) {
+	          json['query'] = query;
+	          _this.update(json);
+	        }).catch(function (error) {
+	          _this.failed(error);
+	        });
+	      };
+	    }
+	  }, {
+	    key: 'getQueryFromURL',
+	    value: function getQueryFromURL(url) {
+	      /* Take a URL (for an API call), and construct a query Object from it.
+	       * Notes:
+	       *   - Each parameter becomes its own key
+	       *   - Each value is an array
+	       *   - infrastructure_type is always returned. If it's not in the URL, then
+	       *     the value is an empty array.
+	       */
+	      var keyAndValue = void 0;
+	      var queryObject = {};
+	      var parameters = url.slice(url.indexOf('?') + 1).split('&');
+	      for (var i = 0; i < parameters.length; i++) {
+	        keyAndValue = parameters[i].split('=');
+	        var key = keyAndValue[0];
+	
+	        // Try to convert the value to an integer
+	        var value = void 0;
+	        if (!isNaN(parseInt(keyAndValue[1]))) {
+	          value = parseInt(keyAndValue[1]);
+	        } else {
+	          // Converting the value to an integer results in NaN, so just use the (string) value
+	          value = keyAndValue[1];
+	        }
+	
+	        // If the key already exists in the query object, then push the new value
+	        // into that array. Otherwise, add a new key to the query object, with the
+	        // value being an array of the 'value' variable.
+	        if (queryObject.hasOwnProperty(key)) {
+	          queryObject[key].push(value);
+	        } else {
+	          queryObject[key] = [value];
+	        }
+	      }
+	
+	      // Delete the 'limit' and 'offset' keys, since we don't need them for the query
+	      delete queryObject['limit'];
+	      delete queryObject['offset'];
+	      // The queryObject will need to have an infrastructure_type key later, so if
+	      // it does not already exist, then add it here, and set it to an empty array.
+	      if (!queryObject.hasOwnProperty('infrastructure_type')) {
+	        queryObject['infrastructure_type'] = [];
+	      }
+	
+	      return queryObject;
+	    }
+	  }, {
+	    key: 'load',
+	    value: function load(url) {
+	      var _this2 = this;
+	
+	      this.query = this.getQueryFromURL(url);
+	      return function (dispatch) {
+	        dispatch();
+	        fetch(url).then(function (response) {
+	          return response.json();
+	        }).then(function (json) {
+	          json['query'] = _this2.query;
+	          _this2.update(json);
+	        }).catch(function (error) {
+	          _this2.failed(error);
+	        });
+	      };
+	    }
+	  }, {
+	    key: 'failed',
+	    value: function failed(error) {
+	      return error;
+	    }
+	  }]);
+	
+	  return SearchActionsBase;
+	}();
+	
+	var SearchActions = _alt2.default.createActions(SearchActionsBase);
+	exports.default = SearchActions;
+
+/***/ }),
+/* 161 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -7981,7 +8110,7 @@
 	exports.default = createApiActions;
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -8039,7 +8168,7 @@
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -8064,7 +8193,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* Mapbox GL JS is licensed under the 3-Clause BSD License. Full text of license: https://github.com/mapbox/mapbox-gl-js/blob/v0.47.0/LICENSE.txt */
@@ -8110,7 +8239,7 @@
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -8366,7 +8495,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8381,7 +8510,7 @@
 	
 	var _assign = __webpack_require__(28);
 	
-	var EventPluginRegistry = __webpack_require__(164);
+	var EventPluginRegistry = __webpack_require__(165);
 	var ReactEventEmitterMixin = __webpack_require__(592);
 	var ViewportMetrics = __webpack_require__(444);
 	
@@ -8692,7 +8821,7 @@
 	module.exports = ReactBrowserEventEmitter;
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8766,7 +8895,7 @@
 	module.exports = SyntheticMouseEvent;
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -8997,7 +9126,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 	/**
@@ -9121,7 +9250,7 @@
 	module.exports = escapeTextContentForBrowser;
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9221,7 +9350,7 @@
 	module.exports = setInnerHTML;
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9245,7 +9374,7 @@
 	
 	var _reactInputAutosize2 = _interopRequireDefault(_reactInputAutosize);
 	
-	var _classnames = __webpack_require__(161);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -10684,7 +10813,7 @@
 	exports.default = Select;
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -10713,7 +10842,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10835,7 +10964,7 @@
 	function NoopClass() {}
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10901,135 +11030,6 @@
 	
 	var GeoStoreActions = _alt2.default.createActions(GeoStoreActionsBase);
 	exports.default = GeoStoreActions;
-
-/***/ }),
-/* 174 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable class-methods-use-this */
-	
-	__webpack_require__(119);
-	
-	var _alt = __webpack_require__(37);
-	
-	var _alt2 = _interopRequireDefault(_alt);
-	
-	var _apisources = __webpack_require__(84);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var SearchActionsBase = function () {
-	  function SearchActionsBase() {
-	    _classCallCheck(this, SearchActionsBase);
-	  }
-	
-	  _createClass(SearchActionsBase, [{
-	    key: 'update',
-	    value: function update(data) {
-	      return data;
-	    }
-	  }, {
-	    key: 'search',
-	    value: function search(query) {
-	      var _this = this;
-	
-	      return function (dispatch) {
-	        dispatch();
-	        _apisources.SearchSource.fetch(query).then(function (response) {
-	          return response.json();
-	        }).then(function (json) {
-	          json['query'] = query;
-	          _this.update(json);
-	        }).catch(function (error) {
-	          _this.failed(error);
-	        });
-	      };
-	    }
-	  }, {
-	    key: 'getQueryFromURL',
-	    value: function getQueryFromURL(url) {
-	      /* Take a URL (for an API call), and construct a query Object from it.
-	       * Notes:
-	       *   - Each parameter becomes its own key
-	       *   - Each value is an array
-	       *   - infrastructure_type is always returned. If it's not in the URL, then
-	       *     the value is an empty array.
-	       */
-	      var keyAndValue = void 0;
-	      var queryObject = {};
-	      var parameters = url.slice(url.indexOf('?') + 1).split('&');
-	      for (var i = 0; i < parameters.length; i++) {
-	        keyAndValue = parameters[i].split('=');
-	        var key = keyAndValue[0];
-	
-	        // Try to convert the value to an integer
-	        var value = void 0;
-	        if (!isNaN(parseInt(keyAndValue[1]))) {
-	          value = parseInt(keyAndValue[1]);
-	        } else {
-	          // Converting the value to an integer results in NaN, so just use the (string) value
-	          value = keyAndValue[1];
-	        }
-	
-	        // If the key already exists in the query object, then push the new value
-	        // into that array. Otherwise, add a new key to the query object, with the
-	        // value being an array of the 'value' variable.
-	        if (queryObject.hasOwnProperty(key)) {
-	          queryObject[key].push(value);
-	        } else {
-	          queryObject[key] = [value];
-	        }
-	      }
-	
-	      // Delete the 'limit' and 'offset' keys, since we don't need them for the query
-	      delete queryObject['limit'];
-	      delete queryObject['offset'];
-	      // The queryObject will need to have an infrastructure_type key later, so if
-	      // it does not already exist, then add it here, and set it to an empty array.
-	      if (!queryObject.hasOwnProperty('infrastructure_type')) {
-	        queryObject['infrastructure_type'] = [];
-	      }
-	
-	      return queryObject;
-	    }
-	  }, {
-	    key: 'load',
-	    value: function load(url) {
-	      var _this2 = this;
-	
-	      this.query = this.getQueryFromURL(url);
-	      return function (dispatch) {
-	        dispatch();
-	        fetch(url).then(function (response) {
-	          return response.json();
-	        }).then(function (json) {
-	          json['query'] = _this2.query;
-	          _this2.update(json);
-	        }).catch(function (error) {
-	          _this2.failed(error);
-	        });
-	      };
-	    }
-	  }, {
-	    key: 'failed',
-	    value: function failed(error) {
-	      return error;
-	    }
-	  }]);
-	
-	  return SearchActionsBase;
-	}();
-	
-	var SearchActions = _alt2.default.createActions(SearchActionsBase);
-	exports.default = SearchActions;
 
 /***/ }),
 /* 175 */
@@ -11245,7 +11245,7 @@
 	
 	var _alt2 = _interopRequireDefault(_alt);
 	
-	var _SearchActions = __webpack_require__(174);
+	var _SearchActions = __webpack_require__(160);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -16444,7 +16444,7 @@
 	var ReactInstrumentation = __webpack_require__(57);
 	
 	var createMicrosoftUnsafeLocalFunction = __webpack_require__(397);
-	var setInnerHTML = __webpack_require__(169);
+	var setInnerHTML = __webpack_require__(170);
 	var setTextContent = __webpack_require__(452);
 	
 	function getNodeAfter(parentNode, node) {
@@ -18200,7 +18200,7 @@
 	});
 	exports.defaultFilterOptions = exports.defaultClearRenderer = exports.defaultArrowRenderer = exports.defaultMenuRenderer = exports.Option = exports.Value = exports.Creatable = exports.AsyncCreatable = exports.Async = undefined;
 	
-	var _Select = __webpack_require__(170);
+	var _Select = __webpack_require__(171);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
@@ -18343,7 +18343,7 @@
 		value: true
 	});
 	
-	var _classnames = __webpack_require__(161);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -19261,7 +19261,7 @@
 	
 	var _apisources = __webpack_require__(84);
 	
-	var _apiactions = __webpack_require__(160);
+	var _apiactions = __webpack_require__(161);
 	
 	var _apiactions2 = _interopRequireDefault(_apiactions);
 	
@@ -19411,7 +19411,7 @@
 	
 	var _apisources = __webpack_require__(84);
 	
-	var _apiactions = __webpack_require__(160);
+	var _apiactions = __webpack_require__(161);
 	
 	var _apiactions2 = _interopRequireDefault(_apiactions);
 	
@@ -19498,7 +19498,7 @@
 	
 	var _apisources = __webpack_require__(84);
 	
-	var _apiactions = __webpack_require__(160);
+	var _apiactions = __webpack_require__(161);
 	
 	var _apiactions2 = _interopRequireDefault(_apiactions);
 	
@@ -19524,7 +19524,7 @@
 	
 	var _apisources = __webpack_require__(84);
 	
-	var _apiactions = __webpack_require__(160);
+	var _apiactions = __webpack_require__(161);
 	
 	var _apiactions2 = _interopRequireDefault(_apiactions);
 	
@@ -22011,7 +22011,7 @@
 	var DOMLazyTree = __webpack_require__(113);
 	var DOMProperty = __webpack_require__(82);
 	var React = __webpack_require__(115);
-	var ReactBrowserEventEmitter = __webpack_require__(165);
+	var ReactBrowserEventEmitter = __webpack_require__(166);
 	var ReactCurrentOwner = __webpack_require__(62);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var ReactDOMContainerInfo = __webpack_require__(575);
@@ -22027,7 +22027,7 @@
 	var emptyObject = __webpack_require__(455);
 	var instantiateReactComponent = __webpack_require__(450);
 	var invariant = __webpack_require__(12);
-	var setInnerHTML = __webpack_require__(169);
+	var setInnerHTML = __webpack_require__(170);
 	var shouldUpdateReactComponent = __webpack_require__(402);
 	var warning = __webpack_require__(15);
 	
@@ -23108,8 +23108,8 @@
 	'use strict';
 	
 	var ExecutionEnvironment = __webpack_require__(41);
-	var escapeTextContentForBrowser = __webpack_require__(168);
-	var setInnerHTML = __webpack_require__(169);
+	var escapeTextContentForBrowser = __webpack_require__(169);
+	var setInnerHTML = __webpack_require__(170);
 	
 	/**
 	 * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -23523,7 +23523,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Select = __webpack_require__(170);
+	var _Select = __webpack_require__(171);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
@@ -23805,7 +23805,7 @@
 	
 	var _defaultMenuRenderer2 = _interopRequireDefault(_defaultMenuRenderer);
 	
-	var _Select = __webpack_require__(170);
+	var _Select = __webpack_require__(171);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
@@ -24175,7 +24175,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _classnames = __webpack_require__(161);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -24328,7 +24328,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _classnames = __webpack_require__(161);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -24565,7 +24565,7 @@
 	
 	var ReactNoopUpdateQueue = __webpack_require__(468);
 	
-	var canDefineProperty = __webpack_require__(171);
+	var canDefineProperty = __webpack_require__(172);
 	var emptyObject = __webpack_require__(661);
 	var invariant = __webpack_require__(117);
 	var lowPriorityWarning = __webpack_require__(408);
@@ -24741,7 +24741,7 @@
 	
 	var checkReactTypeSpec = __webpack_require__(656);
 	
-	var canDefineProperty = __webpack_require__(171);
+	var canDefineProperty = __webpack_require__(172);
 	var getIteratorFn = __webpack_require__(469);
 	var warning = __webpack_require__(118);
 	var lowPriorityWarning = __webpack_require__(408);
@@ -25294,7 +25294,7 @@
 	
 	var fn = _interopRequireWildcard(_functions);
 	
-	var _AltUtils = __webpack_require__(172);
+	var _AltUtils = __webpack_require__(173);
 	
 	var utils = _interopRequireWildcard(_AltUtils);
 	
@@ -25390,7 +25390,7 @@
 	
 	var store = _interopRequireWildcard(_store);
 	
-	var _AltUtils = __webpack_require__(172);
+	var _AltUtils = __webpack_require__(173);
 	
 	var utils = _interopRequireWildcard(_AltUtils);
 	
@@ -26171,7 +26171,7 @@
 	exports.createStoreFromObject = createStoreFromObject;
 	exports.createStoreFromClass = createStoreFromClass;
 	
-	var _AltUtils = __webpack_require__(172);
+	var _AltUtils = __webpack_require__(173);
 	
 	var utils = _interopRequireWildcard(_AltUtils);
 	
@@ -26834,7 +26834,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _SearchActions = __webpack_require__(174);
+	var _SearchActions = __webpack_require__(160);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -26977,7 +26977,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _mapboxGl = __webpack_require__(163);
+	var _mapboxGl = __webpack_require__(164);
 	
 	var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 	
@@ -27415,7 +27415,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _GeoStoreActions = __webpack_require__(173);
+	var _GeoStoreActions = __webpack_require__(174);
 	
 	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
@@ -27532,6 +27532,10 @@
 	
 	var _ResultsList2 = _interopRequireDefault(_ResultsList);
 	
+	var _SearchActions = __webpack_require__(160);
+	
+	var _SearchActions2 = _interopRequireDefault(_SearchActions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27570,6 +27574,7 @@
 	    _this.handleNextClick = _this.handleNextClick.bind(_this);
 	    _this.handlePreviousClick = _this.handlePreviousClick.bind(_this);
 	    _this.handleNextClick = _this.handleNextClick.bind(_this);
+	    _this.searchForCuratedResults = _this.searchForCuratedResults.bind(_this);
 	    return _this;
 	  }
 	
@@ -27641,6 +27646,20 @@
 	      return [currentPage, numPages];
 	    }
 	  }, {
+	    key: 'searchForCuratedResults',
+	    value: function searchForCuratedResults(e) {
+	      /* Get the curated project collection query, update parent's state, and search the backend. */
+	
+	      // Get the project collection query
+	      var query = {
+	        'curated_project_collections': [parseInt(e.target.id)],
+	        'infrastructure_type': []
+	        // Uopdate parent state for the curated_project_collections
+	      };this.props.updateParentQuery(query);
+	      // Query the backend (which will also update the map)
+	      _SearchActions2.default.search(query);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
@@ -27707,12 +27726,12 @@
 	                'This list of results illustrate some of the projects and strategies our team is following.',
 	                _react2.default.createElement(
 	                  'a',
-	                  null,
+	                  { id: 1, onClick: this.searchForCuratedResults },
 	                  'Projects funded by the World Bank'
 	                ),
 	                _react2.default.createElement(
 	                  'a',
-	                  null,
+	                  { id: 2, onClick: this.searchForCuratedResults },
 	                  'Projects in India that were announced in 2018'
 	                )
 	              )
@@ -27872,7 +27891,7 @@
 	
 	var _ErrorView2 = _interopRequireDefault(_ErrorView);
 	
-	var _SearchActions = __webpack_require__(174);
+	var _SearchActions = __webpack_require__(160);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -28470,7 +28489,8 @@
 	              nextURL: nextURL,
 	              onPreviousClick: SearchView.handleResultsNavClick,
 	              previousURL: previousURL,
-	              totalCount: this.state.total
+	              totalCount: this.state.total,
+	              updateParentQuery: this.handleQueryUpdate
 	            })
 	          ),
 	          _react2.default.createElement(
@@ -28674,7 +28694,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable no-console, class-methods-use-this */
 	
-	var _mapboxGl = __webpack_require__(163);
+	var _mapboxGl = __webpack_require__(164);
 	
 	var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 	
@@ -28690,7 +28710,7 @@
 	
 	var _GeoCentroidActions2 = _interopRequireDefault(_GeoCentroidActions);
 	
-	var _GeoStoreActions = __webpack_require__(173);
+	var _GeoStoreActions = __webpack_require__(174);
 	
 	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
@@ -29455,7 +29475,7 @@
 	
 	var _promiseQueue2 = _interopRequireDefault(_promiseQueue);
 	
-	var _GeoStoreActions = __webpack_require__(173);
+	var _GeoStoreActions = __webpack_require__(174);
 	
 	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
@@ -32578,7 +32598,7 @@
 	});
 	exports.default = calc;
 	
-	var _joinPrefixedValue = __webpack_require__(162);
+	var _joinPrefixedValue = __webpack_require__(163);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -32608,7 +32628,7 @@
 	});
 	exports.default = cursor;
 	
-	var _joinPrefixedValue = __webpack_require__(162);
+	var _joinPrefixedValue = __webpack_require__(163);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -32738,7 +32758,7 @@
 	});
 	exports.default = gradient;
 	
-	var _joinPrefixedValue = __webpack_require__(162);
+	var _joinPrefixedValue = __webpack_require__(163);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -32785,7 +32805,7 @@
 	});
 	exports.default = sizing;
 	
-	var _joinPrefixedValue = __webpack_require__(162);
+	var _joinPrefixedValue = __webpack_require__(163);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -35708,7 +35728,7 @@
 	
 	var EventPropagators = __webpack_require__(157);
 	var ReactDOMComponentTree = __webpack_require__(34);
-	var SyntheticMouseEvent = __webpack_require__(166);
+	var SyntheticMouseEvent = __webpack_require__(167);
 	
 	var eventTypes = {
 	  mouseEnter: {
@@ -37357,8 +37377,8 @@
 	var DOMProperty = __webpack_require__(82);
 	var DOMPropertyOperations = __webpack_require__(434);
 	var EventPluginHub = __webpack_require__(156);
-	var EventPluginRegistry = __webpack_require__(164);
-	var ReactBrowserEventEmitter = __webpack_require__(165);
+	var EventPluginRegistry = __webpack_require__(165);
+	var ReactBrowserEventEmitter = __webpack_require__(166);
 	var ReactDOMComponentFlags = __webpack_require__(435);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var ReactDOMInput = __webpack_require__(579);
@@ -37370,7 +37390,7 @@
 	var ReactServerRenderingTransaction = __webpack_require__(603);
 	
 	var emptyFunction = __webpack_require__(81);
-	var escapeTextContentForBrowser = __webpack_require__(168);
+	var escapeTextContentForBrowser = __webpack_require__(169);
 	var invariant = __webpack_require__(12);
 	var isEventSupported = __webpack_require__(401);
 	var shallowEqual = __webpack_require__(404);
@@ -39294,7 +39314,7 @@
 	var DOMLazyTree = __webpack_require__(113);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	
-	var escapeTextContentForBrowser = __webpack_require__(168);
+	var escapeTextContentForBrowser = __webpack_require__(169);
 	var invariant = __webpack_require__(12);
 	var validateDOMNesting = __webpack_require__(403);
 	
@@ -39755,7 +39775,7 @@
 	'use strict';
 	
 	var DOMProperty = __webpack_require__(82);
-	var EventPluginRegistry = __webpack_require__(164);
+	var EventPluginRegistry = __webpack_require__(165);
 	var ReactComponentTreeHook = __webpack_require__(56);
 	
 	var warning = __webpack_require__(15);
@@ -40236,7 +40256,7 @@
 	var _assign = __webpack_require__(28);
 	
 	var ReactUpdates = __webpack_require__(61);
-	var Transaction = __webpack_require__(167);
+	var Transaction = __webpack_require__(168);
 	
 	var emptyFunction = __webpack_require__(81);
 	
@@ -40645,7 +40665,7 @@
 	var EventPluginUtils = __webpack_require__(391);
 	var ReactComponentEnvironment = __webpack_require__(394);
 	var ReactEmptyComponent = __webpack_require__(437);
-	var ReactBrowserEventEmitter = __webpack_require__(165);
+	var ReactBrowserEventEmitter = __webpack_require__(166);
 	var ReactHostComponent = __webpack_require__(439);
 	var ReactUpdates = __webpack_require__(61);
 	
@@ -41345,10 +41365,10 @@
 	
 	var CallbackQueue = __webpack_require__(433);
 	var PooledClass = __webpack_require__(111);
-	var ReactBrowserEventEmitter = __webpack_require__(165);
+	var ReactBrowserEventEmitter = __webpack_require__(166);
 	var ReactInputSelection = __webpack_require__(440);
 	var ReactInstrumentation = __webpack_require__(57);
-	var Transaction = __webpack_require__(167);
+	var Transaction = __webpack_require__(168);
 	var ReactUpdateQueue = __webpack_require__(396);
 	
 	/**
@@ -41616,7 +41636,7 @@
 	var _assign = __webpack_require__(28);
 	
 	var PooledClass = __webpack_require__(111);
-	var Transaction = __webpack_require__(167);
+	var Transaction = __webpack_require__(168);
 	var ReactInstrumentation = __webpack_require__(57);
 	var ReactServerUpdateQueue = __webpack_require__(604);
 	
@@ -42369,7 +42389,7 @@
 	var SyntheticEvent = __webpack_require__(80);
 	var SyntheticFocusEvent = __webpack_require__(613);
 	var SyntheticKeyboardEvent = __webpack_require__(615);
-	var SyntheticMouseEvent = __webpack_require__(166);
+	var SyntheticMouseEvent = __webpack_require__(167);
 	var SyntheticDragEvent = __webpack_require__(612);
 	var SyntheticTouchEvent = __webpack_require__(616);
 	var SyntheticTransitionEvent = __webpack_require__(617);
@@ -42706,7 +42726,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(166);
+	var SyntheticMouseEvent = __webpack_require__(167);
 	
 	/**
 	 * @interface DragEvent
@@ -42995,7 +43015,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(166);
+	var SyntheticMouseEvent = __webpack_require__(167);
 	
 	/**
 	 * @interface WheelEvent
@@ -43744,7 +43764,7 @@
 	
 	'use strict';
 	
-	var escapeTextContentForBrowser = __webpack_require__(168);
+	var escapeTextContentForBrowser = __webpack_require__(169);
 	
 	/**
 	 * Escapes attribute value to prevent scripting attacks.
@@ -44776,7 +44796,7 @@
 	
 	var _Creatable2 = _interopRequireDefault(_Creatable);
 	
-	var _Select = __webpack_require__(170);
+	var _Select = __webpack_require__(171);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	

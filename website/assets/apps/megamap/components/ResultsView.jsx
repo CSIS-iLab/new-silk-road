@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import ResultsList from './ResultsList';
-
+import SearchActions from '../actions/SearchActions';
 
 
 const resultsNavStyle = {
@@ -31,6 +31,7 @@ class ResultsView extends Component {
     this.handleNextClick = this.handleNextClick.bind(this);
     this.handlePreviousClick = this.handlePreviousClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
+    this.searchForCuratedResults = this.searchForCuratedResults.bind(this);
   }
 
   componentWillUpdate() {
@@ -96,6 +97,20 @@ class ResultsView extends Component {
     return [currentPage, numPages];
   }
 
+  searchForCuratedResults (e) {
+    /* Get the curated project collection query, update parent's state, and search the backend. */
+
+    // Get the project collection query
+    let query = {
+      'curated_project_collections': [parseInt(e.target.id)],
+      'infrastructure_type': [],
+    }
+    // Uopdate parent state for the curated_project_collections
+    this.props.updateParentQuery(query);
+    // Query the backend (which will also update the map)
+    SearchActions.search(query);
+  }
+
   render() {
     const noResults = this.props.results.length === 0;
     let currentPage;
@@ -142,8 +157,8 @@ class ResultsView extends Component {
               <h2>Curated Results</h2>
               <p>
                 This list of results illustrate some of the projects and strategies our team is following.
-                <a>Projects funded by the World Bank</a>
-                <a>Projects in India that were announced in 2018</a>
+                <a id={1} onClick={this.searchForCuratedResults}>Projects funded by the World Bank</a>
+                <a id={2} onClick={this.searchForCuratedResults}>Projects in India that were announced in 2018</a>
               </p>
             </section>
           </div>
