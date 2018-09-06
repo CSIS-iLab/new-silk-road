@@ -26,3 +26,10 @@ class CountryFactory(factory.django.DjangoModelFactory):
     slug = factory.Sequence(lambda n: 'Country-%d' % n)
     numeric = factory.Sequence(lambda n: n)
     alpha_3 = factory.Sequence(lambda n: str(n))
+
+
+class RegionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'locations.Region'
+
+    name = factory.Sequence(lambda n: 'Region %d' % n)

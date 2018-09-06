@@ -84,7 +84,7 @@ class ProjectFundingFactory(factory.django.DjangoModelFactory):
         model = 'infrastructure.ProjectFunding'
 
     project = factory.SubFactory(ProjectFactory)
-    amount = random.randint(0, 1000)
+    amount = random.randint(0, 1000000)
     currency = random.choice(CURRENCY_CHOICES)[0]
 
 
