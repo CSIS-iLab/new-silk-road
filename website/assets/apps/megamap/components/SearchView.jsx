@@ -10,6 +10,7 @@ import RegionStore from '../stores/RegionStore';
 import RegionActions from '../actions/RegionActions';
 import CountryStore from '../stores/CountryStore';
 import CountryActions from '../actions/CountryActions';
+import GeoCentroidStore from '../stores/GeoCentroidStore';
 import PrincipalAgentStore from '../stores/PrincipalAgentStore';
 import PrincipalAgentActions from '../actions/PrincipalAgentActions';
 import CurrencyStore from '../stores/CurrencyStore';
@@ -97,6 +98,16 @@ export default class SearchView extends Component {
 
   componentDidMount() {
     SearchStore.listen(this.onSearchResults);
+
+    // If the current state has a total of 0, then get the total from the call
+    // to the GeoCentroidSource
+    GeoCentroidStore.listen(
+      store => this.setState((prevState) => {
+        if (prevState.total === null && store.geo !== null) {
+          return {'total': store.geo.features.length};
+        }
+      }),
+    )
 
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {

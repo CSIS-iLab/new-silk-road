@@ -111,6 +111,9 @@ class ResultsView extends Component {
 
     return (
       <div className="resultsView" style={this.props.style}>
+        <h2 className="summaryInfo">
+          {this.props.totalCount} Projects
+        </h2>
         <div
           className="scrollWrap"
           ref={(el) => { this.scrollWrap = el; }}

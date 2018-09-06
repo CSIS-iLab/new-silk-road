@@ -448,6 +448,13 @@ $scroll-max-height: $results-view-max-height - 46;
         position: relative;
     }
 
+    /* For the summary of the results */
+    .summaryInfo {
+        font-size: x-large;
+        padding: 24px 24px 0;
+        color: $green-2018;
+    }
+
     /* for the two links in the Curated results section. */
     .scrollContent {
         >section {
