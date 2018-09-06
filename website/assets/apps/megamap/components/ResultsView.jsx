@@ -49,8 +49,66 @@ class ResultsView extends Component {
     }
   }
 
+  getPageNumbersFromURL(previousURL, nextURL, totalNumResults) {
+    /* Return current page number & total number of pages based on previousURL and nextURL */
+    let currentPage;
+    let numPages;
+    let keyAndValue;
+
+    if (nextURL !== null) {
+      // There is a nextURL, so use it to find the currentPage and numPages
+      let numLastResult;
+      let pageSize;
+      const parameters = this.props.nextURL.slice(this.props.nextURL.indexOf('?') + 1).split('&');
+      for (let i = 0; i < parameters.length; i++) {
+        keyAndValue = parameters[i].split('=');
+        const key = keyAndValue[0];
+        const value = keyAndValue[1];
+        if (key === 'offset') {
+          numLastResult = parseInt(value);
+        }
+        if (key === 'limit') {
+          pageSize = parseInt(value);
+        }
+      }
+      currentPage = Math.ceil(numLastResult / pageSize);
+      numPages = Math.ceil(totalNumResults / pageSize);
+    } else if (previousURL !== null) {
+      // There is no nextURL, but there is a previousURL, so this must be the last page
+      let pageSize;
+      const parameters = this.props.previousURL.slice(this.props.previousURL.indexOf('?') + 1).split('&');
+      for (let i = 0; i < parameters.length; i++) {
+        keyAndValue = parameters[i].split('=');
+        const key = keyAndValue[0];
+        const value = keyAndValue[1];
+        if (key === 'limit') {
+          pageSize = parseInt(value);
+        }
+      }
+      numPages = Math.ceil(totalNumResults / pageSize);
+      currentPage = numPages;
+    } else {
+      // There is no previousURL or nextURL. This must be page 1 of 1
+      currentPage = 1;
+      numPages = 1;
+    }
+
+    return [currentPage, numPages];
+  }
+
   render() {
     const noResults = this.props.results.length === 0;
+    let currentPage;
+    let numPages;
+
+    if (!noResults) {
+      const pageNumbers = this.getPageNumbersFromURL(
+        this.props.previousURL, this.props.nextURL, this.props.totalCount
+      );
+      currentPage = pageNumbers[0];
+      numPages = pageNumbers[1];
+    }
+
     return (
       <div className="resultsView" style={this.props.style}>
         <div
@@ -104,7 +162,7 @@ class ResultsView extends Component {
             ></button>
           </div>
           <div className="pagination">
-            Page 1 of 9
+            Page {currentPage} of {numPages}
           </div>
           <div className="buttonWrap">
             <button

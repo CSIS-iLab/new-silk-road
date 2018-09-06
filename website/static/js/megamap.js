@@ -10954,15 +10954,64 @@
 	      };
 	    }
 	  }, {
+	    key: 'getQueryFromURL',
+	    value: function getQueryFromURL(url) {
+	      /* Take a URL (for an API call), and construct a query Object from it.
+	       * Notes:
+	       *   - Each parameter becomes its own key
+	       *   - Each value is an array
+	       *   - infrastructure_type is always returned. If it's not in the URL, then
+	       *     the value is an empty array.
+	       */
+	      var keyAndValue = void 0;
+	      var queryObject = {};
+	      var parameters = url.slice(url.indexOf('?') + 1).split('&');
+	      for (var i = 0; i < parameters.length; i++) {
+	        keyAndValue = parameters[i].split('=');
+	        var key = keyAndValue[0];
+	
+	        // Try to convert the value to an integer
+	        var value = void 0;
+	        if (!isNaN(parseInt(keyAndValue[1]))) {
+	          value = parseInt(keyAndValue[1]);
+	        } else {
+	          // Converting the value to an integer results in NaN, so just use the (string) value
+	          value = keyAndValue[1];
+	        }
+	
+	        // If the key already exists in the query object, then push the new value
+	        // into that array. Otherwise, add a new key to the query object, with the
+	        // value being an array of the 'value' variable.
+	        if (queryObject.hasOwnProperty(key)) {
+	          queryObject[key].push(value);
+	        } else {
+	          queryObject[key] = [value];
+	        }
+	      }
+	
+	      // Delete the 'limit' and 'offset' keys, since we don't need them for the query
+	      delete queryObject['limit'];
+	      delete queryObject['offset'];
+	      // The queryObject will need to have an infrastructure_type key later, so if
+	      // it does not already exist, then add it here, and set it to an empty array.
+	      if (!queryObject.hasOwnProperty('infrastructure_type')) {
+	        queryObject['infrastructure_type'] = [];
+	      }
+	
+	      return queryObject;
+	    }
+	  }, {
 	    key: 'load',
 	    value: function load(url) {
 	      var _this2 = this;
 	
+	      this.query = this.getQueryFromURL(url);
 	      return function (dispatch) {
 	        dispatch();
 	        fetch(url).then(function (response) {
 	          return response.json();
 	        }).then(function (json) {
+	          json['query'] = _this2.query;
 	          _this2.update(json);
 	        }).catch(function (error) {
 	          _this2.failed(error);
@@ -27544,11 +27593,68 @@
 	      }
 	    }
 	  }, {
+	    key: 'getPageNumbersFromURL',
+	    value: function getPageNumbersFromURL(previousURL, nextURL, totalNumResults) {
+	      /* Return current page number & total number of pages based on previousURL and nextURL */
+	      var currentPage = void 0;
+	      var numPages = void 0;
+	      var keyAndValue = void 0;
+	
+	      if (nextURL !== null) {
+	        // There is a nextURL, so use it to find the currentPage and numPages
+	        var numLastResult = void 0;
+	        var pageSize = void 0;
+	        var parameters = this.props.nextURL.slice(this.props.nextURL.indexOf('?') + 1).split('&');
+	        for (var i = 0; i < parameters.length; i++) {
+	          keyAndValue = parameters[i].split('=');
+	          var key = keyAndValue[0];
+	          var value = keyAndValue[1];
+	          if (key === 'offset') {
+	            numLastResult = parseInt(value);
+	          }
+	          if (key === 'limit') {
+	            pageSize = parseInt(value);
+	          }
+	        }
+	        currentPage = Math.ceil(numLastResult / pageSize);
+	        numPages = Math.ceil(totalNumResults / pageSize);
+	      } else if (previousURL !== null) {
+	        // There is no nextURL, but there is a previousURL, so this must be the last page
+	        var _pageSize = void 0;
+	        var _parameters = this.props.previousURL.slice(this.props.previousURL.indexOf('?') + 1).split('&');
+	        for (var _i = 0; _i < _parameters.length; _i++) {
+	          keyAndValue = _parameters[_i].split('=');
+	          var _key = keyAndValue[0];
+	          var _value = keyAndValue[1];
+	          if (_key === 'limit') {
+	            _pageSize = parseInt(_value);
+	          }
+	        }
+	        numPages = Math.ceil(totalNumResults / _pageSize);
+	        currentPage = numPages;
+	      } else {
+	        // There is no previousURL or nextURL. This must be page 1 of 1
+	        currentPage = 1;
+	        numPages = 1;
+	      }
+	
+	      return [currentPage, numPages];
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
 	      var noResults = this.props.results.length === 0;
+	      var currentPage = void 0;
+	      var numPages = void 0;
+	
+	      if (!noResults) {
+	        var pageNumbers = this.getPageNumbersFromURL(this.props.previousURL, this.props.nextURL, this.props.totalCount);
+	        currentPage = pageNumbers[0];
+	        numPages = pageNumbers[1];
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'resultsView', style: this.props.style },
@@ -27631,7 +27737,10 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'pagination' },
-	            'Page 1 of 9'
+	            'Page ',
+	            currentPage,
+	            ' of ',
+	            numPages
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -28360,7 +28469,8 @@
 	              onNextClick: SearchView.handleResultsNavClick,
 	              nextURL: nextURL,
 	              onPreviousClick: SearchView.handleResultsNavClick,
-	              previousURL: previousURL
+	              previousURL: previousURL,
+	              totalCount: this.state.total
 	            })
 	          ),
 	          _react2.default.createElement(
