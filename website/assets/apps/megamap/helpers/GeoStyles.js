@@ -79,6 +79,18 @@ export default class GeoStyles {
           },
         }),
       },
+      'power-plant': {
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': {
+              stops: [
+                [0, 'Powerplant'],
+                [minDetailZoom, 'PowerplantIcon'],
+              ],
+            },
+          },
+        }),
+      },
       seaport: {
         points: objectMerge(pointStyle, {
           layout: {
