@@ -42,6 +42,7 @@ iso3166==0.8
 iso4217==1.5.20180101
 jmespath==0.9.3
 Markdown==2.6.11
+openpyxl==2.5.3
 Pillow==5.1.0
 psycopg2-binary==2.7.4
 pylibmc==1.5.2

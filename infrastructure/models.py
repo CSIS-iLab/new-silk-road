@@ -459,13 +459,13 @@ class PowerPlant(Publishable):
 
     grid_connected = models.NullBooleanField('Grid connected?')
 
-    latitude = models.DecimalField(
-        max_digits=9, decimal_places=6,
-        blank=True, null=True
-    )
-    longitude = models.DecimalField(
-        max_digits=9, decimal_places=6,
-        blank=True, null=True
+    # Geodata
+    geo = models.ForeignKey(
+        'locations.GeometryStore',
+        models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='power_plants'
     )
 
     # Organization relations
