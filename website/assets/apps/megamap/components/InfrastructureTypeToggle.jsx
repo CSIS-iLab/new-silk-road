@@ -92,8 +92,12 @@ export default class InfrastructureTypeToggle extends Component {
       }
     }
     return (
-      <div id="infrastructureToggle">
-        {infrastructureTypeIcons}
+      // <div id="infrastructureToggle" onMouseEnter={this.makeIconDescriptionsVisible} onMouseLeave={this.hideIconDescriptions}>
+      <div id="infrastructureToggleContainer">
+        <div id="infrastructureToggleTitle">INFRASTRUCTURE FILTER</div>
+        <div id="infrastructureToggle">
+          {infrastructureTypeIcons}
+        </div>
       </div>
     )
   }

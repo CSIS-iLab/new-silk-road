@@ -264,14 +264,30 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 
+#infrastructureToggleContainer {
+    position: absolute;
+}
+
+#infrastructureToggleTitle {
+    //position: absolute;
+    position: relative;
+    top: 28px;
+    left: 290px;
+    background-color: $dark-night;
+    color: $med-gray;
+    padding: 8px;
+}
+
 #infrastructureToggle {
     background: #fff;
     position: absolute;
     z-index: 10;
-    right: -50px;
+    //right: -50px;
+    left: 290px;
     top: 70px;
+    width: 100%;
 
-    span {
+    span span {
         display: block;
         height: 50px;
         width: 50px;
@@ -300,6 +316,17 @@ $scroll-max-height: $results-view-max-height - 46;
     span.selected {
         background-color: $warm-grey;
     }
+}
+
+.infrastructureIconContainer {
+    display: flex;
+}
+
+.infrastructureIconLabel {
+    background-color: white;
+    padding: 12px;
+    height: 50px;
+    width: max-content;
 }
 
 .app-wrap {

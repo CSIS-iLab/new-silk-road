@@ -26843,9 +26843,18 @@
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'span',
-	        { className: this.getSpanColorClass() + ' ' + this.state.selected, onClick: this.handleClick.bind(this) },
-	        _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText() })
+	        'div',
+	        { className: 'infrastructureIconContainer', onClick: this.handleClick.bind(this) },
+	        _react2.default.createElement(
+	          'span',
+	          { className: this.getSpanColorClass() + ' ' + this.state.selected },
+	          _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText() })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'infrastructureIconLabel' },
+	          this.label
+	        )
 	      );
 	    }
 	  }]);
@@ -26989,10 +26998,22 @@
 	          infrastructureTypeIcons.push(_react2.default.createElement(_InfrastructureIcon2.default, { returnIdOnClick: this.handleClickIcon, properties: this.props.infrastructureTypes[i], key: this.props.infrastructureTypes[i].value }));
 	        }
 	      }
-	      return _react2.default.createElement(
-	        'div',
-	        { id: 'infrastructureToggle' },
-	        infrastructureTypeIcons
+	      return (
+	        // <div id="infrastructureToggle" onMouseEnter={this.makeIconDescriptionsVisible} onMouseLeave={this.hideIconDescriptions}>
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'infrastructureToggleContainer' },
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'infrastructureToggleTitle' },
+	            'INFRASTRUCTURE FILTER'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'infrastructureToggle' },
+	            infrastructureTypeIcons
+	          )
+	        )
 	      );
 	    }
 	  }]);

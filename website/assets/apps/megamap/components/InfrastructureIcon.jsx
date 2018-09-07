@@ -30,9 +30,12 @@ export default class InfrastructureIcon extends Component {
 
   render() {
     return (
-      <span className={`${this.getSpanColorClass()} ${this.state.selected}`} onClick={this.handleClick.bind(this)} >
-        <span width={40} height={40} className={`${this.getSpanIconClass()}`} alt={this.getAltText()}></span>
-      </span>
+      <div className="infrastructureIconContainer" onClick={this.handleClick.bind(this)}>
+        <span className={`${this.getSpanColorClass()} ${this.state.selected}`} >
+          <span width={40} height={40} className={`${this.getSpanIconClass()}`} alt={this.getAltText()}></span>
+        </span>
+        <div className="infrastructureIconLabel">{this.label}</div>
+      </div>
     )
   }
 }
