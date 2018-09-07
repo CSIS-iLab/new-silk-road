@@ -26930,7 +26930,9 @@
 	    value: function handleClickIcon(infrastructureTypeId) {
 	      var _this2 = this;
 	
-	      /* Take the infrastructureTypeId and either add it to, or subtract it from, the state */
+	      /* Take the infrastructureTypeId and either add it to, or subtract it from,
+	       * the state. Then, query the backend with the new query parameters.
+	       */
 	
 	      // A copy of the current state
 	      var selectedInfrastructureTypes = [].concat(_toConsumableArray(this.state.infrastructure_type));
@@ -26958,10 +26960,7 @@
 	        }
 	      }
 	
-	      // get any other query parameters from SearceStore if they happen to exist
-	      // and put into state before search
-	      // console.log(this.props)
-	
+	      // Get the currect query parameters
 	      var storeObj = this.props.theState.query;
 	      var queryParams = {};
 	      if (storeObj) {
@@ -26972,8 +26971,9 @@
 	        });
 	      }
 	      var options = Object.assign({}, queryParams, { infrastructure_type: selectedInfrastructureTypes });
+	      // Set the state, and query the backend with the query parameters we just constructed
 	      this.setState(options, function () {
-	        _this2.props.infrastructureOnClick(_this2.state), _SearchActions2.default.search(_this2.state);
+	        _this2.props.infrastructureOnClick(options), _SearchActions2.default.search(options);
 	      });
 	    }
 	  }, {

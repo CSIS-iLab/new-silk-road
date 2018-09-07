@@ -28,7 +28,9 @@ export default class InfrastructureTypeToggle extends Component {
   }
 
   handleClickIcon(infrastructureTypeId){
-    /* Take the infrastructureTypeId and either add it to, or subtract it from, the state */
+    /* Take the infrastructureTypeId and either add it to, or subtract it from,
+     * the state. Then, query the backend with the new query parameters.
+     */
 
     // A copy of the current state
     var selectedInfrastructureTypes = [...this.state.infrastructure_type];
@@ -56,10 +58,7 @@ export default class InfrastructureTypeToggle extends Component {
       }
     }
 
-    // get any other query parameters from SearceStore if they happen to exist
-    // and put into state before search
-    // console.log(this.props)
-
+    // Get the currect query parameters
     const storeObj = this.props.theState.query;
     const queryParams = {};
     if (storeObj) {
@@ -74,9 +73,10 @@ export default class InfrastructureTypeToggle extends Component {
           queryParams,
           { infrastructure_type: selectedInfrastructureTypes },
         );
+    // Set the state, and query the backend with the query parameters we just constructed
     this.setState(options, () => {
-      this.props.infrastructureOnClick(this.state),
-      SearchActions.search(this.state)
+      this.props.infrastructureOnClick(options),
+      SearchActions.search(options)
     });
   }
 
