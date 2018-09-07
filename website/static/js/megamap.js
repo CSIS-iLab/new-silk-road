@@ -11129,6 +11129,15 @@
 	          }
 	        })
 	      },
+	      'power-plant': {
+	        points: (0, _objectMerge2.default)(pointStyle, {
+	          layout: {
+	            'icon-image': {
+	              stops: [[0, 'Powerplant'], [_mapConstants.minDetailZoom, 'PowerplantIcon']]
+	            }
+	          }
+	        })
+	      },
 	      seaport: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
