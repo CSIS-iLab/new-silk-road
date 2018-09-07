@@ -11101,7 +11101,7 @@
 	          }
 	        }
 	      },
-	      rail: {
+	      Rail: {
 	        lines: (0, _objectMerge2.default)(lineStyle, {
 	          paint: {
 	            'line-color': '#c34242'
@@ -11115,7 +11115,7 @@
 	          }
 	        })
 	      },
-	      road: {
+	      Road: {
 	        lines: (0, _objectMerge2.default)(lineStyle, {
 	          paint: {
 	            'line-color': '#f68b3f'
@@ -11129,7 +11129,7 @@
 	          }
 	        })
 	      },
-	      'power-plant': {
+	      'Power Plant': {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
@@ -11138,7 +11138,7 @@
 	          }
 	        })
 	      },
-	      seaport: {
+	      Seaport: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
@@ -11161,7 +11161,7 @@
 	          }
 	        })
 	      },
-	      dryport: {
+	      Dryport: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
@@ -11179,7 +11179,7 @@
 	          }
 	        })
 	      },
-	      intermodal: {
+	      Intermodal: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {

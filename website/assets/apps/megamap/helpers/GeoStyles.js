@@ -45,7 +45,7 @@ export default class GeoStyles {
           },
         },
       },
-      rail: {
+      Rail: {
         lines: objectMerge(lineStyle, {
           paint: {
             'line-color': '#c34242',
@@ -62,7 +62,7 @@ export default class GeoStyles {
           },
         }),
       },
-      road: {
+      Road: {
         lines: objectMerge(lineStyle, {
           paint: {
             'line-color': '#f68b3f',
@@ -79,7 +79,7 @@ export default class GeoStyles {
           },
         }),
       },
-      'power-plant': {
+      'Power Plant': {
         points: objectMerge(pointStyle, {
           layout: {
             'icon-image': {
@@ -91,7 +91,7 @@ export default class GeoStyles {
           },
         }),
       },
-      seaport: {
+      Seaport: {
         points: objectMerge(pointStyle, {
           layout: {
             'icon-image': {
@@ -117,7 +117,7 @@ export default class GeoStyles {
           },
         }),
       },
-      dryport: {
+      Dryport: {
         points: objectMerge(pointStyle, {
           layout: {
             'icon-image': {
@@ -141,7 +141,7 @@ export default class GeoStyles {
           },
         }),
       },
-      intermodal: {
+      Intermodal: {
         points: objectMerge(pointStyle, {
           layout: {
             'icon-image': {
