@@ -27976,15 +27976,15 @@
 	
 	      _SearchStore2.default.listen(this.onSearchResults);
 	
-	      // If the current state has a total of 0, then get the total from the call
-	      // to the GeoCentroidSource
-	      _GeoCentroidStore2.default.listen(function (store) {
-	        return _this2.setState(function (prevState) {
-	          if (prevState.total === null && store.geo !== null) {
-	            return { 'total': store.geo.features.length };
-	          }
-	        });
-	      });
+	      // // If the current state has a total of 0, then get the total from the call
+	      // // to the GeoCentroidSource
+	      // GeoCentroidStore.listen(
+	      //   store => this.setState((prevState) => {
+	      //     if (prevState.total === null && store.geo !== null) {
+	      //       return {'total': store.geo.features.length + '+'};
+	      //     }
+	      //   }),
+	      // )
 	
 	      _InfrastructureTypeStore2.default.listen(function (store) {
 	        return _this2.setState(function (prevState) {

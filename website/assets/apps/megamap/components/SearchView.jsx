@@ -99,16 +99,6 @@ export default class SearchView extends Component {
   componentDidMount() {
     SearchStore.listen(this.onSearchResults);
 
-    // If the current state has a total of 0, then get the total from the call
-    // to the GeoCentroidSource
-    GeoCentroidStore.listen(
-      store => this.setState((prevState) => {
-        if (prevState.total === null && store.geo !== null) {
-          return {'total': store.geo.features.length};
-        }
-      }),
-    )
-
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {
         const options = Object.assign(
