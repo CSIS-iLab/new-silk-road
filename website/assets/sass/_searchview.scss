@@ -137,14 +137,12 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 
     section {
-        margin-top: $tiny-spacing;
         padding-bottom: $tiny-spacing;
-        border-bottom: 2px solid $pale-grey;
         padding: $small-spacing;
+        padding-top: 0;
 
         h4 {
             display: inline-block;
-            // @include flex(1 0 auto);
             color: $greyish-teal;
             font-size: $search-text-size;
             font-weight: bold;
@@ -159,6 +157,9 @@ $scroll-max-height: $results-view-max-height - 46;
 
     section.projectResult {
         border: none;
+        h1 {
+            padding-bottom: $small-spacing;
+        }
     }
 
     .sectionRow {
@@ -362,24 +363,24 @@ $scroll-max-height: $results-view-max-height - 46;
 .buttonBar {
     @include display(flex);
     @include justify-content(space-between);
+    padding: $small-spacing;
 }
 
 .buttonBar > button {
     font-size: $compact-text-size;
     padding: 6px 3px;
-    max-width: 49%;
-    @include flex(0 1 49%);
+    @include flex(0 1 70%);
     @include order(0);
-    background-color: lighten($pale-green, 7%);
-    color: $gravel-grey;
+    background-color: $green;
+    color: white;
 -webkit-transition: background-color .2s ease-in-out;
             transition: background-color .2s ease-in-out;
                    &:disabled {
         display: none;
     }
     &:hover{
-        background-color: darken($pale-green, 7%);
-        color: black;
+        background-color: $pale-grey;
+        color: $green;
     }
 }
 
@@ -539,8 +540,6 @@ $scroll-max-height: $results-view-max-height - 46;
     h2 {
         font-family: $sans-font-family;
         font-size: $search-text-size;
-        font-weight: normal;
-        font-style: italic;
         margin-bottom: 3px;
         margin-left: 0px;
     }

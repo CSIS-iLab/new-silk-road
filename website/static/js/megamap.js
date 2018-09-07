@@ -27359,15 +27359,18 @@
 	      project.name
 	    ),
 	    _react2.default.createElement(
-	      "p",
+	      "section",
 	      null,
 	      _react2.default.createElement(
-	        "em",
+	        "strong",
 	        null,
-	        "Type:"
+	        "TYPE:"
 	      ),
-	      " ",
-	      project.infrastructure_type
+	      _react2.default.createElement(
+	        "div",
+	        null,
+	        project.infrastructure_type
+	      )
 	    ),
 	    listItems.length > 0 && _react2.default.createElement(
 	      "section",
@@ -27375,7 +27378,7 @@
 	      _react2.default.createElement(
 	        "h2",
 	        null,
-	        "Initiatives:"
+	        "INITIATIVES:"
 	      ),
 	      _react2.default.createElement(
 	        "ul",
@@ -27459,20 +27462,10 @@
 	                'button',
 	                {
 	                  type: 'button',
-	                  onClick: ResultsList.handleMapButtonClick,
-	                  value: geoid,
-	                  disabled: geoid == null
-	                },
-	                'View on Map'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                {
-	                  type: 'button',
 	                  onClick: ResultsList.handleDetailClick,
 	                  value: result.page_url
 	                },
-	                'Open detail page'
+	                'OPEN PROJECT PAGE'
 	              )
 	            )
 	          );
