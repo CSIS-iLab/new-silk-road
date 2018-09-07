@@ -10,6 +10,7 @@ import RegionStore from '../stores/RegionStore';
 import RegionActions from '../actions/RegionActions';
 import CountryStore from '../stores/CountryStore';
 import CountryActions from '../actions/CountryActions';
+import GeoCentroidStore from '../stores/GeoCentroidStore';
 import PrincipalAgentStore from '../stores/PrincipalAgentStore';
 import PrincipalAgentActions from '../actions/PrincipalAgentActions';
 import CurrencyStore from '../stores/CurrencyStore';

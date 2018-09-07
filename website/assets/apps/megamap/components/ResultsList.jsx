@@ -28,15 +28,9 @@ class ResultsList extends Component {
                 <div className="buttonBar">
                   <button
                     type="button"
-                    onClick={ResultsList.handleMapButtonClick}
-                    value={geoid}
-                    disabled={geoid == null}
-                  >View on Map</button>
-                  <button
-                    type="button"
                     onClick={ResultsList.handleDetailClick}
                     value={result.page_url}
-                  >Open detail page</button>
+                  >OPEN PROJECT PAGE</button>
                 </div>
               </li>
             );
