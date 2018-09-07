@@ -141,6 +141,7 @@ class CuratedProjectCollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CuratedProjectCollection
         fields = (
+            'id',
             'name',
             'projects',
         )

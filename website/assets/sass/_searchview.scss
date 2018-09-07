@@ -462,6 +462,9 @@ $scroll-max-height: $results-view-max-height - 46;
             a {
                 display: block;
                 padding-top: $small-spacing;
+                &:hover {
+                    cursor: pointer;
+                }
             }
         }
     }

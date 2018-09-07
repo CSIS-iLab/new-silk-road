@@ -7,10 +7,11 @@ import InfrastructureTypeToggle from './InfrastructureTypeToggle';
 import StatusStore from '../stores/StatusStore';
 import StatusActions from '../actions/StatusActions';
 import RegionStore from '../stores/RegionStore';
+import CuratedProjectCollectionStore from '../stores/CuratedProjectCollectionStore';
 import RegionActions from '../actions/RegionActions';
 import CountryStore from '../stores/CountryStore';
 import CountryActions from '../actions/CountryActions';
-import GeoCentroidStore from '../stores/GeoCentroidStore';
+import CuratedProjectCollectionActions from '../actions/CuratedProjectCollectionActions';
 import PrincipalAgentStore from '../stores/PrincipalAgentStore';
 import PrincipalAgentActions from '../actions/PrincipalAgentActions';
 import CurrencyStore from '../stores/CurrencyStore';
@@ -20,6 +21,7 @@ import CurrencyRangeSelect from './CurrencyRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import SearchActions from '../actions/SearchActions';
+import {CuratedProjectCollectionSource} from '../sources/apisources';
 import SearchStore from '../stores/SearchStore';
 import {
   nameIdMapper,
@@ -134,6 +136,18 @@ export default class SearchView extends Component {
       }),
     );
     RegionActions.fetch();
+
+    CuratedProjectCollectionStore.listen(
+      store => this.setState((prevState) => {
+        const options = Object.assign(
+          {},
+          prevState.options,
+          { curated_project_collections: nameIdMapper(store.results) },
+        );
+        return { options };
+      }),
+    );
+    CuratedProjectCollectionActions.fetch();
 
     CountryStore.listen(
       store => this.setState((prevState) => {
@@ -265,6 +279,8 @@ export default class SearchView extends Component {
     const { results, nextURL, previousURL, error, isSearching, searchCount } = this.state;
     const errorView = error ?
       (<ErrorView errorMessage="Sorry, the application encountered an error." />) : null;
+    const curatedProjectCollections = this.state.options.curated_project_collections;
+
     return (
       <div className="searchView">
         <InfrastructureTypeToggle
@@ -473,6 +489,8 @@ export default class SearchView extends Component {
               onPreviousClick={SearchView.handleResultsNavClick}
               previousURL={previousURL}
               totalCount={this.state.total}
+              updateParentQuery={this.handleQueryUpdate}
+              curatedProjectCollections={curatedProjectCollections}
             />
           </div>
           <div className="helpView">

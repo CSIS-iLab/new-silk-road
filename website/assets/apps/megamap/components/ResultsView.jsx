@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import ResultsList from './ResultsList';
-
+import SearchActions from '../actions/SearchActions';
 
 
 const resultsNavStyle = {
@@ -31,6 +31,7 @@ class ResultsView extends Component {
     this.handleNextClick = this.handleNextClick.bind(this);
     this.handlePreviousClick = this.handlePreviousClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
+    this.searchForCuratedResults = this.searchForCuratedResults.bind(this);
   }
 
   componentWillUpdate() {
@@ -59,7 +60,7 @@ class ResultsView extends Component {
       // There is a nextURL, so use it to find the currentPage and numPages
       let numLastResult;
       let pageSize;
-      const parameters = this.props.nextURL.slice(this.props.nextURL.indexOf('?') + 1).split('&');
+      const parameters = nextURL.slice(nextURL.indexOf('?') + 1).split('&');
       for (let i = 0; i < parameters.length; i++) {
         keyAndValue = parameters[i].split('=');
         const key = keyAndValue[0];
@@ -76,7 +77,7 @@ class ResultsView extends Component {
     } else if (previousURL !== null) {
       // There is no nextURL, but there is a previousURL, so this must be the last page
       let pageSize;
-      const parameters = this.props.previousURL.slice(this.props.previousURL.indexOf('?') + 1).split('&');
+      const parameters = previousURL.slice(previousURL.indexOf('?') + 1).split('&');
       for (let i = 0; i < parameters.length; i++) {
         keyAndValue = parameters[i].split('=');
         const key = keyAndValue[0];
@@ -96,6 +97,20 @@ class ResultsView extends Component {
     return [currentPage, numPages];
   }
 
+  searchForCuratedResults (e) {
+    /* Get the curated project collection query, update parent's state, and search the backend. */
+
+    // Get the project collection query
+    let query = {
+      'curated_project_collections': [parseInt(e.target.id)],
+      'infrastructure_type': [],
+    }
+    // Uopdate parent state for the curated_project_collections
+    this.props.updateParentQuery(query);
+    // Query the backend (which will also update the map)
+    SearchActions.search(query);
+  }
+
   render() {
     const noResults = this.props.results.length === 0;
     let currentPage;
@@ -107,6 +122,20 @@ class ResultsView extends Component {
       );
       currentPage = pageNumbers[0];
       numPages = pageNumbers[1];
+    }
+
+    let curatedProjectCollectionsElements = [];
+    if (this.props.curatedProjectCollections !== undefined && this.props.curatedProjectCollections.length > 0) {
+      for (let i=0; i<this.props.curatedProjectCollections.length; i++) {
+        curatedProjectCollectionsElements.push(
+          <a id={this.props.curatedProjectCollections[i].__proto__.value}
+             key={this.props.curatedProjectCollections[i].__proto__.value}
+             onClick={this.searchForCuratedResults}
+          >
+            {this.props.curatedProjectCollections[i].__proto__.label}
+          </a>
+        );
+      }
     }
 
     return (
@@ -145,8 +174,7 @@ class ResultsView extends Component {
               <h2>Curated Results</h2>
               <p>
                 This list of results illustrate some of the projects and strategies our team is following.
-                <a>Projects funded by the World Bank</a>
-                <a>Projects in India that were announced in 2018</a>
+                {curatedProjectCollectionsElements}
               </p>
             </section>
           </div>
