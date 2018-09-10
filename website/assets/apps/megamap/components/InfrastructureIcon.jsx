@@ -28,13 +28,24 @@ export default class InfrastructureIcon extends Component {
     this.setState({ selected: sel });
   }
 
+  showInfrastructureTypeLabels() {
+    /* Show the infrastructure type labels, by removing their 'hidden' class. */
+    document.getElementById('infrastructureToggleTitle').classList.remove('hidden');
+    Array.prototype.forEach.call(
+      document.getElementsByClassName('infrastructureIconLabel'),
+      (element) => {
+        element.classList.remove('hidden');
+      }
+    );
+  }
+
   render() {
     return (
-      <div className="infrastructureIconContainer" onClick={this.handleClick.bind(this)}>
+      <div className={`infrastructureIconContainer ${this.state.selected}`} onClick={this.handleClick.bind(this)}>
         <span className={`${this.getSpanColorClass()} ${this.state.selected}`} >
-          <span width={40} height={40} className={`${this.getSpanIconClass()}`} alt={this.getAltText()}></span>
+          <span width={40} height={40} className={`${this.getSpanIconClass()}`} alt={this.getAltText()} onMouseEnter={this.showInfrastructureTypeLabels}></span>
         </span>
-        <div className="infrastructureIconLabel">{this.label}</div>
+        <div className="infrastructureIconLabel hidden">{this.label}</div>
       </div>
     )
   }
