@@ -288,6 +288,7 @@ MAPBOX_STYLE_URL=
 AWS_STORAGE_BUCKET_NAME=
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
+USE_DEBUG_TOOLBAR=True
 ```
 
 Those keys (`SECRET_KEY`, `DEBUG`, etc.) represent configuration settings that Django needs. If you open `newsilkroad/settings.py`, you'll see various places lines that have something like `os.getenv('SECRET_KEY', None)`. That's python code that says "Go get the value for 'SECRET_KEY' from the environment." You can search for 'os.getenv' and find the various configurable settings.
