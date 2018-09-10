@@ -494,3 +494,11 @@ SEARCH_SIGNALS = os.getenv('SEARCH_SIGNALS', 'False') == 'True'
 SILENCED_SYSTEM_CHECKS = [
     "cachalot.E001",
 ]
+
+USE_DEBUG_TOOLBAR = os.getenv('DEBUG', 'False') == 'True'
+if DEBUG and USE_DEBUG_TOOLBAR:
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+    INTERNAL_IPS = ('127.0.0.1', )
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')

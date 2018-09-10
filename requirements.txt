@@ -59,3 +59,5 @@ unidecode==1.0.22
 urllib3==1.22
 waitress==1.1.0
 webencodings==0.5.1
+
+django-debug-toolbar==1.10
