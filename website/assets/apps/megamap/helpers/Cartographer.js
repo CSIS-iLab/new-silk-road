@@ -145,7 +145,7 @@ export default class Cartographer {
       });
 
       for (let featureIndex in data.features) {
-        if (data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
+        if (data.features[featureIndex].properties !== undefined && data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
           layer.features.push(data.features[featureIndex]);
         }
       }
@@ -158,7 +158,8 @@ export default class Cartographer {
     this.geoManager.setGeoIdentifiers(allData.features.map(feat => feat.id));
     const layerArray = this.splitLayers(allData);
     for (let i in layerArray) {
-      const thisLayerId = layerArray[i].features[i].properties.infrastructureType
+      if (layerArray[i].features.length == 0) { continue; }
+      const thisLayerId = layerArray[i].features[i].properties.infrastructureType;
       const data = layerArray[i];
       const source = {
         data,
