@@ -89,6 +89,7 @@ class GeometryStoreAdmin(admin.ModelAdmin):
         'lines',
         'polygons'
     ]
+    search_fields = ('label', 'projects__name')
 
     def name_attr(self, obj):
         return obj.attributes.get('name', 'No name attribute')
