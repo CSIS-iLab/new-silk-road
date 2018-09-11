@@ -112,20 +112,39 @@ export default class Cartographer {
   }
 
   geoStoreShouldBeZoomedMore(sourceLayer) {
-    /* Determine if zooming should be enabled for this geo coordinate:
+    /* Determine if zooming should be enabled for this geo coordinate at this zoom level:
      *  - Points may be zoomed to further if the current zoom is less than maxFitZoom
      *  - Lines may be zoomed to further if the current zoom is less than minDetailZoom
      *  - Centroids may be zoomed to further if the current zoom is less than minDetailZoom
-     *  - Other types may not be zoomed
+     *  - Rails may be zoomed to further if the current zoom is less than minDetailZoom
+     *  - Roads may be zoomed to further if the current zoom is less than minDetailZoom
+     *  - Intermodals may be zoomed to further if the current zoom is less than maxFitZoom
+     *  - Power Plants may be zoomed to further if the current zoom is less than maxFitZoom
+     *  - Seaports may be zoomed to further if the current zoom is less than maxFitZoom
+     *  - Other cases may not be zoomed further
      */
-    if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < maxFitZoom) {
+
+    // Layers that can be zoomed until minDetailZoom
+    const useMinDetailZoom = ['Rail', 'Road'];
+    // Layers that can be zoomed until maxFitZoom
+    const usemaxFitZoom = ['Intermodal', 'Power Plant', 'Seaport'];
+
+    if (useMinDetailZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < minDetailZoom) {
+      return true;
+    } else if (usemaxFitZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < maxFitZoom) {
       return true;
     } else if (sourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < minDetailZoom) {
+      // Line layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : lines'
       return true;
     } else if (sourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < minDetailZoom) {
+      // Centroid layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : centroid'
       return true;
+    } else if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < maxFitZoom) {
+      // Point layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : point'
+      return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
 
