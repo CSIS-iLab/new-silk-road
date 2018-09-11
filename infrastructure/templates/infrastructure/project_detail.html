@@ -49,7 +49,7 @@
         {% endif %}
 
         {# Projects which are power plants have their descriptions just below the title. Other projects have their description further down the page. #}
-        {% if object.infrastructure_type.name == 'Power Plant' %}
+        {% if object.infrastructure_type.name == 'Powerplant' %}
           {% if object.description_rendered %}
           <section class="description">
               <h3>Description</h3>
@@ -134,7 +134,7 @@
             {% include "infrastructure/_project_funding_list.html" with funding_list=object.funding.all %}
         </section>
     </section>
-    {% if object.infrastructure_type.name != 'Power Plant' %}
+    {% if object.infrastructure_type.name != 'Powerplant' %}
       {% if object.description_rendered %}
       <section class="description">
           <h3>Description</h3>
