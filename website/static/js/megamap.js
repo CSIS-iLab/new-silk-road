@@ -11129,7 +11129,7 @@
 	          }
 	        })
 	      },
-	      'power-plant': {
+	      powerplant: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
@@ -28943,7 +28943,7 @@
 	      // Layers that can be zoomed until minDetailZoom
 	      var useMinDetailZoom = ['Rail', 'Road'];
 	      // Layers that can be zoomed until maxFitZoom
-	      var usemaxFitZoom = ['Intermodal', 'Power Plant', 'Seaport'];
+	      var usemaxFitZoom = ['Intermodal', 'Powerplant', 'Seaport'];
 	
 	      if (useMinDetailZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
 	        return true;

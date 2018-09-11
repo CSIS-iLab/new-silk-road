@@ -127,7 +127,7 @@ export default class Cartographer {
     // Layers that can be zoomed until minDetailZoom
     const useMinDetailZoom = ['Rail', 'Road'];
     // Layers that can be zoomed until maxFitZoom
-    const usemaxFitZoom = ['Intermodal', 'Power Plant', 'Seaport'];
+    const usemaxFitZoom = ['Intermodal', 'Powerplant', 'Seaport'];
 
     if (useMinDetailZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < minDetailZoom) {
       return true;
