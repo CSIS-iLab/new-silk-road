@@ -80,6 +80,17 @@ export default class InfrastructureTypeToggle extends Component {
     });
   }
 
+  hideInfrastructureTypeLabels() {
+    /* Hide the infrastructure type labels, by giving them a 'hidden' class. */
+    document.getElementById('infrastructureToggleTitle').classList.add('hidden');
+    Array.prototype.forEach.call(
+      document.getElementsByClassName('infrastructureIconLabel'),
+      (element) => {
+        element.classList.add('hidden');
+      }
+    );
+  }
+
   render() {
     /* Render an InfrastructureIcon component for each id in the props. */
     var infrastructureTypeIcons = [];
@@ -92,8 +103,11 @@ export default class InfrastructureTypeToggle extends Component {
       }
     }
     return (
-      <div id="infrastructureToggle">
-        {infrastructureTypeIcons}
+      <div id="infrastructureToggleContainer" onMouseLeave={this.hideInfrastructureTypeLabels}>
+        <div id="infrastructureToggleTitle" className="hidden">INFRASTRUCTURE FILTER</div>
+        <div id="infrastructureToggle">
+          {infrastructureTypeIcons}
+        </div>
       </div>
     )
   }
