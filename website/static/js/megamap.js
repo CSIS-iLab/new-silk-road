@@ -29454,7 +29454,7 @@
 	        var buttonId = 'button_' + feat.properties.geostore;
 	        var geoIdentifier = feat.properties.geostore;
 	        // Determine if zooming should be enabled for the popup
-	        var zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.source);
+	        var zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.layer.source);
 	
 	        // Get the DOM elements for the (project) popup
 	        var popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
