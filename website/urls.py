@@ -28,10 +28,3 @@ urlpatterns = [
     url(r'^map/$', ProjectsMapView.as_view(), name='website-map'),
     url(r'^map/help/$', views.flatpage, {'url': '/map/help/'}, name='map-help'),
 ]
-
-
-if 'debug_toolbar' in settings.INSTALLED_APPS:
-    import debug_toolbar
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]

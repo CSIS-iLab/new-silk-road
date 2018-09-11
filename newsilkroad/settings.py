@@ -102,7 +102,7 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
-DEBUG_TOOLBAR = DEBUG and os.getenv("DEBUG_TOOLBAR", "False") == "True"
+DEBUG_TOOLBAR = os.getenv("DEBUG_TOOLBAR", "False") == "True"
 
 if DEBUG_TOOLBAR:
     from debug_toolbar.settings import PANELS_DEFAULTS
@@ -110,8 +110,16 @@ if DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + ['cachalot.panels.CachalotPanel']
     if os.getenv("DEBUG_PROFILING", "False") == "True":
         DEBUG_TOOLBAR_PANELS += ['debug_toolbar.panels.profiling.ProfilingPanel']
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+
+    def show_toolbar(request):
+        return request.user.is_staff
+
     INTERNAL_IPS = ('127.0.0.1', )
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+    }
+
 
 ROOT_URLCONF = 'newsilkroad.urls'
 
@@ -494,11 +502,3 @@ SEARCH_SIGNALS = os.getenv('SEARCH_SIGNALS', 'False') == 'True'
 SILENCED_SYSTEM_CHECKS = [
     "cachalot.E001",
 ]
-
-USE_DEBUG_TOOLBAR = os.getenv('DEBUG', 'False') == 'True'
-if USE_DEBUG_TOOLBAR:
-    INSTALLED_APPS += (
-        'debug_toolbar',
-    )
-    INTERNAL_IPS = ('127.0.0.1', )
-    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
