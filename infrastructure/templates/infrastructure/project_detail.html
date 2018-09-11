@@ -48,6 +48,17 @@
         <h2 class="details-name">{{ object.name }}</h2>
         {% endif %}
 
+        {# Projects which are power plants have their descriptions just below the title. Other projects have their description further down the page. #}
+        {% if object.infrastructure_type.name == 'Power Plant' %}
+          {% if object.description_rendered %}
+          <section class="description">
+              <h3>Description</h3>
+          {{ object.description_rendered|safe }}
+          </section>
+          {% endif %}
+        {% endif %}
+
+
         <div class="row">
             <section>
                 <h3>Locations</h3>
@@ -123,11 +134,13 @@
             {% include "infrastructure/_project_funding_list.html" with funding_list=object.funding.all %}
         </section>
     </section>
-    {% if object.description_rendered %}
-    <section class="description">
-        <h3>Description</h3>
-    {{ object.description_rendered|safe }}
-    </section>
+    {% if object.infrastructure_type.name != 'Power Plant' %}
+      {% if object.description_rendered %}
+      <section class="description">
+          <h3>Description</h3>
+      {{ object.description_rendered|safe }}
+      </section>
+      {% endif %}
     {% endif %}
 {% if object.documents.count %}
     <section class="documents featured">
@@ -166,7 +179,7 @@
             {% endfor %}
             {% endcomment %}
         </div>
-        
+
     </section>
 {% endif %}
 </article>
