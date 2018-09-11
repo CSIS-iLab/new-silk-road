@@ -496,7 +496,7 @@ SILENCED_SYSTEM_CHECKS = [
 ]
 
 USE_DEBUG_TOOLBAR = os.getenv('DEBUG', 'False') == 'True'
-if DEBUG and USE_DEBUG_TOOLBAR:
+if USE_DEBUG_TOOLBAR:
     INSTALLED_APPS += (
         'debug_toolbar',
     )
