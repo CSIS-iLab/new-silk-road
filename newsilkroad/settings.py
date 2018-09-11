@@ -500,5 +500,12 @@ if USE_DEBUG_TOOLBAR:
     INSTALLED_APPS += (
         'debug_toolbar',
     )
+
+    def show_toolbar(request):
+        return request.user.is_staff
+
     INTERNAL_IPS = ('127.0.0.1', )
-    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+    }
