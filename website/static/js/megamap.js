@@ -26840,12 +26840,30 @@
 	      this.setState({ selected: sel });
 	    }
 	  }, {
+	    key: 'showInfrastructureTypeLabels',
+	    value: function showInfrastructureTypeLabels() {
+	      /* Show the infrastructure type labels, by removing their 'hidden' class. */
+	      document.getElementById('infrastructureToggleTitle').classList.remove('hidden');
+	      Array.prototype.forEach.call(document.getElementsByClassName('infrastructureIconLabel'), function (element) {
+	        element.classList.remove('hidden');
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'span',
-	        { className: this.getSpanColorClass() + ' ' + this.state.selected, onClick: this.handleClick.bind(this) },
-	        _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText() })
+	        'div',
+	        { className: 'infrastructureIconContainer ' + this.state.selected, onClick: this.handleClick.bind(this) },
+	        _react2.default.createElement(
+	          'span',
+	          { className: this.getSpanColorClass() + ' ' + this.state.selected },
+	          _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText(), onMouseEnter: this.showInfrastructureTypeLabels })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'infrastructureIconLabel hidden' },
+	          this.label
+	        )
 	      );
 	    }
 	  }]);
@@ -26977,6 +26995,15 @@
 	      });
 	    }
 	  }, {
+	    key: 'hideInfrastructureTypeLabels',
+	    value: function hideInfrastructureTypeLabels() {
+	      /* Hide the infrastructure type labels, by giving them a 'hidden' class. */
+	      document.getElementById('infrastructureToggleTitle').classList.add('hidden');
+	      Array.prototype.forEach.call(document.getElementsByClassName('infrastructureIconLabel'), function (element) {
+	        element.classList.add('hidden');
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      /* Render an InfrastructureIcon component for each id in the props. */
@@ -26991,8 +27018,17 @@
 	      }
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'infrastructureToggle' },
-	        infrastructureTypeIcons
+	        { id: 'infrastructureToggleContainer', onMouseLeave: this.hideInfrastructureTypeLabels },
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'infrastructureToggleTitle', className: 'hidden' },
+	          'INFRASTRUCTURE FILTER'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'infrastructureToggle' },
+	          infrastructureTypeIcons
+	        )
 	      );
 	    }
 	  }]);
@@ -28927,7 +28963,7 @@
 	        });
 	
 	        for (var featureIndex in data.features) {
-	          if (data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
+	          if (data.features[featureIndex].properties !== undefined && data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
 	            layer.features.push(data.features[featureIndex]);
 	          }
 	        }
@@ -28943,6 +28979,9 @@
 	      }));
 	      var layerArray = this.splitLayers(allData);
 	      for (var i in layerArray) {
+	        if (layerArray[i].features.length == 0) {
+	          continue;
+	        }
 	        var thisLayerId = layerArray[i].features[i].properties.infrastructureType;
 	        var data = layerArray[i];
 	        var source = {

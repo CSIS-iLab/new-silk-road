@@ -360,19 +360,19 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # The powerplant_ouessant point is correct
         powerplant_ouessant_points = powerplant_ouessant.geo.points.all()
         self.assertEqual(powerplant_ouessant_points.count(), 1)
-        self.assertEqual(powerplant_ouessant_points.first().geom.x, 48.43754)
-        self.assertEqual(powerplant_ouessant_points.first().geom.y, -5.11121)
+        self.assertEqual(powerplant_ouessant_points.first().geom.x, -5.11121)
+        self.assertEqual(powerplant_ouessant_points.first().geom.y, 48.43754)
         # The powerplant_ilarionas point is correct
         powerplant_ilarionas_points = powerplant_ilarionas.geo.points.all()
         self.assertEqual(powerplant_ilarionas_points.count(), 1)
-        self.assertEqual(powerplant_ilarionas_points.first().geom.x, 40.0966)
-        self.assertEqual(powerplant_ilarionas_points.first().geom.y, 21.8039)
+        self.assertEqual(powerplant_ilarionas_points.first().geom.x, 21.8039)
+        self.assertEqual(powerplant_ilarionas_points.first().geom.y, 40.0966)
         # The project_liaoning gets its geodata from its latitude and longitude
         # cells
         project_liaoning_points = project_liaoning.geo.points.all()
         self.assertEqual(project_liaoning_points.count(), 1)
-        self.assertEqual(project_liaoning_points.first().geom.x, 41.16469)
-        self.assertEqual(project_liaoning_points.first().geom.y, 121.38065)
+        self.assertEqual(project_liaoning_points.first().geom.x, 121.38065)
+        self.assertEqual(project_liaoning_points.first().geom.y, 41.16469)
         # For the project_ouessant1 and project_ouessant2, the latitude and
         # longitude cells are blank, so they get their geodata from their
         # parent PowerPlant (powerplant_ouessant).

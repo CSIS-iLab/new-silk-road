@@ -4,7 +4,7 @@ from django_select2.forms import (
     ModelSelect2MultipleWidget,
 )
 from infrastructure.models import (
-    Project, Initiative, ProjectFunding, PowerPlant, OwnerStake,
+    Initiative, OwnerStake, PowerPlant, Project, ProjectFunding, ProjectDocument
 )
 from facts.forms import NameSearchWidget, PersonSearchMultiField, OrganizationSearchMultiField
 from facts.models.organizations import Organization
@@ -83,6 +83,19 @@ class ProjectSearchMultiField(forms.ModelMultipleChoiceField):
         super().__init__(*args, **kwargs)
 
 
+class ProjectDocumentSearchMultiWidget(ModelSelect2MultipleWidget):
+    model = ProjectDocument
+    search_fields = [
+        'notes__icontains',
+        'document__url__icontains',
+    ]
+
+
+class ProjectDocumentSearchMultiField(forms.ModelMultipleChoiceField):
+    widget = ProjectDocumentSearchMultiWidget
+    help_text = "Select field and begin typing a country's name to search"
+
+
 class ProjectForm(forms.ModelForm):
     countries = CountrySearchMultiField(
         required=False,
@@ -101,6 +114,10 @@ class ProjectForm(forms.ModelForm):
     operators = OrganizationSearchMultiField(required=False)
 
     contacts = PersonSearchMultiField(required=False, queryset=Person.objects.all())
+    documents = ProjectDocumentSearchMultiField(
+        required=False,
+        queryset=ProjectDocument.objects.all()
+    )
 
     start_month = MonthField(required=False)
     start_day = DayField(required=False)
