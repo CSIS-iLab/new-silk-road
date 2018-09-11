@@ -217,8 +217,8 @@ def add_geo_data(row, object):
     if row.get('Latitude') and row.get('Longitude'):
         point, _ = PointGeometry.objects.get_or_create(
             geom=django.contrib.gis.geos.Point(
-                float(row.get('Latitude')),
-                float(row.get('Longitude'))
+                y=float(row.get('Latitude')),
+                x=float(row.get('Longitude'))
             )
         )
         geometry_store, _ = GeometryStore.objects.get_or_create(
