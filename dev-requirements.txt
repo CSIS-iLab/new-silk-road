@@ -1,6 +1,5 @@
 -r requirements.txt
 coverage==4.5.1
-django-debug-toolbar==1.10
 factory-boy==2.10.0
 Faker==0.8.13
   text-unidecode==1.2
