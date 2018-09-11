@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib.flatpages import views
 
@@ -27,3 +28,10 @@ urlpatterns = [
     url(r'^map/$', ProjectsMapView.as_view(), name='website-map'),
     url(r'^map/help/$', views.flatpage, {'url': '/map/help/'}, name='map-help'),
 ]
+
+
+if 'debug_toolbar' in settings.INSTALLED_APPS:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
