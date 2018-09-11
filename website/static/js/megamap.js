@@ -28946,7 +28946,7 @@
 	        });
 	
 	        for (var featureIndex in data.features) {
-	          if (data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
+	          if (data.features[featureIndex].properties !== undefined && data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
 	            layer.features.push(data.features[featureIndex]);
 	          }
 	        }
@@ -28962,6 +28962,9 @@
 	      }));
 	      var layerArray = this.splitLayers(allData);
 	      for (var i in layerArray) {
+	        if (layerArray[i].features.length == 0) {
+	          continue;
+	        }
 	        var thisLayerId = layerArray[i].features[i].properties.infrastructureType;
 	        var data = layerArray[i];
 	        var source = {
