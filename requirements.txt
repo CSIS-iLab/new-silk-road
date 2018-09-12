@@ -37,12 +37,14 @@ docutils==0.14
 easy-thumbnails==2.5
 elasticsearch==2.4.1
 elasticsearch-dsl==2.2.0
+gunicorn==19.7.1
 html5lib==1.0.1
 idna==2.6
 iso3166==0.8
 iso4217==1.5.20180101
 jmespath==0.9.3
 Markdown==2.6.11
+newrelic==4.4.0.103
 openpyxl==2.5.3
 Pillow==5.1.0
 psycopg2-binary==2.7.4
