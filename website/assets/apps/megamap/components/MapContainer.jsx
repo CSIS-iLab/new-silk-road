@@ -10,7 +10,7 @@ export default class MapContainer extends Component {
   constructor() {
     super();
     this.mapCtl = null;
-    this.state = { loading: '' }
+    this.state = { loading: 'loading' }
     this.handleMapLoad = this.handleMapLoad.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
     this.onSearchResults = this.onSearchResults.bind(this);

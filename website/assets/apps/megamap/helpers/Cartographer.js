@@ -153,6 +153,12 @@ export default class Cartographer {
   handleCentroidsFail(error) {
     console.log('Error!');
     console.log(error);
+    this.map._container.parentElement.lastChild.innerHTML = '<div class="loadError">We encountered an error. Please reload the page.</div>';
+  }
+
+  removeLoading() {
+    // a little basic javascript to avoid react gymnastics
+    this.map._container.parentElement.classList.remove('loading');
   }
 
   splitLayers(data) {
@@ -195,6 +201,7 @@ export default class Cartographer {
 
     this.removePopup();
     this.setPopupLayers(this.layerIds);
+    this.removeLoading();
   }
 
   handleGeoStoreSelect(identifier) {
