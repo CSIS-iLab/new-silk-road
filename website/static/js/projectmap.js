@@ -4445,7 +4445,7 @@
 	          }
 	        })
 	      },
-	      'power-plant': {
+	      powerplant: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {

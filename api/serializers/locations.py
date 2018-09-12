@@ -104,18 +104,14 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
         proj_name = getattr(instance, 'project_alt_name') or instance.project_name or None
         infra_name = instance.project_type or None
         icon_type = ICON_MAP.get(infra_name.lower(), 'dot') if infra_name else None
-        total_cost = '{} {} {}'.format(
-            round(instance.total_cost_dividend, 1),
-            instance.total_cost_unit,
-            instance.currency
-        ) if instance.total_cost_dividend else "Unknown"
         return {
             'label': proj_name,
             'geostore': instance.identifier,
             'infrastructureType': infra_name,
             'icon-image': icon_type,
             'locations': instance.locations,
-            'total_cost': total_cost,
+            'total_cost': instance.total_cost,
+            'currency': instance.currency,
         }
 
 
