@@ -79,7 +79,7 @@ export default class GeoStyles {
           },
         }),
       },
-      'power-plant': {
+      powerplant: {
         points: objectMerge(pointStyle, {
           layout: {
             'icon-image': {
