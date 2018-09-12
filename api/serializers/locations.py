@@ -18,7 +18,8 @@ ICON_MAP = {
     "rail": "Rail",
     "road": "Road",
     "multimodal": "Dryport",
-    "intermodal": "Dryport"
+    "intermodal": "Dryport",
+    "powerplant": "Powerplant",
 }
 
 

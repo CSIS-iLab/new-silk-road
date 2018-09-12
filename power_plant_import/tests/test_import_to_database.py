@@ -407,8 +407,8 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # An InfrastructureType exists for power plants
         self.assertEqual(InfrastructureType.objects.count(), 1)
         infrastructure_type_power_plant = InfrastructureType.objects.get(
-            name='Power Plant',
-            slug='power-plant'
+            name='Powerplant',
+            slug='powerplant'
         )
         # Verify the fields for project_ouessant1
         self.assertEqual(project_ouessant1.name, 'Ouessant Tidal Power Phase I')

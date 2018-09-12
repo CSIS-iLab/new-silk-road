@@ -443,8 +443,8 @@ def import_csv_to_database(*args, **kwargs):
             # We will need an InfrastructureType of 'Power Plant', so either get
             # or create one
             infrastructure_type_power_plant, _ = InfrastructureType.objects.get_or_create(
-                name='Power Plant',
-                slug='power-plant'
+                name='Powerplant',
+                slug='powerplant'
             )
 
             # Create the object

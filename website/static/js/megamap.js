@@ -26840,12 +26840,30 @@
 	      this.setState({ selected: sel });
 	    }
 	  }, {
+	    key: 'showInfrastructureTypeLabels',
+	    value: function showInfrastructureTypeLabels() {
+	      /* Show the infrastructure type labels, by removing their 'hidden' class. */
+	      document.getElementById('infrastructureToggleTitle').classList.remove('hidden');
+	      Array.prototype.forEach.call(document.getElementsByClassName('infrastructureIconLabel'), function (element) {
+	        element.classList.remove('hidden');
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'span',
-	        { className: this.getSpanColorClass() + ' ' + this.state.selected, onClick: this.handleClick.bind(this) },
-	        _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText() })
+	        'div',
+	        { className: 'infrastructureIconContainer ' + this.state.selected, onClick: this.handleClick.bind(this) },
+	        _react2.default.createElement(
+	          'span',
+	          { className: this.getSpanColorClass() + ' ' + this.state.selected },
+	          _react2.default.createElement('span', { width: 40, height: 40, className: '' + this.getSpanIconClass(), alt: this.getAltText(), onMouseEnter: this.showInfrastructureTypeLabels })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'infrastructureIconLabel hidden' },
+	          this.label
+	        )
 	      );
 	    }
 	  }]);
@@ -26977,6 +26995,15 @@
 	      });
 	    }
 	  }, {
+	    key: 'hideInfrastructureTypeLabels',
+	    value: function hideInfrastructureTypeLabels() {
+	      /* Hide the infrastructure type labels, by giving them a 'hidden' class. */
+	      document.getElementById('infrastructureToggleTitle').classList.add('hidden');
+	      Array.prototype.forEach.call(document.getElementsByClassName('infrastructureIconLabel'), function (element) {
+	        element.classList.add('hidden');
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      /* Render an InfrastructureIcon component for each id in the props. */
@@ -26991,8 +27018,17 @@
 	      }
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'infrastructureToggle' },
-	        infrastructureTypeIcons
+	        { id: 'infrastructureToggleContainer', onMouseLeave: this.hideInfrastructureTypeLabels },
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'infrastructureToggleTitle', className: 'hidden' },
+	          'INFRASTRUCTURE FILTER'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'infrastructureToggle' },
+	          infrastructureTypeIcons
+	        )
 	      );
 	    }
 	  }]);
@@ -28892,20 +28928,39 @@
 	  }, {
 	    key: 'geoStoreShouldBeZoomedMore',
 	    value: function geoStoreShouldBeZoomedMore(sourceLayer) {
-	      /* Determine if zooming should be enabled for this geo coordinate:
+	      /* Determine if zooming should be enabled for this geo coordinate at this zoom level:
 	       *  - Points may be zoomed to further if the current zoom is less than maxFitZoom
 	       *  - Lines may be zoomed to further if the current zoom is less than minDetailZoom
 	       *  - Centroids may be zoomed to further if the current zoom is less than minDetailZoom
-	       *  - Other types may not be zoomed
+	       *  - Rails may be zoomed to further if the current zoom is less than minDetailZoom
+	       *  - Roads may be zoomed to further if the current zoom is less than minDetailZoom
+	       *  - Intermodals may be zoomed to further if the current zoom is less than maxFitZoom
+	       *  - Power Plants may be zoomed to further if the current zoom is less than maxFitZoom
+	       *  - Seaports may be zoomed to further if the current zoom is less than maxFitZoom
+	       *  - Other cases may not be zoomed further
 	       */
-	      if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
+	
+	      // Layers that can be zoomed until minDetailZoom
+	      var useMinDetailZoom = ['Rail', 'Road'];
+	      // Layers that can be zoomed until maxFitZoom
+	      var usemaxFitZoom = ['Intermodal', 'Power Plant', 'Seaport'];
+	
+	      if (useMinDetailZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
+	        return true;
+	      } else if (usemaxFitZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
 	        return true;
 	      } else if (sourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
+	        // Line layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : lines'
 	        return true;
 	      } else if (sourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
+	        // Centroid layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : centroid'
 	        return true;
+	      } else if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
+	        // Point layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : point'
+	        return true;
+	      } else {
+	        return false;
 	      }
-	      return false;
 	    }
 	
 	    // Handlers
@@ -29399,7 +29454,7 @@
 	        var buttonId = 'button_' + feat.properties.geostore;
 	        var geoIdentifier = feat.properties.geostore;
 	        // Determine if zooming should be enabled for the popup
-	        var zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.source);
+	        var zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.layer.source);
 	
 	        // Get the DOM elements for the (project) popup
 	        var popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
