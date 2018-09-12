@@ -1,11 +1,6 @@
-from decimal import Decimal
-
 from django.conf import settings
 from django.contrib.postgres.aggregates import StringAgg
-from django.db.models import (
-    Case, CharField, Count, ExpressionWrapper, F, FloatField, Q, Value, When
-)
-from django.db.models.functions import Cast
+from django.db.models import Case, CharField, Count, F, Value, When
 from django.db.models.functions import Lower
 
 from django_filters.rest_framework import DjangoFilterBackend

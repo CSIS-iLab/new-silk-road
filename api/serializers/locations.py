@@ -8,7 +8,6 @@ from locations.models import (
     Region,
     Country
 )
-from infrastructure.models import Project
 from api.serializers.infrastructure import (ProjectNestableSerializer,)
 from api.fields import DynamicFieldsMixin
 
