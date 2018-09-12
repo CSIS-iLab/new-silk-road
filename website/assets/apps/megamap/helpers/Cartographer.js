@@ -124,22 +124,25 @@ export default class Cartographer {
      *  - Other cases may not be zoomed further
      */
 
-    // Layers that can be zoomed until minDetailZoom
-    const useMinDetailZoom = ['Rail', 'Road'];
-    // Layers that can be zoomed until maxFitZoom
-    const usemaxFitZoom = ['Intermodal', 'Power Plant', 'Seaport'];
+    // The lowercase version of the source layer name
+    const lowerSourceLayer = sourceLayer.toLowerCase();
 
-    if (useMinDetailZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < minDetailZoom) {
+    // Layers that can be zoomed until minDetailZoom
+    const useMinDetailZoom = ['rail', 'road'];
+    // Layers that can be zoomed until maxFitZoom
+    const usemaxFitZoom = ['intermodal', 'powerplant', 'seaport'];
+
+    if (useMinDetailZoom.indexOf(lowerSourceLayer) !== -1 && this.map.getZoom() < minDetailZoom) {
       return true;
-    } else if (usemaxFitZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < maxFitZoom) {
+    } else if (usemaxFitZoom.indexOf(lowerSourceLayer) !== -1 && this.map.getZoom() < maxFitZoom) {
       return true;
-    } else if (sourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < minDetailZoom) {
+    } else if (lowerSourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < minDetailZoom) {
       // Line layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : lines'
       return true;
-    } else if (sourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < minDetailZoom) {
+    } else if (lowerSourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < minDetailZoom) {
       // Centroid layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : centroid'
       return true;
-    } else if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < maxFitZoom) {
+    } else if (lowerSourceLayer.indexOf('points') !== -1 && this.map.getZoom() < maxFitZoom) {
       // Point layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : point'
       return true;
     } else {
