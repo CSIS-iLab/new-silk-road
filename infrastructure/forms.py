@@ -152,6 +152,11 @@ class PowerPlantForm(forms.ModelForm):
     plant_day_online = DayField(required=False)
     decommissioning_month = MonthField(required=False)
     decommissioning_day = DayField(required=False)
+    geo = GeometrySearchField(
+        required=False,
+        queryset=GeometryStore.objects.all(),
+        help_text=GeometrySearchField.help_text
+    )
 
     class Meta:
         model = PowerPlant
