@@ -6,6 +6,7 @@ from django.db.models import (
     Case, CharField, Count, ExpressionWrapper, F, FloatField, Q, Value, When
 )
 from django.db.models.functions import Cast
+from django.db.models.functions import Lower
 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
@@ -157,9 +158,27 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             project_alt_name=F('projects__alternate_name'),
             project_name=F('projects__name'),
             project_type=F('projects__infrastructure_type__name'),
+            project_type_lower=Lower('projects__infrastructure_type__name'),
             locations=StringAgg('projects__countries__name', ',', distinct=True),
             currency=F('projects__total_cost_currency'),
             total_cost=F('projects__total_cost'),
+        ).annotate(
+            icon_image=Case(
+                When(project_type_lower='seaport', then=Value('Seaport')),
+                When(project_type_lower='dryport', then=Value('Dryport')),
+                When(project_type_lower='rail', then=Value('Rail')),
+                When(project_type_lower='road', then=Value('Road')),
+                When(project_type_lower='multimodal', then=Value('Multimodal')),
+                When(project_type_lower='intermodal', then=Value('Intermodal')),
+                When(project_type_lower='powerplant', then=Value('Powerplant')),
+                output_field=CharField(),
+            )
+        ).annotate(
+            best_project_name=Case(
+                When(project_alt_name='', then=F('project_name')),
+                default=F('project_alt_name'),
+                output_field=CharField(),
+            )
         ).distinct()
 
         if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
