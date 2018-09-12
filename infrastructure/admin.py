@@ -134,7 +134,6 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
         'status',
         'infrastructure_type',
         'initiatives',
-        'power_plant',
         'countries__name',
         'regions',
         HasGeoListFilter,
