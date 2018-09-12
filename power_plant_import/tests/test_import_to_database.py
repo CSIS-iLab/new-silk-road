@@ -414,6 +414,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(project_ouessant1.name, 'Ouessant Tidal Power Phase I')
         self.assertEqual(project_ouessant1.power_plant, powerplant_ouessant)
         self.assertEqual(project_ouessant1.infrastructure_type, infrastructure_type_power_plant)
+        self.assertEqual(project_ouessant1.published, True)
         self.assertEqual(
             project_ouessant1.status,
             {value: key for key, value in ProjectStatus.STATUSES}['Suspended']
@@ -452,6 +453,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Verify the fields for powerplant_ilarionas
         self.assertEqual(powerplant_ilarionas.name, 'Ilarionas')
         self.assertEqual(powerplant_ilarionas.infrastructure_type, infrastructure_type_power_plant)
+        self.assertEqual(powerplant_ilarionas.published, True)
         self.assertEqual(
             powerplant_ilarionas.status,
             {value: key for key, value in PowerPlantStatus.STATUSES}['Partially Active']

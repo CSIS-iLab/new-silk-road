@@ -543,6 +543,10 @@ def import_csv_to_database(*args, **kwargs):
             for fuel in fuels:
                 new_object.fuels.add(fuel)
 
+            # Set the new_object to published
+            new_object.published = True
+            new_object.save()
+
             num_successful_imports += 1
 
     # Originally, this code was written with the assumption that the CSV would
