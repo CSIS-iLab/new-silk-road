@@ -21,6 +21,8 @@ class GeometryStoreFilter(filters.FilterSet):
         distinct=True
     )
     project_identifiers = filters.CharFilter(method='filter_project_identifiers')
+    project_type = filters.CharFilter(field_name='project_type', lookup_expr='exact')
+
 
     def filter_project_identifiers(self, queryset, name, value):
         value_list = [v for v in value.split(',') if len(v) == 36 or len(v) == 32]
@@ -30,7 +32,7 @@ class GeometryStoreFilter(filters.FilterSet):
 
     class Meta:
         model = GeometryStore
-        fields = ('identifier', 'project')
+        fields = ('identifier', 'project', 'project_type')
 
 
 def filter_region_json(qs, name, value):
