@@ -49,7 +49,7 @@
         {% endif %}
 
         <section>
-          <span>Associated Projects: </span>{% for project in object.project_set.published %}<span><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></span>{% if not forloop.last %}, {% endif %}{% endfor %}
+          <span><strong>Associated Projects</strong>: </span>{% for project in object.project_set.published %}<span><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></span>{% if not forloop.last %}, {% endif %}{% endfor %}
         </section>
 
 
