@@ -161,7 +161,6 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
         ).exclude(
             geo__centroid__isnull=True
         ).only('id')
-        projects_without_powerplants.count()
         project_ids = []
         project_ids.extend(list(projects_with_distinct_powerplants.values_list('id', flat=True)))
         project_ids.extend(list(projects_without_powerplants.values_list('id', flat=True)))
