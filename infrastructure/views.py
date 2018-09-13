@@ -12,7 +12,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 
-from .models import Project, Initiative
+from .models import PowerPlant, Project, Initiative
 from .forms import ProjectGeoUploadForm
 from locations.utils import geostore_from_file
 from publish.views import PublicationMixin
@@ -115,3 +115,14 @@ class ProjectExportView(View):
                 response
             )
         return response
+
+
+class PowerPlantDetailView(PublicationMixin, DetailView):
+    model = PowerPlant
+    template_name = 'infrastructure/powerplant_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PowerPlantDetailView, self).get_context_data(**kwargs)
+        context['mapbox_token'] = MAPBOX_TOKEN
+        context['mapbox_style'] = MAPBOX_STYLE_URL
+        return context

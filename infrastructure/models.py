@@ -492,6 +492,12 @@ class PowerPlant(Publishable):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse(
+            'infrastructure:powerplant-detail',
+            kwargs={'slug': self.slug}
+        )
+
     def save(self, *args, **kwargs):
         self.description_rendered = render_markdown(self.description)
         return super().save(*args, **kwargs)

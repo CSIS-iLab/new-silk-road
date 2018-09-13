@@ -48,6 +48,38 @@ class ProjectDetailViewTestCase(TestCase):
         self.assertEqual(response.context['mapbox_style'], settings.MAPBOX_STYLE_URL)
 
 
+class PowerPlantDetailViewTestCase(TestCase):
+    """Render the details for a PowerPlant."""
+
+    def setUp(self):
+        super().setUp()
+        self.power_plant = factories.PowerPlantFactory(published=True)
+
+    def test_get_powerplant(self):
+        """Fetch the PowerPlant detail page."""
+
+        with self.assertTemplateUsed('infrastructure/powerplant_detail.html'):
+            response = self.client.get(self.power_plant.get_absolute_url())
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, self.power_plant.name)
+
+    def test_unpublished_project(self):
+        """You should not be able to view unpublished PowerPlants."""
+
+        self.power_plant.published = False
+        self.power_plant.save()
+
+        response = self.client.get(self.power_plant.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_map_context(self):
+        """Mapbox configuration should be in the template."""
+
+        response = self.client.get(self.power_plant.get_absolute_url())
+        self.assertEqual(response.context['mapbox_token'], settings.MAPBOX_TOKEN)
+        self.assertEqual(response.context['mapbox_style'], settings.MAPBOX_STYLE_URL)
+
+
 class MapViewTestCase(TestCase):
     """View the map of all projects.
 
