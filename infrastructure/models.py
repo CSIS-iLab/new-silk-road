@@ -381,6 +381,10 @@ class PowerPlant(Publishable):
     """Describes a Power Plant"""
     name = models.CharField(max_length=140)
     slug = models.SlugField(max_length=150, allow_unicode=True)
+
+    description = MarkdownField(blank=True)
+    description_rendered = models.TextField(blank=True, editable=False)
+
     infrastructure_type = models.ForeignKey(
         InfrastructureType,
         models.SET_NULL, blank=True, null=True,
@@ -487,6 +491,16 @@ class PowerPlant(Publishable):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse(
+            'infrastructure:powerplant-detail',
+            kwargs={'slug': self.slug}
+        )
+
+    def save(self, *args, **kwargs):
+        self.description_rendered = render_markdown(self.description)
+        return super().save(*args, **kwargs)
 
 
 class InitiativeType(models.Model):
@@ -666,4 +680,3 @@ class CuratedProjectCollection(Publishable):
 
     def __str__(self):
         return self.name
-

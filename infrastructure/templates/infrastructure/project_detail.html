@@ -56,6 +56,8 @@
           {{ object.description_rendered|safe }}
           </section>
           {% endif %}
+
+          <span><strong>Power Plant</strong>: </span><a href="{{ project.power_plant.get_absolute_url }}">{{ project.power_plant.name }}</a></span>
         {% endif %}
 
 
@@ -142,6 +144,32 @@
       </section>
       {% endif %}
     {% endif %}
+
+    {% if object.power_plant %}
+        <section class="related-power-data">
+          <h2>Related Power Data</h2>
+          <div class="row double">
+              <section>
+                  <h3>Capacity</h3>
+                  <p>{% if object.power_plant.plant_capacity and object.power_plant.plant_capacity_unit %}{{ object.power_plant.plant_capacity }} {{ object.power_plant.plant_capacity_unit }}{% else %}Unknown{% endif %}</p>
+              </section>
+              <section>
+                  <h3>Estimated Output</h3>
+                  <p>{% if object.power_plant.estimated_plant_output and object.power_plant.estimated_plant_output_unit %}{{ object.power_plant.estimated_plant_output }} {{ object.power_plant.estimated_plant_output_unit }}{% else %}Unknown{% endif %}</p>
+              </section>
+          </div>
+          <div class="row double">
+              <section>
+                  <h3>Fuel</h3>
+                  {% for fuel in object.power_plant.fuels.all %}
+                    <div>{{ fuel }}</div>
+                  {% endfor %}
+              </section>
+          </div>
+        </section>
+    {% endif %}
+
+
 {% if object.documents.count %}
     <section class="documents featured">
         <h2>Documentation &amp; References</h2>

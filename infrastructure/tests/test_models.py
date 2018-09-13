@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from . import factories
@@ -52,10 +53,19 @@ class FuelCategoryTestCase(TestCase):
 
 
 class PowerPlantTestCase(TestCase):
+    def setUp(self):
+        self.power_plant = factories.PowerPlantFactory()
+
     def test_str(self):
         """String representation of an PowerPlant uses the name."""
-        power_plant = factories.PowerPlantFactory()
-        self.assertEqual(str(power_plant), power_plant.name)
+        self.assertEqual(str(self.power_plant), self.power_plant.name)
+
+    def test_get_absolute_url(self):
+        """The .get_absolute_url() method returns the PowerPlant's detail page URL."""
+        self.assertEqual(
+            self.power_plant.get_absolute_url(),
+            reverse('infrastructure:powerplant-detail', kwargs={'slug': self.power_plant.slug})
+        )
 
 
 class InitiativeTypeTestCase(TestCase):
