@@ -21,7 +21,7 @@ class GeometryStoreFilter(filters.FilterSet):
         distinct=True
     )
     project_identifiers = filters.CharFilter(method='filter_project_identifiers')
-    project_type = filters.CharFilter(field_name='project_type', lookup_expr='exact')
+    project_type = filters.CharFilter(field_name='project_type', lookup_expr='iexact')
 
 
     def filter_project_identifiers(self, queryset, name, value):

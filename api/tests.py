@@ -254,7 +254,8 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                         flat=True
                     )
                 ),
-                "total_cost": "1.2 million {}".format(self.published_project.total_cost_currency),
+                "total_cost": self.geom_with_published_project.projects.all()[0].total_cost,
+                "currency": self.geom_with_published_project.projects.all()[0].total_cost_currency,
             }
         })
 
@@ -291,6 +292,29 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                 self.assertEqual(response.status_code, 200)
             data = json.loads(response.content.decode())
             self.assertEqual(len(data['features']), 10)
+
+    def test_centroid_list_filters(self):
+        """
+        Test that one can filter by the related project's infrastructure type name,
+        which is set as an annoation
+        """
+        project_type = self.geom_with_published_project.projects.first().infrastructure_type.name
+        with self.subTest('project type match'):
+            response = self.client.get(
+                self.list_url, {'project_type': project_type}
+            )
+            self.assertEqual(response.status_code, 200)
+            data = json.loads(response.content.decode())
+            self.assertEqual(len(data['features']), 1)
+
+        with self.subTest('project type not match'):
+            response = self.client.get(
+                self.list_url, {'project_type': "FOO"}
+            )
+            self.assertEqual(response.status_code, 200)
+            data = json.loads(response.content.decode())
+            self.assertEqual(len(data['features']), 0)
+
 
 
 class TestOrganizationViewSet(TestCase):
