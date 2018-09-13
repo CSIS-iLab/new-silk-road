@@ -132,7 +132,13 @@ $creamer-str: str-slice("#{$creamer}", 2);
             z-index: 10;
         }
 
-
+        .loadError {
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: $section-hedier-size;
+            margin-top: 25%;
+        }
     }
     #megaMapContainer.loading {
         .mapLoading {

@@ -55,6 +55,7 @@ class ProjectsInitiativeInline(admin.StackedInline):
 class ProjectsOwnersInline(admin.StackedInline):
     model = OwnerStake
     form = ProjectOwnerStakeForm
+    raw_id_fields = ('owner',)
 
     class Media:
         css = {
@@ -133,7 +134,6 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
         'status',
         'infrastructure_type',
         'initiatives',
-        'power_plant',
         'countries__name',
         'regions',
         HasGeoListFilter,
@@ -369,4 +369,3 @@ class CuratedProjectCollectionAdmin(admin.ModelAdmin):
         'published',
     )
     filter_horizontal = ('projects', )
-

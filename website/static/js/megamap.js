@@ -28940,22 +28940,25 @@
 	       *  - Other cases may not be zoomed further
 	       */
 	
-	      // Layers that can be zoomed until minDetailZoom
-	      var useMinDetailZoom = ['Rail', 'Road'];
-	      // Layers that can be zoomed until maxFitZoom
-	      var usemaxFitZoom = ['Intermodal', 'Power Plant', 'Seaport'];
+	      // The lowercase version of the source layer name
+	      var lowerSourceLayer = sourceLayer.toLowerCase();
 	
-	      if (useMinDetailZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
+	      // Layers that can be zoomed until minDetailZoom
+	      var useMinDetailZoom = ['rail', 'road'];
+	      // Layers that can be zoomed until maxFitZoom
+	      var usemaxFitZoom = ['intermodal', 'powerplant', 'seaport'];
+	
+	      if (useMinDetailZoom.indexOf(lowerSourceLayer) !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
 	        return true;
-	      } else if (usemaxFitZoom.indexOf(sourceLayer) !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
+	      } else if (usemaxFitZoom.indexOf(lowerSourceLayer) !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
 	        return true;
-	      } else if (sourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
+	      } else if (lowerSourceLayer.indexOf('lines') !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
 	        // Line layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : lines'
 	        return true;
-	      } else if (sourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
+	      } else if (lowerSourceLayer.indexOf('centroids') !== -1 && this.map.getZoom() < _mapConstants.minDetailZoom) {
 	        // Centroid layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : centroid'
 	        return true;
-	      } else if (sourceLayer.indexOf('points') !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
+	      } else if (lowerSourceLayer.indexOf('points') !== -1 && this.map.getZoom() < _mapConstants.maxFitZoom) {
 	        // Point layers look like 'abcd1234-1234-123a-1abc-a1234bc45d6e : point'
 	        return true;
 	      } else {
