@@ -15,6 +15,15 @@ export default class GeoManager {
     this.geoIdentifiers = new Set(identifiers);
   }
 
+  addGeoIdentifiers(identifiers) {
+    if (this.geoIdentifiers) {
+      const newIdentifiersSet = [...this.geoIdentifiers].concat(identifiers);
+      this.geoIdentifiers = newIdentifiersSet;
+    } else {
+      this.geoIdentifiers = new Set(identifiers);
+    }
+  }
+
   get layerIdentifiers() {
     return [...this.layerIds];
   }
