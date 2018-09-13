@@ -55,7 +55,10 @@ export default class MapContainer extends Component {
   handleMapLoad() {
     this.mapCtl = new Cartographer(this.map.glmap);
     SearchStore.listen(this.onSearchResults);
-    GeoCentroidActions.fetch();
+    const infrastructureTypes = InfrastructureTypeStore.state.results
+    for (let i in infrastructureTypes) {
+      GeoCentroidActions.fetch({'project_type': infrastructureTypes[i].name});
+    }
     window.Cart = this.mapCtl;
   }
 

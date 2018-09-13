@@ -8,14 +8,17 @@ import MapboxGl, {
 import GeoStyles from '../megamap/helpers/GeoStyles';
 
 const ProjectDetail = window.ProjectDetail || {};
+const mapStyle = 'mapbox://styles/ilabmedia/cjldtfvvu21jk2qqh0jh8drn1';
+const token = 'pk.eyJ1IjoiaWxhYm1lZGlhIiwiYSI6ImNpbHYycXZ2bTAxajZ1c2tzdWU1b3gydnYifQ.AHxl8pPZsjsqoz95-604nw';
 
 class Map {
   constructor(geoURL, mapConfig, infrastructureType = null) {
     this.geoURL = geoURL;
     this.geoLoaded = false;
     this.infrastructureType = infrastructureType;
-    const { accessToken, disableHandlers, hideNavigation, ...config } = mapConfig;
-    MapboxGl.accessToken = accessToken;
+    const { disableHandlers, hideNavigation, ...config } = mapConfig;
+    config['style'] = mapStyle;
+    MapboxGl.accessToken = token;
     this.map = new MapboxGl.Map(config);
     disableHandlers.forEach((handler) => {
       this.map[handler].disable();
