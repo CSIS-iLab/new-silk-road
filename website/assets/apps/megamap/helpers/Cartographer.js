@@ -430,38 +430,9 @@ export default class Cartographer {
 
       // Get the DOM elements of the popup
       const popupContainers = projects.map((project) => {
-        // Get the total cost, round it to have 1 decimal point, and add a word
-        // for the total cost unit, like "million" or "billion".
-        let totalCost;
-        if (project.total_cost === null) {
-          totalCost = 'Unknown';
-        } else {
-          let totalCostDividend;
-          let totalCostUnit;
-          if (project.total_cost > 10 ** 15) {
-            totalCostDividend = (project.total_cost / (10 ** 15)).toFixed(1);
-            totalCostUnit = ' quadrillion ';
-          } else if (project.total_cost > 10 ** 12) {
-            totalCostDividend = (project.total_cost / (10 ** 12)).toFixed(1);
-            totalCostUnit = ' trillion ';
-          } else if (project.total_cost > 10 ** 9) {
-            totalCostDividend = (project.total_cost / (10 ** 9)).toFixed(1);
-            totalCostUnit = ' billion ';
-          } else if (project.total_cost > 10 ** 6) {
-            totalCostDividend = (project.total_cost / (10 ** 6)).toFixed(1);
-            totalCostUnit = ' million ';
-          } else if (project.total_cost > 10 ** 3) {
-            totalCostDividend = (project.total_cost / (10 ** 3)).toFixed(1);
-            totalCostUnit = ' thousand';
-          } else {
-            totalCostDividend = project.total_cost.toFixed(1);
-            totalCostUnit = ' ';
-          }
-          totalCost = totalCostDividend + totalCostUnit;
-          if (project.total_cost_currency !== null) {
-            totalCost += project.total_cost_currency;
-          }
-        }
+        // Get the rounded total cost
+        const totalCost = this.getRoundedTotalCost(project.total_cost, project.total_cost_currency)
+
         const buttonId = `button_${project.identifier}`;
         const geoIdentifier = feat.layer.metadata.identifier;
 
@@ -592,6 +563,44 @@ export default class Cartographer {
     this.popupLayerIds = layerIds;
   }
 
+  getRoundedTotalCost(totalCostInteger, currency) {
+    /* Given a totalCostInteger and a currency, return a rounded cost with 1 decimal point,
+     * a word for the total cost unit (like "million" or "billion"), and the currency.
+     * The result should look something like "1.2 million USD".
+     */
+    let totalCostString;
+    if (totalCostInteger === null || totalCostInteger === "null") {
+      totalCostString = 'Unknown';
+    } else {
+      let totalCostDividend;
+      let totalCostUnit;
+      if (totalCostInteger > 10 ** 15) {
+        totalCostDividend = (totalCostInteger / (10 ** 15)).toFixed(1);
+        totalCostUnit = ' quadrillion ';
+      } else if (totalCostInteger > 10 ** 12) {
+        totalCostDividend = (totalCostInteger / (10 ** 12)).toFixed(1);
+        totalCostUnit = ' trillion ';
+      } else if (totalCostInteger > 10 ** 9) {
+        totalCostDividend = (totalCostInteger / (10 ** 9)).toFixed(1);
+        totalCostUnit = ' billion ';
+      } else if (totalCostInteger > 10 ** 6) {
+        totalCostDividend = (totalCostInteger / (10 ** 6)).toFixed(1);
+        totalCostUnit = ' million ';
+      } else if (totalCostInteger > 10 ** 3) {
+        totalCostDividend = (totalCostInteger / (10 ** 3)).toFixed(1);
+        totalCostUnit = ' thousand';
+      } else {
+        totalCostDividend = totalCostInteger.toFixed(1);
+        totalCostUnit = ' ';
+      }
+      totalCostString = totalCostDividend + totalCostUnit;
+      if (currency !== null) {
+        totalCostString += currency;
+      }
+    }
+    return totalCostString;
+  }
+
   queryForPopup(event) {
     if (this.popupLayerIds && event.point) {
       const features = this.map.queryRenderedFeatures(event.point, {
@@ -608,8 +617,14 @@ export default class Cartographer {
       // Determine if zooming should be enabled for the popup
       const zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.layer.source);
 
+      // Get the rounded total cost
+      const totalCost = this.getRoundedTotalCost(feat.properties.total_cost, feat.properties.currency);
+
       // Get the DOM elements for the (project) popup
-      const popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
+      const popupContainer = this.getPopupWithContainer(feat.properties.label,
+        feat.properties.locations, feat.properties.infrastructureType, totalCost,
+        buttonId, '', zoomEnabled, geoIdentifier
+      );
       popup.setLngLat(feat.geometry.coordinates)
            .setDOMContent(popupContainer);
 
