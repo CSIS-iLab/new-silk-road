@@ -1,5 +1,5 @@
 import objectMerge from 'object-merge';
-import { minDetailZoom } from './map-constants';
+import { minDetailZoom, maxFitZoom } from './map-constants';
 
 export default class GeoStyles {
   constructor() {
@@ -56,7 +56,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Rail'],
-                [minDetailZoom, 'RailIcon'],
+                [maxFitZoom, 'RailIcon'],
               ],
             },
           },
@@ -73,7 +73,7 @@ export default class GeoStyles {
             'icon-image': {
               stops: [
                 [0, 'Road'],
-                [minDetailZoom, 'RoadIcon'],
+                [maxFitZoom, 'RoadIcon'],
               ],
             },
           },

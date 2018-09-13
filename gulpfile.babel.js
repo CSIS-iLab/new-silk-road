@@ -134,3 +134,9 @@ gulp.task('watch', () => {
     ],
   });
 });
+
+gulp.task('js:stuff', () =>
+  gulp.src(paths.clientEntryPoints)
+    .pipe(makeBundler('streaming'))
+    .pipe(gulp.dest(paths.jsDist)),
+);
