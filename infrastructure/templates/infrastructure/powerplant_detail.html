@@ -112,11 +112,11 @@
       <div class="row double">
           <section>
               <h3>Capacity</h3>
-              <p>{{ object.plant_capacity }} {{ object.plant_capacity_unit }}</p>
+              <p>{% if object.plant_capacity and object.plant_capacity_unit %}{{ object.plant_capacity }} {{ object.plant_capacity_unit }}{% else %}Unknown{% endif %}</p>
           </section>
           <section>
               <h3>Estimated Output</h3>
-              <p>{{ object.estimated_plant_output }} {{ object.estimated_plant_output_unit }}</p>
+              <p>{% if object.estimated_plant_output and object.estimated_plant_output_unit %}{{ object.estimated_plant_output }} {{ object.estimated_plant_output_unit }}{% else %}Unknown{% endif %}</p>
           </section>
       </div>
       <div class="row double">
@@ -128,7 +128,7 @@
           </section>
           <section>
               <h3>CO2 Emissions</h3>
-              <p>{{ object.plant_CO2_emissions }} {{ object.plant_CO2_emissions_unit }}</p>
+              <p>{% if object.plant_CO2_emissions and object.plant_CO2_emissions_unit %}{{ object.plant_CO2_emissions }} {{ object.plant_CO2_emissions_unit }}{% else %}Unknown{% endif %}</p>
           </section>
       </div>
     </section>

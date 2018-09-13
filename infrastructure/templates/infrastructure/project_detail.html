@@ -151,11 +151,11 @@
           <div class="row double">
               <section>
                   <h3>Capacity</h3>
-                  <p>{{ object.power_plant.plant_capacity }} {{ object.power_plant.plant_capacity_unit }}</p>
+                  <p>{% if object.power_plant.plant_capacity and object.power_plant.plant_capacity_unit %}{{ object.power_plant.plant_capacity }} {{ object.power_plant.plant_capacity_unit }}{% else %}Unknown{% endif %}</p>
               </section>
               <section>
                   <h3>Estimated Output</h3>
-                  <p>{{ object.power_plant.estimated_plant_output }} {{ object.power_plant.estimated_plant_output_unit }}</p>
+                  <p>{% if object.power_plant.estimated_plant_output and object.power_plant.estimated_plant_output_unit %}{{ object.power_plant.estimated_plant_output }} {{ object.power_plant.estimated_plant_output_unit }}{% else %}Unknown{% endif %}</p>
               </section>
           </div>
           <div class="row double">
