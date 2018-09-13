@@ -143,12 +143,33 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
 
     def get_queryset(self):
+        projects_with_distinct_powerplants = Project.objects.exclude(
+            power_plant__isnull=True
+        ).exclude(
+            geo__lines=None,
+            geo__points=None,
+            geo__polygons=None,
+        ).exclude(
+            geo__centroid__isnull=True
+        ).order_by('power_plant__id').distinct('power_plant__id').only('id')
+        projects_without_powerplants = Project.objects.exclude(
+            infrastructure_type__name='Powerplant',
+        ).exclude(
+            geo__lines=None,
+            geo__points=None,
+            geo__polygons=None,
+        ).exclude(
+            geo__centroid__isnull=True
+        ).only('id')
+        project_ids = []
+        project_ids.extend(list(projects_with_distinct_powerplants.values_list('id', flat=True)))
+        project_ids.extend(list(projects_without_powerplants.values_list('id', flat=True)))
         queryset = GeometryStore.objects.exclude(
             lines=None, points=None, polygons=None
         ).exclude(
             centroid__isnull=True
         ).filter(
-            projects__isnull=False
+            projects__id__in=project_ids,
         ).annotate(
             project_alt_name=F('projects__alternate_name'),
             project_name=F('projects__name'),

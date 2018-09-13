@@ -286,7 +286,7 @@ class TestGeometryStoreCentroidViewSet(TestCase):
 
         with self.settings(PUBLISH_FILTER_ENABLED=True):
             self.client.logout()
-            with self.assertNumQueries(1):
+            with self.assertNumQueries(3):
                 # All response data should be fetched in a single query
                 response = self.client.get(self.list_url)
                 self.assertEqual(response.status_code, 200)
