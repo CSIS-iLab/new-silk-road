@@ -108,7 +108,7 @@
     </section>
 
     <section class="related-power-data">
-      <h3>Related Power Data</h3>
+      <h2>Related Power Data</h2>
       <div class="row double">
           <section>
               <h3>Capacity</h3>
@@ -123,7 +123,7 @@
           <section>
               <h3>Fuel</h3>
               {% for fuel in object.fuels.all %}
-                <p>{{ fuel }}</p>
+                <div>{{ fuel }}</div>
               {% endfor %}
           </section>
           <section>
