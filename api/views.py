@@ -156,6 +156,8 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
         ).annotate(
             project_alt_name=F('projects__alternate_name'),
             project_name=F('projects__name'),
+            # FYI this annotation is used in the filtering mechanism
+            # If this is adjusted/removed, adjust the filter accordinagly
             project_type=F('projects__infrastructure_type__name'),
             locations=StringAgg('projects__countries__name', ',', distinct=True),
             currency=F('projects__total_cost_currency')
