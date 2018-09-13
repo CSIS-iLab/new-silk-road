@@ -142,6 +142,30 @@
       </section>
       {% endif %}
     {% endif %}
+
+    <section class="related-power-data">
+      <h3>Related Power Data</h3>
+      <div class="row double">
+          <section>
+              <h3>Capacity</h3>
+              <p>{{ object.power_plant.plant_capacity }} {{ object.power_plant.plant_capacity_unit }}</p>
+          </section>
+          <section>
+              <h3>Estimated Output</h3>
+              <p>{{ object.power_plant.estimated_plant_output }} {{ object.power_plant.estimated_plant_output_unit }}</p>
+          </section>
+      </div>
+      <div class="row double">
+          <section>
+              <h3>Fuel</h3>
+              {% for fuel in object.power_plant.fuels.all %}
+                <p>{{ fuel }}</p>
+              {% endfor %}
+          </section>
+      </div>
+    </section>
+
+
 {% if object.documents.count %}
     <section class="documents featured">
         <h2>Documentation &amp; References</h2>
