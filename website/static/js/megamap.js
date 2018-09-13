@@ -29259,38 +29259,9 @@
 	
 	        // Get the DOM elements of the popup
 	        var popupContainers = projects.map(function (project) {
-	          // Get the total cost, round it to have 1 decimal point, and add a word
-	          // for the total cost unit, like "million" or "billion".
-	          var totalCost = void 0;
-	          if (project.total_cost === null) {
-	            totalCost = 'Unknown';
-	          } else {
-	            var totalCostDividend = void 0;
-	            var totalCostUnit = void 0;
-	            if (project.total_cost > Math.pow(10, 15)) {
-	              totalCostDividend = (project.total_cost / Math.pow(10, 15)).toFixed(1);
-	              totalCostUnit = ' quadrillion ';
-	            } else if (project.total_cost > Math.pow(10, 12)) {
-	              totalCostDividend = (project.total_cost / Math.pow(10, 12)).toFixed(1);
-	              totalCostUnit = ' trillion ';
-	            } else if (project.total_cost > Math.pow(10, 9)) {
-	              totalCostDividend = (project.total_cost / Math.pow(10, 9)).toFixed(1);
-	              totalCostUnit = ' billion ';
-	            } else if (project.total_cost > Math.pow(10, 6)) {
-	              totalCostDividend = (project.total_cost / Math.pow(10, 6)).toFixed(1);
-	              totalCostUnit = ' million ';
-	            } else if (project.total_cost > Math.pow(10, 3)) {
-	              totalCostDividend = (project.total_cost / Math.pow(10, 3)).toFixed(1);
-	              totalCostUnit = ' thousand';
-	            } else {
-	              totalCostDividend = project.total_cost.toFixed(1);
-	              totalCostUnit = ' ';
-	            }
-	            totalCost = totalCostDividend + totalCostUnit;
-	            if (project.total_cost_currency !== null) {
-	              totalCost += project.total_cost_currency;
-	            }
-	          }
+	          // Get the rounded total cost
+	          var totalCost = _this3.getRoundedTotalCost(project.total_cost, project.total_cost_currency);
+	
 	          var buttonId = 'button_' + project.identifier;
 	          var geoIdentifier = feat.layer.metadata.identifier;
 	
@@ -29442,6 +29413,45 @@
 	      this.popupLayerIds = layerIds;
 	    }
 	  }, {
+	    key: 'getRoundedTotalCost',
+	    value: function getRoundedTotalCost(totalCostInteger, currency) {
+	      /* Given a totalCostInteger and a currency, return a rounded cost with 1 decimal point,
+	       * a word for the total cost unit (like "million" or "billion"), and the currency.
+	       * The result should look something like "1.2 million USD".
+	       */
+	      var totalCostString = void 0;
+	      if (totalCostInteger === null || totalCostInteger === "null") {
+	        totalCostString = 'Unknown';
+	      } else {
+	        var totalCostDividend = void 0;
+	        var totalCostUnit = void 0;
+	        if (totalCostInteger > Math.pow(10, 15)) {
+	          totalCostDividend = (totalCostInteger / Math.pow(10, 15)).toFixed(1);
+	          totalCostUnit = ' quadrillion ';
+	        } else if (totalCostInteger > Math.pow(10, 12)) {
+	          totalCostDividend = (totalCostInteger / Math.pow(10, 12)).toFixed(1);
+	          totalCostUnit = ' trillion ';
+	        } else if (totalCostInteger > Math.pow(10, 9)) {
+	          totalCostDividend = (totalCostInteger / Math.pow(10, 9)).toFixed(1);
+	          totalCostUnit = ' billion ';
+	        } else if (totalCostInteger > Math.pow(10, 6)) {
+	          totalCostDividend = (totalCostInteger / Math.pow(10, 6)).toFixed(1);
+	          totalCostUnit = ' million ';
+	        } else if (totalCostInteger > Math.pow(10, 3)) {
+	          totalCostDividend = (totalCostInteger / Math.pow(10, 3)).toFixed(1);
+	          totalCostUnit = ' thousand';
+	        } else {
+	          totalCostDividend = totalCostInteger.toFixed(1);
+	          totalCostUnit = ' ';
+	        }
+	        totalCostString = totalCostDividend + totalCostUnit;
+	        if (currency !== null) {
+	          totalCostString += currency;
+	        }
+	      }
+	      return totalCostString;
+	    }
+	  }, {
 	    key: 'queryForPopup',
 	    value: function queryForPopup(event) {
 	      if (this.popupLayerIds && event.point) {
@@ -29459,8 +29469,11 @@
 	        // Determine if zooming should be enabled for the popup
 	        var zoomEnabled = this.geoStoreShouldBeZoomedMore(feat.layer.source);
 	
+	        // Get the rounded total cost
+	        var totalCost = this.getRoundedTotalCost(feat.properties.total_cost, feat.properties.currency);
+	
 	        // Get the DOM elements for the (project) popup
-	        var popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, feat.properties.total_cost, buttonId, '', zoomEnabled, geoIdentifier);
+	        var popupContainer = this.getPopupWithContainer(feat.properties.label, feat.properties.locations, feat.properties.infrastructureType, totalCost, buttonId, '', zoomEnabled, geoIdentifier);
 	        popup.setLngLat(feat.geometry.coordinates).setDOMContent(popupContainer);
 	
 	        this.addPopup(popup);

@@ -254,7 +254,8 @@ class TestGeometryStoreCentroidViewSet(TestCase):
                         flat=True
                     )
                 ),
-                "total_cost": "1.2 million {}".format(self.published_project.total_cost_currency),
+                "total_cost": self.geom_with_published_project.projects.all()[0].total_cost,
+                "currency": self.geom_with_published_project.projects.all()[0].total_cost_currency,
             }
         })
 
