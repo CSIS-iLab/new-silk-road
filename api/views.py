@@ -166,7 +166,7 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
                 When(project_type_lower='rail', then=Value('Rail')),
                 When(project_type_lower='road', then=Value('Road')),
                 When(project_type_lower='multimodal', then=Value('Multimodal')),
-                When(project_type_lower='intermodal', then=Value('Intermodal')),
+                When(project_type_lower='intermodal', then=Value('Dryport')),
                 When(project_type_lower='powerplant', then=Value('Powerplant')),
                 default=Value('dot'),
                 output_field=CharField(),
