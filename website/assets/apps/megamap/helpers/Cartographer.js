@@ -41,7 +41,7 @@ export default class Cartographer {
     this.popupLayerIds = [];
     this.addListeners();
     this.configureMap();
-    this.layerIds = InfrastructureTypeStore.state.results.map(({ name }) => name);
+    this.layerIds = [];
   }
 
   setLayerIds(infrastructure_type) {
@@ -164,43 +164,23 @@ export default class Cartographer {
     this.map._container.parentElement.classList.remove('loading');
   }
 
-  splitLayers(data) {
-    const layerArray = []
-    for (let layerIndex in this.layerIds) {
-      const layer = Object.assign({
-        features: [],
-        type: "FeatureCollection",
-      });
-
-      for (let featureIndex in data.features) {
-        if (data.features[featureIndex].properties !== undefined && data.features[featureIndex].properties.infrastructureType === this.layerIds[layerIndex]) {
-          layer.features.push(data.features[featureIndex]);
-        }
-      }
-      layerArray.push(layer);
-    }
-    return layerArray
-  }
-
   handleCentroidsUpdate(allData) {
-    this.geoManager.setGeoIdentifiers(allData.features.map(feat => feat.id));
-    const layerArray = this.splitLayers(allData);
-    for (let i in layerArray) {
-      if (layerArray[i].features.length == 0) { continue; }
-      const thisLayerId = layerArray[i].features[i].properties.infrastructureType;
-      const data = layerArray[i];
-      const source = {
-        data,
-        type: 'geojson',
-      };
-      const layer = Object.assign({
-        source: thisLayerId,
-        id: thisLayerId,
-      }, this.styles.getStyleFor('centroids'));
+    this.geoManager.addGeoIdentifiers(allData.features.map(feat => feat.id));
+    if (allData.features.length == 0) { return; }
+    const thisLayerId = allData.features[0].properties.infrastructureType;
+    const data = allData;
+    const source = {
+      data,
+      type: 'geojson',
+    };
+    const layer = Object.assign({
+      source: thisLayerId,
+      id: thisLayerId,
+    }, this.styles.getStyleFor('centroids'));
 
-      this.setSource(layer.source, source);
-      this.addLayer(layer);
-    }
+    this.setSource(layer.source, source);
+    this.addLayer(layer);
+    this.layerIds.push(thisLayerId);
 
     this.removePopup();
     this.setPopupLayers(this.layerIds);
