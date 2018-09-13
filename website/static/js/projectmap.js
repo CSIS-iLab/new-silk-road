@@ -4426,7 +4426,7 @@
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
-	              stops: [[0, 'Rail'], [_mapConstants.minDetailZoom, 'RailIcon']]
+	              stops: [[0, 'Rail'], [_mapConstants.maxFitZoom, 'RailIcon']]
 	            }
 	          }
 	        })
@@ -4440,7 +4440,7 @@
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
-	              stops: [[0, 'Road'], [_mapConstants.minDetailZoom, 'RoadIcon']]
+	              stops: [[0, 'Road'], [_mapConstants.maxFitZoom, 'RoadIcon']]
 	            }
 	          }
 	        })

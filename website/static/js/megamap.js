@@ -11110,7 +11110,7 @@
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
-	              stops: [[0, 'Rail'], [_mapConstants.minDetailZoom, 'RailIcon']]
+	              stops: [[0, 'Rail'], [_mapConstants.maxFitZoom, 'RailIcon']]
 	            }
 	          }
 	        })
@@ -11124,7 +11124,7 @@
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
 	            'icon-image': {
-	              stops: [[0, 'Road'], [_mapConstants.minDetailZoom, 'RoadIcon']]
+	              stops: [[0, 'Road'], [_mapConstants.maxFitZoom, 'RoadIcon']]
 	            }
 	          }
 	        })
@@ -27210,7 +27210,7 @@
 	    var _this = _possibleConstructorReturn(this, (MapContainer.__proto__ || Object.getPrototypeOf(MapContainer)).call(this));
 	
 	    _this.mapCtl = null;
-	    _this.state = { loading: '' };
+	    _this.state = { loading: 'loading' };
 	    _this.handleMapLoad = _this.handleMapLoad.bind(_this);
 	    _this.handleMapClick = _this.handleMapClick.bind(_this);
 	    _this.onSearchResults = _this.onSearchResults.bind(_this);
@@ -28973,6 +28973,13 @@
 	    value: function handleCentroidsFail(error) {
 	      console.log('Error!');
 	      console.log(error);
+	      this.map._container.parentElement.lastChild.innerHTML = '<div class="loadError">We encountered an error. Please reload the page.</div>';
+	    }
+	  }, {
+	    key: 'removeLoading',
+	    value: function removeLoading() {
+	      // a little basic javascript to avoid react gymnastics
+	      this.map._container.parentElement.classList.remove('loading');
 	    }
 	  }, {
 	    key: 'splitLayers',
@@ -29021,6 +29028,7 @@
 	
 	      this.removePopup();
 	      this.setPopupLayers(this.layerIds);
+	      this.removeLoading();
 	    }
 	  }, {
 	    key: 'handleGeoStoreSelect',
