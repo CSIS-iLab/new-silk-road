@@ -629,6 +629,10 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 
+// Rule specific for MS Edge
+.searchView .sectionRow .dateRangeSelect .Select-input input {
+    border: none;
+}
 
 .Select {
     font-family: $sans-font-family;
