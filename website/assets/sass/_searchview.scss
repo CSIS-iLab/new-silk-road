@@ -621,7 +621,7 @@ $scroll-max-height: $results-view-max-height - 46;
         margin: 4px;
         overflow: hidden;
         border: 2px solid $pale-grey;
-        width: 50px;
+        width: 63px;
     }
     input:nth-child(1) {
         border: none;
@@ -629,6 +629,10 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 
+// Rule specific for MS Edge
+.searchView .sectionRow .dateRangeSelect .Select-input input {
+    border: none;
+}
 
 .Select {
     font-family: $sans-font-family;
