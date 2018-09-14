@@ -52,12 +52,13 @@
         {% if object.infrastructure_type.name == 'Powerplant' %}
           {% if object.description_rendered %}
           <section class="description">
-              <h3>Description</h3>
-          {{ object.description_rendered|safe }}
+            {{ object.description_rendered|safe }}
           </section>
           {% endif %}
 
-          <span><strong>Power Plant</strong>: </span><a href="{{ project.power_plant.get_absolute_url }}">{{ project.power_plant.name }}</a></span>
+          <section class="associated-objects">
+            <span><strong>Power Plant</strong>: </span><a href="{{ project.power_plant.get_absolute_url }}">{{ project.power_plant.name }}</a></span>
+          </section>
         {% endif %}
 
 

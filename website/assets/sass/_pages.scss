@@ -280,9 +280,9 @@ article {
 }
 
 .description {
+    margin-bottom: 33px;
     h3 {
         text-transform: none;
-
     }
     p {
         font-size: $minor-text-size;
@@ -294,6 +294,10 @@ article {
             border: 6px solid $slate-grey;
         }
     }
+}
+
+.associated-objects {
+  margin-bottom: 33px;
 }
 
 .document-list {
