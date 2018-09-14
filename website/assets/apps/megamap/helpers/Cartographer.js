@@ -42,6 +42,7 @@ export default class Cartographer {
     this.addListeners();
     this.configureMap();
     this.layerIds = [];
+    this.lastLayerLoaded = '';
   }
 
   setLayerIds(infrastructure_type) {
@@ -181,6 +182,14 @@ export default class Cartographer {
     this.setSource(layer.source, source);
     this.addLayer(layer);
     this.layerIds.push(thisLayerId);
+
+    // the layers with the most data load after the smaller layers for obvious reasons.
+    // we take the most recent layer and push it behind the last one loaded so that
+    // the larger layers do not cover the smaller layers.
+    if (this.lastLayerLoaded) {
+      this.map.moveLayer(thisLayerId, this.lastLayerLoaded);
+    }
+    this.lastLayerLoaded = thisLayerId;
 
     this.removePopup();
     this.setPopupLayers(this.layerIds);
