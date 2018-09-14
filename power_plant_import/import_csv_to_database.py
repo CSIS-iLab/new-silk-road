@@ -288,6 +288,7 @@ def get_power_plant_data_for_form(power_plant_obj, row, infrastructure_type):
             row.get('Plant CO2 Emissions Unit')
         ),
         'grid_connected': boolean_or_none(row.get('Grid Connected')),
+        'description': value_or_none(row.get('Notes')),
     }
 
 
@@ -331,6 +332,7 @@ def get_project_data_for_form(project, power_plant, row, infrastructure_type):
         ),
         'planned_completion_year': value_or_none(row.get('Completion Year')),
         'new': boolean_or_none(row.get('New Construction')),
+        'description': value_or_none(row.get('Notes')),
     }
 
 

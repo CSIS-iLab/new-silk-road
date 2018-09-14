@@ -450,6 +450,11 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(project_ouessant1.planned_completion_month, 3)
         self.assertEqual(project_ouessant1.planned_completion_year, 2010)
         self.assertEqual(project_ouessant1.new, True)
+        self.assertEqual(
+            project_ouessant1.description,
+            'This project received public co-financing from the French State and '
+            'other funds from local and public administration authorities.'
+        )
         # Verify the fields for powerplant_ilarionas
         self.assertEqual(powerplant_ilarionas.name, 'Ilarionas')
         self.assertEqual(powerplant_ilarionas.infrastructure_type, infrastructure_type_power_plant)
@@ -486,6 +491,11 @@ class ImportCSVToDatabaseTestCase(TestCase):
             {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['TONNES PER ANNUM']
         )
         self.assertEqual(powerplant_ilarionas.grid_connected, None)
+        self.assertEqual(
+            powerplant_ilarionas.description,
+            'METKA is a EPC contractor of the project. METKA has awarded a contract '
+            'to Alstom Hydro to supply turbine-generators.'
+        )
         # The project_liaoning has a value of '(Project)' in the 'Project Name'
         # field in the CSV, so project_liaoning should get its name from the
         # 'Source Plant Name' field instead.
