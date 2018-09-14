@@ -57,7 +57,9 @@
           </section>
           {% endif %}
 
-          <span><strong>Power Plant</strong>: </span><a href="{{ project.power_plant.get_absolute_url }}">{{ project.power_plant.name }}</a></span>
+          <section class="associated-objects">
+            <span><strong>Power Plant</strong>: </span><a href="{{ project.power_plant.get_absolute_url }}">{{ project.power_plant.name }}</a></span>
+          </section>
         {% endif %}
 
 
