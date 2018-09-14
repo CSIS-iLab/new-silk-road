@@ -108,7 +108,7 @@ export default class Cartographer {
   configureMap() {
     this.map.addControl(new NavigationControl(), 'top-right');
     this.map.scrollZoom.disable();
-    this.beginPeriodicUpdates();
+    // this.beginPeriodicUpdates();
   }
 
   geoStoreShouldBeZoomedMore(sourceLayer) {
@@ -265,7 +265,7 @@ export default class Cartographer {
   }
 
   handleEndMapMove() {
-    this.beginPeriodicUpdates();
+    // this.beginPeriodicUpdates();
     if (this.updateDelayId) {
       clearTimeout(this.updateDelayId);
       this.updateDelayId = null;

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.postgres.aggregates import StringAgg
 from django.db.models import Case, CharField, Count, F, Value, When
 from django.db.models.functions import Lower
+from django.utils.cache import add_never_cache_headers
 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
@@ -204,6 +205,13 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(projects__published=True)
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        "Don't cache powerplant API response since it's >1MB"
+        response = super().list(request, *args, **kwargs)
+        if ('project_type' in request.query_params and request.query_params['project_type'] == 'Powerplant'):
+            add_never_cache_headers(response)
+        return response
 
 
 class RegionListView(generics.ListAPIView):
