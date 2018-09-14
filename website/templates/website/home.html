@@ -26,7 +26,7 @@
                 </div>
                 <a href="{{ entry.entry.get_absolute_url }}">
                 <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image img-{{ forloop.counter }}" src="{{ entry.entry.featured_image.url }}"> </figure>
-                   
+
                 </a>
                 {% if entry.entry.is_sponsored %}
                 <img class="sponsored-logo" src="{{ entry.entry.sponsored_logo.url }}">{% endif %}
@@ -35,7 +35,7 @@
             {% endif %} {% endfor %} {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter == 2 %}
             <a href="{{ entry.entry.get_absolute_url }}">
            <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image " src="{{ entry.entry.featured_image.url }}"> </figure>
-                  
+
             </a>
             <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
@@ -57,7 +57,7 @@
             {% for entry, truncate_length in featured_entry_set %} {% if forloop.counter >= 3 %}
             <a href="{{ entry.entry.get_absolute_url }}">
             <figure class="image-wrap img-{{ forloop.counter }}"><img class="featured-image" src="{{ entry.entry.featured_image.url }}"> </figure>
-                  
+
             </a>
             <div class="featured-entry entry-{{ forloop.counter }}{% if entry.entry.is_sponsored %} sponsored-entry{% endif %}">
                 <a href="{{ entry.entry.get_absolute_url }}"><h3 class="entry-title">{{ entry.entry.title }}</h3></a>
@@ -106,16 +106,16 @@
             <div class="num-stat">
                 <div class="count">
                     <img class="infra-icon" src="{% static 'img/redesign/rail_icon_green.svg' %}" " alt="Railroad Statistics ">
-            
-            <div>
-                <span class="large-numbers ">{{ db_totals.rail.count }}</span>
-                <span class="label ">Railroads</span>
+
+                    <div>
+                        <span class="large-numbers ">{{ db_totals.rail.count }}</span>
+                        <span class="label ">Railroads</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
-         <div class="num-stat ">
-        <div class="count statrt ">
-            
+            <div class="num-stat ">
+              <div class="count statrt ">
+
                 <img class="infra-icon " src="{% static 'img/redesign/seaport_icon_green.svg' %} "" alt="Seaport Statistics">
                     <div>
                         <span class="large-numbers">{{ db_totals.seaport.count }}</span>
@@ -126,15 +126,15 @@
             <div class="num-stat">
                 <div class="count">
                     <img class="infra-icon" src="{% static 'img/redesign/dryport_icon_green.svg' %}"  alt="Dryport Statistics ">
-            
-            <div>
-                <span class="large-numbers ">{{ db_totals.intermodal.count }}</span>
-                <span class="label ">Dryports</span>
-            </div>
+
+                    <div>
+                        <span class="large-numbers ">{{ db_totals.intermodal.count }}</span>
+                        <span class="label ">Dryports</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="clearfix "></div>
+        <div class="clearfix "></div>
     </div>
 </section>
 <section id='illustrating-history'>
@@ -150,7 +150,7 @@
             <p>See tomorrow's supercontinent through the eyes of regional powers.</p>
         </div>
    </div>
-  
+
     <div class="historical-atlas ">
         <a  class="img-container" href="{% url 'historical-atlas' %} ">
             <img src="{% static 'img/redesign/illustrating-history-left.jpg' %} " alt="Historical Atlas teaser image " /></a>
@@ -159,7 +159,7 @@
                 <p id="lastp ">Explore the rise and fall of trade, technology, and civilizations.</p>
             </div>
             </div>
-       
+
 <div class="clearfix "></div>
 </div>
 </section>
@@ -207,4 +207,4 @@ Zepto(function($) {
     });
 });
 </script>-->
-{% endblock %} 
+{% endblock %}
