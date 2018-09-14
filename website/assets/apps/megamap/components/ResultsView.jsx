@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import ResultsList from './ResultsList';
+import SearchActions from '../actions/SearchActions';
 
 
 const resultsNavStyle = {
@@ -30,6 +31,7 @@ class ResultsView extends Component {
     this.handleNextClick = this.handleNextClick.bind(this);
     this.handlePreviousClick = this.handlePreviousClick.bind(this);
     this.handleNextClick = this.handleNextClick.bind(this);
+    this.searchForCuratedResults = this.searchForCuratedResults.bind(this);
   }
 
   componentWillUpdate() {
@@ -48,10 +50,135 @@ class ResultsView extends Component {
     }
   }
 
+  getPageNumbersFromURL(previousURL, nextURL, totalNumResults) {
+    /* Return current page number & total number of pages based on previousURL and nextURL */
+    let currentPage;
+    let numPages;
+    let keyAndValue;
+
+    if (nextURL !== null) {
+      // There is a nextURL, so use it to find the currentPage and numPages
+      let numLastResult;
+      let pageSize;
+      const parameters = nextURL.slice(nextURL.indexOf('?') + 1).split('&');
+      for (let i = 0; i < parameters.length; i++) {
+        keyAndValue = parameters[i].split('=');
+        const key = keyAndValue[0];
+        const value = keyAndValue[1];
+        if (key === 'offset') {
+          numLastResult = parseInt(value);
+        }
+        if (key === 'limit') {
+          pageSize = parseInt(value);
+        }
+      }
+      currentPage = Math.ceil(numLastResult / pageSize);
+      numPages = Math.ceil(totalNumResults / pageSize);
+    } else if (previousURL !== null) {
+      // There is no nextURL, but there is a previousURL, so this must be the last page
+      let pageSize;
+      const parameters = previousURL.slice(previousURL.indexOf('?') + 1).split('&');
+      for (let i = 0; i < parameters.length; i++) {
+        keyAndValue = parameters[i].split('=');
+        const key = keyAndValue[0];
+        const value = keyAndValue[1];
+        if (key === 'limit') {
+          pageSize = parseInt(value);
+        }
+      }
+      numPages = Math.ceil(totalNumResults / pageSize);
+      currentPage = numPages;
+    } else {
+      // There is no previousURL or nextURL. This must be page 1 of 1
+      currentPage = 1;
+      numPages = 1;
+    }
+
+    return [currentPage, numPages];
+  }
+
+  searchForCuratedResults (e) {
+    /* Get the curated project collection query, update parent's state, and search the backend. */
+
+    // Get the project collection query
+    let query = {
+      'curated_project_collections': [parseInt(e.target.id)],
+      'infrastructure_type': [],
+    }
+    // Uopdate parent state for the curated_project_collections
+    this.props.updateParentQuery(query);
+    // Query the backend (which will also update the map)
+    SearchActions.search(query);
+  }
+
   render() {
     const noResults = this.props.results.length === 0;
+    let currentPage;
+    let numPages;
+
+    if (!noResults) {
+      const pageNumbers = this.getPageNumbersFromURL(
+        this.props.previousURL, this.props.nextURL, this.props.totalCount
+      );
+      currentPage = pageNumbers[0];
+      numPages = pageNumbers[1];
+    }
+
+    let curatedProjectCollectionsElements = [];
+    if (this.props.curatedProjectCollections !== undefined && this.props.curatedProjectCollections.length > 0) {
+      for (let i=0; i<this.props.curatedProjectCollections.length; i++) {
+        curatedProjectCollectionsElements.push(
+          <a id={this.props.curatedProjectCollections[i].__proto__.value}
+             key={this.props.curatedProjectCollections[i].__proto__.value}
+             onClick={this.searchForCuratedResults}
+          >
+            {this.props.curatedProjectCollections[i].__proto__.label}
+          </a>
+        );
+      }
+    }
+
     return (
       <div className="resultsView" style={this.props.style}>
+        <h2 className="summaryInfo">
+          {this.props.totalCount} Projects
+        </h2>
+        <div
+          className="scrollWrap"
+          ref={(el) => { this.scrollWrap = el; }}
+          style={[
+            scrollWrap.base,
+          ]}
+        >
+          <div className="scrollContent"
+            style={[
+              this.props.results.length === 0 && scrollWrap.hidden,
+            ]}
+          >
+            <ResultsList results={this.props.results} />
+          </div>
+          <div className="scrollContent"
+            style={[
+              this.props.results.length !== 0 && scrollWrap.hidden,
+            ]}
+          >
+            <section>
+              <p>
+                Click the icon panel on the right to hide the results of particular infrastructure types on the map.
+              </p>
+              <p>
+                Search and filter results by clicking the “Filter” tab above.
+              </p>
+            </section>
+            <section>
+              <h2>Curated Results</h2>
+              <p>
+                This list of results illustrate some of the projects and strategies our team is following.
+                {curatedProjectCollectionsElements}
+              </p>
+            </section>
+          </div>
+        </div>
         <div
           className="resultsNav"
           style={[
@@ -63,26 +190,17 @@ class ResultsView extends Component {
               disabled={this.props.previousURL == null}
               onClick={this.handlePreviousClick}
               value={this.props.previousURL}
-            >Previous</button>
+            ></button>
+          </div>
+          <div className="pagination">
+            Page {currentPage} of {numPages}
           </div>
           <div className="buttonWrap">
             <button
               disabled={this.props.nextURL == null}
               onClick={this.handleNextClick}
               value={this.props.nextURL}
-            >Next</button>
-          </div>
-        </div>
-        <div
-          className="scrollWrap"
-          ref={(el) => { this.scrollWrap = el; }}
-          style={[
-            scrollWrap.base,
-            this.props.results.length === 0 && scrollWrap.hidden,
-          ]}
-        >
-          <div className="scrollContent">
-            <ResultsList results={this.props.results} />
+            ></button>
           </div>
         </div>
       </div>

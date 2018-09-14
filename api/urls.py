@@ -5,6 +5,7 @@ from api.views import (
     # facts
     OrganizationViewSet,
     # infrastructure
+    CuratedProjectCollectionListView,
     ProjectViewSet,
     InitiativeViewSet,
     InfrastructureTypeListView,
@@ -36,6 +37,7 @@ urlpatterns = [
     url(r'^project-statuses/$', ProjectStatusListView.as_view(), name='project-status-list'),
     url(r'^regions/$', RegionListView.as_view(), name='region-list'),
     url(r'^countries/$', CountryListView.as_view(), name='country-list'),
+    url(r'^curated-projects/$', CuratedProjectCollectionListView.as_view(), name='curated-projects-list'),
     url(r'^infrastructure-types/$', InfrastructureTypeListView.as_view(), name='infrastructure-type-list'),
     url(r'^', include(router.urls)),
 ]

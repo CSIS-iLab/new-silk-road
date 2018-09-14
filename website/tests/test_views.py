@@ -115,25 +115,25 @@ class HomeViewTestCase(TestCase):
 
         road = InfrastructureTypeFactory(name='Road', slug='road')
         rail = InfrastructureTypeFactory(name='Railroad', slug='rail')
-        # Create 3 road projects
-        ProjectFactory(infrastructure_type=road)
-        ProjectFactory(infrastructure_type=road)
-        ProjectFactory(infrastructure_type=road)
-        # Create 2 rail projects
-        ProjectFactory(infrastructure_type=rail)
-        ProjectFactory(infrastructure_type=rail)
+        # Create 3 road projects, 2 of which are published
+        ProjectFactory(infrastructure_type=road, published=True)
+        ProjectFactory(infrastructure_type=road, published=True)
+        ProjectFactory(infrastructure_type=road, published=False)
+        # Create 2 rail projects, 1 of which is published
+        ProjectFactory(infrastructure_type=rail, published=True)
+        ProjectFactory(infrastructure_type=rail, published=False)
         # Totals should be in the response
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         expected = {
             'road': {
                 'id': road.pk,
-                'count': 3,
+                'count': 2,
                 'label': 'Road',
             },
             'rail': {
                 'id': rail.pk,
-                'count': 2,
+                'count': 1,
                 'label': 'Railroad',
             }
         }

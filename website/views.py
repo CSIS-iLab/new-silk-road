@@ -43,7 +43,7 @@ class HomeView(FeaturedEntryMixin, TemplateView):
             kwargs['featured_entry_set'] = list(zip(kwargs['featured_entry_set'], article_lengths))
 
         # Add project stat totals
-        totals = Project.objects.filter(
+        totals = Project.objects.published().filter(
             infrastructure_type__isnull=False
         ).values(
             'infrastructure_type', 'infrastructure_type__name', 'infrastructure_type__slug'

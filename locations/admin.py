@@ -7,7 +7,7 @@ from .models import (
     Region, Place,
     Country
 )
-from .forms import CountrySearchMultiField
+from .forms import CountrySearchMultiField, GeometryStoreForm
 from leaflet.admin import LeafletGeoAdmin
 
 
@@ -82,6 +82,7 @@ class LineStringGeometryAdmin(GeometryBaseAdmin):
 
 @admin.register(GeometryStore)
 class GeometryStoreAdmin(admin.ModelAdmin):
+    form = GeometryStoreForm
     readonly_fields = ('attributes',)
     list_display = ('identifier', 'label', 'name_attr', 'source_attr', 'center_attr')
     filter_horizontal = [
@@ -89,6 +90,7 @@ class GeometryStoreAdmin(admin.ModelAdmin):
         'lines',
         'polygons'
     ]
+    search_fields = ('label', 'projects__name')
 
     def name_attr(self, obj):
         return obj.attributes.get('name', 'No name attribute')

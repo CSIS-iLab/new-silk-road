@@ -1,5 +1,8 @@
-from django.db.models import Count, F
 from django.conf import settings
+from django.contrib.postgres.aggregates import StringAgg
+from django.db.models import Case, CharField, Count, F, Value, When
+from django.db.models.functions import Lower
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics
 from rest_framework.views import APIView
@@ -31,6 +34,7 @@ from api.filters.locations import (
 
 )
 from infrastructure.models import (
+    CuratedProjectCollection,
     Project,
     ProjectStatus,
     Initiative,
@@ -39,7 +43,12 @@ from infrastructure.models import (
 from facts.models import (
     Organization
 )
-from api.serializers.infrastructure import (ProjectSerializer, InitiativeSerializer, InfrastructureTypeSerializer)
+from api.serializers.infrastructure import (
+    CuratedProjectCollectionSerializer,
+    ProjectSerializer,
+    InitiativeSerializer,
+    InfrastructureTypeSerializer
+)
 from api.serializers.facts import (OrganizationBasicSerializer)
 from api.filters.infrastructure import (ProjectFilter, InitiativeFilter)
 from api.filters.facts import (OrganizationFilter)
@@ -134,16 +143,61 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
 
     def get_queryset(self):
+        projects_with_distinct_powerplants = Project.objects.exclude(
+            power_plant__isnull=True
+        ).exclude(
+            geo__lines=None,
+            geo__points=None,
+            geo__polygons=None,
+        ).exclude(
+            geo__centroid__isnull=True
+        ).order_by('power_plant__id').distinct('power_plant__id').only('id')
+        projects_without_powerplants = Project.objects.exclude(
+            infrastructure_type__name='Powerplant',
+        ).exclude(
+            geo__lines=None,
+            geo__points=None,
+            geo__polygons=None,
+        ).exclude(
+            geo__centroid__isnull=True
+        ).only('id')
+        project_ids = []
+        project_ids.extend(list(projects_with_distinct_powerplants.values_list('id', flat=True)))
+        project_ids.extend(list(projects_without_powerplants.values_list('id', flat=True)))
         queryset = GeometryStore.objects.exclude(
             lines=None, points=None, polygons=None
         ).exclude(
             centroid__isnull=True
         ).filter(
-            projects__isnull=False
+            projects__id__in=project_ids,
         ).annotate(
             project_alt_name=F('projects__alternate_name'),
             project_name=F('projects__name'),
+            # FYI this annotation is used in the filtering mechanism
+            # If this is adjusted/removed, adjust the filter accordingly
             project_type=F('projects__infrastructure_type__name'),
+            project_type_lower=Lower('projects__infrastructure_type__name'),
+            locations=StringAgg('projects__countries__name', ',', distinct=True),
+            currency=F('projects__total_cost_currency'),
+            total_cost=F('projects__total_cost'),
+        ).annotate(
+            icon_image=Case(
+                When(project_type_lower='seaport', then=Value('Seaport')),
+                When(project_type_lower='dryport', then=Value('Dryport')),
+                When(project_type_lower='rail', then=Value('Rail')),
+                When(project_type_lower='road', then=Value('Road')),
+                When(project_type_lower='multimodal', then=Value('Multimodal')),
+                When(project_type_lower='intermodal', then=Value('Intermodal')),
+                When(project_type_lower='powerplant', then=Value('Powerplant')),
+                default=Value('dot'),
+                output_field=CharField(),
+            )
+        ).annotate(
+            best_project_name=Case(
+                When(project_alt_name='', then=F('project_name')),
+                default=F('project_alt_name'),
+                output_field=CharField(),
+            )
         ).distinct()
 
         if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
@@ -162,3 +216,15 @@ class CountryListView(generics.ListAPIView):
     queryset = Country.objects.distinct().all()
     serializer_class = CountryBasicSerializer
     pagination_class = None
+
+
+class CuratedProjectCollectionListView(generics.ListAPIView):
+    serializer_class = CuratedProjectCollectionSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        queryset = CuratedProjectCollection.objects.distinct()
+        if settings.PUBLISH_FILTER_ENABLED and not self.request.user.is_authenticated:
+            queryset = queryset.published().filter(projects__published=True)
+
+        return queryset

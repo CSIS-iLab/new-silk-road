@@ -8,7 +8,6 @@ from locations.models import (
     Region,
     Country
 )
-from infrastructure.models import Project
 from api.serializers.infrastructure import (ProjectNestableSerializer,)
 from api.fields import DynamicFieldsMixin
 
@@ -18,7 +17,8 @@ ICON_MAP = {
     "rail": "Rail",
     "road": "Road",
     "multimodal": "Dryport",
-    "intermodal": "Dryport"
+    "intermodal": "Dryport",
+    "powerplant": "Powerplant",
 }
 
 
@@ -94,16 +94,20 @@ class GeometryStoreCentroidSerializer(GeoFeatureModelSerializer):
                   'centroid', 'id')
 
     def get_properties(self, instance, fields):
-        # This makes use of the project_name, project_type, and project_alt_name
-        # annotations provided by the view for performance
-        proj_name = getattr(instance, 'project_alt_name') or instance.project_name or None
-        infra_name = instance.project_type or None
-        icon_type = ICON_MAP.get(infra_name.lower(), 'dot') if infra_name else None
+        """
+        Return the properties for the API endpoint.
+
+        This makes use of the project_name, project_type, project_alt_name, and
+        other annotations provided by the view for performance
+        """
         return {
-            'label': proj_name,
+            'label': instance.best_project_name,
             'geostore': instance.identifier,
-            'infrastructureType': infra_name,
-            'icon-image': icon_type
+            'infrastructureType': instance.project_type,
+            'icon-image': instance.icon_image,
+            'locations': instance.locations,
+            'total_cost': instance.total_cost,
+            'currency': instance.currency,
         }
 
 

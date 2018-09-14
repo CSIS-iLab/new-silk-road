@@ -26,6 +26,8 @@ There are a lot of software packages used in developing websites: the following 
 $ brew install python3 node postgresql postgis heroku
 ```
 
+*Note: this project assumes that you are using `node` version 5, which is no longer supported. The front-end libraries should be updated, so the project can work with a supported version of node.*
+
 What is all that, you ask? Well, `brew install` was telling Homebrew we want to install some things, and everything after that is a software package. `python3` and `node` are for running code Python and JavaScript code on your computer. Python runs the server-side code that interacts with the database, generates HTML pages, etc. Node is used to compile CSS files from Sass and JavaScript from, well, other JavaScript.
 
 Next in that list is `postgresql` and `postgis`. PostgreSQL is a database program, and PostGIS adds geospatial capabilities to PostgreSQL. We'll use those to run a local copy of the database.
@@ -37,7 +39,7 @@ Next in that list is `postgresql` and `postgis`. PostgreSQL is a database progra
 Without the packages listed below, you will not be able all parts of the website, such as the search engine. You may not need to work with those parts, but if you do, you'll need to install additional software:
 
 ```sh
-$ brew install redis elasticsearch memcached libmemcached
+$ brew install redis elasticsearch@2.4 memcached libmemcached
 ```
 
 `elasticsearch` is software for a search database. Basically, information gets copied from the PostgreSQL database and transformed into a format optimized for searchability.
@@ -286,6 +288,7 @@ MAPBOX_STYLE_URL=
 AWS_STORAGE_BUCKET_NAME=
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
+USE_DEBUG_TOOLBAR=True
 ```
 
 Those keys (`SECRET_KEY`, `DEBUG`, etc.) represent configuration settings that Django needs. If you open `newsilkroad/settings.py`, you'll see various places lines that have something like `os.getenv('SECRET_KEY', None)`. That's python code that says "Go get the value for 'SECRET_KEY' from the environment." You can search for 'os.getenv' and find the various configurable settings.
@@ -337,6 +340,26 @@ Quit the server with CONTROL-C.
 That means you can open <http://127.0.0.1:8000/> (or <http://localhost:8000/>, both are "addresses" for your computer) in a web browser and you should see your local copy of the website up and running!
 
 Note that any Django commands will need to be run with heroku or foreman, so that the environment variables in the `.env` file can be picked up. For example, to open a shell, you will need to run `heroku local:run python manage.py shell`, rather than just `python manage.py shell`.
+
+## The Search Index
+
+In order for the database records to be quickly accessible through the API, you
+can use ElasticSearch to build a search index for the different models. To do so,
+open a new terminal and type:
+
+```sh
+$ heroku local:run python manage.py create_index
+```
+
+If you make data changes, and want to see them reflected in the API and the map,
+you will need to rebuild the search index for ElasticSearch:
+
+```sh
+$ heroku local:run python manage.py rebuild_index
+```
+
+You can rebuild the index any time you make data changes that you would like to
+see reflected in the API (and the map).
 
 ## Working on JavaScript and Sass/CSS: Use Node
 

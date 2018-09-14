@@ -17,11 +17,11 @@ const ProjectResultView = (props) => {
   return (
     <section className="projectResult">
       <h1>{project.name}</h1>
-      <p><em>Type:</em> {project.infrastructure_type}</p>
+      <section><strong>TYPE:</strong><div>{project.infrastructure_type}</div></section>
       {
         listItems.length > 0 &&
           <section className="initiativesList">
-            <h2>Initiatives:</h2>
+            <h2>INITIATIVES:</h2>
             <ul>
               {listItems}
             </ul>

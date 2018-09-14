@@ -57,7 +57,7 @@ class DateRangeSelect extends Component {
           placeholder={lowerBoundLabel}
           onChange={this.handleUpdate}
         />
-        <span>&amp;</span>
+        <span>and</span>
         <input
           value={value.upperValue || ''}
           name="upperValue"

@@ -1,5 +1,5 @@
 import objectMerge from 'object-merge';
-import { minDetailZoom } from './map-constants';
+import { minDetailZoom, maxFitZoom } from './map-constants';
 
 export default class GeoStyles {
   constructor() {
@@ -53,7 +53,12 @@ export default class GeoStyles {
         }),
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Rail',
+            'icon-image': {
+              stops: [
+                [0, 'Rail'],
+                [maxFitZoom, 'RailIcon'],
+              ],
+            },
           },
         }),
       },
@@ -65,14 +70,36 @@ export default class GeoStyles {
         }),
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Road',
+            'icon-image': {
+              stops: [
+                [0, 'Road'],
+                [maxFitZoom, 'RoadIcon'],
+              ],
+            },
+          },
+        }),
+      },
+      powerplant: {
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': {
+              stops: [
+                [0, 'Powerplant'],
+                [minDetailZoom, 'PowerplantIcon'],
+              ],
+            },
           },
         }),
       },
       seaport: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Seaport',
+            'icon-image': {
+              stops: [
+                [0, 'Seaport'],
+                [minDetailZoom, 'SeaportIcon'],
+              ],
+            },
           },
         }),
       },
@@ -93,21 +120,36 @@ export default class GeoStyles {
       dryport: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Dryport',
+            'icon-image': {
+              stops: [
+                [0, 'Dryport'],
+                [minDetailZoom, 'DryportIcon'],
+              ],
+            },
           },
         }),
       },
       multimodal: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Dryport',
+            'icon-image': {
+              stops: [
+                [0, 'Dryport'],
+                [minDetailZoom, 'DryportIcon'],
+              ],
+            },
           },
         }),
       },
       intermodal: {
         points: objectMerge(pointStyle, {
           layout: {
-            'icon-image': 'Dryport',
+            'icon-image': {
+              stops: [
+                [0, 'Dryport'],
+                [minDetailZoom, 'DryportIcon'],
+              ],
+            },
           },
         }),
       },

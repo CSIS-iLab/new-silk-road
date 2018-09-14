@@ -17,16 +17,16 @@
     h5 {
         font-style: italic;
     }
-    
+
         .subheader {
-            
+
             h5 {
                 font-style: inherit;
                 color: $green;
                 font-weight: normal;
             }
         }
-    
+
     p:last-of-type {
         margin-bottom: 1rem;
     }
@@ -238,7 +238,7 @@ div {
             a[rel="external nofollow"] {
                 color: $dark-grey-blue !important;
                 font-size: .8rem;
-         
+
             }
     }
 
@@ -268,20 +268,21 @@ article {
             }
         }
     }
-   
+
 }
 
 .details {
     h3 {
         border-bottom: 2px solid $slate-grey;
         margin-bottom: .5rem;
+        width: 100%;
     }
 }
 
 .description {
+    margin-bottom: 33px;
     h3 {
         text-transform: none;
-
     }
     p {
         font-size: $minor-text-size;
@@ -293,6 +294,10 @@ article {
             border: 6px solid $slate-grey;
         }
     }
+}
+
+.associated-objects {
+  margin-bottom: 33px;
 }
 
 .document-list {
@@ -323,19 +328,19 @@ article {
 
         #db-search {
             padding: .5rem;
-             
-        
+
+
         }
     }
     h1{
 
-             color: $dark-night;       
+             color: $dark-night;
     }
     section {
         position: relative;
         display: block;
         header > h2 {
-            
+
         }
         &.poster {
             $poster-height: 205px;
@@ -365,15 +370,15 @@ article {
             }
         }
     }
-    
+
     .featured {
         header {
             max-width: $max-content-width;
             margin: 0 auto;
             padding: 0;
-            
+
         }
-     
+
         .panel {
             background-color: #FFF;
         }
@@ -498,7 +503,7 @@ ul.database-nav {
     display: block;
     position: relative;
 margin-bottom: 3rem;
-    
+
 
 }
 
@@ -639,7 +644,7 @@ margin-bottom: 3rem;
     h2.section-title {
         padding: 0px 0px 0px 0px !important;
         margin-top: 0px !important;
-        
+
     }
 }
 
@@ -667,13 +672,13 @@ margin-bottom: 3rem;
             border-left: 0px solid transparent;
             margin-top:14px;
         }
-         
+
     aside {
         color: $callout-color;
     }
     .tags {
         margin-bottom: $large-spacing;
-       
+
            h4 {
  display: inline-block;
            }
@@ -688,11 +693,11 @@ margin-bottom: 3rem;
                         color: lighten($creamer, 10%);
                     }
            }
-                
-            
-        
+
+
+
     }
-    
+
     section.details,
     .author {
         font-size: $minorer-text-size;
@@ -799,8 +804,8 @@ margin-bottom: 3rem;
                         a::before {
                             border-right: $arrow-width solid $green;
                         }
-                     }   
-                   
+                     }
+
                 }
                 &:last-of-type {
                     text-align: right;
@@ -1010,18 +1015,61 @@ margin-bottom: 3rem;
         text-align: center;
         padding: 0px;
         &:after {
-        
+
             color: $warm-grey;
-            
+
         }
         &:hover:after {
-            
+
             color: $warm-grey;
-            
+
         }
     }
       &:hover {
         background-color: transparent;
         transition: background-color 0.4s;
+    }
+}
+
+
+.related-power-data {
+  background-color: $pale-grey;
+  h2 {
+    width: 100%;
+    text-align: center;
+    margin: 2rem 0;
+    color: $green;
+    text-transform: uppercase;
+    font-size: 1rem;
+    display: inline-block;
+    font-family: $sans-font-family;
+    font-weight: 600;
+  }
+  h3 {
+      border-bottom: 2px solid $slate-grey;
+      margin-bottom: .5rem;
+      width: 100%;
+  }
+  .row {
+    padding: 0 2rem;
+  }
+}
+
+.row .sponsors {
+    width: 100%;
+    margin-bottom: 0;
+    h2.section-title {
+        padding-bottom: 1rem;
+        margin: auto 0;
+        margin-bottom: 0px;
+        @include media($medium-break) {
+            padding: 1.5rem;
+        }
+    }
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 15em;
     }
 }
