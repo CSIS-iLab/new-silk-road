@@ -14,6 +14,35 @@ $search-inner-height: 550px;
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
+// Abstract base class for various specialized header toggle buttons.
+button.btn--header-toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    color: white;
+    font-size: map-get($map-font-sizes, 'base');
+    font-family: $sans-font-family;
+    text-transform: uppercase;
+    padding: 0;
+
+    > span {
+        flex: 0 1 auto;
+    }
+
+    &::before {
+        // This requires a background-image property in concrete classes.
+        content: "";
+        display: inline-block;
+        flex: 0 1 auto;
+        height: 11px;
+        width: 1em;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+    }
+}
+
 .searchView {
     width: $side-bar-width;
     font-size: map-get($map-font-sizes, 'base');
@@ -279,30 +308,9 @@ $scroll-max-height: $results-view-max-height - 46;
 }
 
 button.searchView__header-toggle {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: transparent;
-    color: white;
-    font-size: map-get($map-font-sizes, 'base');
-    font-family: $sans-font-family;
-    text-transform: uppercase;
-    padding: 0;
-
-    > span {
-        flex: 0 1 auto;
-    }
-
+    @extend button.btn--header-toggle;
     &::before {
-        content: "";
-        display: inline-block;
-        flex: 0 1 auto;
-        height: 11px;
-        width: 1em;
         background-image: url($close-white);
-        background-position: left center;
-        background-repeat: no-repeat;
-        background-size: auto 100%;
     }
 }
 
@@ -608,6 +616,25 @@ button.searchView__header-toggle {
                 margin-bottom: $tiny-spacing;
             }
         }
+    }
+}
+
+.resultsView__header-toggle {
+    @extend button.btn--header-toggle;
+    color: black;
+
+    &::before {
+        background-image: url($filter);
+        height: 14px;
+    }
+}
+
+.resultsView__header-toggle--help {
+    @extend .resultsView__header-toggle;
+    &::before {
+        background-image: url($help-circle);
+        height: 1em;
+        width: 1em;
     }
 }
 

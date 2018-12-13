@@ -479,8 +479,17 @@ export default class SearchView extends Component {
           })()}
           <div className="resultsViewWrapper">
             <header>
-              <a href="#" onClick={this.toggleFilters}><h2>FILTER</h2></a>
-              <a href="#" onClick={this.toggleHelp}></a>
+              <button
+                className="resultsView__header-toggle"
+                onClick={this.toggleFilters}
+              >
+                <span>Filter</span>
+              </button>
+              <button
+                className="resultsView__header-toggle--help"
+                onClick={this.toggleHelp}
+              >
+              </button>
             </header>
             <ResultsView
               results={results}
