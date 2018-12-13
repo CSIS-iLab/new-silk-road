@@ -6,13 +6,17 @@
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
+$searchview-padding-x: 20px;
+$searchview-padding-y: 24px;
+$searchview-header-height: 50px;
+
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
 .searchView {
     width: $side-bar-width;
-    font-size: $search-text-size;
+    font-size: map-get($map-font-sizes, 'base');
     z-index: 10;
     position: relative;
     top: 0px;
@@ -23,21 +27,29 @@ $scroll-max-height: $results-view-max-height - 46;
     @include media($megamap-break) {
         display: block;
     }
-    header{
+    header {
         @include display(flex);
         @include flex-direction(row);
         @include justify-content(space-between);
-        padding: $base-line-height $small-spacing;;
+        @include align-items(center);
+        
+        height: $searchview-header-height;
+        padding-left: $searchview-padding-x;
+        padding-right: $searchview-padding-x;
+
         background-color: $pale-grey;
+
         a {
             display: block;
             height: $base-line-height;
             width: $base-line-height;
             opacity: 0.6;
         }
+
         a:hover {
             opacity: 1;
         }
+
         h2 {
             padding-left: $base-line-height;
         }
@@ -53,7 +65,8 @@ $scroll-max-height: $results-view-max-height - 46;
         z-index: 10;
         transform: translateX(-290px);
         transition: transform 0.3s;
-        >header {
+        
+        > header {
             background-color: $callout-color;
             h2 {
                 color: #fff;
@@ -104,7 +117,8 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 
     h2 {
-        font: $minor-text-size $sans-font-family;
+        font-size: map-get($map-font-sizes, 'base');
+        font-family: $sans-font-family;
         font-weight: bold;
         color: $callout-color;
         margin-bottom: $tiny-spacing;
@@ -261,6 +275,34 @@ $scroll-max-height: $results-view-max-height - 46;
             width: $expand-collapse-btn-width;
             }
         }
+    }
+}
+
+button.searchView__header-toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    color: white;
+    font-size: map-get($map-font-sizes, 'base');
+    font-family: $sans-font-family;
+    text-transform: uppercase;
+    padding: 0;
+
+    > span {
+        flex: 0 1 auto;
+    }
+
+    &::before {
+        content: "";
+        display: inline-block;
+        flex: 0 1 auto;
+        height: 11px;
+        width: 1em;
+        background-image: url($close-white);
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
     }
 }
 
@@ -748,7 +790,7 @@ $scroll-max-height: $results-view-max-height - 46;
             color: #fff;
         }
         a {
-            background: url($close-white) no-repeat center/70% 70%;
+            background: url($close-white) no-repeat center/50% 50%;
         }
     }
     .textWrap {

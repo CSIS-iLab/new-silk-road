@@ -495,9 +495,9 @@ export default class SearchView extends Component {
           </div>
           <div className="helpView">
             <header>
-              <a href="#" onClick={this.toggleHelp}>
-                <h2>HELP</h2>
-              </a>
+              <button className="searchView__header-toggle" onClick={this.toggleHelp}>
+                <span>Help</span>
+              </button>
             </header>
             <div className="textWrap">
               <section>

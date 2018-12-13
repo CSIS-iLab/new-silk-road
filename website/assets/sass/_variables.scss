@@ -38,6 +38,41 @@ $base-line-height: 1.45em;
 $sans-font-family: Lato, $helvetica;
 $serif-font-family: Merriweather, $georgia;
 
+// map font sizes
+$map-font-base-size: 16px;
+$map-font-sizes: (
+    // Heading
+    // Number of Projects Title
+    'heading': 1.375 * $map-font-base-size,
+
+    // Subheading
+    'subheading': 1.25 * $map-font-base-size,
+
+    // Body Text
+    'body': 1.125 * $map-font-base-size,
+
+    // Data Link
+    // Infrastructure Label
+    // Filter/Form Label
+    // Button Text
+    // Project Title
+    // Road Style
+    // Data
+    // Textfield Text
+    // Pagination
+    'base': $map-font-base-size,
+
+    // Filter/Section Title
+    // Select Option
+    // Dropdown List Option
+    'section-title': 0.875 * $map-font-base-size,
+
+    // Data Label
+    // Popup Label
+    // Button Text Small
+    'data-label': 0.75 * $map-font-base-size
+);
+
 // Colors
 
 $pale-green: #d6e1d6;
