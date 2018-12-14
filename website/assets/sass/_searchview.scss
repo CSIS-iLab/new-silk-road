@@ -287,11 +287,10 @@ button.searchView__header-reset-filter {
     /* WARNING: This is nasty. Styling the .Select with margin-top
     so that we can click on the label. TODO: change this in React
     */
-    .Select{
-        background: none;
+    .Select {
         margin-top: -26px;
         .Select-control {
-            background: none;
+            background-color: transparent !important;
             cursor: pointer;
             input {
                 height: 0px;
