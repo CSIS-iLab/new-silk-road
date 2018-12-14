@@ -291,7 +291,7 @@ export default class SearchView extends Component {
         />
         <div className={`inner ${this.state.showFilters} ${this.state.showHelp}`}>
           <div className="searchWidget">
-            <header>
+            <header className="searchView__header">
               <a href="#" onClick={this.toggleFilters}>
                 <h2>FILTER</h2>
               </a>
@@ -453,7 +453,7 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
             </div>
-            <header>
+            <header className="searchView__header">
               <button
                 type="submit"
                 title="Search"
@@ -478,7 +478,7 @@ export default class SearchView extends Component {
             return '';
           })()}
           <div className="resultsViewWrapper">
-            <header>
+            <header className="searchView__header">
               <button
                 className="resultsView__header-toggle"
                 onClick={this.toggleFilters}
@@ -503,18 +503,18 @@ export default class SearchView extends Component {
             />
           </div>
           <div className="helpView">
-            <header>
+            <header className="searchView__header">
               <button className="searchView__header-toggle" onClick={this.toggleHelp}>
                 <span>Close</span>
               </button>
             </header>
             <div className="helpView__main">
-              <section className="helpView__main-section">
+              <section>
                 <h2 className="helpView__section-heading">How to search the map</h2>
                 <p className="helpView__body-text">For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
               </section>
               <hr className="helpView__section-rule" />
-              <section className="helpView__main-section">
+              <section>
                 <h3 className="helpView__section-subheading">Project Filters</h3>
                 <p className="helpView__body-text">
                   <b>Project Title:</b> Searches project titles, which do not include all attributes of a given project. For example, there may be projects in the city of Karachi without “Karachi” in their title.

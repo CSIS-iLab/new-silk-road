@@ -158,7 +158,7 @@ class ResultsView extends Component {
             <ResultsList results={this.props.results} />
           </div>
           <div
-            className="scrollContent resultsView__scroll-content"
+            className="scrollContent"
             style={[
               this.props.results.length !== 0 && scrollWrap.hidden,
             ]}

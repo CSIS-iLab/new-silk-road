@@ -6,14 +6,12 @@
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
-$searchview-heading-bottom-margin: 12px;
-$searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
 $searchview-padding-x: 20px;
 $searchview-padding-y: 24px;
-$searchview-header-height: 50px;
 
-$helpview-main-padding-y: 24px;
-$helpview-main-padding-x: $searchview-padding-x;
+$searchview-header-height: 50px;
+$searchview-heading-bottom-margin: $searchview-padding-y / 2;
+$searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
 
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
@@ -21,9 +19,9 @@ $scroll-max-height: $results-view-max-height - 46;
 
 // Abstract base class for various specialized header toggle buttons.
 button.btn--header-toggle {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    @include display(flex);
+    @include flex-direction(row);
+    @include align-items(center);
     background-color: transparent;
     color: white;
     font-size: map-get($map-font-sizes, 'base');
@@ -69,17 +67,6 @@ button.btn--header-toggle {
         display: block;
     }
     header {
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        @include align-items(center);
-        
-        height: $searchview-header-height;
-        padding-left: $searchview-padding-x;
-        padding-right: $searchview-padding-x;
-
-        background-color: $pale-grey;
-
         a {
             display: block;
             height: $base-line-height;
@@ -313,6 +300,19 @@ button.btn--header-toggle {
             }
         }
     }
+}
+
+.searchView__header {
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(space-between);
+    @include align-items(center);
+    
+    height: $searchview-header-height;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+
+    background-color: $pale-grey;
 }
 
 button.searchView__header-toggle {
@@ -639,10 +639,10 @@ button.searchView__header-toggle {
     @include flex-direction(column);
     @include justify-content(space-between);
 
-    padding-top: $helpview-main-padding-y;
-    padding-bottom: $helpview-main-padding-y;
-    padding-left: $helpview-main-padding-x;
-    padding-right: $helpview-main-padding-x;
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
 }
 
 .resultsView__summary-info {
@@ -852,10 +852,10 @@ button.searchView__header-toggle {
 }
 
 .helpView__main {
-    padding-top: $helpview-main-padding-y;
-    padding-bottom: $helpview-main-padding-y;
-    padding-left: $helpview-main-padding-x;
-    padding-right: $helpview-main-padding-x;
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
 
     height: calc(100% - #{$searchview-header-height});
     overflow: auto;
@@ -879,8 +879,8 @@ button.searchView__header-toggle {
 }
 
 .helpView__section-rule {
-    margin-top: $helpview-main-padding-y;
-    margin-bottom: $helpview-main-padding-y;
+    margin-top: $searchview-padding-y;
+    margin-bottom: $searchview-padding-y;
 }
 
 .helpView__body-text {
