@@ -276,14 +276,6 @@ button.searchView__header-reset-filter {
 .filter-input-group {
     display: block;
 
-    input {
-        width: calc(100% - 1em);
-        margin-left: $small-spacing;
-    }
-    >input {
-        border: 2px solid $pale-grey;
-
-    }
     input::placeholder {
         font-size: $compact-text-size;
         color: gray;
@@ -319,11 +311,16 @@ button.searchView__header-reset-filter {
     }
 }
 
+.filter-input-group {
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
 .filter-input-group__label {
     display: block;
     font-size: map-get($map-font-sizes, 'base');
     color: map-get($map-colors, 'body');
     font-weight: 600;
+    line-height: 1;
     margin-bottom: $searchview-label-bottom-margin;
 }
 
@@ -336,6 +333,23 @@ button.searchView__header-reset-filter {
         height: 16px;
         margin-bottom: -2px;
         width: $base-line-height;
+    }
+}
+
+.filter-input-group__input-text {
+    display: block;
+    line-height: 1;
+    padding-top: 0; // compensating for natural visual gap
+    padding-bottom: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-left: 16px;
+    width: calc(100% - 16px);
+    color: map-get($map-colors, 'body');
+    border: 1px solid #{map-get($map-colors, 'border')};
+
+    &::placeholder {
+        color: map-get($map-colors, 'placeholder');
     }
 }
 
@@ -708,7 +722,7 @@ button.searchView__header-reset-filter {
     }
 }
 
-.searchView .sectionRow .dateRangeSelect, .searchView .sectionRow .CurrencyRangeSelect {
+.searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {
     @include display(flex);
     @include flex-direction(row);
     @include flex-wrap(wrap);
@@ -754,8 +768,12 @@ button.searchView__header-reset-filter {
     font-size: $compact-text-size;
     width: calc(100% - 1em);
     .Select-input  {
-        height: 24px;
+        height: 100%;
         width: 100% !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: transparent;
         >input {
             padding: 4px 0 6px;
             width: 100% !important;

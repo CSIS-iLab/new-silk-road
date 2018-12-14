@@ -315,6 +315,7 @@ export default class SearchView extends Component {
                     <label className="filter-input-group__label">Project Title</label>
                     <input
                       type="text"
+                      className="filter-input-group__input-text"
                       value={this.state.query.name__icontains}
                       onChange={this.handleChange}
                       name="name__icontains"
@@ -392,6 +393,7 @@ export default class SearchView extends Component {
                     <label className="filter-input-group__label">Initiative Title</label>
                     <input
                       type="text"
+                      className="filter-input-group__input-text"
                       value={this.state.query.initiatives__name__icontains}
                       onChange={this.handleChange}
                       name="initiatives__name__icontains"
@@ -419,14 +421,15 @@ export default class SearchView extends Component {
                   ref={(el) => { this.fundersPanel = el; }}
                 >
                   <div className="filter-input-group">
-                      <label className="filter-input-group__label">Funder Name</label>
-                      <input
-                        type="text"
-                        value={this.state.query.funding__sources__name__icontains}
-                        onChange={this.handleChange}
-                        name="funding__sources__name__icontains"
-                        placeholder="Funder Name"
-                      />
+                    <label className="filter-input-group__label">Funder Name</label>
+                    <input
+                      type="text"
+                      className="filter-input-group__input-text"
+                      value={this.state.query.funding__sources__name__icontains}
+                      onChange={this.handleChange}
+                      name="funding__sources__name__icontains"
+                      placeholder="Funder Name"
+                    />
                   </div>
                   <div className="filter-input-group">
                     <label className="filter-input-group__label filter-input-group__label--with-plus">Cost</label>
