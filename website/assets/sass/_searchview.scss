@@ -312,7 +312,7 @@ button.btn--header-toggle {
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
 
-    background-color: $pale-grey;
+    background-color: map-get($map-colors, 'header-background');
 }
 
 button.searchView__header-toggle {
@@ -616,11 +616,11 @@ button.searchView__header-toggle {
 
 .resultsView__header-toggle {
     @extend button.btn--header-toggle;
-    color: black;
+    color: map-get($map-colors, 'header-toggle');
 
     &::before {
         background-image: url($filter);
-        height: 14px;
+        height: 15px;
     }
 }
 

@@ -168,7 +168,7 @@ class ResultsView extends Component {
                 Click the icon panel on the right to hide the results of particular infrastructure types on the map.
               </p>
               <p className="resultsView__body-text">
-                Search and filter results by clicking the “Filter” tab above.
+                Search and filter results by clicking the “<b>Filter</b>” tab above.
               </p>
             </section>
           </div>
