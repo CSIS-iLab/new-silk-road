@@ -311,8 +311,8 @@ export default class SearchView extends Component {
                   title="Projects"
                   ref={(el) => { this.projectsPanel = el; }}
                 >
-                  <div className="sectionRow">
-                    <label>Project Title</label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Project Title</label>
                     <input
                       type="text"
                       value={this.state.query.name__icontains}
@@ -321,8 +321,8 @@ export default class SearchView extends Component {
                       placeholder="Project Title"
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Status<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Status</label>
                     <Select
                       value={this.state.query.status}
                       name="status"
@@ -337,8 +337,8 @@ export default class SearchView extends Component {
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Region<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Region</label>
                     <Select
                       value={this.state.query.region}
                       name="region"
@@ -353,8 +353,8 @@ export default class SearchView extends Component {
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Country<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
                     <Select
                       value={this.state.query.countries}
                       name="countries"
@@ -369,8 +369,8 @@ export default class SearchView extends Component {
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Milestone<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Milestone</label>
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
@@ -388,8 +388,8 @@ export default class SearchView extends Component {
                   title="Initiatives"
                   ref={(el) => { this.initiativesPanel = el; }}
                 >
-                  <div className="sectionRow">
-                    <label>Initiative Title</label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Initiative Title</label>
                     <input
                       type="text"
                       value={this.state.query.initiatives__name__icontains}
@@ -398,8 +398,8 @@ export default class SearchView extends Component {
                       placeholder="Initiative Title"
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Principal Agent<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Principal Agent</label>
                     <Select
                       value={this.state.query.initiatives__principal_agent__slug}
                       name="initiatives__principal_agent__slug"
@@ -418,8 +418,8 @@ export default class SearchView extends Component {
                   title="Funders"
                   ref={(el) => { this.fundersPanel = el; }}
                 >
-                  <div className="sectionRow">
-                      <label>Funder Name</label>
+                  <div className="filter-input-group">
+                      <label className="filter-input-group__label">Funder Name</label>
                       <input
                         type="text"
                         value={this.state.query.funding__sources__name__icontains}
@@ -428,8 +428,8 @@ export default class SearchView extends Component {
                         placeholder="Funder Name"
                       />
                   </div>
-                  <div className="sectionRow">
-                    <label>Cost<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Cost</label>
                     <CurrencyRangeSelect
                       name="cost"
                       placeholder="Cost"
@@ -441,8 +441,8 @@ export default class SearchView extends Component {
                       }
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Country<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
                     <Select
                       value={this.state.query.funding__sources__countries}
                       name="funding__sources__countries"
@@ -476,7 +476,7 @@ export default class SearchView extends Component {
             !errorView &&
             results.length === 0) {
               return (
-                <div className="sectionRow">
+                <div className="filter-input-group">
                   <p>Sorry, we didn&rsquo;t find any matches.</p>
                 </div>
               );

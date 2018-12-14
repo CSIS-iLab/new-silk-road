@@ -12,6 +12,8 @@ $searchview-padding-y: 24px;
 $searchview-header-height: 50px;
 $searchview-heading-bottom-margin: $searchview-padding-y / 2;
 $searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
+$searchview-section-header-bottom-margin: 8px;
+$searchview-label-bottom-margin: $searchview-section-header-bottom-margin / 2;
 
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
@@ -199,107 +201,6 @@ button.btn--header-toggle {
             padding-bottom: $small-spacing;
         }
     }
-
-    .sectionRow {
-        display: block;
-        clear: both;
-        margin-bottom: $tiny-spacing;
-        label {
-            display: inline-block;
-            font-size: $base-font-size;
-            font-weight: bold;
-            padding-top: $tiny-spacing;
-
-            span {
-                background: url($plus) no-repeat center/70% 70%;
-                display:inline-block;
-                height: 16px;
-                margin-bottom: -2px;
-                width: $base-line-height;
-            }
-        }
-
-        input {
-            width: calc(100% - 1em);
-            margin-left: $small-spacing;
-        }
-        >input {
-            border: 2px solid $pale-grey;
-
-        }
-        input::placeholder {
-            font-size: $compact-text-size;
-            color: gray;
-            line-height: 24px;
-            top: 2px;
-            font-style: normal;
-        }
-
-        /* WARNING: This is nasty. Styling the .Select with margin-top
-        so that we can click on the label. TODO: change this in React
-        */
-        .Select{
-            background: none;
-            margin-top: -26px;
-            .Select-control {
-                background: none;
-                cursor: pointer;
-                input {
-                    height: 0px;
-                    padding: 0px;
-                }
-            }
-        }
-        .Select.has-value{
-            outline: 0;
-            outline: none !important;
-            border: none;
-            margin-top: 0px;
-            .Select-control {
-                margin-left: $small-spacing;
-            }
-
-        }
-    }
-
-    .expandable {
-        header {
-            margin: 0 10px;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-        .sectionBody {
-            margin: $tiny-spacing $small-spacing $tiny-spacing 0;
-        }
-        button.toggle {
-            background-color: transparent;
-              width: 20px;
-              color: transparent;
-
-
-        &.collapsed:before {
-            @include hide-text;
-            padding: 0;
-            font-family: "fontello";
-            content: "\E806";
-            color: black;
-
-            //background: url($expand-btn-img) center no-repeat;
-            width: $expand-collapse-btn-width;
-            }
-        &.expanded:before {
-                //background: url($collapse-btn-img) center no-repeat;
-            font-family: "fontello";
-            content: "\E807";
-            color: black;
-            @include hide-text;
-            padding: 0;
-            width: $expand-collapse-btn-width;
-            }
-        }
-    }
 }
 
 .searchView__header {
@@ -333,6 +234,119 @@ button.searchView__header-reset-filter {
     padding-bottom: $searchview-padding-y;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
+}
+
+.expandable-panel {
+    header {
+        margin: 0 10px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    button.toggle {
+        background-color: transparent;
+          width: 20px;
+          color: transparent;
+
+
+    &.collapsed:before {
+        @include hide-text;
+        padding: 0;
+        font-family: "fontello";
+        content: "\E806";
+        color: black;
+
+        //background: url($expand-btn-img) center no-repeat;
+        width: $expand-collapse-btn-width;
+        }
+    &.expanded:before {
+            //background: url($collapse-btn-img) center no-repeat;
+        font-family: "fontello";
+        content: "\E807";
+        color: black;
+        @include hide-text;
+        padding: 0;
+        width: $expand-collapse-btn-width;
+        }
+    }
+}
+
+.filter-input-group {
+    display: block;
+
+    input {
+        width: calc(100% - 1em);
+        margin-left: $small-spacing;
+    }
+    >input {
+        border: 2px solid $pale-grey;
+
+    }
+    input::placeholder {
+        font-size: $compact-text-size;
+        color: gray;
+        line-height: 24px;
+        top: 2px;
+        font-style: normal;
+    }
+
+    /* WARNING: This is nasty. Styling the .Select with margin-top
+    so that we can click on the label. TODO: change this in React
+    */
+    .Select{
+        background: none;
+        margin-top: -26px;
+        .Select-control {
+            background: none;
+            cursor: pointer;
+            input {
+                height: 0px;
+                padding: 0px;
+            }
+        }
+    }
+    .Select.has-value{
+        outline: 0;
+        outline: none !important;
+        border: none;
+        margin-top: 0px;
+        .Select-control {
+            margin-left: $small-spacing;
+        }
+
+    }
+}
+
+.filter-input-group__label {
+    display: block;
+    font-size: map-get($map-font-sizes, 'base');
+    color: map-get($map-colors, 'body');
+    font-weight: 600;
+    margin-bottom: $searchview-label-bottom-margin;
+}
+
+.filter-input-group__label--with-plus {
+    &::after {
+        display: inline-block;
+        content: "";
+        background: url($plus) no-repeat center/70% 70%;
+        display:inline-block;
+        height: 16px;
+        margin-bottom: -2px;
+        width: $base-line-height;
+    }
+}
+
+.expandable-panel__title {
+    .searchView & {
+        font-size: map-get($map-font-sizes, 'section-title');
+        font-weight: bold;
+        color: map-get($map-colors, 'data-link');
+        text-transform: uppercase;
+        margin-bottom: $searchview-section-header-bottom-margin;
+    }
 }
 
 #infrastructureToggleContainer {
