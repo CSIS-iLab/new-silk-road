@@ -10,6 +10,9 @@ $searchview-padding-x: 20px;
 $searchview-padding-y: 24px;
 $searchview-header-height: 50px;
 
+$helpview-main-padding-y: 24px;
+$helpview-main-padding-x: $searchview-padding-x;
+
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
@@ -180,10 +183,6 @@ button.btn--header-toggle {
     }
 
     section {
-        padding-bottom: $tiny-spacing;
-        padding: $small-spacing;
-        padding-top: 0;
-
         h4 {
             display: inline-block;
             color: $greyish-teal;
@@ -830,6 +829,44 @@ button.searchView__header-toggle {
 
         }
     }
+}
+
+.helpView__main {
+    padding-top: $helpview-main-padding-y;
+    padding-bottom: $helpview-main-padding-y;
+    padding-left: $helpview-main-padding-x;
+    padding-right: $helpview-main-padding-x;
+
+    height: calc(100% - #{$searchview-header-height});
+    overflow: auto;
+}
+
+.helpView__section-heading {
+    // NOTE: temporary specificity boost to be dispensed with
+    // once embedded .searchView h2 rule is eliminated
+    .searchView & {
+        color: map-get($map-colors, 'heading');
+        font-size: map-get($map-font-sizes, 'heading');
+        font-weight: normal;
+        margin-bottom: 12px;
+    }
+}
+
+.helpView__section-subheading {
+    color: map-get($map-colors, 'subheading');
+    font-size: map-get($map-font-sizes, 'subheading');
+    margin-bottom: 12px;
+}
+
+.helpView__section-rule {
+    margin-top: $helpview-main-padding-y;
+    margin-bottom: $helpview-main-padding-y;
+}
+
+.helpView__body-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'body');
+    margin-bottom: 24px;
 }
 
 .inner.showHelp {

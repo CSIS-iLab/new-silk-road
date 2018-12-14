@@ -72,6 +72,43 @@ $map-font-sizes: (
     // Button Text Small
     'data-label': 0.75 * $map-font-base-size
 );
+$map-teal: #3c8183;
+$map-grey: #737373;
+$map-light-grey: #bebebe;
+$map-colors: (
+    // Heading
+    'heading': #000000,
+    // Number of Projects Title
+    'number-of-projects-title': $map-teal,
+
+    // Subheading
+    'subheading': #000000,
+
+    // Body Text
+    // Infrastructure Label
+    // Filter/Form Label
+    // Project Title
+    // Road Style
+    // Data
+    // Textfield Text
+    // Select Option
+    // Dropdown List Option
+    'body': #000000,
+
+    // Infrastructure label, disabled
+    // Pagination
+    'pagination': $map-grey,
+
+    // Data Link
+    // Filter/Section Title
+    'data-link': $map-teal,
+
+    // Button Text, light
+    'button-text-light': #ffffff,
+
+    // Textfield Text, placeholder
+    'placeholder': $map-light-grey,
+);
 
 // Colors
 
