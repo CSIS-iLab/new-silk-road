@@ -6,6 +6,8 @@
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
+$searchview-heading-bottom-margin: 12px;
+$searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
 $searchview-padding-x: 20px;
 $searchview-padding-y: 24px;
 $searchview-header-height: 50px;
@@ -44,6 +46,13 @@ button.btn--header-toggle {
         background-repeat: no-repeat;
         background-size: auto 100%;
     }
+}
+
+// Abstract class to be extended by various body text classes.
+.sidebar__body-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'body');
+    margin-bottom: $searchview-body-text-bottom-margin;
 }
 
 .searchView {
@@ -512,12 +521,6 @@ button.searchView__header-toggle {
 }
 
 .resultsView {
-    padding-top: 0;
-    height: calc(100% - 18px);
-    @include display(flex);
-    @include flex-direction(column);
-    @include justify-content(space-between);
-
     .scrollWrap {
         height: calc(100% - 18px);
         -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -526,13 +529,6 @@ button.searchView__header-toggle {
     > div {
         display: block;
         position: relative;
-    }
-
-    /* For the summary of the results */
-    .summaryInfo {
-        font-size: x-large;
-        padding: $small-spacing $small-spacing 0;
-        color: $green-2018;
     }
 
     /* for the two links in the Curated results section. */
@@ -635,6 +631,30 @@ button.searchView__header-toggle {
         height: 1em;
         width: 1em;
     }
+}
+
+.resultsView__main {
+    height: 100%;
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+
+    padding-top: $helpview-main-padding-y;
+    padding-bottom: $helpview-main-padding-y;
+    padding-left: $helpview-main-padding-x;
+    padding-right: $helpview-main-padding-x;
+}
+
+.resultsView__summary-info {
+    .searchView & {
+        font-size: map-get($map-font-sizes, 'heading');
+        color: map-get($map-colors, 'number-of-projects-title');
+        margin-bottom: $searchview-heading-bottom-margin;
+    }
+}
+
+.resultsView__body-text {
+    @extend .sidebar__body-text;
 }
 
 .initiativesList {
@@ -848,14 +868,14 @@ button.searchView__header-toggle {
         color: map-get($map-colors, 'heading');
         font-size: map-get($map-font-sizes, 'heading');
         font-weight: normal;
-        margin-bottom: 12px;
+        margin-bottom: $searchview-heading-bottom-margin;
     }
 }
 
 .helpView__section-subheading {
     color: map-get($map-colors, 'subheading');
     font-size: map-get($map-font-sizes, 'subheading');
-    margin-bottom: 12px;
+    margin-bottom: $searchview-heading-bottom-margin;
 }
 
 .helpView__section-rule {
@@ -864,9 +884,7 @@ button.searchView__header-toggle {
 }
 
 .helpView__body-text {
-    color: map-get($map-colors, 'body');
-    font-size: map-get($map-font-sizes, 'body');
-    margin-bottom: 24px;
+    @extend .sidebar__body-text;
 }
 
 .inner.showHelp {
