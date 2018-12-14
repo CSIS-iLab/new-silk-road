@@ -26,6 +26,11 @@ services:
     ports:
       - "59200:9200"
 
+  redis:
+    image: redis:4-alpine
+    ports:
+      - "56379:6379"
+
 volumes:
   pgdata:
   esdata:

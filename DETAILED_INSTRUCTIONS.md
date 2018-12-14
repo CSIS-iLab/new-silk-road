@@ -148,7 +148,7 @@ DATABASE_URL=postgis://postgres@localhost:54321/postgres
 ELASTICSEARCH_URL=http://localhost:59200
 MEMCACHEIFY_USE_LOCAL=True
 DISABLE_CACHE=False
-MEMCACHE_SERVERS=localhost:11212
+MEMCACHE_SERVERS=localhost:51212
 ```
 
 You can load a DB dump, if needed, into the container using:
