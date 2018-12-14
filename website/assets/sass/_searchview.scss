@@ -322,6 +322,12 @@ button.searchView__header-toggle {
     }
 }
 
+button.searchView__header-reset-filter {
+    @extend button.btn--header-toggle;
+    color: map-get($map-colors, 'button-text-light-small');
+    font-size: map-get($map-font-sizes, 'data-label');
+}
+
 #infrastructureToggleContainer {
     position: absolute;
 }

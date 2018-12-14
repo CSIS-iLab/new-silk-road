@@ -292,12 +292,18 @@ export default class SearchView extends Component {
         <div className={`inner ${this.state.showFilters} ${this.state.showHelp}`}>
           <div className="searchWidget">
             <header className="searchView__header">
-              <a href="#" onClick={this.toggleFilters}>
-                <h2>FILTER</h2>
-              </a>
-              <a href="#" onClick={this.resetQueryState}>
-                RESET
-              </a>
+              <button
+                className="searchView__header-toggle"
+                onClick={this.toggleFilters}
+              >
+                <span>Close</span>
+              </button>
+              <button
+                className="searchView__header-reset-filter"
+                onClick={this.resetQueryState}
+              >
+                <span>Reset form</span>
+              </button>
             </header>
             <form onSubmit={this.handleSubmit}>
               <div className="filterScroll">
