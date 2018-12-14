@@ -6,13 +6,56 @@
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
+$searchview-padding-x: 20px;
+$searchview-padding-y: 24px;
+
+$searchview-header-height: 50px;
+$searchview-heading-bottom-margin: $searchview-padding-y / 2;
+$searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
+
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
+// Abstract base class for various specialized header toggle buttons.
+button.btn--header-toggle {
+    @include display(flex);
+    @include flex-direction(row);
+    @include align-items(center);
+    background-color: transparent;
+    color: white;
+    font-size: map-get($map-font-sizes, 'base');
+    font-family: $sans-font-family;
+    text-transform: uppercase;
+    padding: 0;
+
+    > span {
+        flex: 0 1 auto;
+    }
+
+    &::before {
+        // This requires a background-image property in concrete classes.
+        content: "";
+        display: inline-block;
+        flex: 0 1 auto;
+        height: 11px;
+        width: 1em;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+    }
+}
+
+// Abstract class to be extended by various body text classes.
+.sidebar__body-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'body');
+    margin-bottom: $searchview-body-text-bottom-margin;
+}
+
 .searchView {
     width: $side-bar-width;
-    font-size: $search-text-size;
+    font-size: map-get($map-font-sizes, 'base');
     z-index: 10;
     position: relative;
     top: 0px;
@@ -23,21 +66,18 @@ $scroll-max-height: $results-view-max-height - 46;
     @include media($megamap-break) {
         display: block;
     }
-    header{
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        padding: $base-line-height $small-spacing;;
-        background-color: $pale-grey;
+    header {
         a {
             display: block;
             height: $base-line-height;
             width: $base-line-height;
             opacity: 0.6;
         }
+
         a:hover {
             opacity: 1;
         }
+
         h2 {
             padding-left: $base-line-height;
         }
@@ -53,7 +93,8 @@ $scroll-max-height: $results-view-max-height - 46;
         z-index: 10;
         transform: translateX(-290px);
         transition: transform 0.3s;
-        >header {
+        
+        > header {
             background-color: $callout-color;
             h2 {
                 color: #fff;
@@ -104,7 +145,8 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 
     h2 {
-        font: $minor-text-size $sans-font-family;
+        font-size: map-get($map-font-sizes, 'base');
+        font-family: $sans-font-family;
         font-weight: bold;
         color: $callout-color;
         margin-bottom: $tiny-spacing;
@@ -137,10 +179,6 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 
     section {
-        padding-bottom: $tiny-spacing;
-        padding: $small-spacing;
-        padding-top: 0;
-
         h4 {
             display: inline-block;
             color: $greyish-teal;
@@ -261,6 +299,26 @@ $scroll-max-height: $results-view-max-height - 46;
             width: $expand-collapse-btn-width;
             }
         }
+    }
+}
+
+.searchView__header {
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(space-between);
+    @include align-items(center);
+    
+    height: $searchview-header-height;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+
+    background-color: map-get($map-colors, 'header-background');
+}
+
+button.searchView__header-toggle {
+    @extend button.btn--header-toggle;
+    &::before {
+        background-image: url($close-white);
     }
 }
 
@@ -463,12 +521,6 @@ $scroll-max-height: $results-view-max-height - 46;
 }
 
 .resultsView {
-    padding-top: 0;
-    height: calc(100% - 18px);
-    @include display(flex);
-    @include flex-direction(column);
-    @include justify-content(space-between);
-
     .scrollWrap {
         height: calc(100% - 18px);
         -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -477,13 +529,6 @@ $scroll-max-height: $results-view-max-height - 46;
     > div {
         display: block;
         position: relative;
-    }
-
-    /* For the summary of the results */
-    .summaryInfo {
-        font-size: x-large;
-        padding: $small-spacing $small-spacing 0;
-        color: $green-2018;
     }
 
     /* for the two links in the Curated results section. */
@@ -567,6 +612,49 @@ $scroll-max-height: $results-view-max-height - 46;
             }
         }
     }
+}
+
+.resultsView__header-toggle {
+    @extend button.btn--header-toggle;
+    color: map-get($map-colors, 'header-toggle');
+
+    &::before {
+        background-image: url($filter);
+        height: 15px;
+    }
+}
+
+.resultsView__header-toggle--help {
+    @extend .resultsView__header-toggle;
+    &::before {
+        background-image: url($help-circle);
+        height: 1em;
+        width: 1em;
+    }
+}
+
+.resultsView__main {
+    height: 100%;
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+}
+
+.resultsView__summary-info {
+    .searchView & {
+        font-size: map-get($map-font-sizes, 'heading');
+        color: map-get($map-colors, 'number-of-projects-title');
+        margin-bottom: $searchview-heading-bottom-margin;
+    }
+}
+
+.resultsView__body-text {
+    @extend .sidebar__body-text;
 }
 
 .initiativesList {
@@ -748,7 +836,7 @@ $scroll-max-height: $results-view-max-height - 46;
             color: #fff;
         }
         a {
-            background: url($close-white) no-repeat center/70% 70%;
+            background: url($close-white) no-repeat center/50% 50%;
         }
     }
     .textWrap {
@@ -761,6 +849,42 @@ $scroll-max-height: $results-view-max-height - 46;
 
         }
     }
+}
+
+.helpView__main {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+
+    height: calc(100% - #{$searchview-header-height});
+    overflow: auto;
+}
+
+.helpView__section-heading {
+    // NOTE: temporary specificity boost to be dispensed with
+    // once embedded .searchView h2 rule is eliminated
+    .searchView & {
+        color: map-get($map-colors, 'heading');
+        font-size: map-get($map-font-sizes, 'heading');
+        font-weight: normal;
+        margin-bottom: $searchview-heading-bottom-margin;
+    }
+}
+
+.helpView__section-subheading {
+    color: map-get($map-colors, 'subheading');
+    font-size: map-get($map-font-sizes, 'subheading');
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.helpView__section-rule {
+    margin-top: $searchview-padding-y;
+    margin-bottom: $searchview-padding-y;
+}
+
+.helpView__body-text {
+    @extend .sidebar__body-text;
 }
 
 .inner.showHelp {

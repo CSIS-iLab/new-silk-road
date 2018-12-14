@@ -291,7 +291,7 @@ export default class SearchView extends Component {
         />
         <div className={`inner ${this.state.showFilters} ${this.state.showHelp}`}>
           <div className="searchWidget">
-            <header>
+            <header className="searchView__header">
               <a href="#" onClick={this.toggleFilters}>
                 <h2>FILTER</h2>
               </a>
@@ -453,7 +453,7 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
             </div>
-            <header>
+            <header className="searchView__header">
               <button
                 type="submit"
                 title="Search"
@@ -478,9 +478,18 @@ export default class SearchView extends Component {
             return '';
           })()}
           <div className="resultsViewWrapper">
-            <header>
-              <a href="#" onClick={this.toggleFilters}><h2>FILTER</h2></a>
-              <a href="#" onClick={this.toggleHelp}></a>
+            <header className="searchView__header">
+              <button
+                className="resultsView__header-toggle"
+                onClick={this.toggleFilters}
+              >
+                <span>Filter</span>
+              </button>
+              <button
+                className="resultsView__header-toggle--help"
+                onClick={this.toggleHelp}
+              >
+              </button>
             </header>
             <ResultsView
               results={results}
@@ -494,34 +503,35 @@ export default class SearchView extends Component {
             />
           </div>
           <div className="helpView">
-            <header>
-              <a href="#" onClick={this.toggleHelp}>
-                <h2>HELP</h2>
-              </a>
+            <header className="searchView__header">
+              <button className="searchView__header-toggle" onClick={this.toggleHelp}>
+                <span>Close</span>
+              </button>
             </header>
-            <div className="textWrap">
+            <div className="helpView__main">
               <section>
-                <h2>How to search the map</h2>
-                <p>For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
+                <h2 className="helpView__section-heading">How to search the map</h2>
+                <p className="helpView__body-text">For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
               </section>
+              <hr className="helpView__section-rule" />
               <section>
-                <h2>Project Filters</h2>
-                <p>
+                <h3 className="helpView__section-subheading">Project Filters</h3>
+                <p className="helpView__body-text">
                   <b>Project Title:</b> Searches project titles, which do not include all attributes of a given project. For example, there may be projects in the city of Karachi without “Karachi” in their title.
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Infrastructure Type:</b> Limits search to a specific infrastructure type (ex. “rail”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Status:</b> Limits search to projects in a specific stage of implementation (ex. “announced or under negotiation”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Region:</b> Limits search to projects within a certain geographic area (ex. “Gulf and Mediterranean”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Country:</b> Limits search to projects within a designated country (ex. “China”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year
                 </p>
               </section>
