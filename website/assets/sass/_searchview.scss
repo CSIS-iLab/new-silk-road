@@ -328,6 +328,13 @@ button.searchView__header-reset-filter {
     font-size: map-get($map-font-sizes, 'data-label');
 }
 
+.searchWidget__main {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+}
+
 #infrastructureToggleContainer {
     position: absolute;
 }

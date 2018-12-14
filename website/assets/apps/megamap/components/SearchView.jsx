@@ -306,7 +306,7 @@ export default class SearchView extends Component {
               </button>
             </header>
             <form onSubmit={this.handleSubmit}>
-              <div className="filterScroll">
+              <div className="filterScroll searchWidget__main">
                 <Panel
                   title="Projects"
                   ref={(el) => { this.projectsPanel = el; }}
