@@ -133,6 +133,33 @@ $ sudo /bin/systemctl daemon-reload
 $ sudo /bin/systemctl enable elasticsearch.service
 ```
 
+## Docker setup
+
+Optionally, if preferred, you can use Docker to run several of the auxillary services, such as PostgreSQL, Memcached, and Elasticsearch. To do so, simply run:
+
+```sh
+docker-compose up -d
+```
+
+Update your ``.env`` file to point to the Docker containers:
+
+```sh
+DATABASE_URL=postgis://postgres@localhost:54321/postgres
+ELASTICSEARCH_URL=http://localhost:59200
+MEMCACHEIFY_USE_LOCAL=True
+DISABLE_CACHE=False
+MEMCACHE_SERVERS=localhost:11212
+```
+
+You can load a DB dump, if needed, into the container using:
+
+```sh
+dropdb -h localhost -p 54321 -U postgres postgres
+createdb -h localhost -p 54321 -U postgres postgres
+pg_restore -h localhost -p 54321 -U postgres -Ox -d postgres latest.dump
+```
+
+
 # Part 2: Setting up the website
 
 ## "Clone" the code repository
