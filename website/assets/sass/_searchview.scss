@@ -14,6 +14,7 @@ $searchview-heading-bottom-margin: $searchview-padding-y / 2;
 $searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
 $searchview-section-header-bottom-margin: 8px;
 $searchview-label-bottom-margin: $searchview-section-header-bottom-margin / 2;
+$searchview-text-input-margin-left: 16px;
 
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
@@ -111,7 +112,7 @@ button.btn--header-toggle {
             }
         }
         .filterScroll {
-            height: calc(100% - 140px);
+            height: calc(100% - #{$searchview-header-height * 2});
             overflow: auto;
         }
 
@@ -288,7 +289,6 @@ button.searchView__header-reset-filter {
     so that we can click on the label. TODO: change this in React
     */
     .Select {
-        margin-top: -26px;
         .Select-control {
             background-color: transparent !important;
             cursor: pointer;
@@ -330,7 +330,7 @@ button.searchView__header-reset-filter {
         background: url($plus) no-repeat center/70% 70%;
         display:inline-block;
         height: 16px;
-        margin-bottom: -2px;
+        margin-bottom: -3px;
         width: $base-line-height;
     }
 }
@@ -342,14 +342,49 @@ button.searchView__header-reset-filter {
     padding-bottom: 2px;
     padding-left: 8px;
     padding-right: 8px;
-    margin-left: 16px;
-    width: calc(100% - 16px);
+    margin-left: $searchview-text-input-margin-left;
+    width: calc(100% - #{$searchview-text-input-margin-left});
     color: map-get($map-colors, 'body');
     border: 1px solid #{map-get($map-colors, 'border')};
 
     &::placeholder {
         color: map-get($map-colors, 'placeholder');
     }
+}
+
+.date-range-select__range-container {
+    padding-left: $searchview-text-input-margin-left;
+}
+
+.date-range-select__helper-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'section-title');
+}
+
+.date-range-select__input-text {
+    .searchView .filter-input-group .dateRangeSelect & {
+        @extend .filter-input-group__input-text;
+        display: inline-block;
+        width: auto;
+        margin-left: 4px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.Select-control {
+    font-size: 0;
+    line-height: 0;
+}
+.Select-input {
+    @extend .filter-input-group__input-text;
+    height: 23px; // TODO: make this non-arbitrary
+}
+.Select--multi .Select-input {
+    @extend .filter-input-group__input-text;
+}
+.Select--multi .Select-multi-value-wrapper {
+    width: 100%;
 }
 
 .expandable-panel__title {
@@ -360,6 +395,14 @@ button.searchView__header-reset-filter {
         text-transform: uppercase;
         margin-bottom: $searchview-section-header-bottom-margin;
     }
+}
+
+.filter-panel-separator {
+    margin-top: $searchview-padding-y;
+    margin-bottom: $searchview-padding-y;
+    margin-left: -$searchview-padding-x;
+    margin-right: -$searchview-padding-x;
+    border-width: 0.5px;
 }
 
 #infrastructureToggleContainer {
@@ -765,14 +808,7 @@ button.searchView__header-reset-filter {
 .Select {
     font-family: $sans-font-family;
     font-size: $compact-text-size;
-    width: calc(100% - 1em);
     .Select-input  {
-        height: 100%;
-        width: 100% !important;
-        position: absolute;
-        left: 0;
-        top: 0;
-        background-color: transparent;
         >input {
             padding: 4px 0 6px;
             width: 100% !important;
@@ -925,6 +961,9 @@ button.searchView__header-reset-filter {
 .helpView__section-rule {
     margin-top: $searchview-padding-y;
     margin-bottom: $searchview-padding-y;
+    margin-left: -$searchview-padding-x;
+    margin-right: -$searchview-padding-x;
+    border-width: 0.5px;
 }
 
 .helpView__body-text {

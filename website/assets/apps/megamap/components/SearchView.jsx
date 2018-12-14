@@ -375,8 +375,8 @@ export default class SearchView extends Component {
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
-                      lowerBoundLabel="YEAR"
-                      upperBoundLabel="YEAR"
+                      lowerBoundLabel="Year"
+                      upperBoundLabel="Year"
                       onChange={value => this.handleQueryUpdate(
                           { dateRange: Object.assign({}, this.state.query.dateRange, value) },
                         )
@@ -385,6 +385,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
+                <hr className="filter-panel-separator" />
                 <Panel
                   title="Initiatives"
                   ref={(el) => { this.initiativesPanel = el; }}
@@ -416,6 +417,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
+                <hr className="filter-panel-separator" />
                 <Panel
                   title="Funders"
                   ref={(el) => { this.fundersPanel = el; }}
