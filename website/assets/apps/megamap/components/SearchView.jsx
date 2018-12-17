@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
+import classNames from 'classnames';
 import Panel from './Panel';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
@@ -463,16 +464,25 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-            </div>
-            <header className="searchView__header">
-              <button
-                type="submit"
-                title="Search"
-                disabled={!this.state.searchEnabled}
-              >UPDATE RESULTS
-              </button>
-              <span></span>
-            </header>
+              </div>
+              <header
+                className={classNames(
+                  'searchView__header',
+                  { 'searchView__header--disabled': !this.state.searchEnabled },
+                )}
+              >
+                <button
+                  type="submit"
+                  title="Search"
+                  className="searchView__update-results"
+                  disabled={!this.state.searchEnabled}
+                >
+                  <span>
+                    Update Results
+                  </span>
+                </button>
+                <span></span>
+              </header>
             </form>
           </div>
           {(() => {
@@ -489,7 +499,7 @@ export default class SearchView extends Component {
             return '';
           })()}
           <div className="resultsViewWrapper">
-            <header className="searchView__header">
+            <header className="searchView__header searchView__header--light">
               <button
                 className="resultsView__header-toggle"
                 onClick={this.toggleFilters}
@@ -499,8 +509,7 @@ export default class SearchView extends Component {
               <button
                 className="resultsView__header-toggle--help"
                 onClick={this.toggleHelp}
-              >
-              </button>
+              />
             </header>
             <ResultsView
               results={results}
@@ -514,7 +523,7 @@ export default class SearchView extends Component {
             />
           </div>
           <div className="helpView">
-            <header className="searchView__header">
+            <header className="searchView__header searchView__header--light">
               <button className="searchView__header-toggle" onClick={this.toggleHelp}>
                 <span>Close</span>
               </button>
@@ -550,9 +559,7 @@ export default class SearchView extends Component {
           </div>
           {errorView}
         </div>
-        <footer>
-
-        </footer>
+        <footer />
       </div>
     );
   }

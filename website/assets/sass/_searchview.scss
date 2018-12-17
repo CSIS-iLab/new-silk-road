@@ -98,7 +98,7 @@ button.btn--header-toggle {
         transition: transform 0.3s;
         
         > header {
-            background-color: $callout-color;
+            // background-color: $callout-color;
             h2 {
                 color: #fff;
             }
@@ -121,16 +121,10 @@ button.btn--header-toggle {
             height: 100%;
             header {
                 @include justify-content(center);
-                background-color: $callout-color;
+
                 button {
                     background: none;
-                    color: #fff;
                     line-height: $base-line-height;
-                }
-                span {
-                    height: $base-line-height;
-                    width: $base-line-height;
-                    background: url($update) no-repeat center/70% 70%;
                 }
                 button[disabled] {
                     opacity: 0.4;
@@ -213,8 +207,17 @@ button.btn--header-toggle {
     height: $searchview-header-height;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
+    
+    background-color: $callout-color;
+}
 
-    background-color: map-get($map-colors, 'header-background');
+.searchView__header--light {
+    background-color: map-get($map-colors, 'header-background-light');
+}
+
+.searchView__header--disabled {
+    background-color: $map-disabled-grey;
+    color: $map-grey;
 }
 
 button.searchView__header-toggle {
@@ -228,6 +231,30 @@ button.searchView__header-reset-filter {
     @extend button.btn--header-toggle;
     color: map-get($map-colors, 'button-text-light-small');
     font-size: map-get($map-font-sizes, 'data-label');
+}
+
+button.searchView__update-results {
+    @include display(flex);
+    @include align-items(center);
+    
+    text-transform: uppercase;
+
+    &[disabled] {
+        color: $map-grey;
+
+        &::after {
+            background: url($update-disabled) no-repeat center/70% 70%;
+        }
+    }
+
+    &::after {
+        content: "";
+        display: inline-block;
+        height: $base-line-height;
+        width: $base-line-height;
+        background: url($update) no-repeat center/70% 70%;
+        margin-left: 0.5em;
+    }
 }
 
 .searchWidget__main {
@@ -337,7 +364,7 @@ button.searchView__header-reset-filter {
 
 .filter-input-group__input-text {
     display: block;
-    line-height: 1;
+    line-height: map-get($map-font-sizes, 'subheading');
     padding-top: 0; // compensating for natural visual gap
     padding-bottom: 2px;
     padding-left: 8px;

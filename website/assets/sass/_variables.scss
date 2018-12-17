@@ -78,6 +78,7 @@ $map-grey: #737373;
 $map-mid-grey: #e9e9e9;
 $map-light-grey: #bebebe;
 $map-extra-light-grey: #e9e9e9;
+$map-disabled-grey: #d3d3d3;
 $map-colors: (
     // Heading
     'heading': #000000,
@@ -91,7 +92,7 @@ $map-colors: (
     'header-toggle': $map-dark-grey,
 
     // Search view header, background color
-    'header-background': $map-mid-grey,
+    'header-background-light': $map-mid-grey,
 
     // Body Text
     // Infrastructure Label
@@ -214,6 +215,7 @@ $arrow-left: $img-url-base + 'arrow_left.svg';
 $arrow-right: $img-url-base + 'arrow_right.svg';
 $plus: $img-url-base + 'plus.svg';
 $update: $img-url-base + 'update-circle.svg';
+$update-disabled: $img-url-base + 'update-circle-disabled.svg';
 
 $search-gray: $img-url-base + 'redesign/search-icon-gray.svg';
 $search-gray-close: $img-url-base + 'redesign/search-icon-gray-close.svg';
