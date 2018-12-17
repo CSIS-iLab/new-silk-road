@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
+import classNames from 'classnames';
 import ResultsList from './ResultsList';
 import SearchActions from '../actions/SearchActions';
 
@@ -174,27 +175,37 @@ class ResultsView extends Component {
           </div>
         </div>
         <div
-          className="resultsNav"
+          className="resultsView__pagination"
           style={[
             noResults && resultsNavStyle.hidden,
           ]}
         >
-          <div className="buttonWrap">
+          <div
+            className={classNames(
+              'resultsView__pagination-buttonWrap',
+              { 'resultsView__pagination-buttonWrap--disabled': this.props.previousURL == null },
+            )}
+          >
             <button
               disabled={this.props.previousURL == null}
               onClick={this.handlePreviousClick}
               value={this.props.previousURL}
-            ></button>
+            />
           </div>
-          <div className="pagination">
+          <div className="resultsView__pagination-count">
             Page {currentPage} of {numPages}
           </div>
-          <div className="buttonWrap">
+          <div
+            className={classNames(
+              'resultsView__pagination-buttonWrap',
+              { 'resultsView__pagination-buttonWrap--disabled': this.props.nextURL == null },
+            )}
+          >
             <button
               disabled={this.props.nextURL == null}
               onClick={this.handleNextClick}
               value={this.props.nextURL}
-            ></button>
+            />
           </div>
         </div>
       </div>
