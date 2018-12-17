@@ -178,13 +178,6 @@ button.btn--header-toggle {
     section:last-child {
         border: none;
     }
-
-    section.projectResult {
-        border: none;
-        h1 {
-            padding-bottom: $small-spacing;
-        }
-    }
 }
 
 .searchView__header {
@@ -549,29 +542,6 @@ button.searchView__update-results {
 
 }
 
-.buttonBar {
-    @include display(flex);
-    @include justify-content(space-between);
-    padding: $small-spacing;
-}
-
-.buttonBar > button {
-    font-size: $compact-text-size;
-    padding: 6px 3px;
-    @include flex(0 1 70%);
-    @include order(0);
-    background-color: $green;
-    color: white;
--webkit-transition: background-color .2s ease-in-out;
-            transition: background-color .2s ease-in-out;
-                   &:disabled {
-        display: none;
-    }
-    &:hover{
-        background-color: $greyish-teal;
-    }
-}
-
 #primarySearch {
     input, button {
         background-color: $dark-night;
@@ -643,29 +613,6 @@ button.searchView__update-results {
         list-style: none;
         padding: 0;
         margin: 0;
-
-        > li {
-            margin: 0 10px 8px 0;
-            padding: 2px 4px 16px 0;
-            border-bottom: 1px solid $slate-grey;
-
-
-            &:last-of-type {
-                border: none;
-                margin-bottom: 0;
-                padding-bottom: 0;
-            }
-
-            h1 {
-                font-family: $sans-font-family;
-                font-size: $search-text-size;
-                margin: 0 0 $tiny-spacing 0;
-            }
-
-            p {
-                margin-bottom: $tiny-spacing;
-            }
-        }
     }
 }
 
@@ -766,28 +713,99 @@ button.searchView__update-results {
     visibility: hidden;
 }
 
-.initiativesList {
+.searchResults__result {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    margin-bottom: 0;
+    position: relative;
+
+    &::after {
+        content: "";
+        display: block;
+        height: 1px;
+        background-color: $map-light-grey;
+        position: absolute;
+        bottom: 0;
+        left: -$searchview-padding-x;
+        width: calc(100% + #{2 * $searchview-padding-x});
+    }
+
+    &:first-of-type {
+        padding-top: 0;
+    }
+
+    &:last-of-type {
+        padding-bottom: 0;
+    }
+}
+
+.searchResults__buttonBar {
+    @include display(flex);
+    @include justify-content(space-between);
+    padding-left: $searchview-padding-x;
+}
+
+.searchResults__button {
+    font-size: map-get($map-font-sizes, 'data-label');
+    text-transform: uppercase;
+    padding: 6px 3px;
+    @include flex(0 1 70%);
+    @include order(0);
+    background-color: $green;
+    color: white;
+-webkit-transition: background-color .2s ease-in-out;
+            transition: background-color .2s ease-in-out;
+                   &:disabled {
+        display: none;
+    }
+    &:hover{
+        background-color: $greyish-teal;
+    }
+}
+
+.projectResult {
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__title {
+    font-size: map-get($map-font-sizes, 'base');
+    font-weight: bold;
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__section {
+    padding-left: $searchview-text-input-margin-left;
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__data-label {
+    font-size: map-get($map-font-sizes, 'data-label');
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.projectResult__section--initiatives-list {
     h2 {
         font-family: $sans-font-family;
         font-size: $search-text-size;
         margin-bottom: 3px;
         margin-left: 0px;
     }
-    ul {
-        padding: 0 0 0 0px;
-        margin: 0;
-        list-style: square inside;
-        li {
-            font-size: $search-text-size;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            a {
-                margin: -15px;
-            }
-        }
-    }
+}
+
+.projectResult__initiatives-list {
+    padding: 0 0 0 0px;
+    margin: 0;
+    list-style: none;
+}
+
+.projectResult__initiatives-list-item {
+    font-size: $search-text-size;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {
