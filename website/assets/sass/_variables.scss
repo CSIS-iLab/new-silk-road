@@ -38,6 +38,94 @@ $base-line-height: 1.45em;
 $sans-font-family: Lato, $helvetica;
 $serif-font-family: Merriweather, $georgia;
 
+// map font sizes
+$map-font-base-size: 16px;
+$map-font-sizes: (
+    // Heading
+    // Number of Projects Title
+    'heading': 1.375 * $map-font-base-size,
+
+    // Subheading
+    'subheading': 1.25 * $map-font-base-size,
+
+    // Body Text
+    'body': 1.125 * $map-font-base-size,
+
+    // Data Link
+    // Infrastructure Label
+    // Filter/Form Label
+    // Button Text
+    // Project Title
+    // Road Style
+    // Data
+    // Textfield Text
+    // Pagination
+    'base': $map-font-base-size,
+
+    // Filter/Section Title
+    // Select Option
+    // Dropdown List Option
+    'section-title': 0.875 * $map-font-base-size,
+
+    // Data Label
+    // Popup Label
+    // Button Text Small
+    'data-label': 0.75 * $map-font-base-size
+);
+$map-teal: #3c8183;
+$map-dark-grey: #4a4a4a;
+$map-grey: #737373;
+$map-mid-grey: #e9e9e9;
+$map-light-grey: #bebebe;
+$map-extra-light-grey: #e9e9e9;
+$map-disabled-grey: #d3d3d3;
+$map-colors: (
+    // Heading
+    'heading': #000000,
+    // Number of Projects Title
+    'number-of-projects-title': $map-teal,
+
+    // Subheading
+    'subheading': #000000,
+
+    // Search view filter text, light background
+    'header-toggle': $map-dark-grey,
+
+    // Search view header, background color
+    'header-background-light': $map-mid-grey,
+
+    // Body Text
+    // Infrastructure Label
+    // Filter/Form Label
+    // Project Title
+    // Road Style
+    // Data
+    // Textfield Text
+    // Select Option
+    // Dropdown List Option
+    'body': #000000,
+
+    // Infrastructure label, disabled
+    // Pagination
+    'pagination': $map-grey,
+
+    // Data Link
+    // Filter/Section Title
+    'data-link': $map-teal,
+
+    // Button Text, light
+    'button-text-light': #ffffff,
+
+    // Textfield Text, placeholder
+    'placeholder': $map-light-grey,
+
+    // Button text / light small
+    'button-text-light-small': $map-extra-light-grey,
+
+    // Input border
+    'border': #d3d3d3
+);
+
 // Colors
 
 $pale-green: #d6e1d6;
@@ -53,6 +141,7 @@ $blue-steel: #788ca8;
 $gravel-grey: #58585a;
 $creamer: #eee8e4;
 $callout-color: #323c49;
+$callout-color-inactive: #636a74;
 $placeholder-color: #788da9;
 $dark-green: #50736C;
 $medium-blue: #16496F;
@@ -121,12 +210,13 @@ $twitter-img: $img-url-base + 'twitter.svg';
 $help-circle: $img-url-base + 'help.svg';
 $help-sprite: $img-url-base + 'help_sprite.svg';
 $filter-sprite: $img-url-base + 'filter_sprite.svg';
-$filter: $img-url-base + 'sliders.svg';
+$filter: $img-url-base + 'filter.svg';
 $close-white: $img-url-base + 'close_white.svg';
 $arrow-left: $img-url-base + 'arrow_left.svg';
 $arrow-right: $img-url-base + 'arrow_right.svg';
 $plus: $img-url-base + 'plus.svg';
 $update: $img-url-base + 'update-circle.svg';
+$update-disabled: $img-url-base + 'update-circle-disabled.svg';
 
 $search-gray: $img-url-base + 'redesign/search-icon-gray.svg';
 $search-gray-close: $img-url-base + 'redesign/search-icon-gray-close.svg';
