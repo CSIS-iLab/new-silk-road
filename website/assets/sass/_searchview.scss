@@ -115,23 +115,8 @@ button.btn--header-toggle {
             overflow: auto;
         }
 
-        /* Submit button */
         form {
             height: 100%;
-            header {
-                @include justify-content(center);
-
-                button {
-                    background: none;
-                    line-height: $base-line-height;
-                }
-                button[disabled] {
-                    opacity: 0.4;
-                }
-                button[disabled] + span {
-                    opacity: 0.4;
-                }
-            }
         }
     }
     .inner.showFilters {
@@ -211,6 +196,8 @@ button.btn--header-toggle {
 }
 
 .searchView__header--interactive {
+    @include display(flex);
+    @include justify-content(center);
     background-color: $callout-color-inactive;
 
     &:hover {
@@ -244,7 +231,9 @@ button.searchView__header-reset-filter {
 button.searchView__update-results {
     @include display(flex);
     @include align-items(center);
+    @include justify-content(center);
     
+    background: none;
     text-transform: uppercase;
 
     &[disabled] {
