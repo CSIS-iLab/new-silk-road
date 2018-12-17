@@ -307,9 +307,8 @@ button.searchView__update-results {
     display: block;
 
     input::placeholder {
-        font-size: $compact-text-size;
+        font-size: map-get($map-font-sizes, 'base');
         color: gray;
-        line-height: 24px;
         top: 2px;
         font-style: normal;
     }
@@ -366,7 +365,8 @@ button.searchView__update-results {
 
 .filter-input-group__input-text {
     display: block;
-    line-height: map-get($map-font-sizes, 'subheading');
+    font-size: map-get($map-font-sizes, 'base');
+    line-height: map-get($map-font-sizes, 'heading');
     padding-top: 0; // compensating for natural visual gap
     padding-bottom: 2px;
     padding-left: 8px;
