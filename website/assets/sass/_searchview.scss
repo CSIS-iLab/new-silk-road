@@ -56,6 +56,15 @@ button.btn--header-toggle {
     margin-bottom: $searchview-body-text-bottom-margin;
 }
 
+// Abstract base class to be extended by various hr classes.
+.sidebar__separator {
+    margin-top: $searchview-padding-y;
+    margin-bottom: $searchview-padding-y;
+    margin-left: -$searchview-padding-x;
+    margin-right: -$searchview-padding-x;
+    border-width: 0.5px;
+}
+
 .searchView {
     width: $side-bar-width;
     font-size: map-get($map-font-sizes, 'base');
@@ -261,6 +270,10 @@ button.searchView__update-results {
     padding-right: $searchview-padding-x;
 }
 
+.searchWidget__separator {
+    @extend .sidebar__separator;
+}
+
 .expandable-panel {
     button.toggle {
         background-color: transparent;
@@ -411,14 +424,6 @@ button.searchView__update-results {
         text-transform: uppercase;
         margin-bottom: $searchview-section-header-bottom-margin;
     }
-}
-
-.filter-panel-separator {
-    margin-top: $searchview-padding-y;
-    margin-bottom: $searchview-padding-y;
-    margin-left: -$searchview-padding-x;
-    margin-right: -$searchview-padding-x;
-    border-width: 0.5px;
 }
 
 #infrastructureToggleContainer {
@@ -974,12 +979,8 @@ button.searchView__update-results {
     margin-bottom: $searchview-heading-bottom-margin;
 }
 
-.helpView__section-rule {
-    margin-top: $searchview-padding-y;
-    margin-bottom: $searchview-padding-y;
-    margin-left: -$searchview-padding-x;
-    margin-right: -$searchview-padding-x;
-    border-width: 0.5px;
+.helpView__separator {
+    @extend .sidebar__separator;
 }
 
 .helpView__body-text {

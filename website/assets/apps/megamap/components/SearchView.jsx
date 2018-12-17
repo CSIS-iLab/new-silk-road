@@ -386,7 +386,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-                <hr className="filter-panel-separator" />
+                <hr className="searchWidget__separator" />
                 <Panel
                   title="Initiatives"
                   ref={(el) => { this.initiativesPanel = el; }}
@@ -534,7 +534,7 @@ export default class SearchView extends Component {
                 <h2 className="helpView__section-heading">How to search the map</h2>
                 <p className="helpView__body-text">For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
               </section>
-              <hr className="helpView__section-rule" />
+              <hr className="helpView__separator" />
               <section>
                 <h3 className="helpView__section-subheading">Project Filters</h3>
                 <p className="helpView__body-text">
