@@ -141,7 +141,13 @@ class ResultsView extends Component {
 
     return (
       <div className="resultsView resultsView__main" style={this.props.style}>
-        <h2 className="summaryInfo resultsView__summary-info">
+        <h2
+          className={classNames(
+            'summaryInfo',
+            'resultsView__summary-info',
+            { 'resultsView__summary-info--with-results': this.props.results.length > 0 },
+          )}
+        >
           {this.props.totalCount} Projects
         </h2>
         <div

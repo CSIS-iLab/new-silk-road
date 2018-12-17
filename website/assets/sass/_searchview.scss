@@ -708,6 +708,12 @@ button.searchView__update-results {
     }
 }
 
+.resultsView__summary-info--with-results {
+    .searchView & {
+        margin-bottom: $searchview-section-header-bottom-margin * 3;
+    }
+}
+
 .resultsView__body-text {
     @extend .sidebar__body-text;
 }
