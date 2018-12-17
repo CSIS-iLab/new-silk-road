@@ -98,7 +98,6 @@ button.btn--header-toggle {
         transition: transform 0.3s;
         
         > header {
-            // background-color: $callout-color;
             h2 {
                 color: #fff;
             }
@@ -211,11 +210,20 @@ button.btn--header-toggle {
     background-color: $callout-color;
 }
 
+.searchView__header--interactive {
+    background-color: $callout-color-inactive;
+
+    &:hover {
+        background-color: $callout-color;
+    }
+}
+
 .searchView__header--light {
     background-color: map-get($map-colors, 'header-background-light');
 }
 
-.searchView__header--disabled {
+.searchView__header--disabled,
+.searchView__header--disabled:hover {
     background-color: $map-disabled-grey;
     color: $map-grey;
 }

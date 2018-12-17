@@ -468,6 +468,7 @@ export default class SearchView extends Component {
               <header
                 className={classNames(
                   'searchView__header',
+                  'searchView__header--interactive',
                   { 'searchView__header--disabled': !this.state.searchEnabled },
                 )}
               >
