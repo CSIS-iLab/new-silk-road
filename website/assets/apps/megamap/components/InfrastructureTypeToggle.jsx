@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import classNames from 'classnames';
 import SearchActions from '../actions/SearchActions';
 import SearchStore from '../stores/SearchStore';
 import InfrastructureIcon from './InfrastructureIcon';
@@ -14,7 +15,8 @@ export default class InfrastructureTypeToggle extends Component {
     // of the props' infrastructureTypes.
     this.state = {
       infrastructure_type: null,
-    }
+      hidden: true,
+    };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -80,26 +82,17 @@ export default class InfrastructureTypeToggle extends Component {
     });
   }
 
-  hideInfrastructureTypeLabels() {
-    /* Hide the infrastructure type labels, by giving them a 'hidden' class. */
-    document.getElementById('infrastructureToggleTitle').classList.add('hidden');
-    Array.prototype.forEach.call(
-      document.getElementsByClassName('infrastructureIconLabel'),
-      (element) => {
-        element.classList.add('hidden');
-      }
-    );
-  }
-
   render() {
     return (
-      <div id="infrastructureToggleContainer" onMouseLeave={this.hideInfrastructureTypeLabels}>
-        <div id="infrastructureToggleTitle" className="hidden">INFRASTRUCTURE FILTER</div>
+      <div id="infrastructureToggleContainer" onMouseLeave={() => this.setState({ hidden: true })}>
+        <div id="infrastructureToggleTitle" className={classNames({ hidden: this.state.hidden })}>INFRASTRUCTURE FILTER</div>
         <div id="infrastructureToggle">
           {
             this.state.infrastructure_type ?
             this.props.infrastructureTypes.map(type => (
               <InfrastructureIcon
+                hidden={this.state.hidden}
+                unHide={() => this.setState({ hidden: false })}
                 returnIdOnClick={this.handleClickIcon}
                 properties={type}
                 key={type.value}
