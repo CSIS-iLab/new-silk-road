@@ -18,7 +18,7 @@ const ProjectResultView = (props) => {
     <section className="projectResult">
       <h3 className="projectResult__title">{project.name}</h3>
       <section className="projectResult__section">
-        <div className="projectResult__data-label">Type:</div>
+        <div className="projectResult__data-label">Type</div>
         <div>
           {project.infrastructure_type}
         </div>
@@ -26,7 +26,7 @@ const ProjectResultView = (props) => {
       {
         listItems.length > 0 &&
           <section className="projectResult__section projectResult__section--initiatives-list">
-            <div className="projectResult__data-label">Initiatives:</div>
+            <div className="projectResult__data-label">Initiatives</div>
             <ul className="projectResult__initiatives-list">
               {listItems}
             </ul>

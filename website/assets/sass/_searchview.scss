@@ -277,11 +277,9 @@ button.searchView__update-results {
         content: "\E806";
         color: black;
 
-        //background: url($expand-btn-img) center no-repeat;
         width: $expand-collapse-btn-width;
         }
     &.expanded:before {
-            //background: url($collapse-btn-img) center no-repeat;
         font-family: "fontello";
         content: "\E807";
         color: black;
@@ -811,7 +809,7 @@ button.searchView__update-results {
 }
 
 .projectResult__initiatives-list-item {
-    font-size: $search-text-size;
+    font-size: map-get($map-font-sizes, 'base');
     margin-bottom: 8px;
     white-space: nowrap;
     overflow: hidden;
