@@ -198,6 +198,12 @@ $creamer-str: str-slice("#{$creamer}", 2);
     .zoom-magnifying-glass {
         background-image: url($zoom-magnifying-glass-img);
     }
+
+    &:hover {
+        .zoom-magnifying-glass {
+            background-image: url($zoom-magnifying-glass-img-active);
+        }
+    }
 }
 
 .popup-header-button-disabled {
