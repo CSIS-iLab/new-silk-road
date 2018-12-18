@@ -163,21 +163,6 @@ button.btn--header-toggle {
         @include flex-direction(column);
         @include justify-content(flex-start);
     }
-
-    section {
-        h4 {
-            display: inline-block;
-            color: $greyish-teal;
-            font-size: $search-text-size;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-    }
-    section:last-child {
-        border: none;
-    }
 }
 
 .searchView__header {
@@ -688,33 +673,30 @@ button.searchView__update-results {
     display: block;
     background-color: transparent;
     line-height: 1;
+}
 
-    button {
-        width: 100%;
-        position: relative;
-        height: $base-line-height;
-        width: $base-line-height;
-        &:disabled {
-            opacity: 0.3;
-        }
-    }
-    &:first-child button {
-        background: url($arrow-left) no-repeat center/70% 70%;
+.resultsView__pagination-button {
+    width: 100%;
+    position: relative;
+    height: $base-line-height;
+    width: $base-line-height;
+}
 
-        &:hover {
-            background: url($arrow-left-active) no-repeat center/70% 70%;
-        }
-    }
-    &:last-child button {
-        background: url($arrow-right) no-repeat center/70% 70%;
+.resultsView__pagination-button--previous {
+    @extend .resultsView__pagination-button;
+    background: url($arrow-left) no-repeat center/70% 70%;
 
-        &:hover {
-            background: url($arrow-right-active) no-repeat center/70% 70%;
-        }
+    &:hover {
+        background: url($arrow-left-active) no-repeat center/70% 70%;
     }
-    .pagination {
-        flex: 1;
-        line-height: $base-line-height;
+}
+
+.resultsView__pagination-button--next {
+    @extend .resultsView__pagination-button;
+    background: url($arrow-right) no-repeat center/70% 70%;
+
+    &:hover {
+        background: url($arrow-right-active) no-repeat center/70% 70%;
     }
 }
 

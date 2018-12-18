@@ -193,6 +193,7 @@ class ResultsView extends Component {
             )}
           >
             <button
+              className="resultsView__pagination-button--previous"
               disabled={this.props.previousURL == null}
               onClick={this.handlePreviousClick}
               value={this.props.previousURL}
@@ -208,6 +209,7 @@ class ResultsView extends Component {
             )}
           >
             <button
+              className="resultsView__pagination-button--next"
               disabled={this.props.nextURL == null}
               onClick={this.handleNextClick}
               value={this.props.nextURL}
