@@ -49,11 +49,15 @@ $creamer-str: str-slice("#{$creamer}", 2);
     font: $compact-text-size/rem(20) 'Helvetica Neue', Arial, Helvetica, sans-serif;
 
     .popup-button {
-        background-color: $green-2018;
-        color: white;
+        background-color: $map-teal;
+        color: $cloudy-blue;
+        font-size: map-get($map-font-sizes, 'data-label');
         font-weight: bolder;
+        padding: 6px 24px;
+
         &:hover {
-            background-color: $greyish-teal;
+            background-color: $map-teal-active;
+            color: white;
         }
     }
 }
@@ -67,7 +71,9 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 .mapboxgl-popup-content {
     background-color: white;
+    border-radius: 0;
 }
+
 .mapboxgl-popup-close-button {
     width: 36px;
     height: 36px;
@@ -148,10 +154,17 @@ $creamer-str: str-slice("#{$creamer}", 2);
     }
 }
 
+.mapboxgl-popup-content {
+    padding: 0;
+}
+
+.popup-content {
+    font-family: $sans-font-family;
+}
+
 .popup-header {
     background-color: black;
-    color: white;
-    margin: -10px -20px 10px -20px;
+    color: $map-mid-grey;
 }
 
 .popup-header-zoomicon {
@@ -190,6 +203,8 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 
 .popup-header-text, .popup-header-text-disabled {
+    font-size: map-get($map-font-sizes, 'data-label');
+    text-transform: uppercase;
     vertical-align: super;
 }
 
@@ -197,22 +212,48 @@ $creamer-str: str-slice("#{$creamer}", 2);
     color: $warm-grey;
 }
 
+.popup-inner-container {
+    padding: 16px 20px 20px 20px;
+}
+
+.popup-inner-header {
+    margin: 0 0 12px 0;
+    font-size: map-get($map-font-sizes, 'base');
+    font-weight: bold;
+}
+
 .popup-row {
-    margin-bottom: 4px;
+    margin-bottom: 12px;
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+.popup-row-header {
+    font-size: map-get($map-font-sizes, 'data-label');
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
 }
 
 .popup-row-data {
     margin-top: -4px;
+    font-size: map-get($map-font-sizes, 'base');
 }
 
 .popup-buttonholder {
     text-align: center;
-    margin-top: 8px;
+    margin-top: 16px;
+    text-transform: uppercase;
+
+    &.popup-row:last-of-type {
+        margin-bottom: 16px;
+    }
 }
 
-.popup-content-inner {
+.popup-content {
     width: 220px;
-    padding: 0 10px;
     font-weight: 500;
 
     p {
