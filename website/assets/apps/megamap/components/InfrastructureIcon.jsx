@@ -6,7 +6,7 @@ export default class InfrastructureIcon extends Component {
     super(props);
     this.label = props.properties.label;
     this.value = props.properties.value;
-    this.state = { selected: '' };
+    this.state = { selected: false };
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -30,20 +30,22 @@ export default class InfrastructureIcon extends Component {
   handleClick(){
     /* Return the element's id value. */
     this.props.returnIdOnClick(this.value);
-    const sel = this.state.selected === '' ? 'selected' : '';
-    this.setState({ selected: sel });
+    this.setState(oldState => ({ selected: !oldState.selected }));
   }
 
   render() {
     return (
       <div
-        className={`infrastructureIcon__container ${this.state.selected}`}
+        className={classNames(
+          'infrastructureIcon__container',
+          { selected: this.state.selected },
+        )}
         onClick={this.handleClick}
       >
         <div
           className={classNames(
             this.colorClass,
-            this.state.selected,
+            { selected: this.state.selected },
             'infrastructureIcon__icon',
           )}
         >
