@@ -9,6 +9,10 @@
 $searchview-padding-x: 20px;
 $searchview-padding-y: 24px;
 
+$searchview-infrastructure-icon-size: 40px;
+$searchview-infrastructure-padding-left: 16px;
+$searchview-infrastructure-padding-right: 24px;
+
 $searchview-header-height: 50px;
 $searchview-heading-bottom-margin: $searchview-padding-y / 2;
 $searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
@@ -417,18 +421,7 @@ button.searchView__update-results {
     z-index: 10;
     left: 290px;
     top: 70px;
-    width: 100%;
-
-    span span {
-        display: block;
-        height: 50px;
-        width: 50px;
-        cursor: pointer;
-
-        img{
-            margin: 5px;
-        }
-    }
+    width: auto;
 
     .rail-color {
         background-color: $rail-color;
@@ -450,7 +443,7 @@ button.searchView__update-results {
     }
 }
 
-.infrastructureIconContainer {
+.infrastructureIcon__container {
     display: flex;
     &:hover {
         cursor: pointer;
@@ -461,9 +454,28 @@ button.searchView__update-results {
     }
 }
 
-.infrastructureIconLabel {
-    padding: 12px;
-    height: 50px;
+.infrastructureIcon__icon {
+    display: inline-block;
+    height: $searchview-infrastructure-icon-size; 
+    width: $searchview-infrastructure-icon-size;
+}
+
+.infrastructureIcon__inner-icon {
+    display: block;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+
+    img{
+        margin: 5px;
+    }
+}
+
+.infrastructureIcon__label {
+    padding-left: $searchview-infrastructure-padding-left;
+    padding-right: $searchview-infrastructure-padding-right;
+    line-height: 40px;
+    height: 40px;
     width: max-content;
 }
 

@@ -31,13 +31,31 @@ export default class InfrastructureIcon extends Component {
 
   render() {
     return (
-      <div className={`infrastructureIconContainer ${this.state.selected}`} onClick={this.handleClick.bind(this)}>
-        <span className={`${this.getSpanColorClass()} ${this.state.selected}`} >
-          <span width={40} height={40} className={`${this.getSpanIconClass()}`} alt={this.getAltText()} onMouseEnter={this.props.unHide}></span>
-        </span>
+      <div
+        className={`infrastructureIcon__container ${this.state.selected}`}
+        onClick={this.handleClick.bind(this)}
+      >
         <div
           className={classNames(
-            'infrastructureIconLabel',
+            this.getSpanColorClass(),
+            this.state.selected,
+            'infrastructureIcon__icon',
+          )}
+        >
+          <span
+            width={40}
+            height={40}
+            className={classNames(
+              this.getSpanIconClass(),
+              'infrastructureIcon__inner-icon'
+            )}
+            alt={this.getAltText()}
+            onMouseEnter={this.props.unHide}
+          />
+        </div>
+        <div
+          className={classNames(
+            'infrastructureIcon__label',
             { hidden: this.props.hidden },
           )}
         >{this.label}</div>

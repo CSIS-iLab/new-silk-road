@@ -5,17 +5,16 @@ import SearchStore from '../stores/SearchStore';
 import InfrastructureIcon from './InfrastructureIcon';
 
 export default class InfrastructureTypeToggle extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
-    this.props = props;
     this.handleClickIcon = this.handleClickIcon.bind(this);
     // Initally, set the state to have null infrastructure_type. When the component
     // receives the props later, we update the state to store the initial value
     // of the props' infrastructureTypes.
     this.state = {
       infrastructure_type: null,
-      hidden: true,
+      hidden: false,
     };
   }
 
@@ -84,8 +83,10 @@ export default class InfrastructureTypeToggle extends Component {
 
   render() {
     return (
-      <div id="infrastructureToggleContainer" onMouseLeave={() => this.setState({ hidden: true })}>
-        <div id="infrastructureToggleTitle" className={classNames({ hidden: this.state.hidden })}>INFRASTRUCTURE FILTER</div>
+      <div
+        id="infrastructureToggleContainer"
+        onMouseLeave={() => this.setState({ hidden: false })} //true })}
+      >
         <div id="infrastructureToggle">
           {
             this.state.infrastructure_type ?
