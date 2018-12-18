@@ -84,13 +84,13 @@ $creamer-str: str-slice("#{$creamer}", 2);
     color: white;
     font-size: 0;
     line-height: 0;
-    background-image: url($close-white);
+    background-image: url($close);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 11px;
 
     &:hover {
-        background-color: $warm-grey;
+        background-image: url($close-white);
     }
 }
 .marker-title {
@@ -195,9 +195,6 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 
 .popup-header-button {
-    &:hover {
-        background-color: $warm-grey;
-    }
     .zoom-magnifying-glass {
         background-image: url($zoom-magnifying-glass-img);
     }
@@ -263,7 +260,7 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 
 .popup-content {
-    width: 220px;
+    width: 250px;
     font-weight: 500;
 
     p {
