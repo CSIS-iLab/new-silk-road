@@ -422,35 +422,17 @@ button.searchView__update-results {
     left: 290px;
     top: 70px;
     width: auto;
-
-    .rail-color {
-        background-color: $rail-color;
-    }
-    .road-color {
-        background-color: $road-color;
-    }
-    .seaport-color {
-        background-color: $seaport-color;
-    }
-    .intermodal-color {
-        background-color: $intermodal-color;
-    }
-    .powerplant-color {
-        background-color: $powerplant-color;
-    }
-    span.selected {
-        background-color: $warm-grey;
-    }
 }
 
 .infrastructureIcon__container {
     display: flex;
     &:hover {
         cursor: pointer;
-        background-color: $pale-grey;
+        background-color: $map-infrastructure-hover-grey;
     }
     &.selected {
-        background-color: $pale-grey;
+        color: $map-grey;
+        background-color: $map-disabled-grey;
     }
 }
 
@@ -458,6 +440,25 @@ button.searchView__update-results {
     display: inline-block;
     height: $searchview-infrastructure-icon-size; 
     width: $searchview-infrastructure-icon-size;
+
+    &.rail-color {
+        background-color: $rail-color;
+    }
+    &.road-color {
+        background-color: $road-color;
+    }
+    &.seaport-color {
+        background-color: $seaport-color;
+    }
+    &.intermodal-color {
+        background-color: $intermodal-color;
+    }
+    &.powerplant-color {
+        background-color: $powerplant-color;
+    }
+    &.selected {
+        background-color: $map-disabled-header-grey !important;
+    }
 }
 
 .infrastructureIcon__inner-icon {
