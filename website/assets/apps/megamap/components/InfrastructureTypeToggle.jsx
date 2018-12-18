@@ -14,7 +14,7 @@ export default class InfrastructureTypeToggle extends Component {
     // of the props' infrastructureTypes.
     this.state = {
       infrastructure_type: null,
-      hidden: false,
+      hidden: true,
     };
   }
 
@@ -85,7 +85,7 @@ export default class InfrastructureTypeToggle extends Component {
     return (
       <div
         id="infrastructureToggleContainer"
-        onMouseLeave={() => this.setState({ hidden: false })} //true })}
+        onMouseLeave={() => this.setState({ hidden: true })}
       >
         <div id="infrastructureToggle">
           {
