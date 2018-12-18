@@ -702,9 +702,17 @@ button.searchView__update-results {
     }
     &:first-child button {
         background: url($arrow-left) no-repeat center/70% 70%;
+
+        &:hover {
+            background: url($arrow-left-active) no-repeat center/70% 70%;
+        }
     }
     &:last-child button {
         background: url($arrow-right) no-repeat center/70% 70%;
+
+        &:hover {
+            background: url($arrow-right-active) no-repeat center/70% 70%;
+        }
     }
     .pagination {
         flex: 1;
