@@ -754,15 +754,14 @@ button.searchView__update-results {
     padding: 6px 3px;
     @include flex(0 1 70%);
     @include order(0);
-    background-color: $green;
-    color: white;
--webkit-transition: background-color .2s ease-in-out;
-            transition: background-color .2s ease-in-out;
-                   &:disabled {
+    background-color: $map-teal;
+    color: $cloudy-blue;
+    &:disabled {
         display: none;
     }
     &:hover{
-        background-color: $greyish-teal;
+        background-color: $map-teal-active;
+        color: white;
     }
 }
 
