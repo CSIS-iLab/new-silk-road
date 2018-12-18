@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import classNames from 'classnames';
+import React, { Component, PropTypes } from 'react';
 import SearchActions from '../actions/SearchActions';
-import SearchStore from '../stores/SearchStore';
 import InfrastructureIcon from './InfrastructureIcon';
 
 export default class InfrastructureTypeToggle extends Component {
@@ -18,34 +16,34 @@ export default class InfrastructureTypeToggle extends Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate() {
     // If this is the first time that the component is receiving props, then
     // update the state from the props.
     if (this.state.infrastructure_type === null && this.props.infrastructureTypes.length > 0) {
       this.setState({
-        infrastructure_type: this.props.infrastructureTypes.map(x => x.__proto__.value)
-      })
+        infrastructure_type: this.props.infrastructureTypes.map(x => x.__proto__.value),
+      });
     }
   }
 
-  handleClickIcon(infrastructureTypeId){
+  handleClickIcon(infrastructureTypeId) {
     /* Take the infrastructureTypeId and either add it to, or subtract it from,
      * the state. Then, query the backend with the new query parameters.
      */
 
     // A copy of the current state
-    var selectedInfrastructureTypes = [...this.state.infrastructure_type];
+    const selectedInfrastructureTypes = [...this.state.infrastructure_type];
 
     // If the infrastructureTypeId is already in the selectedInfrastructureTypes,
     // then remove it from selectedInfrastructureTypes.
-    var index = selectedInfrastructureTypes.indexOf(infrastructureTypeId);
-    if (index !== -1) {
-      selectedInfrastructureTypes.splice(index, 1);
+    const indexI = selectedInfrastructureTypes.indexOf(infrastructureTypeId);
+    if (indexI !== -1) {
+      selectedInfrastructureTypes.splice(indexI, 1);
 
       // If the array is empty add a dummy value of 0 to filter on
       // to return empty results
       if (selectedInfrastructureTypes.length === 0) {
-        selectedInfrastructureTypes.push(0)
+        selectedInfrastructureTypes.push(0);
       }
     } else {
       // The infrastructureTypeId is not in the selectedInfrastructureTypes,
@@ -53,9 +51,9 @@ export default class InfrastructureTypeToggle extends Component {
       selectedInfrastructureTypes.push(infrastructureTypeId);
 
       //
-      var index = selectedInfrastructureTypes.indexOf(0);
-      if (index !== -1) {
-        selectedInfrastructureTypes.splice(index, 1)
+      const indexJ = selectedInfrastructureTypes.indexOf(0);
+      if (indexJ !== -1) {
+        selectedInfrastructureTypes.splice(indexJ, 1);
       }
     }
 
@@ -65,7 +63,7 @@ export default class InfrastructureTypeToggle extends Component {
     if (storeObj) {
       Object.keys(storeObj).map((key) => {
         if (key !== 'infrastructure_type' && storeObj[key] && storeObj[key].length !== 0 && Object.keys(storeObj[key]).length) {
-          queryParams[key] = storeObj[key]
+          queryParams[key] = storeObj[key];
         }
       });
     }
@@ -75,10 +73,9 @@ export default class InfrastructureTypeToggle extends Component {
           { infrastructure_type: selectedInfrastructureTypes },
         );
     // Set the state, and query the backend with the query parameters we just constructed
-    this.setState(options, () => {
-      this.props.infrastructureOnClick(options),
-      SearchActions.search(options)
-    });
+    this.setState(options);
+    this.props.infrastructureOnClick(options);
+    SearchActions.search(options);
   }
 
   render() {
@@ -102,6 +99,12 @@ export default class InfrastructureTypeToggle extends Component {
           }
         </div>
       </div>
-    )
+    );
   }
 }
+
+InfrastructureTypeToggle.propTypes = {
+  infrastructureOnClick: PropTypes.func,
+  infrastructureTypes: PropTypes.arrayOf(PropTypes.shape({})),
+  theState: PropTypes.shape({}),
+};

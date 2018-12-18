@@ -71,9 +71,9 @@ export default class InfrastructureIcon extends Component {
 
 InfrastructureIcon.propTypes = {
   hidden: PropTypes.bool,
-  properties: PropTypes.shape.isRequired,
-  returnIdOnClick: PropTypes.func.isRequired,
-  unHide: PropTypes.func.isRequired,
+  properties: PropTypes.shape({}),
+  returnIdOnClick: PropTypes.func,
+  unHide: PropTypes.func,
 };
 
 InfrastructureIcon.defaultProps = {
