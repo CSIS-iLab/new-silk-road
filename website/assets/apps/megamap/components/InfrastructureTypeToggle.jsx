@@ -92,21 +92,20 @@ export default class InfrastructureTypeToggle extends Component {
   }
 
   render() {
-    /* Render an InfrastructureIcon component for each id in the props. */
-    var infrastructureTypeIcons = [];
-    if (this.state.infrastructure_type !== null) {
-      // Loop over the infrastructure types in the props (all of the infrastructure types
-      // that were passed in from the parent component), and add an InfrastructureIcon
-      // component for each.
-      for (let i=0; i<this.props.infrastructureTypes.length; i++) {
-        infrastructureTypeIcons.push(<InfrastructureIcon returnIdOnClick={this.handleClickIcon} properties={this.props.infrastructureTypes[i]} key={this.props.infrastructureTypes[i].value} />)
-      }
-    }
     return (
       <div id="infrastructureToggleContainer" onMouseLeave={this.hideInfrastructureTypeLabels}>
         <div id="infrastructureToggleTitle" className="hidden">INFRASTRUCTURE FILTER</div>
         <div id="infrastructureToggle">
-          {infrastructureTypeIcons}
+          {
+            this.state.infrastructure_type ?
+            this.props.infrastructureTypes.map(type => (
+              <InfrastructureIcon
+                returnIdOnClick={this.handleClickIcon}
+                properties={type}
+                key={type.value}
+              />
+            )) : null
+          }
         </div>
       </div>
     )
