@@ -16,7 +16,7 @@ $searchview-section-header-bottom-margin: 8px;
 $searchview-label-bottom-margin: $searchview-section-header-bottom-margin / 2;
 $searchview-text-input-margin-left: 16px;
 
-$search-inner-height: 550px;
+$search-inner-height: calc(100% - #{$searchview-header-height * 2});
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
@@ -157,37 +157,11 @@ button.btn--header-toggle {
 
     .inner {
         width: $side-bar-width;
-        height: $search-inner-height;
+        height: 100%;
 
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(flex-start);
-
-        // > div {
-        //     padding: $tiny-spacing;
-        // }
-    }
-
-    section {
-        h4 {
-            display: inline-block;
-            color: $greyish-teal;
-            font-size: $search-text-size;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-    }
-    section:last-child {
-        border: none;
-    }
-
-    section.projectResult {
-        border: none;
-        h1 {
-            padding-bottom: $small-spacing;
-        }
     }
 }
 
@@ -290,11 +264,9 @@ button.searchView__update-results {
         content: "\E806";
         color: black;
 
-        //background: url($expand-btn-img) center no-repeat;
         width: $expand-collapse-btn-width;
         }
     &.expanded:before {
-            //background: url($collapse-btn-img) center no-repeat;
         font-family: "fontello";
         content: "\E807";
         color: black;
@@ -561,29 +533,6 @@ button.searchView__update-results {
 
 }
 
-.buttonBar {
-    @include display(flex);
-    @include justify-content(space-between);
-    padding: $small-spacing;
-}
-
-.buttonBar > button {
-    font-size: $compact-text-size;
-    padding: 6px 3px;
-    @include flex(0 1 70%);
-    @include order(0);
-    background-color: $green;
-    color: white;
--webkit-transition: background-color .2s ease-in-out;
-            transition: background-color .2s ease-in-out;
-                   &:disabled {
-        display: none;
-    }
-    &:hover{
-        background-color: $greyish-teal;
-    }
-}
-
 #primarySearch {
     input, button {
         background-color: $dark-night;
@@ -634,13 +583,8 @@ button.searchView__update-results {
 
 .resultsView {
     .scrollWrap {
-        height: calc(100% - 18px);
+        height: 100%;
         -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
-
-    > div {
-        display: block;
-        position: relative;
     }
 
     /* for the two links in the Curated results section. */
@@ -656,73 +600,10 @@ button.searchView__update-results {
         }
     }
 
-    .resultsNav {
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        @include align-content(stretch);
-
-        padding: $base-line-height $base-line-height/1.5;
-        background-color: $pale-grey;
-
-        .buttonWrap {
-            display: block;
-            background-color: transparent;
-
-            button {
-                width: 100%;
-                position: relative;
-                height: $base-line-height;
-                width: $base-line-height;
-                transform: scale(1, 1);
-                &:hover {
-                    transform: scale(1.3, 1.3);
-                }
-                &:disabled {
-                    opacity: 0.3;
-                    transform: scale(1, 1);
-                }
-            }
-            &:first-child button{
-                background: url($arrow-left) no-repeat center/70% 70%;
-            }
-            &:last-child button{
-                background: url($arrow-right) no-repeat center/70% 70%;
-            }
-            .pagination {
-                flex: 1;
-                line-height: $base-line-height;
-            }
-        }
-    }
-
     ul.searchResults {
         list-style: none;
         padding: 0;
         margin: 0;
-
-        > li {
-            margin: 0 10px 8px 0;
-            padding: 2px 4px 16px 0;
-            border-bottom: 1px solid $slate-grey;
-
-
-            &:last-of-type {
-                border: none;
-                margin-bottom: 0;
-                padding-bottom: 0;
-            }
-
-            h1 {
-                font-family: $sans-font-family;
-                font-size: $search-text-size;
-                margin: 0 0 $tiny-spacing 0;
-            }
-
-            p {
-                margin-bottom: $tiny-spacing;
-            }
-        }
     }
 }
 
@@ -730,8 +611,12 @@ button.searchView__update-results {
     @extend button.btn--header-toggle;
     color: map-get($map-colors, 'header-toggle');
 
+    &:hover {
+        color: $map-hover-grey;
+    }
+
     &::before {
-        background-image: url($filter);
+        background-image: url($filter-active);
         height: 15px;
     }
 }
@@ -743,16 +628,19 @@ button.searchView__update-results {
         height: 1em;
         width: 1em;
     }
+    &:hover::before {
+        background-image: url($help-circle-active);
+    }
 }
 
 .resultsView__main {
-    height: 100%;
+    height: calc(100% - #{$searchview-header-height});
     @include display(flex);
     @include flex-direction(column);
     @include justify-content(space-between);
 
     padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y;
+    padding-bottom: $searchview-header-height;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
 }
@@ -765,32 +653,161 @@ button.searchView__update-results {
     }
 }
 
+.resultsView__summary-info--with-results {
+    .searchView & {
+        margin-bottom: $searchview-section-header-bottom-margin * 3;
+    }
+}
+
 .resultsView__body-text {
     @extend .sidebar__body-text;
 }
 
-.initiativesList {
+.resultsView__pagination {
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(space-between);
+    @include align-content(stretch);
+    @include align-items(center);
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: $searchview-header-height;
+    width: 100%;
+
+    background-color: $pale-grey;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+}
+
+.resultsView__pagination-buttonWrap {
+    display: block;
+    background-color: transparent;
+    line-height: 1;
+}
+
+.resultsView__pagination-button {
+    width: 100%;
+    position: relative;
+    height: $base-line-height;
+    width: $base-line-height;
+}
+
+.resultsView__pagination-button--previous {
+    @extend .resultsView__pagination-button;
+    background: url($arrow-left) no-repeat center/70% 70%;
+
+    &:hover {
+        background: url($arrow-left-active) no-repeat center/70% 70%;
+    }
+}
+
+.resultsView__pagination-button--next {
+    @extend .resultsView__pagination-button;
+    background: url($arrow-right) no-repeat center/70% 70%;
+
+    &:hover {
+        background: url($arrow-right-active) no-repeat center/70% 70%;
+    }
+}
+
+.resultsView__pagination-buttonWrap--disabled {
+    visibility: hidden;
+}
+
+.searchResults__result {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    margin-bottom: 0;
+    position: relative;
+
+    &::after {
+        content: "";
+        display: block;
+        height: 1px;
+        background-color: $map-light-grey;
+        position: absolute;
+        bottom: 0;
+        left: -$searchview-padding-x;
+        width: calc(100% + #{2 * $searchview-padding-x});
+    }
+
+    &:first-of-type {
+        padding-top: 0;
+    }
+
+    &:last-of-type {
+        padding-bottom: 0;
+    }
+}
+
+.searchResults__buttonBar {
+    @include display(flex);
+    @include justify-content(space-between);
+    padding-left: $searchview-text-input-margin-left;
+}
+
+.searchResults__button {
+    font-size: map-get($map-font-sizes, 'data-label');
+    text-transform: uppercase;
+    padding: 6px 3px;
+    @include flex(0 1 70%);
+    @include order(0);
+    background-color: $map-teal;
+    color: $cloudy-blue;
+    &:disabled {
+        display: none;
+    }
+    &:hover{
+        background-color: $map-teal-active;
+        color: white;
+    }
+}
+
+.projectResult {
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__title {
+    font-size: map-get($map-font-sizes, 'base');
+    font-weight: bold;
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__section {
+    padding-left: $searchview-text-input-margin-left;
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__data-label {
+    font-size: map-get($map-font-sizes, 'data-label');
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.projectResult__section--initiatives-list {
     h2 {
         font-family: $sans-font-family;
         font-size: $search-text-size;
         margin-bottom: 3px;
         margin-left: 0px;
     }
-    ul {
-        padding: 0 0 0 0px;
-        margin: 0;
-        list-style: square inside;
-        li {
-            font-size: $search-text-size;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            a {
-                margin: -15px;
-            }
-        }
-    }
+}
+
+.projectResult__initiatives-list {
+    padding: 0 0 0 0px;
+    margin: 0;
+    list-style: none;
+}
+
+.projectResult__initiatives-list-item {
+    font-size: map-get($map-font-sizes, 'base');
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {

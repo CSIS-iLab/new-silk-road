@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
+import classNames from 'classnames';
 import ResultsList from './ResultsList';
 import SearchActions from '../actions/SearchActions';
 
@@ -140,7 +141,13 @@ class ResultsView extends Component {
 
     return (
       <div className="resultsView resultsView__main" style={this.props.style}>
-        <h2 className="summaryInfo resultsView__summary-info">
+        <h2
+          className={classNames(
+            'summaryInfo',
+            'resultsView__summary-info',
+            { 'resultsView__summary-info--with-results': this.props.results.length > 0 },
+          )}
+        >
           {this.props.totalCount} Projects
         </h2>
         <div
@@ -174,27 +181,39 @@ class ResultsView extends Component {
           </div>
         </div>
         <div
-          className="resultsNav"
+          className="resultsView__pagination"
           style={[
             noResults && resultsNavStyle.hidden,
           ]}
         >
-          <div className="buttonWrap">
+          <div
+            className={classNames(
+              'resultsView__pagination-buttonWrap',
+              { 'resultsView__pagination-buttonWrap--disabled': this.props.previousURL == null },
+            )}
+          >
             <button
+              className="resultsView__pagination-button--previous"
               disabled={this.props.previousURL == null}
               onClick={this.handlePreviousClick}
               value={this.props.previousURL}
-            ></button>
+            />
           </div>
-          <div className="pagination">
+          <div className="resultsView__pagination-count">
             Page {currentPage} of {numPages}
           </div>
-          <div className="buttonWrap">
+          <div
+            className={classNames(
+              'resultsView__pagination-buttonWrap',
+              { 'resultsView__pagination-buttonWrap--disabled': this.props.nextURL == null },
+            )}
+          >
             <button
+              className="resultsView__pagination-button--next"
               disabled={this.props.nextURL == null}
               onClick={this.handleNextClick}
               value={this.props.nextURL}
-            ></button>
+            />
           </div>
         </div>
       </div>
