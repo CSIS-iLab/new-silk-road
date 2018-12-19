@@ -416,7 +416,6 @@ button.searchView__update-results {
 }
 
 #infrastructureToggle {
-    background: #fff;
     position: absolute;
     z-index: 10;
     left: 290px;
@@ -426,14 +425,8 @@ button.searchView__update-results {
 
 .infrastructureIcon__container {
     display: flex;
-    &:hover {
-        cursor: pointer;
-        background-color: $map-infrastructure-hover-grey;
-    }
-    &.selected {
-        color: $map-grey;
-        background-color: $map-disabled-grey;
-    }
+    overflow: hidden;
+    cursor: pointer;
 }
 
 .infrastructureIcon__icon {
@@ -477,7 +470,11 @@ button.searchView__update-results {
         }
     }
     &.selected {
-        background-color: $map-disabled-header-grey !important;
+        background-color: $map-disabled-header-grey;
+    }
+
+    .infrastructureIcon__container.selected:hover & {
+        background-color: $map-light-grey;
     }
 }
 
@@ -493,11 +490,35 @@ button.searchView__update-results {
 }
 
 .infrastructureIcon__label {
+    background-color: white;
+
     padding-left: $searchview-infrastructure-padding-left;
     padding-right: $searchview-infrastructure-padding-right;
     line-height: 40px;
     height: 40px;
-    width: max-content;
+    width: 100%;
+
+    z-index: -1;
+    transform: translateX(0);
+    transition: transform 0.25s;
+
+    .infrastructureIcon__container:hover & {
+        background-color: $map-infrastructure-hover-grey;
+    }
+}
+
+.infrastructureIcon__label--hidden {
+    transform: translateX(-100%);
+    transition: transform 0.25s;
+}
+
+.infrastructureIcon__label--selected {
+    color: $map-grey;
+    background-color: $map-disabled-grey;
+
+    .infrastructureIcon__container:hover & {
+        background-color: $map-infrastructure-hover-grey;
+    }
 }
 
 .app-wrap {

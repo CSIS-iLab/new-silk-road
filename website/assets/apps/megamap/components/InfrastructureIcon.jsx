@@ -63,7 +63,8 @@ export default class InfrastructureIcon extends Component {
         <div
           className={classNames(
             'infrastructureIcon__label',
-            { hidden: this.props.hidden },
+            { 'infrastructureIcon__label--hidden': this.props.hidden },
+            { 'infrastructureIcon__label--selected': this.state.selected },
           )}
         >{this.label}</div>
       </div>
