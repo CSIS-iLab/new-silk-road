@@ -162,6 +162,8 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     inlines = [
         ProjectFundingInline
     ]
+    raw_id_fields = ('power_plant', )
+    list_select_related = ('infrastructure_type', )
 
     def fieldbook_id(self, obj):
         if obj.extra_data.exists():
