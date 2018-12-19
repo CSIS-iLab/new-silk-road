@@ -232,6 +232,7 @@ DATABASES['default']['CONN_MAX_AGE'] = 500
 
 # Cache
 CACHE_DISABLED = os.getenv('DISABLE_CACHE', 'False') == 'True'
+SELECT2_CACHE_LOCATION = os.getenv('SELECT2_CACHE_LOCATION', '')
 
 if not CACHE_DISABLED:
     CACHES = memcacheify()
@@ -242,6 +243,17 @@ if not CACHE_DISABLED:
         'locations_pointgeometry',
         'locations_polygongeometry',
     ))
+    if SELECT2_CACHE_LOCATION:
+        CACHES['select2'] = {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": SELECT2_CACHE_LOCATION,
+            "TIMEOUT": 60 * 15,  # 15 minutes
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+        # Set the cache backend to select2
+        SELECT2_CACHE_BACKEND = 'select2'
 else:
     CACHES = {
         'default': {
