@@ -603,8 +603,12 @@ button.searchView__update-results {
     @extend button.btn--header-toggle;
     color: map-get($map-colors, 'header-toggle');
 
+    &:hover {
+        color: $map-hover-grey;
+    }
+
     &::before {
-        background-image: url($filter);
+        background-image: url($filter-active);
         height: 15px;
     }
 }
@@ -733,7 +737,7 @@ button.searchView__update-results {
 .searchResults__buttonBar {
     @include display(flex);
     @include justify-content(space-between);
-    padding-left: $searchview-padding-x;
+    padding-left: $searchview-text-input-margin-left;
 }
 
 .searchResults__button {
