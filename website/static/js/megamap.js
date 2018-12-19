@@ -6752,7 +6752,7 @@
 	var onMoveDelayTime = 750;
 	var updateInterval = 500;
 	var boundsPadding = 15;
-	var popContentClass = 'popup-content-inner';
+	var popContentClass = 'popup-content';
 	var defaultCenter = [88.639973, 32.776942];
 	
 	exports.defaultZoom = defaultZoom;
@@ -32044,7 +32044,8 @@
 	      headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
 	      headerZoomButton.appendChild(headerZoomButtonIcon);
 	      var headerText = document.createElement('span');
-	      headerText.appendChild(document.createTextNode('zoom'.toUpperCase()));
+	      headerText.setAttribute('class', 'popup-header-text');
+	      headerText.appendChild(document.createTextNode('Zoom to detail'));
 	      // If the header's zoom button should be enabled, then give it the appropriate
 	      // CSS class, and add an event listener for when the zoom button is clicked.
 	      // Clicking the header's zoom button should get the geostore data, which in turn
@@ -32067,13 +32068,15 @@
 	
 	      // Project name element
 	      var nameElement = document.createElement('h3');
+	      nameElement.setAttribute('class', 'popup-inner-header');
 	      nameElement.appendChild(document.createTextNode(projectName));
 	
 	      // Project locations row
 	      var locationsRow = document.createElement('div');
 	      locationsRow.setAttribute('class', 'popup-row');
 	      var locationsLabelDiv = document.createElement('div');
-	      locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
+	      locationsLabelDiv.setAttribute('class', 'popup-row-header');
+	      locationsLabelDiv.appendChild(document.createTextNode('Locations'));
 	      var locationsDataDiv = document.createElement('div');
 	      locationsDataDiv.setAttribute('class', 'popup-row-data');
 	      locationsDataDiv.appendChild(document.createTextNode(projectLocations));
@@ -32084,7 +32087,8 @@
 	      var typeRow = document.createElement('div');
 	      typeRow.setAttribute('class', 'popup-row');
 	      var typeLabelDiv = document.createElement('div');
-	      typeLabelDiv.appendChild(document.createTextNode('Type'.toUpperCase()));
+	      typeLabelDiv.setAttribute('class', 'popup-row-header');
+	      typeLabelDiv.appendChild(document.createTextNode('Type'));
 	      var typeDataDiv = document.createElement('div');
 	      typeDataDiv.setAttribute('class', 'popup-row-data');
 	      typeDataDiv.appendChild(document.createTextNode(infrastructureType));
@@ -32095,7 +32099,8 @@
 	      var totalCostRow = document.createElement('div');
 	      totalCostRow.setAttribute('class', 'popup-row');
 	      var totalCostLabelDiv = document.createElement('div');
-	      totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
+	      totalCostLabelDiv.setAttribute('class', 'popup-row-header');
+	      totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'));
 	      var totalCostDataDiv = document.createElement('div');
 	      totalCostDataDiv.setAttribute('class', 'popup-row-data');
 	      totalCostDataDiv.appendChild(document.createTextNode(totalCost));
@@ -32110,16 +32115,21 @@
 	      button.setAttribute('href', detailPageURL);
 	      button.setAttribute('target', '_blank');
 	      button.setAttribute('class', 'button popup-button');
-	      button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
+	      button.appendChild(document.createTextNode('View Project Page'));
 	      buttonHolderRow.appendChild(button);
 	
 	      // Append each of the rows of the popup to the popupContainer
 	      popupContainer.appendChild(header);
-	      popupContainer.appendChild(nameElement);
-	      popupContainer.appendChild(locationsRow);
-	      popupContainer.appendChild(typeRow);
-	      popupContainer.appendChild(totalCostRow);
-	      popupContainer.appendChild(buttonHolderRow);
+	
+	      var innerContainer = document.createElement('div');
+	      innerContainer.setAttribute('class', 'popup-inner-container');
+	      popupContainer.appendChild(innerContainer);
+	
+	      innerContainer.appendChild(nameElement);
+	      innerContainer.appendChild(locationsRow);
+	      innerContainer.appendChild(typeRow);
+	      innerContainer.appendChild(totalCostRow);
+	      innerContainer.appendChild(buttonHolderRow);
 	
 	      return popupContainer;
 	    }

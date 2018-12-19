@@ -3524,7 +3524,7 @@
 	var onMoveDelayTime = 750;
 	var updateInterval = 500;
 	var boundsPadding = 15;
-	var popContentClass = 'popup-content-inner';
+	var popContentClass = 'popup-content';
 	var defaultCenter = [88.639973, 32.776942];
 	
 	exports.defaultZoom = defaultZoom;
