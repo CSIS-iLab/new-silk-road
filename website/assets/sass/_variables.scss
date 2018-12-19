@@ -81,6 +81,7 @@ $map-light-grey: #bebebe;
 $map-extra-light-grey: #e9e9e9;
 $map-disabled-grey: #d3d3d3;
 $map-disabled-header-grey: #9b9b9b;
+$map-infrastructure-hover-grey: #f9f9f9;
 $map-hover-grey: #323c49;
 $map-colors: (
     // Heading
@@ -172,11 +173,17 @@ $green-2018: #3C8183;
 
 // Infastructure Colors
 $road-color: #f68b3f;
+$road-color-hover: #ff7b00;
 $rail-color: #c34242;
+$rail-color-hover: #e82424;
 $seaport-color: #008cc4;
+$seaport-color-hover: #0aa1ee;
 $powerplant-color: #efb744;
+$powerplant-color-hover: #fac417;
 $dryport-color: #4c417d;
+$dryport-color-hover: #3b2994;
 $intermodal-color: #4c417d;
+$intermodal-color-hover: #3b2994;
 
 
 // Image URLs
@@ -216,8 +223,8 @@ $help-circle-active: $img-url-base + 'help-active.svg';
 $help-sprite: $img-url-base + 'help_sprite.svg';
 $filter-sprite: $img-url-base + 'filter_sprite.svg';
 $filter: $img-url-base + 'filter.svg';
-$close: $img-url-base + 'close.svg';
 $filter-active: $img-url-base + 'filter-active.svg';
+$close: $img-url-base + 'close.svg';
 $close-white: $img-url-base + 'close_white.svg';
 $arrow-left: $img-url-base + 'arrow_left.svg';
 $arrow-left-active: $img-url-base + 'arrow_left_active.svg';

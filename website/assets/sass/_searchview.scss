@@ -9,6 +9,10 @@
 $searchview-padding-x: 20px;
 $searchview-padding-y: 24px;
 
+$searchview-infrastructure-icon-size: 40px;
+$searchview-infrastructure-padding-left: 16px;
+$searchview-infrastructure-padding-right: 24px;
+
 $searchview-header-height: 50px;
 $searchview-heading-bottom-margin: $searchview-padding-y / 2;
 $searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
@@ -420,59 +424,109 @@ button.searchView__update-results {
 }
 
 #infrastructureToggle {
-    background: #fff;
     position: absolute;
     z-index: 10;
     left: 290px;
     top: 70px;
-    width: 100%;
+    width: auto;
+}
 
-    span span {
-        display: block;
-        height: 50px;
-        width: 50px;
-        cursor: pointer;
+.infrastructureIcon__container {
+    display: flex;
+    overflow: hidden;
+    cursor: pointer;
+}
 
-        img{
-            margin: 5px;
+.infrastructureIcon__icon {
+    display: inline-block;
+    height: $searchview-infrastructure-icon-size; 
+    width: $searchview-infrastructure-icon-size;
+
+    &.rail-color {
+        background-color: $rail-color;
+
+        .infrastructureIcon__container:hover & {
+            background-color: $rail-color-hover;
         }
     }
-
-    .rail-color {
-        background-color: $rail-color;
-    }
-    .road-color {
+    &.road-color {
         background-color: $road-color;
-    }
-    .seaport-color {
-        background-color: $seaport-color;
-    }
-    .intermodal-color {
-        background-color: $intermodal-color;
-    }
-    .powerplant-color {
-        background-color: $powerplant-color;
-    }
-    span.selected {
-        background-color: $warm-grey;
-    }
-}
 
-.infrastructureIconContainer {
-    display: flex;
-    &:hover {
-        cursor: pointer;
-        background-color: $pale-grey;
+        .infrastructureIcon__container:hover & {
+            background-color: $road-color-hover;
+        }
+    }
+    &.seaport-color {
+        background-color: $seaport-color;
+
+        .infrastructureIcon__container:hover & {
+            background-color: $seaport-color-hover;
+        }
+    }
+    &.intermodal-color {
+        background-color: $intermodal-color;
+
+        .infrastructureIcon__container:hover & {
+            background-color: $intermodal-color-hover;
+        }
+    }
+    &.powerplant-color {
+        background-color: $powerplant-color;
+
+        .infrastructureIcon__container:hover & {
+            background-color: $powerplant-color-hover;
+        }
     }
     &.selected {
-        background-color: $pale-grey;
+        background-color: $map-disabled-header-grey;
+    }
+
+    .infrastructureIcon__container.selected:hover & {
+        background-color: $map-light-grey;
     }
 }
 
-.infrastructureIconLabel {
-    padding: 12px;
-    height: 50px;
-    width: max-content;
+.infrastructureIcon__inner-icon {
+    display: block;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+
+    img{
+        margin: 5px;
+    }
+}
+
+.infrastructureIcon__label {
+    background-color: white;
+
+    padding-left: $searchview-infrastructure-padding-left;
+    padding-right: $searchview-infrastructure-padding-right;
+    line-height: 40px;
+    height: 40px;
+    width: 100%;
+
+    z-index: -1;
+    transform: translateX(0);
+    transition: transform 0.25s;
+
+    .infrastructureIcon__container:hover & {
+        background-color: $map-infrastructure-hover-grey;
+    }
+}
+
+.infrastructureIcon__label--hidden {
+    transform: translateX(-100%);
+    transition: transform 0.25s;
+}
+
+.infrastructureIcon__label--selected {
+    color: $map-grey;
+    background-color: $map-disabled-grey;
+
+    .infrastructureIcon__container:hover & {
+        background-color: $map-infrastructure-hover-grey;
+    }
 }
 
 .app-wrap {
