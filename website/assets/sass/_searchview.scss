@@ -185,6 +185,7 @@ button.btn--header-toggle {
 
     &:hover {
         background-color: $callout-color;
+        color: white;
     }
 }
 
@@ -216,6 +217,7 @@ button.searchView__update-results {
     @include align-items(center);
     @include justify-content(center);
     
+    color: white;
     background: none;
     text-transform: uppercase;
 
@@ -360,6 +362,12 @@ button.searchView__update-results {
 .date-range-select__helper-text {
     color: map-get($map-colors, 'body');
     font-size: map-get($map-font-sizes, 'section-title');
+    margin-left: $searchview-text-input-margin-left / 4;
+    margin-right: $searchview-text-input-margin-left / 4;
+
+    &:first-of-type {
+        margin-left: 0;
+    }
 }
 
 .date-range-select__input-text {
@@ -603,8 +611,12 @@ button.searchView__update-results {
     @extend button.btn--header-toggle;
     color: map-get($map-colors, 'header-toggle');
 
+    &:hover {
+        color: $map-hover-grey;
+    }
+
     &::before {
-        background-image: url($filter);
+        background-image: url($filter-active);
         height: 15px;
     }
 }
@@ -733,7 +745,7 @@ button.searchView__update-results {
 .searchResults__buttonBar {
     @include display(flex);
     @include justify-content(space-between);
-    padding-left: $searchview-padding-x;
+    padding-left: $searchview-text-input-margin-left;
 }
 
 .searchResults__button {

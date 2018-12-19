@@ -81,6 +81,7 @@ $map-light-grey: #bebebe;
 $map-extra-light-grey: #e9e9e9;
 $map-disabled-grey: #d3d3d3;
 $map-disabled-header-grey: #9b9b9b;
+$map-hover-grey: #323c49;
 $map-colors: (
     // Heading
     'heading': #000000,
@@ -216,6 +217,7 @@ $help-sprite: $img-url-base + 'help_sprite.svg';
 $filter-sprite: $img-url-base + 'filter_sprite.svg';
 $filter: $img-url-base + 'filter.svg';
 $close: $img-url-base + 'close.svg';
+$filter-active: $img-url-base + 'filter-active.svg';
 $close-white: $img-url-base + 'close_white.svg';
 $arrow-left: $img-url-base + 'arrow_left.svg';
 $arrow-left-active: $img-url-base + 'arrow_left_active.svg';

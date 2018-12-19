@@ -324,22 +324,6 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Status</label>
-                    <Select
-                      value={this.state.query.status}
-                      name="status"
-                      placeholder="Status"
-                      options={this.state.options.status}
-                      onChange={selections => this.handleQueryUpdate(
-                          { status: selections.map(s => s.value) },
-                        )
-                      }
-                      isLoading={this.state.options.status.length === 0}
-                      multi
-                      backspaceToRemoveMessage=""
-                    />
-                  </div>
-                  <div className="filter-input-group">
                     <label className="filter-input-group__label filter-input-group__label--with-plus">Region</label>
                     <Select
                       value={this.state.query.region}
@@ -367,6 +351,22 @@ export default class SearchView extends Component {
                         )
                       }
                       isLoading={this.state.options.countries.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label filter-input-group__label--with-plus">Project Status</label>
+                    <Select
+                      value={this.state.query.status}
+                      name="status"
+                      placeholder="Project Status"
+                      options={this.state.options.status}
+                      onChange={selections => this.handleQueryUpdate(
+                          { status: selections.map(s => s.value) },
+                        )
+                      }
+                      isLoading={this.state.options.status.length === 0}
                       multi
                       backspaceToRemoveMessage=""
                     />
