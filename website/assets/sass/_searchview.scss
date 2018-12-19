@@ -12,6 +12,9 @@ $searchview-padding-y: 24px;
 $searchview-header-height: 50px;
 $searchview-heading-bottom-margin: $searchview-padding-y / 2;
 $searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
+$searchview-section-header-bottom-margin: 8px;
+$searchview-label-bottom-margin: $searchview-section-header-bottom-margin / 2;
+$searchview-text-input-margin-left: 16px;
 
 $search-inner-height: 550px;
 $results-view-max-height: 410px;
@@ -51,6 +54,15 @@ button.btn--header-toggle {
     color: map-get($map-colors, 'body');
     font-size: map-get($map-font-sizes, 'body');
     margin-bottom: $searchview-body-text-bottom-margin;
+}
+
+// Abstract base class to be extended by various hr classes.
+.sidebar__separator {
+    margin-top: $searchview-padding-y;
+    margin-bottom: $searchview-padding-y;
+    margin-left: -$searchview-padding-x;
+    margin-right: -$searchview-padding-x;
+    border-width: 0.5px;
 }
 
 .searchView {
@@ -95,7 +107,6 @@ button.btn--header-toggle {
         transition: transform 0.3s;
         
         > header {
-            background-color: $callout-color;
             h2 {
                 color: #fff;
             }
@@ -109,33 +120,12 @@ button.btn--header-toggle {
             }
         }
         .filterScroll {
-            height: calc(100% - 140px);
+            height: calc(100% - #{$searchview-header-height * 2});
             overflow: auto;
         }
 
-        /* Submit button */
         form {
             height: 100%;
-            header {
-                @include justify-content(center);
-                background-color: $callout-color;
-                button {
-                    background: none;
-                    color: #fff;
-                    line-height: $base-line-height;
-                }
-                span {
-                    height: $base-line-height;
-                    width: $base-line-height;
-                    background: url($update) no-repeat center/70% 70%;
-                }
-                button[disabled] {
-                    opacity: 0.4;
-                }
-                button[disabled] + span {
-                    opacity: 0.4;
-                }
-            }
         }
     }
     .inner.showFilters {
@@ -199,107 +189,6 @@ button.btn--header-toggle {
             padding-bottom: $small-spacing;
         }
     }
-
-    .sectionRow {
-        display: block;
-        clear: both;
-        margin-bottom: $tiny-spacing;
-        label {
-            display: inline-block;
-            font-size: $base-font-size;
-            font-weight: bold;
-            padding-top: $tiny-spacing;
-
-            span {
-                background: url($plus) no-repeat center/70% 70%;
-                display:inline-block;
-                height: 16px;
-                margin-bottom: -2px;
-                width: $base-line-height;
-            }
-        }
-
-        input {
-            width: calc(100% - 1em);
-            margin-left: $small-spacing;
-        }
-        >input {
-            border: 2px solid $pale-grey;
-
-        }
-        input::placeholder {
-            font-size: $compact-text-size;
-            color: gray;
-            line-height: 24px;
-            top: 2px;
-            font-style: normal;
-        }
-
-        /* WARNING: This is nasty. Styling the .Select with margin-top
-        so that we can click on the label. TODO: change this in React
-        */
-        .Select{
-            background: none;
-            margin-top: -26px;
-            .Select-control {
-                background: none;
-                cursor: pointer;
-                input {
-                    height: 0px;
-                    padding: 0px;
-                }
-            }
-        }
-        .Select.has-value{
-            outline: 0;
-            outline: none !important;
-            border: none;
-            margin-top: 0px;
-            .Select-control {
-                margin-left: $small-spacing;
-            }
-
-        }
-    }
-
-    .expandable {
-        header {
-            margin: 0 10px;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-        .sectionBody {
-            margin: $tiny-spacing $small-spacing $tiny-spacing 0;
-        }
-        button.toggle {
-            background-color: transparent;
-              width: 20px;
-              color: transparent;
-
-
-        &.collapsed:before {
-            @include hide-text;
-            padding: 0;
-            font-family: "fontello";
-            content: "\E806";
-            color: black;
-
-            //background: url($expand-btn-img) center no-repeat;
-            width: $expand-collapse-btn-width;
-            }
-        &.expanded:before {
-                //background: url($collapse-btn-img) center no-repeat;
-            font-family: "fontello";
-            content: "\E807";
-            color: black;
-            @include hide-text;
-            padding: 0;
-            width: $expand-collapse-btn-width;
-            }
-        }
-    }
 }
 
 .searchView__header {
@@ -311,14 +200,237 @@ button.btn--header-toggle {
     height: $searchview-header-height;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
+    
+    background-color: $callout-color;
+}
 
-    background-color: map-get($map-colors, 'header-background');
+.searchView__header--interactive {
+    @include display(flex);
+    @include justify-content(center);
+    background-color: $callout-color-inactive;
+
+    &:hover {
+        background-color: $callout-color;
+        color: white;
+    }
+}
+
+.searchView__header--light {
+    background-color: map-get($map-colors, 'header-background-light');
+}
+
+.searchView__header--disabled,
+.searchView__header--disabled:hover {
+    background-color: $map-disabled-grey;
+    color: $map-grey;
 }
 
 button.searchView__header-toggle {
     @extend button.btn--header-toggle;
     &::before {
         background-image: url($close-white);
+    }
+}
+
+button.searchView__header-reset-filter {
+    @extend button.btn--header-toggle;
+    color: map-get($map-colors, 'button-text-light-small');
+    font-size: map-get($map-font-sizes, 'data-label');
+}
+
+button.searchView__update-results {
+    @include display(flex);
+    @include align-items(center);
+    @include justify-content(center);
+    
+    color: white;
+    background: none;
+    text-transform: uppercase;
+
+    &[disabled] {
+        color: $map-grey;
+
+        &::after {
+            background: url($update-disabled) no-repeat center/70% 70%;
+        }
+    }
+
+    &::after {
+        content: "";
+        display: inline-block;
+        height: $base-line-height;
+        width: $base-line-height;
+        background: url($update) no-repeat center/70% 70%;
+        margin-left: 0.5em;
+    }
+}
+
+.searchWidget__main {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+}
+
+.searchWidget__separator {
+    @extend .sidebar__separator;
+}
+
+.expandable-panel {
+    button.toggle {
+        background-color: transparent;
+          width: 20px;
+          color: transparent;
+
+
+    &.collapsed:before {
+        @include hide-text;
+        padding: 0;
+        font-family: "fontello";
+        content: "\E806";
+        color: black;
+
+        //background: url($expand-btn-img) center no-repeat;
+        width: $expand-collapse-btn-width;
+        }
+    &.expanded:before {
+            //background: url($collapse-btn-img) center no-repeat;
+        font-family: "fontello";
+        content: "\E807";
+        color: black;
+        @include hide-text;
+        padding: 0;
+        width: $expand-collapse-btn-width;
+        }
+    }
+}
+
+.filter-input-group {
+    display: block;
+
+    input::placeholder {
+        font-size: map-get($map-font-sizes, 'base');
+        color: gray;
+        top: 2px;
+        font-style: normal;
+    }
+
+    /* WARNING: This is nasty. Styling the .Select with margin-top
+    so that we can click on the label. TODO: change this in React
+    */
+    .Select {
+        .Select-control {
+            background-color: transparent !important;
+            cursor: pointer;
+            input {
+                height: 0px;
+                padding: 0px;
+            }
+        }
+    }
+    .Select.has-value{
+        outline: 0;
+        outline: none !important;
+        border: none;
+        margin-top: 0px;
+        .Select-control {
+            margin-left: $small-spacing;
+        }
+
+    }
+}
+
+.filter-input-group {
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.filter-input-group__label {
+    display: block;
+    font-size: map-get($map-font-sizes, 'base');
+    color: map-get($map-colors, 'body');
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: $searchview-label-bottom-margin;
+}
+
+.filter-input-group__label--with-plus {
+    &::after {
+        display: inline-block;
+        content: "";
+        background: url($plus) no-repeat center/70% 70%;
+        display:inline-block;
+        height: 16px;
+        margin-bottom: -3px;
+        width: $base-line-height;
+    }
+}
+
+.filter-input-group__input-text {
+    display: block;
+    font-size: map-get($map-font-sizes, 'base');
+    line-height: map-get($map-font-sizes, 'heading');
+    padding-top: 0; // compensating for natural visual gap
+    padding-bottom: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-left: $searchview-text-input-margin-left;
+    width: calc(100% - #{$searchview-text-input-margin-left});
+    color: map-get($map-colors, 'body');
+    border: 1px solid #{map-get($map-colors, 'border')};
+
+    &::placeholder {
+        color: map-get($map-colors, 'placeholder');
+    }
+}
+
+.date-range-select__range-container {
+    padding-left: $searchview-text-input-margin-left;
+}
+
+.date-range-select__helper-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'section-title');
+    margin-left: $searchview-text-input-margin-left / 4;
+    margin-right: $searchview-text-input-margin-left / 4;
+
+    &:first-of-type {
+        margin-left: 0;
+    }
+}
+
+.date-range-select__input-text {
+    .searchView .filter-input-group .dateRangeSelect & {
+        @extend .filter-input-group__input-text;
+        display: inline-block;
+        width: auto;
+        margin-left: 4px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.Select-control {
+    font-size: 0;
+    line-height: 0;
+}
+.Select-input {
+    @extend .filter-input-group__input-text;
+    height: 23px; // TODO: make this non-arbitrary
+}
+.Select--multi .Select-input {
+    @extend .filter-input-group__input-text;
+}
+.Select--multi .Select-multi-value-wrapper {
+    width: 100%;
+}
+
+.expandable-panel__title {
+    .searchView & {
+        font-size: map-get($map-font-sizes, 'section-title');
+        font-weight: bold;
+        color: map-get($map-colors, 'data-link');
+        text-transform: uppercase;
+        margin-bottom: $searchview-section-header-bottom-margin;
     }
 }
 
@@ -681,7 +793,7 @@ button.searchView__header-toggle {
     }
 }
 
-.searchView .sectionRow .dateRangeSelect, .searchView .sectionRow .CurrencyRangeSelect {
+.searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {
     @include display(flex);
     @include flex-direction(row);
     @include flex-wrap(wrap);
@@ -725,10 +837,7 @@ button.searchView__header-toggle {
 .Select {
     font-family: $sans-font-family;
     font-size: $compact-text-size;
-    width: calc(100% - 1em);
     .Select-input  {
-        height: 24px;
-        width: 100% !important;
         >input {
             padding: 4px 0 6px;
             width: 100% !important;
@@ -878,9 +987,8 @@ button.searchView__header-toggle {
     margin-bottom: $searchview-heading-bottom-margin;
 }
 
-.helpView__section-rule {
-    margin-top: $searchview-padding-y;
-    margin-bottom: $searchview-padding-y;
+.helpView__separator {
+    @extend .sidebar__separator;
 }
 
 .helpView__body-text {

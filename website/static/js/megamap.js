@@ -7662,6 +7662,64 @@
 /* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2017 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+	
+	(function () {
+		'use strict';
+	
+		var hasOwn = {}.hasOwnProperty;
+	
+		function classNames () {
+			var classes = [];
+	
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+	
+				var argType = typeof arg;
+	
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg) && arg.length) {
+					var inner = classNames.apply(null, arg);
+					if (inner) {
+						classes.push(inner);
+					}
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+	
+			return classes.join(' ');
+		}
+	
+		if (typeof module !== 'undefined' && module.exports) {
+			classNames.default = classNames;
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ }),
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright (c) 2013-present, Facebook, Inc.
 	 *
@@ -7936,7 +7994,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7949,7 +8007,7 @@
 	
 	'use strict';
 	
-	var EventPluginHub = __webpack_require__(162);
+	var EventPluginHub = __webpack_require__(163);
 	var EventPluginUtils = __webpack_require__(399);
 	
 	var accumulateInto = __webpack_require__(454);
@@ -8073,7 +8131,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports) {
 
 	/**
@@ -8121,7 +8179,7 @@
 	module.exports = ReactInstanceMap;
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -8182,7 +8240,7 @@
 	module.exports = SyntheticUIEvent;
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8309,64 +8367,6 @@
 	
 	var SearchActions = _alt2.default.createActions(SearchActionsBase);
 	exports.default = SearchActions;
-
-/***/ }),
-/* 167 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2017 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-	
-	(function () {
-		'use strict';
-	
-		var hasOwn = {}.hasOwnProperty;
-	
-		function classNames () {
-			var classes = [];
-	
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-	
-				var argType = typeof arg;
-	
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg) && arg.length) {
-					var inner = classNames.apply(null, arg);
-					if (inner) {
-						classes.push(inner);
-					}
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-	
-			return classes.join(' ');
-		}
-	
-		if (typeof module !== 'undefined' && module.exports) {
-			classNames.default = classNames;
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
 
 /***/ }),
 /* 168 */
@@ -9438,7 +9438,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(165);
+	var SyntheticUIEvent = __webpack_require__(166);
 	var ViewportMetrics = __webpack_require__(453);
 	
 	var getEventModifierState = __webpack_require__(407);
@@ -9978,7 +9978,7 @@
 	
 	var _reactInputAutosize2 = _interopRequireDefault(_reactInputAutosize);
 	
-	var _classnames = __webpack_require__(167);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -11858,7 +11858,7 @@
 	
 	var _alt2 = _interopRequireDefault(_alt);
 	
-	var _SearchActions = __webpack_require__(166);
+	var _SearchActions = __webpack_require__(167);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -20124,7 +20124,7 @@
 	var _prodInvariant = __webpack_require__(14);
 	
 	var ReactCurrentOwner = __webpack_require__(64);
-	var ReactInstanceMap = __webpack_require__(164);
+	var ReactInstanceMap = __webpack_require__(165);
 	var ReactInstrumentation = __webpack_require__(58);
 	var ReactUpdates = __webpack_require__(63);
 	
@@ -21216,7 +21216,7 @@
 		value: true
 	});
 	
-	var _classnames = __webpack_require__(167);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -24916,7 +24916,7 @@
 	var ReactDOMContainerInfo = __webpack_require__(585);
 	var ReactDOMFeatureFlags = __webpack_require__(587);
 	var ReactFeatureFlags = __webpack_require__(447);
-	var ReactInstanceMap = __webpack_require__(164);
+	var ReactInstanceMap = __webpack_require__(165);
 	var ReactInstrumentation = __webpack_require__(58);
 	var ReactMarkupChecksum = __webpack_require__(607);
 	var ReactReconciler = __webpack_require__(118);
@@ -27074,7 +27074,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _classnames = __webpack_require__(167);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -27227,7 +27227,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _classnames = __webpack_require__(167);
+	var _classnames = __webpack_require__(162);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -29552,29 +29552,35 @@
 	          onChange: this.handleUpdate
 	        }),
 	        _react2.default.createElement(
-	          'span',
-	          null,
-	          'between'
-	        ),
-	        _react2.default.createElement('input', {
-	          value: value.lowerValue || '',
-	          name: 'lowerValue',
-	          size: boundLength,
-	          placeholder: lowerBoundLabel,
-	          onChange: this.handleUpdate
-	        }),
-	        _react2.default.createElement(
-	          'span',
-	          null,
-	          'and'
-	        ),
-	        _react2.default.createElement('input', {
-	          value: value.upperValue || '',
-	          name: 'upperValue',
-	          size: boundLength,
-	          placeholder: upperBoundLabel,
-	          onChange: this.handleUpdate
-	        })
+	          'div',
+	          { className: 'date-range-select__range-container' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'date-range-select__helper-text' },
+	            'between'
+	          ),
+	          _react2.default.createElement('input', {
+	            value: value.lowerValue || '',
+	            className: 'date-range-select__input-text',
+	            name: 'lowerValue',
+	            size: boundLength,
+	            placeholder: lowerBoundLabel,
+	            onChange: this.handleUpdate
+	          }),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'date-range-select__helper-text' },
+	            'and'
+	          ),
+	          _react2.default.createElement('input', {
+	            value: value.upperValue || '',
+	            className: 'date-range-select__input-text',
+	            name: 'upperValue',
+	            size: boundLength,
+	            placeholder: upperBoundLabel,
+	            onChange: this.handleUpdate
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -29751,7 +29757,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _SearchActions = __webpack_require__(166);
+	var _SearchActions = __webpack_require__(167);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -30213,7 +30219,7 @@
 	    key: 'render',
 	    value: function render() {
 	      var styles = {
-	        sectionBody: {
+	        expandable_panel__body: {
 	          base: {
 	            display: 'block'
 	          },
@@ -30227,17 +30233,17 @@
 	      };
 	      return _react2.default.createElement(
 	        'section',
-	        { className: 'expandable' },
+	        { className: 'expandable-panel' },
 	        _react2.default.createElement(
-	          'h4',
-	          null,
+	          'h2',
+	          { className: 'expandable-panel__title' },
 	          this.props.title
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          {
-	            className: 'sectionBody',
-	            style: [styles.sectionBody.base]
+	            className: 'expandable-panel__body',
+	            style: [styles.expandable_panel__body.base]
 	          },
 	          this.props.children
 	        )
@@ -30463,7 +30469,7 @@
 	
 	var _ResultsList2 = _interopRequireDefault(_ResultsList);
 	
-	var _SearchActions = __webpack_require__(166);
+	var _SearchActions = __webpack_require__(167);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -30753,6 +30759,10 @@
 	
 	var _reactSelect2 = _interopRequireDefault(_reactSelect);
 	
+	var _classnames = __webpack_require__(162);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
 	var _Panel = __webpack_require__(495);
 	
 	var _Panel2 = _interopRequireDefault(_Panel);
@@ -30833,7 +30843,7 @@
 	
 	var _ErrorView2 = _interopRequireDefault(_ErrorView);
 	
-	var _SearchActions = __webpack_require__(166);
+	var _SearchActions = __webpack_require__(167);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -31139,18 +31149,28 @@
 	              'header',
 	              { className: 'searchView__header' },
 	              _react2.default.createElement(
-	                'a',
-	                { href: '#', onClick: this.toggleFilters },
+	                'button',
+	                {
+	                  className: 'searchView__header-toggle',
+	                  onClick: this.toggleFilters
+	                },
 	                _react2.default.createElement(
-	                  'h2',
+	                  'span',
 	                  null,
-	                  'FILTER'
+	                  'Close'
 	                )
 	              ),
 	              _react2.default.createElement(
-	                'a',
-	                { href: '#', onClick: this.resetQueryState },
-	                'RESET'
+	                'button',
+	                {
+	                  className: 'searchView__header-reset-filter',
+	                  onClick: this.resetQueryState
+	                },
+	                _react2.default.createElement(
+	                  'span',
+	                  null,
+	                  'Reset form'
+	                )
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -31158,7 +31178,7 @@
 	              { onSubmit: this.handleSubmit },
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'filterScroll' },
+	                { className: 'filterScroll searchWidget__main' },
 	                _react2.default.createElement(
 	                  _Panel2.default,
 	                  {
@@ -31169,14 +31189,15 @@
 	                  },
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
+	                      { className: 'filter-input-group__label' },
 	                      'Project Title'
 	                    ),
 	                    _react2.default.createElement('input', {
 	                      type: 'text',
+	                      className: 'filter-input-group__input-text',
 	                      value: this.state.query.name__icontains,
 	                      onChange: this.handleChange,
 	                      name: 'name__icontains',
@@ -31185,36 +31206,11 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
-	                      'Status',
-	                      _react2.default.createElement('span', null)
-	                    ),
-	                    _react2.default.createElement(_reactSelect2.default, {
-	                      value: this.state.query.status,
-	                      name: 'status',
-	                      placeholder: 'Status',
-	                      options: this.state.options.status,
-	                      onChange: function onChange(selections) {
-	                        return _this3.handleQueryUpdate({ status: selections.map(function (s) {
-	                            return s.value;
-	                          }) });
-	                      },
-	                      isLoading: this.state.options.status.length === 0,
-	                      multi: true,
-	                      backspaceToRemoveMessage: ''
-	                    })
-	                  ),
-	                  _react2.default.createElement(
-	                    'div',
-	                    { className: 'sectionRow' },
-	                    _react2.default.createElement(
-	                      'label',
-	                      null,
-	                      'Region',
-	                      _react2.default.createElement('span', null)
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Region'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
 	                      value: this.state.query.region,
@@ -31233,12 +31229,11 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
-	                      'Country',
-	                      _react2.default.createElement('span', null)
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Country'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
 	                      value: this.state.query.countries,
@@ -31257,18 +31252,40 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
-	                      'Milestone',
-	                      _react2.default.createElement('span', null)
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Project Status'
+	                    ),
+	                    _react2.default.createElement(_reactSelect2.default, {
+	                      value: this.state.query.status,
+	                      name: 'status',
+	                      placeholder: 'Project Status',
+	                      options: this.state.options.status,
+	                      onChange: function onChange(selections) {
+	                        return _this3.handleQueryUpdate({ status: selections.map(function (s) {
+	                            return s.value;
+	                          }) });
+	                      },
+	                      isLoading: this.state.options.status.length === 0,
+	                      multi: true,
+	                      backspaceToRemoveMessage: ''
+	                    })
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'filter-input-group' },
+	                    _react2.default.createElement(
+	                      'label',
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Milestone'
 	                    ),
 	                    _react2.default.createElement(_DateRangeSelect2.default, {
 	                      labelName: 'Filter by Year...',
 	                      dateLookupOptions: yearLookupOptions,
-	                      lowerBoundLabel: 'YEAR',
-	                      upperBoundLabel: 'YEAR',
+	                      lowerBoundLabel: 'Year',
+	                      upperBoundLabel: 'Year',
 	                      onChange: function onChange(value) {
 	                        return _this3.handleQueryUpdate({ dateRange: Object.assign({}, _this3.state.query.dateRange, value) });
 	                      },
@@ -31276,6 +31293,7 @@
 	                    })
 	                  )
 	                ),
+	                _react2.default.createElement('hr', { className: 'searchWidget__separator' }),
 	                _react2.default.createElement(
 	                  _Panel2.default,
 	                  {
@@ -31286,14 +31304,15 @@
 	                  },
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
+	                      { className: 'filter-input-group__label' },
 	                      'Initiative Title'
 	                    ),
 	                    _react2.default.createElement('input', {
 	                      type: 'text',
+	                      className: 'filter-input-group__input-text',
 	                      value: this.state.query.initiatives__name__icontains,
 	                      onChange: this.handleChange,
 	                      name: 'initiatives__name__icontains',
@@ -31302,12 +31321,11 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
-	                      'Principal Agent',
-	                      _react2.default.createElement('span', null)
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Principal Agent'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
 	                      value: this.state.query.initiatives__principal_agent__slug,
@@ -31322,6 +31340,7 @@
 	                    })
 	                  )
 	                ),
+	                _react2.default.createElement('hr', { className: 'filter-panel-separator' }),
 	                _react2.default.createElement(
 	                  _Panel2.default,
 	                  {
@@ -31332,14 +31351,15 @@
 	                  },
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
+	                      { className: 'filter-input-group__label' },
 	                      'Funder Name'
 	                    ),
 	                    _react2.default.createElement('input', {
 	                      type: 'text',
+	                      className: 'filter-input-group__input-text',
 	                      value: this.state.query.funding__sources__name__icontains,
 	                      onChange: this.handleChange,
 	                      name: 'funding__sources__name__icontains',
@@ -31348,12 +31368,11 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
-	                      'Cost',
-	                      _react2.default.createElement('span', null)
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Cost'
 	                    ),
 	                    _react2.default.createElement(_CurrencyRangeSelect2.default, {
 	                      name: 'cost',
@@ -31366,12 +31385,11 @@
 	                  ),
 	                  _react2.default.createElement(
 	                    'div',
-	                    { className: 'sectionRow' },
+	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      null,
-	                      'Country',
-	                      _react2.default.createElement('span', null)
+	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      'Country'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
 	                      value: this.state.query.funding__sources__countries,
@@ -31392,15 +31410,22 @@
 	              ),
 	              _react2.default.createElement(
 	                'header',
-	                { className: 'searchView__header' },
+	                {
+	                  className: (0, _classnames2.default)('searchView__header', 'searchView__header--interactive', { 'searchView__header--disabled': !this.state.searchEnabled })
+	                },
 	                _react2.default.createElement(
 	                  'button',
 	                  {
 	                    type: 'submit',
 	                    title: 'Search',
+	                    className: 'searchView__update-results',
 	                    disabled: !this.state.searchEnabled
 	                  },
-	                  'UPDATE RESULTS'
+	                  _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    'Update Results'
+	                  )
 	                ),
 	                _react2.default.createElement('span', null)
 	              )
@@ -31410,7 +31435,7 @@
 	            if (searchCount > 0 && !isSearching && !errorView && results.length === 0) {
 	              return _react2.default.createElement(
 	                'div',
-	                { className: 'sectionRow' },
+	                { className: 'filter-input-group' },
 	                _react2.default.createElement(
 	                  'p',
 	                  null,
@@ -31425,7 +31450,7 @@
 	            { className: 'resultsViewWrapper' },
 	            _react2.default.createElement(
 	              'header',
-	              { className: 'searchView__header' },
+	              { className: 'searchView__header searchView__header--light' },
 	              _react2.default.createElement(
 	                'button',
 	                {
@@ -31459,7 +31484,7 @@
 	            { className: 'helpView' },
 	            _react2.default.createElement(
 	              'header',
-	              { className: 'searchView__header' },
+	              { className: 'searchView__header searchView__header--light' },
 	              _react2.default.createElement(
 	                'button',
 	                { className: 'searchView__header-toggle', onClick: this.toggleHelp },
@@ -31492,7 +31517,7 @@
 	                  )
 	                )
 	              ),
-	              _react2.default.createElement('hr', { className: 'helpView__section-rule' }),
+	              _react2.default.createElement('hr', { className: 'helpView__separator' }),
 	              _react2.default.createElement(
 	                'section',
 	                null,
@@ -37762,7 +37787,7 @@
 	
 	'use strict';
 	
-	var EventPropagators = __webpack_require__(163);
+	var EventPropagators = __webpack_require__(164);
 	var ExecutionEnvironment = __webpack_require__(41);
 	var FallbackCompositionState = __webpack_require__(578);
 	var SyntheticCompositionEvent = __webpack_require__(621);
@@ -38366,8 +38391,8 @@
 	
 	'use strict';
 	
-	var EventPluginHub = __webpack_require__(162);
-	var EventPropagators = __webpack_require__(163);
+	var EventPluginHub = __webpack_require__(163);
+	var EventPropagators = __webpack_require__(164);
 	var ExecutionEnvironment = __webpack_require__(41);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var ReactUpdates = __webpack_require__(63);
@@ -38757,7 +38782,7 @@
 	
 	'use strict';
 	
-	var EventPropagators = __webpack_require__(163);
+	var EventPropagators = __webpack_require__(164);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var SyntheticMouseEvent = __webpack_require__(172);
 	
@@ -39386,7 +39411,7 @@
 	var ReactComponentEnvironment = __webpack_require__(402);
 	var ReactCurrentOwner = __webpack_require__(64);
 	var ReactErrorUtils = __webpack_require__(403);
-	var ReactInstanceMap = __webpack_require__(164);
+	var ReactInstanceMap = __webpack_require__(165);
 	var ReactInstrumentation = __webpack_require__(58);
 	var ReactNodeTypes = __webpack_require__(451);
 	var ReactReconciler = __webpack_require__(118);
@@ -40407,7 +40432,7 @@
 	var DOMNamespaces = __webpack_require__(398);
 	var DOMProperty = __webpack_require__(85);
 	var DOMPropertyOperations = __webpack_require__(443);
-	var EventPluginHub = __webpack_require__(162);
+	var EventPluginHub = __webpack_require__(163);
 	var EventPluginRegistry = __webpack_require__(170);
 	var ReactBrowserEventEmitter = __webpack_require__(171);
 	var ReactDOMComponentFlags = __webpack_require__(444);
@@ -43464,7 +43489,7 @@
 	
 	'use strict';
 	
-	var EventPluginHub = __webpack_require__(162);
+	var EventPluginHub = __webpack_require__(163);
 	
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -43692,7 +43717,7 @@
 	'use strict';
 	
 	var DOMProperty = __webpack_require__(85);
-	var EventPluginHub = __webpack_require__(162);
+	var EventPluginHub = __webpack_require__(163);
 	var EventPluginUtils = __webpack_require__(399);
 	var ReactComponentEnvironment = __webpack_require__(402);
 	var ReactEmptyComponent = __webpack_require__(446);
@@ -43822,7 +43847,7 @@
 	var _prodInvariant = __webpack_require__(14);
 	
 	var ReactComponentEnvironment = __webpack_require__(402);
-	var ReactInstanceMap = __webpack_require__(164);
+	var ReactInstanceMap = __webpack_require__(165);
 	var ReactInstrumentation = __webpack_require__(58);
 	
 	var ReactCurrentOwner = __webpack_require__(64);
@@ -45219,7 +45244,7 @@
 	
 	'use strict';
 	
-	var EventPropagators = __webpack_require__(163);
+	var EventPropagators = __webpack_require__(164);
 	var ExecutionEnvironment = __webpack_require__(41);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var ReactInputSelection = __webpack_require__(449);
@@ -45413,7 +45438,7 @@
 	var _prodInvariant = __webpack_require__(14);
 	
 	var EventListener = __webpack_require__(463);
-	var EventPropagators = __webpack_require__(163);
+	var EventPropagators = __webpack_require__(164);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var SyntheticAnimationEvent = __webpack_require__(619);
 	var SyntheticClipboardEvent = __webpack_require__(620);
@@ -45424,7 +45449,7 @@
 	var SyntheticDragEvent = __webpack_require__(622);
 	var SyntheticTouchEvent = __webpack_require__(626);
 	var SyntheticTransitionEvent = __webpack_require__(627);
-	var SyntheticUIEvent = __webpack_require__(165);
+	var SyntheticUIEvent = __webpack_require__(166);
 	var SyntheticWheelEvent = __webpack_require__(628);
 	
 	var emptyFunction = __webpack_require__(84);
@@ -45795,7 +45820,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(165);
+	var SyntheticUIEvent = __webpack_require__(166);
 	
 	/**
 	 * @interface FocusEvent
@@ -45872,7 +45897,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(165);
+	var SyntheticUIEvent = __webpack_require__(166);
 	
 	var getEventCharCode = __webpack_require__(406);
 	var getEventKey = __webpack_require__(634);
@@ -45958,7 +45983,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(165);
+	var SyntheticUIEvent = __webpack_require__(166);
 	
 	var getEventModifierState = __webpack_require__(407);
 	
@@ -46321,7 +46346,7 @@
 	
 	var ReactCurrentOwner = __webpack_require__(64);
 	var ReactDOMComponentTree = __webpack_require__(34);
-	var ReactInstanceMap = __webpack_require__(164);
+	var ReactInstanceMap = __webpack_require__(165);
 	
 	var getHostComponentFromComposite = __webpack_require__(456);
 	var invariant = __webpack_require__(12);
