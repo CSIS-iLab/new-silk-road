@@ -23,17 +23,14 @@ class ResultsList extends Component {
           this.props.results.map((result, index) => {
             const geoid = result.geo;
             return (
-              <li key={index} className="searchResults__result">
+              <li key={index} className="result">
                 <ProjectResultView key={result.identifier} project={result} />
-                <div className="searchResults__buttonBar">
+                <div className="buttonBar">
                   <button
                     type="button"
-                    className="searchResults__button"
                     onClick={ResultsList.handleDetailClick}
                     value={result.page_url}
-                  >
-                    Open Project
-                  </button>
+                  >OPEN PROJECT PAGE</button>
                 </div>
               </li>
             );

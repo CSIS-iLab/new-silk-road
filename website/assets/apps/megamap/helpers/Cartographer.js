@@ -311,8 +311,7 @@ export default class Cartographer {
     headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
     headerZoomButton.appendChild(headerZoomButtonIcon);
     const headerText = document.createElement('span');
-    headerText.setAttribute('class', 'popup-header-text');
-    headerText.appendChild(document.createTextNode('Zoom to detail'));
+    headerText.appendChild(document.createTextNode('zoom'.toUpperCase()));
     // If the header's zoom button should be enabled, then give it the appropriate
     // CSS class, and add an event listener for when the zoom button is clicked.
     // Clicking the header's zoom button should get the geostore data, which in turn
@@ -331,15 +330,13 @@ export default class Cartographer {
 
     // Project name element
     const nameElement = document.createElement('h3');
-    nameElement.setAttribute('class', 'popup-inner-header');
     nameElement.appendChild(document.createTextNode(projectName));
 
     // Project locations row
     const locationsRow = document.createElement('div');
     locationsRow.setAttribute('class', 'popup-row');
     const locationsLabelDiv = document.createElement('div');
-    locationsLabelDiv.setAttribute('class', 'popup-row-header');
-    locationsLabelDiv.appendChild(document.createTextNode('Locations'));
+    locationsLabelDiv.appendChild(document.createTextNode('Locations'.toUpperCase()));
     const locationsDataDiv = document.createElement('div');
     locationsDataDiv.setAttribute('class', 'popup-row-data');
     locationsDataDiv.appendChild(document.createTextNode(projectLocations));
@@ -350,8 +347,7 @@ export default class Cartographer {
     const typeRow = document.createElement('div');
     typeRow.setAttribute('class', 'popup-row');
     const typeLabelDiv = document.createElement('div');
-    typeLabelDiv.setAttribute('class', 'popup-row-header');
-    typeLabelDiv.appendChild(document.createTextNode('Type'));
+    typeLabelDiv.appendChild(document.createTextNode('Type'.toUpperCase()));
     const typeDataDiv = document.createElement('div');
     typeDataDiv.setAttribute('class', 'popup-row-data');
     typeDataDiv.appendChild(document.createTextNode(infrastructureType));
@@ -362,8 +358,7 @@ export default class Cartographer {
     const totalCostRow = document.createElement('div');
     totalCostRow.setAttribute('class', 'popup-row');
     const totalCostLabelDiv = document.createElement('div');
-    totalCostLabelDiv.setAttribute('class', 'popup-row-header');
-    totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'));
+    totalCostLabelDiv.appendChild(document.createTextNode('Total Reported Cost'.toUpperCase()));
     const totalCostDataDiv = document.createElement('div');
     totalCostDataDiv.setAttribute('class', 'popup-row-data');
     totalCostDataDiv.appendChild(document.createTextNode(totalCost));
@@ -378,21 +373,16 @@ export default class Cartographer {
     button.setAttribute('href', detailPageURL);
     button.setAttribute('target', '_blank');
     button.setAttribute('class', 'button popup-button');
-    button.appendChild(document.createTextNode('View Project Page'));
+    button.appendChild(document.createTextNode('View Project Page'.toUpperCase()));
     buttonHolderRow.appendChild(button);
 
     // Append each of the rows of the popup to the popupContainer
     popupContainer.appendChild(header);
-
-    const innerContainer = document.createElement('div');
-    innerContainer.setAttribute('class', 'popup-inner-container');
-    popupContainer.appendChild(innerContainer);
-
-    innerContainer.appendChild(nameElement);
-    innerContainer.appendChild(locationsRow);
-    innerContainer.appendChild(typeRow);
-    innerContainer.appendChild(totalCostRow);
-    innerContainer.appendChild(buttonHolderRow);
+    popupContainer.appendChild(nameElement);
+    popupContainer.appendChild(locationsRow);
+    popupContainer.appendChild(typeRow);
+    popupContainer.appendChild(totalCostRow);
+    popupContainer.appendChild(buttonHolderRow);
 
     return popupContainer;
   }

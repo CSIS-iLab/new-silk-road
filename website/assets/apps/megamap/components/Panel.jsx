@@ -12,7 +12,7 @@ class Panel extends Component {
 
   render() {
     const styles = {
-      expandable_panel__body: {
+      sectionBody: {
         base: {
           display: 'block',
         },
@@ -25,12 +25,12 @@ class Panel extends Component {
       },
     };
     return (
-      <section className="expandable-panel">
-        <h2 className="expandable-panel__title">{this.props.title}</h2>
+      <section className="expandable">
+        <h4>{this.props.title}</h4>
         <div
-          className="expandable-panel__body"
+          className="sectionBody"
           style={[
-            styles.expandable_panel__body.base,
+            styles.sectionBody.base,
           ]}
         >
           {this.props.children}

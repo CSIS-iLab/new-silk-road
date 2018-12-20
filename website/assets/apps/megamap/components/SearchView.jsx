@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-import classNames from 'classnames';
 import Panel from './Panel';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
@@ -292,39 +291,48 @@ export default class SearchView extends Component {
         />
         <div className={`inner ${this.state.showFilters} ${this.state.showHelp}`}>
           <div className="searchWidget">
-            <header className="searchView__header">
-              <button
-                className="searchView__header-toggle"
-                onClick={this.toggleFilters}
-              >
-                <span>Close</span>
-              </button>
-              <button
-                className="searchView__header-reset-filter"
-                onClick={this.resetQueryState}
-              >
-                <span>Reset form</span>
-              </button>
+            <header>
+              <a href="#" onClick={this.toggleFilters}>
+                <h2>FILTER</h2>
+              </a>
+              <a href="#" onClick={this.resetQueryState}>
+                RESET
+              </a>
             </header>
             <form onSubmit={this.handleSubmit}>
-              <div className="filterScroll searchWidget__main">
+              <div className="filterScroll">
                 <Panel
                   title="Projects"
                   ref={(el) => { this.projectsPanel = el; }}
                 >
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label">Project Title</label>
+                  <div className="sectionRow">
+                    <label>Project Title</label>
                     <input
                       type="text"
-                      className="filter-input-group__input-text"
                       value={this.state.query.name__icontains}
                       onChange={this.handleChange}
                       name="name__icontains"
                       placeholder="Project Title"
                     />
                   </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Region</label>
+                  <div className="sectionRow">
+                    <label>Status<span></span></label>
+                    <Select
+                      value={this.state.query.status}
+                      name="status"
+                      placeholder="Status"
+                      options={this.state.options.status}
+                      onChange={selections => this.handleQueryUpdate(
+                          { status: selections.map(s => s.value) },
+                        )
+                      }
+                      isLoading={this.state.options.status.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                  <div className="sectionRow">
+                    <label>Region<span></span></label>
                     <Select
                       value={this.state.query.region}
                       name="region"
@@ -339,8 +347,8 @@ export default class SearchView extends Component {
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                  <div className="sectionRow">
+                    <label>Country<span></span></label>
                     <Select
                       value={this.state.query.countries}
                       name="countries"
@@ -355,29 +363,13 @@ export default class SearchView extends Component {
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Project Status</label>
-                    <Select
-                      value={this.state.query.status}
-                      name="status"
-                      placeholder="Project Status"
-                      options={this.state.options.status}
-                      onChange={selections => this.handleQueryUpdate(
-                          { status: selections.map(s => s.value) },
-                        )
-                      }
-                      isLoading={this.state.options.status.length === 0}
-                      multi
-                      backspaceToRemoveMessage=""
-                    />
-                  </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Milestone</label>
+                  <div className="sectionRow">
+                    <label>Milestone<span></span></label>
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
-                      lowerBoundLabel="Year"
-                      upperBoundLabel="Year"
+                      lowerBoundLabel="YEAR"
+                      upperBoundLabel="YEAR"
                       onChange={value => this.handleQueryUpdate(
                           { dateRange: Object.assign({}, this.state.query.dateRange, value) },
                         )
@@ -386,24 +378,22 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-                <hr className="searchWidget__separator" />
                 <Panel
                   title="Initiatives"
                   ref={(el) => { this.initiativesPanel = el; }}
                 >
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label">Initiative Title</label>
+                  <div className="sectionRow">
+                    <label>Initiative Title</label>
                     <input
                       type="text"
-                      className="filter-input-group__input-text"
                       value={this.state.query.initiatives__name__icontains}
                       onChange={this.handleChange}
                       name="initiatives__name__icontains"
                       placeholder="Initiative Title"
                     />
                   </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Principal Agent</label>
+                  <div className="sectionRow">
+                    <label>Principal Agent<span></span></label>
                     <Select
                       value={this.state.query.initiatives__principal_agent__slug}
                       name="initiatives__principal_agent__slug"
@@ -418,24 +408,22 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-                <hr className="filter-panel-separator" />
                 <Panel
                   title="Funders"
                   ref={(el) => { this.fundersPanel = el; }}
                 >
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label">Funder Name</label>
-                    <input
-                      type="text"
-                      className="filter-input-group__input-text"
-                      value={this.state.query.funding__sources__name__icontains}
-                      onChange={this.handleChange}
-                      name="funding__sources__name__icontains"
-                      placeholder="Funder Name"
-                    />
+                  <div className="sectionRow">
+                      <label>Funder Name</label>
+                      <input
+                        type="text"
+                        value={this.state.query.funding__sources__name__icontains}
+                        onChange={this.handleChange}
+                        name="funding__sources__name__icontains"
+                        placeholder="Funder Name"
+                      />
                   </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Cost</label>
+                  <div className="sectionRow">
+                    <label>Cost<span></span></label>
                     <CurrencyRangeSelect
                       name="cost"
                       placeholder="Cost"
@@ -447,8 +435,8 @@ export default class SearchView extends Component {
                       }
                     />
                   </div>
-                  <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                  <div className="sectionRow">
+                    <label>Country<span></span></label>
                     <Select
                       value={this.state.query.funding__sources__countries}
                       name="funding__sources__countries"
@@ -464,26 +452,16 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-              </div>
-              <header
-                className={classNames(
-                  'searchView__header',
-                  'searchView__header--interactive',
-                  { 'searchView__header--disabled': !this.state.searchEnabled },
-                )}
-              >
-                <button
-                  type="submit"
-                  title="Search"
-                  className="searchView__update-results"
-                  disabled={!this.state.searchEnabled}
-                >
-                  <span>
-                    Update Results
-                  </span>
-                </button>
-                <span></span>
-              </header>
+            </div>
+            <header>
+              <button
+                type="submit"
+                title="Search"
+                disabled={!this.state.searchEnabled}
+              >UPDATE RESULTS
+              </button>
+              <span></span>
+            </header>
             </form>
           </div>
           {(() => {
@@ -492,7 +470,7 @@ export default class SearchView extends Component {
             !errorView &&
             results.length === 0) {
               return (
-                <div className="filter-input-group">
+                <div className="sectionRow">
                   <p>Sorry, we didn&rsquo;t find any matches.</p>
                 </div>
               );
@@ -500,17 +478,9 @@ export default class SearchView extends Component {
             return '';
           })()}
           <div className="resultsViewWrapper">
-            <header className="searchView__header searchView__header--light">
-              <button
-                className="resultsView__header-toggle"
-                onClick={this.toggleFilters}
-              >
-                <span>Filter</span>
-              </button>
-              <button
-                className="resultsView__header-toggle--help"
-                onClick={this.toggleHelp}
-              />
+            <header>
+              <a href="#" onClick={this.toggleFilters}><h2>FILTER</h2></a>
+              <a href="#" onClick={this.toggleHelp}></a>
             </header>
             <ResultsView
               results={results}
@@ -524,35 +494,34 @@ export default class SearchView extends Component {
             />
           </div>
           <div className="helpView">
-            <header className="searchView__header searchView__header--light">
-              <button className="searchView__header-toggle" onClick={this.toggleHelp}>
-                <span>Close</span>
-              </button>
+            <header>
+              <a href="#" onClick={this.toggleHelp}>
+                <h2>HELP</h2>
+              </a>
             </header>
-            <div className="helpView__main">
+            <div className="textWrap">
               <section>
-                <h2 className="helpView__section-heading">How to search the map</h2>
-                <p className="helpView__body-text">For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
+                <h2>How to search the map</h2>
+                <p>For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
               </section>
-              <hr className="helpView__separator" />
               <section>
-                <h3 className="helpView__section-subheading">Project Filters</h3>
-                <p className="helpView__body-text">
+                <h2>Project Filters</h2>
+                <p>
                   <b>Project Title:</b> Searches project titles, which do not include all attributes of a given project. For example, there may be projects in the city of Karachi without “Karachi” in their title.
                 </p>
-                <p className="helpView__body-text">
+                <p>
                   <b>Infrastructure Type:</b> Limits search to a specific infrastructure type (ex. “rail”).
                 </p>
-                <p className="helpView__body-text">
+                <p>
                   <b>Status:</b> Limits search to projects in a specific stage of implementation (ex. “announced or under negotiation”).
                 </p>
-                <p className="helpView__body-text">
+                <p>
                   <b>Region:</b> Limits search to projects within a certain geographic area (ex. “Gulf and Mediterranean”).
                 </p>
-                <p className="helpView__body-text">
+                <p>
                   <b>Country:</b> Limits search to projects within a designated country (ex. “China”).
                 </p>
-                <p className="helpView__body-text">
+                <p>
                   <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year
                 </p>
               </section>
@@ -560,7 +529,9 @@ export default class SearchView extends Component {
           </div>
           {errorView}
         </div>
-        <footer />
+        <footer>
+
+        </footer>
       </div>
     );
   }

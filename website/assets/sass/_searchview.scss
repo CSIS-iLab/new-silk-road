@@ -6,72 +6,13 @@
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
-$searchview-padding-x: 20px;
-$searchview-padding-y: 24px;
-
-$searchview-infrastructure-icon-size: 40px;
-$searchview-infrastructure-padding-left: 16px;
-$searchview-infrastructure-padding-right: 24px;
-
-$searchview-header-height: 50px;
-$searchview-heading-bottom-margin: $searchview-padding-y / 2;
-$searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
-$searchview-section-header-bottom-margin: 8px;
-$searchview-label-bottom-margin: $searchview-section-header-bottom-margin / 2;
-$searchview-text-input-margin-left: 16px;
-
-$search-inner-height: calc(100% - #{$searchview-header-height * 2});
+$search-inner-height: 550px;
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
-// Abstract base class for various specialized header toggle buttons.
-button.btn--header-toggle {
-    @include display(flex);
-    @include flex-direction(row);
-    @include align-items(center);
-    background-color: transparent;
-    color: white;
-    font-size: map-get($map-font-sizes, 'base');
-    font-family: $sans-font-family;
-    text-transform: uppercase;
-    padding: 0;
-
-    > span {
-        flex: 0 1 auto;
-    }
-
-    &::before {
-        // This requires a background-image property in concrete classes.
-        content: "";
-        display: inline-block;
-        flex: 0 1 auto;
-        height: 11px;
-        width: 1em;
-        background-position: left center;
-        background-repeat: no-repeat;
-        background-size: auto 100%;
-    }
-}
-
-// Abstract class to be extended by various body text classes.
-.sidebar__body-text {
-    color: map-get($map-colors, 'body');
-    font-size: map-get($map-font-sizes, 'body');
-    margin-bottom: $searchview-body-text-bottom-margin;
-}
-
-// Abstract base class to be extended by various hr classes.
-.sidebar__separator {
-    margin-top: $searchview-padding-y;
-    margin-bottom: $searchview-padding-y;
-    margin-left: -$searchview-padding-x;
-    margin-right: -$searchview-padding-x;
-    border-width: 0.5px;
-}
-
 .searchView {
     width: $side-bar-width;
-    font-size: map-get($map-font-sizes, 'base');
+    font-size: $search-text-size;
     z-index: 10;
     position: relative;
     top: 0px;
@@ -82,18 +23,21 @@ button.btn--header-toggle {
     @include media($megamap-break) {
         display: block;
     }
-    header {
+    header{
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        padding: $base-line-height $small-spacing;;
+        background-color: $pale-grey;
         a {
             display: block;
             height: $base-line-height;
             width: $base-line-height;
             opacity: 0.6;
         }
-
         a:hover {
             opacity: 1;
         }
-
         h2 {
             padding-left: $base-line-height;
         }
@@ -109,8 +53,8 @@ button.btn--header-toggle {
         z-index: 10;
         transform: translateX(-290px);
         transition: transform 0.3s;
-        
-        > header {
+        >header {
+            background-color: $callout-color;
             h2 {
                 color: #fff;
             }
@@ -124,12 +68,33 @@ button.btn--header-toggle {
             }
         }
         .filterScroll {
-            height: calc(100% - #{$searchview-header-height * 2});
+            height: calc(100% - 140px);
             overflow: auto;
         }
 
+        /* Submit button */
         form {
             height: 100%;
+            header {
+                @include justify-content(center);
+                background-color: $callout-color;
+                button {
+                    background: none;
+                    color: #fff;
+                    line-height: $base-line-height;
+                }
+                span {
+                    height: $base-line-height;
+                    width: $base-line-height;
+                    background: url($update) no-repeat center/70% 70%;
+                }
+                button[disabled] {
+                    opacity: 0.4;
+                }
+                button[disabled] + span {
+                    opacity: 0.4;
+                }
+            }
         }
     }
     .inner.showFilters {
@@ -139,8 +104,7 @@ button.btn--header-toggle {
     }
 
     h2 {
-        font-size: map-get($map-font-sizes, 'base');
-        font-family: $sans-font-family;
+        font: $minor-text-size $sans-font-family;
         font-weight: bold;
         color: $callout-color;
         margin-bottom: $tiny-spacing;
@@ -161,252 +125,142 @@ button.btn--header-toggle {
 
     .inner {
         width: $side-bar-width;
-        height: 100%;
+        height: $search-inner-height;
 
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(flex-start);
+
+        // > div {
+        //     padding: $tiny-spacing;
+        // }
     }
-}
 
-.searchView__header {
-    @include display(flex);
-    @include flex-direction(row);
-    @include justify-content(space-between);
-    @include align-items(center);
-    
-    height: $searchview-header-height;
-    padding-left: $searchview-padding-x;
-    padding-right: $searchview-padding-x;
-    
-    background-color: $callout-color;
-}
+    section {
+        padding-bottom: $tiny-spacing;
+        padding: $small-spacing;
+        padding-top: 0;
 
-.searchView__header--interactive {
-    @include display(flex);
-    @include justify-content(center);
-    background-color: $callout-color-inactive;
+        h4 {
+            display: inline-block;
+            color: $greyish-teal;
+            font-size: $search-text-size;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+        }
 
-    &:hover {
-        background-color: $callout-color;
-        color: white;
     }
-}
-
-.searchView__header--light {
-    background-color: map-get($map-colors, 'header-background-light');
-}
-
-.searchView__header--disabled,
-.searchView__header--disabled:hover {
-    background-color: $map-disabled-grey;
-    color: $map-grey;
-}
-
-button.searchView__header-toggle {
-    @extend button.btn--header-toggle;
-    &::before {
-        background-image: url($close-white);
+    section:last-child {
+        border: none;
     }
-}
 
-button.searchView__header-reset-filter {
-    @extend button.btn--header-toggle;
-    color: map-get($map-colors, 'button-text-light-small');
-    font-size: map-get($map-font-sizes, 'data-label');
-}
-
-button.searchView__update-results {
-    @include display(flex);
-    @include align-items(center);
-    @include justify-content(center);
-    
-    color: white;
-    background: none;
-    text-transform: uppercase;
-
-    &[disabled] {
-        color: $map-grey;
-
-        &::after {
-            background: url($update-disabled) no-repeat center/70% 70%;
+    section.projectResult {
+        border: none;
+        h1 {
+            padding-bottom: $small-spacing;
         }
     }
 
-    &::after {
-        content: "";
-        display: inline-block;
-        height: $base-line-height;
-        width: $base-line-height;
-        background: url($update) no-repeat center/70% 70%;
-        margin-left: 0.5em;
-    }
-}
+    .sectionRow {
+        display: block;
+        clear: both;
+        margin-bottom: $tiny-spacing;
+        label {
+            display: inline-block;
+            font-size: $base-font-size;
+            font-weight: bold;
+            padding-top: $tiny-spacing;
 
-.searchWidget__main {
-    padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y;
-    padding-left: $searchview-padding-x;
-    padding-right: $searchview-padding-x;
-}
-
-.searchWidget__separator {
-    @extend .sidebar__separator;
-}
-
-.expandable-panel {
-    button.toggle {
-        background-color: transparent;
-          width: 20px;
-          color: transparent;
-
-
-    &.collapsed:before {
-        @include hide-text;
-        padding: 0;
-        font-family: "fontello";
-        content: "\E806";
-        color: black;
-
-        width: $expand-collapse-btn-width;
-        }
-    &.expanded:before {
-        font-family: "fontello";
-        content: "\E807";
-        color: black;
-        @include hide-text;
-        padding: 0;
-        width: $expand-collapse-btn-width;
-        }
-    }
-}
-
-.filter-input-group {
-    display: block;
-
-    input::placeholder {
-        font-size: map-get($map-font-sizes, 'base');
-        color: gray;
-        top: 2px;
-        font-style: normal;
-    }
-
-    /* WARNING: This is nasty. Styling the .Select with margin-top
-    so that we can click on the label. TODO: change this in React
-    */
-    .Select {
-        .Select-control {
-            background-color: transparent !important;
-            cursor: pointer;
-            input {
-                height: 0px;
-                padding: 0px;
+            span {
+                background: url($plus) no-repeat center/70% 70%;
+                display:inline-block;
+                height: 16px;
+                margin-bottom: -2px;
+                width: $base-line-height;
             }
         }
-    }
-    .Select.has-value{
-        outline: 0;
-        outline: none !important;
-        border: none;
-        margin-top: 0px;
-        .Select-control {
+
+        input {
+            width: calc(100% - 1em);
             margin-left: $small-spacing;
         }
+        >input {
+            border: 2px solid $pale-grey;
 
+        }
+        input::placeholder {
+            font-size: $compact-text-size;
+            color: gray;
+            line-height: 24px;
+            top: 2px;
+            font-style: normal;
+        }
+
+        /* WARNING: This is nasty. Styling the .Select with margin-top
+        so that we can click on the label. TODO: change this in React
+        */
+        .Select{
+            background: none;
+            margin-top: -26px;
+            .Select-control {
+                background: none;
+                cursor: pointer;
+                input {
+                    height: 0px;
+                    padding: 0px;
+                }
+            }
+        }
+        .Select.has-value{
+            outline: 0;
+            outline: none !important;
+            border: none;
+            margin-top: 0px;
+            .Select-control {
+                margin-left: $small-spacing;
+            }
+
+        }
     }
-}
 
-.filter-input-group {
-    margin-bottom: $searchview-heading-bottom-margin;
-}
+    .expandable {
+        header {
+            margin: 0 10px;
 
-.filter-input-group__label {
-    display: block;
-    font-size: map-get($map-font-sizes, 'base');
-    color: map-get($map-colors, 'body');
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: $searchview-label-bottom-margin;
-}
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        .sectionBody {
+            margin: $tiny-spacing $small-spacing $tiny-spacing 0;
+        }
+        button.toggle {
+            background-color: transparent;
+              width: 20px;
+              color: transparent;
 
-.filter-input-group__label--with-plus {
-    &::after {
-        display: inline-block;
-        content: "";
-        background: url($plus) no-repeat center/70% 70%;
-        display:inline-block;
-        height: 16px;
-        margin-bottom: -3px;
-        width: $base-line-height;
-    }
-}
 
-.filter-input-group__input-text {
-    display: block;
-    font-size: map-get($map-font-sizes, 'base');
-    line-height: map-get($map-font-sizes, 'heading');
-    padding-top: 0; // compensating for natural visual gap
-    padding-bottom: 2px;
-    padding-left: 8px;
-    padding-right: 8px;
-    margin-left: $searchview-text-input-margin-left;
-    width: calc(100% - #{$searchview-text-input-margin-left});
-    color: map-get($map-colors, 'body');
-    border: 1px solid #{map-get($map-colors, 'border')};
+        &.collapsed:before {
+            @include hide-text;
+            padding: 0;
+            font-family: "fontello";
+            content: "\E806";
+            color: black;
 
-    &::placeholder {
-        color: map-get($map-colors, 'placeholder');
-    }
-}
-
-.date-range-select__range-container {
-    padding-left: $searchview-text-input-margin-left;
-}
-
-.date-range-select__helper-text {
-    color: map-get($map-colors, 'body');
-    font-size: map-get($map-font-sizes, 'section-title');
-    margin-left: $searchview-text-input-margin-left / 4;
-    margin-right: $searchview-text-input-margin-left / 4;
-
-    &:first-of-type {
-        margin-left: 0;
-    }
-}
-
-.date-range-select__input-text {
-    .searchView .filter-input-group .dateRangeSelect & {
-        @extend .filter-input-group__input-text;
-        display: inline-block;
-        width: auto;
-        margin-left: 4px;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-}
-
-.Select-control {
-    font-size: 0;
-    line-height: 0;
-}
-.Select-input {
-    @extend .filter-input-group__input-text;
-    height: 23px; // TODO: make this non-arbitrary
-}
-.Select--multi .Select-input {
-    @extend .filter-input-group__input-text;
-}
-.Select--multi .Select-multi-value-wrapper {
-    width: 100%;
-}
-
-.expandable-panel__title {
-    .searchView & {
-        font-size: map-get($map-font-sizes, 'section-title');
-        font-weight: bold;
-        color: map-get($map-colors, 'data-link');
-        text-transform: uppercase;
-        margin-bottom: $searchview-section-header-bottom-margin;
+            //background: url($expand-btn-img) center no-repeat;
+            width: $expand-collapse-btn-width;
+            }
+        &.expanded:before {
+                //background: url($collapse-btn-img) center no-repeat;
+            font-family: "fontello";
+            content: "\E807";
+            color: black;
+            @include hide-text;
+            padding: 0;
+            width: $expand-collapse-btn-width;
+            }
+        }
     }
 }
 
@@ -424,109 +278,59 @@ button.searchView__update-results {
 }
 
 #infrastructureToggle {
+    background: #fff;
     position: absolute;
     z-index: 10;
     left: 290px;
     top: 70px;
-    width: auto;
-}
-
-.infrastructureIcon__container {
-    display: flex;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.infrastructureIcon__icon {
-    display: inline-block;
-    height: $searchview-infrastructure-icon-size; 
-    width: $searchview-infrastructure-icon-size;
-
-    &.rail-color {
-        background-color: $rail-color;
-
-        .infrastructureIcon__container:hover & {
-            background-color: $rail-color-hover;
-        }
-    }
-    &.road-color {
-        background-color: $road-color;
-
-        .infrastructureIcon__container:hover & {
-            background-color: $road-color-hover;
-        }
-    }
-    &.seaport-color {
-        background-color: $seaport-color;
-
-        .infrastructureIcon__container:hover & {
-            background-color: $seaport-color-hover;
-        }
-    }
-    &.intermodal-color {
-        background-color: $intermodal-color;
-
-        .infrastructureIcon__container:hover & {
-            background-color: $intermodal-color-hover;
-        }
-    }
-    &.powerplant-color {
-        background-color: $powerplant-color;
-
-        .infrastructureIcon__container:hover & {
-            background-color: $powerplant-color-hover;
-        }
-    }
-    &.selected {
-        background-color: $map-disabled-header-grey;
-    }
-
-    .infrastructureIcon__container.selected:hover & {
-        background-color: $map-light-grey;
-    }
-}
-
-.infrastructureIcon__inner-icon {
-    display: block;
-    height: 40px;
-    width: 40px;
-    cursor: pointer;
-
-    img{
-        margin: 5px;
-    }
-}
-
-.infrastructureIcon__label {
-    background-color: white;
-
-    padding-left: $searchview-infrastructure-padding-left;
-    padding-right: $searchview-infrastructure-padding-right;
-    line-height: 40px;
-    height: 40px;
     width: 100%;
 
-    z-index: -1;
-    transform: translateX(0);
-    transition: transform 0.25s;
+    span span {
+        display: block;
+        height: 50px;
+        width: 50px;
+        cursor: pointer;
 
-    .infrastructureIcon__container:hover & {
-        background-color: $map-infrastructure-hover-grey;
+        img{
+            margin: 5px;
+        }
+    }
+
+    .rail-color {
+        background-color: $rail-color;
+    }
+    .road-color {
+        background-color: $road-color;
+    }
+    .seaport-color {
+        background-color: $seaport-color;
+    }
+    .intermodal-color {
+        background-color: $intermodal-color;
+    }
+    .powerplant-color {
+        background-color: $powerplant-color;
+    }
+    span.selected {
+        background-color: $warm-grey;
     }
 }
 
-.infrastructureIcon__label--hidden {
-    transform: translateX(-100%);
-    transition: transform 0.25s;
+.infrastructureIconContainer {
+    display: flex;
+    &:hover {
+        cursor: pointer;
+        background-color: $pale-grey;
+    }
+    &.selected {
+        background-color: $pale-grey;
+    }
 }
 
-.infrastructureIcon__label--selected {
-    color: $map-grey;
-    background-color: $map-disabled-grey;
-
-    .infrastructureIcon__container:hover & {
-        background-color: $map-infrastructure-hover-grey;
-    }
+.infrastructureIconLabel {
+    padding: 12px;
+    height: 50px;
+    width: max-content;
 }
 
 .app-wrap {
@@ -587,6 +391,29 @@ button.searchView__update-results {
 
 }
 
+.buttonBar {
+    @include display(flex);
+    @include justify-content(space-between);
+    padding: $small-spacing;
+}
+
+.buttonBar > button {
+    font-size: $compact-text-size;
+    padding: 6px 3px;
+    @include flex(0 1 70%);
+    @include order(0);
+    background-color: $green;
+    color: white;
+-webkit-transition: background-color .2s ease-in-out;
+            transition: background-color .2s ease-in-out;
+                   &:disabled {
+        display: none;
+    }
+    &:hover{
+        background-color: $greyish-teal;
+    }
+}
+
 #primarySearch {
     input, button {
         background-color: $dark-night;
@@ -636,9 +463,27 @@ button.searchView__update-results {
 }
 
 .resultsView {
+    padding-top: 0;
+    height: calc(100% - 18px);
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+
     .scrollWrap {
-        height: 100%;
+        height: calc(100% - 18px);
         -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+
+    > div {
+        display: block;
+        position: relative;
+    }
+
+    /* For the summary of the results */
+    .summaryInfo {
+        font-size: x-large;
+        padding: $small-spacing $small-spacing 0;
+        color: $green-2018;
     }
 
     /* for the two links in the Curated results section. */
@@ -654,217 +499,101 @@ button.searchView__update-results {
         }
     }
 
+    .resultsNav {
+        @include display(flex);
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        @include align-content(stretch);
+
+        padding: $base-line-height $base-line-height/1.5;
+        background-color: $pale-grey;
+
+        .buttonWrap {
+            display: block;
+            background-color: transparent;
+
+            button {
+                width: 100%;
+                position: relative;
+                height: $base-line-height;
+                width: $base-line-height;
+                transform: scale(1, 1);
+                &:hover {
+                    transform: scale(1.3, 1.3);
+                }
+                &:disabled {
+                    opacity: 0.3;
+                    transform: scale(1, 1);
+                }
+            }
+            &:first-child button{
+                background: url($arrow-left) no-repeat center/70% 70%;
+            }
+            &:last-child button{
+                background: url($arrow-right) no-repeat center/70% 70%;
+            }
+            .pagination {
+                flex: 1;
+                line-height: $base-line-height;
+            }
+        }
+    }
+
     ul.searchResults {
         list-style: none;
         padding: 0;
         margin: 0;
+
+        > li {
+            margin: 0 10px 8px 0;
+            padding: 2px 4px 16px 0;
+            border-bottom: 1px solid $slate-grey;
+
+
+            &:last-of-type {
+                border: none;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+
+            h1 {
+                font-family: $sans-font-family;
+                font-size: $search-text-size;
+                margin: 0 0 $tiny-spacing 0;
+            }
+
+            p {
+                margin-bottom: $tiny-spacing;
+            }
+        }
     }
 }
 
-.resultsView__header-toggle {
-    @extend button.btn--header-toggle;
-    color: map-get($map-colors, 'header-toggle');
-
-    &:hover {
-        color: $map-hover-grey;
-    }
-
-    &::before {
-        background-image: url($filter-active);
-        height: 15px;
-    }
-}
-
-.resultsView__header-toggle--help {
-    @extend .resultsView__header-toggle;
-    &::before {
-        background-image: url($help-circle);
-        height: 1em;
-        width: 1em;
-    }
-    &:hover::before {
-        background-image: url($help-circle-active);
-    }
-}
-
-.resultsView__main {
-    height: calc(100% - #{$searchview-header-height});
-    @include display(flex);
-    @include flex-direction(column);
-    @include justify-content(space-between);
-
-    padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-header-height;
-    padding-left: $searchview-padding-x;
-    padding-right: $searchview-padding-x;
-}
-
-.resultsView__summary-info {
-    .searchView & {
-        font-size: map-get($map-font-sizes, 'heading');
-        color: map-get($map-colors, 'number-of-projects-title');
-        margin-bottom: $searchview-heading-bottom-margin;
-    }
-}
-
-.resultsView__summary-info--with-results {
-    .searchView & {
-        margin-bottom: $searchview-section-header-bottom-margin * 3;
-    }
-}
-
-.resultsView__body-text {
-    @extend .sidebar__body-text;
-}
-
-.resultsView__pagination {
-    @include display(flex);
-    @include flex-direction(row);
-    @include justify-content(space-between);
-    @include align-content(stretch);
-    @include align-items(center);
-
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: $searchview-header-height;
-    width: 100%;
-
-    background-color: $pale-grey;
-    padding-left: $searchview-padding-x;
-    padding-right: $searchview-padding-x;
-}
-
-.resultsView__pagination-buttonWrap {
-    display: block;
-    background-color: transparent;
-    line-height: 1;
-}
-
-.resultsView__pagination-button {
-    width: 100%;
-    position: relative;
-    height: $base-line-height;
-    width: $base-line-height;
-}
-
-.resultsView__pagination-button--previous {
-    @extend .resultsView__pagination-button;
-    background: url($arrow-left) no-repeat center/70% 70%;
-
-    &:hover {
-        background: url($arrow-left-active) no-repeat center/70% 70%;
-    }
-}
-
-.resultsView__pagination-button--next {
-    @extend .resultsView__pagination-button;
-    background: url($arrow-right) no-repeat center/70% 70%;
-
-    &:hover {
-        background: url($arrow-right-active) no-repeat center/70% 70%;
-    }
-}
-
-.resultsView__pagination-buttonWrap--disabled {
-    visibility: hidden;
-}
-
-.searchResults__result {
-    padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y;
-    margin-bottom: 0;
-    position: relative;
-
-    &::after {
-        content: "";
-        display: block;
-        height: 1px;
-        background-color: $map-light-grey;
-        position: absolute;
-        bottom: 0;
-        left: -$searchview-padding-x;
-        width: calc(100% + #{2 * $searchview-padding-x});
-    }
-
-    &:first-of-type {
-        padding-top: 0;
-    }
-
-    &:last-of-type {
-        padding-bottom: 0;
-    }
-}
-
-.searchResults__buttonBar {
-    @include display(flex);
-    @include justify-content(space-between);
-    padding-left: $searchview-text-input-margin-left;
-}
-
-.searchResults__button {
-    font-size: map-get($map-font-sizes, 'data-label');
-    text-transform: uppercase;
-    padding: 6px 3px;
-    @include flex(0 1 70%);
-    @include order(0);
-    background-color: $map-teal;
-    color: $cloudy-blue;
-    &:disabled {
-        display: none;
-    }
-    &:hover{
-        background-color: $map-teal-active;
-        color: white;
-    }
-}
-
-.projectResult {
-    margin-bottom: $searchview-heading-bottom-margin;
-}
-
-.projectResult__title {
-    font-size: map-get($map-font-sizes, 'base');
-    font-weight: bold;
-    margin-bottom: $searchview-heading-bottom-margin;
-}
-
-.projectResult__section {
-    padding-left: $searchview-text-input-margin-left;
-    margin-bottom: $searchview-heading-bottom-margin;
-}
-
-.projectResult__data-label {
-    font-size: map-get($map-font-sizes, 'data-label');
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-}
-
-.projectResult__section--initiatives-list {
+.initiativesList {
     h2 {
         font-family: $sans-font-family;
         font-size: $search-text-size;
         margin-bottom: 3px;
         margin-left: 0px;
     }
+    ul {
+        padding: 0 0 0 0px;
+        margin: 0;
+        list-style: square inside;
+        li {
+            font-size: $search-text-size;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            a {
+                margin: -15px;
+            }
+        }
+    }
 }
 
-.projectResult__initiatives-list {
-    padding: 0 0 0 0px;
-    margin: 0;
-    list-style: none;
-}
-
-.projectResult__initiatives-list-item {
-    font-size: map-get($map-font-sizes, 'base');
-    margin-bottom: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {
+.searchView .sectionRow .dateRangeSelect, .searchView .sectionRow .CurrencyRangeSelect {
     @include display(flex);
     @include flex-direction(row);
     @include flex-wrap(wrap);
@@ -908,7 +637,10 @@ button.searchView__update-results {
 .Select {
     font-family: $sans-font-family;
     font-size: $compact-text-size;
+    width: calc(100% - 1em);
     .Select-input  {
+        height: 24px;
+        width: 100% !important;
         >input {
             padding: 4px 0 6px;
             width: 100% !important;
@@ -1016,7 +748,7 @@ button.searchView__update-results {
             color: #fff;
         }
         a {
-            background: url($close-white) no-repeat center/50% 50%;
+            background: url($close-white) no-repeat center/70% 70%;
         }
     }
     .textWrap {
@@ -1029,41 +761,6 @@ button.searchView__update-results {
 
         }
     }
-}
-
-.helpView__main {
-    padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y;
-    padding-left: $searchview-padding-x;
-    padding-right: $searchview-padding-x;
-
-    height: calc(100% - #{$searchview-header-height});
-    overflow: auto;
-}
-
-.helpView__section-heading {
-    // NOTE: temporary specificity boost to be dispensed with
-    // once embedded .searchView h2 rule is eliminated
-    .searchView & {
-        color: map-get($map-colors, 'heading');
-        font-size: map-get($map-font-sizes, 'heading');
-        font-weight: normal;
-        margin-bottom: $searchview-heading-bottom-margin;
-    }
-}
-
-.helpView__section-subheading {
-    color: map-get($map-colors, 'subheading');
-    font-size: map-get($map-font-sizes, 'subheading');
-    margin-bottom: $searchview-heading-bottom-margin;
-}
-
-.helpView__separator {
-    @extend .sidebar__separator;
-}
-
-.helpView__body-text {
-    @extend .sidebar__body-text;
 }
 
 .inner.showHelp {
