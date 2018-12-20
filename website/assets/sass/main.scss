@@ -19,6 +19,34 @@ body {
     height: 100%;
 }
 
+// CSS background image preloader
+body::after {
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    z-index: -1024;
+    content:
+        url($arrow-left)
+        url($arrow-left-active)
+        url($arrow-right)
+        url($arrow-right-active)
+        url($close)
+        url($close-white)
+        url($filter)
+        url($help-btn-img)
+        url($help-circle)
+        url($help-circle-active)
+        url($update)
+        url($update-disabled)
+        url($plus)
+        url($zoom-magnifying-glass-img)
+        url($zoom-magnifying-glass-img-active)
+        url($zoom-magnifying-glass-img-grey)
+        ;
+}
+
 html {
     font-size: $base-font-size;
     -webkit-font-smoothing: antialiased;
