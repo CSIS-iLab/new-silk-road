@@ -50,7 +50,7 @@ You can run the various Django management commands via `heroku local:run` or for
 You can run tests locally with the following command:
 
 ```
-heroku local:run python manange.py tests
+heroku local:run python manage.py test
 ```
 
 For more detailed instrutions, refer to the [DETAILED_INSTRUCTIONS.md](DETAILED_INSTRUCTIONS.md).
