@@ -18,6 +18,8 @@ from locations.models import (
     Country,
     GeometryStore
 )
+from sources.forms import DocumentSearchField
+from sources.models import Document
 
 
 class MonthField(forms.IntegerField):
@@ -81,6 +83,18 @@ class ProjectSearchMultiField(forms.ModelMultipleChoiceField):
         kwargs['queryset'] = Project.objects.all()
         kwargs['help_text'] = 'Select field and begin typing to search'
         super().__init__(*args, **kwargs)
+
+
+class ProjectDocumentForm(forms.ModelForm):
+    document = DocumentSearchField(
+        required=False,
+        queryset=Document.objects.order_by('-id'),
+        help_text=DocumentSearchField.help_text
+    )
+
+    class Meta:
+        model = ProjectDocument
+        fields = '__all__'
 
 
 class ProjectDocumentSearchMultiWidget(ModelSelect2MultipleWidget):
