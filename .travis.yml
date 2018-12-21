@@ -45,9 +45,3 @@ script:
 after_success:
   - pkill -f elasticsearch
   - codecov
-
-branches:
-  only:
-    - master
-    - staging
-    - fix-tests
