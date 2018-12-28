@@ -78,10 +78,12 @@
                 {% endspaceless %}
             </section>
             <section>
-                <h3>Initiatives</h3>
-                {% if object.initiatives.all %}
-                <ul class="clean">{% for initiative in object.initiatives.all %}
-                    <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>{% endfor %}
+                <h3>Plant Initiatives</h3>
+                {% if object.plant_initiatives.all %}
+                <ul class="clean">
+                {% for initiative in object.plant_initiatives.all %}
+                    <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>
+                {% endfor %}
                 </ul>
                 {% else %}
                 <p>&mdash;</p>
@@ -141,6 +143,23 @@
               <p>{% if object.plant_CO2_emissions and object.plant_CO2_emissions_unit %}{{ object.plant_CO2_emissions }} {{ object.plant_CO2_emissions_unit }}{% else %}Unknown{% endif %}</p>
           </section>
       </div>
+    </section>
+
+    <section class="related-power-data">
+        <h2>Associated Project Initiatives</h2>
+        
+        {% for project in object.project_set.published %}
+        <div class="row">
+            <section>
+                <h4>{{ project.name }}</h4>
+                <ul class="clean">
+                {% for pi in project.initiatives.all %}
+                    <li><a href="{{ pi.get_absolute_url }}">{{pi.name}}</li>
+                {% endfor %}
+                </ul>
+            <section>
+        <div>
+        {% endfor %}
     </section>
 
 
