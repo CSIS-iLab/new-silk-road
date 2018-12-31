@@ -77,6 +77,8 @@
                 {% endif %}
                 {% endspaceless %}
             </section>
+        </div>
+        <div class="row double">
             <section>
                 <h3>Plant Initiatives</h3>
                 {% if object.plant_initiatives.all %}
@@ -88,6 +90,14 @@
                 {% else %}
                 <p>&mdash;</p>
                 {% endif %}
+            </section>
+            <section>
+                <h3>Related Project Initiatives</h3>
+                <ul class="clean">
+                    {% for i in initiatives %}
+                        <li><a href="{{ i.get_absolute_url }}">{{ i.name }}</a></li>
+                    {% endfor %}
+                </ul>
             </section>
         </div>
         <div class="row double">
@@ -144,25 +154,6 @@
           </section>
       </div>
     </section>
-
-    <section class="related-power-data">
-        <h2>Associated Project Initiatives</h2>
-        
-        {% for project in object.project_set.published %}
-        <div class="row">
-            <section>
-                <h4>{{ project.name }}</h4>
-                <ul class="clean">
-                {% for pi in project.initiatives.all %}
-                    <li><a href="{{ pi.get_absolute_url }}">{{pi.name}}</li>
-                {% endfor %}
-                </ul>
-            <section>
-        <div>
-        {% endfor %}
-    </section>
-
-
 </article>
 {% endblock %}
 
