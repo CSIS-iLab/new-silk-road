@@ -507,7 +507,9 @@ export default class SearchView extends Component {
                 results.length === 0
               ) ?
                 <div className="resultsView__content">
-                  <p>Sorry, we didn&rsquo;t find any matches.</p>
+                  <p className="resultsView__not-found">
+                    Sorry, we didn&rsquo;t find any matches.
+                  </p>
                 </div>
 
               :

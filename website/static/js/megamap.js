@@ -31511,7 +31511,7 @@
 	              { className: 'resultsView__content' },
 	              _react2.default.createElement(
 	                'p',
-	                null,
+	                { className: 'resultsView__not-found' },
 	                'Sorry, we didn\u2019t find any matches.'
 	              )
 	            ) : _react2.default.createElement(_ResultsView2.default, {
