@@ -378,6 +378,8 @@ button.searchView__update-results {
 }
 
 .date-range-select__range-container {
+    @include display(flex);
+    @include flex-wrap(nowrap);
     padding-left: $searchview-text-input-margin-left;
 }
 
@@ -395,6 +397,9 @@ button.searchView__update-results {
 .date-range-select__input-text {
     .searchView .filter-input-group .dateRangeSelect & {
         @extend .filter-input-group__input-text;
+        @include flex-basis(auto);
+        @include flex-shrink(1);
+
         display: inline-block;
         width: auto;
         margin-left: 4px;
