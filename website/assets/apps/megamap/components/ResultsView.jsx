@@ -112,6 +112,20 @@ class ResultsView extends Component {
     SearchActions.search(query);
   }
 
+  sectionTitle() {
+    return (
+      <h2
+        className={classNames(
+          'summaryInfo',
+          'resultsView__summary-info',
+          { 'resultsView__summary-info--with-results': this.props.results.length > 0 },
+        )}
+      >
+        {this.props.totalCount} Projects
+      </h2>
+    );
+  }
+
   render() {
     const noResults = this.props.results.length === 0;
     let currentPage;
@@ -140,45 +154,44 @@ class ResultsView extends Component {
     }
 
     return (
-      <div className="resultsView resultsView__main" style={this.props.style}>
-        <h2
-          className={classNames(
-            'summaryInfo',
-            'resultsView__summary-info',
-            { 'resultsView__summary-info--with-results': this.props.results.length > 0 },
-          )}
-        >
-          {this.props.totalCount} Projects
-        </h2>
-        <div
-          className="scrollWrap"
-          ref={(el) => { this.scrollWrap = el; }}
+      <div
+        className="resultsView resultsView__main"
+        style={this.props.style}
+        ref={(el) => { this.scrollWrap = el; }}
+      >
+        <div className="resultsView__content"
           style={[
-            scrollWrap.base,
+            this.props.results.length === 0 && scrollWrap.hidden,
           ]}
         >
-          <div className="scrollContent"
-            style={[
-              this.props.results.length === 0 && scrollWrap.hidden,
-            ]}
-          >
-            <ResultsList results={this.props.results} />
-          </div>
-          <div
-            className="scrollContent"
-            style={[
-              this.props.results.length !== 0 && scrollWrap.hidden,
-            ]}
-          >
-            <section>
-              <p className="resultsView__body-text">
-                Click the icon panel on the right to hide the results of particular infrastructure types on the map.
-              </p>
-              <p className="resultsView__body-text">
-                Search and filter results by clicking the “<b>Filter</b>” tab above.
-              </p>
-            </section>
-          </div>
+          { this.sectionTitle() }
+          <ResultsList results={this.props.results} />
+        </div>
+        <div
+          className="resultsView__content"
+          style={[
+            this.props.results.length !== 0 && scrollWrap.hidden,
+          ]}
+        >
+          { this.sectionTitle() }
+          <section>
+            <p className="resultsView__body-text">
+              Click the icon panel on the right to hide the results of particular infrastructure types on the map.
+            </p>
+            <p className="resultsView__body-text">
+              Search and filter results by clicking the “<b>Filter</b>” tab above.
+            </p>
+          </section>
+
+          <hr className="resultsView__separator" />
+
+          <section>
+            <h3 className="resultsView__subheading">Curated Results</h3>
+            <p className="resultsView__body-text">
+              This list of results illustrates some of the projects
+              and strategies our team is following.
+            </p>
+          </section>
         </div>
         <div
           className="resultsView__pagination"
