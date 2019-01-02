@@ -31483,20 +31483,6 @@
 	              )
 	            )
 	          ),
-	          function () {
-	            if (searchCount > 0 && !isSearching && !errorView && results.length === 0) {
-	              return _react2.default.createElement(
-	                'div',
-	                { className: 'filter-input-group' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  'Sorry, we didn\u2019t find any matches.'
-	                )
-	              );
-	            }
-	            return '';
-	          }(),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'resultsViewWrapper' },
@@ -31520,7 +31506,15 @@
 	                onClick: this.toggleHelp
 	              })
 	            ),
-	            _react2.default.createElement(_ResultsView2.default, {
+	            searchCount > 0 && !isSearching && !errorView && results.length === 0 ? _react2.default.createElement(
+	              'div',
+	              { className: 'resultsView__content' },
+	              _react2.default.createElement(
+	                'p',
+	                null,
+	                'Sorry, we didn\u2019t find any matches.'
+	              )
+	            ) : _react2.default.createElement(_ResultsView2.default, {
 	              results: results,
 	              onNextClick: SearchView.handleResultsNavClick,
 	              nextURL: nextURL,
