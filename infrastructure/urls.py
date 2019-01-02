@@ -5,15 +5,19 @@ from .views import (
     ProjectDetailView, ProjectListView,
     CountryProjectListView,
     InitiativeDetailView, InitiativeListView,
-    GeoUploadView, ProjectExportView,
+    GeoUploadView, ProjectExportView, PowerPlantExportView,
     PowerPlantDetailView
 )
 
 
 app_name = 'infrastructure'
 adminpatterns = ([
-    url(r'^add-geo/$', staff_member_required()(GeoUploadView.as_view()), name='project-geo-upload'),
-    url(r'^export-projects/csv/$', staff_member_required()(ProjectExportView.as_view()), name='projects-export-view'),
+    url(r'^add-geo/$', staff_member_required()(GeoUploadView.as_view()), 
+    name='project-geo-upload'),
+    url(r'^export-projects/csv/$', staff_member_required()(ProjectExportView.as_view()), 
+    name='projects-export-view'),
+    url(r'^export-powerplants/csv/$', staff_member_required()(PowerPlantExportView.as_view()),
+    name='powerplants-export-view'),
 ], app_name)
 
 urlpatterns = [

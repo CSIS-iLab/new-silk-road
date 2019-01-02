@@ -1,5 +1,6 @@
 import datetime
 import logging
+import csv
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
@@ -116,6 +117,23 @@ class ProjectExportView(View):
             )
         return response
 
+class PowerPlantExportView(View):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        d = datetime.datetime.now()
+        filename = "infrastructure_power_plants_{:%Y%m%d_%H%M}.csv".format(d)
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        writer = csv.writer(response)
+        with connection.cursor() as cursor:
+            cursor.copy_expert(
+                '''
+                COPY (SELECT * FROM infrastructure_power_plant_export_view)
+                TO STDOUT
+                WITH (FORMAT csv, HEADER TRUE, NULL 'NULL', FORCE_QUOTE *)''',
+                response
+            )
+        return response
 
 class PowerPlantDetailView(PublicationMixin, DetailView):
     model = PowerPlant
