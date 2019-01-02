@@ -670,8 +670,12 @@ button.searchView__update-results {
     }
 
     &::before {
-        background-image: url($filter-active);
+        background-image: url($filter);
         height: 15px;
+    }
+
+    &:hover::before {
+        background-image: url($filter-active);
     }
 }
 
