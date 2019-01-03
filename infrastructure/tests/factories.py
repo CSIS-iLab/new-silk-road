@@ -59,6 +59,15 @@ class ProjectFactory(factory.django.DjangoModelFactory):
             for fuel in extracted:
                 self.fuels.add(fuel)
 
+    @factory.post_generation
+    def manufacturers(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for org in extracted:
+                self.manufacturers.add(org)
+
     class Meta:
         model = 'infrastructure.Project'
 

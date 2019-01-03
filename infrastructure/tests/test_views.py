@@ -10,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 
+from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.export import refresh_views
 from locations.models import GeometryStore
 from locations.tests.factories import CountryFactory
@@ -394,6 +395,7 @@ class ProjectCSVExportTestCase(TestCase):
                    'funding_currencies',
                    'fuel_type',
                    'fuel_category',
+                   'manufacturers',
                    'status',
                    'new',
                    'verified',
@@ -438,13 +440,29 @@ class ProjectCSVExportTestCase(TestCase):
 
         fuel1 = factories.FuelFactory()
         fuel2 = factories.FuelFactory()
-        project1 = factories.ProjectFactory(fuels=(fuel1, fuel2), countries=(CountryFactory(),))
+        project1 = factories.ProjectFactory(fuels=(fuel1, fuel2),
+                                            countries=(CountryFactory(),))
         response = self.client.get(self.url)
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
         for row in results:
-            if row['identifier'] == project1.identifier:
+            if row['identifier'] == str(project1.identifier):
                 self.assertTrue(fuel1.name in row['fuel_type'])
                 self.assertTrue(fuel2.name in row['fuel_type'])
                 self.assertTrue(fuel1.fuel_category.name in row['fuel_category'])
                 self.assertTrue(fuel2.fuel_category.name in row['fuel_category'])
+
+    def test_project_manufacturers(self):
+        """Ensure related manufacturers are included in CSV export"""
+
+        org1 = OrganizationFactory()
+        org2 = OrganizationFactory()
+        project1 = factories.ProjectFactory(manufacturers=(org1, org2),
+                                            countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == str(project1.identifier):
+                self.assertTrue(org1.name in row['manufacturers'])
+                self.assertTrue(org2.name in row['manufacturers'])
