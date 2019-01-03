@@ -50,6 +50,15 @@ class ProjectFactory(factory.django.DjangoModelFactory):
             for country in extracted:
                 self.countries.add(country)
 
+    @factory.post_generation
+    def fuels(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for fuel in extracted:
+                self.fuels.add(fuel)
+
     class Meta:
         model = 'infrastructure.Project'
 

@@ -10,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 
+from infrastructure.export import refresh_views
 from locations.models import GeometryStore
 from locations.tests.factories import CountryFactory
 from publish.tests.factories import UserFactory
@@ -350,6 +351,7 @@ class ProjectCSVExportTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
+        refresh_views()
         self.user = UserFactory(username='staff')
         self.user.set_password('test')
         self.user.is_staff = True
@@ -379,14 +381,50 @@ class ProjectCSVExportTestCase(TestCase):
         response = self.client.get(self.url)
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
-        self.assertEqual(
-            results.fieldnames,
-            ['identifier', 'name', 'infrastructure_type', 'countries', 'regions', 'contractors',
-             'initiatives', 'operators', 'funding_sources', 'funding_amounts', 'funding_currencies',
-             'status', 'new', 'verified', 'total_cost', 'total_cost_currency', 'start_day',
-             'start_month', 'start_year', 'commencement_day', 'commencement_month',
-             'commencement_year', 'planned_completion_day', 'planned_completion_month',
-             'planned_completion_year'])
+        headers = ('identifier',
+                   'name',
+                   'infrastructure_type',
+                   'countries',
+                   'regions',
+                   'contractors',
+                   'initiatives',
+                   'operators',
+                   'funding_sources',
+                   'funding_amounts',
+                   'funding_currencies',
+                   'fuel_type',
+                   'fuel_category',
+                   'status',
+                   'new',
+                   'verified',
+                   'total_cost',
+                   'total_cost_currency',
+                   'start_day',
+                   'start_month',
+                   'start_year',
+                   'commencement_day',
+                   'commencement_month',
+                   'commencement_year',
+                   'planned_completion_day',
+                   'planned_completion_month',
+                   'planned_completion_year',
+                   'construction_start_day',
+                   'construction_start_month',
+                   'construction_start_year',
+                   'estimated_project_output',
+                   'estimated_project_output_unit',
+                   'nox_reduction_system',
+                   'power_plant_id',
+                   'project_CO2_emissions',
+                   'project_CO2_emissions_unit',
+                   'project_capacity',
+                   'project_capacity_unit',
+                   'project_output',
+                   'project_output_unit',
+                   'project_output_year',
+                   'sox_reduction_system',
+        )
+        self.assertEqual(results.fieldnames, list(headers))
         projects = {
             str(self.project.identifier): self.project,
             str(self.other.identifier): self.other,
@@ -394,3 +432,19 @@ class ProjectCSVExportTestCase(TestCase):
         for row in results:
             expected = projects[row['identifier']]
             self.assertEqual(row['name'], expected.name)
+
+    def test_project_fuel(self):
+        """Ensure related fuel relations are included in CSV export"""
+
+        fuel1 = factories.FuelFactory()
+        fuel2 = factories.FuelFactory()
+        project1 = factories.ProjectFactory(fuels=(fuel1, fuel2), countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == project1.identifier:
+                self.assertTrue(fuel1.name in row['fuel_type'])
+                self.assertTrue(fuel2.name in row['fuel_type'])
+                self.assertTrue(fuel1.fuel_category.name in row['fuel_category'])
+                self.assertTrue(fuel2.fuel_category.name in row['fuel_category'])

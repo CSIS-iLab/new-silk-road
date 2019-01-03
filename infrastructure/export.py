@@ -36,7 +36,8 @@ def refresh_views():
                         "infrastructure_consultants_view",
                         "infrastructure_implementers_view",
                         "infrastructure_operators_view",
-                        "infrastructure_funding_view")
+                        "infrastructure_funding_view",
+                        "infrastructure_project_fuels_view")
         for view_name in database_views:
             cursor.execute("DROP VIEW IF EXISTS {};".format(view_name))
 
@@ -116,6 +117,16 @@ def refresh_views():
                 GROUP BY l.project_id;
             ''')
         cursor.execute('''
+            CREATE OR REPLACE VIEW infrastructure_project_fuels_view AS
+                SELECT ipf.project_id,
+                array_to_string(array_agg(quote_literal(if.name::text)), ','::text, 'NULL'::text) as fuel_type,
+                array_to_string(array_agg(quote_literal(ifc.name::text)), ','::text, 'NULL'::text) as fuel_category
+                FROM infrastructure_project_fuels AS ipf
+                    LEFT JOIN infrastructure_fuel if ON ipf.fuel_id = if.id
+                    LEFT JOIN infrastructure_fuelcategory ifc ON if.fuel_category_id = ifc.id
+                GROUP BY ipf.project_id;
+            ''')
+        cursor.execute('''
             CREATE OR REPLACE VIEW infrastructure_projects_export_view AS
                 SELECT
                     identifier,
@@ -129,6 +140,8 @@ def refresh_views():
                     related.funding_sources,
                     related.funding_amounts,
                     related.funding_currencies,
+                    related.fuel_type,
+                    related.fuel_category,
                     CASE
                         {status_cases}
                         ELSE 'NULL'
@@ -193,7 +206,9 @@ def refresh_views():
                             initiatives,
                             funding_sources,
                             funding_amounts,
-                            funding_currencies
+                            funding_currencies,
+                            fuel_type,
+                            fuel_category
                         FROM
                             infrastructure_countries_view AS a
                             LEFT OUTER JOIN infrastructure_initiatives_view ON a.project_id = infrastructure_initiatives_view.project_id
@@ -203,6 +218,7 @@ def refresh_views():
                             LEFT OUTER JOIN infrastructure_implementers_view ON a.project_id = infrastructure_implementers_view.project_id
                             LEFT OUTER JOIN infrastructure_operators_view ON a.project_id = infrastructure_operators_view.project_id
                             LEFT OUTER JOIN infrastructure_funding_view ON a.project_id = infrastructure_funding_view.project_id
+                            LEFT OUTER JOIN infrastructure_project_fuels_view ON a.project_id = infrastructure_project_fuels_view.project_id
                     )
                     AS related
                 ON p.id = related.project_id;
