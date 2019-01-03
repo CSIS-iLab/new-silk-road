@@ -487,19 +487,6 @@ export default class SearchView extends Component {
               </header>
             </form>
           </div>
-          {(() => {
-            if (searchCount > 0 &&
-            !isSearching &&
-            !errorView &&
-            results.length === 0) {
-              return (
-                <div className="filter-input-group">
-                  <p>Sorry, we didn&rsquo;t find any matches.</p>
-                </div>
-              );
-            }
-            return '';
-          })()}
           <div className="resultsViewWrapper">
             <header className="searchView__header searchView__header--light">
               <button
@@ -513,16 +500,30 @@ export default class SearchView extends Component {
                 onClick={this.toggleHelp}
               />
             </header>
-            <ResultsView
-              results={results}
-              onNextClick={SearchView.handleResultsNavClick}
-              nextURL={nextURL}
-              onPreviousClick={SearchView.handleResultsNavClick}
-              previousURL={previousURL}
-              totalCount={this.state.total}
-              updateParentQuery={this.handleQueryUpdate}
-              curatedProjectCollections={curatedProjectCollections}
-            />
+            {
+              (searchCount > 0 &&
+                !isSearching &&
+                !errorView &&
+                results.length === 0
+              ) ?
+                <div className="resultsView__content">
+                  <p className="resultsView__not-found">
+                    Sorry, we didn&rsquo;t find any matches.
+                  </p>
+                </div>
+
+              :
+                <ResultsView
+                  results={results}
+                  onNextClick={SearchView.handleResultsNavClick}
+                  nextURL={nextURL}
+                  onPreviousClick={SearchView.handleResultsNavClick}
+                  previousURL={previousURL}
+                  totalCount={this.state.total}
+                  updateParentQuery={this.handleQueryUpdate}
+                  curatedProjectCollections={curatedProjectCollections}
+                />
+            }
           </div>
           <div className="helpView">
             <header className="searchView__header searchView__header--light">
