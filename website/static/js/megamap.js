@@ -30624,6 +30624,18 @@
 	      _SearchActions2.default.search(query);
 	    }
 	  }, {
+	    key: 'sectionTitle',
+	    value: function sectionTitle() {
+	      return _react2.default.createElement(
+	        'h2',
+	        {
+	          className: (0, _classnames2.default)('summaryInfo', 'resultsView__summary-info', { 'resultsView__summary-info--with-results': this.props.results.length > 0 })
+	        },
+	        this.props.totalCount,
+	        ' Projects'
+	      );
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
@@ -30654,56 +30666,61 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'resultsView resultsView__main', style: this.props.style },
+	        {
+	          className: 'resultsView resultsView__main',
+	          style: this.props.style,
+	          ref: function ref(el) {
+	            _this2.scrollWrap = el;
+	          }
+	        },
 	        _react2.default.createElement(
-	          'h2',
-	          {
-	            className: (0, _classnames2.default)('summaryInfo', 'resultsView__summary-info', { 'resultsView__summary-info--with-results': this.props.results.length > 0 })
+	          'div',
+	          { className: 'resultsView__content',
+	            style: [this.props.results.length === 0 && scrollWrap.hidden]
 	          },
-	          this.props.totalCount,
-	          ' Projects'
+	          this.sectionTitle(),
+	          _react2.default.createElement(_ResultsList2.default, { results: this.props.results })
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          {
-	            className: 'scrollWrap',
-	            ref: function ref(el) {
-	              _this2.scrollWrap = el;
-	            },
-	            style: [scrollWrap.base]
+	            className: 'resultsView__content',
+	            style: [this.props.results.length !== 0 && scrollWrap.hidden]
 	          },
+	          this.sectionTitle(),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'scrollContent',
-	              style: [this.props.results.length === 0 && scrollWrap.hidden]
-	            },
-	            _react2.default.createElement(_ResultsList2.default, { results: this.props.results })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            {
-	              className: 'scrollContent',
-	              style: [this.props.results.length !== 0 && scrollWrap.hidden]
-	            },
+	            'section',
+	            null,
 	            _react2.default.createElement(
-	              'section',
-	              null,
+	              'p',
+	              { className: 'resultsView__body-text' },
+	              'Click the icon panel on the right to hide the results of particular infrastructure types on the map.'
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { className: 'resultsView__body-text' },
+	              'Search and filter results by clicking the \u201C',
 	              _react2.default.createElement(
-	                'p',
-	                { className: 'resultsView__body-text' },
-	                'Click the icon panel on the right to hide the results of particular infrastructure types on the map.'
+	                'b',
+	                null,
+	                'Filter'
 	              ),
-	              _react2.default.createElement(
-	                'p',
-	                { className: 'resultsView__body-text' },
-	                'Search and filter results by clicking the \u201C',
-	                _react2.default.createElement(
-	                  'b',
-	                  null,
-	                  'Filter'
-	                ),
-	                '\u201D tab above.'
-	              )
+	              '\u201D tab above.'
+	            )
+	          ),
+	          _react2.default.createElement('hr', { className: 'resultsView__separator' }),
+	          _react2.default.createElement(
+	            'section',
+	            null,
+	            _react2.default.createElement(
+	              'h3',
+	              { className: 'resultsView__subheading' },
+	              'Curated Results'
+	            ),
+	            _react2.default.createElement(
+	              'p',
+	              { className: 'resultsView__body-text' },
+	              'This list of results illustrates some of the projects and strategies our team is following.'
 	            )
 	          )
 	        ),
@@ -31210,7 +31227,7 @@
 	            ),
 	            _react2.default.createElement(
 	              'form',
-	              { onSubmit: this.handleSubmit },
+	              { className: 'searchWidget__form', onSubmit: this.handleSubmit },
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'filterScroll searchWidget__main' },
@@ -31375,7 +31392,7 @@
 	                    })
 	                  )
 	                ),
-	                _react2.default.createElement('hr', { className: 'filter-panel-separator' }),
+	                _react2.default.createElement('hr', { className: 'searchWidget__separator' }),
 	                _react2.default.createElement(
 	                  _Panel2.default,
 	                  {
@@ -31446,7 +31463,7 @@
 	              _react2.default.createElement(
 	                'header',
 	                {
-	                  className: (0, _classnames2.default)('searchView__header', 'searchView__header--interactive', { 'searchView__header--disabled': !this.state.searchEnabled })
+	                  className: (0, _classnames2.default)('searchView__footer', { 'searchView__footer--disabled': !this.state.searchEnabled })
 	                },
 	                _react2.default.createElement(
 	                  'button',
@@ -31466,20 +31483,6 @@
 	              )
 	            )
 	          ),
-	          function () {
-	            if (searchCount > 0 && !isSearching && !errorView && results.length === 0) {
-	              return _react2.default.createElement(
-	                'div',
-	                { className: 'filter-input-group' },
-	                _react2.default.createElement(
-	                  'p',
-	                  null,
-	                  'Sorry, we didn\u2019t find any matches.'
-	                )
-	              );
-	            }
-	            return '';
-	          }(),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'resultsViewWrapper' },
@@ -31503,7 +31506,15 @@
 	                onClick: this.toggleHelp
 	              })
 	            ),
-	            _react2.default.createElement(_ResultsView2.default, {
+	            searchCount > 0 && !isSearching && !errorView && results.length === 0 ? _react2.default.createElement(
+	              'div',
+	              { className: 'resultsView__content' },
+	              _react2.default.createElement(
+	                'p',
+	                { className: 'resultsView__not-found' },
+	                'Sorry, we didn\u2019t find any matches.'
+	              )
+	            ) : _react2.default.createElement(_ResultsView2.default, {
 	              results: results,
 	              onNextClick: SearchView.handleResultsNavClick,
 	              nextURL: nextURL,
@@ -31535,7 +31546,7 @@
 	              { className: 'helpView__main' },
 	              _react2.default.createElement(
 	                'section',
-	                null,
+	                { className: 'helpView__section' },
 	                _react2.default.createElement(
 	                  'h2',
 	                  { className: 'helpView__section-heading' },
@@ -31555,7 +31566,7 @@
 	              _react2.default.createElement('hr', { className: 'helpView__separator' }),
 	              _react2.default.createElement(
 	                'section',
-	                null,
+	                { className: 'helpView__section' },
 	                _react2.default.createElement(
 	                  'h3',
 	                  { className: 'helpView__section-subheading' },
@@ -31619,7 +31630,7 @@
 	                    null,
 	                    'Filter by Year:'
 	                  ),
-	                  ' Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year'
+	                  ' Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year.'
 	                )
 	              )
 	            )
