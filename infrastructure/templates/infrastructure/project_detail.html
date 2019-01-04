@@ -162,9 +162,11 @@
           <div class="row double">
                 <section>
                     <h3>Fuel Type</h3>
+                        <ul class="clean">
                         {% for fuel in object.fuels.all %}
-                            {{ fuel }}
+                            <li>{{ fuel }}</li>
                         {% endfor %}
+                        </ul>
                     </div>
                 </section>
           </div>
