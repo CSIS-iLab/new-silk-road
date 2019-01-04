@@ -15,11 +15,13 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
         '''
         CREATE OR REPLACE VIEW infrastructure_power_plant_export_view
-        AS SELECT pp.id,
-            pp.created_at,
-            pp.updated_at,
-            pp.published,
+        AS select pp.id, 
             pp.name,
+            array_to_string(array_agg(quote_literal(lc.name::text)), ','::text, 'NULL'::text) as countries,
+            array_to_string(array_agg(quote_literal(lr.name::text)), ','::text, 'NULL'::text) as regions,
+            array_to_string(array_agg(quote_literal(lgeo.centroid::text)), ','::text, 'NULL'::text) as centroid,
+            array_to_string(array_agg(quote_literal(fcown.name::text)), ','::text, 'NULL'::text) as owners,
+            array_to_string(array_agg(quote_literal(fcop.name::text)), ','::text, 'NULL'::text) as operators,
             pp.slug,
             pp.status,
             pp.plant_year_online,
@@ -38,17 +40,21 @@ class Migration(migrations.Migration):
             pp."plant_CO2_emissions",
             pp."plant_CO2_emissions_unit",
             pp.grid_connected,
-            pp.infrastructure_type_id,
-            pp.geo_id,
             pp.description,
-            pp.description_rendered,
-            array_to_string(array_agg(quote_literal(ipp.name::text)), ','::text, 'NULL'::text) as fuel_type,
-            array_to_string(array_agg(quote_literal(ipfc.name::text)), ','::text, 'NULL'::text) as fuel_category
-        FROM infrastructure_powerplant pp
-            LEFT JOIN infrastructure_powerplant_fuels ippf ON ippf.powerplant_id = pp.id
-            LEFT JOIN infrastructure_fuel ipp ON ippf.fuel_id = ipp.id
-            LEFT JOIN infrastructure_fuelcategory ipfc ON ipp.fuel_category_id = ipfc.id
-        GROUP by pp.id
+            pp.created_at,
+            pp.updated_at,
+            pp.published
+        from infrastructure_powerplant pp
+        left join infrastructure_powerplant_countries ppct on ppct.powerplant_id = pp.id
+            left join locations_country lc on lc.id= ppct.country_id
+        left join infrastructure_powerplant_regions ppr on ppr.powerplant_id = pp.id
+            left join locations_region lr on lr.id = ppr.region_id
+        left join infrastructure_powerplant_owners ppown on ppown.powerplant_id = pp.id
+            left join facts_organization fcown on fcown.id = ppown.organization_id
+        left join infrastructure_powerplant_operators ppop on ppop.powerplant_id = pp.id
+            left join facts_organization fcop on fcop.id = ppop.organization_id
+        join locations_geometrystore lgeo on lgeo.id = pp.geo_id
+        group by pp.id
         ''',
         "DROP VIEW public.infrastructure_power_plant_export_view"
         )
