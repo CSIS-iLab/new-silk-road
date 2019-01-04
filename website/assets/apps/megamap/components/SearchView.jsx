@@ -306,7 +306,7 @@ export default class SearchView extends Component {
                 <span>Reset form</span>
               </button>
             </header>
-            <form onSubmit={this.handleSubmit}>
+            <form className="searchWidget__form" onSubmit={this.handleSubmit}>
               <div className="filterScroll searchWidget__main">
                 <Panel
                   title="Projects"
@@ -418,7 +418,9 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-                <hr className="filter-panel-separator" />
+
+                <hr className="searchWidget__separator" />
+
                 <Panel
                   title="Funders"
                   ref={(el) => { this.fundersPanel = el; }}
@@ -467,9 +469,8 @@ export default class SearchView extends Component {
               </div>
               <header
                 className={classNames(
-                  'searchView__header',
-                  'searchView__header--interactive',
-                  { 'searchView__header--disabled': !this.state.searchEnabled },
+                  'searchView__footer',
+                  { 'searchView__footer--disabled': !this.state.searchEnabled },
                 )}
               >
                 <button
@@ -486,19 +487,6 @@ export default class SearchView extends Component {
               </header>
             </form>
           </div>
-          {(() => {
-            if (searchCount > 0 &&
-            !isSearching &&
-            !errorView &&
-            results.length === 0) {
-              return (
-                <div className="filter-input-group">
-                  <p>Sorry, we didn&rsquo;t find any matches.</p>
-                </div>
-              );
-            }
-            return '';
-          })()}
           <div className="resultsViewWrapper">
             <header className="searchView__header searchView__header--light">
               <button
@@ -512,16 +500,30 @@ export default class SearchView extends Component {
                 onClick={this.toggleHelp}
               />
             </header>
-            <ResultsView
-              results={results}
-              onNextClick={SearchView.handleResultsNavClick}
-              nextURL={nextURL}
-              onPreviousClick={SearchView.handleResultsNavClick}
-              previousURL={previousURL}
-              totalCount={this.state.total}
-              updateParentQuery={this.handleQueryUpdate}
-              curatedProjectCollections={curatedProjectCollections}
-            />
+            {
+              (searchCount > 0 &&
+                !isSearching &&
+                !errorView &&
+                results.length === 0
+              ) ?
+                <div className="resultsView__content">
+                  <p className="resultsView__not-found">
+                    Sorry, we didn&rsquo;t find any matches.
+                  </p>
+                </div>
+
+              :
+                <ResultsView
+                  results={results}
+                  onNextClick={SearchView.handleResultsNavClick}
+                  nextURL={nextURL}
+                  onPreviousClick={SearchView.handleResultsNavClick}
+                  previousURL={previousURL}
+                  totalCount={this.state.total}
+                  updateParentQuery={this.handleQueryUpdate}
+                  curatedProjectCollections={curatedProjectCollections}
+                />
+            }
           </div>
           <div className="helpView">
             <header className="searchView__header searchView__header--light">
@@ -530,12 +532,12 @@ export default class SearchView extends Component {
               </button>
             </header>
             <div className="helpView__main">
-              <section>
+              <section className="helpView__section">
                 <h2 className="helpView__section-heading">How to search the map</h2>
                 <p className="helpView__body-text">For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
               </section>
               <hr className="helpView__separator" />
-              <section>
+              <section className="helpView__section">
                 <h3 className="helpView__section-subheading">Project Filters</h3>
                 <p className="helpView__body-text">
                   <b>Project Title:</b> Searches project titles, which do not include all attributes of a given project. For example, there may be projects in the city of Karachi without “Karachi” in their title.
@@ -553,7 +555,7 @@ export default class SearchView extends Component {
                   <b>Country:</b> Limits search to projects within a designated country (ex. “China”).
                 </p>
                 <p className="helpView__body-text">
-                  <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year
+                  <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year.
                 </p>
               </section>
             </div>

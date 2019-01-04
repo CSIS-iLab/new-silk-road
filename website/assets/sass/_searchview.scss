@@ -53,6 +53,13 @@ button.btn--header-toggle {
     }
 }
 
+// Abstract base class to be extended by various subheadings.
+.sidebar__subheading {
+    color: map-get($map-colors, 'subheading');
+    font-size: map-get($map-font-sizes, 'subheading');
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
 // Abstract class to be extended by various body text classes.
 .sidebar__body-text {
     color: map-get($map-colors, 'body');
@@ -67,6 +74,7 @@ button.btn--header-toggle {
     margin-left: -$searchview-padding-x;
     margin-right: -$searchview-padding-x;
     border-width: 0.5px;
+    border-color: $map-extra-light-grey;
 }
 
 .searchView {
@@ -123,14 +131,6 @@ button.btn--header-toggle {
                 color: #fff;
             }
         }
-        .filterScroll {
-            height: calc(100% - #{$searchview-header-height * 2});
-            overflow: auto;
-        }
-
-        form {
-            height: 100%;
-        }
     }
     .inner.showFilters {
         .searchWidget {
@@ -182,10 +182,21 @@ button.btn--header-toggle {
     background-color: $callout-color;
 }
 
-.searchView__header--interactive {
+.searchView__header--light {
+    background-color: map-get($map-colors, 'header-background-light');
+}
+
+.searchView__footer {
+    @extend .searchView__header;
+
     @include display(flex);
     @include justify-content(center);
     background-color: $callout-color-inactive;
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 
     &:hover {
         background-color: $callout-color;
@@ -193,12 +204,8 @@ button.btn--header-toggle {
     }
 }
 
-.searchView__header--light {
-    background-color: map-get($map-colors, 'header-background-light');
-}
-
-.searchView__header--disabled,
-.searchView__header--disabled:hover {
+.searchView__footer--disabled,
+.searchView__footer--disabled:hover {
     background-color: $map-disabled-grey;
     color: $map-grey;
 }
@@ -245,9 +252,14 @@ button.searchView__update-results {
 
 .searchWidget__main {
     padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y + $searchview-header-height;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
+}
+
+.searchWidget__form {
+    height: calc(100% - #{$searchview-header-height});
+    overflow-y: scroll;
 }
 
 .searchWidget__separator {
@@ -281,6 +293,10 @@ button.searchView__update-results {
     }
 }
 
+.expandable-panel:last-of-type .filter-input-group:last-of-type {
+    margin-bottom: 0;
+}
+
 .filter-input-group {
     display: block;
 
@@ -297,6 +313,8 @@ button.searchView__update-results {
     .Select {
         .Select-control {
             background-color: transparent !important;
+            position: relative;
+
             cursor: pointer;
             input {
                 height: 0px;
@@ -310,7 +328,7 @@ button.searchView__update-results {
         border: none;
         margin-top: 0px;
         .Select-control {
-            margin-left: $small-spacing;
+            margin-left: $searchview-text-input-margin-left;
         }
 
     }
@@ -360,6 +378,8 @@ button.searchView__update-results {
 }
 
 .date-range-select__range-container {
+    @include display(flex);
+    @include flex-wrap(nowrap);
     padding-left: $searchview-text-input-margin-left;
 }
 
@@ -377,6 +397,9 @@ button.searchView__update-results {
 .date-range-select__input-text {
     .searchView .filter-input-group .dateRangeSelect & {
         @extend .filter-input-group__input-text;
+        @include flex-basis(auto);
+        @include flex-shrink(1);
+
         display: inline-block;
         width: auto;
         margin-left: 4px;
@@ -392,12 +415,17 @@ button.searchView__update-results {
 .Select-input {
     @extend .filter-input-group__input-text;
     height: 23px; // TODO: make this non-arbitrary
+    width: calc(100% - #{$searchview-text-input-margin-left});
 }
 .Select--multi .Select-input {
     @extend .filter-input-group__input-text;
 }
 .Select--multi .Select-multi-value-wrapper {
-    width: 100%;
+    width: calc(100% - #{$searchview-text-input-margin-left});
+
+    .Select-input {
+        width: 100%;
+    }
 }
 
 .expandable-panel__title {
@@ -605,60 +633,29 @@ button.searchView__update-results {
     z-index: 0;
     height: 100%;
 
-    >header {
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        a {
-            display: block;
-            height: $base-line-height;
-            width: $base-line-height;
-            opacity: 0.8;
-        }
-        a:first-child {
-            background: url($filter) no-repeat center/90% 90%;
-        }
-        a:last-child {
-            background: url($help-circle) no-repeat center/90% 90%;
-        }
-        a:hover {
-            opacity: 1;
-        }
-        h2 {
-            flex: 1;
-            color: $callout-color;
-        }
-    }
-
     &.no-results {
         display: none;
     }
 }
 
 .resultsView {
-    .scrollWrap {
-        height: 100%;
-        -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
-
-    /* for the two links in the Curated results section. */
-    .scrollContent {
-        >section {
-            a {
-                display: block;
-                padding-top: $small-spacing;
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-
     ul.searchResults {
         list-style: none;
         padding: 0;
         margin: 0;
     }
+}
+
+.resultsView__content {
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y + $searchview-header-height;
+}
+
+.resultsView__not-found {
+    font-size: map-get($map-font-sizes, 'body');
+    color: map-get($map-colors, 'body');
 }
 
 .resultsView__header-toggle {
@@ -670,8 +667,12 @@ button.searchView__update-results {
     }
 
     &::before {
-        background-image: url($filter-active);
+        background-image: url($filter);
         height: 15px;
+    }
+
+    &:hover::before {
+        background-image: url($filter-active);
     }
 }
 
@@ -691,12 +692,8 @@ button.searchView__update-results {
     height: calc(100% - #{$searchview-header-height});
     @include display(flex);
     @include flex-direction(column);
-    @include justify-content(space-between);
 
-    padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-header-height;
-    padding-left: $searchview-padding-x;
-    padding-right: $searchview-padding-x;
+    overflow-y: scroll;
 }
 
 .resultsView__summary-info {
@@ -713,8 +710,16 @@ button.searchView__update-results {
     }
 }
 
+.resultsView__subheading {
+    @extend .sidebar__subheading;
+}
+
 .resultsView__body-text {
     @extend .sidebar__body-text;
+}
+
+.resultsView__separator {
+    @extend .sidebar__separator;
 }
 
 .resultsView__pagination {
@@ -793,6 +798,10 @@ button.searchView__update-results {
 
     &:last-of-type {
         padding-bottom: 0;
+
+        &::after {
+            display: none;
+        }
     }
 }
 
@@ -944,6 +953,9 @@ button.searchView__update-results {
         display: none;
     }
     .Select-clear-zone {
+        position: absolute;
+        top: 0;
+        right: 8px;
         vertical-align: top;
     }
 
@@ -1038,7 +1050,11 @@ button.searchView__update-results {
     padding-right: $searchview-padding-x;
 
     height: calc(100% - #{$searchview-header-height});
-    overflow: auto;
+    overflow-y: scroll;
+}
+
+.helpView__section {
+    margin-bottom: $searchview-padding-y;
 }
 
 .helpView__section-heading {
@@ -1053,9 +1069,7 @@ button.searchView__update-results {
 }
 
 .helpView__section-subheading {
-    color: map-get($map-colors, 'subheading');
-    font-size: map-get($map-font-sizes, 'subheading');
-    margin-bottom: $searchview-heading-bottom-margin;
+    @extend .sidebar__subheading;
 }
 
 .helpView__separator {
