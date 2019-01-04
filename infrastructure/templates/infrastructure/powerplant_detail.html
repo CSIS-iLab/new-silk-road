@@ -122,8 +122,8 @@
           <section>
               <h3>Fuel Category</h3>
                 <ul class="clean">
-                {% for fuel in object.fuels.all %}
-                    <li>{{ fuel.fuel_category }}</li>
+                {% for fc in fuel_categories %}
+                    <li>{{ fc }}</li>
                 {% endfor %}
                 </ul>
           </section>
