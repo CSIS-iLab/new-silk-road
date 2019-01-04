@@ -18,7 +18,7 @@ from locations.models import (
     Country,
     GeometryStore
 )
-from sources.forms import DocumentSearchField
+from sources.forms import DocumentSearchField, DocumentSearchMultiField
 from sources.models import Document
 
 
@@ -62,6 +62,9 @@ class InitiativeForm(forms.ModelForm):
         widget=NameSearchWidget(model=Organization),
         required=False
     )
+    affiliated_organizations = OrganizationSearchMultiField(required=False)
+    affiliated_people = PersonSearchMultiField(required=False, queryset=Person.objects.all())
+    documents = DocumentSearchMultiField(queryset=Document.objects.all())
 
     founding_month = MonthField(required=False)
     founding_day = DayField(required=False)
