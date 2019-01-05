@@ -394,6 +394,16 @@ class PowerPlant(Publishable):
         'Fuel',
         blank=True,
     )
+    total_cost = models.BigIntegerField(
+        blank=True, null=True,
+        help_text="Values in whole units (dollars, etc.)"
+    )
+    total_cost_currency = models.CharField(
+        blank=True,
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default=DEFAULT_CURRENCY_CHOICE
+    )
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
         'locations.Region',
