@@ -64,7 +64,7 @@ class InitiativeForm(forms.ModelForm):
     )
     affiliated_organizations = OrganizationSearchMultiField(required=False)
     affiliated_people = PersonSearchMultiField(required=False, queryset=Person.objects.all())
-    documents = DocumentSearchMultiField(queryset=Document.objects.all())
+    documents = DocumentSearchMultiField(required=False, queryset=Document.objects.all())
 
     founding_month = MonthField(required=False)
     founding_day = DayField(required=False)
