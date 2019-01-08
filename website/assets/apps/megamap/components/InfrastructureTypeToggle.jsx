@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import SearchActions from '../actions/SearchActions';
 import InfrastructureIcon from './InfrastructureIcon';
+import { validInfrastructureTypes } from '../helpers/map-constants';
 
 export default class InfrastructureTypeToggle extends Component {
   constructor(props) {
@@ -78,6 +79,12 @@ export default class InfrastructureTypeToggle extends Component {
     SearchActions.search(options);
   }
 
+  get validInfrastructureTypes() {
+    return this.props.infrastructureTypes.filter(
+      type => validInfrastructureTypes.indexOf(type.label) > -1,
+    );
+  }
+
   render() {
     return (
       <div
@@ -87,7 +94,7 @@ export default class InfrastructureTypeToggle extends Component {
         <div id="infrastructureToggle">
           {
             this.state.infrastructure_type ?
-            this.props.infrastructureTypes.map(type => (
+            this.validInfrastructureTypes.map(type => (
               <InfrastructureIcon
                 hidden={this.state.hidden}
                 unHide={() => this.setState({ hidden: false })}

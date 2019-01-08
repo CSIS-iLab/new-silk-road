@@ -6,6 +6,13 @@ const updateInterval = 500;
 const boundsPadding = 15;
 const popContentClass = 'popup-content';
 const defaultCenter = [88.639973, 32.776942];
+const validInfrastructureTypes = [
+  'Intermodal',
+  'Powerplant',
+  'Rail',
+  'Road',
+  'Seaport',
+];
 
 export {
   defaultZoom,
@@ -16,4 +23,5 @@ export {
   updateInterval,
   popContentClass,
   defaultCenter,
+  validInfrastructureTypes,
 };
