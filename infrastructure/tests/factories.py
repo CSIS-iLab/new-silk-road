@@ -68,6 +68,24 @@ class ProjectFactory(factory.django.DjangoModelFactory):
             for org in extracted:
                 self.manufacturers.add(org)
 
+    @factory.post_generation
+    def consultants(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for org in extracted:
+                self.consultants.add(org)
+
+    @factory.post_generation
+    def implementers(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for org in extracted:
+                self.implementers.add(org)
+
     class Meta:
         model = 'infrastructure.Project'
 
