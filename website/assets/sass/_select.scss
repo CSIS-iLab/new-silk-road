@@ -43,4 +43,59 @@
   .Select--multi .Select-input {
     vertical-align: top;
   }
+
+  // Selection styles
+  &.Select--multi {
+    .Select-value {
+      @include display(inline-flex);
+      @include flex-direction(row-reverse);
+      border: none;
+      border-radius: 0;
+      background-color: $map-mid-grey;
+      color: map-get($map-colors, 'body');
+      font-size: map-get($map-font-sizes, 'section-title');
+      line-height: 1;
+    }
+
+    .Select-value-label {
+      padding: 2px 0 2px 8px;
+    }
+
+    .Select-value-icon {
+      border-right: none;
+      padding: 3px 6px 3px 4px;
+    }
+  }
+
+  // Select menu and options
+  .Select-menu-outer {
+    border-top-color: #ccc;
+  }
+
+  .Select-menu {
+    background-color: $map-mid-grey;
+    padding: 4px 12px;
+  }
+
+  .Select-option {
+    background-color: inherit;
+    padding: 0;
+    line-height: 1.25;
+    margin-bottom: 8px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.searchView-select__container.Select.has-value {
+  .Select-control {
+    height: auto;
+  }
+
+  .Select-multi-value-wrapper {
+    height: auto;
+    padding-bottom: 5px;
+  }
 }
