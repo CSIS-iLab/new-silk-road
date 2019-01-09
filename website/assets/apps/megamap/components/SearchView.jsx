@@ -347,6 +347,7 @@ export default class SearchView extends Component {
                       name="countries"
                       placeholder="Country"
                       options={this.state.options.countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { countries: selections.map(s => s.value) },
                         )
@@ -363,6 +364,7 @@ export default class SearchView extends Component {
                       name="status"
                       placeholder="Project Status"
                       options={this.state.options.status}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { status: selections.map(s => s.value) },
                         )
@@ -410,6 +412,7 @@ export default class SearchView extends Component {
                       name="initiatives__principal_agent__slug"
                       placeholder="Principal Agent"
                       options={this.state.options.initiatives__principal_agent__slug}
+                      className="searchView-select__container"
                       onChange={option => this.handleQueryUpdate(
                           { initiatives__principal_agent__slug: option ? option.value : '' },
                         )
@@ -457,6 +460,7 @@ export default class SearchView extends Component {
                       name="funding__sources__countries"
                       placeholder="Country"
                       options={this.state.options.funding__sources__countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { funding__sources__countries: selections.map(s => s.value) },
                         )
