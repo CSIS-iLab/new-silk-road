@@ -16,6 +16,7 @@ from publish.admin import (
 from infrastructure.forms import (
     InitiativeForm,
     ProjectForm,
+    ProjectDocumentForm,
     ProjectFundingForm,
     PowerPlantForm,
     ProjectOwnerStakeForm
@@ -331,10 +332,16 @@ class ProjectDocumentAdmin(admin.ModelAdmin):
         'status_indicator',
     )
     list_filter = ('document_type', 'status_indicator')
-    search_fields = ('source_url', 'notes')
+    search_fields = ('source_url', 'notes', 'document__source_file__original_filename')
     inlines = [
         ProjectsDocumentsInline,
     ]
+    form = ProjectDocumentForm
+    list_select_related = ('document__source_file', )
+
+    def get_queryset(self, request):
+        # projects_display below iterates through obj.project_set.all(), so this'll cut down on SQL queries
+        return super().get_queryset(request).prefetch_related('project_set')
 
     def projects_display(self, obj):
         if obj.project_set:

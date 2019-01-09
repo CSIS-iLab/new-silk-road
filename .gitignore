@@ -24,6 +24,7 @@ coverage.xml
 
 # Project stuff:
 /.env
+.idea/*
 
 /serve/staticfiles/*
 !/serve/staticfiles/.gitkeep
@@ -33,6 +34,9 @@ coverage.xml
 
 # Ignore tmp dir
 /tmp
+
+# Ignore .dump files
+*.dump
 
 # Node modules
 /node_modules
