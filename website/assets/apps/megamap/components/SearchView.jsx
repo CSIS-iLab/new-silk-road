@@ -330,6 +330,7 @@ export default class SearchView extends Component {
                       name="region"
                       placeholder="Region"
                       options={this.state.options.region}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { region: selections.map(s => s.value) },
                         )

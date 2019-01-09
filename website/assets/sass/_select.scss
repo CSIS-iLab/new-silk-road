@@ -1,0 +1,46 @@
+/*
+  Because we don't control the internal elements of the Select
+  component, we can just namespace rules beneath this container
+  class.
+
+  All rules specified below can be assumed to be overrides of
+  selectors defined in the react-select style definitions.
+  Their form is dictated by the form of rules given there.
+*/
+.searchView-select__container {
+  $widget-height: 26px;
+  $widget-border-width: 2px;
+  $widget-height-inner: $widget-height - $widget-border-width;
+
+  .Select-control {
+    border-radius: 0;
+    box-sizing: border-box;
+    height: $widget-height;
+    line-height: 0;
+  }
+
+  .Select-multi-value-wrapper {
+    height: $widget-height-inner;
+  }
+
+  .Select-arrow-zone {
+    line-height: $widget-height-inner;
+  }
+
+  .Select-placeholder {
+    line-height: $widget-height-inner;
+    height: $widget-height-inner;
+  }
+
+  .Select-input {
+    height: $widget-height-inner;
+  }
+
+  .Select-input>input {
+    padding-top: 4px;
+  }
+
+  .Select--multi .Select-input {
+    vertical-align: top;
+  }
+}
