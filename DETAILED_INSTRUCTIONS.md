@@ -288,6 +288,16 @@ If you ever need to destroy the database on your local machine, you can run `$ d
 
 More information on the automated DB backups is described in [our Heroku setup](HEROKU.md) documentation.
 
+
+### CSV Export Database Views
+
+The Project CSV export feature in the admin list view depends on PostgreSQL database views. To refresh the views, you can run:
+
+```sh
+$ heroku local:run python manage.py refresh_export_views
+```
+
+
 ## Configure the application
 
 At this point, we have the various software and python package dependencies installed, so we are close to being able to run the website locally. If you want to see some errors about things like `SECRET_KEY` not being set, you can run `$ heroku local:run python manage.py check`. The command tried to load configuration settings so that our Django-powered website could run, but we haven't created the configuration file.
