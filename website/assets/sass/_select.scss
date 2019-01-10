@@ -68,6 +68,11 @@
     .Select-value-icon {
       border-right: none;
       padding: 3px 6px 3px 4px;
+
+      &:hover {
+        background-color: inherit;
+        color: inherit;
+      }
     }
   }
 
