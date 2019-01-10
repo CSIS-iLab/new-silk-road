@@ -8,9 +8,17 @@
   Their form is dictated by the form of rules given there.
 */
 .searchView-select__container {
+  /*
+    The height parameters must take into account the fact that there is
+    an overall wrapper element .Select-control whose size includes 2px
+    (total) top and bottom borders. The height of the contents of this
+    wrappers must also be overridden at multiple points, but it must
+    accommodate that border.
+  */
   $widget-height: 26px;
   $widget-border-width: 2px;
   $widget-height-inner: $widget-height - $widget-border-width;
+  
   $widget-margin-left: 16px;
 
   width: calc(100% - #{$widget-margin-left});
@@ -61,6 +69,11 @@
       line-height: 1;
     }
 
+    /*
+      The magic numbers for whitespace on .Select-value-label and
+      .Select-value-icon are dictated by spec requirements, but
+      they are too context-specific to be worth assigning a variable.
+    */
     .Select-value-label {
       padding: 2px 0 2px 8px;
     }
@@ -98,6 +111,10 @@
     line-height: 1.25;
     margin-bottom: 8px;
 
+    /*
+      Allow .Select-menu's padding to dictate the
+      bottom-most whitespace.
+    */
     &:last-of-type {
       margin-bottom: 0;
     }
