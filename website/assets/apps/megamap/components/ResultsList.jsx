@@ -10,34 +10,25 @@ class ResultsList extends Component {
     }
   }
 
-  static handleMapButtonClick(event) {
-    if (event.target.value) {
-      GeoStoreActions.selectGeoStoreId(event.target.value);
-    }
-  }
-
   render() {
     return (
       <ul className="searchResults">
         {
-          this.props.results.map((result, index) => {
-            const geoid = result.geo;
-            return (
-              <li key={index} className="searchResults__result">
-                <ProjectResultView key={result.identifier} project={result} />
-                <div className="searchResults__buttonBar">
-                  <button
-                    type="button"
-                    className="searchResults__button"
-                    onClick={ResultsList.handleDetailClick}
-                    value={result.page_url}
-                  >
-                    Open Project
-                  </button>
-                </div>
-              </li>
-            );
-          })
+          this.props.results.map((result, index) => (
+            <li key={index} className="searchResults__result">
+              <ProjectResultView key={result.identifier} project={result} />
+              <div className="searchResults__buttonBar">
+                <button
+                  type="button"
+                  className="searchResults__button"
+                  onClick={ResultsList.handleDetailClick}
+                  value={result.page_url}
+                >
+                  Open Project
+                </button>
+              </div>
+            </li>
+          ))
         }
       </ul>
     );
