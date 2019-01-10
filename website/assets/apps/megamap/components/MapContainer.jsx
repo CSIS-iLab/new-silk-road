@@ -30,6 +30,13 @@ export default class MapContainer extends Component {
       const queryKeys = Object.keys(query);
       const geoIdentifiers = results.filter(element => element.geo)
                                       .map(element => element.geo);
+
+      // is this a reset request? if so, just wipe the currentGeo and move on
+      if (queryKeys.length === 0 && !isSearching) {
+        this.mapCtl.setCurrentGeo();
+        return;
+      }
+
       // if we are only searching on infastructure_type, then we only show or hide layers
       if (queryKeys.length === 1 && query.infrastructure_type.length > 0) {
         this.mapCtl.setLayerIds(query.infrastructure_type);

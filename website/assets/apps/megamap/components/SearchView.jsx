@@ -210,15 +210,18 @@ export default class SearchView extends Component {
 
   onSearchResults(data) {
     const { total, results, next, previous, error, isSearching, searchCount } = data;
-    this.setState({
-      total,
-      results,
-      nextURL: next,
-      previousURL: previous,
-      error,
-      isSearching,
-      searchCount,
-    });
+    this.setState(Object.assign(
+      {
+        total,
+        results,
+        nextURL: next,
+        previousURL: previous,
+        error,
+        isSearching,
+        searchCount,
+      },
+      searchCount === 0 ? { query: emptyQueryState() } : {},
+    ));
   }
 
   resetQueryState() {
