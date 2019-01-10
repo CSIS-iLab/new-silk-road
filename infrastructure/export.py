@@ -38,7 +38,8 @@ def refresh_views():
                         "infrastructure_operators_view",
                         "infrastructure_funding_view",
                         "infrastructure_project_fuels_view",
-                        "infrastructure_project_manufacturers_view")
+                        "infrastructure_project_manufacturers_view",
+                        "infrastructure_power_plant_export_view")
         for view_name in database_views:
             cursor.execute("DROP VIEW IF EXISTS {};".format(view_name))
 
@@ -106,6 +107,24 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
+        cursor.execute('''
+            CREATE OR REPLACE VIEW infrastructure_power_plant_owners_view AS
+                SELECT l.id, 
+                    array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS owners
+                FROM infrastructure_powerplant_owners AS l
+                JOIN facts_organization AS r
+                ON l.organization_id = r.id
+                GROUP BY l.id
+        ''')
+        cursor.execute('''
+            CREATE OR REPLACE VIEW infrastructure_power_plant_operators_view AS
+                SELECT l.id, 
+	                array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS operators
+            FROM infrastructure_powerplant_operators AS l
+            JOIN facts_organization AS r
+            ON l.organization_id = r.id
+            GROUP BY l.id
+        ''')
         cursor.execute('''
             CREATE OR REPLACE VIEW infrastructure_funding_view AS
                 SELECT l.project_id,
@@ -236,4 +255,43 @@ def refresh_views():
                     AS related
                 ON p.id = related.project_id;
             '''.format(status_cases=status_cases, **case_statements))
+        cursor.execute('''
+            CREATE OR REPLACE VIEW infrastructure_power_plant_export_view AS
+                SELECT pp.id, 
+                pp.name,
+                array_to_string(array_agg(icv.countries::text), ','::text, 'NULL'::text) as countries,
+                array_to_string(array_agg(irv.regions::text), ','::text, 'NULL'::text) as regions,
+                array_to_string(array_agg(lgeo.centroid::text), ','::text, 'NULL'::text) as centroid,
+                array_to_string(array_agg(ippov.owners::text), ','::text, 'NULL'::text) as owners,
+                array_to_string(array_agg(ippopv.operators::text), ','::text, 'NULL'::text) as operators,
+                pp.slug,
+                pp.status,
+                pp.plant_year_online,
+                pp.plant_month_online,
+                pp.plant_day_online,
+                pp.decommissioning_year,
+                pp.decommissioning_month,
+                pp.decommissioning_day,
+                pp.plant_capacity,
+                pp.plant_capacity_unit,
+                pp.plant_output,
+                pp.plant_output_unit,
+                pp.plant_output_year,
+                pp.estimated_plant_output,
+                pp.estimated_plant_output_unit,
+                pp."plant_CO2_emissions",
+                pp."plant_CO2_emissions_unit",
+                pp.grid_connected,
+                pp.description,
+                pp.created_at,
+                pp.updated_at,
+                pp.published
+            FROM infrastructure_powerplant pp
+                LEFT OUTER JOIN infrastructure_countries_view icv ON icv.project_id = pp.id
+                LEFT OUTER JOIN infrastructure_regions_view irv ON irv.project_id = pp.id 
+                LEFT OUTER JOIN infrastructure_power_plant_owners_view ippov ON ippov.id = pp.id
+                LEFT OUTER JOIN infrastructure_power_plant_operators_view ippopv ON ippopv.id = pp.id
+                LEFT OUTER JOIN locations_geometrystore lgeo ON lgeo.id = pp.geo_id
+            group by pp.id
+        ''')
         logger.info("Complete")

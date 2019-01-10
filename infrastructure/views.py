@@ -12,6 +12,8 @@ from django.views.generic import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 
 from .models import PowerPlant, Project, Initiative
 from .forms import ProjectGeoUploadForm
@@ -100,7 +102,7 @@ class GeoUploadView(LoginRequiredMixin, FormView):
             error_response = '<h1>{}</h1><p>{}</p>'.format(err_msg, str(e))
             return HttpResponseServerError(error_response)
 
-
+@method_decorator(never_cache, name='dispatch')
 class ProjectExportView(View):
 
     def get(self, request, *args, **kwargs):
@@ -118,6 +120,7 @@ class ProjectExportView(View):
             )
         return response
 
+@method_decorator(never_cache, name='dispatch')
 class PowerPlantExportView(View):
 
     def get(self, request, *args, **kwargs):
