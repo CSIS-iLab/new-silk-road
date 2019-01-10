@@ -20,11 +20,12 @@ const ProjectResultView = (props) => {
       <h3 className="projectResult__title">
         {project.name}
         { project.geo ?
-          <button
+          <div
+            className="projectResult__pin-button"
+            role="button"
+            tabIndex="0"
             onClick={() => GeoStoreActions.selectGeoStoreId(project.geo)}
-          >
-            🔍
-          </button> :
+          /> :
           null
         }
       </h3>
