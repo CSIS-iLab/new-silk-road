@@ -270,12 +270,17 @@ export default class SearchView extends Component {
         delete searchParams.dateRange;
       }
       Object.entries(searchParams).forEach(([key, value]) => {
-        if (value === '' || value === null) {
+        if (value === '' || value === null || (value instanceof Object && !value.length)) {
           delete searchParams[key];
         }
       });
       this.toggleFilters();
-      SearchActions.search(searchParams);
+      
+      if (Object.keys(searchParams).length > 0) {
+        SearchActions.search(searchParams);
+      } else {
+        SearchActions.clear();
+      }
     }
   }
 
@@ -470,17 +475,11 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
               </div>
-              <header
-                className={classNames(
-                  'searchView__footer',
-                  { 'searchView__footer--disabled': !this.state.searchEnabled },
-                )}
-              >
+              <header className="searchView__footer">
                 <button
                   type="submit"
                   title="Search"
                   className="searchView__update-results"
-                  disabled={!this.state.searchEnabled}
                 >
                   <span>
                     Update Results

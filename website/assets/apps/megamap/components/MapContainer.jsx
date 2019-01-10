@@ -38,7 +38,9 @@ export default class MapContainer extends Component {
       }
 
       // if we are only searching on infastructure_type, then we only show or hide layers
-      if (queryKeys.length === 1 && query.infrastructure_type.length > 0) {
+      if (queryKeys.length === 1 &&
+          (query.infrastructure_type instanceof Object && query.infrastructure_type.length > 0)
+      ) {
         this.mapCtl.setLayerIds(query.infrastructure_type);
         this.mapCtl.setCurrentGeo();
       } else {
