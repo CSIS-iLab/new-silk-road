@@ -321,18 +321,6 @@ button.searchView__update-results {
     margin-bottom: $searchview-label-bottom-margin;
 }
 
-.filter-input-group__label--with-plus {
-    &::after {
-        display: inline-block;
-        content: "";
-        background: url($plus) no-repeat center/70% 70%;
-        display:inline-block;
-        height: 16px;
-        margin-bottom: -3px;
-        width: $base-line-height;
-    }
-}
-
 .filter-input-group__input-text {
     display: block;
     font-size: map-get($map-font-sizes, 'base');
@@ -355,6 +343,7 @@ button.searchView__update-results {
     @include display(flex);
     @include flex-wrap(nowrap);
     padding-left: $searchview-text-input-margin-left;
+    margin-top: $searchview-section-header-bottom-margin / 2;
 }
 
 .date-range-select__helper-text {
@@ -825,42 +814,6 @@ button.searchView__update-results {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {
-    @include display(flex);
-    @include flex-direction(row);
-    @include flex-wrap(wrap);
-    @include justify-content(space-between);
-    @include align-items(center);
-    @include align-content(space-between);
-    min-height: 64px;
-    > span {
-        @include flex(0.25 0 auto);
-        padding: 0 2px;
-        text-align: center;
-    }
-    // .Select {
-    //     @include flex(1 0 100%);
-    // }
-    // .Select-menu-outer {
-    //     width: auto;
-    // }
-    // .Select-value {
-    //     line-height: 2em;
-    // }
-    input {
-        @include flex(0.5 1 auto);
-        padding: 2px 10px;
-        margin: 4px;
-        overflow: hidden;
-        border: 2px solid $pale-grey;
-        width: 63px;
-    }
-    input:nth-child(1) {
-        border: none;
-        width: auto;
-    }
 }
 
 .helpView {

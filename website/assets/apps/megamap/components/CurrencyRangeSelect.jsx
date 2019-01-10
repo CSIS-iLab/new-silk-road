@@ -47,6 +47,7 @@ export default class CurrencyRangeSelect extends Component {
         name={this.props.name}
         placeholder={this.props.placeholder}
         options={this.state.options}
+        className="searchView-select__container"
         onChange={this.handleChange}
         isLoading={this.state.options.length === 0}
         backspaceToRemoveMessage=""

@@ -11,6 +11,10 @@
   $widget-height: 26px;
   $widget-border-width: 2px;
   $widget-height-inner: $widget-height - $widget-border-width;
+  $widget-margin-left: 16px;
+
+  width: calc(100% - #{$widget-margin-left});
+  margin-left: $widget-margin-left;
 
   .Select-control {
     border-radius: 0;
@@ -67,6 +71,12 @@
     }
   }
 
+  &.Select--single {
+    > .Select-control .Select-value {
+      line-height: $widget-height-inner;
+    }
+  }
+
   // Select menu and options
   .Select-menu-outer {
     border-top-color: #ccc;
@@ -89,7 +99,7 @@
   }
 }
 
-.searchView-select__container.Select.has-value {
+.searchView-select__container.Select.Select--multi.has-value {
   .Select-control {
     height: auto;
   }

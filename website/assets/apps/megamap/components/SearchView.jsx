@@ -324,7 +324,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Region</label>
+                    <label className="filter-input-group__label">Region</label>
                     <Select
                       value={this.state.query.region}
                       name="region"
@@ -341,7 +341,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.countries}
                       name="countries"
@@ -358,7 +358,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Project Status</label>
+                    <label className="filter-input-group__label">Project Status</label>
                     <Select
                       value={this.state.query.status}
                       name="status"
@@ -375,7 +375,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Milestone</label>
+                    <label className="filter-input-group__label">Milestone</label>
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
@@ -406,7 +406,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Principal Agent</label>
+                    <label className="filter-input-group__label">Principal Agent</label>
                     <Select
                       value={this.state.query.initiatives__principal_agent__slug}
                       name="initiatives__principal_agent__slug"
@@ -441,7 +441,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Cost</label>
+                    <label className="filter-input-group__label">Cost</label>
                     <CurrencyRangeSelect
                       name="cost"
                       placeholder="Cost"
@@ -454,7 +454,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.funding__sources__countries}
                       name="funding__sources__countries"
