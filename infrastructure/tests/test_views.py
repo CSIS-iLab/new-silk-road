@@ -512,3 +512,78 @@ class ProjectCSVExportTestCase(TestCase):
         for row in results:
             if row['identifier'] == str(project1.identifier):
                 self.assertEqual(project1.power_plant.name, row['power_plant_name'])
+
+
+class PowerPlantCSVExportTestCase(TestCase):
+    """Export current projects as a CSV."""
+    def setUp(self):
+        super().setUp()
+        refresh_views()
+        self.user = UserFactory(username='staff')
+        self.user.set_password('test')
+        self.user.is_staff = True
+        self.user.save()
+        self.client.login(username='staff', password='test')
+        self.url = reverse('infrastructure-admin:powerplants-export-view')
+        self.project = factories.ProjectFactory()
+        self.other = factories.ProjectFactory()
+    
+    def test_get_csv(self):
+        """Download the CSV of projects."""
+
+        with self.subTest('Staff download'):
+            response = self.client.get(self.url)
+            self.assertEqual(response['Content-Type'], 'text/csv')
+            self.assertEqual(response.status_code, 200)
+
+        with self.subTest('Non-staff user'):
+            self.user.is_staff = False
+            self.user.save()
+            response = self.client.get(self.url)
+            self.assertRedirects(response, '{}?next={}'.format(reverse('admin:login'), self.url))
+        
+    def test_csv_results(self):
+        """Spot checking some of the CSV results."""
+
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        headers = (
+                'id',
+                'name',
+                'countries',
+                'regions',
+                'centroid',
+                'owners',
+                'operators',
+                'slug',
+                'status',
+                'plant_year_online',
+                'plant_month_online',
+                'plant_day_online',
+                'decommissioning_year',
+                'decommissioning_month',
+                'decommissioning_day',
+                'plant_capacity',
+                'plant_capacity_unit',
+                'plant_output',
+                'plant_output_unit',
+                'plant_output_year',
+                'estimated_plant_output',
+                'estimated_plant_output_unit',
+                'plant_CO2_emissions',
+                'plant_CO2_emissions_unit',
+                'grid_connected',
+                'description',
+                'created_at',
+                'updated_at',
+                'published',
+        )
+        self.assertEqual(results.fieldnames, list(headers))
+        projects = {
+            str(self.project.identifier): self.project,
+            str(self.other.identifier): self.other,
+        }
+        for row in results:
+            expected = projects[row['identifier']]
+            self.assertEqual(row['name'], expected.name)

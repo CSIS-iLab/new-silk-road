@@ -123,14 +123,49 @@ class ProjectFundingFactory(factory.django.DjangoModelFactory):
     amount = random.randint(0, 1000000)
     currency = random.choice(CURRENCY_CHOICES)[0]
 
-
+@factory.django.mute_signals(signals.pre_save, signals.post_save)
 class PowerPlantFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'infrastructure.PowerPlant'
-
     name = factory.Sequence(lambda n: 'Power Plant %d' % n)
     slug = factory.Sequence(lambda n: 'power-plant-%d' % n)
 
+    @factory.post_generation
+    def owners(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for org in extracted:
+                self.owners.add(org)
+    
+    @factory.post_generation
+    def operators(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for org in extracted:
+                self.operators.add(org)
+    
+    @factory.post_generation
+    def countries(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for country in extracted:
+                self.countries.add(country)
+    
+    @factory.post_generation
+    def regions(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for region in extracted:
+                self.regions.add(region)
+
+    class Meta:
+        model = 'infrastructure.PowerPlant'
 
 class OwnerStakeFactory(factory.django.DjangoModelFactory):
     class Meta:
