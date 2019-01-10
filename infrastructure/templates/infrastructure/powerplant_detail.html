@@ -120,10 +120,12 @@
       </div>
       <div class="row double">
           <section>
-              <h3>Fuel</h3>
-              {% for fuel in object.fuels.all %}
-                <div>{{ fuel }}</div>
-              {% endfor %}
+              <h3>Fuel Category</h3>
+                <ul class="clean">
+                {% for fc in fuel_categories %}
+                    <li>{{ fc }}</li>
+                {% endfor %}
+                </ul>
           </section>
           <section>
               <h3>CO2 Emissions</h3>

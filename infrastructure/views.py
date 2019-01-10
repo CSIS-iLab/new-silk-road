@@ -34,6 +34,7 @@ class ProjectDetailView(PublicationMixin, DetailView):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
+        context['fuel_types'] = self.object.fuels.all().distinct()
         return context
 
 
@@ -143,4 +144,5 @@ class PowerPlantDetailView(PublicationMixin, DetailView):
         context = super(PowerPlantDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
+        context['fuel_categories'] = self.object.fuels.values_list('fuel_category__name', flat=True).distinct()
         return context
