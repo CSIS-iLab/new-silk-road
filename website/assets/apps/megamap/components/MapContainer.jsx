@@ -13,17 +13,29 @@ export default class MapContainer extends Component {
     this.state = { loading: 'loading' }
     this.handleMapLoad = this.handleMapLoad.bind(this);
     this.handleMapClick = this.handleMapClick.bind(this);
-    this.onSearchResults = this.onSearchResults.bind(this);
+    this.onSearchStoreChange = this.onSearchStoreChange.bind(this);
     this.handleLoading = this.handleLoading.bind(this);
   }
 
-  onSearchResults(data) {
+  onSearchStoreChange(data) {
     const { total, results, isSearching, query } = data;
 
     this.handleLoading(isSearching);
     this.mapCtl.removePopup();
     this.mapCtl.resetMapZoom();
 
+    /*
+      If `isSearching` is false, the change presumably indicates
+      a transition to a completed request.
+
+      NOTE: as I'm receiving it, this code also checks truthiness of
+      `results`, but this should never be falsey, as the value
+      of `results` should always be some array. I'm leaving this
+      in for now because it's not hurting anything & removing it
+      may cause failures under unexpected conditions.
+
+      TODO: figure out why this was added at all.
+    */
     if (!isSearching && results) {
       // check query to see if we are searching for more than just infrstructure_type,
       // then simply hide and show layers depending on query.
@@ -31,12 +43,13 @@ export default class MapContainer extends Component {
       const geoIdentifiers = results.filter(element => element.geo)
                                       .map(element => element.geo);
 
-      // is this a reset request? if so, just wipe the currentGeo and move on
+      // is this a reset request? if so, just wipe the currentGeo and move on.
       if (queryKeys.length === 0 && !isSearching) {
         this.mapCtl.setCurrentGeo();
         return;
       }
 
+      // otherwise, this is a search.
       // if we are only searching on infastructure_type, then we only show or hide layers
       if (queryKeys.length === 1 &&
           (query.infrastructure_type instanceof Object && query.infrastructure_type.length > 0)
@@ -63,7 +76,7 @@ export default class MapContainer extends Component {
 
   handleMapLoad() {
     this.mapCtl = new Cartographer(this.map.glmap);
-    SearchStore.listen(this.onSearchResults);
+    SearchStore.listen(this.onSearchStoreChange);
     const infrastructureTypes = InfrastructureTypeStore.state.results
     for (let i in infrastructureTypes) {
       GeoCentroidActions.fetch({'project_type': infrastructureTypes[i].name});
