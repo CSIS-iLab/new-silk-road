@@ -48,7 +48,7 @@ export default class Cartographer {
   setLayerIds(infrastructure_type) {
     const obj = InfrastructureTypeStore.state.results;
     const visibleIds = []
-    if (infrastructure_type.length > 0) {
+    if (infrastructure_type instanceof Object && infrastructure_type.length > 0) {
       for (let i in obj) {
         if (!infrastructure_type.includes(obj[i].id)) {
           this.hideLayer(obj[i].name);

@@ -204,12 +204,6 @@ button.btn--header-toggle {
     }
 }
 
-.searchView__footer--disabled,
-.searchView__footer--disabled:hover {
-    background-color: $map-disabled-grey;
-    color: $map-grey;
-}
-
 button.searchView__header-toggle {
     @extend button.btn--header-toggle;
     &::before {

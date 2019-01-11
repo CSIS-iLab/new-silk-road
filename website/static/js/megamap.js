@@ -8428,6 +8428,11 @@
 	    value: function failed(error) {
 	      return error;
 	    }
+	  }, {
+	    key: 'clear',
+	    value: function clear() {
+	      return null;
+	    }
 	  }]);
 	
 	  return SearchActionsBase;
@@ -22445,7 +22450,8 @@
 	    this.bindListeners({
 	      handleSearch: _SearchActions2.default.SEARCH,
 	      handleSearchResults: _SearchActions2.default.UPDATE,
-	      handleSearchFail: _SearchActions2.default.FAILED
+	      handleSearchFail: _SearchActions2.default.FAILED,
+	      handleSearchClear: _SearchActions2.default.CLEAR
 	    });
 	  }
 	
@@ -22477,6 +22483,18 @@
 	      this.results = [];
 	      this.isSearching = false;
 	      this.error = error;
+	    }
+	  }, {
+	    key: 'handleSearchClear',
+	    value: function handleSearchClear() {
+	      this.total = null;
+	      this.results = [];
+	      this.next = null;
+	      this.previous = null;
+	      this.error = null;
+	      this.isSearching = false;
+	      this.query = {};
+	      this.searchCount = 0;
 	    }
 	  }]);
 	
@@ -30105,14 +30123,14 @@
 	    _this.state = { loading: 'loading' };
 	    _this.handleMapLoad = _this.handleMapLoad.bind(_this);
 	    _this.handleMapClick = _this.handleMapClick.bind(_this);
-	    _this.onSearchResults = _this.onSearchResults.bind(_this);
+	    _this.onSearchStoreChange = _this.onSearchStoreChange.bind(_this);
 	    _this.handleLoading = _this.handleLoading.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(MapContainer, [{
-	    key: 'onSearchResults',
-	    value: function onSearchResults(data) {
+	    key: 'onSearchStoreChange',
+	    value: function onSearchStoreChange(data) {
 	      var total = data.total,
 	          results = data.results,
 	          isSearching = data.isSearching,
@@ -30123,6 +30141,16 @@
 	      this.mapCtl.removePopup();
 	      this.mapCtl.resetMapZoom();
 	
+	      /*
+	        If `isSearching` is false, the change presumably indicates
+	        a transition to a completed request.
+	         NOTE: as I'm receiving it, this code also checks truthiness of
+	        `results`, but this should never be falsey, as the value
+	        of `results` should always be some array. I'm leaving this
+	        in for now because it's not hurting anything & removing it
+	        may cause failures under unexpected conditions.
+	         TODO: figure out why this was added at all.
+	      */
 	      if (!isSearching && results) {
 	        // check query to see if we are searching for more than just infrstructure_type,
 	        // then simply hide and show layers depending on query.
@@ -30132,8 +30160,16 @@
 	        }).map(function (element) {
 	          return element.geo;
 	        });
+	
+	        // is this a reset request? if so, just wipe the currentGeo and move on.
+	        if (queryKeys.length === 0 && !isSearching) {
+	          this.mapCtl.setCurrentGeo();
+	          return;
+	        }
+	
+	        // otherwise, this is a search.
 	        // if we are only searching on infastructure_type, then we only show or hide layers
-	        if (queryKeys.length === 1 && query.infrastructure_type.length > 0) {
+	        if (queryKeys.length === 1 && query.infrastructure_type instanceof Object && query.infrastructure_type.length > 0) {
 	          this.mapCtl.setLayerIds(query.infrastructure_type);
 	          this.mapCtl.setCurrentGeo();
 	        } else {
@@ -30159,7 +30195,7 @@
 	    key: 'handleMapLoad',
 	    value: function handleMapLoad() {
 	      this.mapCtl = new _Cartographer2.default(this.map.glmap);
-	      _SearchStore2.default.listen(this.onSearchResults);
+	      _SearchStore2.default.listen(this.onSearchStoreChange);
 	      var infrastructureTypes = _InfrastructureTypeStore2.default.state.results;
 	      for (var i in infrastructureTypes) {
 	        _GeoCentroidActions2.default.fetch({ 'project_type': infrastructureTypes[i].name });
@@ -30991,7 +31027,7 @@
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    _this.handleQueryUpdate = _this.handleQueryUpdate.bind(_this);
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
-	    _this.onSearchResults = _this.onSearchResults.bind(_this);
+	    _this.onSearchStoreChange = _this.onSearchStoreChange.bind(_this);
 	    _this.toggleFilters = _this.toggleFilters.bind(_this);
 	    _this.toggleHelp = _this.toggleHelp.bind(_this);
 	    return _this;
@@ -31002,7 +31038,7 @@
 	    value: function componentDidMount() {
 	      var _this2 = this;
 	
-	      _SearchStore2.default.listen(this.onSearchResults);
+	      _SearchStore2.default.listen(this.onSearchStoreChange);
 	
 	      _InfrastructureTypeStore2.default.listen(function (store) {
 	        return _this2.setState(function (prevState) {
@@ -31089,8 +31125,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'onSearchResults',
-	    value: function onSearchResults(data) {
+	    key: 'onSearchStoreChange',
+	    value: function onSearchStoreChange(data) {
 	      var total = data.total,
 	          results = data.results,
 	          next = data.next,
@@ -31099,7 +31135,7 @@
 	          isSearching = data.isSearching,
 	          searchCount = data.searchCount;
 	
-	      this.setState({
+	      this.setState(Object.assign({
 	        total: total,
 	        results: results,
 	        nextURL: next,
@@ -31107,7 +31143,7 @@
 	        error: error,
 	        isSearching: isSearching,
 	        searchCount: searchCount
-	      });
+	      }, searchCount === 0 ? { query: emptyQueryState() } : {}));
 	    }
 	  }, {
 	    key: 'resetQueryState',
@@ -31164,12 +31200,17 @@
 	              key = _ref4[0],
 	              value = _ref4[1];
 	
-	          if (value === '' || value === null) {
+	          if (value === '' || value === null || value instanceof Object && !value.length) {
 	            delete searchParams[key];
 	          }
 	        });
 	        this.toggleFilters();
-	        _SearchActions2.default.search(searchParams);
+	
+	        if (Object.keys(searchParams).length > 0) {
+	          _SearchActions2.default.search(searchParams);
+	        } else {
+	          _SearchActions2.default.clear();
+	        }
 	      }
 	    }
 	  }, {
@@ -31473,16 +31514,13 @@
 	              ),
 	              _react2.default.createElement(
 	                'header',
-	                {
-	                  className: (0, _classnames2.default)('searchView__footer', { 'searchView__footer--disabled': !this.state.searchEnabled })
-	                },
+	                { className: 'searchView__footer' },
 	                _react2.default.createElement(
 	                  'button',
 	                  {
 	                    type: 'submit',
 	                    title: 'Search',
-	                    className: 'searchView__update-results',
-	                    disabled: !this.state.searchEnabled
+	                    className: 'searchView__update-results'
 	                  },
 	                  _react2.default.createElement(
 	                    'span',
@@ -31810,7 +31848,7 @@
 	    value: function setLayerIds(infrastructure_type) {
 	      var obj = _InfrastructureTypeStore2.default.state.results;
 	      var visibleIds = [];
-	      if (infrastructure_type.length > 0) {
+	      if (infrastructure_type instanceof Object && infrastructure_type.length > 0) {
 	        for (var i in obj) {
 	          if (!infrastructure_type.includes(obj[i].id)) {
 	            this.hideLayer(obj[i].name);

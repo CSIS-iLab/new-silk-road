@@ -94,13 +94,13 @@ export default class SearchView extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.onSearchResults = this.onSearchResults.bind(this);
+    this.onSearchStoreChange = this.onSearchStoreChange.bind(this);
     this.toggleFilters = this.toggleFilters.bind(this);
     this.toggleHelp = this.toggleHelp.bind(this);
   }
 
   componentDidMount() {
-    SearchStore.listen(this.onSearchResults);
+    SearchStore.listen(this.onSearchStoreChange);
 
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {
@@ -208,17 +208,20 @@ export default class SearchView extends Component {
     });
   }
 
-  onSearchResults(data) {
+  onSearchStoreChange(data) {
     const { total, results, next, previous, error, isSearching, searchCount } = data;
-    this.setState({
-      total,
-      results,
-      nextURL: next,
-      previousURL: previous,
-      error,
-      isSearching,
-      searchCount,
-    });
+    this.setState(Object.assign(
+      {
+        total,
+        results,
+        nextURL: next,
+        previousURL: previous,
+        error,
+        isSearching,
+        searchCount,
+      },
+      searchCount === 0 ? { query: emptyQueryState() } : {},
+    ));
   }
 
   resetQueryState() {
@@ -267,12 +270,17 @@ export default class SearchView extends Component {
         delete searchParams.dateRange;
       }
       Object.entries(searchParams).forEach(([key, value]) => {
-        if (value === '' || value === null) {
+        if (value === '' || value === null || (value instanceof Object && !value.length)) {
           delete searchParams[key];
         }
       });
       this.toggleFilters();
-      SearchActions.search(searchParams);
+      
+      if (Object.keys(searchParams).length > 0) {
+        SearchActions.search(searchParams);
+      } else {
+        SearchActions.clear();
+      }
     }
   }
 
@@ -472,17 +480,11 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
               </div>
-              <header
-                className={classNames(
-                  'searchView__footer',
-                  { 'searchView__footer--disabled': !this.state.searchEnabled },
-                )}
-              >
+              <header className="searchView__footer">
                 <button
                   type="submit"
                   title="Search"
                   className="searchView__update-results"
-                  disabled={!this.state.searchEnabled}
                 >
                   <span>
                     Update Results
