@@ -29441,6 +29441,7 @@
 	        name: this.props.name,
 	        placeholder: this.props.placeholder,
 	        options: this.state.options,
+	        className: 'searchView-select__container',
 	        onChange: this.handleChange,
 	        isLoading: this.state.options.length === 0,
 	        backspaceToRemoveMessage: ''
@@ -29549,6 +29550,7 @@
 	          name: 'dateLookupType',
 	          placeholder: labelName,
 	          options: dateLookupOptions,
+	          className: 'searchView-select__container',
 	          onChange: this.handleUpdate
 	        }),
 	        _react2.default.createElement(
@@ -31265,7 +31267,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Region'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31273,6 +31275,7 @@
 	                      name: 'region',
 	                      placeholder: 'Region',
 	                      options: this.state.options.region,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ region: selections.map(function (s) {
 	                            return s.value;
@@ -31288,7 +31291,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Country'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31296,6 +31299,7 @@
 	                      name: 'countries',
 	                      placeholder: 'Country',
 	                      options: this.state.options.countries,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ countries: selections.map(function (s) {
 	                            return s.value;
@@ -31311,7 +31315,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Project Status'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31319,6 +31323,7 @@
 	                      name: 'status',
 	                      placeholder: 'Project Status',
 	                      options: this.state.options.status,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ status: selections.map(function (s) {
 	                            return s.value;
@@ -31334,7 +31339,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Milestone'
 	                    ),
 	                    _react2.default.createElement(_DateRangeSelect2.default, {
@@ -31380,7 +31385,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Principal Agent'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31388,6 +31393,7 @@
 	                      name: 'initiatives__principal_agent__slug',
 	                      placeholder: 'Principal Agent',
 	                      options: this.state.options.initiatives__principal_agent__slug,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(option) {
 	                        return _this3.handleQueryUpdate({ initiatives__principal_agent__slug: option ? option.value : '' });
 	                      },
@@ -31427,7 +31433,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Cost'
 	                    ),
 	                    _react2.default.createElement(_CurrencyRangeSelect2.default, {
@@ -31444,7 +31450,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Country'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31452,6 +31458,7 @@
 	                      name: 'funding__sources__countries',
 	                      placeholder: 'Country',
 	                      options: this.state.options.funding__sources__countries,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ funding__sources__countries: selections.map(function (s) {
 	                            return s.value;
