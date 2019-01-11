@@ -13,7 +13,7 @@ from django.urls import reverse
 from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.export import refresh_views
 from locations.models import GeometryStore
-from locations.tests.factories import CountryFactory
+from locations.tests.factories import CountryFactory, RegionFactory
 from publish.tests.factories import UserFactory
 from . import factories
 
@@ -553,8 +553,6 @@ class PowerPlantCSVExportTestCase(TestCase):
                 'name',
                 'countries',
                 'regions',
-                'centroid',
-                'owners',
                 'operators',
                 'slug',
                 'status',
@@ -572,7 +570,7 @@ class PowerPlantCSVExportTestCase(TestCase):
                 'estimated_plant_output',
                 'estimated_plant_output_unit',
                 'plant_CO2_emissions',
-                'plant_CO2_emissions_unit',
+                'plant_co2_emissions_unit',
                 'grid_connected',
                 'description',
                 'created_at',
@@ -587,3 +585,42 @@ class PowerPlantCSVExportTestCase(TestCase):
         for row in results:
             expected = projects[row['identifier']]
             self.assertEqual(row['name'], expected.name)
+    
+    def test_plant_countries(self):
+        """Ensure multiple countries are in CSV export"""
+        country1 = CountryFactory()
+        country2 = CountryFactory()
+        power_plant = factories.PowerPlantFactory(countries=(country1, country2))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['id'] == str(power_plant.id):
+                self.assertTrue(country1.name in row['countries'])
+                self.assertTrue(country2.name in row['countries'])
+    
+    def test_plant_regions(self):
+        """Ensure multiple regions are in CSV export"""
+        region1 = RegionFactory()
+        region2 = RegionFactory()
+        power_plant = factories.PowerPlantFactory(regions=(region1, region2))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['id'] == str(power_plant.id):
+                self.assertTrue(region1.name in row['regions'])
+                self.assertTrue(region2.name in row['regions'])
+    
+    def test_plant_operators(self):
+        """Ensure multiple operators are in CSV export"""
+        operator1 = OrganizationFactory()
+        operator2 = OrganizationFactory()
+        power_plant = factories.PowerPlantFactory(operators=(operator1, operator2))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['id'] == str(power_plant.id):
+                self.assertTrue(operator1.name in row['operators'])
+                self.assertTrue(operator2.name in row['operators'])
