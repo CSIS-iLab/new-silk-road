@@ -215,6 +215,10 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
         },
+        'infrastructure': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
     }
 }
 

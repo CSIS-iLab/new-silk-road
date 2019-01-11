@@ -47,6 +47,7 @@ class DateRangeSelect extends Component {
           name="dateLookupType"
           placeholder={labelName}
           options={dateLookupOptions}
+          className="searchView-select__container"
           onChange={this.handleUpdate}
         />
         <div className="date-range-select__range-container">

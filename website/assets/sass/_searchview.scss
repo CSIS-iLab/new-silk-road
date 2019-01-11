@@ -300,32 +300,6 @@ button.searchView__update-results {
         top: 2px;
         font-style: normal;
     }
-
-    /* WARNING: This is nasty. Styling the .Select with margin-top
-    so that we can click on the label. TODO: change this in React
-    */
-    .Select {
-        .Select-control {
-            background-color: transparent !important;
-            position: relative;
-
-            cursor: pointer;
-            input {
-                height: 0px;
-                padding: 0px;
-            }
-        }
-    }
-    .Select.has-value{
-        outline: 0;
-        outline: none !important;
-        border: none;
-        margin-top: 0px;
-        .Select-control {
-            margin-left: $searchview-text-input-margin-left;
-        }
-
-    }
 }
 
 .filter-input-group {
@@ -339,18 +313,6 @@ button.searchView__update-results {
     font-weight: 600;
     line-height: 1;
     margin-bottom: $searchview-label-bottom-margin;
-}
-
-.filter-input-group__label--with-plus {
-    &::after {
-        display: inline-block;
-        content: "";
-        background: url($plus) no-repeat center/70% 70%;
-        display:inline-block;
-        height: 16px;
-        margin-bottom: -3px;
-        width: $base-line-height;
-    }
 }
 
 .filter-input-group__input-text {
@@ -375,6 +337,7 @@ button.searchView__update-results {
     @include display(flex);
     @include flex-wrap(nowrap);
     padding-left: $searchview-text-input-margin-left;
+    margin-top: $searchview-section-header-bottom-margin / 2;
 }
 
 .date-range-select__helper-text {
@@ -399,26 +362,6 @@ button.searchView__update-results {
         margin-left: 4px;
         margin-top: 0;
         margin-bottom: 0;
-    }
-}
-
-.Select-control {
-    font-size: 0;
-    line-height: 0;
-}
-.Select-input {
-    @extend .filter-input-group__input-text;
-    height: 23px; // TODO: make this non-arbitrary
-    width: calc(100% - #{$searchview-text-input-margin-left});
-}
-.Select--multi .Select-input {
-    @extend .filter-input-group__input-text;
-}
-.Select--multi .Select-multi-value-wrapper {
-    width: calc(100% - #{$searchview-text-input-margin-left});
-
-    .Select-input {
-        width: 100%;
     }
 }
 
@@ -832,6 +775,22 @@ button.searchView__update-results {
     margin-bottom: $searchview-heading-bottom-margin;
 }
 
+.projectResult__pin-button {
+    display: inline-block;
+    margin-left: 0.35em;
+
+    &::after {
+        cursor: pointer;
+        background: url($map-pin-img) no-repeat center/70% 70%;
+        display: inline-block;
+        width: 1em;
+
+        // use a space to ensure height == one text line
+        content: " ";
+        white-space: pre;
+    }
+}
+
 .projectResult__section {
     padding-left: $searchview-text-input-margin-left;
     margin-bottom: $searchview-heading-bottom-margin;
@@ -865,145 +824,6 @@ button.searchView__update-results {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.searchView .filter-input-group .dateRangeSelect, .searchView .filter-input-group .CurrencyRangeSelect {
-    @include display(flex);
-    @include flex-direction(row);
-    @include flex-wrap(wrap);
-    @include justify-content(space-between);
-    @include align-items(center);
-    @include align-content(space-between);
-    min-height: 64px;
-    > span {
-        @include flex(0.25 0 auto);
-        padding: 0 2px;
-        text-align: center;
-    }
-    .Select {
-        @include flex(1 0 100%);
-    }
-    .Select-menu-outer {
-        width: auto;
-    }
-    .Select-value {
-        line-height: 2em;
-    }
-    input {
-        @include flex(0.5 1 auto);
-        padding: 2px 10px;
-        margin: 4px;
-        overflow: hidden;
-        border: 2px solid $pale-grey;
-        width: 63px;
-    }
-    input:nth-child(1) {
-        border: none;
-        width: auto;
-    }
-}
-
-// Rule specific for MS Edge
-.searchView .sectionRow .dateRangeSelect .Select-input input {
-    border: none;
-}
-
-.Select {
-    font-family: $sans-font-family;
-    font-size: $compact-text-size;
-    .Select-input  {
-        >input {
-            padding: 4px 0 6px;
-            width: 100% !important;
-        }
-    }
-    .Select-control {
-        color: black;
-        border: none;
-        border-radius: 0;
-        height: auto;
-
-        .Select-value {
-            font-size: $compact-text-size;
-            border: 1px solid $pale-grey;
-        }
-        .Select-value-icon {
-            border-right: 1px solid $pale-grey;
-        }
-        .Select-value-label, .Select-clear-zone {
-            color: black;
-            &:hover {
-                color: $dark-night transparent transparent;
-            }
-        }
-    }
-    .Select-placeholder {
-        display: none;
-    }
-    .Select-arrow {
-        display: none;
-    }
-    .Select-arrow-zone {
-        display: none;
-    }
-    .Select-clear-zone {
-        position: absolute;
-        top: 0;
-        right: 8px;
-        vertical-align: top;
-    }
-
-    .Select-menu-outer {
-        background-color: $pale-grey;
-        width: 100%;
-        margin-left: $small-spacing;
-    }
-    .Select-option {
-        color: black;
-        background-color: $pale-grey;
-        padding: 4px 6px;
-
-        &:hover {
-            background-color: $med-gray;
-        }
-        &:last-child {
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-    }
-    /* This is an attempt to remove the light blue halo surrounding the .Select elemnt.
-    the issue is that it is likely a style added to the element, hence this is broke. */
-    .is-open, .is-focused {
-        border: none;
-    }
-}
-.has-value.Select > .Select-control > .Select-value .Select-value-label,
-.has-valueis-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label,
-.has-value.Select--single>.Select-control .Select-value .Select-value-label,
-.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
-.has-value.Select > .Select-control > .Select-value .Select-value-label {
-    color: $dark-grey-blue;
-    display: inline-block;
-}
-
-.Select--multi {
-    .Select-value {
-        margin: 3px 0 3px 3px;
-        background-color: $pale-grey;
-        color: $blue-steel;
-        font-size: $compact-text-size;
-    }
-    .Select-value-icon {
-        border-right-color: $blue-steel;
-    }
-}
-.Select--single {
-    .Select-value {
-        // margin: 3px 0 3px 3px;
-        background-color: $pale-grey;
-        color: $blue-steel;
-        font-size: $compact-text-size;
-    }
 }
 
 .helpView {

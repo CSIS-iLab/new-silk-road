@@ -284,6 +284,8 @@ class FuelAdmin(admin.ModelAdmin):
         'fuel_category'
     )
     search_fields = ('name', 'fuel_category__name')
+    list_select_related = ('fuel_category', )
+    ordering = ('name', )
 
 
 @admin.register(FuelCategory)

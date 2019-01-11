@@ -332,12 +332,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Region</label>
+                    <label className="filter-input-group__label">Region</label>
                     <Select
                       value={this.state.query.region}
                       name="region"
                       placeholder="Region"
                       options={this.state.options.region}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { region: selections.map(s => s.value) },
                         )
@@ -348,12 +349,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.countries}
                       name="countries"
                       placeholder="Country"
                       options={this.state.options.countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { countries: selections.map(s => s.value) },
                         )
@@ -364,12 +366,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Project Status</label>
+                    <label className="filter-input-group__label">Project Status</label>
                     <Select
                       value={this.state.query.status}
                       name="status"
                       placeholder="Project Status"
                       options={this.state.options.status}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { status: selections.map(s => s.value) },
                         )
@@ -380,7 +383,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Milestone</label>
+                    <label className="filter-input-group__label">Milestone</label>
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
@@ -411,12 +414,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Principal Agent</label>
+                    <label className="filter-input-group__label">Principal Agent</label>
                     <Select
                       value={this.state.query.initiatives__principal_agent__slug}
                       name="initiatives__principal_agent__slug"
                       placeholder="Principal Agent"
                       options={this.state.options.initiatives__principal_agent__slug}
+                      className="searchView-select__container"
                       onChange={option => this.handleQueryUpdate(
                           { initiatives__principal_agent__slug: option ? option.value : '' },
                         )
@@ -445,7 +449,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Cost</label>
+                    <label className="filter-input-group__label">Cost</label>
                     <CurrencyRangeSelect
                       name="cost"
                       placeholder="Cost"
@@ -458,12 +462,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.funding__sources__countries}
                       name="funding__sources__countries"
                       placeholder="Country"
                       options={this.state.options.funding__sources__countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { funding__sources__countries: selections.map(s => s.value) },
                         )
