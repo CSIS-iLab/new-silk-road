@@ -781,6 +781,22 @@ button.searchView__update-results {
     margin-bottom: $searchview-heading-bottom-margin;
 }
 
+.projectResult__pin-button {
+    display: inline-block;
+    margin-left: 0.35em;
+
+    &::after {
+        cursor: pointer;
+        background: url($map-pin-img) no-repeat center/70% 70%;
+        display: inline-block;
+        width: 1em;
+
+        // use a space to ensure height == one text line
+        content: " ";
+        white-space: pre;
+    }
+}
+
 .projectResult__section {
     padding-left: $searchview-text-input-margin-left;
     margin-bottom: $searchview-heading-bottom-margin;

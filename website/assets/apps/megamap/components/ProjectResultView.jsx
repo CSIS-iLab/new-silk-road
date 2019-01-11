@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import GeoStoreActions from '../actions/GeoStoreActions';
 
 const ProjectResultView = (props) => {
   const {
@@ -16,7 +17,18 @@ const ProjectResultView = (props) => {
 
   return (
     <section className="projectResult">
-      <h3 className="projectResult__title">{project.name}</h3>
+      <h3 className="projectResult__title">
+        {project.name}
+        { project.geo ?
+          <div
+            className="projectResult__pin-button"
+            role="button"
+            tabIndex="0"
+            onClick={() => GeoStoreActions.selectGeoStoreId(project.geo)}
+          /> :
+          null
+        }
+      </h3>
       <section className="projectResult__section">
         <div className="projectResult__data-label">Type</div>
         <div>
