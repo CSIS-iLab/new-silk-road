@@ -512,6 +512,10 @@ class ProjectCSVExportTestCase(TestCase):
         for row in results:
             if row['identifier'] == str(project1.identifier):
                 self.assertEqual(project1.power_plant.name, row['power_plant_name'])
+    
+    def test_never_cache_is_enabled(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
 
 
 class PowerPlantCSVExportTestCase(TestCase):
@@ -643,3 +647,7 @@ class PowerPlantCSVExportTestCase(TestCase):
 
                 with self.subTest('Excluded owner stake'):
                     self.assertFalse(stake_non.owner.name in row['owners'])
+    
+    def test_never_cache_is_enabled(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
