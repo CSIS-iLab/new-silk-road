@@ -132,7 +132,7 @@ class PowerPlantExportView(View):
         with connection.cursor() as cursor:
             cursor.copy_expert(
                 '''
-                COPY (SELECT * FROM infrastructure_power_plant_export_view)
+                COPY (SELECT * FROM infrastructure_powerplant_export_view)
                 TO STDOUT
                 WITH (FORMAT csv, HEADER TRUE, NULL 'NULL', FORCE_QUOTE *)''',
                 response
