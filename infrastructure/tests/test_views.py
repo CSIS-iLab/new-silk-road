@@ -516,6 +516,7 @@ class ProjectCSVExportTestCase(TestCase):
 
 class PowerPlantCSVExportTestCase(TestCase):
     """Export current projects as a CSV."""
+
     def setUp(self):
         super().setUp()
         refresh_views()
@@ -527,7 +528,7 @@ class PowerPlantCSVExportTestCase(TestCase):
         self.url = reverse('infrastructure-admin:powerplants-export-view')
         self.project = factories.ProjectFactory()
         self.other = factories.ProjectFactory()
-    
+
     def test_get_csv(self):
         """Download the CSV of projects."""
 
@@ -541,7 +542,7 @@ class PowerPlantCSVExportTestCase(TestCase):
             self.user.save()
             response = self.client.get(self.url)
             self.assertRedirects(response, '{}?next={}'.format(reverse('admin:login'), self.url))
-        
+
     def test_csv_results(self):
         """Spot checking some of the CSV results."""
 
@@ -554,6 +555,8 @@ class PowerPlantCSVExportTestCase(TestCase):
                 'countries',
                 'regions',
                 'operators',
+                'owners',
+                'owners_stake',
                 'slug',
                 'status',
                 'plant_year_online',
@@ -585,7 +588,7 @@ class PowerPlantCSVExportTestCase(TestCase):
         for row in results:
             expected = projects[row['identifier']]
             self.assertEqual(row['name'], expected.name)
-    
+
     def test_plant_countries(self):
         """Ensure multiple countries are in CSV export"""
         country1 = CountryFactory()
@@ -598,7 +601,7 @@ class PowerPlantCSVExportTestCase(TestCase):
             if row['id'] == str(power_plant.id):
                 self.assertTrue(country1.name in row['countries'])
                 self.assertTrue(country2.name in row['countries'])
-    
+
     def test_plant_regions(self):
         """Ensure multiple regions are in CSV export"""
         region1 = RegionFactory()
@@ -611,7 +614,7 @@ class PowerPlantCSVExportTestCase(TestCase):
             if row['id'] == str(power_plant.id):
                 self.assertTrue(region1.name in row['regions'])
                 self.assertTrue(region2.name in row['regions'])
-    
+
     def test_plant_operators(self):
         """Ensure multiple operators are in CSV export"""
         operator1 = OrganizationFactory()
@@ -624,3 +627,28 @@ class PowerPlantCSVExportTestCase(TestCase):
             if row['id'] == str(power_plant.id):
                 self.assertTrue(operator1.name in row['operators'])
                 self.assertTrue(operator2.name in row['operators'])
+
+    def test_plant_owner_stakes(self):
+        """Ensure owner stakes are in CSV export"""
+
+        power_plant = factories.PowerPlantFactory()
+        stake1 = factories.OwnerStakeFactory(power_plant=power_plant)
+        stake2 = factories.OwnerStakeFactory(power_plant=power_plant, percent_owned=None)
+        stake_non = factories.OwnerStakeFactory()
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['id'] == str(power_plant.id):
+                owners = list(zip(row['owners'].split(','), row['owners_stake'].split(',')))
+
+                with self.subTest('Owner stake 1'):
+                    self.assertTrue(stake1.owner.name in owners[0][0])
+                    self.assertTrue(str(stake1.percent_owned) in owners[0][1])
+
+                with self.subTest('Owner stake 2'):
+                    self.assertTrue(stake2.owner.name in owners[1][0])
+                    self.assertTrue('NULL' in owners[1][1])
+
+                with self.subTest('Excluded owner stake'):
+                    self.assertFalse(stake_non.owner.name in row['owners'])

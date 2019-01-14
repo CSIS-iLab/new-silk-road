@@ -10,20 +10,20 @@ logger = logging.getLogger(__name__)
 @transaction.atomic
 def refresh_views():
     logger.info("Refreshing PostgreSQL CVS export views")
-    
+
     project_status_cases = get_statuses(ProjectStatus, 'p')
     power_plant_status_cases = get_statuses(PowerPlantStatus, 'pp')
-    
+
     project_case_statements = {}
     powerplant_case_statements = {}
-    
+
     project_unit_fields = (
         'project_output_unit',
         'estimated_project_output_unit',
         'project_capacity_unit',
         'project_CO2_emissions_unit'
     )
-    
+
     powerplant_unit_fields = (
         'plant_capacity_unit',
         'plant_output_unit',
@@ -33,13 +33,13 @@ def refresh_views():
 
     for field in project_unit_fields:
         project_case_statements[field] = "\n".join([
-            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s) 
+            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s)
             for s in ProjectPlantUnits.UNITS
         ])
-    
+
     for field in powerplant_unit_fields:
         powerplant_case_statements[field] = "\n".join([
-            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s) 
+            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s)
             for s in ProjectPlantUnits.UNITS
         ])
     with connection.cursor() as cursor:
@@ -177,7 +177,7 @@ def refresh_views():
             ''')
         cursor.execute('''
             CREATE OR REPLACE VIEW infrastructure_powerplant_operators_view AS
-                SELECT l.powerplant_id, 
+                SELECT l.powerplant_id,
 	                array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS operators
                 FROM infrastructure_powerplant_operators AS l
                 JOIN facts_organization AS r
@@ -186,9 +186,9 @@ def refresh_views():
         ''')
         cursor.execute('''
             CREATE OR REPLACE VIEW infrastructure_powerplant_owner_stake_view AS
-                SELECT l.power_plant_id, 
+                SELECT l.power_plant_id,
                     array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS owners,
-                    array_to_string(array_agg(quote_literal(l."percent_owned")), ', ', 'NULL') AS owners_stake
+                    array_to_string(array_agg(l."percent_owned"), ', ', 'NULL') AS owners_stake
                 FROM infrastructure_ownerstake AS l
                 JOIN facts_organization AS r
                 ON l.owner_id = r.id
@@ -299,11 +299,13 @@ def refresh_views():
             '''.format(status_cases=project_status_cases, **project_case_statements))
         cursor.execute('''
             CREATE OR REPLACE VIEW infrastructure_power_plant_export_view AS
-                SELECT pp.id, 
+                SELECT pp.id,
                 pp.name,
-                array_to_string(array_agg(icv.countries::text), ','::text, 'NULL'::text) as countries,
-                array_to_string(array_agg(irv.regions::text), ','::text, 'NULL'::text) as regions,
-                array_to_string(array_agg(ippopv.operators::text), ','::text, 'NULL'::text) as operators,
+                icv.countries,
+                irv.regions,
+                ippopv.operators,
+                ipposv.owners,
+                ipposv.owners_stake,
                 pp.slug,
                 CASE
                     {status_cases}
@@ -348,11 +350,13 @@ def refresh_views():
                 pp.published
             FROM infrastructure_powerplant pp
                 LEFT OUTER JOIN infrastructure_powerplant_countries_view icv ON icv.powerplant_id = pp.id
-                LEFT OUTER JOIN infrastructure_powerplant_regions_view irv ON irv.powerplant_id = pp.id 
+                LEFT OUTER JOIN infrastructure_powerplant_regions_view irv ON irv.powerplant_id = pp.id
                 LEFT OUTER JOIN infrastructure_powerplant_operators_view ippopv ON ippopv.powerplant_id = pp.id
-            group by pp.id
+                LEFT OUTER JOIN infrastructure_powerplant_owner_stake_view ipposv ON ipposv.power_plant_id = pp.id
+            ORDER BY pp.id
         '''.format(status_cases=power_plant_status_cases, **powerplant_case_statements))
         logger.info("Complete")
+
 
 def get_statuses(model, table_id):
     '''get_statuses
@@ -365,7 +369,7 @@ def get_statuses(model, table_id):
         str
 
     CAVEAT: The output of this, an SQL CASE statement, is evaluated and solidified into
-             the PostgreSQL when _this_ code is executed. This means that if future 
+             the PostgreSQL when _this_ code is executed. This means that if future
              Units are added, they will not automatically be incorporated into
              PosgresSQL view. The view must be recreated.
     '''
