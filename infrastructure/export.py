@@ -44,27 +44,29 @@ def refresh_views():
         ])
     with connection.cursor() as cursor:
         logger.info("Dropping existing views...")
-        database_views = ("infrastructure_projects_export_view",
-                        "infrastructure_regions_view",
+        database_views = ("infrastructure_regions_view",
                         "infrastructure_countries_view",
                         "infrastructure_initiatives_view",
                         "infrastructure_contractors_view",
                         "infrastructure_consultants_view",
                         "infrastructure_implementers_view",
                         "infrastructure_operators_view",
-                        "infrastructure_power_plant_operators_view",
-                        "infrastructure_power_plant_owners_view",
                         "infrastructure_funding_view",
                         "infrastructure_project_fuels_view",
                         "infrastructure_project_manufacturers_view",
-                        "infrastructure_power_plant_export_view")
+                        "infrastructure_powerplant_countries_view",
+                        "infrastructure_powerplant_regions_view",
+                        "infrastructure_powerplant_operators_view",
+                        "infrastructure_powerplant_owner_stake_view",
+                        "infrastructure_projects_export_view",
+                        "infrastructure_powerplant_export_view",
+                        )
         for view_name in database_views:
             cursor.execute("DROP VIEW IF EXISTS {} CASCADE;".format(view_name))
 
         logger.info("Creating views...")
         # Project Views #
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_regions_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_regions_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS regions
                 FROM infrastructure_project_regions AS l
@@ -72,8 +74,7 @@ def refresh_views():
                 ON l.region_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_countries_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_countries_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS countries
                 FROM infrastructure_project_countries AS l
@@ -81,8 +82,7 @@ def refresh_views():
                 ON l.country_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_initiatives_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_initiatives_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS initiatives
                 FROM infrastructure_project_initiatives AS l
@@ -90,8 +90,7 @@ def refresh_views():
                 ON l.initiative_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_contractors_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_contractors_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS contractors
                 FROM infrastructure_project_contractors AS l
@@ -99,8 +98,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_consultants_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_consultants_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS consultants
                 FROM infrastructure_project_consultants AS l
@@ -108,8 +106,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_implementers_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_implementers_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS implementing_agencies
                 FROM infrastructure_project_implementers AS l
@@ -117,8 +114,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_operators_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_operators_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS operators
                 FROM infrastructure_project_operators AS l
@@ -126,8 +122,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_funding_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_funding_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(org.name)), ' ', 'NULL') AS funding_sources,
                     array_to_string(array_agg(l.amount), ' ', 'NULL') AS funding_amounts,
@@ -137,8 +132,7 @@ def refresh_views():
                     LEFT OUTER JOIN facts_organization AS org ON r.organization_id = org.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_project_fuels_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_project_fuels_view AS
                 SELECT ipf.project_id,
                     array_to_string(array_agg(quote_literal(if.name::text)), ','::text, 'NULL'::text) as fuel_type,
                     array_to_string(array_agg(quote_literal(ifc.name::text)), ','::text, 'NULL'::text) as fuel_category
@@ -147,8 +141,7 @@ def refresh_views():
                     LEFT JOIN infrastructure_fuelcategory ifc ON if.fuel_category_id = ifc.id
                 GROUP BY ipf.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_project_manufacturers_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_project_manufacturers_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS manufacturers
                 FROM infrastructure_project_manufacturers AS l
@@ -156,8 +149,7 @@ def refresh_views():
                 GROUP BY l.project_id;
             ''')
         # Power Plant Views
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_powerplant_countries_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_countries_view AS
                 SELECT l.powerplant_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS countries
                 FROM infrastructure_powerplant_countries AS l
@@ -165,9 +157,7 @@ def refresh_views():
                 ON l.country_id = r.id
                 GROUP BY l.powerplant_id;
             ''')
-
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_powerplant_regions_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_regions_view AS
                 SELECT l.powerplant_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS regions
                 FROM infrastructure_powerplant_regions AS l
@@ -175,17 +165,15 @@ def refresh_views():
                 ON l.region_id = r.id
                 GROUP BY l.powerplant_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_powerplant_operators_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_operators_view AS
                 SELECT l.powerplant_id,
 	                array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS operators
                 FROM infrastructure_powerplant_operators AS l
                 JOIN facts_organization AS r
                 ON l.organization_id = r.id
                 GROUP BY l.powerplant_id;
-        ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_powerplant_owner_stake_view AS
+            ''')
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_owner_stake_view AS
                 SELECT l.power_plant_id,
                     array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS owners,
                     array_to_string(array_agg(l."percent_owned"), ', ', 'NULL') AS owners_stake
@@ -193,11 +181,10 @@ def refresh_views():
                 JOIN facts_organization AS r
                 ON l.owner_id = r.id
                 GROUP BY l.power_plant_id;
-        ''')
+            ''')
         # Export Views
 
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_projects_export_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_projects_export_view AS
                 SELECT
                     identifier,
                     p.name,
@@ -297,8 +284,7 @@ def refresh_views():
                     AS related
                 ON p.id = related.project_id;
             '''.format(status_cases=project_status_cases, **project_case_statements))
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_power_plant_export_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_export_view AS
                 SELECT pp.id,
                 pp.name,
                 icv.countries,
