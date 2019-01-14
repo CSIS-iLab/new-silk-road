@@ -526,8 +526,6 @@ class PowerPlantCSVExportTestCase(TestCase):
         self.user.save()
         self.client.login(username='staff', password='test')
         self.url = reverse('infrastructure-admin:powerplants-export-view')
-        self.project = factories.ProjectFactory()
-        self.other = factories.ProjectFactory()
 
     def test_get_csv(self):
         """Download the CSV of projects."""
@@ -581,13 +579,6 @@ class PowerPlantCSVExportTestCase(TestCase):
                 'published',
         )
         self.assertEqual(results.fieldnames, list(headers))
-        projects = {
-            str(self.project.identifier): self.project,
-            str(self.other.identifier): self.other,
-        }
-        for row in results:
-            expected = projects[row['identifier']]
-            self.assertEqual(row['name'], expected.name)
 
     def test_plant_countries(self):
         """Ensure multiple countries are in CSV export"""
