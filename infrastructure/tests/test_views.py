@@ -81,6 +81,24 @@ class PowerPlantDetailViewTestCase(TestCase):
         self.assertEqual(response.context['mapbox_token'], settings.MAPBOX_TOKEN)
         self.assertEqual(response.context['mapbox_style'], settings.MAPBOX_STYLE_URL)
 
+    def test_power_plant_cost(self):
+        """Power Plant cost and currency should be in the template"""
+
+        self.power_plant.total_cost = 1000000
+        self.power_plant.total_cost_currency = 'USD'
+        self.power_plant.save()
+        response = self.client.get(self.power_plant.get_absolute_url())
+
+        with self.subTest("Cost in context"):
+            self.assertEqual(response.context['object'].total_cost,
+                             self.power_plant.total_cost)
+            self.assertEqual(response.context['object'].total_cost_currency,
+                             self.power_plant.total_cost_currency)
+
+        with self.subTest("Cost formatting"):
+            self.assertContains(response, "1.0 million")
+            self.assertContains(response, self.power_plant.total_cost_currency)
+
     def test_power_plant_initiatives(self):
         """Initiatives should include unique set of related project and power plant initiatives"""
 
