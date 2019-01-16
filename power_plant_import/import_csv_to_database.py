@@ -16,7 +16,6 @@ os.environ['DISABLE_CACHE'] = "True"
 sys.path.append(os.environ['PWD'])
 os.environ["DJANGO_SETTINGS_MODULE"] = "newsilkroad.settings"
 django.setup()
-from django.db import transaction
 from facts.models import Organization
 from infrastructure.forms import PowerPlantForm, ProjectForm
 from infrastructure.models import (
@@ -417,9 +416,6 @@ def import_csv_to_database(*args, **kwargs):
             total_rows = sum(1 for line in csv_file) - 1  # -1 for header row
             logger.info('total_rows: {}'.format(total_rows))
 
-    # commit inserts/updates in chunks for speed improvements
-    transaction.set_autocommit(False)
-
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
         for row_number, row in enumerate(reader):
@@ -569,14 +565,12 @@ def import_csv_to_database(*args, **kwargs):
 
             num_successful_imports += 1
             if num_successful_imports % 500 == 0:
-                transaction.commit()
                 if use_logger:
                     elapsed_time = time.time() - start_time
                     logger.info('num_successful_imports: {} ({} imports/sec)'.format(num_successful_imports, 500/elapsed_time))
                     logger.info('last new_object: {}'.format(new_object.name))
                     start_time = time.time()
 
-    transaction.commit()
     # Originally, this code was written with the assumption that the CSV would
     # be a sanitized list of Projects and PowerPlants to be imported into the
     # database. However, some of the rows in the CSV should not end up in the
@@ -589,7 +583,6 @@ def import_csv_to_database(*args, **kwargs):
         logger.info("Removed {} projects and {} power plants".format(num_projects_removed, num_powerplants_removed))
         logger.info("project_ids_imported: {}".format(project_ids_imported))
         logger.info("power_plant_ids_imported: {}".format(power_plant_ids_imported))
-        transaction.commit()
     num_projects_created = len(project_ids_imported) - num_projects_removed
     num_powerplants_created = len(power_plant_ids_imported) - num_powerplants_removed
 
