@@ -81,6 +81,42 @@ class PowerPlantDetailViewTestCase(TestCase):
         self.assertEqual(response.context['mapbox_token'], settings.MAPBOX_TOKEN)
         self.assertEqual(response.context['mapbox_style'], settings.MAPBOX_STYLE_URL)
 
+    def test_power_plant_initiatives(self):
+        """Initiatives should include unique set of related project and power plant initiatives"""
+
+        init_a = factories.InitiativeFactory()
+        init_b = factories.InitiativeFactory()
+        init_c = factories.InitiativeFactory()
+        init_d = factories.InitiativeFactory()
+        init_not_included = factories.InitiativeFactory()
+        proj1 = factories.ProjectFactory(power_plant=self.power_plant, published=True,
+                                         initiatives=(init_a, init_b))
+        proj2 = factories.ProjectFactory(power_plant=self.power_plant, published=True,
+                                         initiatives=(init_b, init_c))
+        self.power_plant.plant_initiatives.add(init_a)
+        self.power_plant.plant_initiatives.add(init_d)
+        self.power_plant.published = True
+        self.power_plant.save()
+
+        response = self.client.get(self.power_plant.get_absolute_url())
+
+        initiatives = response.context['initiatives']
+        self.assertEqual(len(initiatives), 4)
+
+        with self.subTest("Initiatives in context"):
+            self.assertIn(init_a, initiatives)
+            self.assertIn(init_b, initiatives)
+            self.assertIn(init_c, initiatives)
+            self.assertIn(init_d, initiatives)
+            self.assertNotIn(init_not_included, initiatives)
+
+        with self.subTest("Initiative names in template"):
+            self.assertContains(response, init_a.name)
+            self.assertContains(response, init_b.name)
+            self.assertContains(response, init_c.name)
+            self.assertContains(response, init_d.name)
+            self.assertNotContains(response, init_not_included.name)
+
 
 class MapViewTestCase(TestCase):
     """View the map of all projects.
