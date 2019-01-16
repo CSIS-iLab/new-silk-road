@@ -10,6 +10,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 
+from facts.tests.organization_factories import OrganizationFactory
+from infrastructure.export import refresh_views
 from locations.models import GeometryStore
 from locations.tests.factories import CountryFactory
 from publish.tests.factories import UserFactory
@@ -96,6 +98,42 @@ class PowerPlantDetailViewTestCase(TestCase):
         with self.subTest("Cost formatting"):
             self.assertContains(response, "1.0 million")
             self.assertContains(response, self.power_plant.total_cost_currency)
+
+    def test_power_plant_initiatives(self):
+        """Initiatives should include unique set of related project and power plant initiatives"""
+
+        init_a = factories.InitiativeFactory()
+        init_b = factories.InitiativeFactory()
+        init_c = factories.InitiativeFactory()
+        init_d = factories.InitiativeFactory()
+        init_not_included = factories.InitiativeFactory()
+        proj1 = factories.ProjectFactory(power_plant=self.power_plant, published=True,
+                                         initiatives=(init_a, init_b))
+        proj2 = factories.ProjectFactory(power_plant=self.power_plant, published=True,
+                                         initiatives=(init_b, init_c))
+        self.power_plant.plant_initiatives.add(init_a)
+        self.power_plant.plant_initiatives.add(init_d)
+        self.power_plant.published = True
+        self.power_plant.save()
+
+        response = self.client.get(self.power_plant.get_absolute_url())
+
+        initiatives = response.context['initiatives']
+        self.assertEqual(len(initiatives), 4)
+
+        with self.subTest("Initiatives in context"):
+            self.assertIn(init_a, initiatives)
+            self.assertIn(init_b, initiatives)
+            self.assertIn(init_c, initiatives)
+            self.assertIn(init_d, initiatives)
+            self.assertNotIn(init_not_included, initiatives)
+
+        with self.subTest("Initiative names in template"):
+            self.assertContains(response, init_a.name)
+            self.assertContains(response, init_b.name)
+            self.assertContains(response, init_c.name)
+            self.assertContains(response, init_d.name)
+            self.assertNotContains(response, init_not_included.name)
 
 
 class MapViewTestCase(TestCase):
@@ -368,6 +406,7 @@ class ProjectCSVExportTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
+        refresh_views()
         self.user = UserFactory(username='staff')
         self.user.set_password('test')
         self.user.is_staff = True
@@ -397,14 +436,51 @@ class ProjectCSVExportTestCase(TestCase):
         response = self.client.get(self.url)
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
-        self.assertEqual(
-            results.fieldnames,
-            ['identifier', 'name', 'infrastructure_type', 'countries', 'regions', 'contractors',
-             'initiatives', 'operators', 'funding_sources', 'funding_amounts', 'funding_currencies',
-             'status', 'new', 'verified', 'total_cost', 'total_cost_currency', 'start_day',
-             'start_month', 'start_year', 'commencement_day', 'commencement_month',
-             'commencement_year', 'planned_completion_day', 'planned_completion_month',
-             'planned_completion_year'])
+        headers = ('identifier',
+                   'name',
+                   'infrastructure_type',
+                   'countries',
+                   'regions',
+                   'contractors',
+                   'initiatives',
+                   'operators',
+                   'funding_sources',
+                   'funding_amounts',
+                   'funding_currencies',
+                   'fuel_type',
+                   'fuel_category',
+                   'consultants',
+                   'implementing_agencies',
+                   'manufacturers',
+                   'status',
+                   'new',
+                   'verified',
+                   'total_cost',
+                   'total_cost_currency',
+                   'start_day',
+                   'start_month',
+                   'start_year',
+                   'commencement_day',
+                   'commencement_month',
+                   'commencement_year',
+                   'planned_completion_day',
+                   'planned_completion_month',
+                   'planned_completion_year',
+                   'estimated_project_output',
+                   'estimated_project_output_unit',
+                   'nox_reduction_system',
+                   'power_plant_id',
+                   'power_plant_name',
+                   'project_CO2_emissions',
+                   'project_CO2_emissions_unit',
+                   'project_capacity',
+                   'project_capacity_unit',
+                   'project_output',
+                   'project_output_unit',
+                   'project_output_year',
+                   'sox_reduction_system',
+        )
+        self.assertEqual(results.fieldnames, list(headers))
         projects = {
             str(self.project.identifier): self.project,
             str(self.other.identifier): self.other,
@@ -412,3 +488,81 @@ class ProjectCSVExportTestCase(TestCase):
         for row in results:
             expected = projects[row['identifier']]
             self.assertEqual(row['name'], expected.name)
+
+    def test_project_fuel(self):
+        """Ensure related fuel relations are included in CSV export"""
+
+        fuel1 = factories.FuelFactory()
+        fuel2 = factories.FuelFactory()
+        project1 = factories.ProjectFactory(fuels=(fuel1, fuel2),
+                                            countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == str(project1.identifier):
+                self.assertTrue(fuel1.name in row['fuel_type'])
+                self.assertTrue(fuel2.name in row['fuel_type'])
+                self.assertTrue(fuel1.fuel_category.name in row['fuel_category'])
+                self.assertTrue(fuel2.fuel_category.name in row['fuel_category'])
+
+    def test_project_manufacturers(self):
+        """Ensure related manufacturers are included in CSV export"""
+
+        org1 = OrganizationFactory()
+        org2 = OrganizationFactory()
+        project1 = factories.ProjectFactory(manufacturers=(org1, org2),
+                                            countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == str(project1.identifier):
+                self.assertTrue(org1.name in row['manufacturers'])
+                self.assertTrue(org2.name in row['manufacturers'])
+
+    def test_project_consultants(self):
+        """Ensure related consultants are included in CSV export"""
+
+        org1 = OrganizationFactory()
+        org2 = OrganizationFactory()
+        org3 = OrganizationFactory()
+        project1 = factories.ProjectFactory(consultants=(org1, org2),
+                                            countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == str(project1.identifier):
+                self.assertTrue(org1.name in row['consultants'])
+                self.assertTrue(org2.name in row['consultants'])
+                self.assertFalse(org3.name in row['consultants'])
+
+    def test_project_implementing_agencies(self):
+        """Ensure related implementers are included in CSV export"""
+
+        org1 = OrganizationFactory()
+        org2 = OrganizationFactory()
+        org3 = OrganizationFactory()
+        project1 = factories.ProjectFactory(implementers=(org1, org2),
+                                            countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == str(project1.identifier):
+                self.assertTrue(org1.name in row['implementing_agencies'])
+                self.assertTrue(org2.name in row['implementing_agencies'])
+                self.assertFalse(org3.name in row['implementing_agencies'])
+
+    def test_power_plant_name(self):
+        """Ensure Power Plant name is in export"""
+
+        project1 = factories.ProjectFactory(power_plant=factories.PowerPlantFactory(),
+                                            countries=(CountryFactory(),))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['identifier'] == str(project1.identifier):
+                self.assertEqual(project1.power_plant.name, row['power_plant_name'])

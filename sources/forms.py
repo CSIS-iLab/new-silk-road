@@ -6,7 +6,7 @@ from django_select2.forms import (
 from sources.models import Document
 
 
-class DocumentSearchWidget(ModelSelect2Widget):
+class DocumentSearchFieldsMixin(object):
     model = Document
     search_fields = [
         'source_file__original_filename__icontains',
@@ -14,6 +14,19 @@ class DocumentSearchWidget(ModelSelect2Widget):
     ]
 
 
+class DocumentSearchWidget(DocumentSearchFieldsMixin, ModelSelect2Widget):
+    pass
+
+
 class DocumentSearchField(forms.ModelChoiceField):
     widget = DocumentSearchWidget
+    help_text = "Select field and begin typing a document's name to search"
+
+
+class DocumentSearchMultiWidget(DocumentSearchFieldsMixin, ModelSelect2MultipleWidget):
+    pass
+
+
+class DocumentSearchMultiField(forms.ModelMultipleChoiceField):
+    widget = DocumentSearchMultiWidget
     help_text = "Select field and begin typing a document's name to search"

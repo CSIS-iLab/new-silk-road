@@ -418,6 +418,8 @@ class PowerPlant(Publishable):
     plant_month_online = models.PositiveSmallIntegerField(blank=True, null=True)
     plant_day_online = models.PositiveSmallIntegerField(blank=True, null=True)
 
+    plant_initiatives = models.ManyToManyField('Initiative', blank=True)
+
     @property
     def fuzzy_plant_online_date(self):
         return fuzzydate(self.plant_year_online, self.plant_month_online, self.plant_day_online)

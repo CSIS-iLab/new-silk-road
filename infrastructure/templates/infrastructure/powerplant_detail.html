@@ -77,16 +77,6 @@
                 {% endif %}
                 {% endspaceless %}
             </section>
-            <section>
-                <h3>Initiatives</h3>
-                {% if object.initiatives.all %}
-                <ul class="clean">{% for initiative in object.initiatives.all %}
-                    <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>{% endfor %}
-                </ul>
-                {% else %}
-                <p>&mdash;</p>
-                {% endif %}
-            </section>
         </div>
         <div class="row double">
             <section>
@@ -98,10 +88,20 @@
                 <p>{{object.fuzzy_decommissioning_date|fuzzydate:'N d Y'|default:'&mdash;'}}</p>
             </section>
         </div>
-        <div class="row">
+        <div class="row double">
             <section>
                 <h3>Owners</h3>
                 {% include "infrastructure/_related_organization_list.html" with organization_list=object.contractors.all %}
+            </section>
+            <section>
+                <h3>Initiatives</h3>
+                <ul class="clean">
+                {% for initiative in initiatives %}
+                    <li><a href="{{ initiative.get_absolute_url }}">{{ initiative.name }}</a></li>
+                {% empty %}
+                    <li><p>&mdash;</p></li>
+                {% endfor %}
+                </ul>
             </section>
         </div>
     </section>
@@ -120,10 +120,12 @@
       </div>
       <div class="row double">
           <section>
-              <h3>Fuel</h3>
-              {% for fuel in object.fuels.all %}
-                <div>{{ fuel }}</div>
-              {% endfor %}
+              <h3>Fuel Category</h3>
+                <ul class="clean">
+                {% for fc in fuel_categories %}
+                    <li>{{ fc }}</li>
+                {% endfor %}
+                </ul>
           </section>
           <section>
               <h3>CO2 Emissions</h3>
@@ -131,8 +133,6 @@
           </section>
       </div>
     </section>
-
-
 </article>
 {% endblock %}
 
