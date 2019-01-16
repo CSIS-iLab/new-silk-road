@@ -262,6 +262,9 @@ class PowerPlantAdmin(admin.ModelAdmin):
         'status',
         'countries__name'
     )
+    filter_horizontal = [
+        'plant_initiatives',
+    ]
     search_fields = ('name', 'plant_capacity')
     actions = [make_published, make_not_published]
     inlines = [

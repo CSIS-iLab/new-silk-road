@@ -394,6 +394,16 @@ class PowerPlant(Publishable):
         'Fuel',
         blank=True,
     )
+    total_cost = models.BigIntegerField(
+        blank=True, null=True,
+        help_text="Values in whole units (dollars, etc.)"
+    )
+    total_cost_currency = models.CharField(
+        blank=True,
+        max_length=3,
+        choices=CURRENCY_CHOICES,
+        default=DEFAULT_CURRENCY_CHOICE
+    )
     countries = models.ManyToManyField('locations.Country', blank=True)
     regions = models.ManyToManyField(
         'locations.Region',
@@ -407,6 +417,8 @@ class PowerPlant(Publishable):
     plant_year_online = models.PositiveSmallIntegerField(blank=True, null=True)
     plant_month_online = models.PositiveSmallIntegerField(blank=True, null=True)
     plant_day_online = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    plant_initiatives = models.ManyToManyField('Initiative', blank=True)
 
     @property
     def fuzzy_plant_online_date(self):

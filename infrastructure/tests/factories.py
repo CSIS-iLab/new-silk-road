@@ -86,6 +86,15 @@ class ProjectFactory(factory.django.DjangoModelFactory):
             for org in extracted:
                 self.implementers.add(org)
 
+    @factory.post_generation
+    def initiatives(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for initiative in extracted:
+                self.initiatives.add(initiative)
+
     class Meta:
         model = 'infrastructure.Project'
 
