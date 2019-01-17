@@ -298,6 +298,8 @@ def refresh_views():
                     ELSE 'NULL'
                 END
                 status,
+                pp.total_cost,
+                pp.total_cost_currency,
                 pp.plant_year_online,
                 pp.plant_month_online,
                 pp.plant_day_online,

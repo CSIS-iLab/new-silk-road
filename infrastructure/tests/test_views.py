@@ -615,6 +615,8 @@ class PowerPlantCSVExportTestCase(TestCase):
                 'owners_stake',
                 'slug',
                 'status',
+                'total_cost',
+                'total_cost_currency',
                 'plant_year_online',
                 'plant_month_online',
                 'plant_day_online',
