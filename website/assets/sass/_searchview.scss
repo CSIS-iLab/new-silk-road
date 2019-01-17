@@ -407,46 +407,51 @@ button.searchView__update-results {
     height: $searchview-infrastructure-icon-size; 
     width: $searchview-infrastructure-icon-size;
 
-    &.rail-color {
+    &.rail-color > span {
         background-color: $rail-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $rail-color-hover;
         }
     }
-    &.road-color {
+    
+    &.road-color > span {
         background-color: $road-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $road-color-hover;
         }
     }
-    &.seaport-color {
+
+    &.seaport-color > span {
         background-color: $seaport-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $seaport-color-hover;
         }
     }
-    &.intermodal-color {
+
+    &.intermodal-color > span {
         background-color: $intermodal-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $intermodal-color-hover;
         }
     }
-    &.powerplant-color {
+
+    &.powerplant-color > span {
         background-color: $powerplant-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $powerplant-color-hover;
         }
     }
-    &.selected {
+
+    &.selected > span {
         background-color: $map-disabled-header-grey;
     }
 
-    .infrastructureIcon__container.selected:hover & {
+    .infrastructureIcon__container.selected:hover & > span {
         background-color: $map-light-grey;
     }
 }
