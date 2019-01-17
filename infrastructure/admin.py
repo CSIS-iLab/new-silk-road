@@ -265,7 +265,7 @@ class PowerPlantAdmin(admin.ModelAdmin):
     filter_horizontal = [
         'plant_initiatives',
     ]
-    search_fields = ('name', 'plant_capacity')
+    search_fields = ('name', 'plant_capacity', 'notes')
     actions = [make_published, make_not_published]
     inlines = [
         ProjectsOwnersInline
