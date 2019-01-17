@@ -13,14 +13,14 @@ def move_notes(apps, schema_editor):
     # move PowerPlant notes [description -> notes]
     # only update powerplants that have descriptions but are missing notes
     pps_with_desc = PowerPlant.objects.exclude(description='').filter(notes='')
-    print(f"Moving desc->notes on {pps_with_desc.count()} power plants")
+    print("Moving desc->notes on {} power plants".format(pps_with_desc.count()))
     # copy into notes field, clear description fields
     pps_with_desc.update(notes=F('description'), description='', description_rendered='')
 
     # move Project notes (powerplants only) [description -> notes]
     pp_projects_with_desc = Project.objects.filter(infrastructure_type__name='Powerplant')
     pp_projects_with_desc = pp_projects_with_desc.exclude(description='').filter(notes='')
-    print(f"Moving desc->notes on {pp_projects_with_desc.count()} projects")
+    print("Moving desc->notes on {} projects".format(pp_projects_with_desc.count()))
     # copy into notes field, clear description fields
     pp_projects_with_desc.update(notes=F('description'), description='', description_rendered='')
 
@@ -31,7 +31,7 @@ def move_notes_back(apps, schema_editor):
 
     # move PowerPlant notes [notes -> description]
     pps_with_notes = PowerPlant.objects.exclude(notes='').filter(description='')
-    print(f"Moving notes->desc on {pps_with_notes.count()} power plants")
+    print("Moving notes->desc on {} power plants".format(pps_with_notes.count()))
     # copy into description field, clear note field
     pps_with_notes.update(description=F('notes'), notes='')
     # description_rendered is populated in PowerPlant.save()
@@ -41,7 +41,7 @@ def move_notes_back(apps, schema_editor):
     # move Project notes (powerplants only) [notes -> description]
     pp_projects_with_notes = Project.objects.filter(infrastructure_type__name='Powerplant')
     pp_projects_with_notes = pp_projects_with_notes.exclude(notes='').filter(description='')
-    print(f"Moving notes->desc on {pp_projects_with_notes.count()} projects")
+    print("Moving notes->desc on {} projects".format(pp_projects_with_notes.count()))
     # copy into description field, clear note field
     pp_projects_with_notes.update(description=F('notes'), notes='')
     # description_rendered is populated in Project.save()
