@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.db import connection
+from django.db.models import Q
 from django.http import HttpResponseServerError, HttpResponse
 from django.views.generic import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -147,5 +148,14 @@ class PowerPlantDetailView(PublicationMixin, DetailView):
         context = super(PowerPlantDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
+
+        # limit to just this power plant OR related project initiatives
+        powerplant_initiatives = Q(powerplant=self.object.pk)
+        project_initiatives = Q(project__power_plant=self.object.pk, project__published=True)
+        qs = Initiative.objects.filter(Q(powerplant_initiatives) | Q(project_initiatives))
+        # remove any potential duplicates and only select the needed columns
+        qs = qs.only('id', 'identifier', 'name', 'slug').distinct()
+        context['initiatives'] = qs
+
         context['fuel_categories'] = self.object.fuels.values_list('fuel_category__name', flat=True).distinct()
         return context
