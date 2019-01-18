@@ -480,19 +480,19 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
               </div>
-              <header className="searchView__footer">
-                <button
-                  type="submit"
-                  title="Search"
-                  className="searchView__update-results"
-                >
-                  <span>
-                    Update Results
-                  </span>
-                </button>
-                <span></span>
-              </header>
             </form>
+            <header className="searchView__footer">
+              <button
+                type="submit"
+                title="Search"
+                className="searchView__update-results"
+                onClick={this.handleSubmit}
+              >
+                <span>
+                  Update Results
+                </span>
+              </button>
+            </header>
           </div>
           <div className="resultsViewWrapper">
             <header className="searchView__header searchView__header--light">
