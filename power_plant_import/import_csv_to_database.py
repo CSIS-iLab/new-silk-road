@@ -7,6 +7,10 @@ import iso3166
 import logging
 import os
 import sys
+import time
+
+# Always disable cache for importer
+os.environ['DISABLE_CACHE'] = "True"
 
 # Set up Django so that we can import models in this file
 sys.path.append(os.environ['PWD'])
@@ -19,6 +23,7 @@ from infrastructure.models import (
     PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from locations.models import Country, GeometryStore, PointGeometry, Region
+
 
 # Set the logging
 logger = logging.getLogger('power_plant_import')
@@ -289,6 +294,8 @@ def get_power_plant_data_for_form(power_plant_obj, row, infrastructure_type):
         ),
         'grid_connected': boolean_or_none(row.get('Grid Connected')),
         'description': value_or_none(row.get('Notes')),
+        'total_cost': value_or_none(row.get('Total Cost')),
+        'total_cost_currency': value_or_none(row.get('Total Cost Currency')),
     }
 
 
@@ -401,6 +408,13 @@ def import_csv_to_database(*args, **kwargs):
     # Statistics that can be used for removing objects after the import
     project_ids_imported = set()
     power_plant_ids_imported = set()
+
+    start_time = time.time()
+    if use_logger:
+        logger.info('CSV import started')
+        with open(filename, 'r') as csv_file:
+            total_rows = sum(1 for line in csv_file) - 1  # -1 for header row
+            logger.info('total_rows: {}'.format(total_rows))
 
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
@@ -550,6 +564,12 @@ def import_csv_to_database(*args, **kwargs):
             new_object.save()
 
             num_successful_imports += 1
+            if num_successful_imports % 500 == 0:
+                if use_logger:
+                    elapsed_time = time.time() - start_time
+                    logger.info('num_successful_imports: {} ({} imports/sec)'.format(num_successful_imports, 500/elapsed_time))
+                    logger.info('last new_object: {}'.format(new_object.name))
+                    start_time = time.time()
 
     # Originally, this code was written with the assumption that the CSV would
     # be a sanitized list of Projects and PowerPlants to be imported into the
@@ -557,8 +577,12 @@ def import_csv_to_database(*args, **kwargs):
     # database, so the following functions remove them from the database.
     num_projects_removed = num_powerplants_removed = 0
     if remove_undesired_objects:
+        logger.info('Removing undesired objects')
         num_projects_removed = remove_undesired_projects(project_ids_imported)
         num_powerplants_removed = remove_undesired_powerplants(power_plant_ids_imported)
+        logger.info("Removed {} projects and {} power plants".format(num_projects_removed, num_powerplants_removed))
+        logger.info("project_ids_imported: {}".format(project_ids_imported))
+        logger.info("power_plant_ids_imported: {}".format(power_plant_ids_imported))
     num_projects_created = len(project_ids_imported) - num_projects_removed
     num_powerplants_created = len(power_plant_ids_imported) - num_powerplants_removed
 

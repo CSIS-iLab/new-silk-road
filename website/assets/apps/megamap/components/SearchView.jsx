@@ -94,13 +94,13 @@ export default class SearchView extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.onSearchResults = this.onSearchResults.bind(this);
+    this.onSearchStoreChange = this.onSearchStoreChange.bind(this);
     this.toggleFilters = this.toggleFilters.bind(this);
     this.toggleHelp = this.toggleHelp.bind(this);
   }
 
   componentDidMount() {
-    SearchStore.listen(this.onSearchResults);
+    SearchStore.listen(this.onSearchStoreChange);
 
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {
@@ -208,17 +208,20 @@ export default class SearchView extends Component {
     });
   }
 
-  onSearchResults(data) {
+  onSearchStoreChange(data) {
     const { total, results, next, previous, error, isSearching, searchCount } = data;
-    this.setState({
-      total,
-      results,
-      nextURL: next,
-      previousURL: previous,
-      error,
-      isSearching,
-      searchCount,
-    });
+    this.setState(Object.assign(
+      {
+        total,
+        results,
+        nextURL: next,
+        previousURL: previous,
+        error,
+        isSearching,
+        searchCount,
+      },
+      searchCount === 0 ? { query: emptyQueryState() } : {},
+    ));
   }
 
   resetQueryState() {
@@ -267,12 +270,17 @@ export default class SearchView extends Component {
         delete searchParams.dateRange;
       }
       Object.entries(searchParams).forEach(([key, value]) => {
-        if (value === '' || value === null) {
+        if (value === '' || value === null || (value instanceof Object && !value.length)) {
           delete searchParams[key];
         }
       });
       this.toggleFilters();
-      SearchActions.search(searchParams);
+      
+      if (Object.keys(searchParams).length > 0) {
+        SearchActions.search(searchParams);
+      } else {
+        SearchActions.clear();
+      }
     }
   }
 
@@ -324,12 +332,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Region</label>
+                    <label className="filter-input-group__label">Region</label>
                     <Select
                       value={this.state.query.region}
                       name="region"
                       placeholder="Region"
                       options={this.state.options.region}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { region: selections.map(s => s.value) },
                         )
@@ -340,12 +349,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.countries}
                       name="countries"
                       placeholder="Country"
                       options={this.state.options.countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { countries: selections.map(s => s.value) },
                         )
@@ -356,12 +366,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Project Status</label>
+                    <label className="filter-input-group__label">Project Status</label>
                     <Select
                       value={this.state.query.status}
                       name="status"
                       placeholder="Project Status"
                       options={this.state.options.status}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { status: selections.map(s => s.value) },
                         )
@@ -372,7 +383,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Milestone</label>
+                    <label className="filter-input-group__label">Milestone</label>
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
@@ -403,12 +414,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Principal Agent</label>
+                    <label className="filter-input-group__label">Principal Agent</label>
                     <Select
                       value={this.state.query.initiatives__principal_agent__slug}
                       name="initiatives__principal_agent__slug"
                       placeholder="Principal Agent"
                       options={this.state.options.initiatives__principal_agent__slug}
+                      className="searchView-select__container"
                       onChange={option => this.handleQueryUpdate(
                           { initiatives__principal_agent__slug: option ? option.value : '' },
                         )
@@ -437,7 +449,7 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Cost</label>
+                    <label className="filter-input-group__label">Cost</label>
                     <CurrencyRangeSelect
                       name="cost"
                       placeholder="Cost"
@@ -450,12 +462,13 @@ export default class SearchView extends Component {
                     />
                   </div>
                   <div className="filter-input-group">
-                    <label className="filter-input-group__label filter-input-group__label--with-plus">Country</label>
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.funding__sources__countries}
                       name="funding__sources__countries"
                       placeholder="Country"
                       options={this.state.options.funding__sources__countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
                           { funding__sources__countries: selections.map(s => s.value) },
                         )
@@ -467,17 +480,11 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
               </div>
-              <header
-                className={classNames(
-                  'searchView__footer',
-                  { 'searchView__footer--disabled': !this.state.searchEnabled },
-                )}
-              >
+              <header className="searchView__footer">
                 <button
                   type="submit"
                   title="Search"
                   className="searchView__update-results"
-                  disabled={!this.state.searchEnabled}
                 >
                   <span>
                     Update Results

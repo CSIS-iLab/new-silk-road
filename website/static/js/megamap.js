@@ -2676,7 +2676,7 @@
 	var PooledClass = __webpack_require__(115);
 	var ReactFeatureFlags = __webpack_require__(447);
 	var ReactReconciler = __webpack_require__(119);
-	var Transaction = __webpack_require__(173);
+	var Transaction = __webpack_require__(174);
 	
 	var invariant = __webpack_require__(12);
 	
@@ -5234,7 +5234,7 @@
 	var ReactCurrentOwner = __webpack_require__(64);
 	
 	var warning = __webpack_require__(123);
-	var canDefineProperty = __webpack_require__(177);
+	var canDefineProperty = __webpack_require__(178);
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	
 	var REACT_ELEMENT_TYPE = __webpack_require__(475);
@@ -5630,7 +5630,7 @@
 	'use strict';
 	
 	var DOMNamespaces = __webpack_require__(397);
-	var setInnerHTML = __webpack_require__(175);
+	var setInnerHTML = __webpack_require__(176);
 	
 	var createMicrosoftUnsafeLocalFunction = __webpack_require__(404);
 	var setTextContent = __webpack_require__(461);
@@ -5936,7 +5936,7 @@
 	
 	if (process.env.NODE_ENV !== 'production') {
 	  var lowPriorityWarning = __webpack_require__(415);
-	  var canDefineProperty = __webpack_require__(177);
+	  var canDefineProperty = __webpack_require__(178);
 	  var ReactElementValidator = __webpack_require__(476);
 	  var didWarnPropTypesDeprecated = false;
 	  createElement = ReactElementValidator.createElement;
@@ -7732,7 +7732,7 @@
 	
 	var _prodInvariant = __webpack_require__(14);
 	
-	var EventPluginRegistry = __webpack_require__(170);
+	var EventPluginRegistry = __webpack_require__(171);
 	var EventPluginUtils = __webpack_require__(398);
 	var ReactErrorUtils = __webpack_require__(402);
 	
@@ -8251,6 +8251,74 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable class-methods-use-this */
 	
+	var _alt = __webpack_require__(35);
+	
+	var _alt2 = _interopRequireDefault(_alt);
+	
+	var _GeoStoreSource = __webpack_require__(505);
+	
+	var _GeoStoreSource2 = _interopRequireDefault(_GeoStoreSource);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var GeoStoreActionsBase = function () {
+	  function GeoStoreActionsBase() {
+	    _classCallCheck(this, GeoStoreActionsBase);
+	  }
+	
+	  _createClass(GeoStoreActionsBase, [{
+	    key: 'selectGeoStoreId',
+	    value: function selectGeoStoreId(identifier) {
+	      return identifier;
+	    }
+	  }, {
+	    key: 'didGetGeoStore',
+	    value: function didGetGeoStore(json) {
+	      return json;
+	    }
+	  }, {
+	    key: 'getGeoStore',
+	    value: function getGeoStore(identifier) {
+	      var _this = this;
+	
+	      return function (dispatch) {
+	        dispatch();
+	        _GeoStoreSource2.default.get(identifier).then(function (response) {
+	          return response.json();
+	        }).then(function (json) {
+	          _this.didGetGeoStore(json);
+	        }).catch(function (error) {
+	          _this.fetchFailed(error);
+	        });
+	      };
+	    }
+	  }, {
+	    key: 'fetchFailed',
+	    value: function fetchFailed(error) {
+	      return error;
+	    }
+	  }]);
+	
+	  return GeoStoreActionsBase;
+	}();
+	
+	var GeoStoreActions = _alt2.default.createActions(GeoStoreActionsBase);
+	exports.default = GeoStoreActions;
+
+/***/ }),
+/* 168 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable class-methods-use-this */
+	
 	__webpack_require__(124);
 	
 	var _alt = __webpack_require__(35);
@@ -8360,6 +8428,11 @@
 	    value: function failed(error) {
 	      return error;
 	    }
+	  }, {
+	    key: 'clear',
+	    value: function clear() {
+	      return null;
+	    }
 	  }]);
 	
 	  return SearchActionsBase;
@@ -8369,7 +8442,7 @@
 	exports.default = SearchActions;
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -8394,7 +8467,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var require;var require;/* WEBPACK VAR INJECTION */(function(Buffer, global) {(function(f){if(true){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.mapboxgl = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -8843,7 +8916,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(382).Buffer, (function() { return this; }())))
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9099,7 +9172,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9114,7 +9187,7 @@
 	
 	var _assign = __webpack_require__(29);
 	
-	var EventPluginRegistry = __webpack_require__(170);
+	var EventPluginRegistry = __webpack_require__(171);
 	var ReactEventEmitterMixin = __webpack_require__(602);
 	var ViewportMetrics = __webpack_require__(453);
 	
@@ -9425,7 +9498,7 @@
 	module.exports = ReactBrowserEventEmitter;
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9499,7 +9572,7 @@
 	module.exports = SyntheticMouseEvent;
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9730,7 +9803,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports) {
 
 	/**
@@ -9854,7 +9927,7 @@
 	module.exports = escapeTextContentForBrowser;
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -9954,7 +10027,7 @@
 	module.exports = setInnerHTML;
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11417,7 +11490,7 @@
 	exports.default = Select;
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -11446,7 +11519,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11566,74 +11639,6 @@
 	
 	/* istanbul ignore next */
 	function NoopClass() {}
-
-/***/ }),
-/* 179 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable class-methods-use-this */
-	
-	var _alt = __webpack_require__(35);
-	
-	var _alt2 = _interopRequireDefault(_alt);
-	
-	var _GeoStoreSource = __webpack_require__(505);
-	
-	var _GeoStoreSource2 = _interopRequireDefault(_GeoStoreSource);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var GeoStoreActionsBase = function () {
-	  function GeoStoreActionsBase() {
-	    _classCallCheck(this, GeoStoreActionsBase);
-	  }
-	
-	  _createClass(GeoStoreActionsBase, [{
-	    key: 'selectGeoStoreId',
-	    value: function selectGeoStoreId(identifier) {
-	      return identifier;
-	    }
-	  }, {
-	    key: 'didGetGeoStore',
-	    value: function didGetGeoStore(json) {
-	      return json;
-	    }
-	  }, {
-	    key: 'getGeoStore',
-	    value: function getGeoStore(identifier) {
-	      var _this = this;
-	
-	      return function (dispatch) {
-	        dispatch();
-	        _GeoStoreSource2.default.get(identifier).then(function (response) {
-	          return response.json();
-	        }).then(function (json) {
-	          _this.didGetGeoStore(json);
-	        }).catch(function (error) {
-	          _this.fetchFailed(error);
-	        });
-	      };
-	    }
-	  }, {
-	    key: 'fetchFailed',
-	    value: function fetchFailed(error) {
-	      return error;
-	    }
-	  }]);
-	
-	  return GeoStoreActionsBase;
-	}();
-	
-	var GeoStoreActions = _alt2.default.createActions(GeoStoreActionsBase);
-	exports.default = GeoStoreActions;
 
 /***/ }),
 /* 180 */
@@ -19235,7 +19240,7 @@
 	var ReactInstrumentation = __webpack_require__(58);
 	
 	var createMicrosoftUnsafeLocalFunction = __webpack_require__(404);
-	var setInnerHTML = __webpack_require__(175);
+	var setInnerHTML = __webpack_require__(176);
 	var setTextContent = __webpack_require__(461);
 	
 	function getNodeAfter(parentNode, node) {
@@ -20991,7 +20996,7 @@
 	});
 	exports.defaultFilterOptions = exports.defaultClearRenderer = exports.defaultArrowRenderer = exports.defaultMenuRenderer = exports.Option = exports.Value = exports.Creatable = exports.AsyncCreatable = exports.Async = undefined;
 	
-	var _Select = __webpack_require__(176);
+	var _Select = __webpack_require__(177);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
@@ -22421,7 +22426,7 @@
 	
 	var _alt2 = _interopRequireDefault(_alt);
 	
-	var _SearchActions = __webpack_require__(167);
+	var _SearchActions = __webpack_require__(168);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -22445,7 +22450,8 @@
 	    this.bindListeners({
 	      handleSearch: _SearchActions2.default.SEARCH,
 	      handleSearchResults: _SearchActions2.default.UPDATE,
-	      handleSearchFail: _SearchActions2.default.FAILED
+	      handleSearchFail: _SearchActions2.default.FAILED,
+	      handleSearchClear: _SearchActions2.default.CLEAR
 	    });
 	  }
 	
@@ -22477,6 +22483,18 @@
 	      this.results = [];
 	      this.isSearching = false;
 	      this.error = error;
+	    }
+	  }, {
+	    key: 'handleSearchClear',
+	    value: function handleSearchClear() {
+	      this.total = null;
+	      this.results = [];
+	      this.next = null;
+	      this.previous = null;
+	      this.error = null;
+	      this.isSearching = false;
+	      this.query = {};
+	      this.searchCount = 0;
 	    }
 	  }]);
 	
@@ -24910,7 +24928,7 @@
 	var DOMLazyTree = __webpack_require__(118);
 	var DOMProperty = __webpack_require__(85);
 	var React = __webpack_require__(120);
-	var ReactBrowserEventEmitter = __webpack_require__(171);
+	var ReactBrowserEventEmitter = __webpack_require__(172);
 	var ReactCurrentOwner = __webpack_require__(64);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var ReactDOMContainerInfo = __webpack_require__(585);
@@ -24926,7 +24944,7 @@
 	var emptyObject = __webpack_require__(464);
 	var instantiateReactComponent = __webpack_require__(459);
 	var invariant = __webpack_require__(12);
-	var setInnerHTML = __webpack_require__(175);
+	var setInnerHTML = __webpack_require__(176);
 	var shouldUpdateReactComponent = __webpack_require__(409);
 	var warning = __webpack_require__(15);
 	
@@ -26007,8 +26025,8 @@
 	'use strict';
 	
 	var ExecutionEnvironment = __webpack_require__(41);
-	var escapeTextContentForBrowser = __webpack_require__(174);
-	var setInnerHTML = __webpack_require__(175);
+	var escapeTextContentForBrowser = __webpack_require__(175);
+	var setInnerHTML = __webpack_require__(176);
 	
 	/**
 	 * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -26422,7 +26440,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Select = __webpack_require__(176);
+	var _Select = __webpack_require__(177);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
@@ -26704,7 +26722,7 @@
 	
 	var _defaultMenuRenderer2 = _interopRequireDefault(_defaultMenuRenderer);
 	
-	var _Select = __webpack_require__(176);
+	var _Select = __webpack_require__(177);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
@@ -27464,7 +27482,7 @@
 	
 	var ReactNoopUpdateQueue = __webpack_require__(477);
 	
-	var canDefineProperty = __webpack_require__(177);
+	var canDefineProperty = __webpack_require__(178);
 	var emptyObject = __webpack_require__(671);
 	var invariant = __webpack_require__(122);
 	var lowPriorityWarning = __webpack_require__(415);
@@ -27640,7 +27658,7 @@
 	
 	var checkReactTypeSpec = __webpack_require__(666);
 	
-	var canDefineProperty = __webpack_require__(177);
+	var canDefineProperty = __webpack_require__(178);
 	var getIteratorFn = __webpack_require__(478);
 	var warning = __webpack_require__(123);
 	var lowPriorityWarning = __webpack_require__(415);
@@ -28193,7 +28211,7 @@
 	
 	var fn = _interopRequireWildcard(_functions);
 	
-	var _AltUtils = __webpack_require__(178);
+	var _AltUtils = __webpack_require__(179);
 	
 	var utils = _interopRequireWildcard(_AltUtils);
 	
@@ -28289,7 +28307,7 @@
 	
 	var store = _interopRequireWildcard(_store);
 	
-	var _AltUtils = __webpack_require__(178);
+	var _AltUtils = __webpack_require__(179);
 	
 	var utils = _interopRequireWildcard(_AltUtils);
 	
@@ -29070,7 +29088,7 @@
 	exports.createStoreFromObject = createStoreFromObject;
 	exports.createStoreFromClass = createStoreFromClass;
 	
-	var _AltUtils = __webpack_require__(178);
+	var _AltUtils = __webpack_require__(179);
 	
 	var utils = _interopRequireWildcard(_AltUtils);
 	
@@ -29441,6 +29459,7 @@
 	        name: this.props.name,
 	        placeholder: this.props.placeholder,
 	        options: this.state.options,
+	        className: 'searchView-select__container',
 	        onChange: this.handleChange,
 	        isLoading: this.state.options.length === 0,
 	        backspaceToRemoveMessage: ''
@@ -29549,6 +29568,7 @@
 	          name: 'dateLookupType',
 	          placeholder: labelName,
 	          options: dateLookupOptions,
+	          className: 'searchView-select__container',
 	          onChange: this.handleUpdate
 	        }),
 	        _react2.default.createElement(
@@ -29785,7 +29805,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _SearchActions = __webpack_require__(167);
+	var _SearchActions = __webpack_require__(168);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -29940,7 +29960,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _mapboxGl = __webpack_require__(169);
+	var _mapboxGl = __webpack_require__(170);
 	
 	var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 	
@@ -30103,14 +30123,14 @@
 	    _this.state = { loading: 'loading' };
 	    _this.handleMapLoad = _this.handleMapLoad.bind(_this);
 	    _this.handleMapClick = _this.handleMapClick.bind(_this);
-	    _this.onSearchResults = _this.onSearchResults.bind(_this);
+	    _this.onSearchStoreChange = _this.onSearchStoreChange.bind(_this);
 	    _this.handleLoading = _this.handleLoading.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(MapContainer, [{
-	    key: 'onSearchResults',
-	    value: function onSearchResults(data) {
+	    key: 'onSearchStoreChange',
+	    value: function onSearchStoreChange(data) {
 	      var total = data.total,
 	          results = data.results,
 	          isSearching = data.isSearching,
@@ -30121,6 +30141,16 @@
 	      this.mapCtl.removePopup();
 	      this.mapCtl.resetMapZoom();
 	
+	      /*
+	        If `isSearching` is false, the change presumably indicates
+	        a transition to a completed request.
+	         NOTE: as I'm receiving it, this code also checks truthiness of
+	        `results`, but this should never be falsey, as the value
+	        of `results` should always be some array. I'm leaving this
+	        in for now because it's not hurting anything & removing it
+	        may cause failures under unexpected conditions.
+	         TODO: figure out why this was added at all.
+	      */
 	      if (!isSearching && results) {
 	        // check query to see if we are searching for more than just infrstructure_type,
 	        // then simply hide and show layers depending on query.
@@ -30130,8 +30160,16 @@
 	        }).map(function (element) {
 	          return element.geo;
 	        });
+	
+	        // is this a reset request? if so, just wipe the currentGeo and move on.
+	        if (queryKeys.length === 0 && !isSearching) {
+	          this.mapCtl.setCurrentGeo();
+	          return;
+	        }
+	
+	        // otherwise, this is a search.
 	        // if we are only searching on infastructure_type, then we only show or hide layers
-	        if (queryKeys.length === 1 && query.infrastructure_type.length > 0) {
+	        if (queryKeys.length === 1 && query.infrastructure_type instanceof Object && query.infrastructure_type.length > 0) {
 	          this.mapCtl.setLayerIds(query.infrastructure_type);
 	          this.mapCtl.setCurrentGeo();
 	        } else {
@@ -30157,7 +30195,7 @@
 	    key: 'handleMapLoad',
 	    value: function handleMapLoad() {
 	      this.mapCtl = new _Cartographer2.default(this.map.glmap);
-	      _SearchStore2.default.listen(this.onSearchResults);
+	      _SearchStore2.default.listen(this.onSearchStoreChange);
 	      var infrastructureTypes = _InfrastructureTypeStore2.default.state.results;
 	      for (var i in infrastructureTypes) {
 	        _GeoCentroidActions2.default.fetch({ 'project_type': infrastructureTypes[i].name });
@@ -30287,7 +30325,7 @@
 /* 496 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -30296,6 +30334,10 @@
 	var _react = __webpack_require__(16);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _GeoStoreActions = __webpack_require__(167);
+	
+	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -30306,49 +30348,57 @@
 	  var listItems = project.initiatives.map(function (init) {
 	    var url = init.page_url || null;
 	    return _react2.default.createElement(
-	      "li",
-	      { key: init.name, className: "projectResult__initiatives-list-item" },
+	      'li',
+	      { key: init.name, className: 'projectResult__initiatives-list-item' },
 	      _react2.default.createElement(
-	        "a",
-	        { href: url, target: "_blank", rel: "noopener noreferrer" },
+	        'a',
+	        { href: url, target: '_blank', rel: 'noopener noreferrer' },
 	        init.name
 	      )
 	    );
 	  });
 	
 	  return _react2.default.createElement(
-	    "section",
-	    { className: "projectResult" },
+	    'section',
+	    { className: 'projectResult' },
 	    _react2.default.createElement(
-	      "h3",
-	      { className: "projectResult__title" },
-	      project.name
+	      'h3',
+	      { className: 'projectResult__title' },
+	      project.name,
+	      project.geo ? _react2.default.createElement('div', {
+	        className: 'projectResult__pin-button',
+	        role: 'button',
+	        tabIndex: '0',
+	        onClick: function onClick() {
+	          return _GeoStoreActions2.default.selectGeoStoreId(project.geo);
+	        }
+	      }) : null
 	    ),
 	    _react2.default.createElement(
-	      "section",
-	      { className: "projectResult__section" },
+	      'section',
+	      { className: 'projectResult__section' },
 	      _react2.default.createElement(
-	        "div",
-	        { className: "projectResult__data-label" },
-	        "Type"
+	        'div',
+	        { className: 'projectResult__data-label' },
+	        'Type'
 	      ),
 	      _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
 	        project.infrastructure_type
 	      )
 	    ),
 	    listItems.length > 0 && _react2.default.createElement(
-	      "section",
-	      { className: "projectResult__section projectResult__section--initiatives-list" },
+	      'section',
+	      { className: 'projectResult__section projectResult__section--initiatives-list' },
 	      _react2.default.createElement(
-	        "div",
-	        { className: "projectResult__data-label" },
-	        "Initiatives"
+	        'div',
+	        { className: 'projectResult__data-label' },
+	        'Initiatives'
 	      ),
 	      _react2.default.createElement(
-	        "ul",
-	        { className: "projectResult__initiatives-list" },
+	        'ul',
+	        { className: 'projectResult__initiatives-list' },
 	        listItems
 	      )
 	    )
@@ -30384,7 +30434,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _GeoStoreActions = __webpack_require__(179);
+	var _GeoStoreActions = __webpack_require__(167);
 	
 	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
@@ -30416,7 +30466,6 @@
 	        'ul',
 	        { className: 'searchResults' },
 	        this.props.results.map(function (result, index) {
-	          var geoid = result.geo;
 	          return _react2.default.createElement(
 	            'li',
 	            { key: index, className: 'searchResults__result' },
@@ -30444,13 +30493,6 @@
 	    value: function handleDetailClick(event) {
 	      if (event.target.value) {
 	        window.open(event.target.value, '_blank');
-	      }
-	    }
-	  }, {
-	    key: 'handleMapButtonClick',
-	    value: function handleMapButtonClick(event) {
-	      if (event.target.value) {
-	        _GeoStoreActions2.default.selectGeoStoreId(event.target.value);
 	      }
 	    }
 	  }]);
@@ -30496,7 +30538,7 @@
 	
 	var _ResultsList2 = _interopRequireDefault(_ResultsList);
 	
-	var _SearchActions = __webpack_require__(167);
+	var _SearchActions = __webpack_require__(168);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -30895,7 +30937,7 @@
 	
 	var _ErrorView2 = _interopRequireDefault(_ErrorView);
 	
-	var _SearchActions = __webpack_require__(167);
+	var _SearchActions = __webpack_require__(168);
 	
 	var _SearchActions2 = _interopRequireDefault(_SearchActions);
 	
@@ -30985,7 +31027,7 @@
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    _this.handleQueryUpdate = _this.handleQueryUpdate.bind(_this);
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
-	    _this.onSearchResults = _this.onSearchResults.bind(_this);
+	    _this.onSearchStoreChange = _this.onSearchStoreChange.bind(_this);
 	    _this.toggleFilters = _this.toggleFilters.bind(_this);
 	    _this.toggleHelp = _this.toggleHelp.bind(_this);
 	    return _this;
@@ -30996,7 +31038,7 @@
 	    value: function componentDidMount() {
 	      var _this2 = this;
 	
-	      _SearchStore2.default.listen(this.onSearchResults);
+	      _SearchStore2.default.listen(this.onSearchStoreChange);
 	
 	      _InfrastructureTypeStore2.default.listen(function (store) {
 	        return _this2.setState(function (prevState) {
@@ -31083,8 +31125,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'onSearchResults',
-	    value: function onSearchResults(data) {
+	    key: 'onSearchStoreChange',
+	    value: function onSearchStoreChange(data) {
 	      var total = data.total,
 	          results = data.results,
 	          next = data.next,
@@ -31093,7 +31135,7 @@
 	          isSearching = data.isSearching,
 	          searchCount = data.searchCount;
 	
-	      this.setState({
+	      this.setState(Object.assign({
 	        total: total,
 	        results: results,
 	        nextURL: next,
@@ -31101,7 +31143,7 @@
 	        error: error,
 	        isSearching: isSearching,
 	        searchCount: searchCount
-	      });
+	      }, searchCount === 0 ? { query: emptyQueryState() } : {}));
 	    }
 	  }, {
 	    key: 'resetQueryState',
@@ -31158,12 +31200,17 @@
 	              key = _ref4[0],
 	              value = _ref4[1];
 	
-	          if (value === '' || value === null) {
+	          if (value === '' || value === null || value instanceof Object && !value.length) {
 	            delete searchParams[key];
 	          }
 	        });
 	        this.toggleFilters();
-	        _SearchActions2.default.search(searchParams);
+	
+	        if (Object.keys(searchParams).length > 0) {
+	          _SearchActions2.default.search(searchParams);
+	        } else {
+	          _SearchActions2.default.clear();
+	        }
 	      }
 	    }
 	  }, {
@@ -31261,7 +31308,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Region'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31269,6 +31316,7 @@
 	                      name: 'region',
 	                      placeholder: 'Region',
 	                      options: this.state.options.region,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ region: selections.map(function (s) {
 	                            return s.value;
@@ -31284,7 +31332,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Country'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31292,6 +31340,7 @@
 	                      name: 'countries',
 	                      placeholder: 'Country',
 	                      options: this.state.options.countries,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ countries: selections.map(function (s) {
 	                            return s.value;
@@ -31307,7 +31356,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Project Status'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31315,6 +31364,7 @@
 	                      name: 'status',
 	                      placeholder: 'Project Status',
 	                      options: this.state.options.status,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ status: selections.map(function (s) {
 	                            return s.value;
@@ -31330,7 +31380,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Milestone'
 	                    ),
 	                    _react2.default.createElement(_DateRangeSelect2.default, {
@@ -31376,7 +31426,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Principal Agent'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31384,6 +31434,7 @@
 	                      name: 'initiatives__principal_agent__slug',
 	                      placeholder: 'Principal Agent',
 	                      options: this.state.options.initiatives__principal_agent__slug,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(option) {
 	                        return _this3.handleQueryUpdate({ initiatives__principal_agent__slug: option ? option.value : '' });
 	                      },
@@ -31423,7 +31474,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Cost'
 	                    ),
 	                    _react2.default.createElement(_CurrencyRangeSelect2.default, {
@@ -31440,7 +31491,7 @@
 	                    { className: 'filter-input-group' },
 	                    _react2.default.createElement(
 	                      'label',
-	                      { className: 'filter-input-group__label filter-input-group__label--with-plus' },
+	                      { className: 'filter-input-group__label' },
 	                      'Country'
 	                    ),
 	                    _react2.default.createElement(_reactSelect2.default, {
@@ -31448,6 +31499,7 @@
 	                      name: 'funding__sources__countries',
 	                      placeholder: 'Country',
 	                      options: this.state.options.funding__sources__countries,
+	                      className: 'searchView-select__container',
 	                      onChange: function onChange(selections) {
 	                        return _this3.handleQueryUpdate({ funding__sources__countries: selections.map(function (s) {
 	                            return s.value;
@@ -31462,16 +31514,13 @@
 	              ),
 	              _react2.default.createElement(
 	                'header',
-	                {
-	                  className: (0, _classnames2.default)('searchView__footer', { 'searchView__footer--disabled': !this.state.searchEnabled })
-	                },
+	                { className: 'searchView__footer' },
 	                _react2.default.createElement(
 	                  'button',
 	                  {
 	                    type: 'submit',
 	                    title: 'Search',
-	                    className: 'searchView__update-results',
-	                    disabled: !this.state.searchEnabled
+	                    className: 'searchView__update-results'
 	                  },
 	                  _react2.default.createElement(
 	                    'span',
@@ -31727,7 +31776,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint-disable no-console, class-methods-use-this */
 	
-	var _mapboxGl = __webpack_require__(169);
+	var _mapboxGl = __webpack_require__(170);
 	
 	var _mapboxGl2 = _interopRequireDefault(_mapboxGl);
 	
@@ -31743,7 +31792,7 @@
 	
 	var _GeoCentroidActions2 = _interopRequireDefault(_GeoCentroidActions);
 	
-	var _GeoStoreActions = __webpack_require__(179);
+	var _GeoStoreActions = __webpack_require__(167);
 	
 	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
@@ -31799,7 +31848,7 @@
 	    value: function setLayerIds(infrastructure_type) {
 	      var obj = _InfrastructureTypeStore2.default.state.results;
 	      var visibleIds = [];
-	      if (infrastructure_type.length > 0) {
+	      if (infrastructure_type instanceof Object && infrastructure_type.length > 0) {
 	        for (var i in obj) {
 	          if (!infrastructure_type.includes(obj[i].id)) {
 	            this.hideLayer(obj[i].name);
@@ -32559,7 +32608,7 @@
 	
 	var _promiseQueue2 = _interopRequireDefault(_promiseQueue);
 	
-	var _GeoStoreActions = __webpack_require__(179);
+	var _GeoStoreActions = __webpack_require__(167);
 	
 	var _GeoStoreActions2 = _interopRequireDefault(_GeoStoreActions);
 	
@@ -35710,7 +35759,7 @@
 	});
 	exports.default = calc;
 	
-	var _joinPrefixedValue = __webpack_require__(168);
+	var _joinPrefixedValue = __webpack_require__(169);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -35740,7 +35789,7 @@
 	});
 	exports.default = cursor;
 	
-	var _joinPrefixedValue = __webpack_require__(168);
+	var _joinPrefixedValue = __webpack_require__(169);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -35870,7 +35919,7 @@
 	});
 	exports.default = gradient;
 	
-	var _joinPrefixedValue = __webpack_require__(168);
+	var _joinPrefixedValue = __webpack_require__(169);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -35917,7 +35966,7 @@
 	});
 	exports.default = sizing;
 	
-	var _joinPrefixedValue = __webpack_require__(168);
+	var _joinPrefixedValue = __webpack_require__(169);
 	
 	var _joinPrefixedValue2 = _interopRequireDefault(_joinPrefixedValue);
 	
@@ -38840,7 +38889,7 @@
 	
 	var EventPropagators = __webpack_require__(164);
 	var ReactDOMComponentTree = __webpack_require__(34);
-	var SyntheticMouseEvent = __webpack_require__(172);
+	var SyntheticMouseEvent = __webpack_require__(173);
 	
 	var eventTypes = {
 	  mouseEnter: {
@@ -40489,8 +40538,8 @@
 	var DOMProperty = __webpack_require__(85);
 	var DOMPropertyOperations = __webpack_require__(443);
 	var EventPluginHub = __webpack_require__(163);
-	var EventPluginRegistry = __webpack_require__(170);
-	var ReactBrowserEventEmitter = __webpack_require__(171);
+	var EventPluginRegistry = __webpack_require__(171);
+	var ReactBrowserEventEmitter = __webpack_require__(172);
 	var ReactDOMComponentFlags = __webpack_require__(444);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	var ReactDOMInput = __webpack_require__(589);
@@ -40502,7 +40551,7 @@
 	var ReactServerRenderingTransaction = __webpack_require__(613);
 	
 	var emptyFunction = __webpack_require__(84);
-	var escapeTextContentForBrowser = __webpack_require__(174);
+	var escapeTextContentForBrowser = __webpack_require__(175);
 	var invariant = __webpack_require__(12);
 	var isEventSupported = __webpack_require__(408);
 	var shallowEqual = __webpack_require__(411);
@@ -42426,7 +42475,7 @@
 	var DOMLazyTree = __webpack_require__(118);
 	var ReactDOMComponentTree = __webpack_require__(34);
 	
-	var escapeTextContentForBrowser = __webpack_require__(174);
+	var escapeTextContentForBrowser = __webpack_require__(175);
 	var invariant = __webpack_require__(12);
 	var validateDOMNesting = __webpack_require__(410);
 	
@@ -42887,7 +42936,7 @@
 	'use strict';
 	
 	var DOMProperty = __webpack_require__(85);
-	var EventPluginRegistry = __webpack_require__(170);
+	var EventPluginRegistry = __webpack_require__(171);
 	var ReactComponentTreeHook = __webpack_require__(57);
 	
 	var warning = __webpack_require__(15);
@@ -43368,7 +43417,7 @@
 	var _assign = __webpack_require__(29);
 	
 	var ReactUpdates = __webpack_require__(63);
-	var Transaction = __webpack_require__(173);
+	var Transaction = __webpack_require__(174);
 	
 	var emptyFunction = __webpack_require__(84);
 	
@@ -43777,7 +43826,7 @@
 	var EventPluginUtils = __webpack_require__(398);
 	var ReactComponentEnvironment = __webpack_require__(401);
 	var ReactEmptyComponent = __webpack_require__(446);
-	var ReactBrowserEventEmitter = __webpack_require__(171);
+	var ReactBrowserEventEmitter = __webpack_require__(172);
 	var ReactHostComponent = __webpack_require__(448);
 	var ReactUpdates = __webpack_require__(63);
 	
@@ -44477,10 +44526,10 @@
 	
 	var CallbackQueue = __webpack_require__(442);
 	var PooledClass = __webpack_require__(115);
-	var ReactBrowserEventEmitter = __webpack_require__(171);
+	var ReactBrowserEventEmitter = __webpack_require__(172);
 	var ReactInputSelection = __webpack_require__(449);
 	var ReactInstrumentation = __webpack_require__(58);
-	var Transaction = __webpack_require__(173);
+	var Transaction = __webpack_require__(174);
 	var ReactUpdateQueue = __webpack_require__(403);
 	
 	/**
@@ -44748,7 +44797,7 @@
 	var _assign = __webpack_require__(29);
 	
 	var PooledClass = __webpack_require__(115);
-	var Transaction = __webpack_require__(173);
+	var Transaction = __webpack_require__(174);
 	var ReactInstrumentation = __webpack_require__(58);
 	var ReactServerUpdateQueue = __webpack_require__(614);
 	
@@ -45501,7 +45550,7 @@
 	var SyntheticEvent = __webpack_require__(83);
 	var SyntheticFocusEvent = __webpack_require__(623);
 	var SyntheticKeyboardEvent = __webpack_require__(625);
-	var SyntheticMouseEvent = __webpack_require__(172);
+	var SyntheticMouseEvent = __webpack_require__(173);
 	var SyntheticDragEvent = __webpack_require__(622);
 	var SyntheticTouchEvent = __webpack_require__(626);
 	var SyntheticTransitionEvent = __webpack_require__(627);
@@ -45838,7 +45887,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(172);
+	var SyntheticMouseEvent = __webpack_require__(173);
 	
 	/**
 	 * @interface DragEvent
@@ -46127,7 +46176,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(172);
+	var SyntheticMouseEvent = __webpack_require__(173);
 	
 	/**
 	 * @interface WheelEvent
@@ -46876,7 +46925,7 @@
 	
 	'use strict';
 	
-	var escapeTextContentForBrowser = __webpack_require__(174);
+	var escapeTextContentForBrowser = __webpack_require__(175);
 	
 	/**
 	 * Escapes attribute value to prevent scripting attacks.
@@ -47908,7 +47957,7 @@
 	
 	var _Creatable2 = _interopRequireDefault(_Creatable);
 	
-	var _Select = __webpack_require__(176);
+	var _Select = __webpack_require__(177);
 	
 	var _Select2 = _interopRequireDefault(_Select);
 	
