@@ -285,27 +285,27 @@ def refresh_views():
                 ON p.id = related.project_id;
             '''.format(status_cases=project_status_cases, **project_case_statements))
         cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_export_view AS
-                SELECT pp.id,
-                pp.name,
-                icv.countries,
-                irv.regions,
-                ippopv.operators,
-                ipposv.owners,
-                ipposv.owners_stake,
-                pp.slug,
+                SELECT pp.id AS plant_id,
+                pp.name AS plant_name,
+                icv.countries AS plant_countries,
+                irv.regions AS plant_regions,
+                ippopv.operators AS plant_operators,
+                ipposv.owners AS plant_owners,
+                ipposv.owners_stake AS plant_owners_stake,
+                pp.slug AS plant_slug,
                 CASE
                     {status_cases}
                     ELSE 'NULL'
                 END
-                status,
-                pp.total_cost,
-                pp.total_cost_currency,
+                AS plant_status,
+                pp.total_cost AS plant_total_cost,
+                pp.total_cost_currency AS plant_total_cost_currency,
                 pp.plant_year_online,
                 pp.plant_month_online,
                 pp.plant_day_online,
-                pp.decommissioning_year,
-                pp.decommissioning_month,
-                pp.decommissioning_day,
+                pp.decommissioning_year AS plant_decommissioning_year,
+                pp.decommissioning_month AS plant_decommissioning_month,
+                pp.decommissioning_day AS plant_decommissioning_day,
                 pp.plant_capacity,
                 CASE
                     {plant_capacity_unit}
@@ -319,23 +319,23 @@ def refresh_views():
                 END
                 plant_output_unit,
                 pp.plant_output_year,
-                pp.estimated_plant_output,
+                pp.estimated_plant_output AS plant_estimated_output,
                 CASE
                     {estimated_plant_output_unit}
                     ELSE 'NULL'
                 END
-                estimated_plant_output_unit,
+                AS plant_estimated_output_unit,
                 pp."plant_CO2_emissions",
                 CASE
                     {plant_CO2_emissions_unit}
                     ELSE 'NULL'
                 END
                 plant_CO2_emissions_unit,
-                pp.grid_connected,
-                pp.description,
-                pp.created_at,
-                pp.updated_at,
-                pp.published
+                pp.grid_connected AS plant_grid_connected,
+                pp.description AS plant_description,
+                pp.created_at AS plant_created_at,
+                pp.updated_at AS plant_updated_at,
+                pp.published AS plant_published
             FROM infrastructure_powerplant pp
                 LEFT OUTER JOIN infrastructure_powerplant_countries_view icv ON icv.powerplant_id = pp.id
                 LEFT OUTER JOIN infrastructure_powerplant_regions_view irv ON irv.powerplant_id = pp.id

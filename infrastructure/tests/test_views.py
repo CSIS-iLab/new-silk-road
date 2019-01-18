@@ -606,37 +606,37 @@ class PowerPlantCSVExportTestCase(TestCase):
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
         headers = (
-                'id',
-                'name',
-                'countries',
-                'regions',
-                'operators',
-                'owners',
-                'owners_stake',
-                'slug',
-                'status',
-                'total_cost',
-                'total_cost_currency',
+                'plant_id',
+                'plant_name',
+                'plant_countries',
+                'plant_regions',
+                'plant_operators',
+                'plant_owners',
+                'plant_owners_stake',
+                'plant_slug',
+                'plant_status',
+                'plant_total_cost',
+                'plant_total_cost_currency',
                 'plant_year_online',
                 'plant_month_online',
                 'plant_day_online',
-                'decommissioning_year',
-                'decommissioning_month',
-                'decommissioning_day',
+                'plant_decommissioning_year',
+                'plant_decommissioning_month',
+                'plant_decommissioning_day',
                 'plant_capacity',
                 'plant_capacity_unit',
                 'plant_output',
                 'plant_output_unit',
                 'plant_output_year',
-                'estimated_plant_output',
-                'estimated_plant_output_unit',
+                'plant_estimated_output',
+                'plant_estimated_output_unit',
                 'plant_CO2_emissions',
                 'plant_co2_emissions_unit',
-                'grid_connected',
-                'description',
-                'created_at',
-                'updated_at',
-                'published',
+                'plant_grid_connected',
+                'plant_description',
+                'plant_created_at',
+                'plant_updated_at',
+                'plant_published',
         )
         self.assertEqual(results.fieldnames, list(headers))
 
@@ -649,9 +649,9 @@ class PowerPlantCSVExportTestCase(TestCase):
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
         for row in results:
-            if row['id'] == str(power_plant.id):
-                self.assertTrue(country1.name in row['countries'])
-                self.assertTrue(country2.name in row['countries'])
+            if row['plant_id'] == str(power_plant.id):
+                self.assertTrue(country1.name in row['plant_countries'])
+                self.assertTrue(country2.name in row['plant_countries'])
 
     def test_plant_regions(self):
         """Ensure multiple regions are in CSV export"""
@@ -662,9 +662,9 @@ class PowerPlantCSVExportTestCase(TestCase):
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
         for row in results:
-            if row['id'] == str(power_plant.id):
-                self.assertTrue(region1.name in row['regions'])
-                self.assertTrue(region2.name in row['regions'])
+            if row['plant_id'] == str(power_plant.id):
+                self.assertTrue(region1.name in row['plant_regions'])
+                self.assertTrue(region2.name in row['plant_regions'])
 
     def test_plant_operators(self):
         """Ensure multiple operators are in CSV export"""
@@ -675,9 +675,9 @@ class PowerPlantCSVExportTestCase(TestCase):
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
         for row in results:
-            if row['id'] == str(power_plant.id):
-                self.assertTrue(operator1.name in row['operators'])
-                self.assertTrue(operator2.name in row['operators'])
+            if row['plant_id'] == str(power_plant.id):
+                self.assertTrue(operator1.name in row['plant_operators'])
+                self.assertTrue(operator2.name in row['plant_operators'])
 
     def test_plant_owner_stakes(self):
         """Ensure owner stakes are in CSV export"""
@@ -690,8 +690,8 @@ class PowerPlantCSVExportTestCase(TestCase):
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
         for row in results:
-            if row['id'] == str(power_plant.id):
-                owners = list(zip(row['owners'].split(','), row['owners_stake'].split(',')))
+            if row['plant_id'] == str(power_plant.id):
+                owners = list(zip(row['plant_owners'].split(','), row['plant_owners_stake'].split(',')))
 
                 with self.subTest('Owner stake 1'):
                     self.assertTrue(stake1.owner.name in owners[0][0])
@@ -702,7 +702,7 @@ class PowerPlantCSVExportTestCase(TestCase):
                     self.assertTrue('NULL' in owners[1][1])
 
                 with self.subTest('Excluded owner stake'):
-                    self.assertFalse(stake_non.owner.name in row['owners'])
+                    self.assertFalse(stake_non.owner.name in row['plant_owners'])
     
     def test_never_cache_is_enabled(self):
         response = self.client.get(self.url)
