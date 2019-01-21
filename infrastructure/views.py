@@ -1,5 +1,6 @@
 import datetime
 import logging
+import csv
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
@@ -12,6 +13,8 @@ from django.views.generic import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 
 from .models import PowerPlant, Project, Initiative
 from .forms import ProjectGeoUploadForm
@@ -100,7 +103,7 @@ class GeoUploadView(LoginRequiredMixin, FormView):
             error_response = '<h1>{}</h1><p>{}</p>'.format(err_msg, str(e))
             return HttpResponseServerError(error_response)
 
-
+@method_decorator(never_cache, name='dispatch')
 class ProjectExportView(View):
 
     def get(self, request, *args, **kwargs):
@@ -118,6 +121,24 @@ class ProjectExportView(View):
             )
         return response
 
+@method_decorator(never_cache, name='dispatch')
+class PowerPlantExportView(View):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        d = datetime.datetime.now()
+        filename = "infrastructure_power_plants_{:%Y%m%d_%H%M}.csv".format(d)
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        writer = csv.writer(response)
+        with connection.cursor() as cursor:
+            cursor.copy_expert(
+                '''
+                COPY (SELECT * FROM infrastructure_powerplant_export_view)
+                TO STDOUT
+                WITH (FORMAT csv, HEADER TRUE, NULL 'NULL', FORCE_QUOTE *)''',
+                response
+            )
+        return response
 
 class PowerPlantDetailView(PublicationMixin, DetailView):
     model = PowerPlant
