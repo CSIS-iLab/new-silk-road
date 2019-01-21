@@ -1,7 +1,7 @@
 import logging
 
 from django.db import connection, transaction
-from infrastructure.models import ProjectStatus, ProjectPlantUnits
+from infrastructure.models import ProjectStatus, ProjectPlantUnits, PowerPlantStatus
 
 
 logger = logging.getLogger(__name__)
@@ -10,26 +10,41 @@ logger = logging.getLogger(__name__)
 @transaction.atomic
 def refresh_views():
     logger.info("Refreshing PostgreSQL CVS export views")
-    
-    status_cases = "\n".join(["WHEN p.status={0} THEN '{1}'".format(*s) for s in ProjectStatus.STATUSES])
-    # this converts unit IDs (0, 1, 2) to human-readable strings from the ProjectPlantUnits model (MW)
-    # CAVEAT: The output of this, a SQL CASE statement, is evaluated and solidified into
-    #         the PostgreSQL when _this_ code is executed. This means that if future 
-    #         ProjectPlantUnits are added, they will not automatically be incorporated into
-    #         PosgresSQL view. The view must be recreated.
-    case_statements = {}
-    unit_fields = ('project_output_unit', 'estimated_project_output_unit', 'project_capacity_unit',
-                   'project_CO2_emissions_unit')
-    for field in unit_fields:
-        case_statements[field] = "\n".join([
-            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s) 
+
+    project_status_cases = get_statuses(ProjectStatus, 'p')
+    power_plant_status_cases = get_statuses(PowerPlantStatus, 'pp')
+
+    project_case_statements = {}
+    powerplant_case_statements = {}
+
+    project_unit_fields = (
+        'project_output_unit',
+        'estimated_project_output_unit',
+        'project_capacity_unit',
+        'project_CO2_emissions_unit'
+    )
+
+    powerplant_unit_fields = (
+        'plant_capacity_unit',
+        'plant_output_unit',
+        'estimated_plant_output_unit',
+        'plant_CO2_emissions_unit'
+    )
+
+    for field in project_unit_fields:
+        project_case_statements[field] = "\n".join([
+            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s)
             for s in ProjectPlantUnits.UNITS
         ])
 
+    for field in powerplant_unit_fields:
+        powerplant_case_statements[field] = "\n".join([
+            """WHEN "{0}"={1} THEN '{2}'""".format(field, *s)
+            for s in ProjectPlantUnits.UNITS
+        ])
     with connection.cursor() as cursor:
         logger.info("Dropping existing views...")
-        database_views = ("infrastructure_projects_export_view",
-                        "infrastructure_regions_view",
+        database_views = ("infrastructure_regions_view",
                         "infrastructure_countries_view",
                         "infrastructure_initiatives_view",
                         "infrastructure_contractors_view",
@@ -38,13 +53,20 @@ def refresh_views():
                         "infrastructure_operators_view",
                         "infrastructure_funding_view",
                         "infrastructure_project_fuels_view",
-                        "infrastructure_project_manufacturers_view")
+                        "infrastructure_project_manufacturers_view",
+                        "infrastructure_powerplant_countries_view",
+                        "infrastructure_powerplant_regions_view",
+                        "infrastructure_powerplant_operators_view",
+                        "infrastructure_powerplant_owner_stake_view",
+                        "infrastructure_projects_export_view",
+                        "infrastructure_powerplant_export_view",
+                        )
         for view_name in database_views:
-            cursor.execute("DROP VIEW IF EXISTS {};".format(view_name))
+            cursor.execute("DROP VIEW IF EXISTS {} CASCADE;".format(view_name))
 
         logger.info("Creating views...")
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_regions_view AS
+        # Project Views #
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_regions_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS regions
                 FROM infrastructure_project_regions AS l
@@ -52,8 +74,7 @@ def refresh_views():
                 ON l.region_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_countries_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_countries_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS countries
                 FROM infrastructure_project_countries AS l
@@ -61,8 +82,7 @@ def refresh_views():
                 ON l.country_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_initiatives_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_initiatives_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS initiatives
                 FROM infrastructure_project_initiatives AS l
@@ -70,8 +90,7 @@ def refresh_views():
                 ON l.initiative_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_contractors_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_contractors_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS contractors
                 FROM infrastructure_project_contractors AS l
@@ -79,8 +98,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_consultants_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_consultants_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS consultants
                 FROM infrastructure_project_consultants AS l
@@ -88,8 +106,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_implementers_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_implementers_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS implementing_agencies
                 FROM infrastructure_project_implementers AS l
@@ -97,8 +114,7 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_operators_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_operators_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS operators
                 FROM infrastructure_project_operators AS l
@@ -106,37 +122,69 @@ def refresh_views():
                 ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_funding_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_funding_view AS
                 SELECT l.project_id,
-                array_to_string(array_agg(quote_literal(org.name)), ' ', 'NULL') AS funding_sources,
-                array_to_string(array_agg(l.amount), ' ', 'NULL') AS funding_amounts,
-                array_to_string(array_agg(l.currency), ' ', 'NULL') AS funding_currencies
+                    array_to_string(array_agg(quote_literal(org.name)), ' ', 'NULL') AS funding_sources,
+                    array_to_string(array_agg(l.amount), ' ', 'NULL') AS funding_amounts,
+                    array_to_string(array_agg(l.currency), ' ', 'NULL') AS funding_currencies
                 FROM infrastructure_projectfunding AS l
-                LEFT OUTER JOIN infrastructure_projectfunding_sources AS r ON l.id = r.projectfunding_id
-                LEFT OUTER JOIN facts_organization AS org ON r.organization_id = org.id
+                    LEFT OUTER JOIN infrastructure_projectfunding_sources AS r ON l.id = r.projectfunding_id
+                    LEFT OUTER JOIN facts_organization AS org ON r.organization_id = org.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_project_fuels_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_project_fuels_view AS
                 SELECT ipf.project_id,
-                array_to_string(array_agg(quote_literal(if.name::text)), ','::text, 'NULL'::text) as fuel_type,
-                array_to_string(array_agg(quote_literal(ifc.name::text)), ','::text, 'NULL'::text) as fuel_category
+                    array_to_string(array_agg(quote_literal(if.name::text)), ','::text, 'NULL'::text) as fuel_type,
+                    array_to_string(array_agg(quote_literal(ifc.name::text)), ','::text, 'NULL'::text) as fuel_category
                 FROM infrastructure_project_fuels AS ipf
                     LEFT JOIN infrastructure_fuel if ON ipf.fuel_id = if.id
                     LEFT JOIN infrastructure_fuelcategory ifc ON if.fuel_category_id = ifc.id
                 GROUP BY ipf.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_project_manufacturers_view AS
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_project_manufacturers_view AS
                 SELECT l.project_id,
                     array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS manufacturers
                 FROM infrastructure_project_manufacturers AS l
                     JOIN facts_organization AS r ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
-        cursor.execute('''
-            CREATE OR REPLACE VIEW infrastructure_projects_export_view AS
+        # Power Plant Views
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_countries_view AS
+                SELECT l.powerplant_id,
+                    array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS countries
+                FROM infrastructure_powerplant_countries AS l
+                JOIN locations_country AS r
+                ON l.country_id = r.id
+                GROUP BY l.powerplant_id;
+            ''')
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_regions_view AS
+                SELECT l.powerplant_id,
+                    array_to_string(array_agg(quote_literal(r.name)), ', ', 'NULL') AS regions
+                FROM infrastructure_powerplant_regions AS l
+                JOIN locations_region AS r
+                ON l.region_id = r.id
+                GROUP BY l.powerplant_id;
+            ''')
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_operators_view AS
+                SELECT l.powerplant_id,
+	                array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS operators
+                FROM infrastructure_powerplant_operators AS l
+                JOIN facts_organization AS r
+                ON l.organization_id = r.id
+                GROUP BY l.powerplant_id;
+            ''')
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_owner_stake_view AS
+                SELECT l.power_plant_id,
+                    array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS owners,
+                    array_to_string(array_agg(l."percent_owned"), ', ', 'NULL') AS owners_stake
+                FROM infrastructure_ownerstake AS l
+                JOIN facts_organization AS r
+                ON l.owner_id = r.id
+                GROUP BY l.power_plant_id;
+            ''')
+        # Export Views
+
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_projects_export_view AS
                 SELECT
                     identifier,
                     p.name,
@@ -235,5 +283,87 @@ def refresh_views():
                     )
                     AS related
                 ON p.id = related.project_id;
-            '''.format(status_cases=status_cases, **case_statements))
+            '''.format(status_cases=project_status_cases, **project_case_statements))
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_export_view AS
+                SELECT pp.id AS plant_id,
+                pp.name AS plant_name,
+                icv.countries AS plant_countries,
+                irv.regions AS plant_regions,
+                ippopv.operators AS plant_operators,
+                ipposv.owners AS plant_owners,
+                ipposv.owners_stake AS plant_owners_stake,
+                pp.slug AS plant_slug,
+                CASE
+                    {status_cases}
+                    ELSE 'NULL'
+                END
+                AS plant_status,
+                pp.total_cost AS plant_total_cost,
+                pp.total_cost_currency AS plant_total_cost_currency,
+                pp.plant_year_online,
+                pp.plant_month_online,
+                pp.plant_day_online,
+                pp.decommissioning_year AS plant_decommissioning_year,
+                pp.decommissioning_month AS plant_decommissioning_month,
+                pp.decommissioning_day AS plant_decommissioning_day,
+                pp.plant_capacity,
+                CASE
+                    {plant_capacity_unit}
+                    ELSE 'NULL'
+                END
+                plant_capacity_unit,
+                pp.plant_output,
+                CASE
+                    {plant_output_unit}
+                    ELSE 'NULL'
+                END
+                plant_output_unit,
+                pp.plant_output_year,
+                pp.estimated_plant_output AS plant_estimated_output,
+                CASE
+                    {estimated_plant_output_unit}
+                    ELSE 'NULL'
+                END
+                AS plant_estimated_output_unit,
+                pp."plant_CO2_emissions",
+                CASE
+                    {plant_CO2_emissions_unit}
+                    ELSE 'NULL'
+                END
+                plant_CO2_emissions_unit,
+                pp.grid_connected AS plant_grid_connected,
+                pp.description AS plant_description,
+                pp.created_at AS plant_created_at,
+                pp.updated_at AS plant_updated_at,
+                pp.published AS plant_published
+            FROM infrastructure_powerplant pp
+                LEFT OUTER JOIN infrastructure_powerplant_countries_view icv ON icv.powerplant_id = pp.id
+                LEFT OUTER JOIN infrastructure_powerplant_regions_view irv ON irv.powerplant_id = pp.id
+                LEFT OUTER JOIN infrastructure_powerplant_operators_view ippopv ON ippopv.powerplant_id = pp.id
+                LEFT OUTER JOIN infrastructure_powerplant_owner_stake_view ipposv ON ipposv.power_plant_id = pp.id
+            ORDER BY pp.id
+        '''.format(status_cases=power_plant_status_cases, **powerplant_case_statements))
         logger.info("Complete")
+
+
+def get_statuses(model, table_id):
+    '''get_statuses
+    converts unit IDs (0, 1, 2) to human-readable strings from a Status model
+
+    Params:
+        model: A model following the choices pattern
+        table_id: The id of the result table in the view being created
+    Returns:
+        str
+
+    CAVEAT: The output of this, an SQL CASE statement, is evaluated and solidified into
+             the PostgreSQL when _this_ code is executed. This means that if future
+             Units are added, they will not automatically be incorporated into
+             PosgresSQL view. The view must be recreated.
+    '''
+    return "\n".join(
+        [
+        "WHEN {table_id}.status={0} THEN '{1}'"
+        .format(table_id=table_id, *s) for s in model.STATUSES
+        ]
+    )

@@ -13,7 +13,7 @@ from django.urls import reverse
 from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.export import refresh_views
 from locations.models import GeometryStore
-from locations.tests.factories import CountryFactory
+from locations.tests.factories import CountryFactory, RegionFactory
 from publish.tests.factories import UserFactory
 from . import factories
 
@@ -566,3 +566,144 @@ class ProjectCSVExportTestCase(TestCase):
         for row in results:
             if row['identifier'] == str(project1.identifier):
                 self.assertEqual(project1.power_plant.name, row['power_plant_name'])
+    
+    def test_never_cache_is_enabled(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
+
+
+class PowerPlantCSVExportTestCase(TestCase):
+    """Export current projects as a CSV."""
+
+    def setUp(self):
+        super().setUp()
+        refresh_views()
+        self.user = UserFactory(username='staff')
+        self.user.set_password('test')
+        self.user.is_staff = True
+        self.user.save()
+        self.client.login(username='staff', password='test')
+        self.url = reverse('infrastructure-admin:powerplants-export-view')
+
+    def test_get_csv(self):
+        """Download the CSV of projects."""
+
+        with self.subTest('Staff download'):
+            response = self.client.get(self.url)
+            self.assertEqual(response['Content-Type'], 'text/csv')
+            self.assertEqual(response.status_code, 200)
+
+        with self.subTest('Non-staff user'):
+            self.user.is_staff = False
+            self.user.save()
+            response = self.client.get(self.url)
+            self.assertRedirects(response, '{}?next={}'.format(reverse('admin:login'), self.url))
+
+    def test_csv_results(self):
+        """Spot checking some of the CSV results."""
+
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        headers = (
+                'plant_id',
+                'plant_name',
+                'plant_countries',
+                'plant_regions',
+                'plant_operators',
+                'plant_owners',
+                'plant_owners_stake',
+                'plant_slug',
+                'plant_status',
+                'plant_total_cost',
+                'plant_total_cost_currency',
+                'plant_year_online',
+                'plant_month_online',
+                'plant_day_online',
+                'plant_decommissioning_year',
+                'plant_decommissioning_month',
+                'plant_decommissioning_day',
+                'plant_capacity',
+                'plant_capacity_unit',
+                'plant_output',
+                'plant_output_unit',
+                'plant_output_year',
+                'plant_estimated_output',
+                'plant_estimated_output_unit',
+                'plant_CO2_emissions',
+                'plant_co2_emissions_unit',
+                'plant_grid_connected',
+                'plant_description',
+                'plant_created_at',
+                'plant_updated_at',
+                'plant_published',
+        )
+        self.assertEqual(results.fieldnames, list(headers))
+
+    def test_plant_countries(self):
+        """Ensure multiple countries are in CSV export"""
+        country1 = CountryFactory()
+        country2 = CountryFactory()
+        power_plant = factories.PowerPlantFactory(countries=(country1, country2))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['plant_id'] == str(power_plant.id):
+                self.assertTrue(country1.name in row['plant_countries'])
+                self.assertTrue(country2.name in row['plant_countries'])
+
+    def test_plant_regions(self):
+        """Ensure multiple regions are in CSV export"""
+        region1 = RegionFactory()
+        region2 = RegionFactory()
+        power_plant = factories.PowerPlantFactory(regions=(region1, region2))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['plant_id'] == str(power_plant.id):
+                self.assertTrue(region1.name in row['plant_regions'])
+                self.assertTrue(region2.name in row['plant_regions'])
+
+    def test_plant_operators(self):
+        """Ensure multiple operators are in CSV export"""
+        operator1 = OrganizationFactory()
+        operator2 = OrganizationFactory()
+        power_plant = factories.PowerPlantFactory(operators=(operator1, operator2))
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['plant_id'] == str(power_plant.id):
+                self.assertTrue(operator1.name in row['plant_operators'])
+                self.assertTrue(operator2.name in row['plant_operators'])
+
+    def test_plant_owner_stakes(self):
+        """Ensure owner stakes are in CSV export"""
+
+        power_plant = factories.PowerPlantFactory()
+        stake1 = factories.OwnerStakeFactory(power_plant=power_plant)
+        stake2 = factories.OwnerStakeFactory(power_plant=power_plant, percent_owned=None)
+        stake_non = factories.OwnerStakeFactory()
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        results = csv.DictReader(stream)
+        for row in results:
+            if row['plant_id'] == str(power_plant.id):
+                owners = list(zip(row['plant_owners'].split(','), row['plant_owners_stake'].split(',')))
+
+                with self.subTest('Owner stake 1'):
+                    self.assertTrue(stake1.owner.name in owners[0][0])
+                    self.assertTrue(str(stake1.percent_owned) in owners[0][1])
+
+                with self.subTest('Owner stake 2'):
+                    self.assertTrue(stake2.owner.name in owners[1][0])
+                    self.assertTrue('NULL' in owners[1][1])
+
+                with self.subTest('Excluded owner stake'):
+                    self.assertFalse(stake_non.owner.name in row['plant_owners'])
+    
+    def test_never_cache_is_enabled(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
