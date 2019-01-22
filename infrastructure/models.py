@@ -474,6 +474,7 @@ class PowerPlant(Publishable):
     )
 
     grid_connected = models.NullBooleanField('Grid connected?')
+    notes = MarkdownField(blank=True)
 
     # Geodata
     geo = models.ForeignKey(
