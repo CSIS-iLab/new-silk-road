@@ -789,11 +789,16 @@ button.searchView__update-results {
         cursor: pointer;
         background: url($map-pin-img) no-repeat center/70% 70%;
         display: inline-block;
-        width: 1em;
+        width: 1.25em;
 
         // use a space to ensure height == one text line
         content: " ";
         white-space: pre;
+    }
+
+    &:hover::after {
+        background-color: #b4d0d0;
+        border-radius: 50%;
     }
 }
 
