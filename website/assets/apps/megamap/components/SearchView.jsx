@@ -107,7 +107,7 @@ export default class SearchView extends Component {
     SearchStore.listen(this.onSearchStoreChange);
 
     ProjectCountStore.listen(this.onProjectCountStoreChange);
-    ProjectCountActions.fetch();
+    ProjectCountActions.fetch({ limit: 1 });
 
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {

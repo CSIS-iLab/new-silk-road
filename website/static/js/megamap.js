@@ -28661,7 +28661,7 @@
 	      _SearchStore2.default.listen(this.onSearchStoreChange);
 	
 	      _ProjectCountStore2.default.listen(this.onProjectCountStoreChange);
-	      _ProjectCountActions2.default.fetch();
+	      _ProjectCountActions2.default.fetch({ limit: 1 });
 	
 	      _InfrastructureTypeStore2.default.listen(function (store) {
 	        return _this2.setState(function (prevState) {
