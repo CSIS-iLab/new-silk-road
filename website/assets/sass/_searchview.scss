@@ -899,3 +899,18 @@ button.searchView__update-results {
         transform: translateX(0px);
     }
 }
+
+@media (max-width: $medium) {
+    .searchView {
+        display: none !important;
+    }
+
+    .app-wrap {
+        margin-bottom: 24px;
+    }
+
+    .style-root,
+    .search-map {
+        height: auto !important;
+    }
+}
