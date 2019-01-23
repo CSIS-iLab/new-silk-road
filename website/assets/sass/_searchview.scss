@@ -443,11 +443,11 @@ button.searchView__update-results {
         }
     }
     &.selected {
-        background-color: $map-disabled-header-grey;
+        background-color: $map-infrastructure-selected-icon-bg-grey;
     }
 
     .infrastructureIcon__container.selected:hover & {
-        background-color: $map-light-grey;
+        background-color: $map-infrastructure-selected-hover-icon-bg-grey;
     }
 }
 
@@ -463,7 +463,7 @@ button.searchView__update-results {
 }
 
 .infrastructureIcon__label {
-    background-color: white;
+    background-color: $map-infrastructure-grey;
 
     padding-left: $searchview-infrastructure-padding-left;
     padding-right: $searchview-infrastructure-padding-right;
@@ -486,11 +486,12 @@ button.searchView__update-results {
 }
 
 .infrastructureIcon__label--selected {
-    color: $map-grey;
-    background-color: $map-disabled-grey;
+    color: $map-infrastructure-selected-icon-grey;
+    background-color: $map-infrastructure-selected-grey;
 
     .infrastructureIcon__container:hover & {
-        background-color: $map-infrastructure-hover-grey;
+        color: $map-grey;
+        background-color: $map-infrastructure-selected-hover-grey;
     }
 }
 
