@@ -191,7 +191,8 @@ button.btn--header-toggle {
 
     @include display(flex);
     @include justify-content(center);
-    background-color: $callout-color-inactive;
+    background-color: $map-hover-grey;
+    color: white;
 
     position: absolute;
     left: 0;
@@ -199,7 +200,7 @@ button.btn--header-toggle {
     width: 100%;
 
     &:hover {
-        background-color: $callout-color;
+        background-color: $callout-color-inactive;
         color: white;
     }
 }
