@@ -98,7 +98,7 @@ class ResultsView extends Component {
     return [currentPage, numPages];
   }
 
-  searchForCuratedResults (e) {
+  searchForCuratedResults(e) {
     /* Get the curated project collection query, update parent's state, and search the backend. */
 
     // Get the project collection query
@@ -113,6 +113,8 @@ class ResultsView extends Component {
   }
 
   sectionTitle() {
+    const { totalCount } = this.props;
+
     return (
       <h2
         className={classNames(
@@ -121,7 +123,7 @@ class ResultsView extends Component {
           { 'resultsView__summary-info--with-results': this.props.results.length > 0 },
         )}
       >
-        {this.props.totalCount} Projects
+        {totalCount ? `${totalCount.toLocaleString()} Projects` : null}
       </h2>
     );
   }
@@ -141,11 +143,11 @@ class ResultsView extends Component {
 
     let curatedProjectCollectionsElements = [];
     if (this.props.curatedProjectCollections !== undefined && this.props.curatedProjectCollections.length > 0) {
-      for (let i=0; i<this.props.curatedProjectCollections.length; i++) {
+      for (let i = 0; i < this.props.curatedProjectCollections.length; i++) {
         curatedProjectCollectionsElements.push(
           <a id={this.props.curatedProjectCollections[i].__proto__.value}
-             key={this.props.curatedProjectCollections[i].__proto__.value}
-             onClick={this.searchForCuratedResults}
+            key={this.props.curatedProjectCollections[i].__proto__.value}
+            onClick={this.searchForCuratedResults}
           >
             {this.props.curatedProjectCollections[i].__proto__.label}
           </a>
@@ -164,7 +166,7 @@ class ResultsView extends Component {
             this.props.results.length === 0 && scrollWrap.hidden,
           ]}
         >
-          { this.sectionTitle() }
+          {this.sectionTitle()}
           <ResultsList results={this.props.results} />
         </div>
         <div
@@ -173,7 +175,7 @@ class ResultsView extends Component {
             this.props.results.length !== 0 && scrollWrap.hidden,
           ]}
         >
-          { this.sectionTitle() }
+          {this.sectionTitle()}
           <section>
             <p className="resultsView__body-text">
               Click the icon panel on the right to hide the results of particular infrastructure types on the map.
