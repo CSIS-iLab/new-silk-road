@@ -213,8 +213,12 @@ button.searchView__header-toggle {
 
 button.searchView__header-reset-filter {
     @extend button.btn--header-toggle;
-    color: map-get($map-colors, 'button-text-light-small');
+    color: #ddd;
     font-size: map-get($map-font-sizes, 'data-label');
+
+    &:hover {
+        color: #fff;
+    }
 }
 
 button.searchView__update-results {
