@@ -157,14 +157,15 @@ class ResultsView extends Component {
       <div
         className="resultsView resultsView__main"
         style={this.props.style}
-        ref={(el) => { this.scrollWrap = el; }}
       >
-        <div className={classNames(
-          'resultsView__scroll-container',
-          {
-            'resultsView__scroll-container--expanded': this.props.results.length === 0,
-          },
-        )}
+        <div
+          className={classNames(
+            'resultsView__scroll-container',
+            {
+              'resultsView__scroll-container--expanded': this.props.results.length === 0,
+            },
+          )}
+          ref={(el) => { this.scrollWrap = el; }}
         >
           <div className="resultsView__content"
             style={[
