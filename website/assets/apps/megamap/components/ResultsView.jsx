@@ -159,7 +159,13 @@ class ResultsView extends Component {
         style={this.props.style}
         ref={(el) => { this.scrollWrap = el; }}
       >
-        <div className="resultsView__scroll-container">
+        <div className={classNames(
+          'resultsView__scroll-container',
+          {
+            'resultsView__scroll-container--expanded': this.props.results.length === 0,
+          },
+        )}
+        >
           <div className="resultsView__content"
             style={[
               this.props.results.length === 0 && scrollWrap.hidden,
@@ -168,8 +174,7 @@ class ResultsView extends Component {
             { this.sectionTitle() }
             <ResultsList results={this.props.results} />
           </div>
-          <div
-            className="resultsView__content"
+          <div className="resultsView__content"
             style={[
               this.props.results.length !== 0 && scrollWrap.hidden,
             ]}

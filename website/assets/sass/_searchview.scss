@@ -254,7 +254,6 @@ button.searchView__update-results {
 .searchWidget__form {
     height: calc(100% - #{$searchview-header-height * 2});
     overflow-y: scroll;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 .searchWidget__separator {
@@ -635,7 +634,10 @@ button.searchView__update-results {
 .resultsView__scroll-container {
     height: calc(100% - #{$searchview-header-height});
     overflow-y: scroll;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.resultsView__scroll-container--expanded {
+    height: 100%;
 }
 
 .resultsView__summary-info {
