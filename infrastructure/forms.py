@@ -145,9 +145,6 @@ class ProjectForm(forms.ModelForm):
     planned_completion_month = MonthField(required=False)
     planned_completion_day = DayField(required=False)
 
-    construction_start_month = MonthField(required=False)
-    construction_start_day = DayField(required=False)
-
     class Meta:
         model = Project
         fields = '__all__'
