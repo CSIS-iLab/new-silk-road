@@ -791,7 +791,7 @@ button.searchView__update-results {
         width: 1em;
 
         // use a space to ensure height == one text line
-        content: " ";
+        content: "\a0\a0";
         white-space: pre;
     }
 }
