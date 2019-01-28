@@ -1,16 +1,20 @@
 import datetime
 import logging
+import csv
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.db import connection
+from django.db.models import Q
 from django.http import HttpResponseServerError, HttpResponse
 from django.views.generic import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 
 from .models import PowerPlant, Project, Initiative
 from .forms import ProjectGeoUploadForm
@@ -33,6 +37,7 @@ class ProjectDetailView(PublicationMixin, DetailView):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
+        context['fuel_types'] = self.object.fuels.all().distinct()
         return context
 
 
@@ -98,7 +103,7 @@ class GeoUploadView(LoginRequiredMixin, FormView):
             error_response = '<h1>{}</h1><p>{}</p>'.format(err_msg, str(e))
             return HttpResponseServerError(error_response)
 
-
+@method_decorator(never_cache, name='dispatch')
 class ProjectExportView(View):
 
     def get(self, request, *args, **kwargs):
@@ -116,6 +121,24 @@ class ProjectExportView(View):
             )
         return response
 
+@method_decorator(never_cache, name='dispatch')
+class PowerPlantExportView(View):
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        d = datetime.datetime.now()
+        filename = "infrastructure_power_plants_{:%Y%m%d_%H%M}.csv".format(d)
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        writer = csv.writer(response)
+        with connection.cursor() as cursor:
+            cursor.copy_expert(
+                '''
+                COPY (SELECT * FROM infrastructure_powerplant_export_view)
+                TO STDOUT
+                WITH (FORMAT csv, HEADER TRUE, NULL 'NULL', FORCE_QUOTE *)''',
+                response
+            )
+        return response
 
 class PowerPlantDetailView(PublicationMixin, DetailView):
     model = PowerPlant
@@ -125,4 +148,14 @@ class PowerPlantDetailView(PublicationMixin, DetailView):
         context = super(PowerPlantDetailView, self).get_context_data(**kwargs)
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
+
+        # limit to just this power plant OR related project initiatives
+        powerplant_initiatives = Q(powerplant=self.object.pk)
+        project_initiatives = Q(project__power_plant=self.object.pk, project__published=True)
+        qs = Initiative.objects.filter(Q(powerplant_initiatives) | Q(project_initiatives))
+        # remove any potential duplicates and only select the needed columns
+        qs = qs.only('id', 'identifier', 'name', 'slug').distinct()
+        context['initiatives'] = qs
+
+        context['fuel_categories'] = self.object.fuels.values_list('fuel_category__name', flat=True).distinct()
         return context

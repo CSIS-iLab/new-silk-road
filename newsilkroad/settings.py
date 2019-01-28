@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import sys
 import dj_database_url
 import raven  # noqa: F401
 from memcacheify import memcacheify
@@ -212,6 +213,10 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'power_plant_import': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'infrastructure': {
             'handlers': ['console'],
             'level': 'INFO',
         },
@@ -514,3 +519,12 @@ SEARCH_SIGNALS = os.getenv('SEARCH_SIGNALS', 'False') == 'True'
 SILENCED_SYSTEM_CHECKS = [
     "cachalot.E001",
 ]
+
+# Special test-specific settings
+if 'test' in sys.argv:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+    SELECT2_CACHE_BACKEND = 'default'

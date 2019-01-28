@@ -262,7 +262,10 @@ class PowerPlantAdmin(admin.ModelAdmin):
         'status',
         'countries__name'
     )
-    search_fields = ('name', 'plant_capacity')
+    filter_horizontal = [
+        'plant_initiatives',
+    ]
+    search_fields = ('name', 'plant_capacity', 'notes')
     actions = [make_published, make_not_published]
     inlines = [
         ProjectsOwnersInline
@@ -284,6 +287,8 @@ class FuelAdmin(admin.ModelAdmin):
         'fuel_category'
     )
     search_fields = ('name', 'fuel_category__name')
+    list_select_related = ('fuel_category', )
+    ordering = ('name', )
 
 
 @admin.register(FuelCategory)
