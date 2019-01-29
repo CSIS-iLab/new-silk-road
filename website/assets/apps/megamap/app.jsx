@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import { StyleRoot } from 'radium';
 import MapContainer from './components/MapContainer';
+import MobilePlaceholder from './components/MobilePlaceholder';
 import SearchView from './components/SearchView';
 import { defaultCenter } from './helpers/map-constants';
 
@@ -17,7 +18,7 @@ const containerStyle = {
 
 
 ReactDOM.render(
-  <StyleRoot style={{ height: appHeight }}>
+  <StyleRoot className="style-root" style={{ height: appHeight }}>
     <SearchView />
     <MapContainer
       accessToken={token}
@@ -25,6 +26,7 @@ ReactDOM.render(
       mapStyle={mapStyle}
       center={defaultCenter}
     />
+    <MobilePlaceholder />
   </StyleRoot>,
   document.getElementById('app'),
 );

@@ -1,0 +1,43 @@
+@import "variables";
+
+.mobile-placeholder {
+  display: none;
+}
+
+@media (max-width: $medium) {
+  .mobile-placeholder {
+    display: block;
+  }
+
+  .mobile-placeholder__img {
+    background-image: url('../img/mobile_placeholder.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  
+    width: 100vw;
+    height: calc(100vh * (2 / 3));
+  }
+  
+  .mobile-placeholder__text-container {
+    $side-whitespace: 24px;
+    max-width: calc(100vw - #{$side-whitespace * 2});
+    padding: 2em;
+
+    margin-left: $side-whitespace;
+    margin-top: -50px;
+  
+    background-color: $map-hover-grey;
+
+    text-align: center;
+  }
+  
+  .mobile-placeholder__text {
+    color: white;
+    font-size: map-get($map-font-sizes, 'base');
+  
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}
