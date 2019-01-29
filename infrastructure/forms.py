@@ -159,7 +159,6 @@ class PowerPlantForm(forms.ModelForm):
         queryset=Country.objects.all(),
         help_text=CountrySearchMultiField.help_text
     )
-    owners = OrganizationSearchMultiField(required=False)
     operators = OrganizationSearchMultiField(required=False)
     projects = ProjectSearchMultiField(required=False)
     plant_month_online = MonthField(required=False)
