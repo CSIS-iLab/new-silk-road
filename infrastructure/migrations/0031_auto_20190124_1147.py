@@ -9,7 +9,7 @@ def forwards(apps, schema_editor):
     Project = apps.get_model('infrastructure', 'Project')
     prjs = Project.objects.filter(infrastructure_type__name="Powerplant")
 
-    print("Moving construction dates to commencement dates for {} projects".format(len(prjs)))
+    print("Moving construction dates to commencement dates for {} projects".format(prjs.count()))
     prjs.update(commencement_year=F('construction_start_year'), construction_start_year=None)
     prjs.update(commencement_month=F('construction_start_month'), construction_start_month=None)
     prjs.update(commencement_day=F('construction_start_day'), construction_start_day=None)
