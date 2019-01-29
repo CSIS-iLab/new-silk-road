@@ -73,7 +73,7 @@ $map-font-sizes: (
     'data-label': 0.75 * $map-font-base-size
 );
 $map-teal: #3c8183;
-$map-teal-active: #3d8282;
+$map-teal-active: #2c6565;
 $map-dark-grey: #4a4a4a;
 $map-grey: #737373;
 $map-mid-grey: #e9e9e9;
@@ -81,8 +81,16 @@ $map-light-grey: #bebebe;
 $map-extra-light-grey: #e9e9e9;
 $map-disabled-grey: #d3d3d3;
 $map-disabled-header-grey: #9b9b9b;
-$map-infrastructure-hover-grey: #f9f9f9;
+$map-infrastructure-grey: #fff; // technically this is not grey, but ...
+$map-infrastructure-hover-grey: #eee;
+$map-infrastructure-selected-grey: #ddd;
+$map-infrastructure-selected-icon-grey: #bebebe;
+$map-infrastructure-selected-icon-bg-grey: #bbb;
+$map-infrastructure-selected-hover-grey: #ccc;
+$map-infrastructure-selected-hover-icon-bg-grey: #aaa;
 $map-hover-grey: #323c49;
+$map-filter-footer-bg: #323c49;
+$map-filter-footer-hover-bg: #636a74;
 $map-colors: (
     // Heading
     'heading': #000000,
