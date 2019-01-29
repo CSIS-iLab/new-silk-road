@@ -485,13 +485,6 @@ class PowerPlant(Publishable):
         related_name='power_plants'
     )
 
-    # Organization relations
-    owners = models.ManyToManyField(
-        'facts.Organization',
-        verbose_name='Owners',
-        related_name='plants_contracted',
-        blank=True
-    )
     operators = models.ManyToManyField(
         'facts.Organization',
         verbose_name='Operators',
