@@ -246,13 +246,13 @@ button.searchView__update-results {
 
 .searchWidget__main {
     padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y + $searchview-header-height;
+    padding-bottom: $searchview-padding-y;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
 }
 
 .searchWidget__form {
-    height: calc(100% - #{$searchview-header-height});
+    height: calc(100% - #{$searchview-header-height * 2});
     overflow-y: scroll;
 }
 
@@ -587,7 +587,7 @@ button.searchView__update-results {
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
     padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y + $searchview-header-height;
+    padding-bottom: $searchview-padding-y;
 }
 
 .resultsView__not-found {
@@ -629,8 +629,15 @@ button.searchView__update-results {
     height: calc(100% - #{$searchview-header-height});
     @include display(flex);
     @include flex-direction(column);
+}
 
+.resultsView__scroll-container {
+    height: calc(100% - #{$searchview-header-height});
     overflow-y: scroll;
+}
+
+.resultsView__scroll-container--expanded {
+    height: 100%;
 }
 
 .resultsView__summary-info {
