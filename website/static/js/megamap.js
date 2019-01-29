@@ -28298,59 +28298,66 @@
 	        'div',
 	        {
 	          className: 'resultsView resultsView__main',
-	          style: this.props.style,
-	          ref: function ref(el) {
-	            _this2.scrollWrap = el;
-	          }
+	          style: this.props.style
 	        },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'resultsView__content',
-	            style: [this.props.results.length === 0 && scrollWrap.hidden]
-	          },
-	          this.sectionTitle(),
-	          _react2.default.createElement(_ResultsList2.default, { results: this.props.results })
-	        ),
-	        _react2.default.createElement(
-	          'div',
 	          {
-	            className: 'resultsView__content',
-	            style: [this.props.results.length !== 0 && scrollWrap.hidden]
+	            className: (0, _classnames2.default)('resultsView__scroll-container', {
+	              'resultsView__scroll-container--expanded': this.props.results.length === 0
+	            }),
+	            ref: function ref(el) {
+	              _this2.scrollWrap = el;
+	            }
 	          },
-	          this.sectionTitle(),
 	          _react2.default.createElement(
-	            'section',
-	            null,
-	            _react2.default.createElement(
-	              'p',
-	              { className: 'resultsView__body-text' },
-	              'Click the icon panel on the right to hide the results of particular infrastructure types on the map.'
-	            ),
-	            _react2.default.createElement(
-	              'p',
-	              { className: 'resultsView__body-text' },
-	              'Search and filter results by clicking the \u201C',
-	              _react2.default.createElement(
-	                'b',
-	                null,
-	                'Filter'
-	              ),
-	              '\u201D tab above.'
-	            )
+	            'div',
+	            { className: 'resultsView__content',
+	              style: [this.props.results.length === 0 && scrollWrap.hidden]
+	            },
+	            this.sectionTitle(),
+	            _react2.default.createElement(_ResultsList2.default, { results: this.props.results })
 	          ),
-	          _react2.default.createElement('hr', { className: 'resultsView__separator' }),
 	          _react2.default.createElement(
-	            'section',
-	            null,
+	            'div',
+	            { className: 'resultsView__content',
+	              style: [this.props.results.length !== 0 && scrollWrap.hidden]
+	            },
+	            this.sectionTitle(),
 	            _react2.default.createElement(
-	              'h3',
-	              { className: 'resultsView__subheading' },
-	              'Curated Results'
+	              'section',
+	              null,
+	              _react2.default.createElement(
+	                'p',
+	                { className: 'resultsView__body-text' },
+	                'Click the icon panel on the right to hide the results of particular infrastructure types on the map.'
+	              ),
+	              _react2.default.createElement(
+	                'p',
+	                { className: 'resultsView__body-text' },
+	                'Search and filter results by clicking the \u201C',
+	                _react2.default.createElement(
+	                  'b',
+	                  null,
+	                  'Filter'
+	                ),
+	                '\u201D tab above.'
+	              )
 	            ),
+	            _react2.default.createElement('hr', { className: 'resultsView__separator' }),
 	            _react2.default.createElement(
-	              'p',
-	              { className: 'resultsView__body-text' },
-	              'This list of results illustrates some of the projects and strategies our team is following.'
+	              'section',
+	              null,
+	              _react2.default.createElement(
+	                'h3',
+	                { className: 'resultsView__subheading' },
+	                'Curated Results'
+	              ),
+	              _react2.default.createElement(
+	                'p',
+	                { className: 'resultsView__body-text' },
+	                'This list of results illustrates some of the projects and strategies our team is following.'
+	              )
 	            )
 	          )
 	        ),
@@ -29099,24 +29106,24 @@
 	                    })
 	                  )
 	                )
-	              ),
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'header',
+	              { className: 'searchView__footer' },
 	              _react2.default.createElement(
-	                'header',
-	                { className: 'searchView__footer' },
+	                'button',
+	                {
+	                  type: 'submit',
+	                  title: 'Search',
+	                  className: 'searchView__update-results',
+	                  onClick: this.handleSubmit
+	                },
 	                _react2.default.createElement(
-	                  'button',
-	                  {
-	                    type: 'submit',
-	                    title: 'Search',
-	                    className: 'searchView__update-results'
-	                  },
-	                  _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    'Update Results'
-	                  )
-	                ),
-	                _react2.default.createElement('span', null)
+	                  'span',
+	                  null,
+	                  'Update Results'
+	                )
 	              )
 	            )
 	          ),
