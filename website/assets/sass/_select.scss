@@ -25,6 +25,8 @@
   margin-left: $widget-margin-left;
 
   .Select-control {
+    @include display(flex);
+    @include flex-wrap(nowrap);
     border-radius: 0;
     box-sizing: border-box;
     height: $widget-height;
@@ -32,6 +34,7 @@
   }
 
   .Select-multi-value-wrapper {
+    @include flex-basis(100%);
     height: $widget-height-inner;
   }
 
@@ -58,6 +61,11 @@
 
   // Selection styles
   &.Select--multi {
+    .Select-clear-zone {
+      padding-top: 3px;
+      padding-left: 3px;
+    }
+
     .Select-value {
       @include display(inline-flex);
       @include flex-direction(row-reverse);
