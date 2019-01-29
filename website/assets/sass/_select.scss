@@ -83,16 +83,18 @@
       they are too context-specific to be worth assigning a variable.
     */
     .Select-value-label {
-      padding: 2px 0 2px 8px;
+      padding: 2px 0 2px 6px;
     }
 
     .Select-value-icon {
       border-right: none;
-      padding: 3px 6px 3px 4px;
+      padding: 3px 4px 3px 4px;
+      margin-left: 6px;
+      color: #666;
 
       &:hover {
         background-color: inherit;
-        color: inherit;
+        color: black;
       }
     }
   }

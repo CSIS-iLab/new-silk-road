@@ -1,12 +1,13 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.ipynb_checkpoints/*
 
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit test / coverage reports / linters
 htmlcov/
 .tox/
 .coverage
@@ -14,6 +15,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+.mypy_cache/
 
 # Translations
 *.mo
@@ -25,6 +27,7 @@ coverage.xml
 # Project stuff:
 /.env
 .idea/*
+.vscode/*
 
 /serve/staticfiles/*
 !/serve/staticfiles/.gitkeep
@@ -36,7 +39,7 @@ coverage.xml
 /tmp
 
 # Ignore .dump files
-*.dump
+*.dump*
 
 # Node modules
 /node_modules

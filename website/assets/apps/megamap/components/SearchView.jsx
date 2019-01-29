@@ -22,8 +22,10 @@ import CurrencyRangeSelect from './CurrencyRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import SearchActions from '../actions/SearchActions';
-import {CuratedProjectCollectionSource} from '../sources/apisources';
+import { CuratedProjectCollectionSource } from '../sources/apisources';
 import SearchStore from '../stores/SearchStore';
+import ProjectCountStore from '../stores/ProjectCountStore';
+import ProjectCountActions from '../actions/ProjectCountActions';
 import {
   nameIdMapper,
   nameSlugMapper,
@@ -79,6 +81,7 @@ export default class SearchView extends Component {
       },
       query: emptyQueryState(),
       total: null,
+      projectTotal: null,
       results: [],
       nextURL: null,
       previousURL: null,
@@ -95,12 +98,16 @@ export default class SearchView extends Component {
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSearchStoreChange = this.onSearchStoreChange.bind(this);
+    this.onProjectCountStoreChange = this.onProjectCountStoreChange.bind(this);
     this.toggleFilters = this.toggleFilters.bind(this);
     this.toggleHelp = this.toggleHelp.bind(this);
   }
 
   componentDidMount() {
     SearchStore.listen(this.onSearchStoreChange);
+
+    ProjectCountStore.listen(this.onProjectCountStoreChange);
+    ProjectCountActions.fetch({ limit: 1 });
 
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {
@@ -178,7 +185,7 @@ export default class SearchView extends Component {
     CurrencyStore.listen(
       store => this.setState((prevState) => {
         const lookups = Object.entries(store.lookups)
-                              .map(([key, value]) => ({ label: key, value }));
+          .map(([key, value]) => ({ label: key, value }));
         const options = Object.assign(
           {},
           prevState.options,
@@ -190,7 +197,7 @@ export default class SearchView extends Component {
     CurrencyActions.fetch();
   }
 
-  toggleFilters(e){
+  toggleFilters(e) {
     if (e) {
       e.preventDefault();
     }
@@ -200,7 +207,7 @@ export default class SearchView extends Component {
     });
   }
 
-  toggleHelp(e){
+  toggleHelp(e) {
     e.preventDefault();
     const helpState = this.state.showHelp ? '' : 'showHelp';
     this.setState({
@@ -222,6 +229,12 @@ export default class SearchView extends Component {
       },
       searchCount === 0 ? { query: emptyQueryState() } : {},
     ));
+  }
+
+  onProjectCountStoreChange({ total }) {
+    this.setState({
+      projectTotal: total,
+    });
   }
 
   resetQueryState() {
@@ -275,7 +288,7 @@ export default class SearchView extends Component {
         }
       });
       this.toggleFilters();
-      
+
       if (Object.keys(searchParams).length > 0) {
         SearchActions.search(searchParams);
       } else {
@@ -340,8 +353,8 @@ export default class SearchView extends Component {
                       options={this.state.options.region}
                       className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { region: selections.map(s => s.value) },
-                        )
+                        { region: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.region.length === 0}
                       multi
@@ -357,8 +370,8 @@ export default class SearchView extends Component {
                       options={this.state.options.countries}
                       className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { countries: selections.map(s => s.value) },
-                        )
+                        { countries: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.countries.length === 0}
                       multi
@@ -374,8 +387,8 @@ export default class SearchView extends Component {
                       options={this.state.options.status}
                       className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { status: selections.map(s => s.value) },
-                        )
+                        { status: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.status.length === 0}
                       multi
@@ -390,8 +403,8 @@ export default class SearchView extends Component {
                       lowerBoundLabel="Year"
                       upperBoundLabel="Year"
                       onChange={value => this.handleQueryUpdate(
-                          { dateRange: Object.assign({}, this.state.query.dateRange, value) },
-                        )
+                        { dateRange: Object.assign({}, this.state.query.dateRange, value) },
+                      )
                       }
                       value={this.state.query.dateRange}
                     />
@@ -422,8 +435,8 @@ export default class SearchView extends Component {
                       options={this.state.options.initiatives__principal_agent__slug}
                       className="searchView-select__container"
                       onChange={option => this.handleQueryUpdate(
-                          { initiatives__principal_agent__slug: option ? option.value : '' },
-                        )
+                        { initiatives__principal_agent__slug: option ? option.value : '' },
+                      )
                       }
                       isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
                       backspaceToRemoveMessage=""
@@ -470,8 +483,8 @@ export default class SearchView extends Component {
                       options={this.state.options.funding__sources__countries}
                       className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { funding__sources__countries: selections.map(s => s.value) },
-                        )
+                        { funding__sources__countries: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.funding__sources__countries.length === 0}
                       multi
@@ -480,19 +493,19 @@ export default class SearchView extends Component {
                   </div>
                 </Panel>
               </div>
-              <header className="searchView__footer">
-                <button
-                  type="submit"
-                  title="Search"
-                  className="searchView__update-results"
-                >
-                  <span>
-                    Update Results
-                  </span>
-                </button>
-                <span></span>
-              </header>
             </form>
+            <header className="searchView__footer">
+              <button
+                type="submit"
+                title="Search"
+                className="searchView__update-results"
+                onClick={this.handleSubmit}
+              >
+                <span>
+                  Update Results
+                </span>
+              </button>
+            </header>
           </div>
           <div className="resultsViewWrapper">
             <header className="searchView__header searchView__header--light">
@@ -519,14 +532,14 @@ export default class SearchView extends Component {
                   </p>
                 </div>
 
-              :
+                :
                 <ResultsView
                   results={results}
                   onNextClick={SearchView.handleResultsNavClick}
                   nextURL={nextURL}
                   onPreviousClick={SearchView.handleResultsNavClick}
                   previousURL={previousURL}
-                  totalCount={this.state.total}
+                  totalCount={this.state.total || this.state.projectTotal}
                   updateParentQuery={this.handleQueryUpdate}
                   curatedProjectCollections={curatedProjectCollections}
                 />
