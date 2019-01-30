@@ -50,14 +50,13 @@ $creamer-str: str-slice("#{$creamer}", 2);
 
     .popup-button {
         background-color: $map-teal;
-        color: $cloudy-blue;
+        color: white;
         font-size: map-get($map-font-sizes, 'data-label');
         font-weight: bolder;
         padding: 6px 24px;
 
         &:hover {
             background-color: $map-teal-active;
-            color: white;
         }
     }
 }
@@ -292,4 +291,10 @@ $creamer-str: str-slice("#{$creamer}", 2);
     display: block;
     width: 100%;
     height: 0.5em;
+}
+
+@media (max-width: $medium) {
+    #megaMapContainer {
+        display: none !important;
+    }
 }

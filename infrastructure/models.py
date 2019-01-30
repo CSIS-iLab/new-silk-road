@@ -207,18 +207,6 @@ class Project(Publishable):
             self.planned_completion_day
         )
 
-    construction_start_year = models.PositiveSmallIntegerField(blank=True, null=True)
-    construction_start_month = models.PositiveSmallIntegerField(blank=True, null=True)
-    construction_start_day = models.PositiveSmallIntegerField(blank=True, null=True)
-
-    @property
-    def fuzzy_construction_date(self):
-        return fuzzydate(
-            self.construction_start_year,
-            self.construction_start_month,
-            self.construction_start_day
-        )
-
     project_output = models.FloatField(
         blank=True, null=True,
     )
@@ -485,13 +473,6 @@ class PowerPlant(Publishable):
         related_name='power_plants'
     )
 
-    # Organization relations
-    owners = models.ManyToManyField(
-        'facts.Organization',
-        verbose_name='Owners',
-        related_name='plants_contracted',
-        blank=True
-    )
     operators = models.ManyToManyField(
         'facts.Organization',
         verbose_name='Operators',

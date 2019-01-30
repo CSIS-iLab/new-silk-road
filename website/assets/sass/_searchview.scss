@@ -191,7 +191,8 @@ button.btn--header-toggle {
 
     @include display(flex);
     @include justify-content(center);
-    background-color: $callout-color-inactive;
+    background-color: $map-filter-footer-bg;
+    color: white;
 
     position: absolute;
     left: 0;
@@ -199,7 +200,7 @@ button.btn--header-toggle {
     width: 100%;
 
     &:hover {
-        background-color: $callout-color;
+        background-color: $map-filter-footer-hover-bg;
         color: white;
     }
 }
@@ -213,8 +214,12 @@ button.searchView__header-toggle {
 
 button.searchView__header-reset-filter {
     @extend button.btn--header-toggle;
-    color: map-get($map-colors, 'button-text-light-small');
+    color: #ddd;
     font-size: map-get($map-font-sizes, 'data-label');
+
+    &:hover {
+        color: #fff;
+    }
 }
 
 button.searchView__update-results {
@@ -246,13 +251,13 @@ button.searchView__update-results {
 
 .searchWidget__main {
     padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y + $searchview-header-height;
+    padding-bottom: $searchview-padding-y;
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
 }
 
 .searchWidget__form {
-    height: calc(100% - #{$searchview-header-height});
+    height: calc(100% - #{$searchview-header-height * 2});
     overflow-y: scroll;
 }
 
@@ -407,47 +412,51 @@ button.searchView__update-results {
     height: $searchview-infrastructure-icon-size; 
     width: $searchview-infrastructure-icon-size;
 
-    &.rail-color {
+    &.rail-color > span {
         background-color: $rail-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $rail-color-hover;
         }
     }
-    &.road-color {
+    
+    &.road-color > span {
         background-color: $road-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $road-color-hover;
         }
     }
-    &.seaport-color {
+
+    &.seaport-color > span {
         background-color: $seaport-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $seaport-color-hover;
         }
     }
-    &.intermodal-color {
+
+    &.intermodal-color > span {
         background-color: $intermodal-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $intermodal-color-hover;
         }
     }
-    &.powerplant-color {
+
+    &.powerplant-color > span {
         background-color: $powerplant-color;
 
-        .infrastructureIcon__container:hover & {
+        .infrastructureIcon__container:hover & > span {
             background-color: $powerplant-color-hover;
         }
     }
-    &.selected {
-        background-color: $map-disabled-header-grey;
+    &.selected > span {
+        background-color: $map-infrastructure-selected-icon-bg-grey;
     }
 
-    .infrastructureIcon__container.selected:hover & {
-        background-color: $map-light-grey;
+    .infrastructureIcon__container.selected:hover & > span {
+        background-color: $map-infrastructure-selected-hover-icon-bg-grey;
     }
 }
 
@@ -463,7 +472,7 @@ button.searchView__update-results {
 }
 
 .infrastructureIcon__label {
-    background-color: white;
+    background-color: $map-infrastructure-grey;
 
     padding-left: $searchview-infrastructure-padding-left;
     padding-right: $searchview-infrastructure-padding-right;
@@ -486,11 +495,12 @@ button.searchView__update-results {
 }
 
 .infrastructureIcon__label--selected {
-    color: $map-grey;
-    background-color: $map-disabled-grey;
+    color: $map-infrastructure-selected-icon-grey;
+    background-color: $map-infrastructure-selected-grey;
 
     .infrastructureIcon__container:hover & {
-        background-color: $map-infrastructure-hover-grey;
+        color: $map-grey;
+        background-color: $map-infrastructure-selected-hover-grey;
     }
 }
 
@@ -587,7 +597,7 @@ button.searchView__update-results {
     padding-left: $searchview-padding-x;
     padding-right: $searchview-padding-x;
     padding-top: $searchview-padding-y;
-    padding-bottom: $searchview-padding-y + $searchview-header-height;
+    padding-bottom: $searchview-padding-y;
 }
 
 .resultsView__not-found {
@@ -629,8 +639,15 @@ button.searchView__update-results {
     height: calc(100% - #{$searchview-header-height});
     @include display(flex);
     @include flex-direction(column);
+}
 
+.resultsView__scroll-container {
+    height: calc(100% - #{$searchview-header-height});
     overflow-y: scroll;
+}
+
+.resultsView__scroll-container--expanded {
+    height: 100%;
 }
 
 .resultsView__summary-info {
@@ -755,7 +772,7 @@ button.searchView__update-results {
     @include flex(0 1 70%);
     @include order(0);
     background-color: $map-teal;
-    color: $cloudy-blue;
+    color: white;
     &:disabled {
         display: none;
     }
@@ -783,11 +800,16 @@ button.searchView__update-results {
         cursor: pointer;
         background: url($map-pin-img) no-repeat center/70% 70%;
         display: inline-block;
-        width: 1em;
+        width: 1.25em;
 
         // use a space to ensure height == one text line
-        content: " ";
+        content: "\a0\a0";
         white-space: pre;
+    }
+
+    &:hover::after {
+        background-color: #b4d0d0;
+        border-radius: 50%;
     }
 }
 
@@ -798,7 +820,7 @@ button.searchView__update-results {
 
 .projectResult__data-label {
     font-size: map-get($map-font-sizes, 'data-label');
-    font-weight: bold;
+    font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 2px;
 }
@@ -897,5 +919,20 @@ button.searchView__update-results {
 .inner.showHelp {
     .helpView {
         transform: translateX(0px);
+    }
+}
+
+@media (max-width: $medium) {
+    .searchView {
+        display: none !important;
+    }
+
+    .app-wrap {
+        margin-bottom: 24px;
+    }
+
+    .style-root,
+    .search-map {
+        height: auto !important;
     }
 }
