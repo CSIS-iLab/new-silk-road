@@ -298,6 +298,7 @@ def refresh_views():
                     ELSE 'NULL'
                 END
                 AS plant_status,
+                pp.sources as plant_sources,
                 pp.total_cost AS plant_total_cost,
                 pp.total_cost_currency AS plant_total_cost_currency,
                 pp.plant_year_online,
