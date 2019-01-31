@@ -5,30 +5,6 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-def move_projects_from_4_to_8_and_delete_4(apps, schema_editor):
-    """
-    Clean up Projects associated with one of the two
-    "Russia, Central Asia, and the Sou(r)th Caucasus" Region
-    instances by associating all of them with the
-    misspelled variant (it's the one with more data
-    attached to it, after all).
-    """
-    Region = apps.get_model('locations', 'Region')
-
-    # strangely enough, we want to move all Projects over
-    # to the instance that is currently *not* spelled right
-    spelled_right = Region.objects.get(pk=4)
-    spelled_wrong = Region.objects.get(pk=8)
-
-    for project in spelled_right.project_set.all():
-        project.regions.remove(spelled_right)
-        project.regions.add(spelled_wrong)
-        project.save()
-    
-    spelled_right.delete()
-
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -37,5 +13,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_projects_from_4_to_8_and_delete_4)
+        migrations.RunSQL("UPDATE infrastructure_project_regions set region_id=8 WHERE region_id=4;"),
+        migrations.RunSQL("UPDATE locations_region set name='Russia, Central Asia and the South Caucasus' where id=8;"),
+        migrations.RunSQL("DELETE from locations_region where id=4;")
     ]
