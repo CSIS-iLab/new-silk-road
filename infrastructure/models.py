@@ -480,6 +480,15 @@ class PowerPlant(Publishable):
         blank=True,
     )
 
+    sources = ArrayField(
+        models.CharField(max_length=1000, validators=[URLLikeValidator]),
+        blank=True,
+        null=True,
+        default=list,
+        verbose_name="Sources URLs",
+        help_text='Enter URLs separated by commas.'
+    )
+
     class Meta:
         ordering = ['name', ]
 
