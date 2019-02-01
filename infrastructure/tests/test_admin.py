@@ -4,8 +4,8 @@ from django.test import TestCase
 
 from facts.models import Data
 from locations.models import GeometryStore
-from ..admin import HasGeoListFilter, ProjectAdmin, InitiativeAdmin
-from ..models import Project, Initiative
+from ..admin import HasGeoListFilter, ProjectAdmin, InitiativeAdmin, PowerPlantAdmin
+from ..models import Project, Initiative, PowerPlant
 from . import factories
 
 
@@ -125,6 +125,34 @@ class ProjectAdminTestCase(TestCase):
                 else:
                     self.assertIsNone(result)
 
+class PowerPlantAdminTestCase(TestCase):
+    def setUp(self):
+        super().setUp()
+        self.admin = PowerPlantAdmin(PowerPlant, admin_site=Mock())
+    
+    @classmethod
+    def setUpTestData(cls):  # noqa
+        super().setUpTestData()
+        cls.pp1 = factories.PowerPlantFactory(name="Plant with no sources")
+        cls.pp2 = factories.PowerPlantFactory(name="Plant with sources", 
+            sources=['http://google.com', 'http://example.com'])
+
+    
+    def test_display_sources(self):
+        """Display list of sources associated with the power_plant."""
+
+        tests = (
+            # PowerPlant, Sources
+            (self.pp1, None),
+            (self.pp2, '<ul><li>http://google.com</li>\n<li>http://example.com</li></ul>'),
+        )
+        for power_plant, expected in tests:
+            with self.subTest('Sources for {}'.format(power_plant)):
+                result = self.admin.sources_display(power_plant)
+                if expected is not None:
+                    self.assertHTMLEqual(result, expected)
+                else:
+                    self.assertIsNone(result)
 
 class InitiativeAdminTestCase(TestCase):
     """Admin customizations for initiatives."""

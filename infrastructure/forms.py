@@ -174,6 +174,9 @@ class PowerPlantForm(forms.ModelForm):
     class Meta:
         model = PowerPlant
         fields = '__all__'
+        widgets = {
+            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
+        }
 
     def __init__(self, *args, **kwargs):
         """Display all of the PowerPlant's current projects as initial data."""
