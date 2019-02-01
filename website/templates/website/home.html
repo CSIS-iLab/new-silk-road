@@ -77,19 +77,23 @@
     </div>
 </section>
 <section id='db-search' class=" white-text">
-    <div class='content-wrapper'>
-        <h2 class="section-title  white-text">Search the Database</h2>
-        <div class="left-div">
-            <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
+    <form action="{% url 'search:search' %}">
+        <div class='content-wrapper'>
+            <h2 class="section-title  white-text">Search the Database</h2>
+            <div class="left-div">
+                <p>Search hundreds of projects and the people, organizations, and events behind them.</p>
+            </div>
+            <div class="right-div" role="search">
+                {% include "search/_search_form.html" with omit_form=True %}
+            </div>
+            <div class="clearfix"></div>
+            <button class="green-button" type="submit">
+                <div class="button-text">
+                    Search
+                </div>
+            </button>
         </div>
-        <div class="right-div" role="search">
-            {% include "search/_search_form.html" %}
-        </div>
-        <div class="clearfix"></div>
-        <a class="green-button" href="/analysis" alt="Search">
-            <div class="button-text">Search</div>
-        </a>
-    </div>
+    </form>
 </section>
 <section id='db-summary'>
     <div class='content-wrapper'>
