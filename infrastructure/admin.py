@@ -256,6 +256,7 @@ class PowerPlantAdmin(admin.ModelAdmin):
         'infrastructure_type',
         'status',
         'published',
+        'sources_display',
     )
     list_filter = (
         'plant_capacity',
@@ -270,6 +271,15 @@ class PowerPlantAdmin(admin.ModelAdmin):
     inlines = [
         ProjectsOwnersInline
     ]
+
+    def sources_display(self, obj):
+        if obj.sources:
+            return format_html(
+                "<ul>{}</ul>",
+                format_html_join('\n', '<li>{}</li>', ((x,) for x in obj.sources))
+            )
+        return None
+    sources_display.short_description = 'Sources'
 
     class Meta:
         model = PowerPlant

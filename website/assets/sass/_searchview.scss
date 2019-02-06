@@ -6,13 +6,80 @@
 @import "../../../node_modules/react-select/dist/react-select.css";
 
 
-$search-inner-height: 550px;
+$searchview-padding-x: 20px;
+$searchview-padding-y: 24px;
+
+$searchview-infrastructure-icon-size: 40px;
+$searchview-infrastructure-padding-left: 16px;
+$searchview-infrastructure-padding-right: 24px;
+
+$searchview-header-height: 50px;
+$searchview-heading-bottom-margin: $searchview-padding-y / 2;
+$searchview-body-text-bottom-margin: $searchview-heading-bottom-margin * 2;
+$searchview-section-header-bottom-margin: 8px;
+$searchview-label-bottom-margin: $searchview-section-header-bottom-margin / 2;
+$searchview-text-input-margin-left: 16px;
+
+$search-inner-height: calc(100% - #{$searchview-header-height * 2});
 $results-view-max-height: 410px;
 $scroll-max-height: $results-view-max-height - 46;
 
+// Abstract base class for various specialized header toggle buttons.
+button.btn--header-toggle {
+    @include display(flex);
+    @include flex-direction(row);
+    @include align-items(center);
+    background-color: transparent;
+    color: white;
+    font-size: map-get($map-font-sizes, 'base');
+    font-family: $sans-font-family;
+    text-transform: uppercase;
+    padding: 0;
+
+    > span {
+        flex: 0 1 auto;
+    }
+
+    &::before {
+        // This requires a background-image property in concrete classes.
+        content: "";
+        display: inline-block;
+        flex: 0 1 auto;
+        height: 11px;
+        width: 1em;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+    }
+}
+
+// Abstract base class to be extended by various subheadings.
+.sidebar__subheading {
+    color: map-get($map-colors, 'subheading');
+    font-size: map-get($map-font-sizes, 'subheading');
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+// Abstract class to be extended by various body text classes.
+.sidebar__body-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'body');
+    margin-bottom: $searchview-body-text-bottom-margin;
+}
+
+// Abstract base class to be extended by various hr classes.
+.sidebar__separator {
+    margin-top: $searchview-padding-y;
+    margin-bottom: $searchview-padding-y;
+    margin-left: -$searchview-padding-x;
+    margin-right: -$searchview-padding-x;
+    border-width: 0.5px;
+    border-color: $map-extra-light-grey;
+}
+
 .searchView {
     width: $side-bar-width;
-    font-size: $search-text-size;
+    font-size: map-get($map-font-sizes, 'base');
     z-index: 10;
     position: relative;
     top: 0px;
@@ -23,21 +90,18 @@ $scroll-max-height: $results-view-max-height - 46;
     @include media($megamap-break) {
         display: block;
     }
-    header{
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        padding: $base-line-height $small-spacing;;
-        background-color: $pale-grey;
+    header {
         a {
             display: block;
             height: $base-line-height;
             width: $base-line-height;
             opacity: 0.6;
         }
+
         a:hover {
             opacity: 1;
         }
+
         h2 {
             padding-left: $base-line-height;
         }
@@ -53,8 +117,8 @@ $scroll-max-height: $results-view-max-height - 46;
         z-index: 10;
         transform: translateX(-290px);
         transition: transform 0.3s;
-        >header {
-            background-color: $callout-color;
+        
+        > header {
             h2 {
                 color: #fff;
             }
@@ -67,35 +131,6 @@ $scroll-max-height: $results-view-max-height - 46;
                 color: #fff;
             }
         }
-        .filterScroll {
-            height: calc(100% - 140px);
-            overflow: auto;
-        }
-
-        /* Submit button */
-        form {
-            height: 100%;
-            header {
-                @include justify-content(center);
-                background-color: $callout-color;
-                button {
-                    background: none;
-                    color: #fff;
-                    line-height: $base-line-height;
-                }
-                span {
-                    height: $base-line-height;
-                    width: $base-line-height;
-                    background: url($update) no-repeat center/70% 70%;
-                }
-                button[disabled] {
-                    opacity: 0.4;
-                }
-                button[disabled] + span {
-                    opacity: 0.4;
-                }
-            }
-        }
     }
     .inner.showFilters {
         .searchWidget {
@@ -104,7 +139,8 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 
     h2 {
-        font: $minor-text-size $sans-font-family;
+        font-size: map-get($map-font-sizes, 'base');
+        font-family: $sans-font-family;
         font-weight: bold;
         color: $callout-color;
         margin-bottom: $tiny-spacing;
@@ -125,142 +161,222 @@ $scroll-max-height: $results-view-max-height - 46;
 
     .inner {
         width: $side-bar-width;
-        height: $search-inner-height;
+        height: 100%;
 
         @include display(flex);
         @include flex-direction(column);
         @include justify-content(flex-start);
-
-        // > div {
-        //     padding: $tiny-spacing;
-        // }
     }
+}
 
-    section {
-        padding-bottom: $tiny-spacing;
-        padding: $small-spacing;
-        padding-top: 0;
+.searchView__header {
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(space-between);
+    @include align-items(center);
+    
+    height: $searchview-header-height;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+    
+    background-color: $callout-color;
+}
 
-        h4 {
-            display: inline-block;
-            color: $greyish-teal;
-            font-size: $search-text-size;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 0;
-        }
+.searchView__header--light {
+    background-color: map-get($map-colors, 'header-background-light');
+}
 
+.searchView__footer {
+    @extend .searchView__header;
+
+    @include display(flex);
+    @include justify-content(center);
+    background-color: $map-filter-footer-bg;
+    color: white;
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+
+    &:hover {
+        background-color: $map-filter-footer-hover-bg;
+        color: white;
     }
-    section:last-child {
-        border: none;
+}
+
+button.searchView__header-toggle {
+    @extend button.btn--header-toggle;
+    &::before {
+        background-image: url($close-white);
     }
+}
 
-    section.projectResult {
-        border: none;
-        h1 {
-            padding-bottom: $small-spacing;
-        }
+button.searchView__header-reset-filter {
+    @extend button.btn--header-toggle;
+    color: #ddd;
+    font-size: map-get($map-font-sizes, 'data-label');
+
+    &:hover {
+        color: #fff;
     }
+}
 
-    .sectionRow {
-        display: block;
-        clear: both;
-        margin-bottom: $tiny-spacing;
-        label {
-            display: inline-block;
-            font-size: $base-font-size;
-            font-weight: bold;
-            padding-top: $tiny-spacing;
+button.searchView__update-results {
+    @include display(flex);
+    @include align-items(center);
+    @include justify-content(center);
+    
+    color: white;
+    background: none;
+    text-transform: uppercase;
 
-            span {
-                background: url($plus) no-repeat center/70% 70%;
-                display:inline-block;
-                height: 16px;
-                margin-bottom: -2px;
-                width: $base-line-height;
-            }
-        }
+    &[disabled] {
+        color: $map-grey;
 
-        input {
-            width: calc(100% - 1em);
-            margin-left: $small-spacing;
-        }
-        >input {
-            border: 2px solid $pale-grey;
-
-        }
-        input::placeholder {
-            font-size: $compact-text-size;
-            color: gray;
-            line-height: 24px;
-            top: 2px;
-            font-style: normal;
-        }
-
-        /* WARNING: This is nasty. Styling the .Select with margin-top
-        so that we can click on the label. TODO: change this in React
-        */
-        .Select{
-            background: none;
-            margin-top: -26px;
-            .Select-control {
-                background: none;
-                cursor: pointer;
-                input {
-                    height: 0px;
-                    padding: 0px;
-                }
-            }
-        }
-        .Select.has-value{
-            outline: 0;
-            outline: none !important;
-            border: none;
-            margin-top: 0px;
-            .Select-control {
-                margin-left: $small-spacing;
-            }
-
+        &::after {
+            background: url($update-disabled) no-repeat center/70% 70%;
         }
     }
 
-    .expandable {
-        header {
-            margin: 0 10px;
+    &::after {
+        content: "";
+        display: inline-block;
+        height: $base-line-height;
+        width: $base-line-height;
+        background: url($update) no-repeat center/70% 70%;
+        margin-left: 0.5em;
+    }
+}
 
-            &:hover {
-                cursor: pointer;
-            }
+.searchWidget__main {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+}
+
+.searchWidget__form {
+    height: calc(100% - #{$searchview-header-height * 2});
+    overflow-y: scroll;
+}
+
+.searchWidget__separator {
+    @extend .sidebar__separator;
+}
+
+.expandable-panel {
+    button.toggle {
+        background-color: transparent;
+          width: 20px;
+          color: transparent;
+
+
+    &.collapsed:before {
+        @include hide-text;
+        padding: 0;
+        font-family: "fontello";
+        content: "\E806";
+        color: black;
+
+        width: $expand-collapse-btn-width;
         }
-        .sectionBody {
-            margin: $tiny-spacing $small-spacing $tiny-spacing 0;
+    &.expanded:before {
+        font-family: "fontello";
+        content: "\E807";
+        color: black;
+        @include hide-text;
+        padding: 0;
+        width: $expand-collapse-btn-width;
         }
-        button.toggle {
-            background-color: transparent;
-              width: 20px;
-              color: transparent;
+    }
+}
 
+.expandable-panel:last-of-type .filter-input-group:last-of-type {
+    margin-bottom: 0;
+}
 
-        &.collapsed:before {
-            @include hide-text;
-            padding: 0;
-            font-family: "fontello";
-            content: "\E806";
-            color: black;
+.filter-input-group {
+    display: block;
 
-            //background: url($expand-btn-img) center no-repeat;
-            width: $expand-collapse-btn-width;
-            }
-        &.expanded:before {
-                //background: url($collapse-btn-img) center no-repeat;
-            font-family: "fontello";
-            content: "\E807";
-            color: black;
-            @include hide-text;
-            padding: 0;
-            width: $expand-collapse-btn-width;
-            }
-        }
+    input::placeholder {
+        font-size: map-get($map-font-sizes, 'base');
+        color: gray;
+        top: 2px;
+        font-style: normal;
+    }
+}
+
+.filter-input-group {
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.filter-input-group__label {
+    display: block;
+    font-size: map-get($map-font-sizes, 'base');
+    color: map-get($map-colors, 'body');
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: $searchview-label-bottom-margin;
+}
+
+.filter-input-group__input-text {
+    display: block;
+    font-size: map-get($map-font-sizes, 'base');
+    line-height: map-get($map-font-sizes, 'heading');
+    padding-top: 0; // compensating for natural visual gap
+    padding-bottom: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-left: $searchview-text-input-margin-left;
+    width: calc(100% - #{$searchview-text-input-margin-left});
+    color: map-get($map-colors, 'body');
+    border: 1px solid #{map-get($map-colors, 'border')};
+
+    &::placeholder {
+        color: map-get($map-colors, 'placeholder');
+    }
+}
+
+.date-range-select__range-container {
+    @include display(flex);
+    @include flex-wrap(nowrap);
+    padding-left: $searchview-text-input-margin-left;
+    margin-top: $searchview-section-header-bottom-margin / 2;
+}
+
+.date-range-select__helper-text {
+    color: map-get($map-colors, 'body');
+    font-size: map-get($map-font-sizes, 'section-title');
+    margin-left: $searchview-text-input-margin-left / 4;
+    margin-right: $searchview-text-input-margin-left / 4;
+
+    &:first-of-type {
+        margin-left: 0;
+    }
+}
+
+.date-range-select__input-text {
+    .searchView .filter-input-group .dateRangeSelect & {
+        @extend .filter-input-group__input-text;
+        @include flex-basis(auto);
+        @include flex-shrink(1);
+
+        display: inline-block;
+        width: auto;
+        margin-left: 4px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.expandable-panel__title {
+    .searchView & {
+        font-size: map-get($map-font-sizes, 'section-title');
+        font-weight: bold;
+        color: map-get($map-colors, 'data-link');
+        text-transform: uppercase;
+        margin-bottom: $searchview-section-header-bottom-margin;
     }
 }
 
@@ -278,59 +394,114 @@ $scroll-max-height: $results-view-max-height - 46;
 }
 
 #infrastructureToggle {
-    background: #fff;
     position: absolute;
     z-index: 10;
     left: 290px;
     top: 70px;
-    width: 100%;
+    width: auto;
+}
 
-    span span {
-        display: block;
-        height: 50px;
-        width: 50px;
-        cursor: pointer;
+.infrastructureIcon__container {
+    display: flex;
+    overflow: hidden;
+    cursor: pointer;
+}
 
-        img{
-            margin: 5px;
+.infrastructureIcon__icon {
+    display: inline-block;
+    height: $searchview-infrastructure-icon-size; 
+    width: $searchview-infrastructure-icon-size;
+
+    &.rail-color > span {
+        background-color: $rail-color;
+
+        .infrastructureIcon__container:hover & > span {
+            background-color: $rail-color-hover;
+        }
+    }
+    
+    &.road-color > span {
+        background-color: $road-color;
+
+        .infrastructureIcon__container:hover & > span {
+            background-color: $road-color-hover;
         }
     }
 
-    .rail-color {
-        background-color: $rail-color;
-    }
-    .road-color {
-        background-color: $road-color;
-    }
-    .seaport-color {
+    &.seaport-color > span {
         background-color: $seaport-color;
+
+        .infrastructureIcon__container:hover & > span {
+            background-color: $seaport-color-hover;
+        }
     }
-    .intermodal-color {
+
+    &.intermodal-color > span {
         background-color: $intermodal-color;
+
+        .infrastructureIcon__container:hover & > span {
+            background-color: $intermodal-color-hover;
+        }
     }
-    .powerplant-color {
+
+    &.powerplant-color > span {
         background-color: $powerplant-color;
+
+        .infrastructureIcon__container:hover & > span {
+            background-color: $powerplant-color-hover;
+        }
     }
-    span.selected {
-        background-color: $warm-grey;
+    &.selected > span {
+        background-color: $map-infrastructure-selected-icon-bg-grey;
+    }
+
+    .infrastructureIcon__container.selected:hover & > span {
+        background-color: $map-infrastructure-selected-hover-icon-bg-grey;
     }
 }
 
-.infrastructureIconContainer {
-    display: flex;
-    &:hover {
-        cursor: pointer;
-        background-color: $pale-grey;
-    }
-    &.selected {
-        background-color: $pale-grey;
+.infrastructureIcon__inner-icon {
+    display: block;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+
+    img{
+        margin: 5px;
     }
 }
 
-.infrastructureIconLabel {
-    padding: 12px;
-    height: 50px;
-    width: max-content;
+.infrastructureIcon__label {
+    background-color: $map-infrastructure-grey;
+
+    padding-left: $searchview-infrastructure-padding-left;
+    padding-right: $searchview-infrastructure-padding-right;
+    line-height: 40px;
+    height: 40px;
+    width: 100%;
+
+    z-index: -1;
+    transform: translateX(0);
+    transition: transform 0.25s;
+
+    .infrastructureIcon__container:hover & {
+        background-color: $map-infrastructure-hover-grey;
+    }
+}
+
+.infrastructureIcon__label--hidden {
+    transform: translateX(-100%);
+    transition: transform 0.25s;
+}
+
+.infrastructureIcon__label--selected {
+    color: $map-infrastructure-selected-icon-grey;
+    background-color: $map-infrastructure-selected-grey;
+
+    .infrastructureIcon__container:hover & {
+        color: $map-grey;
+        background-color: $map-infrastructure-selected-hover-grey;
+    }
 }
 
 .app-wrap {
@@ -391,29 +562,6 @@ $scroll-max-height: $results-view-max-height - 46;
 
 }
 
-.buttonBar {
-    @include display(flex);
-    @include justify-content(space-between);
-    padding: $small-spacing;
-}
-
-.buttonBar > button {
-    font-size: $compact-text-size;
-    padding: 6px 3px;
-    @include flex(0 1 70%);
-    @include order(0);
-    background-color: $green;
-    color: white;
--webkit-transition: background-color .2s ease-in-out;
-            transition: background-color .2s ease-in-out;
-                   &:disabled {
-        display: none;
-    }
-    &:hover{
-        background-color: $greyish-teal;
-    }
-}
-
 #primarySearch {
     input, button {
         background-color: $dark-night;
@@ -432,304 +580,272 @@ $scroll-max-height: $results-view-max-height - 46;
     z-index: 0;
     height: 100%;
 
-    >header {
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        a {
-            display: block;
-            height: $base-line-height;
-            width: $base-line-height;
-            opacity: 0.8;
-        }
-        a:first-child {
-            background: url($filter) no-repeat center/90% 90%;
-        }
-        a:last-child {
-            background: url($help-circle) no-repeat center/90% 90%;
-        }
-        a:hover {
-            opacity: 1;
-        }
-        h2 {
-            flex: 1;
-            color: $callout-color;
-        }
-    }
-
     &.no-results {
         display: none;
     }
 }
 
 .resultsView {
-    padding-top: 0;
-    height: calc(100% - 18px);
-    @include display(flex);
-    @include flex-direction(column);
-    @include justify-content(space-between);
-
-    .scrollWrap {
-        height: calc(100% - 18px);
-        -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
-
-    > div {
-        display: block;
-        position: relative;
-    }
-
-    /* For the summary of the results */
-    .summaryInfo {
-        font-size: x-large;
-        padding: $small-spacing $small-spacing 0;
-        color: $green-2018;
-    }
-
-    /* for the two links in the Curated results section. */
-    .scrollContent {
-        >section {
-            a {
-                display: block;
-                padding-top: $small-spacing;
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-        }
-    }
-
-    .resultsNav {
-        @include display(flex);
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        @include align-content(stretch);
-
-        padding: $base-line-height $base-line-height/1.5;
-        background-color: $pale-grey;
-
-        .buttonWrap {
-            display: block;
-            background-color: transparent;
-
-            button {
-                width: 100%;
-                position: relative;
-                height: $base-line-height;
-                width: $base-line-height;
-                transform: scale(1, 1);
-                &:hover {
-                    transform: scale(1.3, 1.3);
-                }
-                &:disabled {
-                    opacity: 0.3;
-                    transform: scale(1, 1);
-                }
-            }
-            &:first-child button{
-                background: url($arrow-left) no-repeat center/70% 70%;
-            }
-            &:last-child button{
-                background: url($arrow-right) no-repeat center/70% 70%;
-            }
-            .pagination {
-                flex: 1;
-                line-height: $base-line-height;
-            }
-        }
-    }
-
     ul.searchResults {
         list-style: none;
         padding: 0;
         margin: 0;
+    }
+}
 
-        > li {
-            margin: 0 10px 8px 0;
-            padding: 2px 4px 16px 0;
-            border-bottom: 1px solid $slate-grey;
+.resultsView__content {
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+}
 
+.resultsView__not-found {
+    font-size: map-get($map-font-sizes, 'body');
+    color: map-get($map-colors, 'body');
+}
 
-            &:last-of-type {
-                border: none;
-                margin-bottom: 0;
-                padding-bottom: 0;
-            }
+.resultsView__header-toggle {
+    @extend button.btn--header-toggle;
+    color: map-get($map-colors, 'header-toggle');
 
-            h1 {
-                font-family: $sans-font-family;
-                font-size: $search-text-size;
-                margin: 0 0 $tiny-spacing 0;
-            }
+    &:hover {
+        color: $map-hover-grey;
+    }
 
-            p {
-                margin-bottom: $tiny-spacing;
-            }
+    &::before {
+        background-image: url($filter);
+        height: 15px;
+    }
+
+    &:hover::before {
+        background-image: url($filter-active);
+    }
+}
+
+.resultsView__header-toggle--help {
+    @extend .resultsView__header-toggle;
+    &::before {
+        background-image: url($help-circle);
+        height: 1em;
+        width: 1em;
+    }
+    &:hover::before {
+        background-image: url($help-circle-active);
+    }
+}
+
+.resultsView__main {
+    height: calc(100% - #{$searchview-header-height});
+    @include display(flex);
+    @include flex-direction(column);
+}
+
+.resultsView__scroll-container {
+    height: calc(100% - #{$searchview-header-height});
+    overflow-y: scroll;
+}
+
+.resultsView__scroll-container--expanded {
+    height: 100%;
+}
+
+.resultsView__summary-info {
+    .searchView & {
+        font-size: map-get($map-font-sizes, 'heading');
+        color: map-get($map-colors, 'number-of-projects-title');
+        margin-bottom: $searchview-heading-bottom-margin;
+    }
+}
+
+.resultsView__summary-info--with-results {
+    .searchView & {
+        margin-bottom: $searchview-section-header-bottom-margin * 3;
+    }
+}
+
+.resultsView__subheading {
+    @extend .sidebar__subheading;
+}
+
+.resultsView__body-text {
+    @extend .sidebar__body-text;
+}
+
+.resultsView__separator {
+    @extend .sidebar__separator;
+}
+
+.resultsView__pagination {
+    @include display(flex);
+    @include flex-direction(row);
+    @include justify-content(space-between);
+    @include align-content(stretch);
+    @include align-items(center);
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: $searchview-header-height;
+    width: 100%;
+
+    background-color: $pale-grey;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+}
+
+.resultsView__pagination-buttonWrap {
+    display: block;
+    background-color: transparent;
+    line-height: 1;
+}
+
+.resultsView__pagination-button {
+    width: 100%;
+    position: relative;
+    height: $base-line-height;
+    width: $base-line-height;
+}
+
+.resultsView__pagination-button--previous {
+    @extend .resultsView__pagination-button;
+    background: url($arrow-left) no-repeat center/70% 70%;
+
+    &:hover {
+        background: url($arrow-left-active) no-repeat center/70% 70%;
+    }
+}
+
+.resultsView__pagination-button--next {
+    @extend .resultsView__pagination-button;
+    background: url($arrow-right) no-repeat center/70% 70%;
+
+    &:hover {
+        background: url($arrow-right-active) no-repeat center/70% 70%;
+    }
+}
+
+.resultsView__pagination-buttonWrap--disabled {
+    visibility: hidden;
+}
+
+.searchResults__result {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    margin-bottom: 0;
+    position: relative;
+
+    &::after {
+        content: "";
+        display: block;
+        height: 1px;
+        background-color: $map-light-grey;
+        position: absolute;
+        bottom: 0;
+        left: -$searchview-padding-x;
+        width: calc(100% + #{2 * $searchview-padding-x});
+    }
+
+    &:first-of-type {
+        padding-top: 0;
+    }
+
+    &:last-of-type {
+        padding-bottom: 0;
+
+        &::after {
+            display: none;
         }
     }
 }
 
-.initiativesList {
+.searchResults__buttonBar {
+    @include display(flex);
+    @include justify-content(space-between);
+    padding-left: $searchview-text-input-margin-left;
+}
+
+.searchResults__button {
+    font-size: map-get($map-font-sizes, 'data-label');
+    text-transform: uppercase;
+    padding: 6px 3px;
+    @include flex(0 1 70%);
+    @include order(0);
+    background-color: $map-teal;
+    color: white;
+    &:disabled {
+        display: none;
+    }
+    &:hover{
+        background-color: $map-teal-active;
+        color: white;
+    }
+}
+
+.projectResult {
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__title {
+    font-size: map-get($map-font-sizes, 'base');
+    font-weight: bold;
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__pin-button {
+    display: inline-block;
+    margin-left: 0.35em;
+
+    &::after {
+        cursor: pointer;
+        background: url($map-pin-img) no-repeat center/70% 70%;
+        display: inline-block;
+        width: 1.25em;
+
+        // use a space to ensure height == one text line
+        content: "\a0\a0";
+        white-space: pre;
+    }
+
+    &:hover::after {
+        background-color: #b4d0d0;
+        border-radius: 50%;
+    }
+}
+
+.projectResult__section {
+    padding-left: $searchview-text-input-margin-left;
+    margin-bottom: $searchview-heading-bottom-margin;
+}
+
+.projectResult__data-label {
+    font-size: map-get($map-font-sizes, 'data-label');
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.projectResult__section--initiatives-list {
     h2 {
         font-family: $sans-font-family;
         font-size: $search-text-size;
         margin-bottom: 3px;
         margin-left: 0px;
     }
-    ul {
-        padding: 0 0 0 0px;
-        margin: 0;
-        list-style: square inside;
-        li {
-            font-size: $search-text-size;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            a {
-                margin: -15px;
-            }
-        }
-    }
 }
 
-.searchView .sectionRow .dateRangeSelect, .searchView .sectionRow .CurrencyRangeSelect {
-    @include display(flex);
-    @include flex-direction(row);
-    @include flex-wrap(wrap);
-    @include justify-content(space-between);
-    @include align-items(center);
-    @include align-content(space-between);
-    min-height: 64px;
-    > span {
-        @include flex(0.25 0 auto);
-        padding: 0 2px;
-        text-align: center;
-    }
-    .Select {
-        @include flex(1 0 100%);
-    }
-    .Select-menu-outer {
-        width: auto;
-    }
-    .Select-value {
-        line-height: 2em;
-    }
-    input {
-        @include flex(0.5 1 auto);
-        padding: 2px 10px;
-        margin: 4px;
-        overflow: hidden;
-        border: 2px solid $pale-grey;
-        width: 63px;
-    }
-    input:nth-child(1) {
-        border: none;
-        width: auto;
-    }
+.projectResult__initiatives-list {
+    padding: 0 0 0 0px;
+    margin: 0;
+    list-style: none;
 }
 
-// Rule specific for MS Edge
-.searchView .sectionRow .dateRangeSelect .Select-input input {
-    border: none;
-}
-
-.Select {
-    font-family: $sans-font-family;
-    font-size: $compact-text-size;
-    width: calc(100% - 1em);
-    .Select-input  {
-        height: 24px;
-        width: 100% !important;
-        >input {
-            padding: 4px 0 6px;
-            width: 100% !important;
-        }
-    }
-    .Select-control {
-        color: black;
-        border: none;
-        border-radius: 0;
-        height: auto;
-
-        .Select-value {
-            font-size: $compact-text-size;
-            border: 1px solid $pale-grey;
-        }
-        .Select-value-icon {
-            border-right: 1px solid $pale-grey;
-        }
-        .Select-value-label, .Select-clear-zone {
-            color: black;
-            &:hover {
-                color: $dark-night transparent transparent;
-            }
-        }
-    }
-    .Select-placeholder {
-        display: none;
-    }
-    .Select-arrow {
-        display: none;
-    }
-    .Select-arrow-zone {
-        display: none;
-    }
-    .Select-clear-zone {
-        vertical-align: top;
-    }
-
-    .Select-menu-outer {
-        background-color: $pale-grey;
-        width: 100%;
-        margin-left: $small-spacing;
-    }
-    .Select-option {
-        color: black;
-        background-color: $pale-grey;
-        padding: 4px 6px;
-
-        &:hover {
-            background-color: $med-gray;
-        }
-        &:last-child {
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-    }
-    /* This is an attempt to remove the light blue halo surrounding the .Select elemnt.
-    the issue is that it is likely a style added to the element, hence this is broke. */
-    .is-open, .is-focused {
-        border: none;
-    }
-}
-.has-value.Select > .Select-control > .Select-value .Select-value-label,
-.has-valueis-pseudo-focused.Select > .Select-control > .Select-value .Select-value-label,
-.has-value.Select--single>.Select-control .Select-value .Select-value-label,
-.has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label,
-.has-value.Select > .Select-control > .Select-value .Select-value-label {
-    color: $dark-grey-blue;
-    display: inline-block;
-}
-
-.Select--multi {
-    .Select-value {
-        margin: 3px 0 3px 3px;
-        background-color: $pale-grey;
-        color: $blue-steel;
-        font-size: $compact-text-size;
-    }
-    .Select-value-icon {
-        border-right-color: $blue-steel;
-    }
-}
-.Select--single {
-    .Select-value {
-        // margin: 3px 0 3px 3px;
-        background-color: $pale-grey;
-        color: $blue-steel;
-        font-size: $compact-text-size;
-    }
+.projectResult__initiatives-list-item {
+    font-size: map-get($map-font-sizes, 'base');
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .helpView {
@@ -748,7 +864,7 @@ $scroll-max-height: $results-view-max-height - 46;
             color: #fff;
         }
         a {
-            background: url($close-white) no-repeat center/70% 70%;
+            background: url($close-white) no-repeat center/50% 50%;
         }
     }
     .textWrap {
@@ -763,8 +879,60 @@ $scroll-max-height: $results-view-max-height - 46;
     }
 }
 
+.helpView__main {
+    padding-top: $searchview-padding-y;
+    padding-bottom: $searchview-padding-y;
+    padding-left: $searchview-padding-x;
+    padding-right: $searchview-padding-x;
+
+    height: calc(100% - #{$searchview-header-height});
+    overflow-y: scroll;
+}
+
+.helpView__section {
+    margin-bottom: $searchview-padding-y;
+}
+
+.helpView__section-heading {
+    // NOTE: temporary specificity boost to be dispensed with
+    // once embedded .searchView h2 rule is eliminated
+    .searchView & {
+        color: map-get($map-colors, 'heading');
+        font-size: map-get($map-font-sizes, 'heading');
+        font-weight: normal;
+        margin-bottom: $searchview-heading-bottom-margin;
+    }
+}
+
+.helpView__section-subheading {
+    @extend .sidebar__subheading;
+}
+
+.helpView__separator {
+    @extend .sidebar__separator;
+}
+
+.helpView__body-text {
+    @extend .sidebar__body-text;
+}
+
 .inner.showHelp {
     .helpView {
         transform: translateX(0px);
+    }
+}
+
+@media (max-width: $medium) {
+    .searchView {
+        display: none !important;
+    }
+
+    .app-wrap {
+        margin-bottom: 24px;
+    }
+
+    .style-root,
+    .search-map {
+        height: auto !important;
     }
 }

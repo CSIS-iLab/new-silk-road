@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Radium, { Style } from 'radium';
+import classNames from 'classnames';
 import ResultsList from './ResultsList';
 import SearchActions from '../actions/SearchActions';
 
@@ -97,7 +98,7 @@ class ResultsView extends Component {
     return [currentPage, numPages];
   }
 
-  searchForCuratedResults (e) {
+  searchForCuratedResults(e) {
     /* Get the curated project collection query, update parent's state, and search the backend. */
 
     // Get the project collection query
@@ -109,6 +110,22 @@ class ResultsView extends Component {
     this.props.updateParentQuery(query);
     // Query the backend (which will also update the map)
     SearchActions.search(query);
+  }
+
+  sectionTitle() {
+    const { totalCount } = this.props;
+
+    return (
+      <h2
+        className={classNames(
+          'summaryInfo',
+          'resultsView__summary-info',
+          { 'resultsView__summary-info--with-results': this.props.results.length > 0 },
+        )}
+      >
+        {totalCount ? `${totalCount.toLocaleString()} Projects` : null}
+      </h2>
+    );
   }
 
   render() {
@@ -126,11 +143,11 @@ class ResultsView extends Component {
 
     let curatedProjectCollectionsElements = [];
     if (this.props.curatedProjectCollections !== undefined && this.props.curatedProjectCollections.length > 0) {
-      for (let i=0; i<this.props.curatedProjectCollections.length; i++) {
+      for (let i = 0; i < this.props.curatedProjectCollections.length; i++) {
         curatedProjectCollectionsElements.push(
           <a id={this.props.curatedProjectCollections[i].__proto__.value}
-             key={this.props.curatedProjectCollections[i].__proto__.value}
-             onClick={this.searchForCuratedResults}
+            key={this.props.curatedProjectCollections[i].__proto__.value}
+            onClick={this.searchForCuratedResults}
           >
             {this.props.curatedProjectCollections[i].__proto__.label}
           </a>
@@ -139,68 +156,87 @@ class ResultsView extends Component {
     }
 
     return (
-      <div className="resultsView" style={this.props.style}>
-        <h2 className="summaryInfo">
-          {this.props.totalCount} Projects
-        </h2>
+      <div
+        className="resultsView resultsView__main"
+        style={this.props.style}
+      >
         <div
-          className="scrollWrap"
+          className={classNames(
+            'resultsView__scroll-container',
+            {
+              'resultsView__scroll-container--expanded': this.props.results.length === 0,
+            },
+          )}
           ref={(el) => { this.scrollWrap = el; }}
-          style={[
-            scrollWrap.base,
-          ]}
         >
-          <div className="scrollContent"
+          <div className="resultsView__content"
             style={[
               this.props.results.length === 0 && scrollWrap.hidden,
             ]}
           >
+            { this.sectionTitle() }
             <ResultsList results={this.props.results} />
           </div>
-          <div className="scrollContent"
+          <div className="resultsView__content"
             style={[
               this.props.results.length !== 0 && scrollWrap.hidden,
             ]}
           >
+            { this.sectionTitle() }
             <section>
-              <p>
+              <p className="resultsView__body-text">
                 Click the icon panel on the right to hide the results of particular infrastructure types on the map.
               </p>
-              <p>
-                Search and filter results by clicking the “Filter” tab above.
+              <p className="resultsView__body-text">
+                Search and filter results by clicking the “<b>Filter</b>” tab above.
               </p>
             </section>
+
+            <hr className="resultsView__separator" />
+
             <section>
-              <h2>Curated Results</h2>
-              <p>
-                This list of results illustrate some of the projects and strategies our team is following.
-                {curatedProjectCollectionsElements}
+              <h3 className="resultsView__subheading">Curated Results</h3>
+              <p className="resultsView__body-text">
+                This list of results illustrates some of the projects
+                and strategies our team is following.
               </p>
             </section>
           </div>
         </div>
         <div
-          className="resultsNav"
+          className="resultsView__pagination"
           style={[
             noResults && resultsNavStyle.hidden,
           ]}
         >
-          <div className="buttonWrap">
+          <div
+            className={classNames(
+              'resultsView__pagination-buttonWrap',
+              { 'resultsView__pagination-buttonWrap--disabled': this.props.previousURL == null },
+            )}
+          >
             <button
+              className="resultsView__pagination-button--previous"
               disabled={this.props.previousURL == null}
               onClick={this.handlePreviousClick}
               value={this.props.previousURL}
-            ></button>
+            />
           </div>
-          <div className="pagination">
+          <div className="resultsView__pagination-count">
             Page {currentPage} of {numPages}
           </div>
-          <div className="buttonWrap">
+          <div
+            className={classNames(
+              'resultsView__pagination-buttonWrap',
+              { 'resultsView__pagination-buttonWrap--disabled': this.props.nextURL == null },
+            )}
+          >
             <button
+              className="resultsView__pagination-button--next"
               disabled={this.props.nextURL == null}
               onClick={this.handleNextClick}
               value={this.props.nextURL}
-            ></button>
+            />
           </div>
         </div>
       </div>

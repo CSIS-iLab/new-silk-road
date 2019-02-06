@@ -47,24 +47,29 @@ class DateRangeSelect extends Component {
           name="dateLookupType"
           placeholder={labelName}
           options={dateLookupOptions}
+          className="searchView-select__container"
           onChange={this.handleUpdate}
         />
-        <span>between</span>
-        <input
-          value={value.lowerValue || ''}
-          name="lowerValue"
-          size={boundLength}
-          placeholder={lowerBoundLabel}
-          onChange={this.handleUpdate}
-        />
-        <span>and</span>
-        <input
-          value={value.upperValue || ''}
-          name="upperValue"
-          size={boundLength}
-          placeholder={upperBoundLabel}
-          onChange={this.handleUpdate}
-        />
+        <div className="date-range-select__range-container">
+          <span className="date-range-select__helper-text">between</span>
+          <input
+            value={value.lowerValue || ''}
+            className="date-range-select__input-text"
+            name="lowerValue"
+            size={boundLength}
+            placeholder={lowerBoundLabel}
+            onChange={this.handleUpdate}
+          />
+          <span className="date-range-select__helper-text">and</span>
+          <input
+            value={value.upperValue || ''}
+            className="date-range-select__input-text"
+            name="upperValue"
+            size={boundLength}
+            placeholder={upperBoundLabel}
+            onChange={this.handleUpdate}
+          />
+        </div>
       </div>
     );
   }

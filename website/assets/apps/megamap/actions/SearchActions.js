@@ -90,6 +90,10 @@ class SearchActionsBase {
   failed(error) {
     return error;
   }
+
+  clear() {
+    return null;
+  }
 }
 
 const SearchActions = alt.createActions(SearchActionsBase);

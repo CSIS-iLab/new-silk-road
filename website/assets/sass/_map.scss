@@ -49,32 +49,47 @@ $creamer-str: str-slice("#{$creamer}", 2);
     font: $compact-text-size/rem(20) 'Helvetica Neue', Arial, Helvetica, sans-serif;
 
     .popup-button {
-        background-color: $green-2018;
+        background-color: $map-teal;
         color: white;
+        font-size: map-get($map-font-sizes, 'data-label');
         font-weight: bolder;
+        padding: 6px 24px;
+
         &:hover {
-            background-color: $greyish-teal;
+            background-color: $map-teal-active;
         }
     }
 }
 
-@each $aside, $bside in (top, bottom), (right, left), (bottom, top), (left, right) {
+@each $aside, $bside in (top-right, bottom), (top, bottom), (top-left, bottom) {
     .mapboxgl-popup-anchor-#{$aside} {
         .mapboxgl-popup-tip {
-            border-#{$bside}-color: $pale-green;
+            border-#{$bside}-color: $callout-color;
         }
     }
 }
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+    border-bottom-color: white;
+}
+
 .mapboxgl-popup-content {
     background-color: white;
+    border-radius: 0;
 }
+
 .mapboxgl-popup-close-button {
     width: 36px;
     height: 36px;
     color: white;
-    font-size: 32px;
+    font-size: 0;
+    line-height: 0;
+    background-image: url($close);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 11px;
+
     &:hover {
-        background-color: $warm-grey;
+        background-image: url($close-white);
     }
 }
 .marker-title {
@@ -148,10 +163,17 @@ $creamer-str: str-slice("#{$creamer}", 2);
     }
 }
 
+.mapboxgl-popup-content {
+    padding: 0;
+}
+
+.popup-content {
+    font-family: $sans-font-family;
+}
+
 .popup-header {
-    background-color: black;
-    color: white;
-    margin: -10px -20px 10px -20px;
+    background-color: $callout-color;
+    color: $map-mid-grey;
 }
 
 .popup-header-zoomicon {
@@ -172,11 +194,14 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 
 .popup-header-button {
-    &:hover {
-        background-color: $warm-grey;
-    }
     .zoom-magnifying-glass {
         background-image: url($zoom-magnifying-glass-img);
+    }
+
+    &:hover {
+        .zoom-magnifying-glass {
+            background-image: url($zoom-magnifying-glass-img-active);
+        }
     }
 }
 
@@ -190,29 +215,57 @@ $creamer-str: str-slice("#{$creamer}", 2);
 }
 
 .popup-header-text, .popup-header-text-disabled {
+    font-size: map-get($map-font-sizes, 'data-label');
+    text-transform: uppercase;
     vertical-align: super;
 }
 
 .popup-header-text-disabled {
-    color: $warm-grey;
+    color: $map-disabled-header-grey;
+}
+
+.popup-inner-container {
+    padding: 16px 20px 20px 20px;
+}
+
+.popup-inner-header {
+    margin: 0 0 12px 0;
+    font-size: map-get($map-font-sizes, 'base');
+    font-weight: bold;
 }
 
 .popup-row {
-    margin-bottom: 4px;
+    margin-bottom: 12px;
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+.popup-row-header {
+    font-size: map-get($map-font-sizes, 'data-label');
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 2px;
 }
 
 .popup-row-data {
     margin-top: -4px;
+    font-size: map-get($map-font-sizes, 'base');
 }
 
 .popup-buttonholder {
     text-align: center;
-    margin-top: 8px;
+    margin-top: 16px;
+    text-transform: uppercase;
+
+    &.popup-row:last-of-type {
+        margin-bottom: 16px;
+    }
 }
 
-.popup-content-inner {
-    width: 220px;
-    padding: 0 10px;
+.popup-content {
+    width: 250px;
     font-weight: 500;
 
     p {
@@ -238,4 +291,10 @@ $creamer-str: str-slice("#{$creamer}", 2);
     display: block;
     width: 100%;
     height: 0.5em;
+}
+
+@media (max-width: $medium) {
+    #megaMapContainer {
+        display: none !important;
+    }
 }

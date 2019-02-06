@@ -632,7 +632,8 @@ section h2 {
     color: $green;
 }
 
-a.green-button {
+a.green-button,
+button.green-button {
     background-color: $greyish-teal;
     display: block;
     margin: 1rem auto;

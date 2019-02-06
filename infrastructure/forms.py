@@ -145,9 +145,6 @@ class ProjectForm(forms.ModelForm):
     planned_completion_month = MonthField(required=False)
     planned_completion_day = DayField(required=False)
 
-    construction_start_month = MonthField(required=False)
-    construction_start_day = DayField(required=False)
-
     class Meta:
         model = Project
         fields = '__all__'
@@ -162,7 +159,6 @@ class PowerPlantForm(forms.ModelForm):
         queryset=Country.objects.all(),
         help_text=CountrySearchMultiField.help_text
     )
-    owners = OrganizationSearchMultiField(required=False)
     operators = OrganizationSearchMultiField(required=False)
     projects = ProjectSearchMultiField(required=False)
     plant_month_online = MonthField(required=False)
@@ -178,6 +174,9 @@ class PowerPlantForm(forms.ModelForm):
     class Meta:
         model = PowerPlant
         fields = '__all__'
+        widgets = {
+            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
+        }
 
     def __init__(self, *args, **kwargs):
         """Display all of the PowerPlant's current projects as initial data."""

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
+import classNames from 'classnames';
 import Panel from './Panel';
 import InfrastructureTypeStore from '../stores/InfrastructureTypeStore';
 import InfrastructureTypeActions from '../actions/InfrastructureTypeActions';
@@ -21,8 +22,10 @@ import CurrencyRangeSelect from './CurrencyRangeSelect';
 import ResultsView from './ResultsView';
 import ErrorView from './ErrorView';
 import SearchActions from '../actions/SearchActions';
-import {CuratedProjectCollectionSource} from '../sources/apisources';
+import { CuratedProjectCollectionSource } from '../sources/apisources';
 import SearchStore from '../stores/SearchStore';
+import ProjectCountStore from '../stores/ProjectCountStore';
+import ProjectCountActions from '../actions/ProjectCountActions';
 import {
   nameIdMapper,
   nameSlugMapper,
@@ -78,6 +81,7 @@ export default class SearchView extends Component {
       },
       query: emptyQueryState(),
       total: null,
+      projectTotal: null,
       results: [],
       nextURL: null,
       previousURL: null,
@@ -93,13 +97,17 @@ export default class SearchView extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleQueryUpdate = this.handleQueryUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.onSearchResults = this.onSearchResults.bind(this);
+    this.onSearchStoreChange = this.onSearchStoreChange.bind(this);
+    this.onProjectCountStoreChange = this.onProjectCountStoreChange.bind(this);
     this.toggleFilters = this.toggleFilters.bind(this);
     this.toggleHelp = this.toggleHelp.bind(this);
   }
 
   componentDidMount() {
-    SearchStore.listen(this.onSearchResults);
+    SearchStore.listen(this.onSearchStoreChange);
+
+    ProjectCountStore.listen(this.onProjectCountStoreChange);
+    ProjectCountActions.fetch({ limit: 1 });
 
     InfrastructureTypeStore.listen(
       store => this.setState((prevState) => {
@@ -177,7 +185,7 @@ export default class SearchView extends Component {
     CurrencyStore.listen(
       store => this.setState((prevState) => {
         const lookups = Object.entries(store.lookups)
-                              .map(([key, value]) => ({ label: key, value }));
+          .map(([key, value]) => ({ label: key, value }));
         const options = Object.assign(
           {},
           prevState.options,
@@ -189,7 +197,7 @@ export default class SearchView extends Component {
     CurrencyActions.fetch();
   }
 
-  toggleFilters(e){
+  toggleFilters(e) {
     if (e) {
       e.preventDefault();
     }
@@ -199,7 +207,7 @@ export default class SearchView extends Component {
     });
   }
 
-  toggleHelp(e){
+  toggleHelp(e) {
     e.preventDefault();
     const helpState = this.state.showHelp ? '' : 'showHelp';
     this.setState({
@@ -207,16 +215,25 @@ export default class SearchView extends Component {
     });
   }
 
-  onSearchResults(data) {
+  onSearchStoreChange(data) {
     const { total, results, next, previous, error, isSearching, searchCount } = data;
+    this.setState(Object.assign(
+      {
+        total,
+        results,
+        nextURL: next,
+        previousURL: previous,
+        error,
+        isSearching,
+        searchCount,
+      },
+      searchCount === 0 ? { query: emptyQueryState() } : {},
+    ));
+  }
+
+  onProjectCountStoreChange({ total }) {
     this.setState({
-      total,
-      results,
-      nextURL: next,
-      previousURL: previous,
-      error,
-      isSearching,
-      searchCount,
+      projectTotal: total,
     });
   }
 
@@ -266,12 +283,17 @@ export default class SearchView extends Component {
         delete searchParams.dateRange;
       }
       Object.entries(searchParams).forEach(([key, value]) => {
-        if (value === '' || value === null) {
+        if (value === '' || value === null || (value instanceof Object && !value.length)) {
           delete searchParams[key];
         }
       });
       this.toggleFilters();
-      SearchActions.search(searchParams);
+
+      if (Object.keys(searchParams).length > 0) {
+        SearchActions.search(searchParams);
+      } else {
+        SearchActions.clear();
+      }
     }
   }
 
@@ -291,139 +313,156 @@ export default class SearchView extends Component {
         />
         <div className={`inner ${this.state.showFilters} ${this.state.showHelp}`}>
           <div className="searchWidget">
-            <header>
-              <a href="#" onClick={this.toggleFilters}>
-                <h2>FILTER</h2>
-              </a>
-              <a href="#" onClick={this.resetQueryState}>
-                RESET
-              </a>
+            <header className="searchView__header">
+              <button
+                className="searchView__header-toggle"
+                onClick={this.toggleFilters}
+              >
+                <span>Close</span>
+              </button>
+              <button
+                className="searchView__header-reset-filter"
+                onClick={this.resetQueryState}
+              >
+                <span>Reset form</span>
+              </button>
             </header>
-            <form onSubmit={this.handleSubmit}>
-              <div className="filterScroll">
+            <form className="searchWidget__form" onSubmit={this.handleSubmit}>
+              <div className="filterScroll searchWidget__main">
                 <Panel
                   title="Projects"
                   ref={(el) => { this.projectsPanel = el; }}
                 >
-                  <div className="sectionRow">
-                    <label>Project Title</label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Project Title</label>
                     <input
                       type="text"
+                      className="filter-input-group__input-text"
                       value={this.state.query.name__icontains}
                       onChange={this.handleChange}
                       name="name__icontains"
                       placeholder="Project Title"
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Status<span></span></label>
-                    <Select
-                      value={this.state.query.status}
-                      name="status"
-                      placeholder="Status"
-                      options={this.state.options.status}
-                      onChange={selections => this.handleQueryUpdate(
-                          { status: selections.map(s => s.value) },
-                        )
-                      }
-                      isLoading={this.state.options.status.length === 0}
-                      multi
-                      backspaceToRemoveMessage=""
-                    />
-                  </div>
-                  <div className="sectionRow">
-                    <label>Region<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Region</label>
                     <Select
                       value={this.state.query.region}
                       name="region"
                       placeholder="Region"
                       options={this.state.options.region}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { region: selections.map(s => s.value) },
-                        )
+                        { region: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.region.length === 0}
                       multi
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Country<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.countries}
                       name="countries"
                       placeholder="Country"
                       options={this.state.options.countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { countries: selections.map(s => s.value) },
-                        )
+                        { countries: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.countries.length === 0}
                       multi
                       backspaceToRemoveMessage=""
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Milestone<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Project Status</label>
+                    <Select
+                      value={this.state.query.status}
+                      name="status"
+                      placeholder="Project Status"
+                      options={this.state.options.status}
+                      className="searchView-select__container"
+                      onChange={selections => this.handleQueryUpdate(
+                        { status: selections.map(s => s.value) },
+                      )
+                      }
+                      isLoading={this.state.options.status.length === 0}
+                      multi
+                      backspaceToRemoveMessage=""
+                    />
+                  </div>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Milestone</label>
                     <DateRangeSelect
                       labelName="Filter by Year..."
                       dateLookupOptions={yearLookupOptions}
-                      lowerBoundLabel="YEAR"
-                      upperBoundLabel="YEAR"
+                      lowerBoundLabel="Year"
+                      upperBoundLabel="Year"
                       onChange={value => this.handleQueryUpdate(
-                          { dateRange: Object.assign({}, this.state.query.dateRange, value) },
-                        )
+                        { dateRange: Object.assign({}, this.state.query.dateRange, value) },
+                      )
                       }
                       value={this.state.query.dateRange}
                     />
                   </div>
                 </Panel>
+                <hr className="searchWidget__separator" />
                 <Panel
                   title="Initiatives"
                   ref={(el) => { this.initiativesPanel = el; }}
                 >
-                  <div className="sectionRow">
-                    <label>Initiative Title</label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Initiative Title</label>
                     <input
                       type="text"
+                      className="filter-input-group__input-text"
                       value={this.state.query.initiatives__name__icontains}
                       onChange={this.handleChange}
                       name="initiatives__name__icontains"
                       placeholder="Initiative Title"
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Principal Agent<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Principal Agent</label>
                     <Select
                       value={this.state.query.initiatives__principal_agent__slug}
                       name="initiatives__principal_agent__slug"
                       placeholder="Principal Agent"
                       options={this.state.options.initiatives__principal_agent__slug}
+                      className="searchView-select__container"
                       onChange={option => this.handleQueryUpdate(
-                          { initiatives__principal_agent__slug: option ? option.value : '' },
-                        )
+                        { initiatives__principal_agent__slug: option ? option.value : '' },
+                      )
                       }
                       isLoading={this.state.options.initiatives__principal_agent__slug.length === 0}
                       backspaceToRemoveMessage=""
                     />
                   </div>
                 </Panel>
+
+                <hr className="searchWidget__separator" />
+
                 <Panel
                   title="Funders"
                   ref={(el) => { this.fundersPanel = el; }}
                 >
-                  <div className="sectionRow">
-                      <label>Funder Name</label>
-                      <input
-                        type="text"
-                        value={this.state.query.funding__sources__name__icontains}
-                        onChange={this.handleChange}
-                        name="funding__sources__name__icontains"
-                        placeholder="Funder Name"
-                      />
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Funder Name</label>
+                    <input
+                      type="text"
+                      className="filter-input-group__input-text"
+                      value={this.state.query.funding__sources__name__icontains}
+                      onChange={this.handleChange}
+                      name="funding__sources__name__icontains"
+                      placeholder="Funder Name"
+                    />
                   </div>
-                  <div className="sectionRow">
-                    <label>Cost<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Cost</label>
                     <CurrencyRangeSelect
                       name="cost"
                       placeholder="Cost"
@@ -435,16 +474,17 @@ export default class SearchView extends Component {
                       }
                     />
                   </div>
-                  <div className="sectionRow">
-                    <label>Country<span></span></label>
+                  <div className="filter-input-group">
+                    <label className="filter-input-group__label">Country</label>
                     <Select
                       value={this.state.query.funding__sources__countries}
                       name="funding__sources__countries"
                       placeholder="Country"
                       options={this.state.options.funding__sources__countries}
+                      className="searchView-select__container"
                       onChange={selections => this.handleQueryUpdate(
-                          { funding__sources__countries: selections.map(s => s.value) },
-                        )
+                        { funding__sources__countries: selections.map(s => s.value) },
+                      )
                       }
                       isLoading={this.state.options.funding__sources__countries.length === 0}
                       multi
@@ -452,86 +492,97 @@ export default class SearchView extends Component {
                     />
                   </div>
                 </Panel>
-            </div>
-            <header>
+              </div>
+            </form>
+            <header className="searchView__footer">
               <button
                 type="submit"
                 title="Search"
-                disabled={!this.state.searchEnabled}
-              >UPDATE RESULTS
+                className="searchView__update-results"
+                onClick={this.handleSubmit}
+              >
+                <span>
+                  Update Results
+                </span>
               </button>
-              <span></span>
             </header>
-            </form>
           </div>
-          {(() => {
-            if (searchCount > 0 &&
-            !isSearching &&
-            !errorView &&
-            results.length === 0) {
-              return (
-                <div className="sectionRow">
-                  <p>Sorry, we didn&rsquo;t find any matches.</p>
-                </div>
-              );
-            }
-            return '';
-          })()}
           <div className="resultsViewWrapper">
-            <header>
-              <a href="#" onClick={this.toggleFilters}><h2>FILTER</h2></a>
-              <a href="#" onClick={this.toggleHelp}></a>
+            <header className="searchView__header searchView__header--light">
+              <button
+                className="resultsView__header-toggle"
+                onClick={this.toggleFilters}
+              >
+                <span>Filter</span>
+              </button>
+              <button
+                className="resultsView__header-toggle--help"
+                onClick={this.toggleHelp}
+              />
             </header>
-            <ResultsView
-              results={results}
-              onNextClick={SearchView.handleResultsNavClick}
-              nextURL={nextURL}
-              onPreviousClick={SearchView.handleResultsNavClick}
-              previousURL={previousURL}
-              totalCount={this.state.total}
-              updateParentQuery={this.handleQueryUpdate}
-              curatedProjectCollections={curatedProjectCollections}
-            />
+            {
+              (searchCount > 0 &&
+                !isSearching &&
+                !errorView &&
+                results.length === 0
+              ) ?
+                <div className="resultsView__content">
+                  <p className="resultsView__not-found">
+                    Sorry, we didn&rsquo;t find any matches.
+                  </p>
+                </div>
+
+                :
+                <ResultsView
+                  results={results}
+                  onNextClick={SearchView.handleResultsNavClick}
+                  nextURL={nextURL}
+                  onPreviousClick={SearchView.handleResultsNavClick}
+                  previousURL={previousURL}
+                  totalCount={this.state.total || this.state.projectTotal}
+                  updateParentQuery={this.handleQueryUpdate}
+                  curatedProjectCollections={curatedProjectCollections}
+                />
+            }
           </div>
           <div className="helpView">
-            <header>
-              <a href="#" onClick={this.toggleHelp}>
-                <h2>HELP</h2>
-              </a>
+            <header className="searchView__header searchView__header--light">
+              <button className="searchView__header-toggle" onClick={this.toggleHelp}>
+                <span>Close</span>
+              </button>
             </header>
-            <div className="textWrap">
-              <section>
-                <h2>How to search the map</h2>
-                <p>For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
+            <div className="helpView__main">
+              <section className="helpView__section">
+                <h2 className="helpView__section-heading">How to search the map</h2>
+                <p className="helpView__body-text">For more information about data collection and definitions, see our <a href="/methodology/">methodology.</a></p>
               </section>
-              <section>
-                <h2>Project Filters</h2>
-                <p>
+              <hr className="helpView__separator" />
+              <section className="helpView__section">
+                <h3 className="helpView__section-subheading">Project Filters</h3>
+                <p className="helpView__body-text">
                   <b>Project Title:</b> Searches project titles, which do not include all attributes of a given project. For example, there may be projects in the city of Karachi without “Karachi” in their title.
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Infrastructure Type:</b> Limits search to a specific infrastructure type (ex. “rail”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Status:</b> Limits search to projects in a specific stage of implementation (ex. “announced or under negotiation”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Region:</b> Limits search to projects within a certain geographic area (ex. “Gulf and Mediterranean”).
                 </p>
-                <p>
+                <p className="helpView__body-text">
                   <b>Country:</b> Limits search to projects within a designated country (ex. “China”).
                 </p>
-                <p>
-                  <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year
+                <p className="helpView__body-text">
+                  <b>Filter by Year:</b> Limits search to projects that fall within a specific timeframe, as defined by selecting either completion year, commencement year, or start year.
                 </p>
               </section>
             </div>
           </div>
           {errorView}
         </div>
-        <footer>
-
-        </footer>
+        <footer />
       </div>
     );
   }

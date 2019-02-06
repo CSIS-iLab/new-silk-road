@@ -16,6 +16,7 @@ class SearchStoreBase {
       handleSearch: SearchActions.SEARCH,
       handleSearchResults: SearchActions.UPDATE,
       handleSearchFail: SearchActions.FAILED,
+      handleSearchClear: SearchActions.CLEAR,
     });
   }
 
@@ -45,7 +46,16 @@ class SearchStoreBase {
     this.error = error;
   }
 
-
+  handleSearchClear() {
+    this.total = null;
+    this.results = [];
+    this.next = null;
+    this.previous = null;
+    this.error = null;
+    this.isSearching = false;
+    this.query = {};
+    this.searchCount = 0;
+  }
 }
 
 const SearchStore = alt.createStore(SearchStoreBase, 'SearchStore');

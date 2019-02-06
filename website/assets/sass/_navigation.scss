@@ -133,14 +133,24 @@
 }
 
 .ico-svg {
-    height: 17px;
+    $icon-dimensions-lg: 17px;
+    $icon-dimensions-sm: 13px;
+    height: $icon-dimensions-lg;
+    width: $icon-dimensions-lg;
     @include media($medium-break) {
-        height: 13px;
+        height: $icon-dimensions-sm;
+        width: $icon-dimensions-sm;
     }
+}
+
+.recon-logo-link {
+    display: inline-block;
+    width: 100%;
 }
 
 .recon-logo {
     width: 100%;
+    max-width: 300px !important;
     max-height: 25px !important;
     float: left;
     @include media($medium-break) {
