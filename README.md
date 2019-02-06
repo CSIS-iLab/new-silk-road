@@ -9,6 +9,12 @@ This is a Django project set up to run as a Procfile-based application. At a min
 
 Create a virtualenv for the project, then `pip install -r dev-requirements.txt`.
 
+Memcached note: installation requires pylibmc, which requires that libmemcached be installed on the system. If installation fails, you might need to install libmemcached with your package manager, and/or install pylibmc directly in the virtualenv, for example:
+
+	$ pip install pylibmc==1.5.2 --install-option="--with-libmemcached=/opt/local"
+
+GEOS and GDAL note: running locally requires that geos and gdal be installed on your system. You might need to install them with your package manager.
+
 You'll need to create a `.env` file with values for `SECRET_KEY` and `DATABASE_URL`, as well a few others; look in `newsilkroad/settings.py` for lines that have `os.getenv` for other environment variables. You'll probably want to set `DEBUG=True` in development.
 
 If you want to test file handling, you'll need to set the various AWS settings for a test bucket.
