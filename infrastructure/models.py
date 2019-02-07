@@ -255,6 +255,7 @@ class Project(Publishable):
         blank=True, null=True,
         choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
     )
+    linear_length = models.PositiveSmallIntegerField(blank=True, null=True, help_text="km")
     new = models.NullBooleanField('New Construction?')
     initiatives = models.ManyToManyField('Initiative', blank=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)

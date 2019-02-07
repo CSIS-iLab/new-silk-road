@@ -107,6 +107,28 @@ class ProjectFormTestCase(SimpleTestCase):
         self.assertIn('planned_completion_day', form.errors)
         self.assertListEqual(form.errors['planned_completion_day'], ['Ensure this value is less than or equal to 31.'])
 
+    def test_project_linear_length(self):
+        data = {
+            'name': 'Test Project Name',
+            'slug': 'test-project-name',
+            'linear_length': 32768,
+        }
+        with self.subTest("Length is too long"):
+            form = ProjectForm(data)
+            self.assertFalse(form.is_valid())
+            self.assertIn('linear_length', form.errors)
+        
+        with self.subTest("Length is right"):
+            data['linear_length'] = 32767
+            form = ProjectForm(data)
+            self.assertTrue(form.is_valid())
+            self.assertNotIn('linear_length', form.errors)
+        
+        with self.subTest("No Length required"):
+            data['linear_length'] = None
+            form = ProjectForm(data)
+            self.assertTrue(form.is_valid())
+            self.assertNotIn('linear_length', form.errors)
 
 class InitiativeFormTestCase(SimpleTestCase):
 
