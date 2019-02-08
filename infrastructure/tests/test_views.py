@@ -684,9 +684,9 @@ class PowerPlantCSVExportTestCase(TestCase):
         """Ensure owner stakes are in CSV export"""
 
         power_plant = factories.PowerPlantFactory()
-        stake1 = factories.OwnerStakeFactory(power_plant=power_plant)
-        stake2 = factories.OwnerStakeFactory(power_plant=power_plant, percent_owned=None)
-        stake_non = factories.OwnerStakeFactory()
+        stake1 = factories.PlantOwnerStakeFactory(power_plant=power_plant)
+        stake2 = factories.PlantOwnerStakeFactory(power_plant=power_plant, percent_owned=None)
+        stake_non = factories.PlantOwnerStakeFactory()
         response = self.client.get(self.url)
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
