@@ -4,7 +4,7 @@ from django_select2.forms import (
     ModelSelect2MultipleWidget,
 )
 from infrastructure.models import (
-    Initiative, OwnerStake, PowerPlant, Project, ProjectFunding, ProjectDocument
+    Initiative, PlantOwnerStake, ProjectOwnerStake, PowerPlant, Project, ProjectFunding, ProjectDocument
 )
 from facts.forms import NameSearchWidget, PersonSearchMultiField, OrganizationSearchMultiField
 from facts.models.organizations import Organization
@@ -221,11 +221,15 @@ class ProjectFundingForm(forms.ModelForm):
         fields = '__all__'
 
 
-class ProjectOwnerStakeForm(forms.ModelForm):
+class PlantOwnerStakeForm(forms.ModelForm):
     class Meta:
-        model = OwnerStake
+        model = PlantOwnerStake
         fields = '__all__'
 
+class ProjectOwnerStakeForm(forms.ModelForm):
+    class Meta:
+        model = ProjectOwnerStake
+        fields = '__all__'
 
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
     project = forms.ModelChoiceField(
