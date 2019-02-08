@@ -538,7 +538,7 @@ class Initiative(MPTTModel, Publishable):
     )
     parent = TreeForeignKey('self', models.SET_NULL,
                             null=True, blank=True,
-                            verbose_name='parent initiative',
+        verbose_name='parent initiative',
                             related_name='children', db_index=True)
     related_initiatives = models.ManyToManyField('self', blank=True)
 
@@ -608,30 +608,30 @@ class Initiative(MPTTModel, Publishable):
 class ProjectDocument(models.Model):
     DOCUMENT_TYPES = (
         ('Public Materials', (
-            (1, 'Press Releases'),
-            (2, 'Presentations & Brochures'),
-            (3, 'National Development Plans'),
+                (1, 'Press Releases'),
+                (2, 'Presentations & Brochures'),
+                (3, 'National Development Plans'),
         )),
         ('Agreements/Contracts', (
-            (4, 'MoU'),
-            (5, 'Financing Agreements'),
-            (6, 'Procurement Contracts'),
-            (7, 'Other Agreements'),
+                (4, 'MoU'),
+                (5, 'Financing Agreements'),
+                (6, 'Procurement Contracts'),
+                (7, 'Other Agreements'),
         )),
         ('Operational Documents', (
-            (8, 'Concept Notes'),
-            (9, 'Review and Approval Documents'),
-            (10, 'Procurement Documents'),
-            (11, 'Appraisal Documents'),
-            (12, 'Administration Manuals'),
-            (13, 'Aide-Memoires'),
-            (14, 'Financial Audits'),
+                (8, 'Concept Notes'),
+                (9, 'Review and Approval Documents'),
+                (10, 'Procurement Documents'),
+                (11, 'Appraisal Documents'),
+                (12, 'Administration Manuals'),
+                (13, 'Aide-Memoires'),
+                (14, 'Financial Audits'),
         )),
         ('Impact Assessment and Monitoring Reports', (
-            (15, 'Environmental and Social Assessment'),
-            (16, 'Resettlement Frameworks'),
-            (17, 'Safeguards Monitoring Reports'),
-            (18, 'Consultation Minutes'),
+                (15, 'Environmental and Social Assessment'),
+                (16, 'Resettlement Frameworks'),
+                (17, 'Safeguards Monitoring Reports'),
+                (18, 'Consultation Minutes'),
         )),
         ('Implementation Progress Reports', (
             (19, 'Progress Reports'),
@@ -678,9 +678,21 @@ class ProjectDocument(models.Model):
 
 class CuratedProjectCollection(Publishable):
     """A collection of projects for the megamap"""
+
     name = models.CharField(max_length=256)
     projects = models.ManyToManyField('Project', blank=False)
 
-
     def __str__(self):
         return self.name
+
+
+class ProjectSubstation(models.Model):
+    """information about a substation related to a transmission line project."""
+
+    name = models.CharField(max_length=1024, blank=True, help_text="Substation Name (Location)")
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, help_text="Substation Project")
+    capacity = models.BigIntegerField(blank=True, null=True, help_text="Substation Capacity (MW)")
+    voltage = models.BigIntegerField(blank=True, null=True, help_text="Substation Voltage (kV)")
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.project)
