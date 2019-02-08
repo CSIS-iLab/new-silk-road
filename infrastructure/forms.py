@@ -1,66 +1,51 @@
+from django.core.exceptions import ValidationError
 from django import forms
-from django_select2.forms import (
-    ModelSelect2Widget,
-    ModelSelect2MultipleWidget,
-)
+from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget
 from infrastructure.models import (
-    Initiative, OwnerStake, PowerPlant, Project, ProjectFunding, ProjectDocument
+    Initiative,
+    OwnerStake,
+    PowerPlant,
+    Project,
+    ProjectFunding,
+    ProjectDocument,
+    ProjectSubstation,
 )
 from facts.forms import NameSearchWidget, PersonSearchMultiField, OrganizationSearchMultiField
 from facts.models.organizations import Organization
 from facts.models.people import Person
-from locations.forms import (
-    GeometryStoreUploadForm,
-    GeometrySearchField,
-    CountrySearchMultiField
-)
-from locations.models import (
-    Country,
-    GeometryStore
-)
+from locations.forms import GeometryStoreUploadForm, GeometrySearchField, CountrySearchMultiField
+from locations.models import Country, GeometryStore
 from sources.forms import DocumentSearchField, DocumentSearchMultiField
 from sources.models import Document
 
 
 class MonthField(forms.IntegerField):
-
     def __init__(self, *args, **kwargs):
         help_text = kwargs.get('help_text', 'Enter a whole number representing the month (1-12)')
-        kwargs.update({
-            'min_value': 1,
-            'max_value': 12,
-            'help_text': help_text,
-        })
+        kwargs.update({'min_value': 1, 'max_value': 12, 'help_text': help_text})
         super(MonthField, self).__init__(*args, **kwargs)
 
 
 class DayField(forms.IntegerField):
-
     def __init__(self, *args, **kwargs):
-        help_text = kwargs.get('help_text', 'Enter a whole number representing a day in the range 1-31')
-        kwargs.update({
-            'min_value': 1,
-            'max_value': 31,
-            'help_text': help_text,
-        })
+        help_text = kwargs.get(
+            'help_text', 'Enter a whole number representing a day in the range 1-31'
+        )
+        kwargs.update({'min_value': 1, 'max_value': 31, 'help_text': help_text})
         super(DayField, self).__init__(*args, **kwargs)
 
 
 class InitiativeForm(forms.ModelForm):
     member_countries = CountrySearchMultiField(
-        required=False,
-        queryset=Country.objects.all(),
-        help_text=CountrySearchMultiField.help_text
+        required=False, queryset=Country.objects.all(), help_text=CountrySearchMultiField.help_text
     )
     parent = forms.ModelChoiceField(
-        queryset=Initiative.objects.all(),
-        widget=NameSearchWidget(model=Initiative),
-        required=False
+        queryset=Initiative.objects.all(), widget=NameSearchWidget(model=Initiative), required=False
     )
     principal_agent = forms.ModelChoiceField(
         queryset=Organization.objects.all(),
         widget=NameSearchWidget(model=Organization),
-        required=False
+        required=False,
     )
     affiliated_organizations = OrganizationSearchMultiField(required=False)
     affiliated_people = PersonSearchMultiField(required=False, queryset=Person.objects.all())
@@ -79,8 +64,8 @@ class InitiativeForm(forms.ModelForm):
 
 class ProjectSearchMultiField(forms.ModelMultipleChoiceField):
     widget = ModelSelect2MultipleWidget(
-        model=Project, attrs={'style': 'width: 75%'},
-        search_fields=('name__icontains', ))
+        model=Project, attrs={'style': 'width: 75%'}, search_fields=('name__icontains',)
+    )
 
     def __init__(self, *args, **kwargs):
         kwargs['queryset'] = Project.objects.all()
@@ -92,7 +77,7 @@ class ProjectDocumentForm(forms.ModelForm):
     document = DocumentSearchField(
         required=False,
         queryset=Document.objects.order_by('-id'),
-        help_text=DocumentSearchField.help_text
+        help_text=DocumentSearchField.help_text,
     )
 
     class Meta:
@@ -102,10 +87,7 @@ class ProjectDocumentForm(forms.ModelForm):
 
 class ProjectDocumentSearchMultiWidget(ModelSelect2MultipleWidget):
     model = ProjectDocument
-    search_fields = [
-        'notes__icontains',
-        'document__url__icontains',
-    ]
+    search_fields = ['notes__icontains', 'document__url__icontains']
 
 
 class ProjectDocumentSearchMultiField(forms.ModelMultipleChoiceField):
@@ -115,14 +97,12 @@ class ProjectDocumentSearchMultiField(forms.ModelMultipleChoiceField):
 
 class ProjectForm(forms.ModelForm):
     countries = CountrySearchMultiField(
-        required=False,
-        queryset=Country.objects.all(),
-        help_text=CountrySearchMultiField.help_text
+        required=False, queryset=Country.objects.all(), help_text=CountrySearchMultiField.help_text
     )
     geo = GeometrySearchField(
         required=False,
         queryset=GeometryStore.objects.all(),
-        help_text=GeometrySearchField.help_text
+        help_text=GeometrySearchField.help_text,
     )
     contractors = OrganizationSearchMultiField(required=False)
     manufacturers = OrganizationSearchMultiField(required=False)
@@ -132,8 +112,7 @@ class ProjectForm(forms.ModelForm):
 
     contacts = PersonSearchMultiField(required=False, queryset=Person.objects.all())
     documents = ProjectDocumentSearchMultiField(
-        required=False,
-        queryset=ProjectDocument.objects.all()
+        required=False, queryset=ProjectDocument.objects.all()
     )
 
     start_month = MonthField(required=False)
@@ -149,15 +128,13 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = '__all__'
         widgets = {
-            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
+            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'})
         }
 
 
 class PowerPlantForm(forms.ModelForm):
     countries = CountrySearchMultiField(
-        required=False,
-        queryset=Country.objects.all(),
-        help_text=CountrySearchMultiField.help_text
+        required=False, queryset=Country.objects.all(), help_text=CountrySearchMultiField.help_text
     )
     operators = OrganizationSearchMultiField(required=False)
     projects = ProjectSearchMultiField(required=False)
@@ -168,14 +145,14 @@ class PowerPlantForm(forms.ModelForm):
     geo = GeometrySearchField(
         required=False,
         queryset=GeometryStore.objects.all(),
-        help_text=GeometrySearchField.help_text
+        help_text=GeometrySearchField.help_text,
     )
 
     class Meta:
         model = PowerPlant
         fields = '__all__'
         widgets = {
-            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'}),
+            'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -211,9 +188,7 @@ class PowerPlantForm(forms.ModelForm):
 class ProjectFundingForm(forms.ModelForm):
     sources = OrganizationSearchMultiField(required=False)
     project = forms.ModelChoiceField(
-        queryset=Project.objects.all(),
-        widget=NameSearchWidget(model=Project),
-        required=True
+        queryset=Project.objects.all(), widget=NameSearchWidget(model=Project), required=True
     )
 
     class Meta:
@@ -230,9 +205,25 @@ class ProjectOwnerStakeForm(forms.ModelForm):
 class ProjectGeoUploadForm(GeometryStoreUploadForm):
     project = forms.ModelChoiceField(
         queryset=Project.objects.all(),
-        widget=ModelSelect2Widget(
-            model=Project,
-            search_fields=['name__icontains']
-        ),
-        required=False
+        widget=ModelSelect2Widget(model=Project, search_fields=['name__icontains']),
+        required=False,
     )
+
+
+class ProjectSubstationForm(forms.ModelForm):
+    class Meta:
+        model = ProjectSubstation
+        fields = '__all__'
+        labels = {'name': 'Name (Location)', 'capacity': 'Capacity (MW)', 'voltage': 'Voltage (kV)'}
+
+    def clean(self):
+        """at least one of the ProjectSubstation data fields needs to be non-empty.
+        (in addition to the required FK to Project)
+        """
+        cleaned_data = super(ProjectSubstationForm, self).clean()
+        substation_values = filter(
+            lambda v: bool(v) is True, [v for k, v in cleaned_data.items() if k != 'project']
+        )
+        if len(list(substation_values)) == 0:
+            raise ValidationError("At least one substation field value must be non-empty.")
+        return cleaned_data
