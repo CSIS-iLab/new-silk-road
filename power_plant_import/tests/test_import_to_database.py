@@ -210,14 +210,14 @@ class ImportCSVToDatabaseTestCase(TestCase):
         )
         self.assertIsNone(owner_stake_ilarionas2.percent_owned)
         self.assertEqual(
-            set(powerplant_ouessant.owner_stakes.all()),
+            set(powerplant_ouessant.plant_owner_stakes.all()),
             set([owner_stake_ouessant1, owner_stake_ouessant2])
         )
         self.assertEqual(
-            set(powerplant_ilarionas.owner_stakes.all()),
+            set(powerplant_ilarionas.plant_owner_stakes.all()),
             set([owner_stake_ilarionas1, owner_stake_ilarionas2])
         )
-        self.assertEqual(powerplant_tonstad.owner_stakes.count(), 0)
+        self.assertEqual(powerplant_tonstad.plant_owner_stakes.count(), 0)
 
     def test_initiatives_created(self):
         """Initiatives are created correctly for Projects."""
