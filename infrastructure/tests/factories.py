@@ -132,6 +132,7 @@ class ProjectFundingFactory(factory.django.DjangoModelFactory):
     amount = random.randint(0, 1000000)
     currency = random.choice(CURRENCY_CHOICES)[0]
 
+
 @factory.django.mute_signals(signals.pre_save, signals.post_save)
 class PowerPlantFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'Power Plant %d' % n)
@@ -145,7 +146,7 @@ class PowerPlantFactory(factory.django.DjangoModelFactory):
         if extracted:
             for org in extracted:
                 self.owners.add(org)
-    
+
     @factory.post_generation
     def operators(self, create, extracted, **kwargs):
         if not create:
@@ -154,7 +155,7 @@ class PowerPlantFactory(factory.django.DjangoModelFactory):
         if extracted:
             for org in extracted:
                 self.operators.add(org)
-    
+
     @factory.post_generation
     def countries(self, create, extracted, **kwargs):
         if not create:
@@ -163,7 +164,7 @@ class PowerPlantFactory(factory.django.DjangoModelFactory):
         if extracted:
             for country in extracted:
                 self.countries.add(country)
-    
+
     @factory.post_generation
     def regions(self, create, extracted, **kwargs):
         if not create:
@@ -175,6 +176,7 @@ class PowerPlantFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'infrastructure.PowerPlant'
+
 
 class OwnerStakeFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -198,3 +200,13 @@ class FuelFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'Power Plant %d' % n)
     fuel_category = factory.SubFactory(FuelCategoryFactory)
+
+
+class ProjectSubstationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.ProjectSubstation'
+
+    project = factory.SubFactory(ProjectFactory)
+    name = factory.Sequence(lambda n: 'Substation %d' % n)
+    capacity = random.randint(0, 1000)
+    voltage = random.randint(0, 1000)

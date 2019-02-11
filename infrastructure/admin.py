@@ -8,6 +8,7 @@ from infrastructure.models import (
     ProjectFunding, PowerPlant, CuratedProjectCollection,
     Initiative, InitiativeType,
     Fuel, FuelCategory, OwnerStake,
+    ProjectSubstation,
 )
 from publish.admin import (
     make_published,
@@ -19,7 +20,8 @@ from infrastructure.forms import (
     ProjectDocumentForm,
     ProjectFundingForm,
     PowerPlantForm,
-    ProjectOwnerStakeForm
+    ProjectOwnerStakeForm,
+    ProjectSubstationForm
 )
 from facts.forms import NameSearchWidget
 from utilities.admin import PhraseSearchAdminMixin
@@ -62,6 +64,11 @@ class ProjectsOwnersInline(admin.StackedInline):
         css = {
             "all": ("admin/css/adminfixes.css",)
         }
+
+
+class ProjectSubstationsInline(admin.TabularInline):
+    model = ProjectSubstation
+    form = ProjectSubstationForm
 
 
 class ProjectsDocumentsInline(admin.StackedInline):
@@ -161,7 +168,7 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     ordering = ['name', 'created_at', 'published']
     readonly_fields = ('extra_data', 'identifier')
     inlines = [
-        ProjectFundingInline
+        ProjectFundingInline, ProjectSubstationsInline,
     ]
     raw_id_fields = ('power_plant', )
     list_select_related = ('infrastructure_type', )
