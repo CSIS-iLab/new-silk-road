@@ -7,65 +7,51 @@ from ..forms import (
     InitiativeForm,
     MonthField,
     DayField,
+    ProjectSubstationForm,
 )
-from .factories import PowerPlantFactory, ProjectFactory
+from .factories import PowerPlantFactory, ProjectFactory, ProjectSubstationFactory
 
 
 class FormFieldTestCase(SimpleTestCase):
-
     def test_monthfield(self):
         self.assertFieldOutput(
             MonthField,
             {'12': 12},
             {'14': ['Ensure this value is less than or equal to 12.']},
-            empty_value=None
+            empty_value=None,
         )
 
     def test_monthfield_has_default_help_text(self):
         field = MonthField()
-        self.assertEqual(
-            field.help_text,
-            'Enter a whole number representing the month (1-12)'
-        )
+        self.assertEqual(field.help_text, 'Enter a whole number representing the month (1-12)')
 
     def test_monthfield_default_help_text_is_overridable(self):
         field = MonthField(help_text='Help text override')
-        self.assertEqual(
-            field.help_text,
-            'Help text override'
-        )
+        self.assertEqual(field.help_text, 'Help text override')
 
     def test_dayfield(self):
         self.assertFieldOutput(
             DayField,
             {'1': 1},
             {'42': ['Ensure this value is less than or equal to 31.']},
-            empty_value=None
+            empty_value=None,
         )
 
     def test_dayfield_has_default_help_text(self):
         field = DayField()
         self.assertEqual(
-            field.help_text,
-            'Enter a whole number representing a day in the range 1-31'
+            field.help_text, 'Enter a whole number representing a day in the range 1-31'
         )
 
     def test_dayfield_default_help_text_is_overridable(self):
         field = DayField(help_text='Help text override')
-        self.assertEqual(
-            field.help_text,
-            'Help text override'
-        )
+        self.assertEqual(field.help_text, 'Help text override')
 
 
 class ProjectFormTestCase(SimpleTestCase):
-
     def test_project_form_only_requires_name_and_slug(self):
         '''ProjectForm only requires name and slug values.'''
-        data = {
-            'name': 'Test Project Name',
-            'slug': 'test-project-name',
-        }
+        data = {'name': 'Test Project Name', 'slug': 'test-project-name'}
         form = ProjectForm(data)
         self.assertTrue(form.is_valid())
 
@@ -82,11 +68,18 @@ class ProjectFormTestCase(SimpleTestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('start_month', form.errors)
-        self.assertListEqual(form.errors['start_month'], ['Ensure this value is less than or equal to 12.'])
+        self.assertListEqual(
+            form.errors['start_month'], ['Ensure this value is less than or equal to 12.']
+        )
         self.assertIn('commencement_month', form.errors)
-        self.assertListEqual(form.errors['commencement_month'], ['Ensure this value is less than or equal to 12.'])
+        self.assertListEqual(
+            form.errors['commencement_month'], ['Ensure this value is less than or equal to 12.']
+        )
         self.assertIn('planned_completion_month', form.errors)
-        self.assertListEqual(form.errors['planned_completion_month'], ['Ensure this value is less than or equal to 12.'])
+        self.assertListEqual(
+            form.errors['planned_completion_month'],
+            ['Ensure this value is less than or equal to 12.'],
+        )
 
     def test_project_form_raises_errors_on_invalid_day(self):
         '''ProjectForm raises an error on an invalid day.'''
@@ -101,43 +94,43 @@ class ProjectFormTestCase(SimpleTestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('start_day', form.errors)
-        self.assertListEqual(form.errors['start_day'], ['Ensure this value is less than or equal to 31.'])
+        self.assertListEqual(
+            form.errors['start_day'], ['Ensure this value is less than or equal to 31.']
+        )
         self.assertIn('commencement_day', form.errors)
-        self.assertListEqual(form.errors['commencement_day'], ['Ensure this value is less than or equal to 31.'])
+        self.assertListEqual(
+            form.errors['commencement_day'], ['Ensure this value is less than or equal to 31.']
+        )
         self.assertIn('planned_completion_day', form.errors)
-        self.assertListEqual(form.errors['planned_completion_day'], ['Ensure this value is less than or equal to 31.'])
+        self.assertListEqual(
+            form.errors['planned_completion_day'],
+            ['Ensure this value is less than or equal to 31.'],
+        )
 
     def test_project_linear_length(self):
-        data = {
-            'name': 'Test Project Name',
-            'slug': 'test-project-name',
-            'linear_length': 32768,
-        }
+        data = {'name': 'Test Project Name', 'slug': 'test-project-name', 'linear_length': 32768}
         with self.subTest("Length is too long"):
             form = ProjectForm(data)
             self.assertFalse(form.is_valid())
             self.assertIn('linear_length', form.errors)
-        
+
         with self.subTest("Length is right"):
             data['linear_length'] = 32767
             form = ProjectForm(data)
             self.assertTrue(form.is_valid())
             self.assertNotIn('linear_length', form.errors)
-        
+
         with self.subTest("No Length required"):
             data['linear_length'] = None
             form = ProjectForm(data)
             self.assertTrue(form.is_valid())
             self.assertNotIn('linear_length', form.errors)
 
-class InitiativeFormTestCase(SimpleTestCase):
 
+class InitiativeFormTestCase(SimpleTestCase):
     def test_initiative_form_only_requires_name_and_slug(self):
         '''InitiativeForm only requires name and slug values.'''
-        data = {
-            'name': 'Test Initiative Name',
-            'slug': 'test-initiative-name',
-        }
+        data = {'name': 'Test Initiative Name', 'slug': 'test-initiative-name'}
         form = InitiativeForm(data)
         self.assertTrue(form.is_valid())
 
@@ -153,9 +146,13 @@ class InitiativeFormTestCase(SimpleTestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('founding_month', form.errors)
-        self.assertListEqual(form.errors['founding_month'], ['Ensure this value is less than or equal to 12.'])
+        self.assertListEqual(
+            form.errors['founding_month'], ['Ensure this value is less than or equal to 12.']
+        )
         self.assertIn('appeared_month', form.errors)
-        self.assertListEqual(form.errors['appeared_month'], ['Ensure this value is less than or equal to 12.'])
+        self.assertListEqual(
+            form.errors['appeared_month'], ['Ensure this value is less than or equal to 12.']
+        )
 
     def test_initiative_form_raises_errors_on_invalid_day(self):
         '''InitiativeForm raises an error on an invalid day.'''
@@ -169,19 +166,19 @@ class InitiativeFormTestCase(SimpleTestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn('founding_day', form.errors)
-        self.assertListEqual(form.errors['founding_day'], ['Ensure this value is less than or equal to 31.'])
+        self.assertListEqual(
+            form.errors['founding_day'], ['Ensure this value is less than or equal to 31.']
+        )
         self.assertIn('appeared_day', form.errors)
-        self.assertListEqual(form.errors['appeared_day'], ['Ensure this value is less than or equal to 31.'])
+        self.assertListEqual(
+            form.errors['appeared_day'], ['Ensure this value is less than or equal to 31.']
+        )
 
 
 class PowerPlantFormTestCase(TestCase):
-
     def test_powerplant_form_only_requires_name_and_slug(self):
         '''PowerPlantForm only requires name and slug values.'''
-        data = {
-            'name': 'Test Initiative Name',
-            'slug': 'test-initiative-name',
-        }
+        data = {'name': 'Test Initiative Name', 'slug': 'test-initiative-name'}
         form = PowerPlantForm(data)
         self.assertTrue(form.is_valid())
 
@@ -202,14 +199,10 @@ class PowerPlantFormTestCase(TestCase):
             project2 = ProjectFactory()
             power_plant.project_set.add(project1, project2)
             form = PowerPlantForm(
-                instance=power_plant,
-                data={'name': power_plant.name, 'slug': power_plant.slug}
+                instance=power_plant, data={'name': power_plant.name, 'slug': power_plant.slug}
             )
             self.assertTrue(form.is_valid())
-            self.assertEqual(
-                set(form.initial['projects']),
-                set([project1, project2])
-            )
+            self.assertEqual(set(form.initial['projects']), set([project1, project2]))
 
     def test_save_projects(self):
         '''PowerPlantForm correctly saves a PowerPlant's Projects.'''
@@ -226,10 +219,7 @@ class PowerPlantFormTestCase(TestCase):
             self.assertTrue(form.is_valid())
             updated_powerplant = form.save()
 
-            self.assertEqual(
-                set(updated_powerplant.project_set.all()),
-                set([project1, project2])
-            )
+            self.assertEqual(set(updated_powerplant.project_set.all()), set([project1, project2]))
 
         with self.subTest('Removing Projects with a QueryDict'):
             data = QueryDict(mutable=True)
@@ -245,16 +235,13 @@ class PowerPlantFormTestCase(TestCase):
             data = {
                 'name': power_plant.name,
                 'slug': power_plant.slug,
-                'projects': [project1, project2]
+                'projects': [project1, project2],
             }
             form = PowerPlantForm(instance=power_plant, data=data)
             self.assertTrue(form.is_valid())
             updated_powerplant = form.save()
 
-            self.assertEqual(
-                set(updated_powerplant.project_set.all()),
-                set([project1, project2])
-            )
+            self.assertEqual(set(updated_powerplant.project_set.all()), set([project1, project2]))
 
         with self.subTest('Removing Projects with a dictionary'):
             data['projects'] = [project1]
@@ -263,3 +250,32 @@ class PowerPlantFormTestCase(TestCase):
             updated_powerplant = form.save()
 
             self.assertEqual(set(updated_powerplant.project_set.all()), set([project1]))
+
+
+class ProjectSubstationFormTestCase(TestCase):
+    def setUp(self):
+        self.substation = ProjectSubstationFactory()
+        self.substation_fields = ['name', 'capacity', 'voltage']
+
+    def test_valid(self):
+        """The form is valid when it has a project and at least one of the data field values"""
+        for field in self.substation_fields:
+            form_data = {
+                'project': self.substation.project.id,
+                field: self.substation.__dict__[field],
+            }
+            form = ProjectSubstationForm(form_data)
+            self.assertTrue(form.is_valid())
+
+    def test_invalid_no_project(self):
+        """The form is not valid when there is no project"""
+        for field in self.substation_fields:
+            form = ProjectSubstationForm({field: self.substation.__dict__[field]})
+            self.assertFalse(form.is_valid())
+            self.assertIn('project', form.errors.keys())
+
+    def test_invalid_no_data(self):
+        """The form is not valid when there is no substation data"""
+        form = ProjectSubstationForm({'project': self.substation.project.id})
+        self.assertFalse(form.is_valid())
+        self.assertIn('__all__', form.errors.keys())

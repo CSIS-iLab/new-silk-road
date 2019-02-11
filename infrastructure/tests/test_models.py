@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from . import factories
+from infrastructure import models
 
 
 class InfrastructureTypeTestCase(TestCase):
@@ -16,8 +17,7 @@ class OwnerStakeTestCase(TestCase):
         """String representation of an OwnerStake uses the owner and PowerPlant."""
         owner_stake = factories.PlantOwnerStakeFactory()
         self.assertEqual(
-            str(owner_stake),
-            '{} stake in {}'.format(owner_stake.owner, owner_stake.power_plant)
+            str(owner_stake), '{} stake in {}'.format(owner_stake.owner, owner_stake.power_plant)
         )
 
 class ProjectOwnerStakeTestCase(TestCase):
@@ -33,8 +33,7 @@ class ProjectFundingTestCase(TestCase):
         """String representation of an ProjectFunding uses the amount and currency."""
         project_funding = factories.ProjectFundingFactory()
         self.assertEqual(
-            str(project_funding),
-            '{} {}'.format(project_funding.amount, project_funding.currency)
+            str(project_funding), '{} {}'.format(project_funding.amount, project_funding.currency)
         )
 
 
@@ -71,7 +70,7 @@ class PowerPlantTestCase(TestCase):
         """The .get_absolute_url() method returns the PowerPlant's detail page URL."""
         self.assertEqual(
             self.power_plant.get_absolute_url(),
-            reverse('infrastructure:powerplant-detail', kwargs={'slug': self.power_plant.slug})
+            reverse('infrastructure:powerplant-detail', kwargs={'slug': self.power_plant.slug}),
         )
 
 
@@ -87,3 +86,18 @@ class InitiativeTestCase(TestCase):
         """String representation of an Initiative uses the name."""
         initiative = factories.InitiativeFactory()
         self.assertEqual(str(initiative), initiative.name)
+
+
+class ProjectSubstationTestCase(TestCase):
+    def setUp(self):
+        self.substation = factories.ProjectSubstationFactory()
+
+    def test_fk(self):
+        """
+        * Substation must have a project. 
+        * When the project is deleted, so is the substation (cascade)
+        """
+        self.assertIsNotNone(self.substation.project)
+        id = self.substation.id
+        self.substation.project.delete()
+        self.assertFalse(models.ProjectSubstation.objects.filter(id=id).exists())
