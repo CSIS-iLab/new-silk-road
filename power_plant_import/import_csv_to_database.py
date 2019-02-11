@@ -19,7 +19,7 @@ django.setup()
 from facts.models import Organization
 from infrastructure.forms import PowerPlantForm, ProjectForm
 from infrastructure.models import (
-    Fuel, FuelCategory, InfrastructureType, Initiative, OwnerStake, PowerPlant,
+    Fuel, FuelCategory, InfrastructureType, Initiative, PlantOwnerStake, PowerPlant,
     PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
 )
 from locations.models import Country, GeometryStore, PointGeometry, Region
@@ -109,7 +109,7 @@ def add_owner_stakes(row, power_plant):
         if value_or_none(row.get('Owner {}'.format(i))):
             owner_name = row.get('Owner {}'.format(i))
             owner, _ = Organization.objects.get_or_create(name=owner_name)
-            owner_stake, _ = OwnerStake.objects.get_or_create(
+            owner_stake, _ = PlantOwnerStake.objects.get_or_create(
                 owner=owner,
                 power_plant=power_plant,
             )

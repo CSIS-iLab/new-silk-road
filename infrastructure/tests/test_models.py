@@ -15,11 +15,18 @@ class InfrastructureTypeTestCase(TestCase):
 class OwnerStakeTestCase(TestCase):
     def test_str(self):
         """String representation of an OwnerStake uses the owner and PowerPlant."""
-        owner_stake = factories.OwnerStakeFactory()
+        owner_stake = factories.PlantOwnerStakeFactory()
         self.assertEqual(
             str(owner_stake), '{} stake in {}'.format(owner_stake.owner, owner_stake.power_plant)
         )
 
+class ProjectOwnerStakeTestCase(TestCase):
+    def test_str(self):
+        owner_stake = factories.ProjectOwnerStakeFactory()
+        self.assertEqual(
+            str(owner_stake),
+            '{} stake in {}'.format(owner_stake.owner, owner_stake.project)
+        )
 
 class ProjectFundingTestCase(TestCase):
     def test_str(self):

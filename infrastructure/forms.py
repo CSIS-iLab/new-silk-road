@@ -3,7 +3,8 @@ from django import forms
 from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget
 from infrastructure.models import (
     Initiative,
-    OwnerStake,
+    PlantOwnerStake,
+    ProjectOwnerStake,
     PowerPlant,
     Project,
     ProjectFunding,
@@ -196,9 +197,15 @@ class ProjectFundingForm(forms.ModelForm):
         fields = '__all__'
 
 
+class PlantOwnerStakeForm(forms.ModelForm):
+    class Meta:
+        model = PlantOwnerStake
+        fields = '__all__'
+
+
 class ProjectOwnerStakeForm(forms.ModelForm):
     class Meta:
-        model = OwnerStake
+        model = ProjectOwnerStake
         fields = '__all__'
 
 

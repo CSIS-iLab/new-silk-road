@@ -178,11 +178,20 @@ class PowerPlantFactory(factory.django.DjangoModelFactory):
         model = 'infrastructure.PowerPlant'
 
 
-class OwnerStakeFactory(factory.django.DjangoModelFactory):
+class PlantOwnerStakeFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = 'infrastructure.OwnerStake'
+        model = 'infrastructure.PlantOwnerStake'
 
     power_plant = factory.SubFactory(PowerPlantFactory)
+    owner = factory.SubFactory(OrganizationFactory)
+    percent_owned = random.randint(0, 100)
+
+
+class ProjectOwnerStakeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'infrastructure.ProjectOwnerStake'
+
+    project = factory.SubFactory(ProjectFactory)
     owner = factory.SubFactory(OrganizationFactory)
     percent_owned = random.randint(0, 100)
 

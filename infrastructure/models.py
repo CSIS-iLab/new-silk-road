@@ -25,15 +25,39 @@ class InfrastructureType(models.Model):
         return self.name
 
 
-class OwnerStake(models.Model):
+class PlantOwnerStake(models.Model):
     """ Percentage that owners own and also relation with PowerPlant and Organization """
-
-    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, related_name='owner_stakes')
-    owner = models.ForeignKey('facts.Organization', models.CASCADE, related_name='owners_stakes')
+    power_plant = models.ForeignKey(
+        'PowerPlant',
+        models.CASCADE,
+        related_name='plant_owner_stakes'
+    )
+    owner = models.ForeignKey(
+        'facts.Organization',
+        models.CASCADE,
+        related_name='plant_owners_stakes'
+    )
     percent_owned = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return "{} stake in {}".format(self.owner, self.power_plant)
+
+class ProjectOwnerStake(models.Model):
+    """Percentage that owners own and also relation with Projects and Organization"""
+    project = models.ForeignKey(
+        'Project',
+        models.CASCADE,
+        related_name='project_owner_stakes'
+    )
+    owner = models.ForeignKey(
+        'facts.Organization',
+        models.CASCADE,
+        related_name='project_owners_stakes'
+    )
+    percent_owned = models.FloatField(blank=True, null=True)
+
+    def __str__(self):
+        return "{} stake in {}".format(self.owner, self.project)
 
 
 class ProjectFunding(Temporal):
