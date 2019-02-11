@@ -530,4 +530,4 @@ if 'test' in sys.argv:
     SELECT2_CACHE_BACKEND = 'default'
 
 # set cache timeout from the environment
-CACHE_MIDDLEWARE_SECONDS = os.getenv('CACHE_MIDDLEWARE_SECONDS', 600)
+CACHE_MIDDLEWARE_SECONDS = int(os.getenv('CACHE_MIDDLEWARE_SECONDS', 600))
