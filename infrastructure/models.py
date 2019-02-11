@@ -296,8 +296,8 @@ class Project(Publishable):
     )
 
     # Transmission Project fields
-    design_voltage = models.BigIntegerField(null=True, help_text="Design Voltage (kV)")
-    direct_current = models.NullBooleanField(null=True, help_text="Direct Current?")
+    design_voltage = models.BigIntegerField(null=True, blank=True, help_text="Design Voltage (kV)")
+    direct_current = models.NullBooleanField(null=True, blank=True, help_text="Direct Current?")
     electricity_flow = models.CharField(
         null=True,
         blank=True,
@@ -306,7 +306,7 @@ class Project(Publishable):
         help_text="Electricity Flow (direction)",
     )
     estimated_transfer_capacity = models.BigIntegerField(
-        null=True, help_text="Estimated Transfer Capacity (MW)"
+        null=True, blank=True, help_text="Estimated Transfer Capacity (MW)"
     )
 
     class Meta:
