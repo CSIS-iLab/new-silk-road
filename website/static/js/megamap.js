@@ -29998,6 +29998,9 @@
 	  }, {
 	    key: 'filterMap',
 	    value: function filterMap(layerId, filterArray) {
+	      if (!this.map.getLayer(layerId)) {
+	        return;
+	      }
 	      this.map.setFilter(layerId, filterArray);
 	    }
 	
@@ -30006,11 +30009,17 @@
 	  }, {
 	    key: 'hideLayer',
 	    value: function hideLayer(layerId) {
+	      if (!this.map.getLayer(layerId)) {
+	        return;
+	      }
 	      this.map.setLayoutProperty(layerId, 'visibility', 'none');
 	    }
 	  }, {
 	    key: 'showLayer',
 	    value: function showLayer(layerId) {
+	      if (!this.map.getLayer(layerId)) {
+	        return;
+	      }
 	      this.map.setLayoutProperty(layerId, 'visibility', 'visible');
 	    }
 	  }, {

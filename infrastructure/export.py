@@ -177,7 +177,7 @@ def refresh_views():
                 SELECT l.power_plant_id,
                     array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS owners,
                     array_to_string(array_agg(l."percent_owned"), ', ', 'NULL') AS owners_stake
-                FROM infrastructure_ownerstake AS l
+                FROM infrastructure_plantownerstake AS l
                 JOIN facts_organization AS r
                 ON l.owner_id = r.id
                 GROUP BY l.power_plant_id;
