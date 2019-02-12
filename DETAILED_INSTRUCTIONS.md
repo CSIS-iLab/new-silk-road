@@ -400,6 +400,14 @@ see reflected in the API (and the map).
 
 ## Working on JavaScript and Sass/CSS: Use Node
 
+This project requires node 5, so make sure your current node version is 5, for example via `nvm`:
+
+```bash
+$ nvm use 5
+$ npm --version
+v5.12.0
+```
+
 Since [Node](https://nodejs.org/) has its own ecosystem of tools oriented toward front-end web development, this project includes a `package.json` and `gulpfile.babel.js`. If you plan to write Sass/CSS or JavaScript, you should install the required tools:
 
 ```sh
