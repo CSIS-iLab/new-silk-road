@@ -129,7 +129,7 @@ export default class Cartographer {
     const lowerSourceLayer = sourceLayer.toLowerCase();
 
     // Layers that can be zoomed until minDetailZoom
-    const useMinDetailZoom = ['rail', 'road'];
+    const useMinDetailZoom = ['rail', 'road', 'pipeline', 'transmission'];
     // Layers that can be zoomed until maxFitZoom
     const usemaxFitZoom = ['intermodal', 'powerplant', 'seaport'];
 

@@ -79,6 +79,40 @@ export default class GeoStyles {
           },
         }),
       },
+      pipeline: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#AB3F97',
+          },
+        }),
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': {
+              stops: [
+                [0, 'Pipeline'],
+                [maxFitZoom, 'PipelineIcon'],
+              ],
+            },
+          },
+        }),
+      },
+      transmission: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#56B746',
+          },
+        }),
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': {
+              stops: [
+                [0, 'Transmission'],
+                [maxFitZoom, 'TransmissionIcon'],
+              ],
+            },
+          },
+        }),
+      },
       powerplant: {
         points: objectMerge(pointStyle, {
           layout: {
@@ -100,13 +134,6 @@ export default class GeoStyles {
                 [minDetailZoom, 'SeaportIcon'],
               ],
             },
-          },
-        }),
-      },
-      pipeline: {
-        lines: objectMerge(lineStyle, {
-          paint: {
-            'line-color': '#7e3c22',
           },
         }),
       },

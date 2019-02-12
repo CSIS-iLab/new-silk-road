@@ -11338,6 +11338,34 @@
 	          }
 	        })
 	      },
+	      pipeline: {
+	        lines: (0, _objectMerge2.default)(lineStyle, {
+	          paint: {
+	            'line-color': '#AB3F97'
+	          }
+	        }),
+	        points: (0, _objectMerge2.default)(pointStyle, {
+	          layout: {
+	            'icon-image': {
+	              stops: [[0, 'Pipeline'], [_mapConstants.maxFitZoom, 'PipelineIcon']]
+	            }
+	          }
+	        })
+	      },
+	      transmission: {
+	        lines: (0, _objectMerge2.default)(lineStyle, {
+	          paint: {
+	            'line-color': '#56B746'
+	          }
+	        }),
+	        points: (0, _objectMerge2.default)(pointStyle, {
+	          layout: {
+	            'icon-image': {
+	              stops: [[0, 'Transmission'], [_mapConstants.maxFitZoom, 'TransmissionIcon']]
+	            }
+	          }
+	        })
+	      },
 	      powerplant: {
 	        points: (0, _objectMerge2.default)(pointStyle, {
 	          layout: {
@@ -11353,13 +11381,6 @@
 	            'icon-image': {
 	              stops: [[0, 'Seaport'], [_mapConstants.minDetailZoom, 'SeaportIcon']]
 	            }
-	          }
-	        })
-	      },
-	      pipeline: {
-	        lines: (0, _objectMerge2.default)(lineStyle, {
-	          paint: {
-	            'line-color': '#7e3c22'
 	          }
 	        })
 	      },
@@ -29610,7 +29631,7 @@
 	      var lowerSourceLayer = sourceLayer.toLowerCase();
 	
 	      // Layers that can be zoomed until minDetailZoom
-	      var useMinDetailZoom = ['rail', 'road'];
+	      var useMinDetailZoom = ['rail', 'road', 'pipeline', 'transmission'];
 	      // Layers that can be zoomed until maxFitZoom
 	      var usemaxFitZoom = ['intermodal', 'powerplant', 'seaport'];
 	
