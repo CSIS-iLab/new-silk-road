@@ -12,6 +12,7 @@ import sass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
 import cleanCss from 'gulp-clean-css';
 import concat from 'gulp-concat';
+import gulpIf from 'gulp-if';
 import svgmin from 'gulp-svgmin';
 import process from 'process';
 
@@ -57,14 +58,20 @@ const makeBundler = (type = 'default') => {
   return bundler;
 };
 
-gulp.task('sass:build', () =>
-  gulp.src(paths.allSass)
-    .pipe(sourcemaps.init())
+gulp.task('sass:build', () => {
+  const prod = process.env.NODE_ENV === 'production';
+
+  return gulp.src(paths.allSass)
+    .pipe(gulpIf(!prod, sourcemaps.init()))
     .pipe(sass().on('error', sass.logError))
     .pipe(cleanCss({ processImportFrom: ['local'] }))
     .pipe(concat('site.min.css'))
-    .pipe(sourcemaps.write('./maps'))
-    .pipe(gulp.dest(paths.cssDist)),
+    .pipe(gulpIf(!prod, sourcemaps.write('./maps')))
+    .pipe(gulp.dest(paths.cssDist));
+});
+
+gulp.task('sass:watch', () =>
+  gulp.watch(paths.allSass, ['sass:build']),
 );
 
 gulp.task('svg', () =>
@@ -115,11 +122,15 @@ gulp.task('js:package', ['js:build'], () =>
     .pipe(gulp.dest(paths.jsDist)),
 );
 
-gulp.task('default', ['js:watch', 'js:package']);
+gulp.task('watch', [
+  'js:package',
+  'js:watch',
+  'sass:build',
+  'sass:watch',
+]);
 
-gulp.task('watch', () => {
+gulp.task('watch:sync', ['watch'], () => {
   const bundler = makeBundler();
-  gulp.watch(paths.allSass, ['sass:build']);
   sync.init({
     proxy: 'localhost:8000',
     serveStatic: [distBase],
@@ -135,8 +146,5 @@ gulp.task('watch', () => {
   });
 });
 
-gulp.task('js:stuff', () =>
-  gulp.src(paths.clientEntryPoints)
-    .pipe(makeBundler('streaming'))
-    .pipe(gulp.dest(paths.jsDist)),
-);
+gulp.task('default', ['js:package', 'sass:build']);
+
