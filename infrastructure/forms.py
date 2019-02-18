@@ -131,6 +131,9 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'sources': forms.Textarea(attrs={'cols': 200, 'rows': 4, 'style': 'width: 90%;'})
         }
+        labels = {
+            'linear_length': "Project length"
+        }
 
 
 class PowerPlantForm(forms.ModelForm):
