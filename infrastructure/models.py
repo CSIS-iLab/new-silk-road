@@ -114,7 +114,7 @@ class ProjectStatus:
     )
 
 
-class ProjectThroughPutUnits:
+class ProjectThroughputUnits:
     BARRELS = 'barrels'
     TONS = 'tons'
     MIL_CUBIC_FT = 'million-cubic-feet'
@@ -144,7 +144,6 @@ class ProjectTimeFrameUnits:
         (PER_MONTH, 'per month'),
         (PER_YEAR, 'per year'),
     )
-
 
 
 class ProjectPlantUnits:
@@ -353,7 +352,7 @@ class Project(Publishable):
     pipeline_throughput = models.IntegerField("Throughput", null=True, blank=True)
     pipeline_throughput_unit = models.CharField("Throughput Unit", null=True, blank=True,
                                                 max_length=20,
-                                                choices=ProjectThroughPutUnits.UNITS)
+                                                choices=ProjectThroughputUnits.UNITS)
     pipeline_throughput_timeframe = models.CharField("Throughput Timeframe", null=True, blank=True,
                                                      max_length=10,
                                                      choices=ProjectTimeFrameUnits.TIME_UNITS)
