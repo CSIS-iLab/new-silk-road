@@ -7,8 +7,8 @@ from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
     ProjectFunding, PowerPlant, CuratedProjectCollection,
     Initiative, InitiativeType,
-    Fuel, FuelCategory, PlantOwnerStake, ProjectOwnerStake, 
-    ProjectSubstation,
+    Fuel, FuelCategory, PlantOwnerStake, ProjectOwnerStake,
+    ProjectSubstation
 )
 from publish.admin import (
     make_published,
@@ -66,18 +66,26 @@ class PlantOwnersInline(admin.StackedInline):
             "all": ("admin/css/adminfixes.css",)
         }
 
+
 class ProjectOwnersInline(admin.StackedInline):
     model = ProjectOwnerStake
     form = ProjectOwnerStakeForm
     raw_id_fields = ('owner',)
+
     class Media:
         css = {
             "all": ("admin/css/adminfixes.css",)
         }
 
+
 class ProjectSubstationsInline(admin.TabularInline):
     model = ProjectSubstation
     form = ProjectSubstationForm
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+    }
 
 
 class ProjectsDocumentsInline(admin.StackedInline):
