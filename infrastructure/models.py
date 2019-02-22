@@ -42,6 +42,7 @@ class PlantOwnerStake(models.Model):
     def __str__(self):
         return "{} stake in {}".format(self.owner, self.power_plant)
 
+
 class ProjectOwnerStake(models.Model):
     """Percentage that owners own and also relation with Projects and Organization"""
     project = models.ForeignKey(

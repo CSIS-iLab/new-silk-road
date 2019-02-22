@@ -457,6 +457,12 @@ class ProjectCSVExportTestCase(TestCase):
                    'verified',
                    'total_cost',
                    'total_cost_currency',
+                   'project_owners',
+                   'project_owners_stake',
+                   'substation_name',
+                   'substation_capacity',
+                   'substation_voltage',
+                   'project_capacity_timeframe',
                    'start_day',
                    'start_month',
                    'start_year',
@@ -479,8 +485,20 @@ class ProjectCSVExportTestCase(TestCase):
                    'project_output_unit',
                    'project_output_year',
                    'sox_reduction_system',
+                   'project_length',
+                   'pipeline_diameter',
+                   'pipeline_diameter_unit',
+                   'pipeline_metered',
+                   'pipeline_throughput',
+                   'pipeline_throughput_unit',
+                   'pipeline_throughput_timeframe',
+                   'pipeline_throughput_year',
+                   'design_voltage',
+                   'direct_current',
+                   'electricity_flow',
+                   'estimated_transfer_capacity',
         )
-        self.assertEqual(results.fieldnames, list(headers))
+        self.assertEqual(sorted(results.fieldnames), sorted(list(headers)))
         projects = {
             str(self.project.identifier): self.project,
             str(self.other.identifier): self.other,
@@ -566,7 +584,7 @@ class ProjectCSVExportTestCase(TestCase):
         for row in results:
             if row['identifier'] == str(project1.identifier):
                 self.assertEqual(project1.power_plant.name, row['power_plant_name'])
-    
+
     def test_never_cache_is_enabled(self):
         response = self.client.get(self.url)
         self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
@@ -704,7 +722,7 @@ class PowerPlantCSVExportTestCase(TestCase):
 
                 with self.subTest('Excluded owner stake'):
                     self.assertFalse(stake_non.owner.name in row['plant_owners'])
-    
+
     def test_never_cache_is_enabled(self):
         response = self.client.get(self.url)
         self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
