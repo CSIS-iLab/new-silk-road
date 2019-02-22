@@ -38,6 +38,7 @@ class ProjectDetailView(PublicationMixin, DetailView):
         context['mapbox_token'] = MAPBOX_TOKEN
         context['mapbox_style'] = MAPBOX_STYLE_URL
         context['fuel_types'] = self.object.fuels.all().distinct()
+        context['substations'] = self.object.projectsubstation_set.all()
         return context
 
 
@@ -103,6 +104,7 @@ class GeoUploadView(LoginRequiredMixin, FormView):
             error_response = '<h1>{}</h1><p>{}</p>'.format(err_msg, str(e))
             return HttpResponseServerError(error_response)
 
+
 @method_decorator(never_cache, name='dispatch')
 class ProjectExportView(View):
 
@@ -120,6 +122,7 @@ class ProjectExportView(View):
                 response
             )
         return response
+
 
 @method_decorator(never_cache, name='dispatch')
 class PowerPlantExportView(View):
@@ -139,6 +142,7 @@ class PowerPlantExportView(View):
                 response
             )
         return response
+
 
 class PowerPlantDetailView(PublicationMixin, DetailView):
     model = PowerPlant
