@@ -332,7 +332,7 @@ class Project(Publishable):
         blank=True, null=True, choices=ProjectPlantUnits.UNITS
     )
 
-    project_capacity_timeframe = models.CharField(blank=True, null=True, max_length=10,
+    project_capacity_timeframe = models.CharField(blank=True, max_length=10,
                                                   choices=ProjectTimeFrameUnits.TIME_UNITS)
 
     project_CO2_emissions = models.FloatField(blank=True, null=True)

@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='project_capacity_timeframe',
-            field=models.CharField(blank=True, choices=[('per-hour', 'per hour'), ('per-day', 'per day'), ('per-month', 'per month'), ('per-year', 'per year')], max_length=10, null=True),
+            field=models.CharField(blank=True, choices=[('per-hour', 'per hour'), ('per-day', 'per day'), ('per-month', 'per month'), ('per-year', 'per year')], max_length=10),
         ),
         migrations.RunPython(
             update_powerplant_project_capacity_timeframe_unit,
