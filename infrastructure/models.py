@@ -172,10 +172,6 @@ class PipelineDiameters:
         (MILLIMETERS, 'mm'),
     )
 
-
-class ElectricityFlowTypes:
-    UNIDIRECTIONAL = 'unidirectional'
-
 # ----- END CHOICES CLASSES ----- #
 
 
