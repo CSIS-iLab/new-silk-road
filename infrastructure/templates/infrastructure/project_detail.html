@@ -206,28 +206,13 @@
                   </p>
                </section>
             </div>
-            {% if substations|length > 1 %}
-               <div class="row">
-                  <section>
+            {% if substations.exists %}
+               <section>
+                  <div class="row triple">
                      <h3>Substation(s)</h3>
-                     <table>
-                     <thead>
-                        <tr>
-                        <td>Location(s)</td>
-                        <td>Voltage</td>
-                        <td>Capcity</td>
-                        </tr>
-                     </thead>
-                     {% for station in substations %}
-                        <tr>
-                           <td>{{ station.name }}</td>
-                           <td>{{ station.voltage }}kV</td>
-                           <td>{{ station.capacity }}MW</td>
-                        </tr>
-                     {% endfor %}
-                     </table>
-                  </section>
-               </div>
+                        {% include "infrastructure/_project_transmission_list.html" with funding_list=substations %}
+                  </div>
+               </section>
             {% endif %}
          </section>
       {% endif %}
