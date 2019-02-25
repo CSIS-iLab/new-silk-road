@@ -39,7 +39,6 @@ class ProjectDetailView(PublicationMixin, DetailView):
         context['mapbox_style'] = MAPBOX_STYLE_URL
         context['fuel_types'] = self.object.fuels.all().distinct()
         context['substations'] = self.object.projectsubstation_set.all()
-        # import pudb; pudb.set_trace()
         return context
 
 
