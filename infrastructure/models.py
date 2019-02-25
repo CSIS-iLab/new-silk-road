@@ -84,6 +84,8 @@ class ProjectFunding(Temporal):
     def __str__(self):
         return "{} {}".format(self.amount or None, self.currency)
 
+# ----- CHOICES CLASSES ----- #
+
 
 class PowerPlantStatus:
     ACTIVE = 1
@@ -159,6 +161,22 @@ class CollectionStage(object):
     IDENTIFIED = 1
     COLLECTED = 2
     STAGES = ((IDENTIFIED, 'Identified'), (COLLECTED, 'Collected'))
+
+
+class PipelineDiameters:
+    INCHES = 'inches'
+    MILLIMETERS = 'mm'
+
+    UNITS = (
+        (INCHES, 'inches'),
+        (MILLIMETERS, 'mm'),
+    )
+
+
+class ElectricityFlowTypes:
+    UNIDIRECTIONAL = 'unidirectional'
+
+# ----- END CHOICES CLASSES ----- #
 
 
 class Project(Publishable):
@@ -314,7 +332,7 @@ class Project(Publishable):
         blank=True, null=True, choices=ProjectPlantUnits.UNITS
     )
 
-    project_capacity_timeframe = models.CharField(blank=True, null=True, max_length=10,
+    project_capacity_timeframe = models.CharField(blank=True, max_length=10,
                                                   choices=ProjectTimeFrameUnits.TIME_UNITS)
 
     project_CO2_emissions = models.FloatField(blank=True, null=True)
@@ -345,22 +363,19 @@ class Project(Publishable):
 
     # ---- PIPELINE TYPE PROJECT FIELDS ---- #
     pipeline_diameter = models.IntegerField("Pipeline Diameter", null=True, blank=True)
-    pipeline_diameter_unit = models.CharField("Diameter Unit", null=True, blank=True, max_length=6,
-                                              choices=(
-                                                  ('inches', 'inches'),
-                                                  ('mm', 'mm'),
-                                                ),
+    pipeline_diameter_unit = models.CharField("Diameter Unit", blank=True, max_length=6,
+                                              choices=PipelineDiameters.UNITS,
                                               help_text="Diameter unit")
     pipeline_metered = models.NullBooleanField("Pipeline Metered?", null=True, blank=True)
 
     pipeline_throughput = models.IntegerField("Throughput", null=True, blank=True)
-    pipeline_throughput_unit = models.CharField("Throughput Unit", null=True, blank=True,
+    pipeline_throughput_unit = models.CharField("Throughput Unit", blank=True,
                                                 max_length=20,
                                                 choices=ProjectThroughputUnits.UNITS)
-    pipeline_throughput_timeframe = models.CharField("Throughput Timeframe", null=True, blank=True,
+    pipeline_throughput_timeframe = models.CharField("Throughput Timeframe", blank=True,
                                                      max_length=10,
                                                      choices=ProjectTimeFrameUnits.TIME_UNITS)
-    pipeline_throughput_year = models.IntegerField("Throughput Year", null=True, blank=True)
+    pipeline_throughput_year = models.PositiveSmallIntegerField("Throughput Year", null=True, blank=True)
 
     # ---- END PIPELINE TYPE PROJECT FIELDS ---- #
 

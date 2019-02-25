@@ -4,12 +4,13 @@ from __future__ import unicode_literals
 import sys
 
 from django.db import migrations, models
-from infrastructure.models import Project, ProjectTimeFrameUnits
+from infrastructure.models import ProjectTimeFrameUnits
 
 
 def update_powerplant_project_capacity_timeframe_unit(apps, schema_editor):
     if 'test' in sys.argv:
         return
+    Project = apps.get_model('infrastructure', "Project")
     projects = Project.objects.filter(
         infrastructure_type__name='Powerplant'
     ).filter(
@@ -22,6 +23,7 @@ def update_powerplant_project_capacity_timeframe_unit(apps, schema_editor):
 def reverse_migration(apps, schema_editor):
     if 'test' in sys.argv:
         return
+    Project = apps.get_model('infrastructure', "Project")
     projects = Project.objects.filter(
         infrastructure_type__name='Powerplant'
     ).filter(
@@ -34,14 +36,14 @@ def reverse_migration(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('infrastructure', '0041_auto_20190221_1015'),
+        ('infrastructure', '0041_auto_20190225_1047'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='project',
             name='project_capacity_timeframe',
-            field=models.CharField(blank=True, choices=[('per-hour', 'per hour'), ('per-day', 'per day'), ('per-month', 'per month'), ('per-year', 'per year')], max_length=10, null=True),
+            field=models.CharField(blank=True, choices=[('per-hour', 'per hour'), ('per-day', 'per day'), ('per-month', 'per month'), ('per-year', 'per year')], max_length=10),
         ),
         migrations.RunPython(
             update_powerplant_project_capacity_timeframe_unit,
