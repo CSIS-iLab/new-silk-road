@@ -67,7 +67,7 @@ class OrganizationViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 class ProjectViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Project.objects.distinct().select_related(
         'infrastructure_type',
-    ).filter(published=True)
+    ).all()
     lookup_field = 'identifier'
     serializer_class = ProjectSerializer
     filter_backends = (DjangoFilterBackend,)
