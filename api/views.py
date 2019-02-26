@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.postgres.aggregates import StringAgg
-from django.db.models import Case, CharField, Count, F, Value, When
+from django.db.models import Case, CharField, Count, F, Value, When, Q
 from django.db.models.functions import Lower
 from django.utils.cache import add_never_cache_headers
 
@@ -83,7 +83,8 @@ class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class InfrastructureTypeListView(generics.ListAPIView):
-    queryset = InfrastructureType.objects.distinct().all()
+    queryset = InfrastructureType.objects.filter(~Q(name__contains='Pipeline')
+                                                 & ~Q(name__contains='Transmission'))
     serializer_class = InfrastructureTypeSerializer
     pagination_class = None
 
@@ -212,6 +213,7 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
         if ('project_type' in request.query_params and request.query_params['project_type'] == 'Powerplant'):
             add_never_cache_headers(response)
         return response
+
 
 class RegionListView(generics.ListAPIView):
     queryset = Region.objects.distinct().all()
