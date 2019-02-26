@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.postgres.aggregates import StringAgg
-from django.db.models import Case, CharField, Count, F, Value, When, Q
+from django.db.models import Case, CharField, Count, F, Value, When
 from django.db.models.functions import Lower
 from django.utils.cache import add_never_cache_headers
 
@@ -67,7 +67,7 @@ class OrganizationViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 class ProjectViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Project.objects.distinct().select_related(
         'infrastructure_type',
-    ).all()
+    ).filter(published=True)
     lookup_field = 'identifier'
     serializer_class = ProjectSerializer
     filter_backends = (DjangoFilterBackend,)
@@ -83,7 +83,7 @@ class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class InfrastructureTypeListView(generics.ListAPIView):
-    queryset = InfrastructureType.objects.distinct().filter(show_on_map=True)
+    queryset = InfrastructureType.objects.filter(show_on_map=True)
     serializer_class = InfrastructureTypeSerializer
     pagination_class = None
 
