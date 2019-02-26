@@ -668,7 +668,7 @@ button.searchView__update-results {
 
 .resultsView__scroll-container {
     height: calc(100% - #{$searchview-header-height});
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .resultsView__scroll-container--expanded {
