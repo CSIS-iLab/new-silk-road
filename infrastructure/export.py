@@ -249,7 +249,7 @@ def refresh_views():
                         ELSE 'NULL'
                     END
                     estimated_project_output_unit,
-                    nox_reduction_system,
+                    upper(nox_reduction_system::text) as nox_reduction_system,
                     power_plant_id,
                     pp.name AS "power_plant_name",
                     psubv.substation_name AS substation_name,
@@ -275,7 +275,7 @@ def refresh_views():
                     END
                     project_output_unit,
                     project_output_year,
-                    sox_reduction_system,
+                    upper(sox_reduction_system::text) as sox_reduction_system,
                     linear_length AS "project_length",
                     pipeline_diameter,
                     pipeline_diameter_unit,
@@ -285,7 +285,7 @@ def refresh_views():
                     pipeline_throughput_timeframe,
                     pipeline_throughput_year,
                     design_voltage,
-                    direct_current,
+                    upper(direct_current::text) as direct_current,
                     electricity_flow,
                     estimated_transfer_capacity
                 FROM
