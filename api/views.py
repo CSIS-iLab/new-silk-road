@@ -83,8 +83,7 @@ class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class InfrastructureTypeListView(generics.ListAPIView):
-    queryset = InfrastructureType.objects.filter(~Q(name__contains='Pipeline')
-                                                 & ~Q(name__contains='Transmission'))
+    queryset = InfrastructureType.objects.distinct().filter(show_on_map=True)
     serializer_class = InfrastructureTypeSerializer
     pagination_class = None
 
