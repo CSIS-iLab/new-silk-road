@@ -1053,6 +1053,10 @@ ul.database-nav {
   .row {
     padding: 0 2rem;
   }
+
+  table:last-child {
+    margin-bottom: 2rem;
+  }
 }
 
 .related-power-data {
@@ -1061,6 +1065,7 @@ ul.database-nav {
 
 .related-transmission-data {
   @extend %related-block;
+
 }
 
 .row .sponsors {
