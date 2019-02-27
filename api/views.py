@@ -83,7 +83,7 @@ class InitiativeViewSet(PublicationMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class InfrastructureTypeListView(generics.ListAPIView):
-    queryset = InfrastructureType.objects.distinct().all()
+    queryset = InfrastructureType.objects.filter(show_on_map=True)
     serializer_class = InfrastructureTypeSerializer
     pagination_class = None
 
@@ -212,6 +212,7 @@ class GeometryStoreCentroidViewSet(viewsets.ReadOnlyModelViewSet):
         if ('project_type' in request.query_params and request.query_params['project_type'] == 'Powerplant'):
             add_never_cache_headers(response)
         return response
+
 
 class RegionListView(generics.ListAPIView):
     queryset = Region.objects.distinct().all()

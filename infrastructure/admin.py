@@ -356,6 +356,7 @@ class OwnerStakeAdmin(admin.ModelAdmin):
     class Meta:
         model = PlantOwnerStake
 
+
 @admin.register(ProjectOwnerStake)
 class ProjectOwnerStakeAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -376,9 +377,14 @@ class ProjectOwnerStakeAdmin(admin.ModelAdmin):
     class Meta:
         model = ProjectOwnerStake
 
+
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
+    list_display = (
+        'name',
+        'show_on_map'
+    )
 
 
 @admin.register(ProjectDocument)
