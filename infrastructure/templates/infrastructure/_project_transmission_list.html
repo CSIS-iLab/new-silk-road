@@ -1,0 +1,42 @@
+<table class="table">{% load humanize %}
+   <thead>
+   <tr>
+      <th scope="col">Location(s)</th>
+      <th scope="col">Voltage</th>
+      <th scope="col">Capacity</th>
+   </tr>
+   </thead>
+   <tbody>
+   {% for substation in substations %}
+      <tr>
+         {% if substation.name != '' %}
+            <td>
+               {{ substation.name }}
+            </td>
+         {% else %}
+            <td>
+               &mdash;
+            </td>
+         {% endif %}
+         {% if substation.voltage is not none %}
+            <td>
+               {{ substation.voltage }}kV
+            </td>
+         {% else %}
+            <td>
+               &mdash;
+            </td>
+         {% endif %}
+         {% if substation.capacity is not none %}
+            <td>
+               {{ substation.capacity }}MW
+            </td>
+         {% else %}
+            <td>
+               &mdash;
+            </td>
+         {% endif %}
+      </tr>
+   {% endfor %}
+   </tbody>
+</table>
