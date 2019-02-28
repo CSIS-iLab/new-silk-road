@@ -1066,6 +1066,14 @@ ul.database-nav {
 .related-transmission-data {
   @extend %related-block;
 
+  /**
+   * See the rules within the article{} block of main.scss
+   * for the rule being overridden here.
+   */
+  article & table td:last-of-type,
+  article & table th:last-of-type {
+    text-align: left;
+  }
 }
 
 .row .sponsors {
