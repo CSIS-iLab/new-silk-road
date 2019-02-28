@@ -782,6 +782,10 @@ article {
                 padding: 2px 5px;
                 text-align: left;
                 vertical-align: text-top;
+                /**
+                 * See rules for .related-transmission-data
+                 * for context-specific override.
+                 */
                 &:last-of-type {
                     text-align: right;
                 }
