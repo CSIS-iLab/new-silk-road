@@ -7,8 +7,8 @@ from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
     ProjectFunding, PowerPlant, CuratedProjectCollection,
     Initiative, InitiativeType,
-    Fuel, FuelCategory, PlantOwnerStake, ProjectOwnerStake, 
-    ProjectSubstation,
+    Fuel, FuelCategory, PlantOwnerStake, ProjectOwnerStake,
+    ProjectSubstation
 )
 from publish.admin import (
     make_published,
@@ -66,18 +66,26 @@ class PlantOwnersInline(admin.StackedInline):
             "all": ("admin/css/adminfixes.css",)
         }
 
+
 class ProjectOwnersInline(admin.StackedInline):
     model = ProjectOwnerStake
     form = ProjectOwnerStakeForm
     raw_id_fields = ('owner',)
+
     class Media:
         css = {
             "all": ("admin/css/adminfixes.css",)
         }
 
+
 class ProjectSubstationsInline(admin.TabularInline):
     model = ProjectSubstation
     form = ProjectSubstationForm
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+    }
 
 
 class ProjectsDocumentsInline(admin.StackedInline):
@@ -348,6 +356,7 @@ class OwnerStakeAdmin(admin.ModelAdmin):
     class Meta:
         model = PlantOwnerStake
 
+
 @admin.register(ProjectOwnerStake)
 class ProjectOwnerStakeAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -368,9 +377,14 @@ class ProjectOwnerStakeAdmin(admin.ModelAdmin):
     class Meta:
         model = ProjectOwnerStake
 
+
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
+    list_display = (
+        'name',
+        'show_on_map'
+    )
 
 
 @admin.register(ProjectDocument)

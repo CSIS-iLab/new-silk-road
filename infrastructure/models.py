@@ -17,6 +17,7 @@ class InfrastructureType(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=110, allow_unicode=True)
+    show_on_map = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['name']
@@ -41,6 +42,7 @@ class PlantOwnerStake(models.Model):
 
     def __str__(self):
         return "{} stake in {}".format(self.owner, self.power_plant)
+
 
 class ProjectOwnerStake(models.Model):
     """Percentage that owners own and also relation with Projects and Organization"""
@@ -83,6 +85,8 @@ class ProjectFunding(Temporal):
     def __str__(self):
         return "{} {}".format(self.amount or None, self.currency)
 
+# ----- CHOICES CLASSES ----- #
+
 
 class PowerPlantStatus:
     ACTIVE = 1
@@ -114,6 +118,38 @@ class ProjectStatus:
     )
 
 
+class ProjectThroughputUnits:
+    BARRELS = 'barrels'
+    TONS = 'tons'
+    MIL_CUBIC_FT = 'million-cubic-feet'
+    BIL_CUBIC_FT = 'billion-cubic-feet'
+    MIL_CUBIC_METERS = 'million-cubic-meters'
+    BIL_CUBIC_METERS = 'billion-cubic-meters'
+
+    UNITS = (
+        (BARRELS, 'Barrels'),
+        (TONS, 'Tons'),
+        (MIL_CUBIC_FT, 'million cubic feet'),
+        (MIL_CUBIC_METERS, 'million cubic meters'),
+        (BIL_CUBIC_FT, 'billion cubic feet'),
+        (BIL_CUBIC_METERS, 'billion cubic meters'),
+    )
+
+
+class ProjectTimeFrameUnits:
+    PER_HOUR = 'per-hour'
+    PER_DAY = 'per-day'
+    PER_MONTH = 'per-month'
+    PER_YEAR = 'per-year'
+
+    TIME_UNITS = (
+        (PER_HOUR, 'per hour'),
+        (PER_DAY, 'per day'),
+        (PER_MONTH, 'per month'),
+        (PER_YEAR, 'per year'),
+    )
+
+
 class ProjectPlantUnits:
     MEGAWATTHOUR = 0
     MEGAWATT = 1
@@ -128,9 +164,22 @@ class CollectionStage(object):
     STAGES = ((IDENTIFIED, 'Identified'), (COLLECTED, 'Collected'))
 
 
+class PipelineDiameters:
+    INCHES = 'inches'
+    MILLIMETERS = 'mm'
+
+    UNITS = (
+        (INCHES, 'inches'),
+        (MILLIMETERS, 'mm'),
+    )
+
+# ----- END CHOICES CLASSES ----- #
+
+
 class Project(Publishable):
     """Describes a project"""
 
+    # ---- STANDARD FIELDS ---- #
     identifier = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     name = models.CharField("Project name/title", max_length=300)
     slug = models.SlugField(max_length=310, allow_unicode=True)
@@ -154,8 +203,6 @@ class Project(Publishable):
         null=True,
         help_text='Select or create named infrastructure types.',
     )
-    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True, null=True)
-    fuels = models.ManyToManyField('Fuel', blank=True)
     total_cost = models.BigIntegerField(
         blank=True, null=True, help_text="Values in whole units (dollars, etc.)"
     )
@@ -170,11 +217,6 @@ class Project(Publishable):
     start_year = models.PositiveSmallIntegerField(blank=True, null=True)
     start_month = models.PositiveSmallIntegerField(blank=True, null=True)
     start_day = models.PositiveSmallIntegerField(blank=True, null=True)
-
-    @property
-    def fuzzy_start_date(self):
-        return fuzzydate(self.start_year, self.start_month, self.start_day)
-
     commencement_year = models.PositiveSmallIntegerField(
         'Year of commencement of works', blank=True, null=True
     )
@@ -184,56 +226,14 @@ class Project(Publishable):
     commencement_day = models.PositiveSmallIntegerField(
         'Day of commencement of works', blank=True, null=True
     )
-
-    @property
-    def fuzzy_commencement_date(self):
-        return fuzzydate(self.commencement_year, self.commencement_month, self.commencement_day)
-
-    planned_completion_year = models.PositiveSmallIntegerField(blank=True, null=True)
-    planned_completion_month = models.PositiveSmallIntegerField(blank=True, null=True)
-    planned_completion_day = models.PositiveSmallIntegerField(blank=True, null=True)
-
-    @property
-    def fuzzy_planned_completion_date(self):
-        return fuzzydate(
-            self.planned_completion_year, self.planned_completion_month, self.planned_completion_day
-        )
-
-    project_output = models.FloatField(blank=True, null=True)
-
-    project_output_unit = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=ProjectPlantUnits.UNITS
-    )
-
-    project_output_year = models.PositiveSmallIntegerField(blank=True, null=True)
-
-    @property
-    def fuzzy_output_date(self):
-        return fuzzydate(self.project_output_year)
-
-    estimated_project_output = models.FloatField(blank=True, null=True)
-    estimated_project_output_unit = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=ProjectPlantUnits.UNITS
-    )
-    project_capacity = models.FloatField(blank=True, null=True, help_text="MW")
-
-    project_capacity_unit = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=ProjectPlantUnits.UNITS
-    )
-
-    project_CO2_emissions = models.FloatField(blank=True, null=True)
-
-    project_CO2_emissions_unit = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=ProjectPlantUnits.UNITS
-    )
-
-    nox_reduction_system = models.NullBooleanField('NOx Reduction System?')
-    sox_reduction_system = models.NullBooleanField('SOx Reduction System?')
-
-    status = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=ProjectStatus.STATUSES, default=ProjectStatus.ANNOUNCED
-    )
-    linear_length = models.PositiveSmallIntegerField(blank=True, null=True, help_text="km")
+    planned_completion_year = models.PositiveSmallIntegerField(blank=True,
+                                                               null=True)
+    planned_completion_month = models.PositiveSmallIntegerField(blank=True,
+                                                                null=True)
+    planned_completion_day = models.PositiveSmallIntegerField(blank=True,
+                                                              null=True)
+    linear_length = models.PositiveSmallIntegerField(blank=True, null=True,
+                                                     help_text="km")
     new = models.NullBooleanField('New Construction?')
     initiatives = models.ManyToManyField('Initiative', blank=True)
     documents = models.ManyToManyField('ProjectDocument', blank=True)
@@ -287,15 +287,63 @@ class Project(Publishable):
     extra_data = models.ManyToManyField('facts.Data', blank=True)
     verified_path = models.NullBooleanField(blank=True)
     collection_stage = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=CollectionStage.STAGES, default=CollectionStage.IDENTIFIED
+        blank=True, null=True, choices=CollectionStage.STAGES,
+        default=CollectionStage.IDENTIFIED
     )
 
     # Geodata
     geo = models.ForeignKey(
-        'locations.GeometryStore', models.SET_NULL, blank=True, null=True, related_name='projects'
+        'locations.GeometryStore', models.SET_NULL, blank=True, null=True,
+        related_name='projects'
+    )
+    status = models.PositiveSmallIntegerField(
+        blank=True, null=True, choices=ProjectStatus.STATUSES,
+        default=ProjectStatus.ANNOUNCED
     )
 
-    # Transmission Project fields
+    # ---- End STANDARD FIELDS ---- #
+
+    # ---- POWER PLANT TYPE PROJECT FIELDS ---- #
+    power_plant = models.ForeignKey('PowerPlant', models.CASCADE, blank=True,
+                                    null=True)
+    fuels = models.ManyToManyField('Fuel', blank=True)
+
+    # These are ostensibly for all projects but they make the most sense
+    # for power plants
+    project_output = models.FloatField(blank=True, null=True)
+
+    project_output_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True, choices=ProjectPlantUnits.UNITS
+    )
+
+    project_output_year = models.PositiveSmallIntegerField(blank=True,
+                                                           null=True)
+
+    estimated_project_output = models.FloatField(blank=True, null=True)
+    estimated_project_output_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True, choices=ProjectPlantUnits.UNITS
+    )
+    project_capacity = models.FloatField(blank=True, null=True, help_text="MW")
+
+    project_capacity_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True, choices=ProjectPlantUnits.UNITS
+    )
+
+    project_capacity_timeframe = models.CharField(blank=True, max_length=10,
+                                                  choices=ProjectTimeFrameUnits.TIME_UNITS)
+
+    project_CO2_emissions = models.FloatField(blank=True, null=True)
+
+    project_CO2_emissions_unit = models.PositiveSmallIntegerField(
+        blank=True, null=True, choices=ProjectPlantUnits.UNITS
+    )
+
+    nox_reduction_system = models.NullBooleanField('NOx Reduction System?')
+    sox_reduction_system = models.NullBooleanField('SOx Reduction System?')
+
+    # ---- END POWER PLANT TYPE PROJECT FIELDS ---- #
+
+    # ---- TRANSMISSION TYPE PROJECT FIELDS ---- #
     design_voltage = models.BigIntegerField(null=True, blank=True, help_text="Design Voltage (kV)")
     direct_current = models.NullBooleanField(null=True, blank=True, help_text="Direct Current?")
     electricity_flow = models.CharField(
@@ -308,6 +356,51 @@ class Project(Publishable):
     estimated_transfer_capacity = models.BigIntegerField(
         null=True, blank=True, help_text="Estimated Transfer Capacity (MW)"
     )
+    # ---- END TRANSMISSION TYPE PROJECT FIELDS ---- #
+
+    # ---- PIPELINE TYPE PROJECT FIELDS ---- #
+    pipeline_diameter = models.IntegerField("Pipeline Diameter", null=True, blank=True)
+    pipeline_diameter_unit = models.CharField("Diameter Unit", blank=True, max_length=6,
+                                              choices=PipelineDiameters.UNITS,
+                                              help_text="Diameter unit")
+    pipeline_metered = models.NullBooleanField("Pipeline Metered?", null=True, blank=True)
+
+    pipeline_throughput = models.IntegerField("Throughput", null=True, blank=True)
+    pipeline_throughput_unit = models.CharField("Throughput Unit", blank=True,
+                                                max_length=20,
+                                                choices=ProjectThroughputUnits.UNITS)
+    pipeline_throughput_timeframe = models.CharField("Throughput Timeframe", blank=True,
+                                                     max_length=10,
+                                                     choices=ProjectTimeFrameUnits.TIME_UNITS)
+    pipeline_throughput_year = models.PositiveSmallIntegerField("Throughput Year", null=True, blank=True)
+
+    # ---- END PIPELINE TYPE PROJECT FIELDS ---- #
+
+    # ---- PROPERTIES ---- #
+    @property
+    def fuzzy_output_date(self):
+        return fuzzydate(self.project_output_year)
+
+    @property
+    def fuzzy_start_date(self):
+        return fuzzydate(self.start_year,
+                         self.start_month,
+                         self.start_day)
+
+    @property
+    def fuzzy_commencement_date(self):
+        return fuzzydate(self.commencement_year,
+                         self.commencement_month,
+                         self.commencement_day)
+
+    @property
+    def fuzzy_planned_completion_date(self):
+        return fuzzydate(
+            self.planned_completion_year,
+            self.planned_completion_month,
+            self.planned_completion_day
+        )
+    # ---- END PROPERTIES ---- #
 
     class Meta:
         ordering = ['name']
