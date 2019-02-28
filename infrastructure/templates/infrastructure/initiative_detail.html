@@ -106,8 +106,10 @@
     <div class="row">
         <section class="maximized">
             <h3>Related Projects</h3>
-            <ul class="clean multicolumn">{% for item in object.project_set.all  %}
+            <ul class="clean multicolumn">{% for item in object.project_set.all %}
+               {% if item.published == True %}
                 <li><a href="{{item.get_absolute_url}}">{{item.alternate_name|default:item.name}}</a></li>
+               {% endif %}
             {% empty %}
                 <li>&mdash;</li>
             {% endfor %}
