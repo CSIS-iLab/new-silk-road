@@ -217,6 +217,50 @@
          </section>
       {% endif %}
 
+      {% if object.infrastructure_type.name == 'Pipeline' %}
+            <section class="related-pipeline-data">
+               <h2>Related Pipeline Data</h2>
+               <div class="row double">
+                  <section>
+                     <h3>Capacity</h3>
+                     <p>{% if object.project_capacity %}
+                        {{ object.pipeline_capacity_property }}
+                     {% else %}
+                        &mdash;
+                     {% endif %}
+                     </p>
+                  </section>
+                  <section>
+                     <h3>Estimated Throughput</h3>
+                     <p>
+                        {% if object.pipeline_throughput_property %}
+                           {{ object.pipeline_throughput_property }}
+                        {% else %}
+                           &mdash;
+                        {% endif %}
+                     </p>
+                  </section>
+               </div>
+               <div class="row double">
+                  <section>
+                     <h3>Fuel(s)</h3>
+                     <ul class="clean">
+                        {% for fuel in fuel_types %}
+                           <li>{{ fuel }}</li>
+                        {% endfor %}
+                     </ul>
+                  </section>
+                  <section>
+                     <h3>Diameter</h3>
+                     {% if object.pipeline_diameter %}
+                        {{ object.pipeline_diameter }} {{ object.pipeline_diameter_unit }}
+                     {% else %}
+                        &mdash;
+                     {% endif %}
+                  </section>
+               </div>
+            </section>
+         {% endif %}
 
       {% if object.documents.count %}
          <section class="documents featured">

@@ -1065,7 +1065,10 @@ ul.database-nav {
 
 .related-transmission-data {
   @extend %related-block;
+}
 
+.related-pipeline-data {
+  @extend %related-block;
 }
 
 .row .sponsors {

@@ -20,7 +20,6 @@ def refresh_views():
     project_unit_fields = (
         'project_output_unit',
         'estimated_project_output_unit',
-        'project_capacity_unit',
         'project_CO2_emissions_unit'
     )
 
@@ -262,10 +261,6 @@ def refresh_views():
                     END
                     "project_CO2_emissions_unit",
                     project_capacity,
-                    CASE
-                        {project_capacity_unit}
-                        ELSE 'NULL'
-                    END
                     project_capacity_unit,
                     project_capacity_timeframe,
                     project_output,
