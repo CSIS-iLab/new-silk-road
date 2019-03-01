@@ -1067,6 +1067,10 @@ ul.database-nav {
   @extend %related-block;
 }
 
+.related-pipeline-data {
+  @extend %related-block;
+}
+
 .row .sponsors {
   width: 100%;
   margin-bottom: 0;
