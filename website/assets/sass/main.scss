@@ -53,7 +53,7 @@ body::after {
 html {
     font-size: $base-font-size;
     -webkit-font-smoothing: antialiased;
-    
+
 }
 
 body {
@@ -500,7 +500,7 @@ header.decorated {
         display: block;
         @include position(absolute,
         100% 0 ($small-spacing - $thin-border-width - 2px) 0);
-        
+
         z-index: 1;
         @include media($medium-break) {
             @include position(absolute,
@@ -528,7 +528,7 @@ $img in $icons {
     section.#{$name} {
         min-height: 70px;
         &.decorated {
-             
+
             padding-bottom: 0;
             h1 {
                 text-align: left;
@@ -618,7 +618,7 @@ body > footer#page-footer {
         padding: $small-spacing $small-spacing $small-spacing $small-spacing;
         .branding {
             @include flex(1 0 100%);
-            
+
             padding-top: $medium-spacing;
             @include media($medium-break) {
                 padding-right: 50px !important;
@@ -629,7 +629,7 @@ body > footer#page-footer {
         }
         .quick-links {
             display: block;
-            
+
             @include flex(1 0 100%);
             .quick-links-left,
             .quick-links-right {
@@ -647,7 +647,7 @@ body > footer#page-footer {
         }
         .newsletter-signup {
             display: block;
-            
+
             @include flex(1 0 100%);
         }
         @include media($medium-break) {
@@ -782,10 +782,6 @@ article {
                 padding: 2px 5px;
                 text-align: left;
                 vertical-align: text-top;
-                /**
-                 * See rules for .related-transmission-data
-                 * for context-specific override.
-                 */
                 &:last-of-type {
                     text-align: right;
                 }
@@ -837,7 +833,7 @@ body {
                 width: auto;
                 height: auto;
             }
-           
+
         }
         &:last-of-type {
             border: none;
@@ -860,7 +856,7 @@ body {
 .database .inner {
     section{
        display: block;
-       float: left; 
+       float: left;
        width: 50px;
        height: 50px;
        background-size: 50px 50px;
