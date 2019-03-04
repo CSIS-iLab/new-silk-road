@@ -137,12 +137,6 @@ class ProjectCapacityUnits:
         (BIL_CUBIC_METERS, 'billion cubic meters'),
     )
 
-    @staticmethod
-    def get_human(unit):
-        if unit is None:
-            return ''
-        return [x[1] for x in ProjectThroughputUnits.UNITS if x[0] == unit][0]
-
 
 class ProjectThroughputUnits:
     BARRELS = 'barrels'
@@ -161,10 +155,6 @@ class ProjectThroughputUnits:
         (BIL_CUBIC_METERS, 'billion cubic meters'),
     )
 
-    @staticmethod
-    def get_human(unit):
-        return [x[1] for x in ProjectThroughputUnits.UNITS if x[0] == unit][0]
-
 
 class ProjectTimeFrameUnits:
     PER_HOUR = 'per-hour'
@@ -178,10 +168,6 @@ class ProjectTimeFrameUnits:
         (PER_MONTH, 'per month'),
         (PER_YEAR, 'per year'),
     )
-
-    @staticmethod
-    def get_human(unit):
-        return [x[1] for x in ProjectTimeFrameUnits.TIME_UNITS if x[0] == unit][0]
 
 
 class ProjectPlantUnits:
@@ -440,9 +426,9 @@ class Project(Publishable):
             return None
         pc = str(self.project_capacity)
         if self.project_capacity_unit:
-            pc += " {}".format(ProjectCapacityUnits.get_human(self.project_capacity_unit))
+            pc += " {}".format(self.get_project_capacity_unit_display().lower())
         if self.project_capacity_timeframe:
-            pc += " {}".format(ProjectTimeFrameUnits.get_human(self.project_capacity_timeframe))
+            pc += " {}".format(self.get_project_capacity_timeframe_display())
         return pc
 
     @property
@@ -451,9 +437,9 @@ class Project(Publishable):
             return None
         pt = str(self.pipeline_throughput)
         if self.pipeline_throughput_unit:
-            pt += " {}".format(ProjectThroughputUnits.get_human(self.pipeline_throughput_unit))
+            pt += " {}".format(self.get_pipeline_throughput_unit_display().lower())
         if self.pipeline_throughput_timeframe:
-            pt += " {}".format(ProjectTimeFrameUnits.get_human(self.pipeline_throughput_timeframe))
+            pt += " {}".format(self.get_pipeline_throughput_timeframe_display())
         if self.pipeline_throughput_year:
             pt += " ({})".format(self.pipeline_throughput_year)
         return pt
