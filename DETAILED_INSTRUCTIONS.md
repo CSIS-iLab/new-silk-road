@@ -273,10 +273,11 @@ This will create a new file named `latest.dump` which can be used to restore the
 
 ```sh
 $ createdb reconasia
+$ psql -c "create extension postgis" reconasia  # might be necessary
 $ pg_restore --clean --no-owner --dbname=reconasia latest.dump
 ```
 
-The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example.
+The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example (though there shouldn't be any if the database was just created!).
 
 Notes: If you already had this db present, you may see some errors after running this command, but everything should be in working order. If it doesn't seem to work, try deleting your existing db with `$ dropdb reconasia` and run the above commands again. Also, if your local code has migrations that have not been deployed to the system you are restoring the db from, you may need to run migrations as follows:
 
