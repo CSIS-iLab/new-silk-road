@@ -60,7 +60,6 @@ class ProjectTestCase(TestCase):
         self.project.pipeline_throughput_timeframe = models.ProjectTimeFrameUnits.PER_YEAR
         self.project.pipeline_throughput_year = 2019
 
-        #import pudb; pudb.set_trace()
         pp_capacity = self.project.pipeline_capacity_property
         # Is capacity rendered correctly
         self.assertEqual(pp_capacity, "10.0 Barrels per year")

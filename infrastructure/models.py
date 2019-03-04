@@ -359,7 +359,7 @@ class Project(Publishable):
     )
     project_capacity = models.FloatField(blank=True, null=True)
 
-    project_capacity_unit = models.CharField(blank=True, max_length=20,
+    project_capacity_unit = models.CharField(blank=True, default='', max_length=20,
                                              choices=ProjectCapacityUnits.UNITS)
 
     project_capacity_timeframe = models.CharField(blank=True, max_length=10,

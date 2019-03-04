@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='project',
             name='project_capacity_unit',
-            field=models.CharField(blank=True, default='', choices=[('MW', 'MW'), ('barrels', 'Barrels'), ('tons', 'Tons'), ('million-cubic-feet', 'million cubic feet'), ('million-cubic-meters', 'million cubic meters'), ('billion-cubic-feet', 'billion cubic feet'), ('billion-cubic-meters', 'billion cubic meters')], max_length=20),
+            field=models.CharField(blank=True, default='', choices=[('mw', 'MW'), ('barrels', 'Barrels'), ('tons', 'Tons'), ('million-cubic-feet', 'million cubic feet'), ('million-cubic-meters', 'million cubic meters'), ('billion-cubic-feet', 'billion cubic feet'), ('billion-cubic-meters', 'billion cubic meters')], max_length=20),
         ),
         migrations.RunPython(update_capacity_unit),
     ]
