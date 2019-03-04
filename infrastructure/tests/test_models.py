@@ -62,7 +62,7 @@ class ProjectTestCase(TestCase):
 
         pp_capacity = self.project.pipeline_capacity_property
         # Is capacity rendered correctly
-        self.assertEqual(pp_capacity, "10.0 Barrels per year")
+        self.assertEqual(pp_capacity, "10.0 barrels per year")
 
         # Is Throughput rendered correctly
         self.assertEqual(self.project.pipeline_throughput_property,
