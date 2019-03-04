@@ -1065,6 +1065,24 @@ ul.database-nav {
 
 .related-transmission-data {
   @extend %related-block;
+
+  tbody>tr>:nth-child(1) {
+    width: 50%;
+  }
+
+  tbody>tr>:nth-child(2) {
+    width: 40%;
+  }
+
+  /**
+   * See the rules within the article{} block of main.scss
+   * for the rule being overridden here.
+   */
+  article & table td:last-of-type,
+  article & table th:last-of-type {
+    text-align: left;
+  }
+
 }
 
 .row .sponsors {
