@@ -206,14 +206,12 @@
                   </p>
                </section>
             </div>
-            {% if substations.exists %}
                <section>
                   <div class="row triple">
                      <h3>Substation(s)</h3>
                         {% include "infrastructure/_project_transmission_list.html" with funding_list=substations %}
                   </div>
                </section>
-            {% endif %}
          </section>
       {% endif %}
 
