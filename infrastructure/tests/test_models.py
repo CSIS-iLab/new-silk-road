@@ -20,6 +20,7 @@ class OwnerStakeTestCase(TestCase):
             str(owner_stake), '{} stake in {}'.format(owner_stake.owner, owner_stake.power_plant)
         )
 
+
 class ProjectOwnerStakeTestCase(TestCase):
     def test_str(self):
         owner_stake = factories.ProjectOwnerStakeFactory()
@@ -27,6 +28,7 @@ class ProjectOwnerStakeTestCase(TestCase):
             str(owner_stake),
             '{} stake in {}'.format(owner_stake.owner, owner_stake.project)
         )
+
 
 class ProjectFundingTestCase(TestCase):
     def test_str(self):
@@ -38,10 +40,33 @@ class ProjectFundingTestCase(TestCase):
 
 
 class ProjectTestCase(TestCase):
+
+    def setUp(self):
+        self.project = factories.ProjectFactory()  # type: models.Project
+
     def test_str(self):
         """String representation of an Project uses the name."""
-        project = factories.ProjectFactory()
-        self.assertEqual(str(project), project.name)
+        self.assertEqual(str(self.project), self.project.name)
+
+    def test_pipelines(self):
+        """Test the pipeline portion of the model"""
+        self.project.project_capacity = 10.0
+        self.project.project_capacity_unit = models.ProjectCapacityUnits.BARRELS
+        self.project.project_capacity_timeframe = models.ProjectTimeFrameUnits.PER_YEAR
+
+        self.project.pipeline_diameter = 40
+        self.project.pipeline_throughput = 100
+        self.project.pipeline_throughput_unit = models.ProjectThroughputUnits.MIL_CUBIC_METERS
+        self.project.pipeline_throughput_timeframe = models.ProjectTimeFrameUnits.PER_YEAR
+        self.project.pipeline_throughput_year = 2019
+
+        pp_capacity = self.project.pipeline_capacity_property
+        # Is capacity rendered correctly
+        self.assertEqual(pp_capacity, "10.0 barrels per year")
+
+        # Is Throughput rendered correctly
+        self.assertEqual(self.project.pipeline_throughput_property,
+                         "100 million cubic meters per year (2019)")
 
 
 class FuelTestCase(TestCase):
@@ -94,7 +119,7 @@ class ProjectSubstationTestCase(TestCase):
 
     def test_fk(self):
         """
-        * Substation must have a project. 
+        * Substation must have a project.
         * When the project is deleted, so is the substation (cascade)
         """
         self.assertIsNotNone(self.substation.project)

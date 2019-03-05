@@ -118,6 +118,26 @@ class ProjectStatus:
     )
 
 
+class ProjectCapacityUnits:
+    MEGAWATTS = 'mw'
+    BARRELS = 'barrels'
+    TONS = 'tons'
+    MIL_CUBIC_FT = 'million-cubic-feet'
+    BIL_CUBIC_FT = 'billion-cubic-feet'
+    MIL_CUBIC_METERS = 'million-cubic-meters'
+    BIL_CUBIC_METERS = 'billion-cubic-meters'
+
+    UNITS = (
+        (MEGAWATTS, 'MW'),
+        (BARRELS, 'Barrels'),
+        (TONS, 'Tons'),
+        (MIL_CUBIC_FT, 'million cubic feet'),
+        (MIL_CUBIC_METERS, 'million cubic meters'),
+        (BIL_CUBIC_FT, 'billion cubic feet'),
+        (BIL_CUBIC_METERS, 'billion cubic meters'),
+    )
+
+
 class ProjectThroughputUnits:
     BARRELS = 'barrels'
     TONS = 'tons'
@@ -323,11 +343,10 @@ class Project(Publishable):
     estimated_project_output_unit = models.PositiveSmallIntegerField(
         blank=True, null=True, choices=ProjectPlantUnits.UNITS
     )
-    project_capacity = models.FloatField(blank=True, null=True, help_text="MW")
+    project_capacity = models.FloatField(blank=True, null=True)
 
-    project_capacity_unit = models.PositiveSmallIntegerField(
-        blank=True, null=True, choices=ProjectPlantUnits.UNITS
-    )
+    project_capacity_unit = models.CharField(blank=True, default='', max_length=20,
+                                             choices=ProjectCapacityUnits.UNITS)
 
     project_capacity_timeframe = models.CharField(blank=True, max_length=10,
                                                   choices=ProjectTimeFrameUnits.TIME_UNITS)
@@ -400,6 +419,31 @@ class Project(Publishable):
             self.planned_completion_month,
             self.planned_completion_day
         )
+
+    @property
+    def pipeline_capacity_property(self):
+        if self.project_capacity is None:
+            return None
+        pc = str(self.project_capacity)
+        if self.project_capacity_unit:
+            pc += " {}".format(self.get_project_capacity_unit_display().lower())
+        if self.project_capacity_timeframe:
+            pc += " {}".format(self.get_project_capacity_timeframe_display())
+        return pc
+
+    @property
+    def pipeline_throughput_property(self):
+        if self.pipeline_throughput is None:
+            return None
+        pt = str(self.pipeline_throughput)
+        if self.pipeline_throughput_unit:
+            pt += " {}".format(self.get_pipeline_throughput_unit_display().lower())
+        if self.pipeline_throughput_timeframe:
+            pt += " {}".format(self.get_pipeline_throughput_timeframe_display())
+        if self.pipeline_throughput_year:
+            pt += " ({})".format(self.pipeline_throughput_year)
+        return pt
+
     # ---- END PROPERTIES ---- #
 
     class Meta:

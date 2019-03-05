@@ -6,7 +6,8 @@ from facts.models import Organization
 from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.models import (
     Fuel, FuelCategory, Initiative, InfrastructureType, PlantOwnerStake, PowerPlant,
-    PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
+    PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus,
+    ProjectCapacityUnits
 )
 from infrastructure.tests.factories import ProjectFundingFactory
 from locations.models import Country, GeometryStore, PointGeometry, Region
@@ -420,10 +421,11 @@ class ImportCSVToDatabaseTestCase(TestCase):
             {value: key for key, value in ProjectStatus.STATUSES}['Suspended']
         )
         self.assertEqual(project_ouessant1.project_capacity, 0.5)
-        self.assertEqual(
-            project_ouessant1.project_capacity_unit,
-            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MW']
-        )
+        if project_ouessant1.project_capacity_unit != '':
+            self.assertEqual(
+                project_ouessant1.project_capacity_unit,
+                project_ouessant1.project_capacity_unit.get_project_capacity_unit_display()
+            )
         self.assertEqual(project_ouessant1.project_output, 200)
         self.assertEqual(
             project_ouessant1.project_output_unit,
