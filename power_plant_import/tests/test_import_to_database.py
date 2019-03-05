@@ -424,7 +424,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         if project_ouessant1.project_capacity_unit != '':
             self.assertEqual(
                 project_ouessant1.project_capacity_unit,
-                ProjectCapacityUnits.get_human(project_ouessant1.project_capacity_unit)
+                project_ouessant1.project_capacity_unit.get_project_capacity_unit_display()
             )
         self.assertEqual(project_ouessant1.project_output, 200)
         self.assertEqual(
