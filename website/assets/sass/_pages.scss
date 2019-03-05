@@ -1065,6 +1065,39 @@ ul.database-nav {
 
 .related-transmission-data {
   @extend %related-block;
+
+  table {
+    width: 100%;
+  }
+
+  thead th:not(:last-child),
+  tbody td:not(:last-child) {
+    padding-right: 6px;
+  }
+
+  tbody > tr {
+    > :nth-child(1) {
+      width: 40%;
+    }
+
+    > :nth-child(2) {
+      width: 25%;
+    }
+
+    > :nth-child(3) {
+      width: 100% - (40% + 25%);
+    }
+  }
+
+  /**
+   * See the rules within the article{} block of main.scss
+   * for the rule being overridden here.
+   */
+  article & table td:last-of-type,
+  article & table th:last-of-type {
+    text-align: left;
+  }
+
 }
 
 .related-pipeline-data {

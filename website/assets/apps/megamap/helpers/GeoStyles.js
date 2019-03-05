@@ -29,6 +29,14 @@ export default class GeoStyles {
         'fill-color': '#4d8d8e',
       },
     };
+    /**
+     * NOTE: when new infrastructure types are added to
+     * this map, the `GeometryStoreCentroidViewSet` will
+     * have to be updated to include the new icon images,
+     * if any. Add to the `.annotate` clause that includes
+     * the `icon_image` property to the instance. If you
+     * do not do this, the default "dot" will be used.
+     */
     this.styles = {
       default: {
         lines: lineStyle,
