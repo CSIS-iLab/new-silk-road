@@ -247,6 +247,8 @@
                      <ul class="clean">
                         {% for fuel in fuel_types %}
                            <li>{{ fuel }}</li>
+                        {% empty %}
+                           <li>&mdash;</li>
                         {% endfor %}
                      </ul>
                   </section>
