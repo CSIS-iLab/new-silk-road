@@ -413,12 +413,24 @@ button.searchView__update-results {
     display: flex;
     overflow: hidden;
     cursor: pointer;
+    position: relative;
 }
 
 .infrastructureIcon__icon {
     display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
     height: $searchview-infrastructure-icon-size; 
-    width: $searchview-infrastructure-icon-size;
+    /**
+     * This width rule addresses a bug on Firefox where the
+     * label's click handler doesn't appear to work. We can
+     * get around this by allowing the `__icon` element to
+     * invisibly stretch across the full width of the container,
+     * allowing the user to click *it* and use *its* click
+     * handler, which appears to work in all situations.
+     */
+    width: 100%;
 
     &.rail-color > span {
         background-color: $rail-color;
@@ -499,6 +511,7 @@ button.searchView__update-results {
 .infrastructureIcon__label {
     background-color: $map-infrastructure-grey;
 
+    margin-left: $searchview-infrastructure-icon-size;
     padding-left: $searchview-infrastructure-padding-left;
     padding-right: $searchview-infrastructure-padding-right;
     line-height: 40px;
