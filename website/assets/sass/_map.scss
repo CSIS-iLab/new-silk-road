@@ -176,6 +176,25 @@ $creamer-str: str-slice("#{$creamer}", 2);
     color: $map-mid-grey;
 }
 
+.popup-header-zoomable-container {
+    cursor: pointer;
+    display: inline-block;
+    padding-right: 12px;
+
+    &:hover .zoom-magnifying-glass {
+        background-image: url($zoom-magnifying-glass-img-active);
+    }
+
+    &:hover .popup-header-button-disabled .zoom-magnifying-glass {
+        background-image: url($zoom-magnifying-glass-img-grey);
+    }
+}
+
+.popup-header-zoomable-container-disabled {
+    @extend .popup-header-zoomable-container;
+    cursor: initial;
+}
+
 .popup-header-zoomicon {
     width: 20px;
     height: 20px;
@@ -196,12 +215,6 @@ $creamer-str: str-slice("#{$creamer}", 2);
 .popup-header-button {
     .zoom-magnifying-glass {
         background-image: url($zoom-magnifying-glass-img);
-    }
-
-    &:hover {
-        .zoom-magnifying-glass {
-            background-image: url($zoom-magnifying-glass-img-active);
-        }
     }
 }
 
