@@ -321,6 +321,13 @@ button.searchView__update-results {
     margin-bottom: $searchview-label-bottom-margin;
 }
 
+.filter-input-group__sub-label {
+    color: map-get($map-colors, 'body');
+    font-size: 75%;
+    line-height: 1.25;
+    margin-bottom: 0.5em;
+}
+
 .filter-input-group__input-text {
     display: block;
     font-size: map-get($map-font-sizes, 'base');

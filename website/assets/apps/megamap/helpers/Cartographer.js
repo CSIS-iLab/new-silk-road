@@ -324,7 +324,7 @@ export default class Cartographer {
     // CSS class, and add an event listener for when the zoom button is clicked.
     // Clicking the header's zoom button should get the geostore data, which in turn
     // will zoom in to the icon at the appropriate zoom (in this.handleGeoStoreSelect()).
-    if (!zoomEnabled) {
+    if (zoomEnabled) {
       headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container');
       headerZoomableContainer.setAttribute('role', 'button');
       headerZoomableContainer.setAttribute('tabindex', '0');
