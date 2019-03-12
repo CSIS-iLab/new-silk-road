@@ -83,6 +83,9 @@ export default class InfrastructureTypeToggle extends Component {
       <div
         id="infrastructureToggleContainer"
         onMouseLeave={() => this.setState({ hidden: true })}
+        onMouseOut={() => this.setState({ hidden: true })}
+        onMouseEnter={() => this.setState({ hidden: false })}
+        onMouseOver={() => this.setState({ hidden: false })}
       >
         <div id="infrastructureToggle">
           {
@@ -90,7 +93,6 @@ export default class InfrastructureTypeToggle extends Component {
             this.props.infrastructureTypes.map(type => (
               <InfrastructureIcon
                 hidden={this.state.hidden}
-                unHide={() => this.setState({ hidden: false })}
                 returnIdOnClick={this.handleClickIcon}
                 properties={type}
                 key={type.value}

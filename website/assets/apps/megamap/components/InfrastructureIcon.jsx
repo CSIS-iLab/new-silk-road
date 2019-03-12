@@ -57,7 +57,6 @@ export default class InfrastructureIcon extends Component {
               'infrastructureIcon__inner-icon',
             )}
             alt={this.altText}
-            onMouseEnter={this.props.unHide}
           />
         </div>
         <div
@@ -76,7 +75,6 @@ InfrastructureIcon.propTypes = {
   hidden: PropTypes.bool,
   properties: PropTypes.shape({}),
   returnIdOnClick: PropTypes.func,
-  unHide: PropTypes.func,
 };
 
 InfrastructureIcon.defaultProps = {
