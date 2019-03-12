@@ -28053,6 +28053,7 @@
 	      project.name,
 	      project.geo ? _react2.default.createElement('div', {
 	        className: 'projectResult__pin-button',
+	        title: 'Locate on map',
 	        role: 'button',
 	        tabIndex: '0',
 	        onClick: function onClick() {
@@ -29100,8 +29101,13 @@
 	                      { className: 'filter-input-group__label' },
 	                      'Milestone'
 	                    ),
+	                    _react2.default.createElement(
+	                      'p',
+	                      { className: 'filter-input-group__sub-label' },
+	                      'Completion Year and Year range fields are required to apply the Milestone filter.'
+	                    ),
 	                    _react2.default.createElement(_DateRangeSelect2.default, {
-	                      labelName: 'Filter by Year...',
+	                      labelName: 'Completion Year',
 	                      dateLookupOptions: yearLookupOptions,
 	                      lowerBoundLabel: 'Year',
 	                      upperBoundLabel: 'Year',
@@ -29838,6 +29844,13 @@
 	      // Header row
 	      var header = document.createElement('div');
 	      header.setAttribute('class', 'popup-header');
+	
+	      // A container element to hold elements that *can* trigger
+	      // the "zoom to detail" behavior. This lets us set hover
+	      // rules independent of each such individual element,
+	      // treating the whole complex as a single button-like element.
+	      var headerZoomableContainer = document.createElement('div');
+	
 	      var headerZoomButton = document.createElement('button');
 	      var headerZoomButtonIcon = document.createElement('span');
 	      headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
@@ -29850,20 +29863,26 @@
 	      // Clicking the header's zoom button should get the geostore data, which in turn
 	      // will zoom in to the icon at the appropriate zoom (in this.handleGeoStoreSelect()).
 	      if (zoomEnabled) {
-	        headerZoomButton.setAttribute('class', 'popup-header-button');
-	        headerZoomButton.addEventListener('click', function () {
+	        headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container');
+	        headerZoomableContainer.setAttribute('role', 'button');
+	        headerZoomableContainer.setAttribute('tabindex', '0');
+	        headerZoomableContainer.addEventListener('click', function () {
 	          return _GeoStoreActions2.default.selectGeoStoreId(geoIdentifier);
 	        });
-	        headerZoomButton.addEventListener('click', function () {
+	        headerZoomableContainer.addEventListener('click', function () {
 	          _this2.removePopup();
 	        });
+	        headerZoomButton.setAttribute('class', 'popup-header-button');
 	        headerText.setAttribute('class', 'popup-header-text');
 	      } else {
+	        headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container-disabled');
 	        headerZoomButton.setAttribute('class', 'popup-header-button-disabled');
 	        headerText.setAttribute('class', 'popup-header-text-disabled');
 	      }
-	      header.appendChild(headerZoomButton);
-	      header.appendChild(headerText);
+	      headerZoomableContainer.appendChild(headerZoomButton);
+	      headerZoomableContainer.appendChild(headerText);
+	
+	      header.appendChild(headerZoomableContainer);
 	
 	      // Project name element
 	      var nameElement = document.createElement('h3');
