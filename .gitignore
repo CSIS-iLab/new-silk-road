@@ -45,3 +45,5 @@ coverage.xml
 /node_modules
 /website/assets/lib
 package-lock.json
+
+githide/*

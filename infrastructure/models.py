@@ -122,37 +122,29 @@ class ProjectCapacityUnits:
     MEGAWATTS = 'mw'
     BARRELS = 'barrels'
     TONS = 'tons'
-    MIL_CUBIC_FT = 'million-cubic-feet'
-    BIL_CUBIC_FT = 'billion-cubic-feet'
-    MIL_CUBIC_METERS = 'million-cubic-meters'
-    BIL_CUBIC_METERS = 'billion-cubic-meters'
+    CUBIC_FT = 'cubic-feet'
+    CUBIC_METERS = 'cubic-meters'
 
     UNITS = (
         (MEGAWATTS, 'MW'),
         (BARRELS, 'Barrels'),
         (TONS, 'Tons'),
-        (MIL_CUBIC_FT, 'million cubic feet'),
-        (MIL_CUBIC_METERS, 'million cubic meters'),
-        (BIL_CUBIC_FT, 'billion cubic feet'),
-        (BIL_CUBIC_METERS, 'billion cubic meters'),
+        (CUBIC_FT, 'cubic feet'),
+        (CUBIC_METERS, 'cubic meters'),
     )
 
 
 class ProjectThroughputUnits:
     BARRELS = 'barrels'
     TONS = 'tons'
-    MIL_CUBIC_FT = 'million-cubic-feet'
-    BIL_CUBIC_FT = 'billion-cubic-feet'
-    MIL_CUBIC_METERS = 'million-cubic-meters'
-    BIL_CUBIC_METERS = 'billion-cubic-meters'
+    CUBIC_FT = 'cubic-feet'
+    CUBIC_METERS = 'cubic-meters'
 
     UNITS = (
         (BARRELS, 'Barrels'),
         (TONS, 'Tons'),
-        (MIL_CUBIC_FT, 'million cubic feet'),
-        (MIL_CUBIC_METERS, 'million cubic meters'),
-        (BIL_CUBIC_FT, 'billion cubic feet'),
-        (BIL_CUBIC_METERS, 'billion cubic meters'),
+        (CUBIC_FT, 'cubic feet'),
+        (CUBIC_METERS, 'cubic meters'),
     )
 
 
@@ -384,7 +376,7 @@ class Project(Publishable):
                                               help_text="Diameter unit")
     pipeline_metered = models.NullBooleanField("Pipeline Metered?", null=True, blank=True)
 
-    pipeline_throughput = models.IntegerField("Throughput", null=True, blank=True)
+    pipeline_throughput = models.BigIntegerField("Throughput", null=True, blank=True)
     pipeline_throughput_unit = models.CharField("Throughput Unit", blank=True,
                                                 max_length=20,
                                                 choices=ProjectThroughputUnits.UNITS)
@@ -424,7 +416,7 @@ class Project(Publishable):
     def pipeline_capacity_property(self):
         if self.project_capacity is None:
             return None
-        pc = str(self.project_capacity)
+        pc = ''
         if self.project_capacity_unit:
             pc += " {}".format(self.get_project_capacity_unit_display().lower())
         if self.project_capacity_timeframe:
@@ -435,7 +427,7 @@ class Project(Publishable):
     def pipeline_throughput_property(self):
         if self.pipeline_throughput is None:
             return None
-        pt = str(self.pipeline_throughput)
+        pt = ''
         if self.pipeline_throughput_unit:
             pt += " {}".format(self.get_pipeline_throughput_unit_display().lower())
         if self.pipeline_throughput_timeframe:

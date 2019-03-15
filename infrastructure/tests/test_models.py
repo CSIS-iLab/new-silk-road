@@ -56,17 +56,21 @@ class ProjectTestCase(TestCase):
 
         self.project.pipeline_diameter = 40
         self.project.pipeline_throughput = 100
-        self.project.pipeline_throughput_unit = models.ProjectThroughputUnits.MIL_CUBIC_METERS
+        self.project.pipeline_throughput_unit = models.ProjectThroughputUnits.CUBIC_METERS
         self.project.pipeline_throughput_timeframe = models.ProjectTimeFrameUnits.PER_YEAR
         self.project.pipeline_throughput_year = 2019
 
-        pp_capacity = self.project.pipeline_capacity_property
         # Is capacity rendered correctly
-        self.assertEqual(pp_capacity, "10.0 barrels per year")
+        cap_check = str(self.project.project_capacity) + "{}"\
+            .format(self.project.pipeline_capacity_property)
+
+        self.assertEqual(cap_check, "10.0 barrels per year")
 
         # Is Throughput rendered correctly
-        self.assertEqual(self.project.pipeline_throughput_property,
-                         "100 million cubic meters per year (2019)")
+        through_check = "{} {}".format(str(self.project.pipeline_throughput),
+                                       "cubic meters per year (2019)")
+        self.assertEqual(through_check,
+                         "100 cubic meters per year (2019)")
 
 
 class FuelTestCase(TestCase):
