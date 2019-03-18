@@ -222,7 +222,11 @@
                   <section>
                      <h3>Capacity</h3>
                      <p>{% if object.project_capacity %}
-                        {{ object.project_capacity|intcomma}} {{ object.pipeline_capacity_property }}
+                        {%  if object.humanize_capacity %}
+                           {{ object.project_capacity|intword|intcomma}} {{ object.pipeline_capacity_property }}
+                        {% else %}
+                           {{ object.project_capacity|intcomma}} {{ object.pipeline_capacity_property }}
+                        {% endif %}
                      {% else %}
                         &mdash;
                      {% endif %}
