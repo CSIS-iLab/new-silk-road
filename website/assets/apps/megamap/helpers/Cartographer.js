@@ -306,6 +306,13 @@ export default class Cartographer {
     // Header row
     const header = document.createElement('div');
     header.setAttribute('class', 'popup-header');
+    
+    // A container element to hold elements that *can* trigger
+    // the "zoom to detail" behavior. This lets us set hover
+    // rules independent of each such individual element,
+    // treating the whole complex as a single button-like element.
+    const headerZoomableContainer = document.createElement('div');
+
     const headerZoomButton = document.createElement('button');
     const headerZoomButtonIcon = document.createElement('span');
     headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
@@ -318,16 +325,22 @@ export default class Cartographer {
     // Clicking the header's zoom button should get the geostore data, which in turn
     // will zoom in to the icon at the appropriate zoom (in this.handleGeoStoreSelect()).
     if (zoomEnabled) {
+      headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container');
+      headerZoomableContainer.setAttribute('role', 'button');
+      headerZoomableContainer.setAttribute('tabindex', '0');
+      headerZoomableContainer.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(geoIdentifier));
+      headerZoomableContainer.addEventListener('click', () => { this.removePopup(); });
       headerZoomButton.setAttribute('class', 'popup-header-button');
-      headerZoomButton.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(geoIdentifier));
-      headerZoomButton.addEventListener('click', () => { this.removePopup(); });
       headerText.setAttribute('class', 'popup-header-text');
     } else {
+      headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container-disabled');
       headerZoomButton.setAttribute('class', 'popup-header-button-disabled');
       headerText.setAttribute('class', 'popup-header-text-disabled');
     }
-    header.appendChild(headerZoomButton);
-    header.appendChild(headerText);
+    headerZoomableContainer.appendChild(headerZoomButton);
+    headerZoomableContainer.appendChild(headerText);
+
+    header.appendChild(headerZoomableContainer);
 
     // Project name element
     const nameElement = document.createElement('h3');

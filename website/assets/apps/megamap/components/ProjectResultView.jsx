@@ -22,6 +22,7 @@ const ProjectResultView = (props) => {
         { project.geo ?
           <div
             className="projectResult__pin-button"
+            title="Locate on map"
             role="button"
             tabIndex="0"
             onClick={() => GeoStoreActions.selectGeoStoreId(project.geo)}
