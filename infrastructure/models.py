@@ -413,6 +413,14 @@ class Project(Publishable):
         )
 
     @property
+    def humanize_capacity(self):
+        if self.project_capacity is None:
+            return False
+        if self.project_capacity > (1*10**6):
+            return True
+        return False
+
+    @property
     def pipeline_capacity_property(self):
         if self.project_capacity is None:
             return None
