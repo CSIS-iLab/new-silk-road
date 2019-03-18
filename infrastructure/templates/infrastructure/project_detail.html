@@ -158,7 +158,7 @@
                <section>
                   <h3>Capacity</h3>
                   <p>{% if object.power_plant.plant_capacity and object.power_plant.plant_capacity_unit %}
-                     {{ object.power_plant.plant_capacity }} {{ object.power_plant.plant_capacity_unit }}{% else %}
+                     {{ object.power_plant.plant_capacity|intcomma }} {{ object.power_plant.plant_capacity_unit }}{% else %}
                      Unknown{% endif %}</p>
                </section>
                <section>
@@ -189,7 +189,7 @@
                <section>
                   <h3>Transfer Capacity</h3>
                   <p>{% if object.estimated_transfer_capacity %}
-                     {{ object.estimated_transfer_capacity }}MW
+                     {{ object.estimated_transfer_capacity|intcomma|intword }}MW
                   {% else %}
                      &mdash;
                   {% endif %}
@@ -222,7 +222,7 @@
                   <section>
                      <h3>Capacity</h3>
                      <p>{% if object.project_capacity %}
-                        {{ object.pipeline_capacity_property }}
+                        {{ object.project_capacity|intcomma}} {{ object.pipeline_capacity_property }}
                      {% else %}
                         &mdash;
                      {% endif %}
@@ -232,7 +232,7 @@
                      <h3>Estimated Throughput</h3>
                      <p>
                         {% if object.pipeline_throughput_property %}
-                           {{ object.pipeline_throughput_property }}
+                           {{ object.pipeline_throughput|intword|intcomma }} {{ object.pipeline_throughput_property }}
                         {% else %}
                            &mdash;
                         {% endif %}
@@ -253,7 +253,7 @@
                   <section>
                      <h3>Diameter</h3>
                      {% if object.pipeline_diameter %}
-                        {{ object.pipeline_diameter }} {{ object.pipeline_diameter_unit }}
+                        {{ object.pipeline_diameter|intcomma }} {{ object.pipeline_diameter_unit }}
                      {% else %}
                         &mdash;
                      {% endif %}
