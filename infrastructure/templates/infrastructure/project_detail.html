@@ -225,7 +225,7 @@
                         {%  if object.humanize_capacity %}
                            {{ object.project_capacity|intword|intcomma}} {{ object.pipeline_capacity_property }}
                         {% else %}
-                           {{ object.project_capacity|intcomma}} {{ object.pipeline_capacity_property }}
+                           {{ object.project_capacity|floatformat:2|intcomma}} {{ object.pipeline_capacity_property }}
                         {% endif %}
                      {% else %}
                         &mdash;
