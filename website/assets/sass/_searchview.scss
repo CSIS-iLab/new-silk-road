@@ -12,6 +12,7 @@ $searchview-padding-y: 24px;
 $searchview-infrastructure-icon-size: 40px;
 $searchview-infrastructure-padding-left: 16px;
 $searchview-infrastructure-padding-right: 24px;
+$searchview-infrastructure-toggle-transition: 0.25s;
 
 $searchview-header-height: 50px;
 $searchview-heading-bottom-margin: $searchview-padding-y / 2;
@@ -320,6 +321,13 @@ button.searchView__update-results {
     margin-bottom: $searchview-label-bottom-margin;
 }
 
+.filter-input-group__sub-label {
+    color: map-get($map-colors, 'body');
+    font-size: 75%;
+    line-height: 1.25;
+    margin-bottom: 0.5em;
+}
+
 .filter-input-group__input-text {
     display: block;
     font-size: map-get($map-font-sizes, 'base');
@@ -398,24 +406,43 @@ button.searchView__update-results {
     z-index: 10;
     left: 290px;
     top: 70px;
-    width: auto;
+    max-width: $searchview-infrastructure-icon-size;
+    transition: all 0s;
+    transition-delay: $searchview-infrastructure-toggle-transition;
+
+    &:hover {
+        max-width: 100vw;
+        transition-delay: 0s;
+    }
 }
 
 .infrastructureIcon__container {
     display: flex;
     overflow: hidden;
     cursor: pointer;
+    position: relative;
 }
 
 .infrastructureIcon__icon {
     display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
     height: $searchview-infrastructure-icon-size; 
-    width: $searchview-infrastructure-icon-size;
+    /**
+     * This width rule addresses a bug on Firefox where the
+     * label's click handler doesn't appear to work. We can
+     * get around this by allowing the `__icon` element to
+     * invisibly stretch across the full width of the container,
+     * allowing the user to click *it* and use *its* click
+     * handler, which appears to work in all situations.
+     */
+    width: 100%;
 
     &.rail-color > span {
         background-color: $rail-color;
 
-        .infrastructureIcon__container:hover & > span {
+        .infrastructureIcon__container:hover & {
             background-color: $rail-color-hover;
         }
     }
@@ -423,7 +450,7 @@ button.searchView__update-results {
     &.road-color > span {
         background-color: $road-color;
 
-        .infrastructureIcon__container:hover & > span {
+        .infrastructureIcon__container:hover & {
             background-color: $road-color-hover;
         }
     }
@@ -431,7 +458,7 @@ button.searchView__update-results {
     &.seaport-color > span {
         background-color: $seaport-color;
 
-        .infrastructureIcon__container:hover & > span {
+        .infrastructureIcon__container:hover & {
             background-color: $seaport-color-hover;
         }
     }
@@ -439,7 +466,7 @@ button.searchView__update-results {
     &.intermodal-color > span {
         background-color: $intermodal-color;
 
-        .infrastructureIcon__container:hover & > span {
+        .infrastructureIcon__container:hover & {
             background-color: $intermodal-color-hover;
         }
     }
@@ -447,10 +474,27 @@ button.searchView__update-results {
     &.powerplant-color > span {
         background-color: $powerplant-color;
 
-        .infrastructureIcon__container:hover & > span {
+        .infrastructureIcon__container:hover & {
             background-color: $powerplant-color-hover;
         }
     }
+
+    &.pipeline-color > span {
+        background-color: $pipeline-color;
+
+        .infrastructureIcon__container:hover & {
+            background-color: $pipeline-color-hover;
+        }
+    }
+
+    &.transmission-color > span {
+        background-color: $transmission-color;
+
+        .infrastructureIcon__container:hover & {
+            background-color: $transmission-color-hover;
+        }
+    }
+
     &.selected > span {
         background-color: $map-infrastructure-selected-icon-bg-grey;
     }
@@ -474,6 +518,7 @@ button.searchView__update-results {
 .infrastructureIcon__label {
     background-color: $map-infrastructure-grey;
 
+    margin-left: $searchview-infrastructure-icon-size;
     padding-left: $searchview-infrastructure-padding-left;
     padding-right: $searchview-infrastructure-padding-right;
     line-height: 40px;
@@ -482,7 +527,7 @@ button.searchView__update-results {
 
     z-index: -1;
     transform: translateX(0);
-    transition: transform 0.25s;
+    transition: transform #{$searchview-infrastructure-toggle-transition};
 
     .infrastructureIcon__container:hover & {
         background-color: $map-infrastructure-hover-grey;
@@ -491,7 +536,7 @@ button.searchView__update-results {
 
 .infrastructureIcon__label--hidden {
     transform: translateX(-100%);
-    transition: transform 0.25s;
+    transition: transform #{$searchview-infrastructure-toggle-transition};
 }
 
 .infrastructureIcon__label--selected {
@@ -643,7 +688,7 @@ button.searchView__update-results {
 
 .resultsView__scroll-container {
     height: calc(100% - #{$searchview-header-height});
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .resultsView__scroll-container--expanded {

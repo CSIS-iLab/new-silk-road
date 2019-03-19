@@ -457,6 +457,12 @@ class ProjectCSVExportTestCase(TestCase):
                    'verified',
                    'total_cost',
                    'total_cost_currency',
+                   'project_owners',
+                   'project_owners_stake',
+                   'substation_name',
+                   'substation_capacity',
+                   'substation_voltage',
+                   'project_capacity_timeframe',
                    'start_day',
                    'start_month',
                    'start_year',
@@ -479,8 +485,20 @@ class ProjectCSVExportTestCase(TestCase):
                    'project_output_unit',
                    'project_output_year',
                    'sox_reduction_system',
+                   'project_length',
+                   'pipeline_diameter',
+                   'pipeline_diameter_unit',
+                   'pipeline_metered',
+                   'pipeline_throughput',
+                   'pipeline_throughput_unit',
+                   'pipeline_throughput_timeframe',
+                   'pipeline_throughput_year',
+                   'design_voltage',
+                   'direct_current',
+                   'electricity_flow',
+                   'estimated_transfer_capacity',
         )
-        self.assertEqual(results.fieldnames, list(headers))
+        self.assertEqual(sorted(results.fieldnames), sorted(list(headers)))
         projects = {
             str(self.project.identifier): self.project,
             str(self.other.identifier): self.other,
@@ -496,15 +514,57 @@ class ProjectCSVExportTestCase(TestCase):
         fuel2 = factories.FuelFactory()
         project1 = factories.ProjectFactory(fuels=(fuel1, fuel2),
                                             countries=(CountryFactory(),))
-        response = self.client.get(self.url)
-        stream = io.StringIO(response.content.decode('utf-8'))
-        results = csv.DictReader(stream)
-        for row in results:
+        for row in self.get_results():
             if row['identifier'] == str(project1.identifier):
                 self.assertTrue(fuel1.name in row['fuel_type'])
                 self.assertTrue(fuel2.name in row['fuel_type'])
                 self.assertTrue(fuel1.fuel_category.name in row['fuel_category'])
                 self.assertTrue(fuel2.fuel_category.name in row['fuel_category'])
+
+    def test_project_substations(self):
+        """Ensure related substations are included in CSV export"""
+        project1 = factories.ProjectFactory(countries=(CountryFactory(),))
+        sub_station1 = factories.ProjectSubstationFactory(project=project1)
+        sub_station2 = factories.ProjectSubstationFactory(project=project1)
+
+        for row in self.get_results():
+            if row['identifier'] == str(project1.identifier):
+                substations = list(zip(row['substation_name'].split(','),
+                                       row['substation_capacity'].split(','),
+                                       row['substation_voltage'].split(','))
+                                   )
+
+                with self.subTest('Substation 1'):
+                    self.assertTrue(sub_station1.name in substations[0][0])
+                    self.assertTrue(str(sub_station1.capacity) in substations[0][1])
+                    self.assertTrue(str(sub_station1.voltage) in substations[0][2])
+
+                with self.subTest('Substation 2'):
+                    self.assertTrue(sub_station2.name in substations[1][0])
+                    self.assertTrue(str(sub_station2.capacity) in substations[1][1])
+                    self.assertTrue(str(sub_station2.voltage) in substations[1][2])
+
+    def test_project_owners_stake(self):
+        """Ensure related owners stakes are in CSV export"""
+
+        project1 = factories.ProjectFactory()
+        stake1 = factories.ProjectOwnerStakeFactory(project=project1)
+        stake2 = factories.ProjectOwnerStakeFactory(project=project1, percent_owned=None)
+
+        for row in self.get_results():
+            if row['identifier'] == str(project1.identifier):
+                owners = list(zip(
+                    row['project_owners'].split(','),
+                    row['project_owners_stake'].split(','))
+                )
+
+                with self.subTest('Owner stake 1'):
+                    self.assertTrue(stake1.owner.name in owners[0][0])
+                    self.assertTrue(str(stake1.percent_owned) in owners[0][1])
+
+                with self.subTest('Owner stake 2'):
+                    self.assertTrue(stake2.owner.name in owners[1][0])
+                    self.assertTrue('NULL' in owners[1][1])
 
     def test_project_manufacturers(self):
         """Ensure related manufacturers are included in CSV export"""
@@ -513,10 +573,7 @@ class ProjectCSVExportTestCase(TestCase):
         org2 = OrganizationFactory()
         project1 = factories.ProjectFactory(manufacturers=(org1, org2),
                                             countries=(CountryFactory(),))
-        response = self.client.get(self.url)
-        stream = io.StringIO(response.content.decode('utf-8'))
-        results = csv.DictReader(stream)
-        for row in results:
+        for row in self.get_results():
             if row['identifier'] == str(project1.identifier):
                 self.assertTrue(org1.name in row['manufacturers'])
                 self.assertTrue(org2.name in row['manufacturers'])
@@ -529,10 +586,7 @@ class ProjectCSVExportTestCase(TestCase):
         org3 = OrganizationFactory()
         project1 = factories.ProjectFactory(consultants=(org1, org2),
                                             countries=(CountryFactory(),))
-        response = self.client.get(self.url)
-        stream = io.StringIO(response.content.decode('utf-8'))
-        results = csv.DictReader(stream)
-        for row in results:
+        for row in self.get_results():
             if row['identifier'] == str(project1.identifier):
                 self.assertTrue(org1.name in row['consultants'])
                 self.assertTrue(org2.name in row['consultants'])
@@ -546,10 +600,7 @@ class ProjectCSVExportTestCase(TestCase):
         org3 = OrganizationFactory()
         project1 = factories.ProjectFactory(implementers=(org1, org2),
                                             countries=(CountryFactory(),))
-        response = self.client.get(self.url)
-        stream = io.StringIO(response.content.decode('utf-8'))
-        results = csv.DictReader(stream)
-        for row in results:
+        for row in self.get_results():
             if row['identifier'] == str(project1.identifier):
                 self.assertTrue(org1.name in row['implementing_agencies'])
                 self.assertTrue(org2.name in row['implementing_agencies'])
@@ -560,13 +611,15 @@ class ProjectCSVExportTestCase(TestCase):
 
         project1 = factories.ProjectFactory(power_plant=factories.PowerPlantFactory(),
                                             countries=(CountryFactory(),))
-        response = self.client.get(self.url)
-        stream = io.StringIO(response.content.decode('utf-8'))
-        results = csv.DictReader(stream)
-        for row in results:
+        for row in self.get_results():
             if row['identifier'] == str(project1.identifier):
                 self.assertEqual(project1.power_plant.name, row['power_plant_name'])
-    
+
+    def get_results(self):
+        response = self.client.get(self.url)
+        stream = io.StringIO(response.content.decode('utf-8'))
+        return csv.DictReader(stream)
+
     def test_never_cache_is_enabled(self):
         response = self.client.get(self.url)
         self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)
@@ -684,9 +737,9 @@ class PowerPlantCSVExportTestCase(TestCase):
         """Ensure owner stakes are in CSV export"""
 
         power_plant = factories.PowerPlantFactory()
-        stake1 = factories.OwnerStakeFactory(power_plant=power_plant)
-        stake2 = factories.OwnerStakeFactory(power_plant=power_plant, percent_owned=None)
-        stake_non = factories.OwnerStakeFactory()
+        stake1 = factories.PlantOwnerStakeFactory(power_plant=power_plant)
+        stake2 = factories.PlantOwnerStakeFactory(power_plant=power_plant, percent_owned=None)
+        stake_non = factories.PlantOwnerStakeFactory()
         response = self.client.get(self.url)
         stream = io.StringIO(response.content.decode('utf-8'))
         results = csv.DictReader(stream)
@@ -704,7 +757,7 @@ class PowerPlantCSVExportTestCase(TestCase):
 
                 with self.subTest('Excluded owner stake'):
                     self.assertFalse(stake_non.owner.name in row['plant_owners'])
-    
+
     def test_never_cache_is_enabled(self):
         response = self.client.get(self.url)
         self.assertEqual(response['Cache-Control'].__contains__('max-age=0'), True)

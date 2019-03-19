@@ -29,6 +29,14 @@ export default class GeoStyles {
         'fill-color': '#4d8d8e',
       },
     };
+    /**
+     * NOTE: when new infrastructure types are added to
+     * this map, the `GeometryStoreCentroidViewSet` will
+     * have to be updated to include the new icon images,
+     * if any. Add to the `.annotate` clause that includes
+     * the `icon_image` property to the instance. If you
+     * do not do this, the default "dot" will be used.
+     */
     this.styles = {
       default: {
         lines: lineStyle,
@@ -79,6 +87,40 @@ export default class GeoStyles {
           },
         }),
       },
+      pipeline: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#AB3F97',
+          },
+        }),
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': {
+              stops: [
+                [0, 'Pipeline'],
+                [maxFitZoom, 'PipelineIcon'],
+              ],
+            },
+          },
+        }),
+      },
+      transmission: {
+        lines: objectMerge(lineStyle, {
+          paint: {
+            'line-color': '#56B746',
+          },
+        }),
+        points: objectMerge(pointStyle, {
+          layout: {
+            'icon-image': {
+              stops: [
+                [0, 'Transmission'],
+                [maxFitZoom, 'TransmissionIcon'],
+              ],
+            },
+          },
+        }),
+      },
       powerplant: {
         points: objectMerge(pointStyle, {
           layout: {
@@ -100,13 +142,6 @@ export default class GeoStyles {
                 [minDetailZoom, 'SeaportIcon'],
               ],
             },
-          },
-        }),
-      },
-      pipeline: {
-        lines: objectMerge(lineStyle, {
-          paint: {
-            'line-color': '#7e3c22',
           },
         }),
       },

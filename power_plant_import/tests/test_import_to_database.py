@@ -5,8 +5,9 @@ from django.test import TestCase
 from facts.models import Organization
 from facts.tests.organization_factories import OrganizationFactory
 from infrastructure.models import (
-    Fuel, FuelCategory, Initiative, InfrastructureType, OwnerStake, PowerPlant,
-    PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus
+    Fuel, FuelCategory, Initiative, InfrastructureType, PlantOwnerStake, PowerPlant,
+    PowerPlantStatus, Project, ProjectFunding, ProjectPlantUnits, ProjectStatus,
+    ProjectCapacityUnits
 )
 from infrastructure.tests.factories import ProjectFundingFactory
 from locations.models import Country, GeometryStore, PointGeometry, Region
@@ -179,45 +180,45 @@ class ImportCSVToDatabaseTestCase(TestCase):
         # Currently, there is 1 owner (Organization) and 0 OwnerStakes objects
         # in the database
         self.assertEqual(Organization.objects.count(), 1)
-        self.assertEqual(OwnerStake.objects.count(), 0)
+        self.assertEqual(PlantOwnerStake.objects.count(), 0)
 
         self.call_command(filename='power_plant_import/tests/data/six_rows.csv')
 
         # Get the PowerPlants that were created during the import
         (powerplant_ouessant, powerplant_ilarionas, powerplant_tonstad) = self.get_created_plants()
         # The OwnerStakes have been assigned to the correct PowerPlants
-        self.assertEqual(OwnerStake.objects.count(), 4)
+        self.assertEqual(PlantOwnerStake.objects.count(), 4)
         owner_sabella = Organization.objects.get(name='Sabella SAS')
         owner_ppc = Organization.objects.get(name='Public Power Corporation SA')
-        owner_stake_ouessant1 = OwnerStake.objects.get(
+        owner_stake_ouessant1 = PlantOwnerStake.objects.get(
             owner=owner_sabella,
             power_plant=powerplant_ouessant
         )
         self.assertEqual(owner_stake_ouessant1.percent_owned, 50)
-        owner_stake_ouessant2 = OwnerStake.objects.get(
+        owner_stake_ouessant2 = PlantOwnerStake.objects.get(
             owner=org_existing,
             power_plant=powerplant_ouessant
         )
         self.assertEqual(owner_stake_ouessant2.percent_owned, 30)
-        owner_stake_ilarionas1 = OwnerStake.objects.get(
+        owner_stake_ilarionas1 = PlantOwnerStake.objects.get(
             owner=owner_ppc,
             power_plant=powerplant_ilarionas
         )
         self.assertIsNone(owner_stake_ilarionas1.percent_owned)
-        owner_stake_ilarionas2 = OwnerStake.objects.get(
+        owner_stake_ilarionas2 = PlantOwnerStake.objects.get(
             owner=org_existing,
             power_plant=powerplant_ilarionas
         )
         self.assertIsNone(owner_stake_ilarionas2.percent_owned)
         self.assertEqual(
-            set(powerplant_ouessant.owner_stakes.all()),
+            set(powerplant_ouessant.plant_owner_stakes.all()),
             set([owner_stake_ouessant1, owner_stake_ouessant2])
         )
         self.assertEqual(
-            set(powerplant_ilarionas.owner_stakes.all()),
+            set(powerplant_ilarionas.plant_owner_stakes.all()),
             set([owner_stake_ilarionas1, owner_stake_ilarionas2])
         )
-        self.assertEqual(powerplant_tonstad.owner_stakes.count(), 0)
+        self.assertEqual(powerplant_tonstad.plant_owner_stakes.count(), 0)
 
     def test_initiatives_created(self):
         """Initiatives are created correctly for Projects."""
@@ -420,10 +421,11 @@ class ImportCSVToDatabaseTestCase(TestCase):
             {value: key for key, value in ProjectStatus.STATUSES}['Suspended']
         )
         self.assertEqual(project_ouessant1.project_capacity, 0.5)
-        self.assertEqual(
-            project_ouessant1.project_capacity_unit,
-            {value.upper(): key for key, value in ProjectPlantUnits.UNITS}['MW']
-        )
+        if project_ouessant1.project_capacity_unit != '':
+            self.assertEqual(
+                project_ouessant1.project_capacity_unit,
+                project_ouessant1.project_capacity_unit.get_project_capacity_unit_display()
+            )
         self.assertEqual(project_ouessant1.project_output, 200)
         self.assertEqual(
             project_ouessant1.project_output_unit,
@@ -515,7 +517,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(Country.objects.count(), 0)
         self.assertEqual(Region.objects.count(), 0)
         # There are no OwnerStakes in the database
-        self.assertEqual(OwnerStake.objects.count(), 0)
+        self.assertEqual(PlantOwnerStake.objects.count(), 0)
         # There are no Initiatives in the database
         self.assertEqual(Initiative.objects.count(), 0)
         # There are no ProjectFunding objects in the database
@@ -537,7 +539,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(Country.objects.count(), 4)
         self.assertEqual(Region.objects.count(), 3)
         # There are now 4 OwnerStakes in the database
-        self.assertEqual(OwnerStake.objects.count(), 4)
+        self.assertEqual(PlantOwnerStake.objects.count(), 4)
         # There is now Initiative in the database
         self.assertEqual(Initiative.objects.count(), 1)
         # There are now 3 ProjectFunding objects in the database
@@ -558,7 +560,7 @@ class ImportCSVToDatabaseTestCase(TestCase):
         self.assertEqual(Country.objects.count(), 4)
         self.assertEqual(Region.objects.count(), 3)
         # There are still 4 OwnerStakes in the database
-        self.assertEqual(OwnerStake.objects.count(), 4)
+        self.assertEqual(PlantOwnerStake.objects.count(), 4)
         # There is still Initiative in the database
         self.assertEqual(Initiative.objects.count(), 1)
         # There are still 3 ProjectFunding objects in the database

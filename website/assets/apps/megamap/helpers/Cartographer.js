@@ -47,7 +47,7 @@ export default class Cartographer {
 
   setLayerIds(infrastructure_type) {
     const obj = InfrastructureTypeStore.state.results;
-    const visibleIds = []
+    const visibleIds = [];
     if (infrastructure_type instanceof Object && infrastructure_type.length > 0) {
       for (let i in obj) {
         if (!infrastructure_type.includes(obj[i].id)) {
@@ -129,7 +129,7 @@ export default class Cartographer {
     const lowerSourceLayer = sourceLayer.toLowerCase();
 
     // Layers that can be zoomed until minDetailZoom
-    const useMinDetailZoom = ['rail', 'road'];
+    const useMinDetailZoom = ['rail', 'road', 'pipeline', 'transmission'];
     // Layers that can be zoomed until maxFitZoom
     const usemaxFitZoom = ['intermodal', 'powerplant', 'seaport'];
 
@@ -306,6 +306,13 @@ export default class Cartographer {
     // Header row
     const header = document.createElement('div');
     header.setAttribute('class', 'popup-header');
+    
+    // A container element to hold elements that *can* trigger
+    // the "zoom to detail" behavior. This lets us set hover
+    // rules independent of each such individual element,
+    // treating the whole complex as a single button-like element.
+    const headerZoomableContainer = document.createElement('div');
+
     const headerZoomButton = document.createElement('button');
     const headerZoomButtonIcon = document.createElement('span');
     headerZoomButtonIcon.setAttribute('class', 'zoom-magnifying-glass popup-header-zoomicon');
@@ -318,16 +325,22 @@ export default class Cartographer {
     // Clicking the header's zoom button should get the geostore data, which in turn
     // will zoom in to the icon at the appropriate zoom (in this.handleGeoStoreSelect()).
     if (zoomEnabled) {
+      headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container');
+      headerZoomableContainer.setAttribute('role', 'button');
+      headerZoomableContainer.setAttribute('tabindex', '0');
+      headerZoomableContainer.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(geoIdentifier));
+      headerZoomableContainer.addEventListener('click', () => { this.removePopup(); });
       headerZoomButton.setAttribute('class', 'popup-header-button');
-      headerZoomButton.addEventListener('click', () => GeoStoreActions.selectGeoStoreId(geoIdentifier));
-      headerZoomButton.addEventListener('click', () => { this.removePopup(); });
       headerText.setAttribute('class', 'popup-header-text');
     } else {
+      headerZoomableContainer.setAttribute('class', 'popup-header-zoomable-container-disabled');
       headerZoomButton.setAttribute('class', 'popup-header-button-disabled');
       headerText.setAttribute('class', 'popup-header-text-disabled');
     }
-    header.appendChild(headerZoomButton);
-    header.appendChild(headerText);
+    headerZoomableContainer.appendChild(headerZoomButton);
+    headerZoomableContainer.appendChild(headerText);
+
+    header.appendChild(headerZoomableContainer);
 
     // Project name element
     const nameElement = document.createElement('h3');
@@ -488,16 +501,19 @@ export default class Cartographer {
   }
 
   filterMap(layerId, filterArray) {
+    if (!this.map.getLayer(layerId)) { return; }
     this.map.setFilter(layerId, filterArray);
   }
 
   // View methods
 
   hideLayer(layerId) {
+    if (!this.map.getLayer(layerId)) { return; }
     this.map.setLayoutProperty(layerId, 'visibility', 'none');
   }
 
   showLayer(layerId) {
+    if (!this.map.getLayer(layerId)) { return; }
     this.map.setLayoutProperty(layerId, 'visibility', 'visible');
   }
 

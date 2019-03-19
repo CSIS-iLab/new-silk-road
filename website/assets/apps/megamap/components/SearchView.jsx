@@ -397,8 +397,12 @@ export default class SearchView extends Component {
                   </div>
                   <div className="filter-input-group">
                     <label className="filter-input-group__label">Milestone</label>
+                    <p className="filter-input-group__sub-label">
+                      Completion Year and Year range fields are required to
+                      apply the Milestone filter.
+                    </p>
                     <DateRangeSelect
-                      labelName="Filter by Year..."
+                      labelName="Completion Year"
                       dateLookupOptions={yearLookupOptions}
                       lowerBoundLabel="Year"
                       upperBoundLabel="Year"

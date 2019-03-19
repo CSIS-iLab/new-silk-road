@@ -7,7 +7,8 @@ from infrastructure.models import (
     Project, ProjectDocument, InfrastructureType,
     ProjectFunding, PowerPlant, CuratedProjectCollection,
     Initiative, InitiativeType,
-    Fuel, FuelCategory, OwnerStake,
+    Fuel, FuelCategory, PlantOwnerStake, ProjectOwnerStake,
+    ProjectSubstation
 )
 from publish.admin import (
     make_published,
@@ -19,7 +20,9 @@ from infrastructure.forms import (
     ProjectDocumentForm,
     ProjectFundingForm,
     PowerPlantForm,
-    ProjectOwnerStakeForm
+    PlantOwnerStakeForm,
+    ProjectOwnerStakeForm,
+    ProjectSubstationForm
 )
 from facts.forms import NameSearchWidget
 from utilities.admin import PhraseSearchAdminMixin
@@ -53,8 +56,19 @@ class ProjectsInitiativeInline(admin.StackedInline):
         }
 
 
-class ProjectsOwnersInline(admin.StackedInline):
-    model = OwnerStake
+class PlantOwnersInline(admin.StackedInline):
+    model = PlantOwnerStake
+    form = PlantOwnerStakeForm
+    raw_id_fields = ('owner',)
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+        }
+
+
+class ProjectOwnersInline(admin.StackedInline):
+    model = ProjectOwnerStake
     form = ProjectOwnerStakeForm
     raw_id_fields = ('owner',)
 
@@ -62,6 +76,16 @@ class ProjectsOwnersInline(admin.StackedInline):
         css = {
             "all": ("admin/css/adminfixes.css",)
         }
+
+
+class ProjectSubstationsInline(admin.TabularInline):
+    model = ProjectSubstation
+    form = ProjectSubstationForm
+
+    class Media:
+        css = {
+            "all": ("admin/css/adminfixes.css",)
+    }
 
 
 class ProjectsDocumentsInline(admin.StackedInline):
@@ -161,7 +185,9 @@ class ProjectAdmin(PhraseSearchAdminMixin, admin.ModelAdmin):
     ordering = ['name', 'created_at', 'published']
     readonly_fields = ('extra_data', 'identifier')
     inlines = [
-        ProjectFundingInline
+        ProjectFundingInline,
+        ProjectOwnersInline,
+        ProjectSubstationsInline,
     ]
     raw_id_fields = ('power_plant', )
     list_select_related = ('infrastructure_type', )
@@ -269,7 +295,7 @@ class PowerPlantAdmin(admin.ModelAdmin):
     search_fields = ('name', 'plant_capacity', 'notes')
     actions = [make_published, make_not_published]
     inlines = [
-        ProjectsOwnersInline
+        PlantOwnersInline
     ]
 
     def sources_display(self, obj):
@@ -310,10 +336,10 @@ class FuelCategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(OwnerStake)
+@admin.register(PlantOwnerStake)
 class OwnerStakeAdmin(admin.ModelAdmin):
     save_on_top = True
-    form = ProjectOwnerStakeForm
+    form = PlantOwnerStakeForm
     list_display = (
         'id',
         'owner',
@@ -328,12 +354,37 @@ class OwnerStakeAdmin(admin.ModelAdmin):
     search_fields = ('owner__name', 'power_plant__name')
 
     class Meta:
-        model = OwnerStake
+        model = PlantOwnerStake
+
+
+@admin.register(ProjectOwnerStake)
+class ProjectOwnerStakeAdmin(admin.ModelAdmin):
+    save_on_top = True
+    form = ProjectOwnerStakeForm
+    list_display = (
+        'id',
+        'owner',
+        'percent_owned',
+        'project'
+    )
+    list_filter = (
+        'owner',
+        'project'
+    )
+    actions = [make_published, make_not_published]
+    search_fields = ('owner__name', 'project__name')
+
+    class Meta:
+        model = ProjectOwnerStake
 
 
 @admin.register(InfrastructureType)
 class InfrastructureTypeAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
+    list_display = (
+        'name',
+        'show_on_map'
+    )
 
 
 @admin.register(ProjectDocument)
@@ -349,7 +400,7 @@ class ProjectDocumentAdmin(admin.ModelAdmin):
     list_filter = ('document_type', 'status_indicator')
     search_fields = ('source_url', 'notes', 'document__source_file__original_filename')
     inlines = [
-        ProjectsDocumentsInline,
+        ProjectsDocumentsInline
     ]
     form = ProjectDocumentForm
     list_select_related = ('document__source_file', )

@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from . import factories
+from infrastructure import models
 
 
 class InfrastructureTypeTestCase(TestCase):
@@ -14,10 +15,18 @@ class InfrastructureTypeTestCase(TestCase):
 class OwnerStakeTestCase(TestCase):
     def test_str(self):
         """String representation of an OwnerStake uses the owner and PowerPlant."""
-        owner_stake = factories.OwnerStakeFactory()
+        owner_stake = factories.PlantOwnerStakeFactory()
+        self.assertEqual(
+            str(owner_stake), '{} stake in {}'.format(owner_stake.owner, owner_stake.power_plant)
+        )
+
+
+class ProjectOwnerStakeTestCase(TestCase):
+    def test_str(self):
+        owner_stake = factories.ProjectOwnerStakeFactory()
         self.assertEqual(
             str(owner_stake),
-            '{} stake in {}'.format(owner_stake.owner, owner_stake.power_plant)
+            '{} stake in {}'.format(owner_stake.owner, owner_stake.project)
         )
 
 
@@ -26,16 +35,42 @@ class ProjectFundingTestCase(TestCase):
         """String representation of an ProjectFunding uses the amount and currency."""
         project_funding = factories.ProjectFundingFactory()
         self.assertEqual(
-            str(project_funding),
-            '{} {}'.format(project_funding.amount, project_funding.currency)
+            str(project_funding), '{} {}'.format(project_funding.amount, project_funding.currency)
         )
 
 
 class ProjectTestCase(TestCase):
+
+    def setUp(self):
+        self.project = factories.ProjectFactory()  # type: models.Project
+
     def test_str(self):
         """String representation of an Project uses the name."""
-        project = factories.ProjectFactory()
-        self.assertEqual(str(project), project.name)
+        self.assertEqual(str(self.project), self.project.name)
+
+    def test_pipelines(self):
+        """Test the pipeline portion of the model"""
+        self.project.project_capacity = 10.0
+        self.project.project_capacity_unit = models.ProjectCapacityUnits.BARRELS
+        self.project.project_capacity_timeframe = models.ProjectTimeFrameUnits.PER_YEAR
+
+        self.project.pipeline_diameter = 40
+        self.project.pipeline_throughput = 100
+        self.project.pipeline_throughput_unit = models.ProjectThroughputUnits.CUBIC_METERS
+        self.project.pipeline_throughput_timeframe = models.ProjectTimeFrameUnits.PER_YEAR
+        self.project.pipeline_throughput_year = 2019
+
+        # Is capacity rendered correctly
+        cap_check = str(self.project.project_capacity) + "{}"\
+            .format(self.project.pipeline_capacity_property)
+
+        self.assertEqual(cap_check, "10.0 barrels per year")
+
+        # Is Throughput rendered correctly
+        through_check = "{} {}".format(str(self.project.pipeline_throughput),
+                                       "cubic meters per year (2019)")
+        self.assertEqual(through_check,
+                         "100 cubic meters per year (2019)")
 
 
 class FuelTestCase(TestCase):
@@ -64,7 +99,7 @@ class PowerPlantTestCase(TestCase):
         """The .get_absolute_url() method returns the PowerPlant's detail page URL."""
         self.assertEqual(
             self.power_plant.get_absolute_url(),
-            reverse('infrastructure:powerplant-detail', kwargs={'slug': self.power_plant.slug})
+            reverse('infrastructure:powerplant-detail', kwargs={'slug': self.power_plant.slug}),
         )
 
 
@@ -80,3 +115,18 @@ class InitiativeTestCase(TestCase):
         """String representation of an Initiative uses the name."""
         initiative = factories.InitiativeFactory()
         self.assertEqual(str(initiative), initiative.name)
+
+
+class ProjectSubstationTestCase(TestCase):
+    def setUp(self):
+        self.substation = factories.ProjectSubstationFactory()
+
+    def test_fk(self):
+        """
+        * Substation must have a project.
+        * When the project is deleted, so is the substation (cascade)
+        """
+        self.assertIsNotNone(self.substation.project)
+        id = self.substation.id
+        self.substation.project.delete()
+        self.assertFalse(models.ProjectSubstation.objects.filter(id=id).exists())

@@ -20,7 +20,6 @@ def refresh_views():
     project_unit_fields = (
         'project_output_unit',
         'estimated_project_output_unit',
-        'project_capacity_unit',
         'project_CO2_emissions_unit'
     )
 
@@ -60,6 +59,8 @@ def refresh_views():
                         "infrastructure_powerplant_owner_stake_view",
                         "infrastructure_projects_export_view",
                         "infrastructure_powerplant_export_view",
+                        "infrastructure_project_owner_stake_view",
+                        "infrastructure_substation_view",
                         )
         for view_name in database_views:
             cursor.execute("DROP VIEW IF EXISTS {} CASCADE;".format(view_name))
@@ -148,6 +149,25 @@ def refresh_views():
                     JOIN facts_organization AS r ON l.organization_id = r.id
                 GROUP BY l.project_id;
             ''')
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_project_owner_stake_view AS
+                SELECT l.project_id,
+                    array_to_string(array_agg(r.name), ',', 'NULL') AS owners,
+                    array_to_string(array_agg(l.percent_owned), ',', 'NULL') AS owners_stake
+                FROM infrastructure_projectownerstake AS l
+                JOIN facts_organization AS r
+                ON l.owner_id = r.id
+                GROUP BY l.project_id;
+        ''')
+        cursor.execute('''CREATE OR REPLACE VIEW infrastructure_substation_view AS
+                SELECT l.id,
+                    array_to_string(array_agg(r.name), ',', 'NULL') AS substation_name,
+                    array_to_string(array_agg(r.capacity), ',', 'NULL') AS substation_capacity,
+                    array_to_string(array_agg(r.voltage), ',', 'NULL') AS substation_voltage
+                FROM infrastructure_project AS l
+                JOIN infrastructure_projectsubstation AS r
+                ON l.id = r.project_id
+                GROUP BY l.id;
+        ''')
         # Power Plant Views
         cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_countries_view AS
                 SELECT l.powerplant_id,
@@ -177,7 +197,7 @@ def refresh_views():
                 SELECT l.power_plant_id,
                     array_to_string(array_agg(quote_literal(r."name")), ', ', 'NULL') AS owners,
                     array_to_string(array_agg(l."percent_owned"), ', ', 'NULL') AS owners_stake
-                FROM infrastructure_ownerstake AS l
+                FROM infrastructure_plantownerstake AS l
                 JOIN facts_organization AS r
                 ON l.owner_id = r.id
                 GROUP BY l.power_plant_id;
@@ -211,6 +231,8 @@ def refresh_views():
                     upper(verified_path::text) AS verified,
                     p.total_cost,
                     p.total_cost_currency,
+                    posv.owners AS project_owners,
+                    posv.owners_stake AS project_owners_stake,
                     start_day,
                     start_month,
                     start_year,
@@ -226,9 +248,12 @@ def refresh_views():
                         ELSE 'NULL'
                     END
                     estimated_project_output_unit,
-                    nox_reduction_system,
+                    upper(nox_reduction_system::text) as nox_reduction_system,
                     power_plant_id,
                     pp.name AS "power_plant_name",
+                    psubv.substation_name AS substation_name,
+                    psubv.substation_capacity AS substation_capacity,
+                    psubv.substation_voltage AS substation_voltage,
                     "project_CO2_emissions",
                     CASE
                         {project_CO2_emissions_unit}
@@ -236,11 +261,8 @@ def refresh_views():
                     END
                     "project_CO2_emissions_unit",
                     project_capacity,
-                    CASE
-                        {project_capacity_unit}
-                        ELSE 'NULL'
-                    END
                     project_capacity_unit,
+                    project_capacity_timeframe,
                     project_output,
                     CASE
                         {project_output_unit}
@@ -248,11 +270,25 @@ def refresh_views():
                     END
                     project_output_unit,
                     project_output_year,
-                    sox_reduction_system
+                    upper(sox_reduction_system::text) as sox_reduction_system,
+                    linear_length AS "project_length",
+                    pipeline_diameter,
+                    pipeline_diameter_unit,
+                    upper(pipeline_metered::text) AS pipeline_metered,
+                    pipeline_throughput,
+                    pipeline_throughput_unit,
+                    pipeline_throughput_timeframe,
+                    pipeline_throughput_year,
+                    design_voltage,
+                    upper(direct_current::text) as direct_current,
+                    electricity_flow,
+                    estimated_transfer_capacity
                 FROM
                 infrastructure_project AS p
                 LEFT OUTER JOIN infrastructure_infrastructuretype AS t ON p.infrastructure_type_id = t.id
                 LEFT OUTER JOIN infrastructure_powerplant AS pp ON p.power_plant_id = pp.id
+                LEFT OUTER JOIN infrastructure_project_owner_stake_view AS posv ON p.id = posv.project_id
+                LEFT OUTER JOIN infrastructure_substation_view AS psubv ON p.id = psubv.id
                 LEFT OUTER JOIN
                     (
                         SELECT a.project_id,
@@ -284,6 +320,7 @@ def refresh_views():
                     AS related
                 ON p.id = related.project_id;
             '''.format(status_cases=project_status_cases, **project_case_statements))
+
         cursor.execute('''CREATE OR REPLACE VIEW infrastructure_powerplant_export_view AS
                 SELECT pp.id AS plant_id,
                 pp.name AS plant_name,

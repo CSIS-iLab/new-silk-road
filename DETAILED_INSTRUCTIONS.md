@@ -273,10 +273,11 @@ This will create a new file named `latest.dump` which can be used to restore the
 
 ```sh
 $ createdb reconasia
+$ psql -c "create extension postgis" reconasia  # might be necessary
 $ pg_restore --clean --no-owner --dbname=reconasia latest.dump
 ```
 
-The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example.
+The parts with the two hyphens are options that affect the behavior of `pg_restore`. The `--clean` options tell `pg_dump` to clear any existing data, for example (though there shouldn't be any if the database was just created!).
 
 Notes: If you already had this db present, you may see some errors after running this command, but everything should be in working order. If it doesn't seem to work, try deleting your existing db with `$ dropdb reconasia` and run the above commands again. Also, if your local code has migrations that have not been deployed to the system you are restoring the db from, you may need to run migrations as follows:
 
@@ -400,6 +401,14 @@ see reflected in the API (and the map).
 
 ## Working on JavaScript and Sass/CSS: Use Node
 
+This project requires node 5, so make sure your current node version is 5, for example via `nvm`:
+
+```bash
+$ nvm use 5
+$ npm --version
+v5.12.0
+```
+
 Since [Node](https://nodejs.org/) has its own ecosystem of tools oriented toward front-end web development, this project includes a `package.json` and `gulpfile.babel.js`. If you plan to write Sass/CSS or JavaScript, you should install the required tools:
 
 ```sh
@@ -414,6 +423,10 @@ npm install --global gulp-cli
 
 Once that's done, you can run the various tasks defined in `gulpfile.babel.js`. Some are Sass-related, some are JavaScript-related, and there is one task for optimizing svg files from website/assets/svg and copying them into website/static/img.
 
+To rebuild the JavaScript and Sass/CSS bundles, run the default Gulp task by running `gulp`. To generate the prod-ready versions of these bundles (which uses Webpack optimizations when bundling the JavaScript and omits sourcemaps in the CSS), run `NODE_ENV=production gulp`.
+
+For development purposes, you will normally want to run `gulp watch` in a terminal session alongside your Django process so that changes to the source JavaScript and Sass will automatically rebundle.
+
 ### Running a Sass dev server
 
 If you want to run the website and edit the Sass styles (\*.scss files) with a live preview, you can open two terminal windows/tabs and run one command in each. The first starts the website at <http://127.0.0.1:8000/> and handle serving the database-driven HTML pages:
@@ -425,7 +438,7 @@ $ heroku local:run python manage.py runserver
 The following will start watching the Sass files for changes and update the resulting CSS. It runs a webserver on <http://127.0.0.1:3000/> (note the different port: 3000, rather than 8000) that live updates the stylesheets as you edit them, and it proxies HTML page requests to the other webserver (running on port 8000):
 
 ```sh
-$ gulp watch
+$ gulp watch:sync
 ```
 
 So if you have both running, you can access <http://127.0.0.1:3000/> or <http://localhost:3000/> to see styles update moments after you edit and save the Sass files.
