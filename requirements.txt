@@ -54,7 +54,7 @@ python-dateutil==2.7.2
 pytz==2018.4
 raven==6.7
 redis==2.10.6
-requests==2.18.4
+requests==2.20.0
 rq==0.10.0
 rq-scheduler==0.8.2
 s3transfer==0.1.13
