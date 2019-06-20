@@ -28,7 +28,7 @@
     "browser-sync": "^2.17.5",
     "del": "^2.2.2",
     "enzyme": "^2.6.0",
-    "eslint": "^3.9.1",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
