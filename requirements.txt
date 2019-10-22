@@ -47,7 +47,7 @@ jmespath==0.9.3
 Markdown==2.6.11
 newrelic==4.4.0.103
 openpyxl==2.5.3
-Pillow==5.1.0
+Pillow==6.2.0
 psycopg2-binary==2.7.4
 pylibmc==1.5.2
 python-dateutil==2.7.2
