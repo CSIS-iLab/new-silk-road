@@ -5,6 +5,7 @@ from django.contrib.flatpages import views
 from .views import (
     HomeView,
     DatabaseView,
+    temporary_redirect
 )
 from infrastructure.views import (
     ProjectsMapView,
@@ -22,9 +23,9 @@ urlpatterns = [
     url(r'^analysis/competing-visions/$', views.flatpage, {'url': '/analysis/competing-visions/'}, name='competing-visions'),
     url(r'^analysis/feed/$', LatestEntriesFeed()),
     url(r'^analysis/', include('writings.urls')),
-    url(r'^database/$', DatabaseView.as_view(), name='database-home'),
-    url(r'^database/', include('infrastructure.urls')),
-    url(r'^database/', include('facts.urls')),
-    url(r'^map/$', ProjectsMapView.as_view(), name='website-map'),
-    url(r'^map/help/$', views.flatpage, {'url': '/map/help/'}, name='map-help'),
+    url(r'^database/$', temporary_redirect, name='database-home'),
+    url(r'^database/', temporary_redirect),
+    url(r'^database/', temporary_redirect),
+    url(r'^map/$', temporary_redirect),
+    url(r'^map/help/$', temporary_redirect),
 ]
