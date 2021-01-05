@@ -3,6 +3,7 @@ import io
 import json
 import os
 import tempfile
+from unittest import skip
 
 from django.conf import settings
 from django.contrib.auth.models import Permission
@@ -135,7 +136,7 @@ class PowerPlantDetailViewTestCase(TestCase):
             self.assertContains(response, init_d.name)
             self.assertNotContains(response, init_not_included.name)
 
-
+@skip("Redirecting to placeholder")
 class MapViewTestCase(TestCase):
     """View the map of all projects.
 

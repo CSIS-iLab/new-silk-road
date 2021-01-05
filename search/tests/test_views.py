@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from unittest import skip
 
 from django.urls import reverse
 
@@ -10,7 +11,7 @@ from ..serializers import ProjectSerializer
 from .base import BaseSearchTestCase
 from .settings import TEST_SEARCH
 
-
+@skip("Redirecting to placeholder")
 class TestSearchViewSet(BaseSearchTestCase):
 
     def setUp(self):
@@ -65,7 +66,7 @@ class TestSearchViewSet(BaseSearchTestCase):
             params = {'q': 'China Rail'}
             response = self.client.get(self.url, params)
             self.assertContains(response, self.china_rail.get_absolute_url())
-
+    
     def test_with_search_facets(self):
         """Narrow results by using facets."""
 

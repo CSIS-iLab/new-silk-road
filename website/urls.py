@@ -4,8 +4,7 @@ from django.contrib.flatpages import views
 
 from .views import (
     HomeView,
-    DatabaseView,
-    temporary_redirect
+    DatabaseView, temporary_redirect,
 )
 from infrastructure.views import (
     ProjectsMapView,
@@ -24,8 +23,8 @@ urlpatterns = [
     url(r'^analysis/feed/$', LatestEntriesFeed()),
     url(r'^analysis/', include('writings.urls')),
     url(r'^database/$', temporary_redirect, name='database-home'),
-    url(r'^database/', temporary_redirect),
-    url(r'^database/', temporary_redirect),
-    url(r'^map/$', temporary_redirect),
-    url(r'^map/help/$', temporary_redirect),
+    url(r'^database/', include('infrastructure.urls')),
+    url(r'^database/', include('facts.urls')),
+    url(r'^map/$', temporary_redirect, name='website-map'),
+    url(r'^map/help/$', views.flatpage, {'url': '/map/help/'}, name='map-help'),
 ]
