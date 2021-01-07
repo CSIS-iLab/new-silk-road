@@ -1,5 +1,6 @@
 from django.db.models import Count
 from django.views.generic import TemplateView
+from django.shortcuts import redirect
 from constance import config
 from website.models import Collection
 from facts.models.organizations import DETAIL_MODEL_NAMES
@@ -8,6 +9,10 @@ from writings.views import (FeaturedAnalysesMixin, FeaturedEntryMixin,
                             get_published_orderedentries_from_collection, )
 from writings.models import EntryCollection
 
+
+
+def temporary_redirect(request):
+    return redirect('https://reconasia.csis.org/analysis/entries/new-website-coming-2021/')
 
 class HomeView(FeaturedEntryMixin, TemplateView):
     template_name = "website/home.html"

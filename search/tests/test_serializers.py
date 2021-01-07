@@ -1,3 +1,4 @@
+from unittest import skip
 from facts.models import Organization
 from infrastructure.tests.factories import ProjectFactory
 from ..base import ModelSerializer, RelatedSerializer
@@ -28,14 +29,14 @@ from .mocks import (
     MockDocOne
 )
 
-
+@skip("Redirecting to placeholder")
 class SerializerTestCase(BaseSearchTestCase):
 
     def test_serializer_loads_doctype_class(self):
         serializer = MockSerializer()
         self.assertEqual(serializer.doc_type, MockDocOne)
 
-
+@skip("Redirecting to placeholder")
 class ProjectSerializerTestCase(BaseSearchTestCase):
 
     def test_project_serializer(self):
@@ -51,7 +52,7 @@ class ProjectSerializerTestCase(BaseSearchTestCase):
         # doc should have string representation of choice
         self.assertEqual(obj.get_status_display(), doc.status)
 
-
+@skip("Redirecting to placeholder")
 class EntrySerializerTestCase(BaseSearchTestCase):
 
     def test_entry_serializer(self):
@@ -74,7 +75,7 @@ class EntrySerializerTestCase(BaseSearchTestCase):
         self.assertEqual(obj.description, doc.description)
         self.assertEqual(obj.publication_date, doc.publication_date)
 
-
+@skip("Redirecting to placeholder")
 class PersonSerializerTestCase(BaseSearchTestCase):
 
     def test_person_serializer(self):
@@ -89,7 +90,7 @@ class PersonSerializerTestCase(BaseSearchTestCase):
         self.assertNotEqual(doc.identifier, '')
         self.assertIn(doc.identifier, doc.url)
 
-
+@skip("Redirecting to placeholder")
 class OrganizationSerializerTestCase(BaseSearchTestCase):
 
     def test_organization_serializer(self):
@@ -100,7 +101,7 @@ class OrganizationSerializerTestCase(BaseSearchTestCase):
         self.assertIsInstance(doc, OrganizationDoc)
         self.assertIsNotNone(doc.organization_types)
 
-
+@skip("Redirecting to placeholder")
 class ModelSerializerTestCase(BaseSearchTestCase):
 
     def test_meta_model(self):
@@ -284,7 +285,7 @@ class ModelSerializerTestCase(BaseSearchTestCase):
             instance = NewOrgSerializer()
             self.assertEqual(instance.doc_type, OrganizationDoc)
 
-
+@skip("Redirecting to placeholder")
 class RelatedSerializerTestCase(BaseSearchTestCase):
 
     def test_mapping_class(self):
