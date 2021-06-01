@@ -60,6 +60,6 @@ rq-scheduler==0.8.2
 s3transfer==0.1.13
 six==1.11.0
 unidecode==1.0.22
-urllib3==1.22
+urllib3==1.26.5
 waitress==1.1.0
 webencodings==0.5.1
