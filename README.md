@@ -1,5 +1,7 @@
 # Reconnecting Asia
 
+**This repo has been archived and the Django project taken down in favor of simpler project architecture. Code for the new ReconAsia site can be found at [reconasia_wp](https://github.com/CSIS-iLab/reconasia_wp).**
+
 This is a Django project for CSIS' *Reconnecting Asia* project.
 
 
